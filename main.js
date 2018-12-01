@@ -14,10 +14,11 @@ function main() {
   const prefabsNumSpan = document.getElementById('prefabs_num');
   const prefabList = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
+  const overlayDiv = document.getElementById('overlay');
 
   let mapWidth = 0;
   let mapHeight = 0;
-  let biomeImg;
+  let biomesImg;
   let splat3Img;
   let allPrefabs = [];
   let prefabs = [];
@@ -32,11 +33,11 @@ function main() {
     signSizeDisplaySpan.textContent = signSizeInput.value;
 
     mapWidth = Math.max(
-      biomeImg ? biomeImg.width : 0,
+      biomesImg ? biomesImg.width : 0,
       splat3Img ? splat3Img.width : 0,
     );
     mapHeight = Math.max(
-      biomeImg ? biomeImg.height : 0,
+      biomesImg ? biomesImg.height : 0,
       splat3Img ? splat3Img.height : 0,
     );
     mapCanvas.width = mapWidth * scale;
@@ -46,8 +47,8 @@ function main() {
 
     const context = mapCanvas.getContext('2d');
     context.scale(scale, scale);
-    if (biomeImg && showBiomesInput.checked) {
-      context.drawImage(biomeImg, 0, 0);
+    if (biomesImg && showBiomesInput.checked) {
+      context.drawImage(biomesImg, 0, 0);
     }
     if (splat3Img && showSplat3Input.checked) {
       context.drawImage(splat3Img, 0, 0);
@@ -103,17 +104,17 @@ function main() {
   // //////////////////////////////////////////////////////////////////////
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
-    biomeImg = await loadAsImage(biomesInput);
+    biomesImg = await loadImageFromInput(biomesInput);
     update();
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
-    splat3Img = await loadAsImage(splat3Input);
+    splat3Img = await loadImageFromInput(splat3Input);
     update();
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
-    await loadPrefabs();
+    await loadPrefabsFromInput();
     filterPrefabs();
     update();
   });
@@ -125,33 +126,84 @@ function main() {
   [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput].forEach((e) => {
     e.addEventListener('input', update);
   });
-
   // "scale" input event occur frequently because scale range step are small.
   // So change event fires "update" to avoid stuttering.
   scaleInput.addEventListener('change', update);
   scaleInput.addEventListener('input', () => {
     scaleDisplaySpan.textContent = scaleInput.value;
   });
+  let isOverNow = false;
+  document.body.addEventListener('dragenter', (event) => {
+    isOverNow = true;
+  });
+  document.body.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    isOverNow = false;
+    document.body.classList.add('dragovered');
+  });
+  document.body.addEventListener('dragleave', () => {
+    if (isOverNow) {
+      isOverNow = false;
+    } else {
+      document.body.classList.remove('dragovered');
+    }
+  });
+  document.body.addEventListener('drop', async (event) => {
+    event.preventDefault();
+    document.body.classList.remove('dragovered');
+    await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
+    update();
+  });
 
-  async function loadAsImage(input) {
+  async function handleDroppedFiles(file) {
+    if (file.name === 'biomes.png') {
+      console.log('Load biome');
+      if (file.type !== 'image/png') {
+        console.warn('Unexpected biomes.png file type: %s', file.type);
+      }
+      biomesImg = await loadImage(file);
+    } else if (file.name === 'splat3.png') {
+      console.log('Load splat3');
+      if (file.type !== 'image/png') {
+        console.warn('Unexpected splat3.png file type: %s', file.type);
+      }
+      splat3Img = await loadImage(file);
+    } else if (file.name === 'prefabs.xml') {
+      console.log('Update prefab list');
+      if (file.type !== 'text/xml') {
+        console.warn('Unexpected prefabs.xml file type: %s', file.type);
+      }
+      await loadPrefabs(file);
+      filterPrefabs();
+    } else {
+      console.warn('Unknown file: %s, %s', file.name, file.type);
+    }
+  }
+
+  async function loadImageFromInput(input) {
     if (input.files.length === 0) {
       console.log('No file');
       return null;
     }
-    const dataURL = await loadAsDataURL(input);
-    return loadDataURL(dataURL);
+    return await loadImage(input.files[0]);
   }
 
-  async function loadAsDataURL(input) {
+  async function loadImage(file) {
+    const dataURL = await loadAsDataURL(file);
+    return loadImageByDataURL(dataURL);
+  }
+
+  async function loadAsDataURL(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = reject;
       reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(file);
     });
   }
 
-  async function loadDataURL(dataURL) {
+  async function loadImageByDataURL(dataURL) {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.addEventListener('load', () => resolve(image));
@@ -160,13 +212,17 @@ function main() {
     });
   }
 
-  async function loadPrefabs() {
+  async function loadPrefabsFromInput() {
     if (prefabsInput.files.length === 0) {
       console.log('No file');
       allPrefabs = [];
       return;
     }
-    const xml = await loadAsText(prefabsInput);
+    await loadPrefabs(prefabsInput.files[0]);
+  }
+
+  async function loadPrefabs(file) {
+    const xml = await loadAsText(file);
     const dom = (new DOMParser()).parseFromString(xml, 'text/xml');
     allPrefabs = Array.from(dom.getElementsByTagName('decoration'))
       .map((e) => {
@@ -179,12 +235,12 @@ function main() {
       });
   }
 
-  async function loadAsText(input) {
+  async function loadAsText(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = reject;
       reader.onload = () => resolve(reader.result);
-      reader.readAsText(input.files[0]);
+      reader.readAsText(file);
     });
   }
 
