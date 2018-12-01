@@ -92,8 +92,7 @@ function main() {
     const ul = document.createElement('ul');
     prefabs.forEach((prefab) => {
       const li = document.createElement('li');
-      li.textContent = prefab.name;
-      li.title = `position: ${prefab.x}, ${prefab.y}`;
+      li.textContent = `${prefab.name} (${prefab.x}, ${prefab.y})`;
       ul.appendChild(li);
     });
     prefabList.replaceChild(ul, prefabList.firstChild);
