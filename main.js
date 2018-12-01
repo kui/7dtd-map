@@ -163,12 +163,14 @@ function main() {
         console.warn('Unexpected biomes.png file type: %s', file.type);
       }
       biomesImg = await loadImage(file);
+      biomesInput.value = '';
     } else if (file.name === 'splat3.png') {
       console.log('Load splat3');
       if (file.type !== 'image/png') {
         console.warn('Unexpected splat3.png file type: %s', file.type);
       }
       splat3Img = await loadImage(file);
+      splat3Input.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
       if (file.type !== 'text/xml') {
@@ -176,6 +178,7 @@ function main() {
       }
       await loadPrefabs(file);
       filterPrefabs();
+      splat3Input.value = '';
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
