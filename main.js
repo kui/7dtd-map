@@ -1,5 +1,7 @@
 /* eslint-env browser */
 function main() {
+  const coodWESpan = document.getElementById('cood_we');
+  const coodNSSpan = document.getElementById('cood_ns');
   const showBiomesInput = document.getElementById('show_biomes');
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
@@ -156,6 +158,16 @@ function main() {
     document.body.classList.remove('dragovered');
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
     update();
+  });
+
+  // cursor position
+  mapCanvas.addEventListener('mousemove', (event) => {
+    coodWESpan.textContent = - Math.round((0.5 - event.offsetX / mapCanvas.width) * mapWidth);
+    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * mapHeight);
+  });
+  mapCanvas.addEventListener('mouseout', () => {
+    coodWESpan.textContent = '-';
+    coodNSSpan.textContent = '-';
   });
 
   async function handleDroppedFiles(file) {

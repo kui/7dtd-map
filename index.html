@@ -8,7 +8,9 @@
   </head>
   <body>
     <h1>7DtD Map Renderer</h1>
+    <p><a href="https://github.com/kui/7dtd-map">Github repository</a></p>
     <fieldset id="controller">
+      <p>W/E: <span id="cood_we">-</span>, N/S: <span id="cood_ns">-</span></p>
       <table>
         <tr>
           <th><label for="biomes">biomes.png</label></th>
@@ -52,18 +54,16 @@
           <td><input id="prefabs_filter" placeholder="Input a part of prefab name"></td>
         </tr>
       </table>
-      <h2>Prefab List</h2>
       <p id="prefabs_num"></p>
       <div id="prefabs_list"><ul></ul></div>
-      <p><a href="https://github.com/kui/7dtd-map">Github repository</a></p>
     </fieldset>
+    <canvas id="map"></canvas>
     <p>Drug and drop world files:</p>
     <ul>
       <li>biomes.png</li>
       <li>splat3.png</li>
       <li>prefabs.xml</li>
     </ul>
-    <canvas id="map"></canvas>
     <div id="overlay">
       <div>
         <p>Drug and drop world files:</p>
