@@ -1,0 +1,61 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Map renderer for 7 Day to Die Alpha 17">
+    <title>7DtD Map Renderer</title>
+    <script src="main.js" async></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+  </head>
+  <body>
+    <h1>7DtD Map Renderer</h1>
+    <fieldset id="controller">
+      <table>
+        <tr>
+          <th><label for="biomes">biomes.png</label></th>
+          <td>
+            <input id="show_biomes" type="checkbox" checked title="Show biomes.png">
+            <input id="biomes" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="splat3">splat3.png</label></th>
+          <td>
+            <input id="show_splat3" type="checkbox" checked title="Show splat3.png">
+            <input id="splat3" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefabs">prefabs.xml</label></th>
+          <td>
+            <input id="show_prefabs" type="checkbox" checked title="Show prefabs">
+            <input id="prefabs" name="prefabs" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="scale">Scale</label></th>
+          <td>
+            <label>
+              <input id="scale" type="range" max="1" min="0.05" step="0.05" value="0.1">
+              <span id="scale_display"></span>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="sign_size">Prefab Sign Size</label></th>
+          <td>
+            <input id="sign_size" type="range" max="400" min="80" step="20" value="250">
+            <span id="sign_size_display"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>Prefabs Filter</th>
+          <td><input id="prefabs_filter" placeholder="Input a part of prefab name"></td>
+        </tr>
+      </table>
+      <h2>Prefab List</h2>
+      <p id="prefabs_num"></p>
+      <div id="prefabs_list"><ul></ul></div>
+    </fieldset>
+    <canvas id="map"></canvas>
+  </body>
+</html>

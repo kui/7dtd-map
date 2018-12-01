@@ -1,0 +1,19 @@
+#controller {
+    position: fixed;
+    margin: 10px;
+    width: 30%;
+    max-width: 500px;
+    right: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+th, td {
+    border-bottom: 1px lightgray solid;
+}
+tr:last-child > * {
+    border-bottom: none;
+}
+#prefabs_list {
+    max-height: 300px;
+    overflow-y: scroll;
+}

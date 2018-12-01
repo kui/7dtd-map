@@ -1,0 +1,16 @@
+{
+  "name": "7dtd-map",
+  "version": "1.0.0",
+  "description": "Map renderer for 7 Days to Die",
+  "private": true,
+  "scripts": {
+    "format": "eslint main.js --fix"
+  },
+  "author": "Keiichiro UI",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}
