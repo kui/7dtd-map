@@ -122,10 +122,15 @@ function main() {
     filterPrefabs();
     update();
   });
-  scaleInput.addEventListener('input', update);
-  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput,
-  ].forEach((e) => {
+  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput].forEach((e) => {
     e.addEventListener('input', update);
+  });
+
+  // "scale" input event occur frequently because scale range step are small.
+  // So change event fires "update" to avoid stuttering.
+  scaleInput.addEventListener('change', update);
+  scaleInput.addEventListener('input', () => {
+    scaleDisplaySpan.textContent = scaleInput.value;
   });
 
   async function loadAsImage(input) {
