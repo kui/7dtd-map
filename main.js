@@ -13,6 +13,7 @@ function main() {
   const signSizeInput = document.getElementById('sign_size');
   const signSizeDisplaySpan = document.getElementById('sign_size_display');
   const prefabsFilterInput = document.getElementById('prefabs_filter');
+  const prefabsFilterPresetsDiv = document.getElementById('prefabs_filter_presets');
   const prefabsNumSpan = document.getElementById('prefabs_num');
   const prefabList = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
@@ -106,12 +107,14 @@ function main() {
   // //////////////////////////////////////////////////////////////////////
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
-    biomesImg = await loadImageFromInput(biomesInput);
+    const newImage = await loadImageFromInput(biomesInput);
+    if (newImage) biomesImg = newImage;
     update();
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
-    splat3Img = await loadImageFromInput(splat3Input);
+    const newImage = await loadImageFromInput(splat3Input);
+    if (newImage) splat3Img = newImage;
     update();
   });
   prefabsInput.addEventListener('input', async () => {
@@ -137,11 +140,12 @@ function main() {
 
   // drag and drop
   let isOverNow = false;
-  document.body.addEventListener('dragenter', (event) => {
+  document.body.addEventListener('dragenter', () => {
     isOverNow = true;
   });
   document.body.addEventListener('dragover', (event) => {
     event.preventDefault();
+    /* eslint no-param-reassign: off */
     event.dataTransfer.dropEffect = 'copy';
     isOverNow = false;
     document.body.classList.add('dragovered');
@@ -162,12 +166,21 @@ function main() {
 
   // cursor position
   mapCanvas.addEventListener('mousemove', (event) => {
-    coodWESpan.textContent = - Math.round((0.5 - event.offsetX / mapCanvas.width) * mapWidth);
+    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * mapWidth);
     coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * mapHeight);
   });
   mapCanvas.addEventListener('mouseout', () => {
     coodWESpan.textContent = '-';
     coodNSSpan.textContent = '-';
+  });
+
+  // presets
+  Array.from(prefabsFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
+    button.addEventListener('click', () => {
+      prefabsFilterInput.value = button.textContent;
+      filterPrefabs();
+      update();
+    });
   });
 
   async function handleDroppedFiles(file) {
@@ -203,7 +216,7 @@ function main() {
       console.log('No file');
       return null;
     }
-    return await loadImage(input.files[0]);
+    return loadImage(input.files[0]);
   }
 
   async function loadImage(file) {
@@ -240,6 +253,7 @@ function main() {
 
   async function loadPrefabs(file) {
     const xml = await loadAsText(file);
+    if (!xml) return;
     const dom = (new DOMParser()).parseFromString(xml, 'text/xml');
     allPrefabs = Array.from(dom.getElementsByTagName('decoration'))
       .map((e) => {
