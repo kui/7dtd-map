@@ -14,7 +14,6 @@ function main() {
   const prefabsNumSpan = document.getElementById('prefabs_num');
   const prefabList = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
-  const overlayDiv = document.getElementById('overlay');
 
   let mapWidth = 0;
   let mapHeight = 0;
@@ -84,7 +83,9 @@ function main() {
   }
 
   function updatePrafabList() {
-    if (prefabsFilterInput.value.trim().length === 0) {
+    if (allPrefabs.length === 0) {
+      prefabsNumSpan.textContent = 'No prefabs';
+    } else if (prefabsFilterInput.value.trim().length === 0) {
       prefabsNumSpan.textContent = 'All prefabs';
     } else {
       prefabsNumSpan.textContent = `Hit ${prefabs.length} prefabs`;
@@ -131,6 +132,8 @@ function main() {
   scaleInput.addEventListener('input', () => {
     scaleDisplaySpan.textContent = scaleInput.value;
   });
+
+  // drag and drop
   let isOverNow = false;
   document.body.addEventListener('dragenter', (event) => {
     isOverNow = true;
