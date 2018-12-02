@@ -64,7 +64,7 @@ function main() {
   function drawPrefabs(ctx) {
     const signSize = signSizeInput.value;
     ctx.font = `bold ${signSize}px sans-serif`;
-    ctx.lineWidth = 7;
+    ctx.lineWidth = Math.round(signSize * 0.08);
     ctx.strokeStyle = 'white';
     ctx.fillStyle = 'red';
     ctx.textAlign = 'center';
