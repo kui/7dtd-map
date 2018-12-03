@@ -38,7 +38,7 @@
           <td>
             <label>
               <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1">
-              <span id="scale_display"></span>
+              <span data-source-input="scale"></span>
             </label>
           </td>
         </tr>
@@ -46,7 +46,14 @@
           <th><label for="sign_size">Prefab Sign Size</label></th>
           <td>
             <input id="sign_size" type="range" max="400" min="80" step="20" value="250">
-            <span id="sign_size_display"></span>
+            <span data-source-input="sign_size"></span>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="saturation">Saturation</label></th>
+          <td>
+            <input id="saturation" type="range" max="1" min="0" step="0.1" value="1">
+            <span data-source-input="saturation"></span>
           </td>
         </tr>
         <tr>

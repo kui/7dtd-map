@@ -9,9 +9,8 @@ function main() {
   const showPrefabsInput = document.getElementById('show_prefabs');
   const prefabsInput = document.getElementById('prefabs');
   const scaleInput = document.getElementById('scale');
-  const scaleDisplaySpan = document.getElementById('scale_display');
   const signSizeInput = document.getElementById('sign_size');
-  const signSizeDisplaySpan = document.getElementById('sign_size_display');
+  const saturationInput = document.getElementById('saturation');
   const prefabsFilterInput = document.getElementById('prefabs_filter');
   const prefabsFilterPresetsDiv = document.getElementById('prefabs_filter_presets');
   const prefabsNumSpan = document.getElementById('prefabs_num');
@@ -31,8 +30,6 @@ function main() {
   update();
   function update() {
     const scale = scaleInput.value;
-    scaleDisplaySpan.textContent = scale;
-    signSizeDisplaySpan.textContent = signSizeInput.value;
 
     mapWidth = Math.max(
       biomesImg ? biomesImg.width : 0,
@@ -49,12 +46,14 @@ function main() {
 
     const context = mapCanvas.getContext('2d');
     context.scale(scale, scale);
+    context.filter = `saturate(${saturationInput.value})`;
     if (biomesImg && showBiomesInput.checked) {
       context.drawImage(biomesImg, 0, 0);
     }
     if (splat3Img && showSplat3Input.checked) {
       context.drawImage(splat3Img, 0, 0);
     }
+    context.filter = 'none';
     if (showPrefabsInput.checked) {
       drawPrefabs(context);
     }
@@ -128,15 +127,12 @@ function main() {
     filterPrefabs();
     update();
   });
-  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput].forEach((e) => {
+  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput, saturationInput].forEach((e) => {
     e.addEventListener('input', update);
   });
   // "scale" input event occur frequently because scale range step are small.
   // So change event fires "update" to avoid stuttering.
   scaleInput.addEventListener('change', update);
-  scaleInput.addEventListener('input', () => {
-    scaleDisplaySpan.textContent = scaleInput.value;
-  });
 
   // drag and drop
   let isOverNow = false;
@@ -162,6 +158,13 @@ function main() {
     document.body.classList.remove('dragovered');
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
     update();
+  });
+
+  // range value display
+  Array.from(document.querySelectorAll('[data-source-input')).forEach((display) => {
+    const sourceInput = document.querySelector(`#${display.dataset.sourceInput}`);
+    display.textContent = sourceInput.value;
+    sourceInput.addEventListener('input', () => { display.textContent = sourceInput.value; });
   });
 
   // cursor position
