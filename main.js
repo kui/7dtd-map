@@ -2,6 +2,7 @@
 function main() {
   const coodWESpan = document.getElementById('cood_we');
   const coodNSSpan = document.getElementById('cood_ns');
+  const downloadButton = document.getElementById('download');
   const showBiomesInput = document.getElementById('show_biomes');
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
@@ -104,6 +105,13 @@ function main() {
   // //////////////////////////////////////////////////////////////////////
   // load and update firing
   // //////////////////////////////////////////////////////////////////////
+  downloadButton.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = mapCanvas.toDataURL('image/png');
+    const filterSuffix = prefabsFilterInput.value ? `-${prefabsFilterInput.value}` : '';
+    a.download = `7DtD-renderer${filterSuffix}.png`;
+    a.click();
+  });
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
     const newImage = await loadImageFromInput(biomesInput);
