@@ -47,7 +47,7 @@ function main() {
 
     const context = mapCanvas.getContext('2d');
     context.scale(scale, scale);
-    context.filter = `saturate(${saturationInput.value})`;
+    context.filter = `saturate(${saturationInput.value}%)`;
     if (biomesImg && showBiomesInput.checked) {
       context.drawImage(biomesImg, 0, 0);
     }
