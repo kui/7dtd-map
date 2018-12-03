@@ -11,7 +11,7 @@ function main() {
   const prefabsInput = document.getElementById('prefabs');
   const scaleInput = document.getElementById('scale');
   const signSizeInput = document.getElementById('sign_size');
-  const saturationInput = document.getElementById('saturation');
+  const brightnessInput = document.getElementById('brightness');
   const prefabsFilterInput = document.getElementById('prefabs_filter');
   const prefabsFilterPresetsDiv = document.getElementById('prefabs_filter_presets');
   const prefabsNumSpan = document.getElementById('prefabs_num');
@@ -47,7 +47,7 @@ function main() {
 
     const context = mapCanvas.getContext('2d');
     context.scale(scale, scale);
-    context.filter = `saturate(${saturationInput.value}%)`;
+    context.filter = `brightness(${brightnessInput.value}%)`;
     if (biomesImg && showBiomesInput.checked) {
       context.drawImage(biomesImg, 0, 0);
     }
@@ -135,7 +135,7 @@ function main() {
     filterPrefabs();
     update();
   });
-  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput, saturationInput].forEach((e) => {
+  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
     e.addEventListener('input', update);
   });
   // "scale" input event occur frequently because scale range step are small.
