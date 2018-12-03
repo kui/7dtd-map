@@ -188,7 +188,7 @@ function main() {
   // presets
   Array.from(prefabsFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
     button.addEventListener('click', () => {
-      prefabsFilterInput.value = button.textContent;
+      prefabsFilterInput.value = button.dataset.filter || button.textContent;
       filterPrefabs();
       update();
     });
