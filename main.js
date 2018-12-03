@@ -7,6 +7,8 @@ function main() {
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
   const splat3Input = document.getElementById('splat3');
+  const showRadInput = document.getElementById('show_radiation');
+  const radInput = document.getElementById('radiation');
   const showPrefabsInput = document.getElementById('show_prefabs');
   const prefabsInput = document.getElementById('prefabs');
   const scaleInput = document.getElementById('scale');
@@ -22,6 +24,7 @@ function main() {
   let mapHeight = 0;
   let biomesImg;
   let splat3Img;
+  let radImg;
   let allPrefabs = [];
   let prefabs = [];
 
@@ -49,10 +52,16 @@ function main() {
     context.scale(scale, scale);
     context.filter = `brightness(${brightnessInput.value}%)`;
     if (biomesImg && showBiomesInput.checked) {
-      context.drawImage(biomesImg, 0, 0);
+      context.drawImage(biomesImg, 0, 0, mapWidth, mapHeight);
     }
     if (splat3Img && showSplat3Input.checked) {
-      context.drawImage(splat3Img, 0, 0);
+      context.drawImage(splat3Img, 0, 0, mapWidth, mapHeight);
+    }
+    if (radImg && showRadInput.checked) {
+      context.filter = 'url(#rad_filter)';
+      context.imageSmoothingEnabled = false;
+      context.drawImage(radImg, 0, 0, mapWidth, mapHeight);
+      context.imageSmoothingEnabled = true;
     }
     context.filter = 'none';
     if (showPrefabsInput.checked) {
@@ -124,6 +133,12 @@ function main() {
     if (newImage) splat3Img = newImage;
     update();
   });
+  radInput.addEventListener('input', async () => {
+    console.log('Load radiation');
+    const newImage = await loadImageFromInput(radInput);
+    if (newImage) radImg = newImage;
+    update();
+  });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
     await loadPrefabsFromInput();
@@ -135,7 +150,8 @@ function main() {
     filterPrefabs();
     update();
   });
-  [showBiomesInput, showSplat3Input, showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
+  [showBiomesInput, showSplat3Input, showRadInput,
+   showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
     e.addEventListener('input', update);
   });
   // "scale" input event occur frequently because scale range step are small.
@@ -209,6 +225,13 @@ function main() {
       }
       splat3Img = await loadImage(file);
       splat3Input.value = '';
+    } else if (file.name === 'radiation.png') {
+      console.log('Load radiation');
+      if (file.type !== 'image/png') {
+        console.warn('Unexpected splat3.png file type: %s', file.type);
+      }
+      radImg = await loadImage(file);
+      radInput.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
       if (file.type !== 'text/xml') {

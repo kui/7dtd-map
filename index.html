@@ -28,6 +28,13 @@
           </td>
         </tr>
         <tr>
+          <th><label for="radiation">radiation.png</label></th>
+          <td>
+            <input id="show_radiation" type="checkbox" checked title="Show radiation.png">
+            <input id="radiation" type="file">
+          </td>
+        </tr>
+        <tr>
           <th><label for="prefabs">prefabs.xml</label></th>
           <td>
             <input id="show_prefabs" type="checkbox" checked title="Show prefabs">
@@ -53,7 +60,7 @@
         <tr>
           <th><label for="brightness">Brightness</label></th>
           <td>
-            <input id="brightness" type="range" max="100" min="0" step="10" value="50">
+            <input id="brightness" type="range" max="100" min="0" step="10" value="60">
             <span data-source-input="brightness"></span>%
           </td>
         </tr>
@@ -80,6 +87,7 @@
         <ul>
           <li>biomes.png</li>
           <li>splat3.png</li>
+          <li>radiation.png</li>
           <li>prefabs.xml</li>
         </ul>
       </li>
@@ -91,9 +99,23 @@
         <ul>
           <li>biomes.png</li>
           <li>splat3.png</li>
+          <li>radiation.png</li>
           <li>prefabs.xml</li>
         </ul>
       </div>
     </div>
+    <svg style="display: none">
+      <!-- Filter for radioation.png
+           Red pixels are mapped to semi-transparent red (alpha = 0.3),
+           Black pixels are mapped to completely transparent. -->
+      <filter id="rad_filter">
+        <feColorMatrix
+          type="matrix"
+          values="1   0 0 0 0
+                  0   0 0 0 0
+                  0   0 0 0 0
+                  0.3 0 0 0 0 " />
+      </filte>
+    </svg>
   </body>
 </html>
