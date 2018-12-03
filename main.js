@@ -86,9 +86,9 @@ function main() {
       const x = offsetX + prefab.x;
       // prefab vertical positions are inverted for canvas coodinates
       const y = offsetY - prefab.y;
-      ctx.shadowBlur = 0;
-      ctx.strokeText('✗', x, y);
       ctx.shadowBlur = 20;
+      ctx.strokeText('✗', x, y);
+      ctx.shadowBlur = 0;
       ctx.fillText('✗', x, y);
       // console.log('Prot %o: %f, %f', prefab, x, y);
     });
