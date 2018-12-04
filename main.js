@@ -160,17 +160,29 @@ function main() {
 
   // drag and drop
   let isOverNow = false;
-  document.body.addEventListener('dragenter', () => {
+  document.body.addEventListener('dragenter', (event) => {
+    if (!event.dataTransfer.types.includes('Files')) {
+      return;
+    }
+    event.preventDefault();
     isOverNow = true;
+    document.body.classList.add('dragovered');
   });
   document.body.addEventListener('dragover', (event) => {
+    if (!event.dataTransfer.types.includes('Files')) {
+      return;
+    }
     event.preventDefault();
     /* eslint no-param-reassign: off */
     event.dataTransfer.dropEffect = 'copy';
     isOverNow = false;
     document.body.classList.add('dragovered');
   });
-  document.body.addEventListener('dragleave', () => {
+  document.body.addEventListener('dragleave', (event) => {
+    if (!event.dataTransfer.types.includes('Files')) {
+      return;
+    }
+    event.preventDefault();
     if (isOverNow) {
       isOverNow = false;
     } else {
@@ -178,6 +190,9 @@ function main() {
     }
   });
   document.body.addEventListener('drop', async (event) => {
+    if (!event.dataTransfer.types.includes('Files')) {
+      return;
+    }
     event.preventDefault();
     document.body.classList.remove('dragovered');
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
