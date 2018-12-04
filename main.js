@@ -70,9 +70,10 @@ function main() {
     console.log('update');
   }
 
+  const signChar = '✗';
   function drawPrefabs(ctx) {
     const signSize = signSizeInput.value;
-    ctx.font = `bold ${signSize}px sans-serif`;
+    ctx.font = `${signSize}px sans-serif`;
     ctx.lineWidth = Math.round(signSize * 0.08);
     ctx.strokeStyle = 'white';
     ctx.fillStyle = 'red';
@@ -87,9 +88,9 @@ function main() {
       // prefab vertical positions are inverted for canvas coodinates
       const y = offsetY - prefab.y;
       ctx.shadowBlur = 20;
-      ctx.strokeText('✗', x, y);
+      ctx.strokeText(signChar, x, y);
       ctx.shadowBlur = 0;
-      ctx.fillText('✗', x, y);
+      ctx.fillText(signChar, x, y);
       // console.log('Prot %o: %f, %f', prefab, x, y);
     });
   }
