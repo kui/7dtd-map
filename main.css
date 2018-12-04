@@ -27,6 +27,9 @@ td {
   height: 100%;
   left: 0;
   top: 0;
+  z-index: 1;
+  color: white;
+  font-size: 55px;
 }
 
 .dragovered #overlay {
@@ -35,7 +38,4 @@ td {
 
 #overlay > div {
   margin: auto;
-  color: white;
-  font-size: 55px;
-  z-index: 1;
 }
