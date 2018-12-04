@@ -151,7 +151,7 @@ function main() {
     update();
   });
   [showBiomesInput, showSplat3Input, showRadInput,
-   showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
+    showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
     e.addEventListener('input', update);
   });
   // "scale" input event occur frequently because scale range step are small.
