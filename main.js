@@ -159,14 +159,14 @@ function main() {
   scaleInput.addEventListener('change', update);
 
   // drag and drop
-  document.body.addEventListener('dragenter', (event) => {
+  document.addEventListener('dragenter', (event) => {
     if (!event.dataTransfer.types.includes('Files')) {
       return;
     }
     event.preventDefault();
     document.body.classList.add('dragovered');
   });
-  document.body.addEventListener('dragover', (event) => {
+  document.addEventListener('dragover', (event) => {
     if (!event.dataTransfer.types.includes('Files')) {
       return;
     }
@@ -175,7 +175,7 @@ function main() {
     event.dataTransfer.dropEffect = 'copy';
     document.body.classList.add('dragovered');
   });
-  document.body.addEventListener('dragleave', (event) => {
+  document.addEventListener('dragleave', (event) => {
     // "dragleave" events raise even if the cursor moved on child nodes.
     // To avoid this case, we should confirm cursor positions.
     // Those are zero if the cursor moved out from the browser window.
@@ -185,7 +185,7 @@ function main() {
     event.preventDefault();
     document.body.classList.remove('dragovered');
   });
-  document.body.addEventListener('drop', async (event) => {
+  document.addEventListener('drop', async (event) => {
     if (!event.dataTransfer.types.includes('Files')) {
       return;
     }
