@@ -5,8 +5,8 @@ Map renderer for 7 Day to Die Alpha 17.
 
 * https://kui.github.io/7dtd-map/
 
-Format js:
+Code lint:
 
 ```
-$ npm run format
+$ npm run lint
 ```
