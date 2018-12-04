@@ -4,9 +4,10 @@
   "description": "Map renderer for 7 Days to Die",
   "private": true,
   "scripts": {
-    "lint": "npm run jslint && npm run htmllint",
+    "lint": "npm run jslint && npm run htmllint && npm run csslint",
     "jslint": "eslint **/*.js --fix",
-    "htmllint": "htmlhint"
+    "htmllint": "htmlhint",
+    "csslint": "stylelint **/*.css --fix"
   },
   "author": "Keiichiro UI",
   "license": "MIT",
@@ -14,6 +15,8 @@
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "htmlhint": "^0.10.1"
+    "htmlhint": "^0.10.1",
+    "stylelint": "^9.9.0",
+    "stylelint-config-standard": "^18.2.0"
   }
 }
