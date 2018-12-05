@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import Map from './map.js';
+import Map from './lib/map.js';
 
 function main() {
   const coodWESpan = document.getElementById('cood_we');
