@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Map renderer for 7 Day to Die Alpha 17">
+    <title>7DtD Map Renderer for Alpha 17</title>
+    <script src="main.js" async></script>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href="main.css"></head>
+  <body>
+    <h1>7DtD Map Renderer for Alpha 17</h1>
+    <p><a href="https://github.com/kui/7dtd-map">Github repository</a>. Only supported in latest Google Chrome</p>
+    <fieldset id="controller">
+      <p>E/W: <span id="cood_we">-</span>, N/S: <span id="cood_ns">-</span></p>
+      <button id="download">Download</button>
+      <table>
+        <tr>
+          <th><label for="biomes">biomes.png</label></th>
+          <td>
+            <input id="show_biomes" type="checkbox" checked title="Show biomes.png">
+            <input id="biomes" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="splat3">splat3.png</label></th>
+          <td>
+            <input id="show_splat3" type="checkbox" checked title="Show splat3.png">
+            <input id="splat3" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="radiation">radiation.png</label></th>
+          <td>
+            <input id="show_radiation" type="checkbox" checked title="Show radiation.png">
+            <input id="radiation" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefabs">prefabs.xml</label></th>
+          <td>
+            <input id="show_prefabs" type="checkbox" checked title="Show prefabs">
+            <input id="prefabs" name="prefabs" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="scale">Scale</label></th>
+          <td>
+            <label>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1">
+              <span data-source-input="scale"></span>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="sign_size">Prefab Sign Size</label></th>
+          <td>
+            <input id="sign_size" type="range" max="600" min="80" step="20" value="250">
+            <span data-source-input="sign_size"></span>px
+          </td>
+        </tr>
+        <tr>
+          <th><label for="brightness">Brightness</label></th>
+          <td>
+            <input id="brightness" type="range" max="100" min="0" step="10" value="60">
+            <span data-source-input="brightness"></span>%
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefabs_filter">Prefabs Filter</label></th>
+          <td><input id="prefabs_filter" placeholder="Input a part of prefab name"></td>
+        </tr>
+      </table>
+      <p id="prefabs_filter_presets">
+        Filter Preset:
+        <button>trader</button>
+        <button>skyscraper</button>
+        <button>factory</button>
+        <button data-filter="house_old_gambrel_03">Super Corn</button>
+      </p>
+      <p id="prefabs_num"></p>
+      <div id="prefabs_list"><ul></ul></div>
+    </fieldset>
+    <canvas id="map"></canvas>
+    <ol>
+      <li>Browse local files</li>
+      <li>Select folders: <code>Data</code> → <code>Worlds</code> → Random world name folder</li>
+      <li>Drug and drop world files:
+        <ul>
+          <li>biomes.png</li>
+          <li>splat3.png</li>
+          <li>radiation.png</li>
+          <li>prefabs.xml</li>
+        </ul>
+      </li>
+    </ol>
+    <p>Note: Navezgane are not supported</p>
+    <div id="overlay">
+      <div>
+        <p>Drug and drop world files:</p>
+        <ul>
+          <li>biomes.png</li>
+          <li>splat3.png</li>
+          <li>radiation.png</li>
+          <li>prefabs.xml</li>
+        </ul>
+      </div>
+    </div>
+    <svg style="display: none">
+      <!-- Filter for radioation.png
+           Red pixels are mapped to semi-transparent red (alpha = 0.3),
+           Black pixels are mapped to completely transparent. -->
+      <filter id="rad_filter">
+        <fecolormatrix
+          type="matrix"
+          values="1   0 0 0 0
+                  0   0 0 0 0
+                  0   0 0 0 0
+                  0.3 0 0 0 0 " />
+      </filter>
+    </svg>
+  </body>
+</html>
