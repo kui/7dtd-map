@@ -1,4 +1,7 @@
 /* eslint-env browser */
+
+import Map from './map.js';
+
 function main() {
   const coodWESpan = document.getElementById('cood_we');
   const coodNSSpan = document.getElementById('cood_ns');
@@ -20,79 +23,17 @@ function main() {
   const prefabList = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
 
-  let mapWidth = 0;
-  let mapHeight = 0;
-  let biomesImg;
-  let splat3Img;
-  let radImg;
+  const map = new Map(window, mapCanvas);
+
   let allPrefabs = [];
   let prefabs = [];
 
   // //////////////////////////////////////////////////////////////////////
   // update
   // //////////////////////////////////////////////////////////////////////
-  update();
   function update() {
-    const scale = scaleInput.value;
-
-    mapWidth = Math.max(
-      biomesImg ? biomesImg.width : 0,
-      splat3Img ? splat3Img.width : 0,
-    );
-    mapHeight = Math.max(
-      biomesImg ? biomesImg.height : 0,
-      splat3Img ? splat3Img.height : 0,
-    );
-    mapCanvas.width = mapWidth * scale;
-    mapCanvas.height = mapHeight * scale;
-
     updatePrafabList();
-
-    const context = mapCanvas.getContext('2d');
-    context.scale(scale, scale);
-    context.filter = `brightness(${brightnessInput.value}%)`;
-    if (biomesImg && showBiomesInput.checked) {
-      context.drawImage(biomesImg, 0, 0, mapWidth, mapHeight);
-    }
-    if (splat3Img && showSplat3Input.checked) {
-      context.drawImage(splat3Img, 0, 0, mapWidth, mapHeight);
-    }
-    if (radImg && showRadInput.checked) {
-      context.filter = 'url(#rad_filter)';
-      context.imageSmoothingEnabled = false;
-      context.drawImage(radImg, 0, 0, mapWidth, mapHeight);
-      context.imageSmoothingEnabled = true;
-    }
-    context.filter = 'none';
-    if (showPrefabsInput.checked) {
-      drawPrefabs(context);
-    }
-    console.log('update');
-  }
-
-  const signChar = '✗';
-  function drawPrefabs(ctx) {
-    const signSize = signSizeInput.value;
-    ctx.font = `${signSize}px sans-serif`;
-    ctx.lineWidth = Math.round(signSize * 0.08);
-    ctx.strokeStyle = 'white';
-    ctx.fillStyle = 'red';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'black';
-
-    const offsetX = mapWidth / 2;
-    const offsetY = mapHeight / 2;
-    prefabs.forEach((prefab) => {
-      const x = offsetX + prefab.x;
-      // prefab vertical positions are inverted for canvas coodinates
-      const y = offsetY - prefab.y;
-      ctx.shadowBlur = 20;
-      ctx.strokeText(signChar, x, y);
-      ctx.shadowBlur = 0;
-      ctx.fillText(signChar, x, y);
-      // console.log('Prot %o: %f, %f', prefab, x, y);
-    });
+    map.update();
   }
 
   function updatePrafabList() {
@@ -124,40 +65,53 @@ function main() {
   });
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
-    const newImage = await loadImageFromInput(biomesInput);
-    if (newImage) biomesImg = newImage;
+    map.setBiomes(biomesInput.files[0]);
     update();
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
-    const newImage = await loadImageFromInput(splat3Input);
-    if (newImage) splat3Img = newImage;
+    map.setSplat3(splat3Input.files[0]);
     update();
   });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
-    const newImage = await loadImageFromInput(radInput);
-    if (newImage) radImg = newImage;
+    map.setRad(radInput.files[0]);
     update();
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
     await loadPrefabsFromInput();
     filterPrefabs();
+    map.prefabs = prefabs;
     update();
   });
   prefabsFilterInput.addEventListener('input', () => {
     console.log('Update prefab list');
     filterPrefabs();
+    map.prefabs = prefabs;
     update();
   });
-  [showBiomesInput, showSplat3Input, showRadInput,
-    showPrefabsInput, signSizeInput, brightnessInput].forEach((e) => {
-    e.addEventListener('input', update);
+
+  map.showBiomes = showBiomesInput.checked;
+  map.showSplat3 = showSplat3Input.checked;
+  map.showRad = showRadInput.checked;
+  map.showPrefabs = showPrefabsInput.checked;
+  map.signSize = signSizeInput.value;
+  map.brightness = `${brightnessInput.value}%`;
+  map.scale = scaleInput.value;
+  [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput, signSizeInput, brightnessInput, scaleInput].forEach((e) => {
+    e.addEventListener('input', () => {
+      map.showBiomes = showBiomesInput.checked;
+      map.showSplat3 = showSplat3Input.checked;
+      map.showRad = showRadInput.checked;
+      map.showPrefabs = showPrefabsInput.checked;
+      map.signSize = signSizeInput.value;
+      map.brightness = `${brightnessInput.value}%`;
+      map.scale = scaleInput.value;
+      console.log(map);
+      update();
+    });
   });
-  // "scale" input event occur frequently because scale range step are small.
-  // So change event fires "update" to avoid stuttering.
-  scaleInput.addEventListener('change', update);
 
   // drag and drop
   document.addEventListener('dragenter', (event) => {
@@ -205,8 +159,8 @@ function main() {
 
   // cursor position
   mapCanvas.addEventListener('mousemove', (event) => {
-    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * mapWidth);
-    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * mapHeight);
+    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * map.width);
+    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * map.height);
   });
   mapCanvas.addEventListener('mouseout', () => {
     coodWESpan.textContent = '-';
@@ -218,6 +172,7 @@ function main() {
     button.addEventListener('click', () => {
       prefabsFilterInput.value = button.dataset.filter || button.textContent;
       filterPrefabs();
+      map.prefabs = prefabs;
       update();
     });
   });
@@ -228,21 +183,21 @@ function main() {
       if (file.type !== 'image/png') {
         console.warn('Unexpected biomes.png file type: %s', file.type);
       }
-      biomesImg = await loadImage(file);
+      await map.setBiomes(file);
       biomesInput.value = '';
     } else if (file.name === 'splat3.png') {
       console.log('Load splat3');
       if (file.type !== 'image/png') {
         console.warn('Unexpected splat3.png file type: %s', file.type);
       }
-      splat3Img = await loadImage(file);
+      await map.setSplat3(file);
       splat3Input.value = '';
     } else if (file.name === 'radiation.png') {
       console.log('Load radiation');
       if (file.type !== 'image/png') {
         console.warn('Unexpected splat3.png file type: %s', file.type);
       }
-      radImg = await loadImage(file);
+      await map.setRad(file);
       radInput.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
@@ -251,41 +206,11 @@ function main() {
       }
       await loadPrefabs(file);
       filterPrefabs();
-      splat3Input.value = '';
+      map.prefabs = prefabs;
+      prefabsInput.value = '';
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
-  }
-
-  async function loadImageFromInput(input) {
-    if (input.files.length === 0) {
-      console.log('No file');
-      return null;
-    }
-    return loadImage(input.files[0]);
-  }
-
-  async function loadImage(file) {
-    const dataURL = await loadAsDataURL(file);
-    return loadImageByDataURL(dataURL);
-  }
-
-  async function loadAsDataURL(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function loadImageByDataURL(dataURL) {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.addEventListener('load', () => resolve(image));
-      image.addEventListener('error', reject);
-      image.src = dataURL;
-    });
   }
 
   async function loadPrefabsFromInput() {
@@ -336,6 +261,8 @@ function main() {
     });
     return prefabs;
   }
+
+  update();
 }
 
 if (document.readyState === 'loading') {
