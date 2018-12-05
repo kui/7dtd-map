@@ -17,6 +17,8 @@
     "eslint-plugin-import": "^2.14.0",
     "htmlhint": "^0.10.1",
     "stylelint": "^9.9.0",
-    "stylelint-config-standard": "^18.2.0"
+    "stylelint-config-standard": "^18.2.0",
+    "webpack": "^4.27.0",
+    "webpack-cli": "^3.1.2"
   }
 }
