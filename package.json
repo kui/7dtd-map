@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
+    "dev-server": "webpack-dev-server --mode development",
     "lint": "npm run jslint && npm run htmllint && npm run csslint",
     "jslint": "eslint **/*.js --fix",
     "htmllint": "htmlhint",
@@ -21,6 +22,7 @@
     "stylelint": "^9.9.0",
     "stylelint-config-standard": "^18.2.0",
     "webpack": "^4.27.0",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   }
 }
