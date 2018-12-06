@@ -42,6 +42,7 @@ export default class Map {
   }
 
   updateImmediately() {
+    console.log(this);
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
     const context = this.canvas.getContext('2d');

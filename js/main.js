@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
 import Map from './lib/map';
+import Prefabs from './lib/prefabs';
 
 function main() {
   const coodWESpan = document.getElementById('cood_we');
@@ -19,34 +20,12 @@ function main() {
   const brightnessInput = document.getElementById('brightness');
   const prefabsFilterInput = document.getElementById('prefabs_filter');
   const prefabsFilterPresetsDiv = document.getElementById('prefabs_filter_presets');
-  const prefabsNumSpan = document.getElementById('prefabs_num');
-  const prefabList = document.getElementById('prefabs_list');
+  const prefabsResultSpan = document.getElementById('prefabs_num');
+  const prefabListDiv = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
 
   const map = new Map(window, mapCanvas);
-
-  let allPrefabs = [];
-  let prefabs = [];
-
-  // //////////////////////////////////////////////////////////////////////
-  // update
-  // //////////////////////////////////////////////////////////////////////
-  function updatePrefabList() {
-    if (allPrefabs.length === 0) {
-      prefabsNumSpan.textContent = 'No prefabs';
-    } else if (prefabsFilterInput.value.trim().length === 0) {
-      prefabsNumSpan.textContent = 'All prefabs';
-    } else {
-      prefabsNumSpan.textContent = `Hit ${prefabs.length} prefabs`;
-    }
-    const ul = document.createElement('ul');
-    prefabs.forEach((prefab) => {
-      const li = document.createElement('li');
-      li.textContent = `${prefab.name} (${prefab.x}, ${prefab.y})`;
-      ul.appendChild(li);
-    });
-    prefabList.replaceChild(ul, prefabList.firstChild);
-  }
+  const prefabs = new Prefabs(window, prefabsResultSpan, prefabListDiv);
 
   // ///////////////////////////////////////////////////////////////
   // Fire some events -> Update models -> render models
@@ -54,42 +33,41 @@ function main() {
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
     // update models
-    map.setBiomes(biomesInput.files[0]);
+    await map.setBiomes(biomesInput.files[0]);
     // render models
     map.update();
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
     // update models
-    map.setSplat3(splat3Input.files[0]);
+    await map.setSplat3(splat3Input.files[0]);
     // render models
     map.update();
   });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
     // update models
-    map.setRad(radInput.files[0]);
+    await map.setRad(radInput.files[0]);
     // render models
     map.update();
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
     // update models
-    allPrefabs = await loadPrefabsFromInput();
-    prefabs = filterPrefabs();
-    map.prefabs = prefabs;
+    await prefabs.setFile(prefabsInput.files[0]);
+    map.prefabs = prefabs.filtered;
     // render models
     map.update();
-    updatePrefabList();
+    prefabs.update();
   });
   prefabsFilterInput.addEventListener('input', () => {
     console.log('Update prefab list');
     // update models
-    prefabs = filterPrefabs();
-    map.prefabs = prefabs;
+    prefabs.setFilterString(prefabsFilterInput.value);
+    map.prefabs = prefabs.filtered;
     // render models
     map.update();
-    updatePrefabList();
+    prefabs.update();
   });
 
   map.showSplat3 = showSplat3Input.checked;
@@ -149,7 +127,7 @@ function main() {
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
     // render models
     map.update();
-    updatePrefabList();
+    prefabs.update();
   });
 
   // presets
@@ -157,11 +135,11 @@ function main() {
     button.addEventListener('click', () => {
       prefabsFilterInput.value = button.dataset.filter || button.textContent;
       // update models
-      prefabs = filterPrefabs();
-      map.prefabs = prefabs;
+      prefabs.setFilterString(prefabsFilterInput.value);
+      map.prefabs = prefabs.filtered;
       // render models
       map.update();
-      updatePrefabList();
+      prefabs.update();
     });
   });
 
@@ -218,67 +196,17 @@ function main() {
       if (file.type !== 'text/xml') {
         console.warn('Unexpected prefabs.xml file type: %s', file.type);
       }
-      allPrefabs = await loadPrefabs(file);
-      prefabs = filterPrefabs();
-      map.prefabs = prefabs;
+      await prefabs.setFile(file);
+      map.prefabs = prefabs.filtered;
       prefabsInput.value = '';
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
   }
 
-  async function loadPrefabsFromInput() {
-    if (prefabsInput.files.length === 0) {
-      console.log('No file');
-      return [];
-    }
-    return loadPrefabs(prefabsInput.files[0]);
-  }
-
-  async function loadPrefabs(file) {
-    const xml = await loadAsText(file);
-    if (!xml) return [];
-    const dom = (new DOMParser()).parseFromString(xml, 'text/xml');
-    return Array.from(dom.getElementsByTagName('decoration'))
-      .map((e) => {
-        const position = e.getAttribute('position').split(',');
-        return {
-          name: e.getAttribute('name'),
-          x: parseInt(position[0], 10),
-          y: parseInt(position[2], 10),
-        };
-      });
-  }
-
-  async function loadAsText(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => resolve(reader.result);
-      reader.readAsText(file);
-    });
-  }
-
-  function filterPrefabs() {
-    const filterString = prefabsFilterInput.value.trim();
-    let newPrefabs;
-    if (!filterString) {
-      newPrefabs = allPrefabs;
-    } else {
-      newPrefabs = allPrefabs.filter(p => p.name.includes(filterString));
-    }
-
-    newPrefabs.sort((a, b) => {
-      if (a.name > b.name) return 1;
-      if (a.name < b.name) return -1;
-      return 0;
-    });
-    return newPrefabs;
-  }
-
   // init
   map.update();
-  updatePrefabList();
+  prefabs.update();
 }
 
 if (document.readyState === 'loading') {
