@@ -31,12 +31,7 @@ function main() {
   // //////////////////////////////////////////////////////////////////////
   // update
   // //////////////////////////////////////////////////////////////////////
-  function update() {
-    updatePrafabList();
-    map.update();
-  }
-
-  function updatePrafabList() {
+  function updatePrefabList() {
     if (allPrefabs.length === 0) {
       prefabsNumSpan.textContent = 'No prefabs';
     } else if (prefabsFilterInput.value.trim().length === 0) {
@@ -53,46 +48,50 @@ function main() {
     prefabList.replaceChild(ul, prefabList.firstChild);
   }
 
-  // //////////////////////////////////////////////////////////////////////
-  // load and update firing
-  // //////////////////////////////////////////////////////////////////////
-  downloadButton.addEventListener('click', () => {
-    const a = document.createElement('a');
-    a.href = mapCanvas.toDataURL('image/png');
-    const filterSuffix = prefabsFilterInput.value ? `-${prefabsFilterInput.value}` : '';
-    a.download = `7DtD-renderer${filterSuffix}.png`;
-    a.click();
-  });
+  // ///////////////////////////////////////////////////////////////
+  // Fire some events -> Update models -> render models
+  // ///////////////////////////////////////////////////////////////
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
+    // update models
     map.setBiomes(biomesInput.files[0]);
-    update();
+    // render models
+    map.update();
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
+    // update models
     map.setSplat3(splat3Input.files[0]);
-    update();
+    // render models
+    map.update();
   });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
+    // update models
     map.setRad(radInput.files[0]);
-    update();
+    // render models
+    map.update();
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
-    await loadPrefabsFromInput();
-    filterPrefabs();
+    // update models
+    allPrefabs = await loadPrefabsFromInput();
+    prefabs = filterPrefabs();
     map.prefabs = prefabs;
-    update();
+    // render models
+    map.update();
+    updatePrefabList();
   });
   prefabsFilterInput.addEventListener('input', () => {
     console.log('Update prefab list');
-    filterPrefabs();
+    // update models
+    prefabs = filterPrefabs();
     map.prefabs = prefabs;
-    update();
+    // render models
+    map.update();
+    updatePrefabList();
   });
 
-  map.showBiomes = showBiomesInput.checked;
   map.showSplat3 = showSplat3Input.checked;
   map.showRad = showRadInput.checked;
   map.showPrefabs = showPrefabsInput.checked;
@@ -109,8 +108,7 @@ function main() {
       map.signSize = signSizeInput.value;
       map.brightness = `${brightnessInput.value}%`;
       map.scale = scaleInput.value;
-      console.log(map);
-      update();
+      map.update();
     });
   });
 
@@ -147,8 +145,24 @@ function main() {
     }
     event.preventDefault();
     document.body.classList.remove('dragovered');
+    // update models
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
-    update();
+    // render models
+    map.update();
+    updatePrefabList();
+  });
+
+  // presets
+  Array.from(prefabsFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
+    button.addEventListener('click', () => {
+      prefabsFilterInput.value = button.dataset.filter || button.textContent;
+      // update models
+      prefabs = filterPrefabs();
+      map.prefabs = prefabs;
+      // render models
+      map.update();
+      updatePrefabList();
+    });
   });
 
   // range value display
@@ -168,14 +182,13 @@ function main() {
     coodNSSpan.textContent = '-';
   });
 
-  // presets
-  Array.from(prefabsFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
-    button.addEventListener('click', () => {
-      prefabsFilterInput.value = button.dataset.filter || button.textContent;
-      filterPrefabs();
-      map.prefabs = prefabs;
-      update();
-    });
+  // download
+  downloadButton.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = mapCanvas.toDataURL('image/png');
+    const filterSuffix = prefabsFilterInput.value ? `-${prefabsFilterInput.value}` : '';
+    a.download = `7DtD-renderer${filterSuffix}.png`;
+    a.click();
   });
 
   async function handleDroppedFiles(file) {
@@ -205,8 +218,8 @@ function main() {
       if (file.type !== 'text/xml') {
         console.warn('Unexpected prefabs.xml file type: %s', file.type);
       }
-      await loadPrefabs(file);
-      filterPrefabs();
+      allPrefabs = await loadPrefabs(file);
+      prefabs = filterPrefabs();
       map.prefabs = prefabs;
       prefabsInput.value = '';
     } else {
@@ -217,17 +230,16 @@ function main() {
   async function loadPrefabsFromInput() {
     if (prefabsInput.files.length === 0) {
       console.log('No file');
-      allPrefabs = [];
-      return;
+      return [];
     }
-    await loadPrefabs(prefabsInput.files[0]);
+    return loadPrefabs(prefabsInput.files[0]);
   }
 
   async function loadPrefabs(file) {
     const xml = await loadAsText(file);
-    if (!xml) return;
+    if (!xml) return [];
     const dom = (new DOMParser()).parseFromString(xml, 'text/xml');
-    allPrefabs = Array.from(dom.getElementsByTagName('decoration'))
+    return Array.from(dom.getElementsByTagName('decoration'))
       .map((e) => {
         const position = e.getAttribute('position').split(',');
         return {
@@ -249,21 +261,24 @@ function main() {
 
   function filterPrefabs() {
     const filterString = prefabsFilterInput.value.trim();
+    let newPrefabs;
     if (!filterString) {
-      prefabs = allPrefabs;
+      newPrefabs = allPrefabs;
     } else {
-      prefabs = allPrefabs.filter(p => p.name.includes(filterString));
+      newPrefabs = allPrefabs.filter(p => p.name.includes(filterString));
     }
 
-    prefabs.sort((a, b) => {
+    newPrefabs.sort((a, b) => {
       if (a.name > b.name) return 1;
       if (a.name < b.name) return -1;
       return 0;
     });
-    return prefabs;
+    return newPrefabs;
   }
 
-  update();
+  // init
+  map.update();
+  updatePrefabList();
 }
 
 if (document.readyState === 'loading') {
