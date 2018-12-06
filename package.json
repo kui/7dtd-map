@@ -7,9 +7,9 @@
     "build": "webpack --mode production",
     "dev-server": "webpack-dev-server --mode development --content-base docs",
     "lint": "npm run jslint && npm run htmllint && npm run csslint",
-    "jslint": "eslint **/*.js --fix",
-    "htmllint": "htmlhint",
-    "csslint": "stylelint **/*.css --fix"
+    "jslint": "eslint js/**/*.js --fix",
+    "htmllint": "htmlhint docs/**/*.html",
+    "csslint": "stylelint docs/**/*.css --fix"
   },
   "author": "Keiichiro UI",
   "license": "MIT",
