@@ -110,7 +110,8 @@ function drawPrefabs(map, ctx) {
 async function loadImage(map, file) {
   if (!file) return null;
   const dataURL = await loadDataURL(map, file);
-  return loadImageByDataURL(map, dataURL);
+  const image = await loadImageByDataURL(map, dataURL);
+  return map.window.createImageBitmap(image);
 }
 
 async function loadDataURL(map, file) {
