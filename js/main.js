@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import Map from './lib/map.js';
+import Map from './lib/map';
 
 function main() {
   const coodWESpan = document.getElementById('cood_we');
@@ -99,7 +99,8 @@ function main() {
   map.signSize = signSizeInput.value;
   map.brightness = `${brightnessInput.value}%`;
   map.scale = scaleInput.value;
-  [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput, signSizeInput, brightnessInput, scaleInput].forEach((e) => {
+  [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
+    signSizeInput, brightnessInput, scaleInput].forEach((e) => {
     e.addEventListener('input', () => {
       map.showBiomes = showBiomesInput.checked;
       map.showSplat3 = showSplat3Input.checked;
