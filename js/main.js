@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import Map from './lib/map';
+import loadBitmap from './lib/bitmap_loader';
 import Prefabs from './lib/prefabs';
 
 function main() {
@@ -24,7 +24,10 @@ function main() {
   const prefabListDiv = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
 
-  const map = new Map(window, mapCanvas);
+  const mapRendererWorker = new Worker('map_renderer.js');
+  const rendererCanvas = mapCanvas.transferControlToOffscreen();
+  mapRendererWorker.postMessage({ canvas: rendererCanvas }, [rendererCanvas]);
+
   const prefabs = new Prefabs(window, prefabsResultSpan, prefabListDiv);
 
   // ///////////////////////////////////////////////////////////////
@@ -32,61 +35,56 @@ function main() {
   // ///////////////////////////////////////////////////////////////
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
-    // update models
-    await map.setBiomes(biomesInput.files[0]);
-    // render models
-    map.update();
+    const biomesImg = await loadBitmap(window, biomesInput.files[0]);
+    if (!biomesImg) return;
+    mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
-    // update models
-    await map.setSplat3(splat3Input.files[0]);
-    // render models
-    map.update();
+    const splat3Img = await loadBitmap(window, splat3Input.files[0]);
+    if (!splat3Img) return;
+    mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
   });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
-    // update models
-    await map.setRad(radInput.files[0]);
-    // render models
-    map.update();
+    const radImg = await loadBitmap(window, radInput.files[0]);
+    if (!radImg) return;
+    mapRendererWorker.postMessage({ radImg }, [radImg]);
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
     // update models
     await prefabs.setFile(prefabsInput.files[0]);
-    map.prefabs = prefabs.filtered;
-    // render models
-    map.update();
+    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
     prefabs.update();
   });
   prefabsFilterInput.addEventListener('input', () => {
     console.log('Update prefab list');
     // update models
     prefabs.setFilterString(prefabsFilterInput.value);
-    map.prefabs = prefabs.filtered;
-    // render models
-    map.update();
+    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
     prefabs.update();
   });
 
-  map.showSplat3 = showSplat3Input.checked;
-  map.showRad = showRadInput.checked;
-  map.showPrefabs = showPrefabsInput.checked;
-  map.signSize = signSizeInput.value;
-  map.brightness = `${brightnessInput.value}%`;
-  map.scale = scaleInput.value;
+  mapRendererWorker.postMessage({
+    showSplat3: showSplat3Input.checked,
+    showRad: showRadInput.checked,
+    showPrefabs: showPrefabsInput.checked,
+    signSize: signSizeInput.value,
+    brightness: `${brightnessInput.value}%`,
+    scale: scaleInput.value,
+  });
   [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
     signSizeInput, brightnessInput, scaleInput].forEach((e) => {
     e.addEventListener('input', () => {
-      map.showBiomes = showBiomesInput.checked;
-      map.showSplat3 = showSplat3Input.checked;
-      map.showRad = showRadInput.checked;
-      map.showPrefabs = showPrefabsInput.checked;
-      map.signSize = signSizeInput.value;
-      map.brightness = `${brightnessInput.value}%`;
-      map.scale = scaleInput.value;
-      map.update();
+      mapRendererWorker.postMessage({
+        showSplat3: showSplat3Input.checked,
+        showRad: showRadInput.checked,
+        showPrefabs: showPrefabsInput.checked,
+        signSize: signSizeInput.value,
+        brightness: `${brightnessInput.value}%`,
+        scale: scaleInput.value,
+      });
     });
   });
 
@@ -126,7 +124,6 @@ function main() {
     // update models
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
     // render models
-    map.update();
     prefabs.update();
   });
 
@@ -136,9 +133,7 @@ function main() {
       prefabsFilterInput.value = button.dataset.filter || button.textContent;
       // update models
       prefabs.setFilterString(prefabsFilterInput.value);
-      map.prefabs = prefabs.filtered;
-      // render models
-      map.update();
+      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabs.update();
     });
   });
@@ -151,9 +146,15 @@ function main() {
   });
 
   // cursor position
+  let mapSizes = { width: 0, height: 0 };
+  mapRendererWorker.addEventListener('message', (event) => {
+    if (event.data.mapSizes) {
+      ({ mapSizes } = event.data);
+    }
+  });
   mapCanvas.addEventListener('mousemove', (event) => {
-    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * map.width);
-    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * map.height);
+    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * mapSizes.width);
+    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * mapSizes.height);
   });
   mapCanvas.addEventListener('mouseout', () => {
     coodWESpan.textContent = '-';
@@ -172,40 +173,47 @@ function main() {
   async function handleDroppedFiles(file) {
     if (file.name === 'biomes.png') {
       console.log('Load biome');
-      if (file.type !== 'image/png') {
-        console.warn('Unexpected biomes.png file type: %s', file.type);
-      }
-      await map.setBiomes(file);
+      const biomesImg = await loadBitmap(window, file);
+      mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
       biomesInput.value = '';
     } else if (file.name === 'splat3.png') {
       console.log('Load splat3');
-      if (file.type !== 'image/png') {
-        console.warn('Unexpected splat3.png file type: %s', file.type);
-      }
-      await map.setSplat3(file);
+      const splat3Img = await loadBitmap(window, file);
+      mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
       splat3Input.value = '';
     } else if (file.name === 'radiation.png') {
       console.log('Load radiation');
-      if (file.type !== 'image/png') {
-        console.warn('Unexpected splat3.png file type: %s', file.type);
-      }
-      await map.setRad(file);
+      const radImg = await loadRadImage(window, file);
+      mapRendererWorker.postMessage({ radImg }, [radImg]);
       radInput.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
-      if (file.type !== 'text/xml') {
-        console.warn('Unexpected prefabs.xml file type: %s', file.type);
-      }
       await prefabs.setFile(file);
-      map.prefabs = prefabs.filtered;
+      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabsInput.value = '';
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
   }
 
+  async function loadRadImage(window, file) {
+    const orig = await loadBitmap(window, file);
+    return filterRad(window, orig);
+  }
+
+  async function filterRad(window, orig) {
+    // We cannot use OffscreenCanvas with url() filter.
+    // So, instead of it, un-rendering canvas element is used.
+    const canvas = window.document.createElement('canvas');
+    canvas.width = orig.width;
+    canvas.height = orig.height;
+    const context = canvas.getContext('2d');
+    context.filter = 'url("#rad_filter")';
+    context.drawImage(orig, 0, 0);
+    return window.createImageBitmap(canvas);
+  }
+
   // init
-  map.update();
   prefabs.update();
 }
 
