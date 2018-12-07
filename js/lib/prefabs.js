@@ -1,8 +1,6 @@
 import prefabBlock from './prefab-block-index';
 
-const prefabBlockIndex = prefabBlock.reduce((o, p) => {
-  return Object.assign(o, { [p.name]: p.blocks });
-}, {});
+const prefabBlockIndex = prefabBlock.reduce((o, p) => Object.assign(o, { [p.name]: p.blocks }), {});
 
 export default class Prefabs {
   constructor(window, resultSpan, listDiv) {

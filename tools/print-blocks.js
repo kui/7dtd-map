@@ -13,6 +13,7 @@ async function main() {
   (await parseNim(process.argv[2])).forEach((b) => {
     console.log(b);
   });
+  return 0;
 }
 
 main().then((exitCode) => {

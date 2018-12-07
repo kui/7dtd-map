@@ -9,7 +9,8 @@ module.exports = async function parseNim(nimFileName) {
   let firstDigit = null;
   let skipBytes = nimInitOffset;
   function handleByte(byte) {
-    // console.log('16: %s, 10: %s, c: %s', Number(byte).toString(16), byte, String.fromCharCode(byte));
+    // console.log('16: %s, 10: %s, c: %s', Number(byte).toString(16),
+    // byte, String.fromCharCode(byte));
     if (skipBytes !== 0) {
       skipBytes -= 1;
     } else if (buffer) {
