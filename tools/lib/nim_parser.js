@@ -1,38 +1,54 @@
 const fs = require('fs');
 
-const nimInitOffset = 12;
-const nimUnknownPadding = 4;
+const nimInitOffset = 11;
 
 module.exports = async function parseNim(nimFileName) {
   const blocks = [];
-  let currentIndex = 0;
   let buffer;
   let bufferIndex;
-  let nextIndex = nimInitOffset;
+  let firstDigit = null;
+  let skipBytes = nimInitOffset;
   function handleByte(byte) {
-    if (buffer) {
+    // console.log('16: %s, 10: %s, c: %s', Number(byte).toString(16), byte, String.fromCharCode(byte));
+    if (skipBytes !== 0) {
+      skipBytes -= 1;
+    } else if (buffer) {
+      // console.log('pick as a char of block name: %s', String.fromCharCode(byte));
       // read block name chars
       buffer[bufferIndex] = byte;
       if (bufferIndex + 1 < buffer.length) {
         bufferIndex += 1;
-        nextIndex += 1;
       } else {
-        blocks.push(buffer.toString());
+        // console.log('add block name: %s', buffer.toString());
+        const blockName = buffer.toString();
+        if (!blocks.includes(blockName)) {
+          blocks.push(blockName);
+        }
         buffer = null;
-        nextIndex += nimUnknownPadding + 1;
+        skipBytes = 2;
       }
-    } else if (currentIndex === nextIndex) {
+    } else if (firstDigit === null) {
+      // console.log('register first digit');
+      firstDigit = byte;
+    } else if (firstDigit === 0 && byte === 0) {
+      // noop
+    } else if (firstDigit === 0 && byte > 1) {
+      // console.log('pick name length: %d', byte);
       // read block name length
       buffer = Buffer.allocUnsafe(byte);
       bufferIndex = 0;
-      nextIndex += 1;
+      firstDigit = null;
+    } else {
+      firstDigit = null;
     }
-    currentIndex += 1;
   }
   const stream = fs.createReadStream(nimFileName);
   return new Promise((resolve, reject) => {
     stream.on('data', data => data.forEach(handleByte));
-    stream.on('close', () => resolve(blocks));
+    stream.on('close', () => {
+      if (buffer) console.error('Unexpected state: %s', nimFileName);
+      resolve(blocks);
+    });
     stream.on('error', reject);
   });
 };
