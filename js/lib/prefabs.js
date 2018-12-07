@@ -1,8 +1,7 @@
 import prefabBlock from './prefab-block-index';
 
 const prefabBlockIndex = prefabBlock.reduce((o, p) => {
-  const blocks = p.blocks.map(b => b.toLowerCase());
-  return Object.assign(o, { [p.name]: blocks });
+  return Object.assign(o, { [p.name]: p.blocks });
 }, {});
 
 export default class Prefabs {
@@ -57,16 +56,34 @@ export default class Prefabs {
     if (filterString.length <= 1) {
       this.filtered = this.all;
     } else {
+      const cache = {};
       this.filtered = this.all.filter((p) => {
+        const cachedValue = cache[p.name];
+
+        // cache hit
+        if (cachedValue) {
+          console.log('cache hit: %s, %o', p.name, cachedValue);
+          if (cachedValue.length === 0) {
+            return false;
+          }
+          Object.assign(p, { matchedBlocks: cachedValue });
+          return true;
+        }
+
+        // cache miss
         const allBlocks = prefabBlockIndex[p.name];
         if (!allBlocks) {
+          console.log('Unknown prefab name: %s', p.name);
+          cache[p.name] = [];
           return false;
         }
-        const matchedBlocks = allBlocks.filter(b => b.includes(filter));
+        const matchedBlocks = allBlocks.filter(b => b.toLowerCase().includes(filter));
         if (matchedBlocks.length === 0) {
+          cache[p.name] = [];
           return false;
         }
         Object.assign(p, { matchedBlocks });
+        cache[p.name] = matchedBlocks;
         return true;
       });
     }
