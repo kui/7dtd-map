@@ -70,17 +70,19 @@ function main() {
     mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
     prefabs.update();
   });
-  prefabsFilterInput.addEventListener('input', () => {
-    console.log('Update prefab list');
-    prefabs.setPrefabsFilterString(prefabsFilterInput.value);
-    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-    prefabs.update();
-  });
-  blocksFilterInput.addEventListener('input', () => {
-    console.log('Update prefab list');
-    prefabs.setBlocksFilterString(blocksFilterInput.value);
-    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-    prefabs.update();
+  ['input', 'focus'].forEach((eventName) => {
+    prefabsFilterInput.addEventListener(eventName, () => {
+      console.log('Update prefab list');
+      prefabs.setPrefabsFilterString(prefabsFilterInput.value);
+      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+      prefabs.update();
+    });
+    blocksFilterInput.addEventListener(eventName, () => {
+      console.log('Update prefab list');
+      prefabs.setBlocksFilterString(blocksFilterInput.value);
+      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+      prefabs.update();
+    });
   });
   [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
     signSizeInput, brightnessInput, scaleInput].forEach((e) => {
@@ -164,21 +166,15 @@ function main() {
   // -------------------------------------------------
 
   // filter input appearance
-  prefabsFilterInput.addEventListener('focus', () => {
-    document.body.classList.remove('disable-prefabs-filter');
-    document.body.classList.add('disable-blocks-filter');
-  });
-  blocksFilterInput.addEventListener('focus', () => {
-    document.body.classList.remove('disable-blocks-filter');
-    document.body.classList.add('disable-prefabs-filter');
-  });
-  prefabsFilterInput.addEventListener('input', () => {
-    document.body.classList.remove('disable-prefabs-filter');
-    document.body.classList.add('disable-blocks-filter');
-  });
-  blocksFilterInput.addEventListener('input', () => {
-    document.body.classList.remove('disable-blocks-filter');
-    document.body.classList.add('disable-prefabs-filter');
+  ['input', 'focus'].forEach((eventName) => {
+    prefabsFilterInput.addEventListener(eventName, () => {
+      document.body.classList.remove('disable-prefabs-filter');
+      document.body.classList.add('disable-blocks-filter');
+    });
+    blocksFilterInput.addEventListener(eventName, () => {
+      document.body.classList.remove('disable-blocks-filter');
+      document.body.classList.add('disable-prefabs-filter');
+    });
   });
 
   // drag and drop
