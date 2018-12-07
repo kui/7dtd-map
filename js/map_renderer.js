@@ -1,4 +1,5 @@
 /* eslint-env worker */
+/* eslint no-restricted-globals: 1 */
 
 import Map from './lib/map';
 
