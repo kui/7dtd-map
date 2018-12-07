@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import loadBitmap from './lib/bitmap_loader';
+import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap_loader';
 import Prefabs from './lib/prefabs';
 
 function main() {
@@ -25,6 +25,7 @@ function main() {
   const prefabsResultSpan = document.getElementById('prefabs_num');
   const prefabListDiv = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
+  const sampleLoadButton = document.getElementById('sample_load');
 
   const mapRendererWorker = new Worker('map_renderer.js');
   const prefabs = new Prefabs(window, prefabsResultSpan, prefabListDiv);
@@ -48,25 +49,25 @@ function main() {
   // inputs
   biomesInput.addEventListener('input', async () => {
     console.log('Load biome');
-    const biomesImg = await loadBitmap(window, biomesInput.files[0]);
+    const biomesImg = await loadBitmapByFile(window, biomesInput.files[0]);
     if (!biomesImg) return;
     mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
   });
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
-    const splat3Img = await loadBitmap(window, splat3Input.files[0]);
+    const splat3Img = await loadBitmapByFile(window, splat3Input.files[0]);
     if (!splat3Img) return;
     mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
   });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
-    const radImg = await loadBitmap(window, radInput.files[0]);
+    const radImg = await loadRadBitmapByFile(window, radInput.files[0]);
     if (!radImg) return;
     mapRendererWorker.postMessage({ radImg }, [radImg]);
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
-    await prefabs.setFile(prefabsInput.files[0]);
+    await prefabs.setByFile(prefabsInput.files[0]);
     mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
     prefabs.update();
   });
@@ -122,6 +123,30 @@ function main() {
       blocksFilterInput.dispatchEvent(new Event('input'));
     });
   });
+
+  // sample load
+  sampleLoadButton.addEventListener('click', () => {
+    Promise.all([
+      loadBitmapByUrl(window, 'sample_world/biomes.png'),
+      loadBitmapByUrl(window, 'sample_world/splat3.png'),
+      loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
+    ]).then(([biomesImg, splat3Img, radImg]) => {
+      mapRendererWorker.postMessage(
+        { biomesImg, splat3Img, radImg },
+        [biomesImg, splat3Img, radImg],
+      );
+    });
+    prefabs
+      .setByUrl('sample_world/prefabs.xml')
+      .then(() => {
+        mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+        prefabs.update();
+      });
+  });
+
+  // -------------------------------------------------
+  // other model updates
+  // -------------------------------------------------
 
   // range value display
   Array.from(document.querySelectorAll('[data-source-input')).forEach((display) => {
@@ -219,22 +244,22 @@ function main() {
   async function handleDroppedFiles(file) {
     if (file.name === 'biomes.png') {
       console.log('Load biome');
-      const biomesImg = await loadBitmap(window, file);
+      const biomesImg = await loadBitmapByFile(window, file);
       mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
       biomesInput.value = '';
     } else if (file.name === 'splat3.png') {
       console.log('Load splat3');
-      const splat3Img = await loadBitmap(window, file);
+      const splat3Img = await loadBitmapByFile(window, file);
       mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
       splat3Input.value = '';
     } else if (file.name === 'radiation.png') {
       console.log('Load radiation');
-      const radImg = await loadRadImage(window, file);
+      const radImg = await loadRadBitmapByFile(window, file);
       mapRendererWorker.postMessage({ radImg }, [radImg]);
       radInput.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
-      await prefabs.setFile(file);
+      await prefabs.setByFile(file);
       mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabsInput.value = '';
     } else {
@@ -242,8 +267,13 @@ function main() {
     }
   }
 
-  async function loadRadImage(window, file) {
-    const orig = await loadBitmap(window, file);
+  async function loadRadBitmapByFile(window, file) {
+    const orig = await loadBitmapByFile(window, file);
+    return filterRad(window, orig);
+  }
+
+  async function loadRadBitmapByUrl(window, url) {
+    const orig = await loadBitmapByUrl(window, url);
     return filterRad(window, orig);
   }
 

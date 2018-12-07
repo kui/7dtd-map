@@ -49,13 +49,14 @@ export default class Prefabs {
     this.sort();
   }
 
-  async setFile(file) {
-    this.all = await loadPrefabs(this.window, file);
-    if (this.blocksFilterString.length > 0) {
-      this.setBlocksFilterString(this.blocksFilterString);
-    } else {
-      this.setPrefabsFilterString(this.prefabsFilterString);
-    }
+  async setByFile(file) {
+    this.all = await loadByFile(this.window, file);
+    applyFilter(this);
+  }
+
+  async setByUrl(url) {
+    this.all = await loadByUrl(this.window, url);
+    applyFilter(this);
   }
 
   sort() {
@@ -67,6 +68,14 @@ export default class Prefabs {
   }
 }
 
+function applyFilter(prefabs) {
+  if (prefabs.blocksFilterString.length > 0) {
+    prefabs.setBlocksFilterString(prefabs.blocksFilterString);
+  } else {
+    prefabs.setPrefabsFilterString(prefabs.prefabsFilterString);
+  }
+}
+
 function hasBlockString(prefabName, blockString) {
   const blocks = prefabBlockIndex[prefabName];
   if (!blocks) {
@@ -75,10 +84,21 @@ function hasBlockString(prefabName, blockString) {
   return blocks.some(b => b.includes(blockString));
 }
 
-async function loadPrefabs(window, file) {
+
+async function loadByUrl(window, url) {
+  if (!url) return [];
+  const response = await window.fetch(url);
+  const xml = await response.text();
+  return parse(window, xml);
+}
+
+async function loadByFile(window, file) {
   if (!file) return [];
   const xml = await loadAsText(window, file);
-  if (!xml) return [];
+  return parse(window, xml);
+}
+
+function parse(window, xml) {
   const dom = (new window.DOMParser()).parseFromString(xml, 'text/xml');
   return Array.from(dom.getElementsByTagName('decoration'))
     .map((e) => {
