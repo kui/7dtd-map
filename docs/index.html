@@ -67,16 +67,29 @@
         </tr>
         <tr>
           <th><label for="prefabs_filter">Prefabs Filter</label></th>
-          <td><input id="prefabs_filter" placeholder="Input a part of prefab name"></td>
+          <td><input id="prefabs_filter" placeholder="Input prefab name"></td>
+        </tr>
+        <tr>
+          <th>Prefabs Preset</th>
+          <td id="prefabs_filter_presets">
+            <button>trader</button>
+            <button>skyscraper</button>
+            <button>factory</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="blocks_filter">Blocks Filter</label></th>
+          <td><input id="blocks_filter" placeholder="Input block name"></td>
+        </tr>
+        <tr>
+          <th>Blocks Preset</th>
+          <td id="blocks_filter_presets">
+            <button>forge</button>
+            <button>workbench</button>
+            <button data-filter="GraceCorn">Super Corn</button>
+          </td>
         </tr>
       </table>
-      <p id="prefabs_filter_presets">
-        Filter Preset:
-        <button>trader</button>
-        <button>skyscraper</button>
-        <button>factory</button>
-        <button data-filter="house_old_gambrel_03">Super Corn</button>
-      </p>
       <p id="prefabs_num"></p>
       <div id="prefabs_list"><ul></ul></div>
     </fieldset>

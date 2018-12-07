@@ -23,6 +23,16 @@ td {
   border-bottom: 1px lightgray solid;
 }
 
+.disable-prefabs-filter [for="prefabs_filter"],
+.disable-prefabs-filter #prefabs_filter {
+  text-decoration: line-through;
+}
+
+.disable-blocks-filter [for="blocks_filter"],
+.disable-blocks-filter #blocks_filter {
+  text-decoration: line-through;
+}
+
 #overlay {
   display: none;
   background-color: rgba(0, 0, 0, 0.8);

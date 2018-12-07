@@ -1,9 +1,17 @@
+import prefabBlock from './prefab-block-index';
+
+const prefabBlockIndex = prefabBlock.reduce((o, p) => {
+  const blocks = p.blocks.map(b => b.toLowerCase());
+  return Object.assign(o, { [p.name]: blocks });
+}, {});
+
 export default class Prefabs {
   constructor(window, resultSpan, listDiv) {
     this.window = window;
     this.all = [];
     this.filtered = [];
-    this.filterString = '';
+    this.prefabsFilterString = '';
+    this.blocksFilterString = '';
     this.resultSpan = resultSpan;
     this.listDiv = listDiv;
   }
@@ -11,7 +19,7 @@ export default class Prefabs {
   update() {
     if (this.all.length === 0) {
       this.resultSpan.textContent = 'No prefabs';
-    } else if (this.filterString.trim().length === 0) {
+    } else if (this.filtered.length === this.all.length) {
       this.resultSpan.textContent = 'All prefabs';
     } else {
       this.resultSpan.textContent = `Hit ${this.filtered.length} prefabs`;
@@ -25,24 +33,46 @@ export default class Prefabs {
     this.listDiv.replaceChild(ul, this.listDiv.firstChild);
   }
 
-  setFilterString(filterString) {
-    this.filterString = filterString;
-    if (!filterString) {
-      this.filtered = this.all;
+  setPrefabsFilterString(filterString) {
+    this.prefabsFilterString = filterString.trim();
+    this.blocksFilterString = '';
+    const filter = this.prefabsFilterString.toLowerCase();
+    this.filtered = this.all.filter(p => p.name.toLowerCase().includes(filter));
+    this.sort();
+  }
+
+  setBlocksFilterString(filterString) {
+    this.blocksFilterString = filterString.trim();
+    this.prefabsFilterString = '';
+    const filter = this.blocksFilterString.toLowerCase();
+    this.filtered = this.all.filter(p => hasBlockString(p.name, filter));
+    this.sort();
+  }
+
+  async setFile(file) {
+    this.all = await loadPrefabs(this.window, file);
+    if (this.blocksFilterString.length > 0) {
+      this.setBlocksFilterString(this.blocksFilterString);
     } else {
-      this.filtered = this.all.filter(p => p.name.includes(filterString));
+      this.setPrefabsFilterString(this.prefabsFilterString);
     }
+  }
+
+  sort() {
     this.filtered.sort((a, b) => {
       if (a.name > b.name) return 1;
       if (a.name < b.name) return -1;
       return 0;
     });
   }
+}
 
-  async setFile(file) {
-    this.all = await loadPrefabs(this.window, file);
-    this.setFilterString(this.filterString);
+function hasBlockString(prefabName, blockString) {
+  const blocks = prefabBlockIndex[prefabName];
+  if (!blocks) {
+    return false;
   }
+  return blocks.some(b => b.includes(blockString));
 }
 
 async function loadPrefabs(window, file) {
