@@ -28,6 +28,15 @@ export default class Prefabs {
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
       li.textContent = `${prefab.name} (${prefab.x}, ${prefab.y})`;
+      if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
+        const blocksUl = this.window.document.createElement('ul');
+        prefab.matchedBlocks.forEach((b) => {
+          const blockLi = this.window.document.createElement('li');
+          blockLi.textContent = b;
+          blocksUl.appendChild(blockLi);
+        });
+        li.appendChild(blocksUl);
+      }
       ul.appendChild(li);
     });
     this.listDiv.replaceChild(ul, this.listDiv.firstChild);
@@ -45,7 +54,22 @@ export default class Prefabs {
     this.blocksFilterString = filterString.trim();
     this.prefabsFilterString = '';
     const filter = this.blocksFilterString.toLowerCase();
-    this.filtered = this.all.filter(p => hasBlockString(p.name, filter));
+    if (filterString.length <= 1) {
+      this.filtered = this.all;
+    } else {
+      this.filtered = this.all.filter((p) => {
+        const allBlocks = prefabBlockIndex[p.name];
+        if (!allBlocks) {
+          return false;
+        }
+        const matchedBlocks = allBlocks.filter(b => b.includes(filter));
+        if (matchedBlocks.length === 0) {
+          return false;
+        }
+        Object.assign(p, { matchedBlocks });
+        return true;
+      });
+    }
     this.sort();
   }
 
@@ -75,15 +99,6 @@ function applyFilter(prefabs) {
     prefabs.setPrefabsFilterString(prefabs.prefabsFilterString);
   }
 }
-
-function hasBlockString(prefabName, blockString) {
-  const blocks = prefabBlockIndex[prefabName];
-  if (!blocks) {
-    return false;
-  }
-  return blocks.some(b => b.includes(blockString));
-}
-
 
 async function loadByUrl(window, url) {
   if (!url) return [];
