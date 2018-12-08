@@ -26,9 +26,12 @@ module.exports = async function parseNim(nimFileName) {
     );
     if (skipBytes !== 0) {
       skipBytes -= 1;
+    } else if (blockNum === null && prevDigits.length === 0) {
+      prevDigits.unshift(byte);
     } else if (blockNum === null) {
-      blockNum = byte;
-      skipBytes = 6;
+      blockNum = Buffer.from([prevDigits[0], byte]).readInt16LE();
+      prevDigits = [];
+      skipBytes = 5;
     } else if (buffer) {
       log.debug('pick as a char of block name: %s', String.fromCharCode(byte));
       buffer[bufferIndex] = byte;
