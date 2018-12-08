@@ -7,6 +7,7 @@ function main() {
   const coodWESpan = document.getElementById('cood_we');
   const coodNSSpan = document.getElementById('cood_ns');
   const downloadButton = document.getElementById('download');
+  const resetFlagButton = document.getElementById('reset_flag');
   const showBiomesInput = document.getElementById('show_biomes');
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
@@ -124,6 +125,15 @@ function main() {
     });
   });
 
+  // flag mark
+  mapCanvas.addEventListener('click', async (event) => {
+    const markCoords = convertCursorPositionToMapCoords(event);
+    mapRendererWorker.postMessage({ markCoords });
+  });
+  resetFlagButton.addEventListener('click', async () => {
+    mapRendererWorker.postMessage({ markCoords: null });
+  });
+
   // sample load
   sampleLoadButton.addEventListener('click', () => {
     Promise.all([
@@ -163,8 +173,9 @@ function main() {
     }
   });
   mapCanvas.addEventListener('mousemove', (event) => {
-    coodWESpan.textContent = -Math.round((0.5 - event.offsetX / mapCanvas.width) * mapSizes.width);
-    coodNSSpan.textContent = Math.round((0.5 - event.offsetY / mapCanvas.height) * mapSizes.height);
+    const { x, y } = convertCursorPositionToMapCoords(event);
+    coodWESpan.textContent = x;
+    coodNSSpan.textContent = y;
   });
   mapCanvas.addEventListener('mouseout', () => {
     coodWESpan.textContent = '-';
@@ -287,6 +298,13 @@ function main() {
     context.filter = 'url("#rad_filter")';
     context.drawImage(orig, 0, 0);
     return window.createImageBitmap(canvas);
+  }
+
+  function convertCursorPositionToMapCoords({ offsetX, offsetY }) {
+    return {
+      x: -Math.round((0.5 - offsetX / mapCanvas.width) * mapSizes.width),
+      y: Math.round((0.5 - offsetY / mapCanvas.height) * mapSizes.height),
+    };
   }
 
   // init

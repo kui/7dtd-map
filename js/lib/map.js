@@ -13,7 +13,12 @@ export default class Map {
     this.scale = '0.1';
     this.signSize = 200;
     this.prefabs = [];
-    this.signChar = '✗';
+    this.signChar = '✘';
+
+    // flag
+    this.markChar = '🚩️';
+    this.markCoords = {};
+
     this.updateRequest = null;
   }
 
@@ -59,6 +64,9 @@ export default class Map {
     if (this.showPrefabs) {
       drawPrefabs(this, context);
     }
+    if (this.markCoords && this.markCoords.x && this.markCoords.y) {
+      drawMark(this, context);
+    }
     this.updateRequest = null;
     console.log('update');
   }
@@ -66,8 +74,6 @@ export default class Map {
 
 function drawPrefabs(map, ctx) {
   ctx.font = `${map.signSize}px sans-serif`;
-  ctx.lineWidth = Math.round(map.signSize * 0.08);
-  ctx.strokeStyle = 'white';
   ctx.fillStyle = 'red';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -79,10 +85,35 @@ function drawPrefabs(map, ctx) {
     const x = offsetX + prefab.x;
     // prefab vertical positions are inverted for canvas coodinates
     const y = offsetY - prefab.y;
-    ctx.shadowBlur = 20;
+
+    ctx.lineWidth = Math.round(map.signSize * 0.1);
+    ctx.strokeStyle = 'white';
     ctx.strokeText(map.signChar, x, y);
-    ctx.shadowBlur = 0;
+
+    ctx.lineWidth = Math.round(map.signSize * 0.03);
+    ctx.strokeStyle = 'black';
+    ctx.strokeText(map.signChar, x, y);
+
     ctx.fillText(map.signChar, x, y);
-    // console.log('Prot %o: %f, %f', prefab, x, y);
   });
+}
+
+function drawMark(map, ctx) {
+  ctx.font = `${map.signSize}px sans-serif`;
+  ctx.lineWidth = Math.round(map.signSize * 0.1);
+  ctx.strokeStyle = 'white';
+  ctx.fillStyle = 'red';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.shadowColor = 'black';
+
+  const offsetX = map.width / 2;
+  const offsetY = map.height / 2;
+
+  const x = offsetX + map.markCoords.x - Math.round(map.signSize * 0.2);
+  // prefab vertical positions are inverted for canvas coodinates
+  const y = offsetY - map.markCoords.y - Math.round(map.signSize * 0.2);
+
+  ctx.strokeText(map.markChar, x, y);
+  ctx.fillText(map.markChar, x, y);
 }

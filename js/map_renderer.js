@@ -16,6 +16,8 @@ const knownParamNames = new Set([
   'signSize',
   'prefabs',
   'signChar',
+  'markChar',
+  'markCoords',
 ]);
 
 let map;
