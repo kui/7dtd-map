@@ -1,3 +1,6 @@
+const signChar = '✘';
+const markChar = '🚩️';
+
 export default class Map {
   constructor(window, canvas) {
     this.window = window;
@@ -13,10 +16,8 @@ export default class Map {
     this.scale = '0.1';
     this.signSize = 200;
     this.prefabs = [];
-    this.signChar = '✘';
 
     // flag
-    this.markChar = '🚩️';
     this.markCoords = {};
 
     this.updateRequest = null;
@@ -81,20 +82,24 @@ function drawPrefabs(map, ctx) {
 
   const offsetX = map.width / 2;
   const offsetY = map.height / 2;
+
+  const charOffsetX = Math.round(map.signSize * 0.01);
+  const charOffsetY = -1 * Math.round(map.signSize * 0.01);
+
   map.prefabs.forEach((prefab) => {
-    const x = offsetX + prefab.x;
+    const x = offsetX + prefab.x + charOffsetX;
     // prefab vertical positions are inverted for canvas coodinates
-    const y = offsetY - prefab.y;
+    const y = offsetY - prefab.y + charOffsetY;
 
     ctx.lineWidth = Math.round(map.signSize * 0.1);
     ctx.strokeStyle = 'white';
-    ctx.strokeText(map.signChar, x, y);
+    ctx.strokeText(signChar, x, y);
 
-    ctx.lineWidth = Math.round(map.signSize * 0.03);
+    ctx.lineWidth = Math.round(map.signSize * 0.04);
     ctx.strokeStyle = 'black';
-    ctx.strokeText(map.signChar, x, y);
+    ctx.strokeText(signChar, x, y);
 
-    ctx.fillText(map.signChar, x, y);
+    ctx.fillText(signChar, x, y);
   });
 }
 
@@ -109,11 +114,13 @@ function drawMark(map, ctx) {
 
   const offsetX = map.width / 2;
   const offsetY = map.height / 2;
+  const charOffsetX = -1 * Math.round(map.signSize * 0.2);
+  const charOffsetY = -1 * Math.round(map.signSize * 0.2);
 
-  const x = offsetX + map.markCoords.x - Math.round(map.signSize * 0.2);
+  const x = offsetX + map.markCoords.x + charOffsetX;
   // prefab vertical positions are inverted for canvas coodinates
-  const y = offsetY - map.markCoords.y - Math.round(map.signSize * 0.2);
+  const y = offsetY - map.markCoords.y + charOffsetY;
 
-  ctx.strokeText(map.markChar, x, y);
-  ctx.fillText(map.markChar, x, y);
+  ctx.strokeText(markChar, x, y);
+  ctx.fillText(markChar, x, y);
 }
