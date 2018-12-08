@@ -1,4 +1,5 @@
 import prefabBlock from './prefab-block-index';
+import blockLabels from './block-labels';
 
 const prefabBlockIndex = prefabBlock.reduce((o, p) => Object.assign(o, { [p.name]: p.blocks }), {});
 
@@ -87,7 +88,8 @@ export default class Prefabs {
         const pattern = new RegExp(filter, 'i');
         const matchedBlocks = containedBlocks
           .reduce((arr, block) => {
-            const result = matchAndHighlight(block, pattern);
+            const blockName = blockLabels[block] || block;
+            const result = matchAndHighlight(blockName, pattern);
             if (result) {
               return arr.concat(result);
             }
