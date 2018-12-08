@@ -12,6 +12,7 @@ export default class Prefabs {
     this.blocksFilterString = '';
     this.resultSpan = resultSpan;
     this.listDiv = listDiv;
+    this.markCoords = null;
   }
 
   update() {
@@ -25,7 +26,11 @@ export default class Prefabs {
     const ul = this.window.document.createElement('ul');
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
-      li.innerHTML = `${prefab.name} (${prefab.x}, ${prefab.y})`;
+      if (prefab.dist) {
+        li.innerHTML = `${prefab.name} (${formatDist(prefab.dist)}, ${prefab.x}, ${prefab.y})`;
+      } else {
+        li.innerHTML = `${prefab.name} (${prefab.x}, ${prefab.y})`;
+      }
       if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
         const blocksUl = this.window.document.createElement('ul');
         prefab.matchedBlocks.forEach((b) => {
@@ -116,13 +121,48 @@ export default class Prefabs {
     applyFilter(this);
   }
 
-  sort() {
-    this.filtered.sort((a, b) => {
-      if (a.name > b.name) return 1;
-      if (a.name < b.name) return -1;
-      return 0;
-    });
+  async setMarkCoords(coords) {
+    this.markCoords = coords;
+    if (coords) {
+      this.filtered.forEach((p) => {
+        const dist = calcDist(p, this.markCoords);
+        Object.assign(p, { dist });
+      });
+    } else {
+      this.filtered.forEach((p) => {
+        Object.assign(p, { dist: null });
+      });
+    }
+    this.sort();
   }
+
+  sort() {
+    if (this.markCoords) {
+      this.filtered.sort((a, b) => {
+        if (a.dist > b.dist) return 1;
+        if (a.dist < b.dist) return -1;
+        return 0;
+      });
+    } else {
+      this.filtered.sort((a, b) => {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+        return 0;
+      });
+    }
+  }
+}
+
+function formatDist(dist) {
+  if (dist < 1000) {
+    return `${dist}m`;
+  }
+  return `${(dist / 1000).toFixed(2)}km`;
+}
+
+function calcDist(targetCoords, baseCoords) {
+  return Math.round(Math.sqrt(((targetCoords.x - baseCoords.x) ** 2)
+                              + ((targetCoords.y - baseCoords.y) ** 2)));
 }
 
 function matchAndHighlight(str, regex) {

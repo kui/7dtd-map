@@ -129,9 +129,13 @@ function main() {
   mapCanvas.addEventListener('click', async (event) => {
     const markCoords = convertCursorPositionToMapCoords(event);
     mapRendererWorker.postMessage({ markCoords });
+    prefabs.setMarkCoords(markCoords);
+    prefabs.update();
   });
   resetFlagButton.addEventListener('click', async () => {
     mapRendererWorker.postMessage({ markCoords: null });
+    prefabs.setMarkCoords(null);
+    prefabs.update();
   });
 
   // sample load
