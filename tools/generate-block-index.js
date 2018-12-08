@@ -4,20 +4,19 @@ const path = require('path');
 const fsPromise = require('fs').promises;
 const glob = require('glob-promise');
 const parseNim = require('./lib/nim_parser');
-
-const usage = `${path.basename(process.argv[1])} <blocks.xml> <Prefabs Dir>`;
+const localInfo = require('../local.json');
 
 const blockPrefabIndex = 'js/lib/block-prefab-index.json';
 const prefabBlockIndex = 'js/lib/prefab-block-index.json';
 
 async function main() {
-  if (process.argv.length <= 2) {
-    console.error(usage);
-    return 1;
+  const { vanillaDir } = localInfo;
+  const fileGlob = path.join(vanillaDir, 'Data', 'Prefabs', '*.blocks.nim');
+  const nimFiles = await glob(fileGlob);
+  if (nimFiles.length === 0) {
+    throw Error(`No nim file: ${fileGlob}`);
   }
-
-  const fileGlob = path.join(process.argv[2], '*.nim');
-  const prefabs = await Promise.all((await glob(fileGlob)).map(readNim));
+  const prefabs = await Promise.all(nimFiles.map(readNim));
   console.log('Load %d prefabs', prefabs.length);
   const waitTasks = [];
   waitTasks.push(fsPromise
