@@ -24,12 +24,12 @@ export default class Prefabs {
     const ul = this.window.document.createElement('ul');
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
-      li.textContent = `${prefab.name} (${prefab.x}, ${prefab.y})`;
+      li.innerHTML = `${prefab.name} (${prefab.x}, ${prefab.y})`;
       if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
         const blocksUl = this.window.document.createElement('ul');
         prefab.matchedBlocks.forEach((b) => {
           const blockLi = this.window.document.createElement('li');
-          blockLi.textContent = b;
+          blockLi.innerHTML = b;
           blocksUl.appendChild(blockLi);
         });
         li.appendChild(blocksUl);
@@ -42,8 +42,19 @@ export default class Prefabs {
   setPrefabsFilterString(filterString) {
     this.prefabsFilterString = filterString.trim();
     this.blocksFilterString = '';
-    const filter = this.prefabsFilterString.toLowerCase();
-    this.filtered = this.all.filter(p => p.name.toLowerCase().includes(filter));
+    if (this.prefabsFilterString.length <= 1) {
+      this.filtered = this.all;
+    } else {
+      const pattern = new RegExp(this.prefabsFilterString, 'i');
+      this.filtered = this.all
+        .reduce((arr, prefab) => {
+          const result = matchAndHighlight(prefab.name, pattern);
+          if (result) {
+            return arr.concat(Object.assign({}, prefab, { name: result }));
+          }
+          return arr;
+        }, []);
+    }
     this.sort();
   }
 
@@ -55,35 +66,40 @@ export default class Prefabs {
       this.filtered = this.all;
     } else {
       const cache = {};
-      this.filtered = this.all.filter((p) => {
-        const cachedValue = cache[p.name];
+      this.filtered = this.all.reduce((matchedPrefabs, prefab) => {
+        const cachedValue = cache[prefab.name];
 
         // cache hit
         if (cachedValue) {
-          console.log('cache hit: %s, %o', p.name, cachedValue);
           if (cachedValue.length === 0) {
-            return false;
+            return matchedPrefabs;
           }
-          Object.assign(p, { matchedBlocks: cachedValue });
-          return true;
+          return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks: cachedValue }));
         }
 
         // cache miss
-        const allBlocks = prefabBlockIndex[p.name];
-        if (!allBlocks) {
-          console.log('Unknown prefab name: %s', p.name);
-          cache[p.name] = [];
-          return false;
+        const containedBlocks = prefabBlockIndex[prefab.name];
+        if (!containedBlocks || containedBlocks.length === 0) {
+          console.log('Unknown prefab name: %s', prefab.name);
+          cache[prefab.name] = [];
+          return matchedPrefabs;
         }
-        const matchedBlocks = allBlocks.filter(b => b.toLowerCase().includes(filter));
+        const pattern = new RegExp(filter, 'i');
+        const matchedBlocks = containedBlocks
+          .reduce((arr, block) => {
+            const result = matchAndHighlight(block, pattern);
+            if (result) {
+              return arr.concat(result);
+            }
+            return arr;
+          }, []);
         if (matchedBlocks.length === 0) {
-          cache[p.name] = [];
-          return false;
+          cache[prefab.name] = [];
+          return matchedPrefabs;
         }
-        Object.assign(p, { matchedBlocks });
-        cache[p.name] = matchedBlocks;
-        return true;
-      });
+        cache[prefab.name] = matchedBlocks;
+        return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks }));
+      }, []);
     }
     this.sort();
   }
@@ -105,6 +121,15 @@ export default class Prefabs {
       return 0;
     });
   }
+}
+
+function matchAndHighlight(str, regex) {
+  let isMatched = false;
+  const highlighted = str.replace(regex, (m) => {
+    isMatched = true;
+    return `<mark>${m}</mark>`;
+  });
+  return isMatched ? highlighted : null;
 }
 
 function applyFilter(prefabs) {
