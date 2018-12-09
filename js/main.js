@@ -4,6 +4,7 @@ import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import Prefabs from './lib/prefabs';
 
 function main() {
+  const controllerFieldset = document.getElementById('controller');
   const coodWESpan = document.getElementById('cood_we');
   const coodNSSpan = document.getElementById('cood_ns');
   const downloadButton = document.getElementById('download');
@@ -163,6 +164,58 @@ function main() {
   // -------------------------------------------------
   // other model updates
   // -------------------------------------------------
+
+  let markPosition = null;
+  let prevCanvasSize = { width: 0, height: 0 };
+
+  // Scroll with the mark at the center of the screen
+  mapCanvas.addEventListener('click', (e) => { markPosition = e; });
+  resetFlagButton.addEventListener('click', () => { markPosition = null; });
+  (new MutationObserver((mutationsList) => {
+    const widthMutation = mutationsList.find(m => m.attributeName === 'width');
+    if (!widthMutation) return;
+    const heightMutation = mutationsList.find(m => m.attributeName === 'height');
+    if (!heightMutation) return;
+    const newCanvasSize = { width: mapCanvas.width, height: mapCanvas.height };
+
+    if (!markPosition) {
+      prevCanvasSize = newCanvasSize;
+      return;
+    }
+
+    markPosition = {
+      offsetX: markPosition.offsetX * newCanvasSize.width / prevCanvasSize.width,
+      offsetY: markPosition.offsetY * newCanvasSize.height / prevCanvasSize.height,
+    };
+
+    const canvasRect = mapCanvas.getBoundingClientRect();
+    const rootRect = document.documentElement.getBoundingClientRect();
+
+    const absCanvasPosition = {
+      left: canvasRect.left - rootRect.left,
+      top: canvasRect.top - rootRect.top,
+    };
+
+    const absMarkPosition = {
+      left: markPosition.offsetX + absCanvasPosition.left,
+      top: markPosition.offsetY + absCanvasPosition.top,
+    };
+
+    // frameSize is based by map display area.
+    // So, the width is not innerWidth.
+    const frameSize = {
+      width: controllerFieldset.offsetLeft,
+      height: window.innerHeight,
+    };
+
+    const scrollArg = {
+      left: absMarkPosition.left - frameSize.width / 2,
+      top: absMarkPosition.top - frameSize.height / 2,
+    };
+    window.scrollTo(scrollArg);
+
+    prevCanvasSize = newCanvasSize;
+  })).observe(mapCanvas, { attributes: true });
 
   // range value display
   Array.from(document.querySelectorAll('[data-source-input')).forEach((display) => {

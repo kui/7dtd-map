@@ -1,6 +1,6 @@
+import memoize from 'lodash/memoize';
 import prefabBlock from './prefab-block-index';
 import blockLabels from './block-labels';
-import memoize from 'lodash/memoize';
 
 const prefabBlockIndex = prefabBlock.reduce((o, p) => Object.assign(o, { [p.name]: p.blocks }), {});
 
