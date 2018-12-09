@@ -1,6 +1,6 @@
 /* eslint-env browser */
 
-import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap_loader';
+import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import Prefabs from './lib/prefabs';
 
 function main() {
@@ -28,7 +28,7 @@ function main() {
   const mapCanvas = document.getElementById('map');
   const sampleLoadButton = document.getElementById('sample_load');
 
-  const mapRendererWorker = new Worker('map_renderer.js');
+  const mapRendererWorker = new Worker('map-renderer.js');
   const prefabs = new Prefabs(window, prefabsResultSpan, prefabListDiv);
 
   // init
