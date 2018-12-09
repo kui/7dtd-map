@@ -16,6 +16,9 @@ export default class Prefabs {
   }
 
   update() {
+    updateDist(this);
+    this.sort();
+
     if (this.all.length === 0) {
       this.resultSpan.textContent = 'No prefabs';
     } else if (this.filtered.length === this.all.length) {
@@ -27,7 +30,7 @@ export default class Prefabs {
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
       if (prefab.dist) {
-        li.innerHTML = `${prefab.name} (${formatDist(prefab.dist)}, ${prefab.x}, ${prefab.y})`;
+        li.innerHTML = `${formatDist(prefab.dist)}, ${prefab.name} (${prefab.x}, ${prefab.y})`;
       } else {
         li.innerHTML = `${prefab.name} (${prefab.x}, ${prefab.y})`;
       }
@@ -61,7 +64,6 @@ export default class Prefabs {
           return arr;
         }, []);
     }
-    this.sort();
   }
 
   setBlocksFilterString(filterString) {
@@ -108,7 +110,6 @@ export default class Prefabs {
         return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks }));
       }, []);
     }
-    this.sort();
   }
 
   async setByFile(file) {
@@ -123,17 +124,6 @@ export default class Prefabs {
 
   async setMarkCoords(coords) {
     this.markCoords = coords;
-    if (coords) {
-      this.filtered.forEach((p) => {
-        const dist = calcDist(p, this.markCoords);
-        Object.assign(p, { dist });
-      });
-    } else {
-      this.filtered.forEach((p) => {
-        Object.assign(p, { dist: null });
-      });
-    }
-    this.sort();
   }
 
   sort() {
@@ -150,6 +140,19 @@ export default class Prefabs {
         return 0;
       });
     }
+  }
+}
+
+function updateDist(map) {
+  if (map.markCoords) {
+    map.filtered.forEach((p) => {
+      const dist = calcDist(p, map.markCoords);
+      Object.assign(p, { dist });
+    });
+  } else {
+    map.filtered.forEach((p) => {
+      Object.assign(p, { dist: null });
+    });
   }
 }
 

@@ -131,11 +131,13 @@ function main() {
     mapRendererWorker.postMessage({ markCoords });
     prefabs.setMarkCoords(markCoords);
     prefabs.update();
+    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
   });
   resetFlagButton.addEventListener('click', async () => {
     mapRendererWorker.postMessage({ markCoords: null });
     prefabs.setMarkCoords(null);
     prefabs.update();
+    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
   });
 
   // sample load
