@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 const path = require('path');
-const parseNim = require('./lib/nim_parser');
+const parseNim = require('./lib/nim-parser');
 
 const usage = `${path.basename(process.argv[1])} <nim file>`;
 

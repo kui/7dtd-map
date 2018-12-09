@@ -3,10 +3,12 @@
 const path = require('path');
 const fsPromise = require('fs').promises;
 const glob = require('glob-promise');
-const csvParse = require('csv-parse');
 
-const parseNim = require('./lib/nim_parser');
+const parseNim = require('./lib/nim-parser');
+const parseLabel = require('./lib/parse-label');
 const localInfo = require('../local.json');
+
+const projectRoot = path.join(path.dirname(process.argv[1]), '..');
 
 const blockPrefabIndexFile = 'js/lib/block-prefab-index.json';
 const prefabBlockIndexFile = 'js/lib/prefab-block-index.json';
@@ -37,29 +39,32 @@ async function main() {
 }
 
 async function writeBlockPrefabIndex(prefabs) {
-  fsPromise.writeFile(prefabBlockIndexFile, JSON.stringify(prefabs));
+  fsPromise.writeFile(
+    path.join(projectRoot, prefabBlockIndexFile),
+    JSON.stringify(prefabs),
+  );
   console.log('Write %s', prefabBlockIndexFile);
 }
 
 async function writePrefabBlockIndex(blocks) {
-  await fsPromise.writeFile(blockPrefabIndexFile, JSON.stringify(blocks));
+  await fsPromise.writeFile(
+    path.join(projectRoot, blockPrefabIndexFile),
+    JSON.stringify(blocks),
+  );
   console.log('Write %s', blockPrefabIndexFile);
 }
 
 async function writeBlockLabels(vanillaDir, blocks) {
-  const blockSet = new Set(blocks);
-  const localization = await fsPromise
-    .readFile(path.join(vanillaDir, 'Data', 'Config', 'Localization.txt'));
-  const labelArr = await new Promise((resolve, reject) => {
-    csvParse(localization, (err, out) => { resolve(out); reject(err); });
-  });
-  const blockLabels = labelArr.reduce((result, label) => {
-    if (blockSet.has(label[0])) {
-      return Object.assign(result, { [label[0]]: label[4] });
-    }
-    return result;
+  const fileName = path.join(vanillaDir, 'Data', 'Config', 'Localization.txt');
+  const labels = await parseLabel(fileName);
+  const blockLabels = blocks.reduce((result, block) => {
+    const obj = { [block]: labels[block] };
+    return Object.assign(result, obj);
   }, {});
-  await fsPromise.writeFile(blockLabelsFile, JSON.stringify(blockLabels));
+  await fsPromise.writeFile(
+    path.join(projectRoot, blockLabelsFile),
+    JSON.stringify(blockLabels),
+  );
   console.log('Write %s', blockLabelsFile);
 }
 

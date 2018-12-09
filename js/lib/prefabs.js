@@ -30,10 +30,11 @@ export default class Prefabs {
     const ul = this.window.document.createElement('ul');
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
+      const name = `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.name}</a>`;
       if (prefab.dist) {
-        li.innerHTML = `${formatDist(prefab.dist)}, ${prefab.name} (${prefab.x}, ${prefab.y})`;
+        li.innerHTML = `${formatDist(prefab.dist)}, ${name} (${prefab.x}, ${prefab.y})`;
       } else {
-        li.innerHTML = `${prefab.name} (${prefab.x}, ${prefab.y})`;
+        li.innerHTML = `${name} (${prefab.x}, ${prefab.y})`;
       }
       if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
         const blocksUl = this.window.document.createElement('ul');
