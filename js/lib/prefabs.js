@@ -1,5 +1,6 @@
 import prefabBlock from './prefab-block-index';
 import blockLabels from './block-labels';
+import memoize from 'lodash/memoize';
 
 const prefabBlockIndex = prefabBlock.reduce((o, p) => Object.assign(o, { [p.name]: p.blocks }), {});
 
@@ -72,25 +73,12 @@ export default class Prefabs {
     if (filterString.length <= 1) {
       this.filtered = this.all;
     } else {
-      const cache = {};
+      const matchBlocksWithCache = memoize(matchBlocks);
       this.filtered = this.all.reduce((matchedPrefabs, prefab) => {
-        const cachedValue = cache[prefab.name];
-
-        // cache hit
-        if (cachedValue) {
-          if (cachedValue.length === 0) {
-            return matchedPrefabs;
-          }
-          return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks: cachedValue }));
-        }
-
-        // cache miss
-        const matchedBlocks = matchBlocks(this, prefab);
+        const matchedBlocks = matchBlocksWithCache(prefab.name, this);
         if (matchedBlocks.length === 0) {
-          cache[prefab.name] = [];
           return matchedPrefabs;
         }
-        cache[prefab.name] = matchedBlocks;
         return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks }));
       }, []);
     }
@@ -127,13 +115,13 @@ export default class Prefabs {
   }
 }
 
-function matchBlocks(map, prefab) {
-  const containedBlocks = prefabBlockIndex[prefab.name];
+function matchBlocks(prefabName, prefabs) {
+  const containedBlocks = prefabBlockIndex[prefabName];
   if (!containedBlocks || containedBlocks.length === 0) {
-    console.log('Unknown prefab name: %s', prefab.name);
+    console.log('Unknown prefab name: %s', prefabName);
     return [];
   }
-  const pattern = new RegExp(map.blocksFilterString, 'i');
+  const pattern = new RegExp(prefabs.blocksFilterString, 'i');
   const matchedBlocks = containedBlocks
     .reduce((arr, block) => {
       const blockName = blockLabels[block] || block;
