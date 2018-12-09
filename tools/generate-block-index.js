@@ -49,7 +49,7 @@ async function writePrefabBlockIndex(blocks) {
 async function writeBlockLabels(vanillaDir, blocks) {
   const blockSet = new Set(blocks);
   const localization = await fsPromise
-        .readFile(path.join(vanillaDir, 'Data', 'Config', 'Localization.txt'));
+    .readFile(path.join(vanillaDir, 'Data', 'Config', 'Localization.txt'));
   const labelArr = await new Promise((resolve, reject) => {
     csvParse(localization, (err, out) => { resolve(out); reject(err); });
   });

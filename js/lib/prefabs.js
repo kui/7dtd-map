@@ -69,7 +69,6 @@ export default class Prefabs {
   setBlocksFilterString(filterString) {
     this.blocksFilterString = filterString.trim();
     this.prefabsFilterString = '';
-    const filter = this.blocksFilterString.toLowerCase();
     if (filterString.length <= 1) {
       this.filtered = this.all;
     } else {
@@ -86,22 +85,7 @@ export default class Prefabs {
         }
 
         // cache miss
-        const containedBlocks = prefabBlockIndex[prefab.name];
-        if (!containedBlocks || containedBlocks.length === 0) {
-          console.log('Unknown prefab name: %s', prefab.name);
-          cache[prefab.name] = [];
-          return matchedPrefabs;
-        }
-        const pattern = new RegExp(filter, 'i');
-        const matchedBlocks = containedBlocks
-          .reduce((arr, block) => {
-            const blockName = blockLabels[block] || block;
-            const result = matchAndHighlight(blockName, pattern);
-            if (result) {
-              return arr.concat(result);
-            }
-            return arr;
-          }, []);
+        const matchedBlocks = matchBlocks(this, prefab);
         if (matchedBlocks.length === 0) {
           cache[prefab.name] = [];
           return matchedPrefabs;
@@ -141,6 +125,28 @@ export default class Prefabs {
       });
     }
   }
+}
+
+function matchBlocks(map, prefab) {
+  const containedBlocks = prefabBlockIndex[prefab.name];
+  if (!containedBlocks || containedBlocks.length === 0) {
+    console.log('Unknown prefab name: %s', prefab.name);
+    return [];
+  }
+  const pattern = new RegExp(map.blocksFilterString, 'i');
+  const matchedBlocks = containedBlocks
+    .reduce((arr, block) => {
+      const blockName = blockLabels[block] || block;
+      const result = matchAndHighlight(blockName, pattern);
+      if (result) {
+        return arr.concat(result);
+      }
+      return arr;
+    }, []);
+  if (matchedBlocks.length === 0) {
+    return [];
+  }
+  return matchedBlocks;
 }
 
 function updateDist(map) {
