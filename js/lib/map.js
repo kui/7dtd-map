@@ -79,11 +79,9 @@ export default class Map {
 
 async function drawPrefabs(map, ctx) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
-  console.log(ctx.font);
   ctx.fillStyle = 'red';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.shadowColor = 'black';
 
   const offsetX = map.width / 2;
   const offsetY = map.height / 2;
@@ -95,28 +93,17 @@ async function drawPrefabs(map, ctx) {
     const x = offsetX + prefab.x + charOffsetX;
     // prefab vertical positions are inverted for canvas coodinates
     const y = offsetY - prefab.y + charOffsetY;
-
-    ctx.lineWidth = Math.round(map.signSize * 0.1);
-    ctx.strokeStyle = 'white';
-    ctx.strokeText(signChar, x, y);
-
-    ctx.lineWidth = Math.round(map.signSize * 0.04);
-    ctx.strokeStyle = 'black';
-    ctx.strokeText(signChar, x, y);
-
-    ctx.fillText(signChar, x, y);
+    putText({
+      ctx, text: signChar, x, y, textSize: map.signSize,
+    });
   });
 }
 
 async function drawMark(map, ctx) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
-  console.log(ctx.font);
-  ctx.lineWidth = Math.round(map.signSize * 0.1);
-  ctx.strokeStyle = 'white';
   ctx.fillStyle = 'red';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  ctx.shadowColor = 'black';
 
   const offsetX = map.width / 2;
   const offsetY = map.height / 2;
@@ -127,6 +114,23 @@ async function drawMark(map, ctx) {
   // prefab vertical positions are inverted for canvas coodinates
   const y = offsetY - map.markCoords.y + charOffsetY;
 
+  putText({
+    ctx, text: markChar, x, y, textSize: map.signSize,
+  });
   ctx.strokeText(markChar, x, y);
   ctx.fillText(markChar, x, y);
+}
+
+function putText({
+  ctx, text, x, y, textSize,
+}) {
+  ctx.lineWidth = Math.round(textSize * 0.2);
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+  ctx.strokeText(text, x, y);
+
+  ctx.lineWidth = Math.round(textSize * 0.1);
+  ctx.strokeStyle = 'white';
+  ctx.strokeText(text, x, y);
+
+  ctx.fillText(text, x, y);
 }
