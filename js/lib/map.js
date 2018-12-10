@@ -17,6 +17,10 @@ export default class Map {
     this.signSize = 200;
     this.prefabs = [];
 
+    const fontFace = new window.FontFace('Noto Sans', 'url(NotoEmoji-Regular.ttf)');
+    fontFace.load().then(a => window.fonts.add(a));
+    this.fontFace = fontFace.load();
+
     // flag
     this.markCoords = {};
 
@@ -44,7 +48,7 @@ export default class Map {
     this.updateRequest = this.window.requestAnimationFrame(() => this.updateImmediately());
   }
 
-  updateImmediately() {
+  async updateImmediately() {
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
     const context = this.canvas.getContext('2d');
@@ -63,18 +67,19 @@ export default class Map {
       context.imageSmoothingEnabled = true;
     }
     if (this.showPrefabs) {
-      drawPrefabs(this, context);
+      await drawPrefabs(this, context);
     }
     if (this.markCoords && this.markCoords.x && this.markCoords.y) {
-      drawMark(this, context);
+      await drawMark(this, context);
     }
     this.updateRequest = null;
     console.log('update');
   }
 }
 
-function drawPrefabs(map, ctx) {
-  ctx.font = `${map.signSize}px sans-serif`;
+async function drawPrefabs(map, ctx) {
+  ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
+  console.log(ctx.font);
   ctx.fillStyle = 'red';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -103,8 +108,9 @@ function drawPrefabs(map, ctx) {
   });
 }
 
-function drawMark(map, ctx) {
-  ctx.font = `${map.signSize}px sans-serif`;
+async function drawMark(map, ctx) {
+  ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
+  console.log(ctx.font);
   ctx.lineWidth = Math.round(map.signSize * 0.1);
   ctx.strokeStyle = 'white';
   ctx.fillStyle = 'red';
