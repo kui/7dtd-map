@@ -89,7 +89,7 @@ async function drawPrefabs(map, ctx) {
   const offsetY = map.height / 2;
 
   const charOffsetX = Math.round(map.signSize * 0.01);
-  const charOffsetY = -1 * Math.round(map.signSize * 0.01);
+  const charOffsetY = Math.round(map.signSize * 0.05);
 
   map.prefabs.forEach((prefab) => {
     const x = offsetX + prefab.x + charOffsetX;
@@ -120,8 +120,8 @@ async function drawMark(map, ctx) {
 
   const offsetX = map.width / 2;
   const offsetY = map.height / 2;
-  const charOffsetX = -1 * Math.round(map.signSize * 0.2);
-  const charOffsetY = -1 * Math.round(map.signSize * 0.2);
+  const charOffsetX = -1 * Math.round(map.signSize * 0.32);
+  const charOffsetY = -1 * Math.round(map.signSize * 0.1);
 
   const x = offsetX + map.markCoords.x + charOffsetX;
   // prefab vertical positions are inverted for canvas coodinates
