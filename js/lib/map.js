@@ -25,6 +25,7 @@ export default class Map {
     this.markCoords = {};
 
     this.updateRequest = null;
+    this.updatePromise = null;
   }
 
   get width() {
@@ -41,11 +42,24 @@ export default class Map {
     );
   }
 
-  update() {
+  async update() {
     if (this.updateRequest) {
       return;
     }
-    this.updateRequest = this.window.requestAnimationFrame(() => this.updateImmediately());
+    this.updateRequest = true;
+    if (this.updatePromise) {
+      return;
+    }
+
+    while (this.updateRequest) {
+      this.updateRequest = false;
+      this.updatePromise = this.updateImmediately();
+      // eslint-disable-next-line no-await-in-loop
+      await this.updatePromise;
+      // eslint-disable-next-line no-await-in-loop
+      await waitAnimationFrame(this.window);
+      this.updatePromise = null;
+    }
   }
 
   async updateImmediately() {
@@ -119,6 +133,10 @@ async function drawMark(map, ctx) {
   });
   ctx.strokeText(markChar, x, y);
   ctx.fillText(markChar, x, y);
+}
+
+function waitAnimationFrame(w) {
+  return new Promise((r) => w.requestAnimationFrame(r));
 }
 
 function putText({
