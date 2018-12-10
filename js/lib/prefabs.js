@@ -30,7 +30,7 @@ export default class Prefabs {
     const ul = this.window.document.createElement('ul');
     this.filtered.forEach((prefab) => {
       const li = this.window.document.createElement('li');
-      const name = `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.name}</a>`;
+      const name = `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`;
       if (prefab.dist) {
         li.innerHTML = `${formatDist(prefab.dist)}, ${name} (${prefab.x}, ${prefab.y})`;
       } else {
@@ -61,7 +61,7 @@ export default class Prefabs {
         .reduce((arr, prefab) => {
           const result = matchAndHighlight(prefab.name, pattern);
           if (result) {
-            return arr.concat(Object.assign({}, prefab, { name: result }));
+            return arr.concat(Object.assign({}, prefab, { highlightedName: result }));
           }
           return arr;
         }, []);
