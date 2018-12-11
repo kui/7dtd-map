@@ -6,8 +6,8 @@ const bformat = require('bunyan-format');
 const log = bunyan.createLogger({
   name: path.basename(__filename, '.js'),
   stream: bformat(),
-  // level: 'info',
-  level: 'debug',
+  level: 'info',
+  // level: 'debug',
 });
 
 module.exports = async function parseNim(nimFileName) {
