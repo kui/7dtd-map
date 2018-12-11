@@ -6,16 +6,19 @@ const bformat = require('bunyan-format');
 const log = bunyan.createLogger({
   name: path.basename(__filename, '.js'),
   stream: bformat(),
-  level: 'info',
-  // level: 'debug',
+  // level: 'info',
+  level: 'debug',
 });
 
 module.exports = async function parseNim(nimFileName) {
   const blocks = [];
+  let blockId = null;
+  let blockIdSecondDigit = null;
   let buffer;
   let bufferIndex;
+
   let blockNum = null;
-  let prevDigits = [];
+  let blockNumSecondDigit = null;
   let skipBytes = 4;
   function handleByte(byte) {
     log.debug(
@@ -26,44 +29,45 @@ module.exports = async function parseNim(nimFileName) {
     );
     if (skipBytes !== 0) {
       skipBytes -= 1;
-    } else if (blockNum === null && prevDigits.length === 0) {
-      prevDigits.unshift(byte);
+    } else if (blockNumSecondDigit === null) {
+      log.debug('pick as a second digit of block num: %d', byte);
+      blockNumSecondDigit = byte;
     } else if (blockNum === null) {
-      blockNum = Buffer.from([prevDigits[0], byte]).readInt16LE();
-      prevDigits = [];
-      skipBytes = 5;
+      log.debug('pick as a first digit of block num: %d', byte);
+      blockNum = Buffer.from([blockNumSecondDigit, byte]).readInt16LE();
+      skipBytes = 2;
+    } else if (blockIdSecondDigit === null) {
+      log.debug('pick as a second digit of block ID: %d', byte);
+      blockIdSecondDigit = byte;
+    } else if (blockId === null) {
+      log.debug('pick as a first digit of block ID: %d', byte);
+      blockId = Buffer.from([blockIdSecondDigit, byte]).readInt16LE();
+      skipBytes = 2;
     } else if (buffer) {
       log.debug('pick as a char of block name: %s', String.fromCharCode(byte));
       buffer[bufferIndex] = byte;
       if (bufferIndex + 1 < buffer.length) {
         bufferIndex += 1;
       } else {
-        log.debug('add block name: %s', buffer.toString());
         const blockName = buffer.toString();
+        log.debug('add block name: %s (id=%s)', blockName, blockId);
         if (!blocks.includes(blockName)) {
           blocks.push(blockName);
         }
+
+        blockId = null;
+        blockIdSecondDigit = null;
         buffer = null;
+
         if (blocks.length === blockNum) {
           log.debug('parse all %d block', blockNum);
           skipBytes = Infinity;
-        } else {
-          skipBytes = 2;
         }
       }
-    } else if (prevDigits[0] === 0 && byte > 0) {
+    } else {
       log.debug('pick as a block name length: %d', byte);
       buffer = Buffer.allocUnsafe(byte);
       bufferIndex = 0;
-      prevDigits = [];
-    } else {
-      prevDigits.unshift(byte);
-    }
-    if (prevDigits.length !== 0 && prevDigits.length % 30 === 0) {
-      log.warn(
-        'Unexpected state: Too long prevDigits: file=%s, length=%d',
-        nimFileName, prevDigits.length,
-      );
     }
   }
   const stream = fs.createReadStream(nimFileName);
