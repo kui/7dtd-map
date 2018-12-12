@@ -4,6 +4,7 @@ const path = require('path');
 const fsPromise = require('fs').promises;
 const parseXmlString = require('xml2js').parseString;
 const parseNim = require('./nim-parser');
+const parseTts = require('./tts-parser');
 
 function html(model) {
   return `<!doctype html>
@@ -33,17 +34,25 @@ function html(model) {
 
   <section>
     <h2>Blocks</h2>
-    <ul>${model.blocks.map(b => `<li>${b.name} (${b.localizedName})</li>`).join('\n')}</ul>
+    <table>
+      <tr><th>ID</th><th>Name</th><th>#</th></tr>
+      ${model.blocks.map(b => `<tr><td>${b.name}</td><td>${b.localizedName}</td><td>${b.num}</td></tr>`).join('\n')}
+    </table>
   </section>
 </body>
 </html>
 `;
 }
 
-module.exports = async ({ xml, nim, labels }) => {
+module.exports = async ({ xml, nim, tts, labels }) => {
   const name = path.basename(xml, '.xml');
+  const blockNums = (await parseTts(tts)).blockNums;
   const blocksPromise = parseNim(nim)
-    .then(bs => bs.map(b => ({ name: b.name, localizedName: labels[b.name] })));
+        .then(bs => bs.map(b => ({
+          name: b.name,
+          localizedName: labels[b.name],
+          num: blockNums.get(b.id),
+        })));
   const xmlPromise = parsePrefabXml(xml);
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
   return html({ name, xml: dom, blocks });
