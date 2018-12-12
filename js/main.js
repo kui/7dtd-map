@@ -131,16 +131,14 @@ function main() {
   // flag mark
   mapCanvas.addEventListener('click', async (event) => {
     const markCoords = convertCursorPositionToMapCoords(event);
-    mapRendererWorker.postMessage({ markCoords });
     prefabs.setMarkCoords(markCoords);
     prefabs.update();
-    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+    mapRendererWorker.postMessage({ markCoords, prefabs: prefabs.filtered });
   });
   resetFlagButton.addEventListener('click', async () => {
-    mapRendererWorker.postMessage({ markCoords: null });
     prefabs.setMarkCoords(null);
     prefabs.update();
-    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+    mapRendererWorker.postMessage({ markCoords: null, prefabs: prefabs.filtered });
   });
 
   // sample load
