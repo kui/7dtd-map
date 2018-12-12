@@ -136,7 +136,7 @@ async function drawMark(map, ctx) {
 }
 
 function waitAnimationFrame(w) {
-  return new Promise((r) => w.requestAnimationFrame(r));
+  return new Promise(r => w.requestAnimationFrame(r));
 }
 
 function putText({

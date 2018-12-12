@@ -6,8 +6,8 @@ const bformat = require('bunyan-format');
 const log = bunyan.createLogger({
   name: path.basename(__filename, '.js'),
   stream: bformat(),
-  // level: 'info',
-  level: 'debug',
+  level: 'info',
+  // level: 'debug',
 });
 
 module.exports = async function parseTts(ttsFileName) {
@@ -48,7 +48,7 @@ module.exports = async function parseTts(ttsFileName) {
       digits.push(byte);
     } else {
       digits.push(byte);
-      // Strip the most significant bit because it is unneccesary
+      // Strip the most significant bit because it is unneccesary for the current app
       // eslint-disable-next-line no-bitwise
       const bid = Buffer.from(digits.slice(0, 2)).readInt16LE() & 0xefff;
       log.debug('pick block ID: %d', bid);
@@ -64,13 +64,33 @@ module.exports = async function parseTts(ttsFileName) {
   return new Promise((resolve, reject) => {
     stream.on('data', data => data.forEach(handleByte));
     stream.on('close', () => {
-      resolve({
-        x: dimensions.x,
-        y: dimensions.y,
-        z: dimensions.z,
+      resolve(new Tts({
+        maxx: dimensions.x,
+        maxy: dimensions.y,
+        maxz: dimensions.z,
         blockIds: blocks,
-      });
+      }));
     });
     stream.on('error', reject);
   });
 };
+
+class Tts {
+  constructor({
+    maxx, maxy, maxz, blockIds,
+  }) {
+    this.maxx = maxx;
+    this.maxy = maxy;
+    this.maxz = maxz;
+    this.blockIds = blockIds;
+  }
+
+  getBlockId(x, y, z) {
+    if (x < 0 || this.maxx < x
+        || y < 0 || this.maxy < y
+        || z < 0 || this.maxz < z) {
+      throw Error(`Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`);
+    }
+    return this.blockIds[x + this.maxx * y + this.maxx * this.maxy * z];
+  }
+}
