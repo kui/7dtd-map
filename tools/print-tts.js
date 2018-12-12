@@ -11,7 +11,11 @@ async function main() {
     return 1;
   }
   const tts = await parseTts(process.argv[2]);
+  console.log('Prefab dimension:');
   console.log({ x: tts.maxx, y: tts.maxy, z: tts.maxz });
+
+  console.log('Each number of blocks:');
+  console.log(tts.blockNums);
 
   // print block IDs slicing horizontally.
   for (let y = 0; y < tts.maxy; y += 1) {

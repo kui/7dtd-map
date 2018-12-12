@@ -83,6 +83,7 @@ class Tts {
     this.maxy = maxy;
     this.maxz = maxz;
     this.blockIds = blockIds;
+    this.blockNums = countValues(blockIds);
   }
 
   getBlockId(x, y, z) {
@@ -93,4 +94,11 @@ class Tts {
     }
     return this.blockIds[x + this.maxx * y + this.maxx * this.maxy * z];
   }
+}
+
+function countValues(arr) {
+  return arr.reduce((map, value) => {
+    map.set(value, (map.get(value) || 0) + 1);
+    return map;
+  }, new Map());
 }
