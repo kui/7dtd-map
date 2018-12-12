@@ -36,6 +36,7 @@ function main() {
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
   mapRendererWorker.postMessage({
     canvas: rendererCanvas,
+    showBiomes: showBiomesInput.checked,
     showSplat3: showSplat3Input.checked,
     showRad: showRadInput.checked,
     showPrefabs: showPrefabsInput.checked,
@@ -91,6 +92,7 @@ function main() {
     signSizeInput, brightnessInput, scaleInput].forEach((e) => {
     e.addEventListener('input', () => {
       mapRendererWorker.postMessage({
+        showBiomes: showBiomesInput.checked,
         showSplat3: showSplat3Input.checked,
         showRad: showRadInput.checked,
         showPrefabs: showPrefabsInput.checked,
