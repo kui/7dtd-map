@@ -48,9 +48,9 @@ module.exports = async function parseTts(ttsFileName) {
       digits.push(byte);
     } else {
       digits.push(byte);
-      // Strip the most significant bit because it is unneccesary for the current app
+      // Strip the significant bits because it is unneccesary for the current app
       // eslint-disable-next-line no-bitwise
-      const bid = Buffer.from(digits.slice(0, 2)).readInt16LE() & 0xefff;
+      const bid = Buffer.from(digits.slice(0, 2)).readInt16LE() & 0b0011111111111111;
       log.debug('pick block ID: %d', bid);
       blocks.push(bid);
       digits = [];
