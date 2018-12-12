@@ -11,7 +11,7 @@ async function main() {
     return 1;
   }
   (await parseNim(process.argv[2])).forEach((b) => {
-    console.log(b);
+    console.log('%d: %s', b.id, b.name);
   });
   return 0;
 }

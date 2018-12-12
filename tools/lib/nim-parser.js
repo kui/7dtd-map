@@ -54,7 +54,10 @@ module.exports = async function parseNim(nimFileName) {
         if (blocks.includes(blockName)) {
           log.warn('Unexpected state: Dupricated blocks: blockId=%d, blockName=%s, fileName=%s', blockId, blockName, nimFileName);
         }
-        blocks.push(blockName);
+        blocks.push({
+          id: blockId,
+          name: blockName,
+        });
 
         blockId = null;
         blockIdSecondDigit = null;

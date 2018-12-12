@@ -43,7 +43,7 @@ function html(model) {
 module.exports = async ({ xml, nim, labels }) => {
   const name = path.basename(xml, '.xml');
   const blocksPromise = parseNim(nim)
-    .then(bs => bs.map(b => ({ name: b, localizedName: labels[b] })));
+    .then(bs => bs.map(b => ({ name: b.name, localizedName: labels[b.name] })));
   const xmlPromise = parsePrefabXml(xml);
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
   return html({ name, xml: dom, blocks });

@@ -72,7 +72,7 @@ async function readNim(nimFileName) {
   const blocks = await parseNim(nimFileName);
   return {
     name: path.basename(nimFileName, '.blocks.nim'),
-    blocks,
+    blocks: blocks.map(b => b.name),
   };
 }
 
