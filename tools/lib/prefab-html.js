@@ -44,15 +44,17 @@ function html(model) {
 `;
 }
 
-module.exports = async ({ xml, nim, tts, labels }) => {
+module.exports = async ({
+  xml, nim, tts, labels,
+}) => {
   const name = path.basename(xml, '.xml');
-  const blockNums = (await parseTts(tts)).blockNums;
+  const { blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
-        .then(bs => bs.map(b => ({
-          name: b.name,
-          localizedName: labels[b.name],
-          num: blockNums.get(b.id),
-        })));
+    .then(bs => bs.map(b => ({
+      name: b.name,
+      localizedName: labels[b.name],
+      num: blockNums.get(b.id),
+    })));
   const xmlPromise = parsePrefabXml(xml);
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
   return html({ name, xml: dom, blocks });

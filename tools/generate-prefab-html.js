@@ -47,7 +47,9 @@ async function generateHtml(labels) {
     const prefabName = path.basename(xmlFileName, '.xml');
     const nimFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.blocks.nim`);
     const ttsFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.tts`);
-    const html = await prefabHtml({ xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels });
+    const html = await prefabHtml({
+      xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels,
+    });
     const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
     await fsPromise.writeFile(dist, html);
     return prefabName;
