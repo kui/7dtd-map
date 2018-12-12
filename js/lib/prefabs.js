@@ -1,4 +1,5 @@
 import memoize from 'lodash/memoize';
+import { parseXmlByUrl, parseXmlByFile } from './xml-parser';
 import prefabBlock from './prefab-block-index';
 import blockLabels from './block-labels';
 
@@ -86,12 +87,12 @@ export default class Prefabs {
   }
 
   async setByFile(file) {
-    this.all = await loadByFile(this.window, file);
+    this.all = extractPrefabs(await parseXmlByFile(this.window, file));
     applyFilter(this);
   }
 
   async setByUrl(url) {
-    this.all = await loadByUrl(this.window, url);
+    this.all = extractPrefabs(await parseXmlByUrl(this.window, url));
     applyFilter(this);
   }
 
@@ -180,21 +181,8 @@ function applyFilter(prefabs) {
   }
 }
 
-async function loadByUrl(window, url) {
-  if (!url) return [];
-  const response = await window.fetch(url);
-  const xml = await response.text();
-  return parse(window, xml);
-}
-
-async function loadByFile(window, file) {
-  if (!file) return [];
-  const xml = await loadAsText(window, file);
-  return parse(window, xml);
-}
-
-function parse(window, xml) {
-  const dom = (new window.DOMParser()).parseFromString(xml, 'text/xml');
+function extractPrefabs(dom) {
+  if (!dom) return [];
   return Array.from(dom.getElementsByTagName('decoration'))
     .map((e) => {
       const position = e.getAttribute('position').split(',');
@@ -204,13 +192,4 @@ function parse(window, xml) {
         y: parseInt(position[2], 10),
       };
     });
-}
-
-async function loadAsText(window, file) {
-  return new Promise((resolve, reject) => {
-    const reader = new window.FileReader();
-    reader.onerror = reject;
-    reader.onload = () => resolve(reader.result);
-    reader.readAsText(file);
-  });
 }

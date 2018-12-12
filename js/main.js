@@ -1,6 +1,8 @@
 /* eslint-env browser */
 
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
+import { parseDtmTgaByFile, parseDtmTgaByUrl } from './lib/dtm-tga-parser';
+import { generateWaterByFile, generateWaterByUrl } from './lib/water-generator';
 import Prefabs from './lib/prefabs';
 
 function main() {
@@ -310,7 +312,8 @@ function main() {
   // -------------------------------------------------
   // helper methods
   // -------------------------------------------------
-
+  let dtm;
+  let water;
   async function handleDroppedFiles(file) {
     if (file.name === 'biomes.png') {
       console.log('Load biome');
@@ -332,8 +335,20 @@ function main() {
       await prefabs.setByFile(file);
       mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabsInput.value = '';
+    } else if (file.name === 'dtm.tga') {
+      console.log('Load dtm');
+      dtm = await parseDtmTgaByFile(window, file);
+      if (water) {
+        mapRendererWorker.postMessage({ waterImg: await generateWaterByFile(window, dtm, water) });
+      }
+    } else if (file.name === 'water_info.xml') {
+      console.log('Load water');
+      water = file;
+      if (dtm) {
+        mapRendererWorker.postMessage({ waterImg: await generateWaterByFile(window, dtm, water) });
+      }
     } else {
-      console.warn('Unknown file: %s, %s', file.name, file.type);
+      console.warn('Unsupported file: %s, %s', file.name, file.type);
     }
   }
 

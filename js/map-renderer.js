@@ -7,6 +7,7 @@ const knownParamNames = new Set([
   'biomesImg',
   'splat3Img',
   'radImg',
+  'waterImg',
   'showBiomes',
   'showSplat3',
   'showRad',

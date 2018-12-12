@@ -9,9 +9,11 @@ export default class Map {
     this.showSplat3 = true;
     this.showRad = true;
     this.showPrefabs = true;
+    this.showWater = true;
     this.biomesImg = null;
     this.splat3Img = null;
     this.radImg = null;
+    this.waterImg = null;
     this.brightness = '100%';
     this.scale = '0.1';
     this.signSize = 200;
@@ -70,6 +72,9 @@ export default class Map {
     context.filter = `brightness(${this.brightness})`;
     if (this.biomesImg && this.showBiomes) {
       context.drawImage(this.biomesImg, 0, 0, this.width, this.height);
+    }
+    if (this.waterImg && this.showWater) {
+      context.drawImage(this.waterImg, 0, 0, this.width, this.height);
     }
     if (this.splat3Img && this.showSplat3) {
       context.drawImage(this.splat3Img, 0, 0, this.width, this.height);
@@ -136,7 +141,7 @@ async function drawMark(map, ctx) {
 }
 
 function waitAnimationFrame(w) {
-  return new Promise((r) => w.requestAnimationFrame(r));
+  return new Promise(r => w.requestAnimationFrame(r));
 }
 
 function putText({
