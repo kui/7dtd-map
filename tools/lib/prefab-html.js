@@ -51,12 +51,22 @@ module.exports = async ({
   const { blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
     .then(bs => bs.map(b => ({
+      id: b.id,
       name: b.name,
       localizedName: labels[b.name],
-      num: blockNums.get(b.id),
+      num: blockNums.get(b.id) || 0,
     })));
   const xmlPromise = parsePrefabXml(xml);
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
+
+  const blockIdSet = new Set(blocks.map(b => b.id));
+  if ([...blockNums.keys()].filter(i => !blockIdSet.has(i)).length > 0) {
+    console.warn('Unexpected state: unused block num: file=%s, idList=%s', xml, [...blockNums.keys()].filter(i => !blockIdSet.has(i)));
+  }
+  if (blocks.filter(b => b.num === 0).length > 0) {
+    console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter(b => b.num === 0));
+  }
+
   return html({ name, xml: dom, blocks });
 };
 
