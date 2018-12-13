@@ -31,7 +31,7 @@ async function loadLabels() {
   const { vanillaDir } = localInfo;
   const fileName = path.join(vanillaDir, 'Data', 'Config', 'Localization.txt');
   const labels = await parseLabel(fileName);
-  console.log('Load %s', Object.keys(labels).length);
+  console.log('Load %s labels', Object.keys(labels).length);
   return labels;
 }
 
@@ -45,11 +45,11 @@ async function generateHtml(labels) {
 
   const prefabNames = await Promise.all(xmlFiles.map(async (xmlFileName) => {
     const prefabName = path.basename(xmlFileName, '.xml');
-    const nimFileName = path.join(
-      vanillaDir, 'Data', 'Prefabs',
-      `${prefabName}.blocks.nim`,
-    );
-    const html = await prefabHtml({ xml: xmlFileName, nim: nimFileName, labels });
+    const nimFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.blocks.nim`);
+    const ttsFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.tts`);
+    const html = await prefabHtml({
+      xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels,
+    });
     const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
     await fsPromise.writeFile(dist, html);
     return prefabName;
