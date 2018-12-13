@@ -5,7 +5,7 @@ const fsPromise = require('fs').promises;
 const glob = require('glob-promise');
 
 const parseNim = require('./lib/nim-parser');
-const parseLabel = require('./lib/parse-label');
+const parseLabel = require('./lib/label-parser');
 const localInfo = require('../local.json');
 
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');

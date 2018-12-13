@@ -6,7 +6,7 @@ const glob = require('glob-promise');
 
 const prefabHtml = require('./lib/prefab-html');
 const localInfo = require('../local.json');
-const parseLabel = require('./lib/parse-label');
+const parseLabel = require('./lib/label-parser');
 
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');
 const baseDist = 'docs/prefabs';
