@@ -10,6 +10,15 @@ const log = bunyan.createLogger({
   // level: 'debug',
 });
 
+// ".blocks.nim" format (Specification just I could guess, refered to no docs)
+// * Header part
+// 1-4: file format prefix and version?
+// 5-8: (int) the number of block types `blockNum`
+// * Body part: repeated each block ID-Name definisions
+// 1-4: (int) block ID (but actualy block ID is int16, so higher 2 digits are dropped)
+// 5:   (int) the number of chars of block name
+// 6-:  (string) block name
+
 module.exports = async function parseNim(nimFileName) {
   const blocks = [];
   let blockId = null;

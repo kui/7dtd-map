@@ -10,6 +10,12 @@ const log = bunyan.createLogger({
   // level: 'debug',
 });
 
+// TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
+// But the current version is "13". (The version is "10" in wiki)
+// There maight bee some defferences but I didn't know.
+// I think there are some changes around block data,
+// because block ID limit seems to increase to 32k from 2048
+
 module.exports = async function parseTts(ttsFileName) {
   const blocks = [];
   const dimensions = {};
@@ -48,7 +54,7 @@ module.exports = async function parseTts(ttsFileName) {
       digits.push(byte);
     } else {
       digits.push(byte);
-      // Strip the significant bits because it is unneccesary for the current app
+      // Strip the higher bits because it is unneccesary for the current usage
       // eslint-disable-next-line no-bitwise
       const bid = Buffer.from(digits.slice(0, 2)).readInt16LE() & 0b0011111111111111;
       log.debug('pick block ID: %d', bid);
