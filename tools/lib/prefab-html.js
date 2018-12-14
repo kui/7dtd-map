@@ -13,11 +13,8 @@ function html(model) {
   <meta charset="utf-8">
   <meta name="description" content="">
   <style>
-  tr:first-child > * {
-    border-top: 1px lightgray solid;
-  }
-  th, td {
-    border-bottom: 1px lightgray solid;
+  tr:nth-child(odd) {
+    background-color: lightcyan;
   }
   </style>
   <title>${model.name}</title>
@@ -48,7 +45,7 @@ function html(model) {
   <section>
     <h2>Blocks</h2>
     <table>
-      <tr><th>ID</th><th>Name</th><th>#</th></tr>
+      <tr><th>ID</th><th>Name</th><th>Count</th></tr>
       ${model.blocks.map(b => `<tr><td>${b.name}</td><td>${b.localizedName}</td><td>${b.num}</td></tr>`).join('\n')}
     </table>
   </section>
