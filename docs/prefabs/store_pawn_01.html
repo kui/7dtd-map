@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>store_pawn_01</title>
 </head>
 <body>
@@ -20,150 +28,157 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>Zoning</th><td>Commercial,downtown</td></tr>
-<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>AllowedTownships</th><td>city,town,rural</td></tr>
-<tr><th>YOffset</th><td>-1</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
+<tr><th>EditorGroups</th><td>commercial</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>SleeperIsBossVolume</th><td>False,False,False</td></tr>
+<tr><th>SleeperIsLootVolume</th><td>False,True,True</td></tr>
+<tr><th>SleeperVolumeGameStageAdjust</th><td>easy,,,</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>???,-1,-1,???,-1,-1,???,-1,-1</td></tr>
 <tr><th>SleeperVolumeSize</th><td>33, 12, 36#33, 12, 11#9, 4, 16</td></tr>
 <tr><th>SleeperVolumeStart</th><td>0, 0, 8#0, 0, 33#2, 5, 12</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>???,-1,-1,???,-1,-1,???,-1,-1</td></tr>
-<tr><th>SleeperVolumeGameStageAdjust</th><td>easy,,,</td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False,True,True</td></tr>
-<tr><th>EditorGroups</th><td>commercial</td></tr>
-<tr><th>SleeperIsBossVolume</th><td>False,False,False</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-1</td></tr>
+<tr><th>Zoning</th><td>Commercial,downtown</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>33</td></tr>
+<tr><th>y</th><td>13</td></tr>
+<tr><th>z</th><td>44</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrAsphalt</td><td>Asphalt</td><td>613</td></tr>
-<tr><td>air</td><td>Air</td><td>13299</td></tr>
-<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>1</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>9</td></tr>
-<tr><td>cntShoppingCartRandomLootHelper</td><td>= Shopping Cart = Random Helper</td><td>1</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>2</td></tr>
-<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>5</td></tr>
-<tr><td>cinderBlocks03</td><td>Cinder Blocks03</td><td>1</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>7</td></tr>
-<tr><td>concretePillar100</td><td>Concrete Pillar 100</td><td>2</td></tr>
-<tr><td>corrugatedMetalPillar50</td><td>Corr. Metal Pillar 50</td><td>9</td></tr>
-<tr><td>streetLight01</td><td>Street Light (POI)</td><td>1</td></tr>
-<tr><td>terrConcrete</td><td>Concrete Terrain (POI)</td><td>135</td></tr>
-<tr><td>iBeamSmall</td><td>I-Beam  Small</td><td>62</td></tr>
-<tr><td>metalSignLetter_p</td><td>Metal Sign P</td><td>1</td></tr>
-<tr><td>metalSignLetter_a</td><td>Metal Sign A</td><td>5</td></tr>
-<tr><td>metalSignLetter_w</td><td>Metal Sign W</td><td>1</td></tr>
-<tr><td>metalSignLetter_n</td><td>Metal Sign N</td><td>5</td></tr>
-<tr><td>metalSignLetter_d</td><td>Metal Sign D</td><td>2</td></tr>
-<tr><td>metalSignLetter_l</td><td>Metal Sign L</td><td>2</td></tr>
-<tr><td>metalSignLetter_o</td><td>Metal Sign O</td><td>3</td></tr>
-<tr><td>metalSignLetter_v</td><td>Metal Sign V</td><td>1</td></tr>
-<tr><td>metalSignLetter_i</td><td>Metal Sign I</td><td>21</td></tr>
-<tr><td>metalSignLetter_c</td><td>Metal Sign C</td><td>2</td></tr>
-<tr><td>metalSignLetter_k</td><td>Metal Sign K</td><td>1</td></tr>
-<tr><td>metalSignLetter_g</td><td>Metal Sign G</td><td>3</td></tr>
-<tr><td>metalSignLetter_r</td><td>Metal Sign R</td><td>2</td></tr>
-<tr><td>metalSignLetter_s</td><td>Metal Sign S</td><td>4</td></tr>
-<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>2</td></tr>
-<tr><td>cntVendingMachine2</td><td>Vending Machine</td><td>3</td></tr>
-<tr><td>woodPlate</td><td>Wood Plate</td><td>480</td></tr>
-<tr><td>concreteWedge</td><td>Concrete Wedge</td><td>10</td></tr>
-<tr><td>concreteHalf</td><td>Concrete 1/2 Block</td><td>302</td></tr>
-<tr><td>commercialDoor2_v3</td><td>Commercial Door 2 v3</td><td>1</td></tr>
-<tr><td>ironBars</td><td>Iron Bars</td><td>32</td></tr>
-<tr><td>signShopOpen</td><td>Shop Sign: Open</td><td>1</td></tr>
-<tr><td>awningCNRRound</td><td>Awning Corner Round</td><td>16</td></tr>
-<tr><td>concreteQuarter</td><td>Concrete 1/4 Block</td><td>29</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>2363</td></tr>
-<tr><td>concretePlate</td><td>Concrete Plate</td><td>47</td></tr>
-<tr><td>glassBulletproofPlate</td><td>Bulletproof Glass Plate</td><td>32</td></tr>
-<tr><td>woodBlock</td><td>Wood Block</td><td>301</td></tr>
-<tr><td>cntBeerCooler</td><td>Beverage Cooler</td><td>2</td></tr>
-<tr><td>looseBoardsTrapPlate1x1</td><td>Loose Boards Plate 1x1</td><td>76</td></tr>
-<tr><td>corrugatedMetalPillar0.025</td><td>Corr. Metal Pillar 2.5cm</td><td>30</td></tr>
-<tr><td>conduit01</td><td>Conduit01</td><td>68</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>55</td></tr>
-<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>20</td></tr>
-<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>133</td></tr>
-<tr><td>conduit01Curve</td><td>Conduit01 Curve</td><td>11</td></tr>
-<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>5</td></tr>
-<tr><td>conduit01Corner</td><td>Conduit01 Corner</td><td>3</td></tr>
-<tr><td>chainLinkPole</td><td>Chain Link Pole</td><td>46</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>44</td></tr>
-<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>25</td></tr>
-<tr><td>securityGatePlate</td><td>Security Gate</td><td>72</td></tr>
-<tr><td>endTable</td><td>End Table</td><td>1</td></tr>
-<tr><td>woodChair1</td><td>Wooden Chair</td><td>2</td></tr>
-<tr><td>cntWashingMachine</td><td>Washing Machine</td><td>1</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>3</td></tr>
-<tr><td>cobweb</td><td>Cobweb</td><td>12</td></tr>
-<tr><td>scrapIronRamp</td><td>Iron Ramp</td><td>24</td></tr>
-<tr><td>scrapIronCNRRound</td><td>Iron CNR Round</td><td>22</td></tr>
-<tr><td>scrapIronBlock</td><td>Iron Block</td><td>38</td></tr>
-<tr><td>storeShelving01</td><td>Store Shelves</td><td>72</td></tr>
-<tr><td>storeShelving01Top</td><td>Store Shelves (Top)</td><td>72</td></tr>
-<tr><td>brickDestroyedBlock01</td><td>Brick Destroyed Block 01</td><td>5</td></tr>
-<tr><td>securityGateCTRPlate</td><td>Security Gate Centered</td><td>12</td></tr>
-<tr><td>glassBusinessSheet</td><td>Business Glass Pane</td><td>16</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>8</td></tr>
-<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>9</td></tr>
-<tr><td>cntShippingCrateShotgunMessiah</td><td>Shotgun Messiah Sealed Shipping Crate</td><td>6</td></tr>
-<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>29</td></tr>
-<tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>12</td></tr>
-<tr><td>cntPurse01</td><td>Purse</td><td>2</td></tr>
-<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>1</td></tr>
-<tr><td>ceilingLight01</td><td>Simple Light (POI)</td><td>4</td></tr>
-<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>6</td></tr>
-<tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
-<tr><td>cntShippingCrateHero</td><td>Sealed Shipping Crate</td><td>3</td></tr>
-<tr><td>cntNightstandRandomLootHelper</td><td>= Night Stand = Random Helper</td><td>2</td></tr>
-<tr><td>metalSignLetter_u</td><td>Metal Sign U</td><td>1</td></tr>
-<tr><td>cntBirdnest</td><td>Birdnest</td><td>1</td></tr>
+      <tr><td>air</td><td>Air</td><td>13299</td></tr>
 <tr><td>airConditioner</td><td>Air Conditioner</td><td>10</td></tr>
-<tr><td>cntShippingCrateBookstore</td><td>Crack-A-Book Sealed Shipping Crate</td><td>1</td></tr>
-<tr><td>jailBars</td><td>Jail Bars</td><td>2</td></tr>
-<tr><td>jailDoorStaticCentered</td><td>Jail Door, static, centered</td><td>3</td></tr>
-<tr><td>metalSignLetter_h</td><td>Metal Sign H</td><td>1</td></tr>
-<tr><td>metalSignLetter_e</td><td>Metal Sign E</td><td>1</td></tr>
-<tr><td>storeShelving01Double</td><td>Store Shelves Double</td><td>3</td></tr>
-<tr><td>storeShelving01TopDouble</td><td>Store Shelves Double (Top)</td><td>3</td></tr>
-<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>2</td></tr>
-<tr><td>commercialDoor1_v1</td><td>Commercial Door 1</td><td>1</td></tr>
-<tr><td>cookingPot</td><td>undefined</td><td>1</td></tr>
+<tr><td>awningCNRRound</td><td>Awning Corner Round</td><td>16</td></tr>
+<tr><td>bed01</td><td>An Old Bed</td><td>1</td></tr>
+<tr><td>brickDestroyedBlock01</td><td>Brick Destroyed Block 01</td><td>5</td></tr>
+<tr><td>brickDestroyedBlock02</td><td>Brick Destroyed Block 02</td><td>4</td></tr>
+<tr><td>ceilingLight01</td><td>Simple Light (POI)</td><td>4</td></tr>
+<tr><td>chainLinkPole</td><td>Chain Link Pole</td><td>46</td></tr>
+<tr><td>cinderBlocks01</td><td>Cinder Blocks01</td><td>1</td></tr>
+<tr><td>cinderBlocks03</td><td>Cinder Blocks03</td><td>1</td></tr>
+<tr><td>cntBeerCooler</td><td>Beverage Cooler</td><td>2</td></tr>
+<tr><td>cntBirdnest</td><td>Birdnest</td><td>1</td></tr>
 <tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>1</td></tr>
-<tr><td>cntChest01</td><td>Wooden Chest</td><td>1</td></tr>
+<tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>12</td></tr>
 <tr><td>cntCabinetOldBottomLootHelper</td><td>= Cabinet Old = Random Helper</td><td>4</td></tr>
 <tr><td>cntCabinetOldSink</td><td>Old Sink</td><td>3</td></tr>
-<tr><td>bed01</td><td>An Old Bed</td><td>1</td></tr>
-<tr><td>sectionalPlaidCouchSofaMiddle</td><td>Old Couch Middle</td><td>2</td></tr>
-<tr><td>cntWorkstationsBustedRandomLootHelper</td><td>= Destroyed Workstation = Random Helper</td><td>1</td></tr>
-<tr><td>faucetBrass04</td><td>Brass Faucet</td><td>3</td></tr>
-<tr><td>concreteDestroyed06</td><td>concrete Destroyed 06</td><td>4</td></tr>
-<tr><td>tv</td><td>TV</td><td>1</td></tr>
-<tr><td>cinderBlocks01</td><td>Cinder Blocks01</td><td>1</td></tr>
-<tr><td>brickDestroyedBlock02</td><td>Brick Destroyed Block 02</td><td>4</td></tr>
-<tr><td>corrugatedMetalPlate</td><td>Corr. Metal Plate</td><td>24</td></tr>
-<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>1</td></tr>
-<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>3</td></tr>
-<tr><td>officeChair01</td><td>Office Chair</td><td>1</td></tr>
-<tr><td>cntTrash_can01</td><td>Trash Can</td><td>3</td></tr>
-<tr><td>cntToilet03</td><td>Commercial Toilet</td><td>3</td></tr>
-<tr><td>newTextureBlock01</td><td>undefined</td><td>1</td></tr>
-<tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
-<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
-<tr><td>commercialDoor1_v3</td><td>Commercial Door 1 v3</td><td>1</td></tr>
+<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>8</td></tr>
+<tr><td>cntChest01</td><td>Wooden Chest</td><td>1</td></tr>
 <tr><td>cntDumpster</td><td>Dumpster</td><td>1</td></tr>
-<tr><td>ladderMetal</td><td>Iron Ladder</td><td>6</td></tr>
+<tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
+<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
+<tr><td>cntNightstandRandomLootHelper</td><td>= Night Stand = Random Helper</td><td>2</td></tr>
+<tr><td>cntPurse01</td><td>Purse</td><td>2</td></tr>
+<tr><td>cntShippingCrateBookstore</td><td>Crack-A-Book Sealed Shipping Crate</td><td>1</td></tr>
+<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>9</td></tr>
+<tr><td>cntShippingCrateHero</td><td>Sealed Shipping Crate</td><td>3</td></tr>
+<tr><td>cntShippingCrateShotgunMessiah</td><td>Shotgun Messiah Sealed Shipping Crate</td><td>6</td></tr>
+<tr><td>cntShoppingCartRandomLootHelper</td><td>= Shopping Cart = Random Helper</td><td>1</td></tr>
+<tr><td>cntToilet03</td><td>Commercial Toilet</td><td>3</td></tr>
+<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>1</td></tr>
 <tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
+<tr><td>cntTrash_can01</td><td>Trash Can</td><td>3</td></tr>
+<tr><td>cntVendingMachine2</td><td>Vending Machine</td><td>3</td></tr>
+<tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
+<tr><td>cntWashingMachine</td><td>Washing Machine</td><td>1</td></tr>
+<tr><td>cntWorkstationsBustedRandomLootHelper</td><td>= Destroyed Workstation = Random Helper</td><td>1</td></tr>
+<tr><td>cobweb</td><td>Cobweb</td><td>12</td></tr>
+<tr><td>commercialDoor1_v1</td><td>Commercial Door 1</td><td>1</td></tr>
+<tr><td>commercialDoor1_v3</td><td>Commercial Door 1 v3</td><td>1</td></tr>
+<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>3</td></tr>
+<tr><td>commercialDoor2_v3</td><td>Commercial Door 2 v3</td><td>1</td></tr>
+<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>2</td></tr>
+<tr><td>concreteBlock</td><td>Concrete Block</td><td>2363</td></tr>
+<tr><td>concreteDestroyed06</td><td>concrete Destroyed 06</td><td>4</td></tr>
+<tr><td>concreteHalf</td><td>Concrete 1/2 Block</td><td>302</td></tr>
+<tr><td>concretePillar100</td><td>Concrete Pillar 100</td><td>2</td></tr>
+<tr><td>concretePlate</td><td>Concrete Plate</td><td>47</td></tr>
+<tr><td>concreteQuarter</td><td>Concrete 1/4 Block</td><td>29</td></tr>
+<tr><td>concreteWedge</td><td>Concrete Wedge</td><td>10</td></tr>
+<tr><td>conduit01</td><td>Conduit01</td><td>68</td></tr>
+<tr><td>conduit01Corner</td><td>Conduit01 Corner</td><td>3</td></tr>
+<tr><td>conduit01Curve</td><td>Conduit01 Curve</td><td>11</td></tr>
+<tr><td>cookingPot</td><td>undefined</td><td>1</td></tr>
+<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>133</td></tr>
+<tr><td>corrugatedMetalPillar0.025</td><td>Corr. Metal Pillar 2.5cm</td><td>30</td></tr>
+<tr><td>corrugatedMetalPillar50</td><td>Corr. Metal Pillar 50</td><td>9</td></tr>
+<tr><td>corrugatedMetalPlate</td><td>Corr. Metal Plate</td><td>24</td></tr>
+<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>2</td></tr>
+<tr><td>endTable</td><td>End Table</td><td>1</td></tr>
+<tr><td>faucetBrass04</td><td>Brass Faucet</td><td>3</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>9</td></tr>
+<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>5</td></tr>
+<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>7</td></tr>
+<tr><td>glassBulletproofPlate</td><td>Bulletproof Glass Plate</td><td>32</td></tr>
+<tr><td>glassBusinessSheet</td><td>Business Glass Pane</td><td>16</td></tr>
+<tr><td>iBeamSmall</td><td>I-Beam  Small</td><td>62</td></tr>
+<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>6</td></tr>
+<tr><td>ironBars</td><td>Iron Bars</td><td>32</td></tr>
+<tr><td>jailBars</td><td>Jail Bars</td><td>2</td></tr>
+<tr><td>jailDoorStaticCentered</td><td>Jail Door, static, centered</td><td>3</td></tr>
+<tr><td>ladderMetal</td><td>Iron Ladder</td><td>6</td></tr>
+<tr><td>looseBoardsTrapPlate1x1</td><td>Loose Boards Plate 1x1</td><td>76</td></tr>
+<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>20</td></tr>
+<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>25</td></tr>
+<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>5</td></tr>
+<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>29</td></tr>
+<tr><td>metalSignLetter_a</td><td>Metal Sign A</td><td>5</td></tr>
+<tr><td>metalSignLetter_c</td><td>Metal Sign C</td><td>2</td></tr>
+<tr><td>metalSignLetter_d</td><td>Metal Sign D</td><td>2</td></tr>
+<tr><td>metalSignLetter_e</td><td>Metal Sign E</td><td>1</td></tr>
+<tr><td>metalSignLetter_g</td><td>Metal Sign G</td><td>3</td></tr>
+<tr><td>metalSignLetter_h</td><td>Metal Sign H</td><td>1</td></tr>
+<tr><td>metalSignLetter_i</td><td>Metal Sign I</td><td>21</td></tr>
+<tr><td>metalSignLetter_k</td><td>Metal Sign K</td><td>1</td></tr>
+<tr><td>metalSignLetter_l</td><td>Metal Sign L</td><td>2</td></tr>
+<tr><td>metalSignLetter_n</td><td>Metal Sign N</td><td>5</td></tr>
+<tr><td>metalSignLetter_o</td><td>Metal Sign O</td><td>3</td></tr>
+<tr><td>metalSignLetter_p</td><td>Metal Sign P</td><td>1</td></tr>
+<tr><td>metalSignLetter_r</td><td>Metal Sign R</td><td>2</td></tr>
+<tr><td>metalSignLetter_s</td><td>Metal Sign S</td><td>4</td></tr>
+<tr><td>metalSignLetter_u</td><td>Metal Sign U</td><td>1</td></tr>
+<tr><td>metalSignLetter_v</td><td>Metal Sign V</td><td>1</td></tr>
+<tr><td>metalSignLetter_w</td><td>Metal Sign W</td><td>1</td></tr>
+<tr><td>newTextureBlock01</td><td>undefined</td><td>1</td></tr>
+<tr><td>officeChair01</td><td>Office Chair</td><td>1</td></tr>
+<tr><td>scrapIronBlock</td><td>Iron Block</td><td>38</td></tr>
+<tr><td>scrapIronCNRRound</td><td>Iron CNR Round</td><td>22</td></tr>
+<tr><td>scrapIronRamp</td><td>Iron Ramp</td><td>24</td></tr>
+<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>1</td></tr>
+<tr><td>sectionalPlaidCouchSofaMiddle</td><td>Old Couch Middle</td><td>2</td></tr>
+<tr><td>securityGateCTRPlate</td><td>Security Gate Centered</td><td>12</td></tr>
+<tr><td>securityGatePlate</td><td>Security Gate</td><td>72</td></tr>
+<tr><td>signShopOpen</td><td>Shop Sign: Open</td><td>1</td></tr>
+<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>44</td></tr>
+<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>3</td></tr>
+<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>55</td></tr>
+<tr><td>storeShelving01</td><td>Store Shelves</td><td>72</td></tr>
+<tr><td>storeShelving01Double</td><td>Store Shelves Double</td><td>3</td></tr>
+<tr><td>storeShelving01Top</td><td>Store Shelves (Top)</td><td>72</td></tr>
+<tr><td>storeShelving01TopDouble</td><td>Store Shelves Double (Top)</td><td>3</td></tr>
+<tr><td>streetLight01</td><td>Street Light (POI)</td><td>1</td></tr>
+<tr><td>terrAsphalt</td><td>Asphalt</td><td>613</td></tr>
+<tr><td>terrConcrete</td><td>Concrete Terrain (POI)</td><td>135</td></tr>
+<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
+<tr><td>tv</td><td>TV</td><td>1</td></tr>
+<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>2</td></tr>
+<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>1</td></tr>
+<tr><td>woodBlock</td><td>Wood Block</td><td>301</td></tr>
+<tr><td>woodChair1</td><td>Wooden Chair</td><td>2</td></tr>
+<tr><td>woodPlate</td><td>Wood Plate</td><td>480</td></tr>
     </table>
   </section>
 </body>

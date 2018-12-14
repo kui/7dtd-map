@@ -12,6 +12,14 @@ function html(model) {
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>${model.name}</title>
 </head>
 <body>
@@ -33,6 +41,11 @@ function html(model) {
   </section>
 
   <section>
+    <h2>Dimensions</h2>
+    <table>${['x', 'y', 'z'].map(d => `<tr><th>${d}</th><td>${model.dimensions[d]}</td></tr>`).join('\n')}</table>
+  </section>
+
+  <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
@@ -48,7 +61,9 @@ module.exports = async ({
   xml, nim, tts, labels,
 }) => {
   const name = path.basename(xml, '.xml');
-  const { blockNums } = await parseTts(tts);
+  const {
+    maxx, maxy, maxz, blockNums,
+  } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
     .then(bs => bs.map(b => ({
       id: b.id,
@@ -67,7 +82,12 @@ module.exports = async ({
     console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter(b => b.num === 0));
   }
 
-  return html({ name, xml: dom, blocks });
+  sortByProperty(dom, 'name');
+  sortByProperty(blocks, 'name');
+
+  return html({
+    name, xml: dom, blocks, dimensions: { x: maxx, y: maxy, z: maxz },
+  });
 };
 
 async function parsePrefabXml(xmlFileName) {
@@ -83,5 +103,13 @@ async function parseXml(xmlFileName) {
       if (result) resolve(result);
       reject(Error('Unexpected state'));
     });
+  });
+}
+
+function sortByProperty(arr, propName) {
+  arr.sort((a, b) => {
+    if (a[propName] > b[propName]) return 1;
+    if (a[propName] < b[propName]) return -1;
+    return 0;
   });
 }

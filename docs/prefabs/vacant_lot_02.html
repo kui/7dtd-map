@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>vacant_lot_02</title>
 </head>
 <body>
@@ -20,63 +28,70 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>Zoning</th><td>any</td></tr>
-<tr><th>YOffset</th><td>-1</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>AllowedTownships</th><td>city,town,rural</td></tr>
 <tr><th>Condition</th><td>Old</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>SleeperVolumeSize</th><td>39, 5, 45</td></tr>
-<tr><th>SleeperVolumeStart</th><td>-8, 0, -7</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,4</td></tr>
-<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>industrial</td></tr>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,4</td></tr>
+<tr><th>SleeperVolumeSize</th><td>39, 5, 45</td></tr>
+<tr><th>SleeperVolumeStart</th><td>-8, 0, -7</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-1</td></tr>
+<tr><th>Zoning</th><td>any</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>23</td></tr>
+<tr><th>y</th><td>13</td></tr>
+<tr><th>z</th><td>30</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>341</td></tr>
-<tr><td>air</td><td>Air</td><td>7881</td></tr>
-<tr><td>woodFenceSheet</td><td>Wood Fence</td><td>129</td></tr>
-<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>18</td></tr>
-<tr><td>corrugatedMetalSheetBent4</td><td>Corr. Metal Sheet Bent 4</td><td>18</td></tr>
-<tr><td>corrugatedMetalSheetBent3</td><td>Corr. Metal Sheet Bent 3</td><td>28</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>52</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>3</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>11</td></tr>
-<tr><td>streetLight01</td><td>Street Light (POI)</td><td>1</td></tr>
-<tr><td>terrBurntForestGround</td><td>Burnt Forest Ground</td><td>349</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>3</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>3</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>3</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>2</td></tr>
-<tr><td>cntDumpster</td><td>Dumpster</td><td>1</td></tr>
-<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>44</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>3</td></tr>
-<tr><td>scrapIronBlock</td><td>Iron Block</td><td>28</td></tr>
-<tr><td>terrDestroyedStone</td><td>Destroyed Stone</td><td>28</td></tr>
-<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>4</td></tr>
-<tr><td>cntDeskSafe</td><td>Desk Safe</td><td>1</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
-<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>2</td></tr>
-<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>2</td></tr>
-<tr><td>tire</td><td>undefined</td><td>5</td></tr>
-<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
+      <tr><td>air</td><td>Air</td><td>7881</td></tr>
+<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>2</td></tr>
 <tr><td>cinderBlocks02</td><td>Cinder Blocks02</td><td>1</td></tr>
 <tr><td>cinderBlocks03</td><td>Cinder Blocks03</td><td>2</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>1</td></tr>
-<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>2</td></tr>
+<tr><td>cntDeskSafe</td><td>Desk Safe</td><td>1</td></tr>
+<tr><td>cntDumpster</td><td>Dumpster</td><td>1</td></tr>
+<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>2</td></tr>
+<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>2</td></tr>
+<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
+<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
 <tr><td>cntTrashPile09</td><td>Old Trash</td><td>1</td></tr>
+<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>18</td></tr>
+<tr><td>corrugatedMetalSheetBent3</td><td>Corr. Metal Sheet Bent 3</td><td>28</td></tr>
+<tr><td>corrugatedMetalSheetBent4</td><td>Corr. Metal Sheet Bent 4</td><td>18</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>3</td></tr>
 <tr><td>metalReinforcedDoorWooden</td><td>Metal Reinforced Door</td><td>1</td></tr>
+<tr><td>scrapIronBlock</td><td>Iron Block</td><td>28</td></tr>
+<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>44</td></tr>
+<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>4</td></tr>
+<tr><td>sleeperBack</td><td>Sleeper Back</td><td>3</td></tr>
+<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>1</td></tr>
+<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>3</td></tr>
+<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>3</td></tr>
+<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>3</td></tr>
+<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>2</td></tr>
+<tr><td>streetLight01</td><td>Street Light (POI)</td><td>1</td></tr>
+<tr><td>terrBurntForestGround</td><td>Burnt Forest Ground</td><td>349</td></tr>
+<tr><td>terrDestroyedStone</td><td>Destroyed Stone</td><td>28</td></tr>
+<tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>341</td></tr>
+<tr><td>tire</td><td>undefined</td><td>5</td></tr>
+<tr><td>woodFenceSheet</td><td>Wood Fence</td><td>129</td></tr>
+<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>11</td></tr>
+<tr><td>woodPole</td><td>Wood Pole</td><td>52</td></tr>
     </table>
   </section>
 </body>

@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>cemetery_01</title>
 </head>
 <body>
@@ -20,73 +28,80 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>True</td></tr>
-<tr><th>Zoning</th><td>ResidentialOld</td></tr>
-<tr><th>YOffset</th><td>-2</td></tr>
-<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>True</td></tr>
 <tr><th>AllowedTownships</th><td>town,rural</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>SleeperVolumeSize</th><td>56, 14, 56</td></tr>
-<tr><th>SleeperVolumeStart</th><td>-6, 0, -6</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,5,6</td></tr>
-<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>commercial</td></tr>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,5,6</td></tr>
+<tr><th>SleeperVolumeSize</th><td>56, 14, 56</td></tr>
+<tr><th>SleeperVolumeStart</th><td>-6, 0, -6</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-2</td></tr>
+<tr><th>Zoning</th><td>ResidentialOld</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>44</td></tr>
+<tr><th>y</th><td>19</td></tr>
+<tr><th>z</th><td>44</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>3300</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>378</td></tr>
-<tr><td>air</td><td>Air</td><td>31458</td></tr>
+      <tr><td>air</td><td>Air</td><td>31458</td></tr>
 <tr><td>brickBlock</td><td>Bricks</td><td>542</td></tr>
-<tr><td>ironBarsCentered</td><td>Iron Bars Centered</td><td>272</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>78</td></tr>
-<tr><td>graveStone03</td><td>Grave Stone 03</td><td>18</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>3</td></tr>
-<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
-<tr><td>cntCoffin</td><td>Coffin</td><td>49</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>79</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>20</td></tr>
-<tr><td>graveStone07</td><td>Grave Stone 07</td><td>5</td></tr>
-<tr><td>graveStone02</td><td>Grave Stone 02</td><td>11</td></tr>
-<tr><td>graveStone01</td><td>Grave Stone 01</td><td>13</td></tr>
-<tr><td>graveStone08</td><td>Grave Stone 08</td><td>2</td></tr>
-<tr><td>flagstoneHalf</td><td>flagstone 1/2 Block</td><td>6</td></tr>
-<tr><td>graveStone06</td><td>Grave Stone 06</td><td>4</td></tr>
-<tr><td>treeDeadTree01</td><td>Tree Dead Tree 01</td><td>3</td></tr>
-<tr><td>cntBirdnest</td><td>Birdnest</td><td>1</td></tr>
-<tr><td>graveStone05</td><td>Grave Stone 05</td><td>3</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>2</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>3</td></tr>
-<tr><td>concreteStairs25</td><td>Concrete Stairs</td><td>2</td></tr>
-<tr><td>porchLight01</td><td>Old Outdoor Light (POI)</td><td>2</td></tr>
-<tr><td>woodRamp</td><td>Wood Ramp</td><td>299</td></tr>
 <tr><td>burntWoodRamp7</td><td>Burnt Wood Ramp 7</td><td>2</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>52</td></tr>
-<tr><td>woodCTRPlate</td><td>undefined</td><td>4</td></tr>
+<tr><td>cntBirdnest</td><td>Birdnest</td><td>1</td></tr>
+<tr><td>cntCoffin</td><td>Coffin</td><td>49</td></tr>
+<tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
+<tr><td>concreteBlock</td><td>Concrete Block</td><td>78</td></tr>
+<tr><td>concreteStairs25</td><td>Concrete Stairs</td><td>2</td></tr>
+<tr><td>flagstoneHalf</td><td>flagstone 1/2 Block</td><td>6</td></tr>
+<tr><td>glassIndustrial02Broken01CTRPlate</td><td>Glass Industrial 2 Broken 1 Ctr Plate</td><td>7</td></tr>
+<tr><td>glassIndustrial02Broken02CTRPlate</td><td>Glass Industrial 2 Broken 2 Ctr Plate</td><td>6</td></tr>
+<tr><td>glassIndustrial02CTRPlate</td><td>Glass Industrial 2 Ctr Plate</td><td>11</td></tr>
+<tr><td>graveStone01</td><td>Grave Stone 01</td><td>13</td></tr>
+<tr><td>graveStone02</td><td>Grave Stone 02</td><td>11</td></tr>
+<tr><td>graveStone03</td><td>Grave Stone 03</td><td>18</td></tr>
+<tr><td>graveStone05</td><td>Grave Stone 05</td><td>3</td></tr>
+<tr><td>graveStone06</td><td>Grave Stone 06</td><td>4</td></tr>
+<tr><td>graveStone07</td><td>Grave Stone 07</td><td>5</td></tr>
+<tr><td>graveStone08</td><td>Grave Stone 08</td><td>2</td></tr>
+<tr><td>ironBarsCentered</td><td>Iron Bars Centered</td><td>272</td></tr>
+<tr><td>pew_segment01</td><td>Pew Segment 1</td><td>8</td></tr>
+<tr><td>pew_segment02</td><td>Pew Segment 2</td><td>8</td></tr>
+<tr><td>pew_segment03</td><td>Pew Segment 3</td><td>8</td></tr>
+<tr><td>porchLight01</td><td>Old Outdoor Light (POI)</td><td>2</td></tr>
+<tr><td>shutters1Plate</td><td>Shutters1 Plate</td><td>4</td></tr>
+<tr><td>sleeperBack</td><td>Sleeper Back</td><td>3</td></tr>
+<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>2</td></tr>
+<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
+<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>20</td></tr>
 <tr><td>solidWoodFrameRamp</td><td>S Wood Frame Ramp</td><td>4</td></tr>
+<tr><td>terrDirt</td><td>Dirt</td><td>79</td></tr>
+<tr><td>terrGravel</td><td>Gravel</td><td>378</td></tr>
+<tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>3300</td></tr>
+<tr><td>treeDeadTree01</td><td>Tree Dead Tree 01</td><td>3</td></tr>
+<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
+<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>2</td></tr>
+<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>3</td></tr>
 <tr><td>woodBlock</td><td>Wood Block</td><td>106</td></tr>
 <tr><td>woodCNRFull</td><td>Wood Corner Full</td><td>4</td></tr>
-<tr><td>pew_segment03</td><td>Pew Segment 3</td><td>8</td></tr>
-<tr><td>pew_segment02</td><td>Pew Segment 2</td><td>8</td></tr>
-<tr><td>pew_segment01</td><td>Pew Segment 1</td><td>8</td></tr>
-<tr><td>shutters1Plate</td><td>Shutters1 Plate</td><td>4</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>glassIndustrial02Broken02CTRPlate</td><td>Glass Industrial 2 Broken 2 Ctr Plate</td><td>6</td></tr>
-<tr><td>glassIndustrial02Broken01CTRPlate</td><td>Glass Industrial 2 Broken 1 Ctr Plate</td><td>7</td></tr>
-<tr><td>glassIndustrial02CTRPlate</td><td>Glass Industrial 2 Ctr Plate</td><td>11</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>2</td></tr>
+<tr><td>woodCTRPlate</td><td>undefined</td><td>4</td></tr>
+<tr><td>woodPole</td><td>Wood Pole</td><td>52</td></tr>
+<tr><td>woodRamp</td><td>Wood Ramp</td><td>299</td></tr>
 <tr><td>woodStairs25</td><td>Wood Stairs</td><td>1</td></tr>
-<tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
     </table>
   </section>
 </body>

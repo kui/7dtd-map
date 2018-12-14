@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>bluff01</title>
 </head>
 <body>
@@ -20,27 +28,34 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>False</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>YOffset</th><td>-4</td></tr>
-<tr><th>Zoning</th><td>BiomeOnly</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>False</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>world/deco/biome</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-4</td></tr>
+<tr><th>Zoning</th><td>BiomeOnly</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>15</td></tr>
+<tr><th>y</th><td>10</td></tr>
+<tr><th>z</th><td>19</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrStone</td><td>Stone</td><td>828</td></tr>
-<tr><td>terrSandStone</td><td>Sandstone</td><td>568</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>199</td></tr>
-<tr><td>air</td><td>Air</td><td>1254</td></tr>
+      <tr><td>air</td><td>Air</td><td>1254</td></tr>
 <tr><td>rockResource</td><td>Resource Boulder 1</td><td>1</td></tr>
+<tr><td>terrDirt</td><td>Dirt</td><td>199</td></tr>
+<tr><td>terrSandStone</td><td>Sandstone</td><td>568</td></tr>
+<tr><td>terrStone</td><td>Stone</td><td>828</td></tr>
     </table>
   </section>
 </body>

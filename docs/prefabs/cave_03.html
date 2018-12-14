@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>cave_03</title>
 </head>
 <body>
@@ -20,124 +28,131 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>True</td></tr>
-<tr><th>YOffset</th><td>-32</td></tr>
-<tr><th>Zoning</th><td>NoZone</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>True</td></tr>
 <tr><th>AllowedTownships</th><td>wilderness</td></tr>
-<tr><th>RotationToFaceNorth</th><td>2</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>True</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>SleeperVolumeSize</th><td>11, 7, 17#19, 11, 23#17, 11, 14#10, 4, 16#10, 8, 10</td></tr>
-<tr><th>SleeperVolumeStart</th><td>31, 23, 28#15, 16, 1#14, 10, 24#18, 15, 38#28, 15, 43</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,2,3,S_-_Group_Ghost_Town,2,3,S_-_Group_Ghost_Town,0,1,S_-_Group_Ghost_Town,0,2,S_Zom_Utility_Worker,1,2</td></tr>
-<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>Wilderness</td></tr>
-<tr><th>SleeperIsBossVolume</th><td>False,False,False,False,False</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>ExcludeDistantPOIMesh</th><td>True</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
-<tr><th>QuestTags</th><td>clear</td></tr></table>
+<tr><th>QuestTags</th><td>clear</td></tr>
+<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>SleeperIsBossVolume</th><td>False,False,False,False,False</td></tr>
+<tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False</td></tr>
+<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,2,3,S_-_Group_Ghost_Town,2,3,S_-_Group_Ghost_Town,0,1,S_-_Group_Ghost_Town,0,2,S_Zom_Utility_Worker,1,2</td></tr>
+<tr><th>SleeperVolumeSize</th><td>11, 7, 17#19, 11, 23#17, 11, 14#10, 4, 16#10, 8, 10</td></tr>
+<tr><th>SleeperVolumeStart</th><td>31, 23, 28#15, 16, 1#14, 10, 24#18, 15, 38#28, 15, 43</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-32</td></tr>
+<tr><th>Zoning</th><td>NoZone</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>44</td></tr>
+<tr><th>y</th><td>63</td></tr>
+<tr><th>z</th><td>54</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>67571</td></tr>
-<tr><td>terrStone</td><td>Stone</td><td>3626</td></tr>
-<tr><td>air</td><td>Air</td><td>76513</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>866</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>198</td></tr>
-<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>44</td></tr>
-<tr><td>woodPoleSupport</td><td>Wood Pole Support</td><td>34</td></tr>
-<tr><td>woodPoleSupport2</td><td>Wood Pole Support 2</td><td>34</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>5</td></tr>
-<tr><td>mushroom02</td><td>Mushrooms 02 (POI)</td><td>21</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>8</td></tr>
-<tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>3</td></tr>
-<tr><td>palletBrownBoxesLoose</td><td>Pallet, Brown Boxes, Loose</td><td>6</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>3</td></tr>
-<tr><td>palletEmpty</td><td>Empty Pallet</td><td>6</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>4</td></tr>
-<tr><td>palletBlueTarpTile</td><td>Pallet, Blue Tarp, Tile</td><td>2</td></tr>
-<tr><td>palletBrownBoxesTop</td><td>Pallet, Brown Boxes, Top</td><td>6</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>5</td></tr>
-<tr><td>corrugatedMetalPillar0.05SCTR</td><td>Corr. Metal Pillar 5cm SCtr</td><td>3</td></tr>
-<tr><td>palletBrownBoxesBase</td><td>Pallet, Brown Boxes, Base</td><td>7</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>palletBrownBoxesTile</td><td>Pallet, Brown Boxes, Tile</td><td>2</td></tr>
+      <tr><td>air</td><td>Air</td><td>76513</td></tr>
+<tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>2</td></tr>
+<tr><td>chainLinkFenceTop</td><td>Chain Link Fence Top</td><td>4</td></tr>
+<tr><td>chainLinkFenceTopPole</td><td>Chain Link Fence Top Pole</td><td>4</td></tr>
+<tr><td>chainLinkFenceTopPole2</td><td>Chain Link Fence Top Pole 2</td><td>4</td></tr>
+<tr><td>chainLinkPole</td><td>Chain Link Pole</td><td>4</td></tr>
+<tr><td>cntBackpack01</td><td>Weathered Backpack</td><td>1</td></tr>
+<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
+<tr><td>cntShippingCrateLabEquipment</td><td>Pop-N-Pills Sealed Shipping Crate</td><td>1</td></tr>
+<tr><td>cntShippingCrateShamway</td><td>Shamway Sealed Shipping Crate</td><td>2</td></tr>
+<tr><td>cntShippingCrateWorkingStiffs</td><td>Working Stiff Sealed Shipping Crate</td><td>1</td></tr>
+<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>3</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>2</td></tr>
 <tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>2</td></tr>
-<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>3</td></tr>
+<tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
+<tr><td>concreteBlock</td><td>Concrete Block</td><td>221</td></tr>
+<tr><td>concreteBlockTileBroken01</td><td>Concrete Block, Broken Tile</td><td>6</td></tr>
+<tr><td>concreteRamp</td><td>Concrete Ramp</td><td>16</td></tr>
+<tr><td>controlPanelBase04</td><td>Control Panel Base 04</td><td>1</td></tr>
+<tr><td>controlPanelBase05</td><td>Control Panel Base 05</td><td>1</td></tr>
+<tr><td>controlPanelBase08</td><td>Control Panel Base 08</td><td>7</td></tr>
+<tr><td>corrugatedMetalPillar0.05</td><td>Corr. Metal Pillar 5cm</td><td>2</td></tr>
+<tr><td>corrugatedMetalPillar0.05CTR</td><td>Corr. Metal Pillar 5cm Centered</td><td>4</td></tr>
+<tr><td>corrugatedMetalPillar0.05SCTR</td><td>Corr. Metal Pillar 5cm SCtr</td><td>3</td></tr>
+<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>3</td></tr>
+<tr><td>corrugatedMetalSheetBent2</td><td>Corr. Metal Sheet Bent 2</td><td>2</td></tr>
+<tr><td>corrugatedMetalSheetBent3</td><td>Corr. Metal Sheet Bent 3</td><td>4</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>5</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>5</td></tr>
+<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>1</td></tr>
+<tr><td>goreBlockHumanCorpse</td><td>Decaying Human Corpse</td><td>1</td></tr>
+<tr><td>iBeam</td><td>I-Beam</td><td>143</td></tr>
+<tr><td>iBeamFoundation</td><td>I-Beam  Foundation</td><td>3</td></tr>
+<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>4</td></tr>
+<tr><td>industrialLight02Red</td><td>xIndustrial Light (POI)</td><td>2</td></tr>
+<tr><td>ironBars</td><td>Iron Bars</td><td>30</td></tr>
+<tr><td>ironDoor1_v1</td><td>Iron Door</td><td>2</td></tr>
+<tr><td>jailDoorStatic</td><td>Jail Door, static</td><td>2</td></tr>
+<tr><td>ladderMetal</td><td>Iron Ladder</td><td>10</td></tr>
+<tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>1</td></tr>
+<tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>16</td></tr>
+<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>6</td></tr>
+<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>5</td></tr>
+<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>5</td></tr>
+<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>11</td></tr>
+<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>3</td></tr>
+<tr><td>mushroom02</td><td>Mushrooms 02 (POI)</td><td>21</td></tr>
+<tr><td>palletBlueTarpBase</td><td>Pallet, Blue Tarp, Base</td><td>3</td></tr>
+<tr><td>palletBlueTarpTile</td><td>Pallet, Blue Tarp, Tile</td><td>2</td></tr>
+<tr><td>palletBricksPartial2</td><td>Pallet, Bricks, Partial 2</td><td>1</td></tr>
+<tr><td>palletBrownBoxesBase</td><td>Pallet, Brown Boxes, Base</td><td>7</td></tr>
+<tr><td>palletBrownBoxesLoose</td><td>Pallet, Brown Boxes, Loose</td><td>6</td></tr>
+<tr><td>palletBrownBoxesTile</td><td>Pallet, Brown Boxes, Tile</td><td>2</td></tr>
+<tr><td>palletBrownBoxesTop</td><td>Pallet, Brown Boxes, Top</td><td>6</td></tr>
+<tr><td>palletEmpty</td><td>Empty Pallet</td><td>6</td></tr>
+<tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>3</td></tr>
 <tr><td>plantedMushroom3Harvest</td><td>Mushrooms 3 (POI)</td><td>4</td></tr>
-<tr><td>treeOakSml01</td><td>undefined</td><td>3</td></tr>
 <tr><td>questRallyMarker</td><td>undefined</td><td>1</td></tr>
-<tr><td>woodCatwalkRailing1</td><td>Wood Catwalk, 1 Railing</td><td>5</td></tr>
-<tr><td>woodCatwalk</td><td>Wood Catwalk</td><td>7</td></tr>
-<tr><td>woodCatwalkRailingCNR</td><td>Wood Catwalk Corner</td><td>2</td></tr>
-<tr><td>woodStairsBoardRailing</td><td>Wood Board Stairs With Railing</td><td>6</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>3</td></tr>
 <tr><td>rock04</td><td>Small Rock 04</td><td>1</td></tr>
+<tr><td>rockResource</td><td>Resource Boulder 1</td><td>1</td></tr>
+<tr><td>rockResource02</td><td>Resource Boulder 2</td><td>2</td></tr>
+<tr><td>scrapHatch_v1</td><td>Iron Hatch</td><td>2</td></tr>
+<tr><td>scrapIronBlock</td><td>Iron Block</td><td>30</td></tr>
+<tr><td>scrapIronPlate</td><td>Iron Plate</td><td>26</td></tr>
+<tr><td>scrapIronPole</td><td>Iron Pole</td><td>12</td></tr>
+<tr><td>scrapIronWedge</td><td>Iron Wedge</td><td>24</td></tr>
+<tr><td>scrapIronWedgeCNRInsideTop</td><td>Iron Wedge Inside Corner Top</td><td>2</td></tr>
+<tr><td>sleeperBack</td><td>Sleeper Back</td><td>5</td></tr>
+<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>4</td></tr>
+<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
+<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
+<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>8</td></tr>
+<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>3</td></tr>
+<tr><td>steelQuarter</td><td>Steel 1/4 Block</td><td>7</td></tr>
+<tr><td>terrGravel</td><td>Gravel</td><td>866</td></tr>
+<tr><td>terrStone</td><td>Stone</td><td>3626</td></tr>
+<tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>67571</td></tr>
 <tr><td>treeBurntMaple01</td><td>Tree Burnt Maple 01</td><td>1</td></tr>
+<tr><td>treeOakMed02</td><td>undefined</td><td>2</td></tr>
+<tr><td>treeOakSml01</td><td>undefined</td><td>3</td></tr>
+<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>3</td></tr>
+<tr><td>woodCatwalk</td><td>Wood Catwalk</td><td>7</td></tr>
+<tr><td>woodCatwalkRailing1</td><td>Wood Catwalk, 1 Railing</td><td>5</td></tr>
+<tr><td>woodCatwalkRailingCNR</td><td>Wood Catwalk Corner</td><td>2</td></tr>
+<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>44</td></tr>
 <tr><td>woodFenceFarmSheetBroken1</td><td>Wood Farm Fence Broken 1</td><td>2</td></tr>
 <tr><td>woodFenceFarmSheetBroken2</td><td>Wood Farm Fence Broken 2</td><td>2</td></tr>
-<tr><td>iBeam</td><td>I-Beam</td><td>143</td></tr>
-<tr><td>steelQuarter</td><td>Steel 1/4 Block</td><td>7</td></tr>
-<tr><td>treeOakMed02</td><td>undefined</td><td>2</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>221</td></tr>
-<tr><td>scrapIronPole</td><td>Iron Pole</td><td>12</td></tr>
-<tr><td>scrapIronPlate</td><td>Iron Plate</td><td>26</td></tr>
-<tr><td>ironBars</td><td>Iron Bars</td><td>30</td></tr>
-<tr><td>concreteRamp</td><td>Concrete Ramp</td><td>16</td></tr>
-<tr><td>rockResource</td><td>Resource Boulder 1</td><td>1</td></tr>
-<tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>16</td></tr>
-<tr><td>cntShippingCrateWorkingStiffs</td><td>Working Stiff Sealed Shipping Crate</td><td>1</td></tr>
-<tr><td>cntShippingCrateShamway</td><td>Shamway Sealed Shipping Crate</td><td>2</td></tr>
+<tr><td>woodPole</td><td>Wood Pole</td><td>198</td></tr>
+<tr><td>woodPoleSupport</td><td>Wood Pole Support</td><td>34</td></tr>
+<tr><td>woodPoleSupport2</td><td>Wood Pole Support 2</td><td>34</td></tr>
 <tr><td>woodQuarter</td><td>Wood 1/4 Block</td><td>16</td></tr>
 <tr><td>woodQuarterCNR</td><td>Wood 1/4 Corner</td><td>4</td></tr>
-<tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>1</td></tr>
-<tr><td>ironDoor1_v1</td><td>Iron Door</td><td>2</td></tr>
-<tr><td>cntShippingCrateLabEquipment</td><td>Pop-N-Pills Sealed Shipping Crate</td><td>1</td></tr>
-<tr><td>jailDoorStatic</td><td>Jail Door, static</td><td>2</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
-<tr><td>rockResource02</td><td>Resource Boulder 2</td><td>2</td></tr>
-<tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
-<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>4</td></tr>
-<tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>2</td></tr>
-<tr><td>controlPanelBase08</td><td>Control Panel Base 08</td><td>7</td></tr>
-<tr><td>corrugatedMetalPillar0.05CTR</td><td>Corr. Metal Pillar 5cm Centered</td><td>4</td></tr>
-<tr><td>ladderMetal</td><td>Iron Ladder</td><td>10</td></tr>
-<tr><td>scrapHatch_v1</td><td>Iron Hatch</td><td>2</td></tr>
-<tr><td>corrugatedMetalPillar0.05</td><td>Corr. Metal Pillar 5cm</td><td>2</td></tr>
-<tr><td>controlPanelBase05</td><td>Control Panel Base 05</td><td>1</td></tr>
-<tr><td>controlPanelBase04</td><td>Control Panel Base 04</td><td>1</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>industrialLight02Red</td><td>xIndustrial Light (POI)</td><td>2</td></tr>
-<tr><td>concreteBlockTileBroken01</td><td>Concrete Block, Broken Tile</td><td>6</td></tr>
-<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>5</td></tr>
-<tr><td>chainLinkFenceTopPole2</td><td>Chain Link Fence Top Pole 2</td><td>4</td></tr>
-<tr><td>corrugatedMetalSheetBent3</td><td>Corr. Metal Sheet Bent 3</td><td>4</td></tr>
-<tr><td>palletBlueTarpBase</td><td>Pallet, Blue Tarp, Base</td><td>3</td></tr>
-<tr><td>scrapIronWedge</td><td>Iron Wedge</td><td>24</td></tr>
-<tr><td>scrapIronBlock</td><td>Iron Block</td><td>30</td></tr>
-<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>11</td></tr>
-<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>3</td></tr>
-<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>5</td></tr>
-<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>6</td></tr>
-<tr><td>goreBlockHumanCorpse</td><td>Decaying Human Corpse</td><td>1</td></tr>
-<tr><td>chainLinkFenceTop</td><td>Chain Link Fence Top</td><td>4</td></tr>
-<tr><td>corrugatedMetalSheetBent2</td><td>Corr. Metal Sheet Bent 2</td><td>2</td></tr>
-<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>3</td></tr>
-<tr><td>iBeamFoundation</td><td>I-Beam  Foundation</td><td>3</td></tr>
-<tr><td>cntBackpack01</td><td>Weathered Backpack</td><td>1</td></tr>
-<tr><td>chainLinkFenceTopPole</td><td>Chain Link Fence Top Pole</td><td>4</td></tr>
-<tr><td>chainLinkPole</td><td>Chain Link Pole</td><td>4</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>1</td></tr>
-<tr><td>palletBricksPartial2</td><td>Pallet, Bricks, Partial 2</td><td>1</td></tr>
-<tr><td>scrapIronWedgeCNRInsideTop</td><td>Iron Wedge Inside Corner Top</td><td>2</td></tr>
+<tr><td>woodStairsBoardRailing</td><td>Wood Board Stairs With Railing</td><td>6</td></tr>
     </table>
   </section>
 </body>

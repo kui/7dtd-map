@@ -5,15 +5,19 @@ const prefabHtml = require('./lib/prefab-html');
 const localInfo = require('../local.json');
 const parseLabel = require('./lib/label-parser');
 
-const usage = `${path.basename(process.argv[1])} <Prefab XML> <Prefab Nim> <Prefab Tts>`;
+const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
 
 async function main() {
-  if (process.argv.length <= 4) {
+  if (process.argv.length <= 2) {
     console.error(usage);
     return 1;
   }
   const labels = await loadLabels();
-  console.log(await prefabHtml({ xml: process.argv[2], nim: process.argv[3], tts: process.argv[4], labels }));
+  const xml = process.argv[2];
+  const pathBasename = path.join(path.dirname(xml), path.basename(xml, '.xml'))
+  const nim = `${pathBasename}.blocks.nim`;
+  const tts = `${pathBasename}.tts`;
+  console.log(await prefabHtml({ xml, nim, tts, labels }));
   return 0;
 }
 

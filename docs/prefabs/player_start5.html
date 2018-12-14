@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>player_start5</title>
 </head>
 <body>
@@ -20,14 +28,21 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>Zoning</th><td>NavOnly</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>world/deco/biome</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr></table>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>Zoning</th><td>NavOnly</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>6</td></tr>
+<tr><th>y</th><td>2</td></tr>
+<tr><th>z</th><td>8</td></tr></table>
   </section>
 
   <section>
@@ -35,11 +50,11 @@
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
       <tr><td>air</td><td>Air</td><td>91</td></tr>
-<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
-<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
-<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
 <tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
+<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
 <tr><td>cntCardboardBox</td><td>Cardboard Box</td><td>1</td></tr>
+<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
+<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
     </table>
   </section>
 </body>

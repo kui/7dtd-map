@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>mp_waste_cover_01</title>
 </head>
 <body>
@@ -20,25 +28,32 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>False</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>Zoning</th><td>NavOnly</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>False</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>world/deco/biome</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr></table>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>Zoning</th><td>NavOnly</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>5</td></tr>
+<tr><th>y</th><td>2</td></tr>
+<tr><th>z</th><td>3</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>cinderBlocks01</td><td>Cinder Blocks01</td><td>2</td></tr>
-<tr><td>air</td><td>Air</td><td>23</td></tr>
+      <tr><td>air</td><td>Air</td><td>23</td></tr>
+<tr><td>cinderBlocks01</td><td>Cinder Blocks01</td><td>2</td></tr>
 <tr><td>concreteDestroyed01</td><td>concrete Destroyed 01</td><td>2</td></tr>
-<tr><td>concreteDestroyed04</td><td>concrete Destroyed 04</td><td>2</td></tr>
 <tr><td>concreteDestroyed03</td><td>concrete Destroyed 03</td><td>1</td></tr>
+<tr><td>concreteDestroyed04</td><td>concrete Destroyed 04</td><td>2</td></tr>
     </table>
   </section>
 </body>

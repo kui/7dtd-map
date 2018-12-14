@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>warehouse_01</title>
 </head>
 <body>
@@ -20,88 +28,95 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>DistantPOIYOffset</th><td>0</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>EditorGroups</th><td>industrial</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>DistantPOIYOffset</th><td>0</td></tr>
+<tr><th>EditorGroups</th><td>industrial</td></tr>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>29</td></tr>
+<tr><th>y</th><td>12</td></tr>
+<tr><th>z</th><td>55</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrAsphalt</td><td>Asphalt</td><td>1595</td></tr>
-<tr><td>air</td><td>Air</td><td>15043</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>12</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>8</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>6</td></tr>
-<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
-<tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>3</td></tr>
-<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>5</td></tr>
-<tr><td>corrugatedMetalPole</td><td>Corr. Metal Pole</td><td>28</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>5</td></tr>
-<tr><td>corrugatedMetalPlate</td><td>Corr. Metal Plate</td><td>19</td></tr>
-<tr><td>securityGatePlate</td><td>Security Gate</td><td>24</td></tr>
-<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>3</td></tr>
-<tr><td>cntTrashPile05</td><td>Rotting Trash</td><td>2</td></tr>
-<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>2</td></tr>
-<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>4</td></tr>
-<tr><td>awningRamp</td><td>Awning Ramp</td><td>5</td></tr>
-<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>940</td></tr>
-<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>1</td></tr>
-<tr><td>garageDoorMetal_v1</td><td>Garage Door Metal</td><td>4</td></tr>
-<tr><td>commercialDoor2_v3</td><td>Commercial Door 2 v3</td><td>1</td></tr>
-<tr><td>glassIndustrial02CTRPlate</td><td>Glass Industrial 2 Ctr Plate</td><td>266</td></tr>
-<tr><td>iBeamCenteredFoundation</td><td>I-Beam Centered Foundation</td><td>8</td></tr>
-<tr><td>ladderMetal</td><td>Iron Ladder</td><td>12</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>4</td></tr>
-<tr><td>oilBarrel</td><td>Gas Barrel</td><td>16</td></tr>
+      <tr><td>air</td><td>Air</td><td>15043</td></tr>
 <tr><td>airConditioner</td><td>Air Conditioner</td><td>5</td></tr>
-<tr><td>cntStorageGeneric</td><td>Storage Box</td><td>1</td></tr>
-<tr><td>iBeamCentered</td><td>I-Beam Centered</td><td>243</td></tr>
-<tr><td>fusebox</td><td>Fusebox</td><td>4</td></tr>
-<tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>107</td></tr>
-<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>3</td></tr>
-<tr><td>metalRailing</td><td>Thin Metal Railing</td><td>67</td></tr>
-<tr><td>electricwirerelay</td><td>Electric Wire Relay</td><td>2</td></tr>
-<tr><td>metalTrussingBlockOld</td><td>Metal Trussing Block (Old)</td><td>126</td></tr>
-<tr><td>speaker</td><td>Speaker</td><td>2</td></tr>
-<tr><td>iBeam6wayCentered</td><td>I-Beam Centered 6-way</td><td>34</td></tr>
-<tr><td>bridgeConcreteBlock</td><td>Bridge Concrete Block</td><td>420</td></tr>
-<tr><td>cntTrash_can01</td><td>Trash Can</td><td>1</td></tr>
-<tr><td>cntTrashPile09</td><td>Old Trash</td><td>3</td></tr>
-<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>47</td></tr>
-<tr><td>spotlightNailedDownPOI</td><td>Spotlight (POI)</td><td>1</td></tr>
-<tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>19</td></tr>
-<tr><td>cntCollapsedGeneratorbank</td><td>Destroyed Generator Bank</td><td>2</td></tr>
-<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
+<tr><td>awningRamp</td><td>Awning Ramp</td><td>5</td></tr>
 <tr><td>batterybank</td><td>Battery Bank</td><td>1</td></tr>
-<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>2</td></tr>
+<tr><td>bridgeConcreteBlock</td><td>Bridge Concrete Block</td><td>420</td></tr>
 <tr><td>burningBarrel</td><td>Burning Barrel (POI)</td><td>2</td></tr>
-<tr><td>metalStairsBoardRailing</td><td>Metal Stairs With Railing</td><td>8</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>3</td></tr>
-<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>1</td></tr>
-<tr><td>electricalBox01</td><td>Electrical Box 01</td><td>1</td></tr>
-<tr><td>switch</td><td>Switch</td><td>1</td></tr>
-<tr><td>cntVendingMachine2</td><td>Vending Machine</td><td>1</td></tr>
-<tr><td>cntBin</td><td>Small Trash Bin</td><td>1</td></tr>
-<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
-<tr><td>tv</td><td>TV</td><td>1</td></tr>
-<tr><td>cntStorageChest</td><td>Storage Chest</td><td>1</td></tr>
-<tr><td>officeChair01</td><td>Office Chair</td><td>1</td></tr>
-<tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>1</td></tr>
+<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
 <tr><td>ceilingLight01</td><td>Simple Light (POI)</td><td>1</td></tr>
-<tr><td>cntFileCabinetTallRandomLootHelper</td><td>= File Cabinet Tall = Random Helper</td><td>2</td></tr>
-<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>1</td></tr>
-<tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
-<tr><td>cntGasPump</td><td>Gas Pump</td><td>1</td></tr>
-<tr><td>commercialDoor1_v3</td><td>Commercial Door 1 v3</td><td>1</td></tr>
+<tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>19</td></tr>
+<tr><td>cntBin</td><td>Small Trash Bin</td><td>1</td></tr>
+<tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>1</td></tr>
+<tr><td>cntCollapsedGeneratorbank</td><td>Destroyed Generator Bank</td><td>2</td></tr>
 <tr><td>cntDumpster</td><td>Dumpster</td><td>1</td></tr>
+<tr><td>cntFileCabinetTallRandomLootHelper</td><td>= File Cabinet Tall = Random Helper</td><td>2</td></tr>
+<tr><td>cntGasPump</td><td>Gas Pump</td><td>1</td></tr>
+<tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
+<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
+<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>47</td></tr>
+<tr><td>cntStorageChest</td><td>Storage Chest</td><td>1</td></tr>
+<tr><td>cntStorageGeneric</td><td>Storage Box</td><td>1</td></tr>
+<tr><td>cntTrashPile01</td><td>Trash Pile</td><td>3</td></tr>
+<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>3</td></tr>
+<tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>3</td></tr>
+<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
+<tr><td>cntTrashPile05</td><td>Rotting Trash</td><td>2</td></tr>
+<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>2</td></tr>
+<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>4</td></tr>
+<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>5</td></tr>
+<tr><td>cntTrashPile09</td><td>Old Trash</td><td>3</td></tr>
+<tr><td>cntTrash_can01</td><td>Trash Can</td><td>1</td></tr>
+<tr><td>cntVendingMachine2</td><td>Vending Machine</td><td>1</td></tr>
+<tr><td>commercialDoor1_v3</td><td>Commercial Door 1 v3</td><td>1</td></tr>
+<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>1</td></tr>
+<tr><td>commercialDoor2_v3</td><td>Commercial Door 2 v3</td><td>1</td></tr>
+<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>1</td></tr>
+<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>940</td></tr>
+<tr><td>corrugatedMetalPlate</td><td>Corr. Metal Plate</td><td>19</td></tr>
+<tr><td>corrugatedMetalPole</td><td>Corr. Metal Pole</td><td>28</td></tr>
+<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>12</td></tr>
+<tr><td>electricalBox01</td><td>Electrical Box 01</td><td>1</td></tr>
+<tr><td>electricwirerelay</td><td>Electric Wire Relay</td><td>2</td></tr>
+<tr><td>fusebox</td><td>Fusebox</td><td>4</td></tr>
+<tr><td>garageDoorMetal_v1</td><td>Garage Door Metal</td><td>4</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>5</td></tr>
+<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>6</td></tr>
+<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>8</td></tr>
+<tr><td>glassIndustrial02CTRPlate</td><td>Glass Industrial 2 Ctr Plate</td><td>266</td></tr>
+<tr><td>iBeam6wayCentered</td><td>I-Beam Centered 6-way</td><td>34</td></tr>
+<tr><td>iBeamCentered</td><td>I-Beam Centered</td><td>243</td></tr>
+<tr><td>iBeamCenteredFoundation</td><td>I-Beam Centered Foundation</td><td>8</td></tr>
+<tr><td>industrialLight01</td><td>Industrial Light (POI)</td><td>3</td></tr>
+<tr><td>ladderMetal</td><td>Iron Ladder</td><td>12</td></tr>
+<tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>107</td></tr>
+<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>2</td></tr>
+<tr><td>metalRailing</td><td>Thin Metal Railing</td><td>67</td></tr>
+<tr><td>metalStairsBoardRailing</td><td>Metal Stairs With Railing</td><td>8</td></tr>
+<tr><td>metalTrussingBlockOld</td><td>Metal Trussing Block (Old)</td><td>126</td></tr>
+<tr><td>officeChair01</td><td>Office Chair</td><td>1</td></tr>
+<tr><td>oilBarrel</td><td>Gas Barrel</td><td>16</td></tr>
+<tr><td>securityGatePlate</td><td>Security Gate</td><td>24</td></tr>
+<tr><td>speaker</td><td>Speaker</td><td>2</td></tr>
+<tr><td>spotlightNailedDownPOI</td><td>Spotlight (POI)</td><td>1</td></tr>
+<tr><td>switch</td><td>Switch</td><td>1</td></tr>
+<tr><td>terrAsphalt</td><td>Asphalt</td><td>1595</td></tr>
+<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
+<tr><td>tv</td><td>TV</td><td>1</td></tr>
+<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>4</td></tr>
+<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>1</td></tr>
     </table>
   </section>
 </body>

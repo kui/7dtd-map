@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>roadblock_01</title>
 </head>
 <body>
@@ -20,15 +28,22 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>Zoning</th><td>NavOnly</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>world/deco/biome, navezgane only</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>Zoning</th><td>NavOnly</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>9</td></tr>
+<tr><th>y</th><td>2</td></tr>
+<tr><th>z</th><td>3</td></tr></table>
   </section>
 
   <section>
@@ -36,13 +51,13 @@
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
       <tr><td>air</td><td>Air</td><td>44</td></tr>
+<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
 <tr><td>goreBlockHumanCorpse</td><td>Decaying Human Corpse</td><td>1</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
+<tr><td>roadBarricadeLight</td><td>Road Barricade Light (POI)</td><td>1</td></tr>
+<tr><td>sandbagEnd00</td><td>Sandbags End 1</td><td>2</td></tr>
 <tr><td>sandbagEnd02</td><td>Sandbags End 3</td><td>2</td></tr>
 <tr><td>sandbagStraight01</td><td>Sandbags Straight</td><td>2</td></tr>
-<tr><td>sandbagEnd00</td><td>Sandbags End 1</td><td>2</td></tr>
-<tr><td>roadBarricadeLight</td><td>Road Barricade Light (POI)</td><td>1</td></tr>
     </table>
   </section>
 </body>

@@ -3,6 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
+  <style>
+  tr:first-child > * {
+    border-top: 1px lightgray solid;
+  }
+  th, td {
+    border-bottom: 1px lightgray solid;
+  }
+  </style>
   <title>parking_lot_01</title>
 </head>
 <body>
@@ -20,74 +28,81 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>YOffset</th><td>-1</td></tr>
-<tr><th>Zoning</th><td>Commercial,downtown</td></tr>
-<tr><th>RotationToFaceNorth</th><td>3</td></tr>
+    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>AllowedTownships</th><td>city,town</td></tr>
 <tr><th>Condition</th><td>New</td></tr>
-<tr><th>TraderArea</th><td>False</td></tr>
-<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
-<tr><th>SleeperVolumeSize</th><td>48, 9, 55</td></tr>
-<tr><th>SleeperVolumeStart</th><td>-4, 0, -8</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,4</td></tr>
-<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>CopyAirBlocks</th><td>True</td></tr>
+<tr><th>DifficultyTier</th><td>1</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>downtown</td></tr>
+<tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
+<tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>RotationToFaceNorth</th><td>3</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
-<tr><th>ExcludePOICulling</th><td>False</td></tr></table>
+<tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,4</td></tr>
+<tr><th>SleeperVolumeSize</th><td>48, 9, 55</td></tr>
+<tr><th>SleeperVolumeStart</th><td>-4, 0, -8</td></tr>
+<tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>YOffset</th><td>-1</td></tr>
+<tr><th>Zoning</th><td>Commercial,downtown</td></tr></table>
+  </section>
+
+  <section>
+    <h2>Dimensions</h2>
+    <table><tr><th>x</th><td>35</td></tr>
+<tr><th>y</th><td>11</td></tr>
+<tr><th>z</th><td>35</td></tr></table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>#</th></tr>
-      <tr><td>terrAsphalt</td><td>Asphalt</td><td>1226</td></tr>
-<tr><td>air</td><td>Air</td><td>11882</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>15</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>27</td></tr>
-<tr><td>sandbagStraight01</td><td>Sandbags Straight</td><td>49</td></tr>
-<tr><td>sandbagCorner02Long</td><td>Sandbags Corner Long</td><td>8</td></tr>
-<tr><td>concreteHalf</td><td>Concrete 1/2 Block</td><td>21</td></tr>
-<tr><td>streetLight01</td><td>Street Light (POI)</td><td>3</td></tr>
+      <tr><td>air</td><td>Air</td><td>11882</td></tr>
 <tr><td>brickBlock</td><td>Bricks</td><td>98</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>6</td></tr>
-<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>10</td></tr>
-<tr><td>sandbagEnd02</td><td>Sandbags End 3</td><td>5</td></tr>
-<tr><td>sandbagEnd01</td><td>Sandbags End 2</td><td>6</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>24</td></tr>
-<tr><td>brickDestroyedBlock03</td><td>Brick Destroyed Block 03</td><td>7</td></tr>
-<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>3</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>5</td></tr>
-<tr><td>sandbagCorner01Short</td><td>Sandbags Corner Short</td><td>3</td></tr>
 <tr><td>brickDestroyedBlock01</td><td>Brick Destroyed Block 01</td><td>15</td></tr>
+<tr><td>brickDestroyedBlock02</td><td>Brick Destroyed Block 02</td><td>2</td></tr>
+<tr><td>brickDestroyedBlock03</td><td>Brick Destroyed Block 03</td><td>7</td></tr>
+<tr><td>brickHalf</td><td>brick 1/2 Block</td><td>25</td></tr>
+<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
 <tr><td>cinderBlocks02</td><td>Cinder Blocks02</td><td>1</td></tr>
 <tr><td>cntCar03SedanDamage2</td><td>Car Wreck</td><td>2</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>1</td></tr>
-<tr><td>cntShoppingCartRandomLootHelper</td><td>= Shopping Cart = Random Helper</td><td>1</td></tr>
-<tr><td>tire</td><td>undefined</td><td>4</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>6</td></tr>
-<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>2</td></tr>
-<tr><td>brickDestroyedBlock02</td><td>Brick Destroyed Block 02</td><td>2</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
+<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>1</td></tr>
 <tr><td>cntDumpster</td><td>Dumpster</td><td>1</td></tr>
-<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>1</td></tr>
-<tr><td>brickHalf</td><td>brick 1/2 Block</td><td>25</td></tr>
-<tr><td>cntTrash_can01</td><td>Trash Can</td><td>1</td></tr>
 <tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
+<tr><td>cntShoppingCartRandomLootHelper</td><td>= Shopping Cart = Random Helper</td><td>1</td></tr>
+<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>1</td></tr>
+<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>2</td></tr>
+<tr><td>cntTrash_can01</td><td>Trash Can</td><td>1</td></tr>
 <tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
+<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>1</td></tr>
+<tr><td>concreteBlock</td><td>Concrete Block</td><td>15</td></tr>
+<tr><td>concreteHalf</td><td>Concrete 1/2 Block</td><td>21</td></tr>
+<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>6</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
+<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>1</td></tr>
 <tr><td>ironBarsCentered</td><td>Iron Bars Centered</td><td>3</td></tr>
 <tr><td>oldChair1</td><td>Old Chair</td><td>1</td></tr>
 <tr><td>porchLight01</td><td>Old Outdoor Light (POI)</td><td>1</td></tr>
+<tr><td>sandbagCorner01Short</td><td>Sandbags Corner Short</td><td>3</td></tr>
+<tr><td>sandbagCorner02Long</td><td>Sandbags Corner Long</td><td>8</td></tr>
+<tr><td>sandbagEnd01</td><td>Sandbags End 2</td><td>6</td></tr>
+<tr><td>sandbagEnd02</td><td>Sandbags End 3</td><td>5</td></tr>
+<tr><td>sandbagStraight01</td><td>Sandbags Straight</td><td>49</td></tr>
+<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>10</td></tr>
+<tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>3</td></tr>
 <tr><td>signShopOpen</td><td>Shop Sign: Open</td><td>1</td></tr>
-<tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>1</td></tr>
+<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>5</td></tr>
+<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
+<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>24</td></tr>
+<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>6</td></tr>
+<tr><td>streetLight01</td><td>Street Light (POI)</td><td>3</td></tr>
+<tr><td>terrAsphalt</td><td>Asphalt</td><td>1226</td></tr>
+<tr><td>tire</td><td>undefined</td><td>4</td></tr>
+<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>27</td></tr>
 <tr><td>woodPlate</td><td>Wood Plate</td><td>1</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>1</td></tr>
     </table>
   </section>
 </body>
