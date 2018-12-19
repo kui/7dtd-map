@@ -37,7 +37,7 @@ export default class Prefabs {
         const blocksUl = this.window.document.createElement('ul');
         prefab.matchedBlocks.forEach((block) => {
           const blockLi = this.window.document.createElement('li');
-          blockLi.innerHTML = `${block.highlightedLabel} <small>${block.highlightedName}</small>`;
+          blockLi.innerHTML = `${block.count}x ${block.highlightedLabel} <small>${block.highlightedName}</small>`;
           blocksUl.appendChild(blockLi);
         });
         li.appendChild(blocksUl);
@@ -81,7 +81,8 @@ export default class Prefabs {
       }
       const prefabBlockIndex = matchedBlocks.reduce((idx, block) => {
         block.prefabs.forEach((p) => {
-          Object.assign(idx, { [p]: (idx[p] || []).concat(block) });
+          const b = Object.assign({}, block, { count: p.count });
+          Object.assign(idx, { [p.name]: (idx[p.name] || []).concat(b) });
         });
         return idx;
       }, {});
@@ -130,16 +131,16 @@ export default class Prefabs {
 function matchBlocks(pattern) {
   return Object
     .entries(blockPrefabIndex)
-    .reduce((arr, [blockName, prefabNames]) => {
+    .reduce((arr, [blockName, prefabs]) => {
       const highlightedName = matchAndHighlight(blockName, pattern);
       const blockLabel = blockLabels[blockName];
       const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, pattern);
-      if (highlightedName) {
+      if (highlightedName || highlightedLabel) {
         return arr.concat({
           name: blockName,
-          highlightedName,
-          highlightedLabel,
-          prefabs: prefabNames,
+          highlightedName: highlightedName || blockName,
+          highlightedLabel: highlightedLabel || blockLabel,
+          prefabs,
         });
       }
       return arr;

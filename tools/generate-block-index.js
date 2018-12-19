@@ -6,6 +6,7 @@ const glob = require('glob-promise');
 
 const parseNim = require('./lib/nim-parser');
 const parseLabel = require('./lib/label-parser');
+const parseTts = require('./lib/tts-parser');
 const localInfo = require('../local.json');
 
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');
@@ -66,14 +67,38 @@ async function readLabels(vanillaDir, blocks) {
 
 async function readNim(nimFiles) {
   const parsedNimFiles = await Promise.all(nimFiles.map(async (nimFileName) => {
-    const blocks = await parseNim(nimFileName);
+    const prefabName = path.basename(nimFileName, '.blocks.nim');
+    const ttsFileName = path.join(
+      path.dirname(nimFileName),
+      `${prefabName}.tts`,
+    );
+
+    let blocks;
+    let blockNums;
+    try {
+      [blocks, { blockNums }] = await Promise.all([
+        parseNim(nimFileName),
+        parseTts(ttsFileName),
+      ]);
+    } catch (e) {
+      console.warn(e);
+      return {};
+    }
+
     return {
-      name: path.basename(nimFileName, '.blocks.nim'),
-      blocks: blocks.map(b => b.name).filter(b => !excludedBlocks.has(b)),
+      name: prefabName,
+      blocks: blocks
+        .filter(b => !excludedBlocks.has(b.name))
+        .map(b => ({ name: b.name, count: blockNums.get(b.id) || 0 })),
     };
   }));
   return parsedNimFiles.reduce(
-    (obj, prefab) => Object.assign(obj, { [prefab.name]: prefab.blocks }),
+    (obj, prefab) => {
+      if (prefab.name) {
+        return Object.assign(obj, { [prefab.name]: prefab.blocks });
+      }
+      return obj;
+    },
     {},
   );
 }
@@ -86,7 +111,7 @@ function invertIndex(prefabs) {
       return arr.concat(flatten);
     }, [])
     .reduce((obj, { prefab, block }) => Object.assign(obj, {
-      [block]: (obj[block] || []).concat(prefab),
+      [block.name]: (obj[block.name] || []).concat({ name: prefab, count: block.count }),
     }), {});
 }
 
