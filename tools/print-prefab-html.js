@@ -14,10 +14,12 @@ async function main() {
   }
   const labels = await loadLabels();
   const xml = process.argv[2];
-  const pathBasename = path.join(path.dirname(xml), path.basename(xml, '.xml'))
+  const pathBasename = path.join(path.dirname(xml), path.basename(xml, '.xml'));
   const nim = `${pathBasename}.blocks.nim`;
   const tts = `${pathBasename}.tts`;
-  console.log(await prefabHtml({ xml, nim, tts, labels }));
+  console.log(await prefabHtml({
+    xml, nim, tts, labels,
+  }));
   return 0;
 }
 

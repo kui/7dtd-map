@@ -59,9 +59,8 @@ async function readLabels(vanillaDir, blocks) {
     const label = labels[block];
     if (label) {
       return Object.assign(result, { [block]: labels[block] });
-    } else {
-      return result;
     }
+    return result;
   }, {});
 }
 
@@ -73,9 +72,10 @@ async function readNim(nimFiles) {
       blocks: blocks.map(b => b.name).filter(b => !excludedBlocks.has(b)),
     };
   }));
-  return parsedNimFiles.reduce((obj, prefab) => {
-    return Object.assign(obj, { [prefab.name]: prefab.blocks });
-  }, {});
+  return parsedNimFiles.reduce(
+    (obj, prefab) => Object.assign(obj, { [prefab.name]: prefab.blocks }),
+    {},
+  );
 }
 
 function invertIndex(prefabs) {
