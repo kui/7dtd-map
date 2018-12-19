@@ -75,15 +75,15 @@ function main() {
     prefabs.update();
   });
   ['input', 'focus'].forEach((eventName) => {
-    prefabsFilterInput.addEventListener(eventName, () => {
+    prefabsFilterInput.addEventListener(eventName, async () => {
       console.log('Update prefab list');
-      prefabs.setPrefabsFilterString(prefabsFilterInput.value);
+      await prefabs.setPrefabsFilterString(prefabsFilterInput.value);
       mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabs.update();
     });
-    blocksFilterInput.addEventListener(eventName, () => {
+    blocksFilterInput.addEventListener(eventName, async () => {
       console.log('Update prefab list');
-      prefabs.setBlocksFilterString(blocksFilterInput.value);
+      await prefabs.setBlocksFilterString(blocksFilterInput.value);
       mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
       prefabs.update();
     });

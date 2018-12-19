@@ -1,6 +1,3 @@
-import blockPrefabIndex from './block-prefab-index';
-import blockLabels from './block-labels';
-
 export default class Prefabs {
   constructor(window, resultSpan, listDiv) {
     this.window = window;
@@ -11,6 +8,10 @@ export default class Prefabs {
     this.resultSpan = resultSpan;
     this.listDiv = listDiv;
     this.markCoords = null;
+    this.blockPrefabIndexPromise = import(/* webpackChunkName: "block-prefab-index" */ './block-prefab-index')
+      .then(m => m.default);
+    this.blockLabelsPromise = import(/* webpackChunkName: "block-labels" */ './block-labels')
+      .then(m => m.default);
   }
 
   update() {
@@ -47,7 +48,7 @@ export default class Prefabs {
     this.listDiv.replaceChild(ul, this.listDiv.firstChild);
   }
 
-  setPrefabsFilterString(filterString) {
+  async setPrefabsFilterString(filterString) {
     this.prefabsFilterString = filterString.trim();
     this.blocksFilterString = '';
     if (this.prefabsFilterString.length <= 1) {
@@ -65,14 +66,17 @@ export default class Prefabs {
     }
   }
 
-  setBlocksFilterString(filterString) {
+  async setBlocksFilterString(filterString) {
     this.blocksFilterString = filterString.trim();
     this.prefabsFilterString = '';
     if (filterString.length <= 1) {
       this.filtered = this.all;
     } else {
       const pattern = new RegExp(this.blocksFilterString, 'i');
-      const matchedBlocks = matchBlocks(pattern);
+      const [blockPrefabIndex, blockLabels] = await Promise.all(
+        [this.blockPrefabIndexPromise, this.blockLabelsPromise],
+      );
+      const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
       console.log('%d matched blocks: %o', matchedBlocks.length, matchedBlocks);
       if (Object.keys(blockPrefabIndex).length === matchBlocks.length) {
         console.warn('Abort block filter: all blocks are matched: filter=%s', pattern);
@@ -128,7 +132,7 @@ export default class Prefabs {
   }
 }
 
-function matchBlocks(pattern) {
+function matchBlocks(pattern, blockPrefabIndex, blockLabels) {
   return Object
     .entries(blockPrefabIndex)
     .reduce((arr, [blockName, prefabs]) => {
@@ -181,11 +185,11 @@ function matchAndHighlight(str, regex) {
   return isMatched ? highlighted : null;
 }
 
-function applyFilter(prefabs) {
+async function applyFilter(prefabs) {
   if (prefabs.blocksFilterString.length > 0) {
-    prefabs.setBlocksFilterString(prefabs.blocksFilterString);
+    await prefabs.setBlocksFilterString(prefabs.blocksFilterString);
   } else {
-    prefabs.setPrefabsFilterString(prefabs.prefabsFilterString);
+    await prefabs.setPrefabsFilterString(prefabs.prefabsFilterString);
   }
 }
 

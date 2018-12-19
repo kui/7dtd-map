@@ -16,6 +16,7 @@
   "author": "Keiichiro UI",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
     "csv-parse": "^4.1.0",
