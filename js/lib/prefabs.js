@@ -1,8 +1,5 @@
-import memoize from 'lodash/memoize';
-import prefabBlock from './prefab-block-index';
+import blockPrefabIndex from './block-prefab-index';
 import blockLabels from './block-labels';
-
-const prefabBlockIndex = prefabBlock.reduce((o, p) => Object.assign(o, { [p.name]: p.blocks }), {});
 
 export default class Prefabs {
   constructor(window, resultSpan, listDiv) {
@@ -38,9 +35,9 @@ export default class Prefabs {
       }
       if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
         const blocksUl = this.window.document.createElement('ul');
-        prefab.matchedBlocks.forEach((b) => {
+        prefab.matchedBlocks.forEach((block) => {
           const blockLi = this.window.document.createElement('li');
-          blockLi.innerHTML = b;
+          blockLi.innerHTML = `${block.highlightedLabel} <small>${block.highlightedName}</small>`;
           blocksUl.appendChild(blockLi);
         });
         li.appendChild(blocksUl);
@@ -74,13 +71,27 @@ export default class Prefabs {
     if (filterString.length <= 1) {
       this.filtered = this.all;
     } else {
-      const matchBlocksWithCache = memoize(matchBlocks);
+      const pattern = new RegExp(this.blocksFilterString, 'i');
+      const matchedBlocks = matchBlocks(pattern);
+      console.log('%d matched blocks: %o', matchedBlocks.length, matchedBlocks);
+      if (Object.keys(blockPrefabIndex).length === matchBlocks.length) {
+        console.warn('Abort block filter: all blocks are matched: filter=%s', pattern);
+        this.filtered = this.all;
+        return;
+      }
+      const prefabBlockIndex = matchedBlocks.reduce((idx, block) => {
+        block.prefabs.forEach((p) => {
+          Object.assign(idx, { [p]: (idx[p] || []).concat(block) });
+        });
+        return idx;
+      }, {});
       this.filtered = this.all.reduce((matchedPrefabs, prefab) => {
-        const matchedBlocks = matchBlocksWithCache(prefab.name, this);
-        if (matchedBlocks.length === 0) {
+        const blocks = prefabBlockIndex[prefab.name];
+        if (!blocks || blocks.length === 0) {
           return matchedPrefabs;
         }
-        return matchedPrefabs.concat(Object.assign({}, prefab, { matchedBlocks }));
+        const matchedPrefab = Object.assign({}, prefab, { matchedBlocks: blocks });
+        return matchedPrefabs.concat(matchedPrefab);
       }, []);
     }
   }
@@ -116,26 +127,23 @@ export default class Prefabs {
   }
 }
 
-function matchBlocks(prefabName, prefabs) {
-  const containedBlocks = prefabBlockIndex[prefabName];
-  if (!containedBlocks || containedBlocks.length === 0) {
-    console.log('Unknown prefab name: %s', prefabName);
-    return [];
-  }
-  const pattern = new RegExp(prefabs.blocksFilterString, 'i');
-  const matchedBlocks = containedBlocks
-    .reduce((arr, block) => {
-      const blockName = blockLabels[block] || block;
-      const result = matchAndHighlight(blockName, pattern);
-      if (result) {
-        return arr.concat(result);
+function matchBlocks(pattern) {
+  return Object
+    .entries(blockPrefabIndex)
+    .reduce((arr, [blockName, prefabNames]) => {
+      const highlightedName = matchAndHighlight(blockName, pattern);
+      const blockLabel = blockLabels[blockName];
+      const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, pattern);
+      if (highlightedName) {
+        return arr.concat({
+          name: blockName,
+          highlightedName,
+          highlightedLabel,
+          prefabs: prefabNames,
+        });
       }
       return arr;
     }, []);
-  if (matchedBlocks.length === 0) {
-    return [];
-  }
-  return matchedBlocks;
 }
 
 function updateDist(map) {
@@ -166,7 +174,7 @@ function calcDist(targetCoords, baseCoords) {
 function matchAndHighlight(str, regex) {
   let isMatched = false;
   const highlighted = str.replace(regex, (m) => {
-    isMatched = true;
+    isMatched = m.length > 0;
     return `<mark>${m}</mark>`;
   });
   return isMatched ? highlighted : null;
