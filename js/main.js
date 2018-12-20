@@ -178,7 +178,6 @@ function main() {
   let restPrefabs;
   const renderedPrefabsNum = 10;
   prefabsFilterWorker.addEventListener('message', (event) => {
-    console.log(event.data);
     const { prefabs, status } = event.data;
     prefabsResultSpan.innerHTML = status;
 

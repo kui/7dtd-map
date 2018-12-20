@@ -71,7 +71,6 @@ export default class Map {
     if (this.markCoords && this.markCoords.x && this.markCoords.y) {
       await drawMark(this, context);
     }
-    console.log('update');
   }
 }
 
