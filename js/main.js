@@ -176,6 +176,7 @@ function main() {
   // -------------------------------------------------
   let prefabListUl;
   let restPrefabs;
+  const renderedPrefabsNum = 10;
   prefabsFilterWorker.addEventListener('message', (event) => {
     console.log(event.data);
     const { prefabs, status } = event.data;
@@ -205,11 +206,15 @@ function main() {
       return;
     }
 
-    const [head, tail] = [restPrefabs.slice(0, 50), restPrefabs.slice(50)];
-    console.log(head);
-    head.forEach((prefab) => {
-      prefabListUl.appendChild(prefabLi(prefab));
-    });
+    const [head, tail] = [
+      restPrefabs.slice(0, renderedPrefabsNum),
+      restPrefabs.slice(renderedPrefabsNum),
+    ];
+
+    const df = document.createDocumentFragment();
+    head.forEach(p => df.appendChild(prefabLi(p)));
+    prefabListUl.appendChild(df);
+
     restPrefabs = tail;
 
     requestAnimationFrame(renderTailPrefabs);
