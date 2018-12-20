@@ -174,6 +174,8 @@ function main() {
   // -------------------------------------------------
   // prefab list updates
   // -------------------------------------------------
+  let prefabListUl;
+  let restPrefabs;
   prefabsFilterWorker.addEventListener('message', (event) => {
     console.log(event.data);
     const { prefabs, status } = event.data;
@@ -183,29 +185,56 @@ function main() {
       return;
     }
 
-    const ul = document.createElement('ul');
-    prefabs.forEach((prefab) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${prefab.dist ? `${formatDist(prefab.dist)}, ` : ''}
-        <a href="prefabs/${prefab.name}.html" target="_blank">
-          ${prefab.highlightedName || prefab.name}
-        </a>
-        (${prefab.x}, ${prefab.y})
-      `;
-      if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
-        const blocksUl = document.createElement('ul');
-        prefab.matchedBlocks.forEach((block) => {
-          const blockLi = document.createElement('li');
-          blockLi.innerHTML = `${block.count}x ${block.highlightedLabel} <small>${block.highlightedName}</small>`;
-          blocksUl.appendChild(blockLi);
-        });
-        li.appendChild(blocksUl);
-      }
-      ul.appendChild(li);
-    });
-    prefabListDiv.replaceChild(ul, prefabListDiv.firstChild);
+    prefabListUl = document.createElement('ul');
+    restPrefabs = prefabs;
+    renderTailPrefabs();
+    prefabListDiv.replaceChild(prefabListUl, prefabListDiv.firstChild);
   });
+
+  controllerFieldset.addEventListener('scroll', () => {
+    renderTailPrefabs();
+  }, { passive: true });
+
+  function renderTailPrefabs() {
+    if (restPrefabs.length === 0) {
+      return;
+    }
+
+    const scrollBottom = controllerFieldset.offsetHeight + controllerFieldset.scrollTop;
+    if (scrollBottom + 100 < controllerFieldset.scrollHeight) {
+      return;
+    }
+
+    const [head, tail] = [restPrefabs.slice(0, 50), restPrefabs.slice(50)];
+    console.log(head);
+    head.forEach((prefab) => {
+      prefabListUl.appendChild(prefabLi(prefab));
+    });
+    restPrefabs = tail;
+
+    requestAnimationFrame(renderTailPrefabs);
+  }
+
+  function prefabLi(prefab) {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${prefab.dist ? `${formatDist(prefab.dist)}, ` : ''}
+      <a href="prefabs/${prefab.name}.html" target="_blank">
+        ${prefab.highlightedName || prefab.name}
+      </a>
+      (${prefab.x}, ${prefab.y})
+    `;
+    if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
+      const blocksUl = document.createElement('ul');
+      prefab.matchedBlocks.forEach((block) => {
+        const blockLi = document.createElement('li');
+        blockLi.innerHTML = `${block.count}x ${block.highlightedLabel} <small>${block.highlightedName}</small>`;
+        blocksUl.appendChild(blockLi);
+      });
+      li.appendChild(blocksUl);
+    }
+    return li;
+  }
 
   // -------------------------------------------------
   // other model updates
