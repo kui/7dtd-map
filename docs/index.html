@@ -78,27 +78,37 @@
         </tr>
         <tr>
           <th><label for="prefabs_filter">Prefabs Filter</label></th>
-          <td><input id="prefabs_filter" placeholder="Input prefab name"></td>
+          <td>
+            <input id="prefabs_filter" placeholder="Input prefab name">
+            <button data-input-for="prefabs_filter" data-input-text="">Clear</button>
+          </td>
         </tr>
         <tr>
           <th>Prefabs Preset</th>
-          <td id="prefabs_filter_presets">
-            <button>trader</button>
-            <button>skyscraper</button>
-            <button>factory</button>
+          <td>
+            <button data-input-for="prefabs_filter">trader</button>
+            <button data-input-for="prefabs_filter">skyscraper</button>
+            <button data-input-for="prefabs_filter">factory</button>
           </td>
         </tr>
         <tr>
           <th><label for="blocks_filter">Blocks Filter</label></th>
-          <td><input id="blocks_filter" placeholder="Input block name"></td>
+          <td>
+            <input id="blocks_filter" placeholder="Input block name">
+            <button data-input-for="blocks_filter" data-input-text="">Clear</button>
+          </td>
         </tr>
         <tr>
           <th>Blocks Preset</th>
-          <td id="blocks_filter_presets">
-            <button>forge</button>
-            <button>workbench</button>
-            <button>super corn</button>
-            <button data-filter="oldsink|granitesink|garagestorage|cntbus|sedandamage[01]">Can of Acid containers</button>
+          <td>
+            <button data-input-for="blocks_filter">Forge</button>
+            <button data-input-for="blocks_filter">Workbench</button>
+            <button data-input-for="blocks_filter">Super Corn</button>
+            <button
+              data-input-for="blocks_filter"
+              data-input-text="oldsink|granitesink|garagestorage|cntbus|sedandamage[01]">
+              Can of Acid containers
+            </button>
           </td>
         </tr>
       </table>

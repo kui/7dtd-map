@@ -22,9 +22,7 @@ function main() {
   const signSizeInput = document.getElementById('sign_size');
   const brightnessInput = document.getElementById('brightness');
   const prefabsFilterInput = document.getElementById('prefabs_filter');
-  const prefabsFilterPresetsDiv = document.getElementById('prefabs_filter_presets');
   const blocksFilterInput = document.getElementById('blocks_filter');
-  const blocksFilterPresetsDiv = document.getElementById('blocks_filter_presets');
   const prefabsResultSpan = document.getElementById('prefabs_num');
   const prefabListDiv = document.getElementById('prefabs_list');
   const mapCanvas = document.getElementById('map');
@@ -95,11 +93,9 @@ function main() {
   });
   ['input', 'focus'].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, async () => {
-      console.log('Update prefab list');
       prefabsFilterWorker.postMessage({ prefabsFilterString: prefabsFilterInput.value });
     });
     blocksFilterInput.addEventListener(eventName, async () => {
-      console.log('Update prefab list');
       prefabsFilterWorker.postMessage({ blocksFilterString: blocksFilterInput.value });
     });
   });
@@ -160,21 +156,6 @@ function main() {
     }
     loadingFiles.delete(file.name);
   }
-
-  // prefab presets
-  Array.from(prefabsFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
-    button.addEventListener('click', () => {
-      prefabsFilterInput.value = button.dataset.filter || button.textContent;
-      prefabsFilterInput.dispatchEvent(new Event('input'));
-    });
-  });
-  // block presets
-  Array.from(blocksFilterPresetsDiv.getElementsByTagName('button')).forEach((button) => {
-    button.addEventListener('click', () => {
-      blocksFilterInput.value = button.dataset.filter || button.textContent;
-      blocksFilterInput.dispatchEvent(new Event('input'));
-    });
-  });
 
   // flag mark
   mapCanvas.addEventListener('click', async (event) => {
@@ -265,18 +246,22 @@ function main() {
 
   function prefabLi(prefab) {
     const li = document.createElement('li');
-    li.innerHTML = `
-      ${prefab.dist ? `${formatDist(prefab.dist)}, ` : ''}
-      <a href="prefabs/${prefab.name}.html" target="_blank">
-        ${prefab.highlightedName || prefab.name}
-      </a>
-      (${prefab.x}, ${prefab.y})
-    `;
+    li.innerHTML = [
+      `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
+      `${prefab.dist ? `${formatDist(prefab.dist)},` : ''}`,
+      `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
+      `(${prefab.x}, ${prefab.y})`,
+    ].join(' ');
     if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
       const blocksUl = document.createElement('ul');
       prefab.matchedBlocks.forEach((block) => {
         const blockLi = document.createElement('li');
-        blockLi.innerHTML = `${block.count}x ${block.highlightedLabel} <small>${block.highlightedName}</small>`;
+        blockLi.innerHTML = [
+          `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+          `${block.count}x`,
+          block.highlightedLabel,
+          `<small>${block.highlightedName}</small>`,
+        ].join(' ');
         blocksUl.appendChild(blockLi);
       });
       li.appendChild(blocksUl);
@@ -287,6 +272,26 @@ function main() {
   // -------------------------------------------------
   // other model updates
   // -------------------------------------------------
+
+  // auto input button
+  controllerFieldset.addEventListener('click', (event) => {
+    const button = event.srcElement;
+    if (button.dataset.inputFor == null) {
+      return;
+    }
+
+    const target = document.getElementById(button.dataset.inputFor);
+    if (!target) {
+      return;
+    }
+
+    if (button.dataset.inputText == null) {
+      target.value = button.textContent;
+    } else {
+      target.value = button.dataset.inputText;
+    }
+    target.dispatchEvent(new Event('input'));
+  });
 
   // Scroll with the mark at the center of the screen
   let markPosition = null;
