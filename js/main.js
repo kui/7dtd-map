@@ -47,12 +47,12 @@ function main() {
   }, [rendererCanvas]);
 
   (async () => {
-    const m = await import(/* webpackChunkName: "block-prefab-index" */ './lib/block-prefab-index');
-    prefabsFilterWorker.postMessage({ blockPrefabIndex: m.default });
+    const res = await fetch('block-prefab-index.json');
+    prefabsFilterWorker.postMessage({ blockPrefabIndex: await res.json() });
   })();
   (async () => {
-    const m = await import(/* webpackChunkName: "block-labels" */ './lib/block-labels');
-    prefabsFilterWorker.postMessage({ blockLabels: m.default });
+    const res = await fetch('block-labels.json');
+    prefabsFilterWorker.postMessage({ blockLabels: await res.json() });
   })();
 
   // -------------------------------------------------

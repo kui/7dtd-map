@@ -9,7 +9,6 @@ module.exports = {
   entry: entries,
   output: {
     filename: '[name]',
-    chunkFilename: '[name].js',
     path: path.resolve(__dirname, 'docs'),
   },
 };

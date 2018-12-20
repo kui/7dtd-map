@@ -1,4 +1,3 @@
 /node_modules
-/js/lib/*.json
 /local.json
 .DS_Store

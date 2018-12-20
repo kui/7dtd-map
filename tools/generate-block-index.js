@@ -11,9 +11,9 @@ const localInfo = require('../local.json');
 
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');
 
-const blockPrefabIndexFile = 'js/lib/block-prefab-index.json';
-const prefabBlockIndexFile = 'js/lib/prefab-block-index.json';
-const blockLabelsFile = 'js/lib/block-labels.json';
+const blockPrefabIndexFile = 'docs/block-prefab-index.json';
+const prefabBlockIndexFile = 'docs/prefab-block-index.json';
+const blockLabelsFile = 'docs/block-labels.json';
 
 const excludedBlocks = new Set([
   'air',
