@@ -175,15 +175,12 @@ function main() {
   // prefab list updates
   // -------------------------------------------------
   prefabsFilterWorker.addEventListener('message', (event) => {
-    const { prefabs } = event.data;
+    console.log(event.data);
+    const { prefabs, status } = event.data;
+    prefabsResultSpan.innerHTML = status;
+
     if (!prefabs) {
       return;
-    }
-
-    if (prefabs.length === 0) {
-      prefabsResultSpan.textContent = 'No prefabs';
-    } else {
-      prefabsResultSpan.textContent = `${prefabs.length} prefabs`;
     }
 
     const ul = document.createElement('ul');

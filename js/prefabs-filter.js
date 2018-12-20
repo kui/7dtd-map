@@ -25,6 +25,4 @@ onmessage = (event) => {
   prefabs.update();
 };
 
-prefabs.addUpdateListener(() => {
-  postMessage({ prefabs: prefabs.filtered });
-});
+prefabs.addUpdateListener(d => postMessage(d));

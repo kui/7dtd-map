@@ -6,6 +6,7 @@ export default class Prefabs {
     this.window = window;
     this.all = [];
     this.filtered = [];
+    this.prevFiltered = [];
     this.filter = null;
     this.prefabsFilterString = '';
     this.blocksFilterString = '';
@@ -13,6 +14,7 @@ export default class Prefabs {
     this.blockPrefabIndex = {};
     this.blockLabels = {};
     this.updateListeners = [];
+    this.status = '';
     this.lazyUpdater = lazy(window, async () => this.updateImmediately());
   }
 
@@ -24,7 +26,12 @@ export default class Prefabs {
     applyFilter(this);
     updateDist(this);
     sort(this);
-    this.updateListeners.forEach(f => f());
+    const updateData = { status: this.status };
+    if (this.prevFiltered !== this.filtered) {
+      updateData.prefabs = this.filtered;
+      this.prevFiltered = this.filtered;
+    }
+    this.updateListeners.forEach(f => f(updateData));
   }
 
   set prefabsFilterString(filterString) {
@@ -62,6 +69,11 @@ function applyFilter(prefabs) {
   if (prefabs.filter) {
     prefabs.filtered = prefabs.filter.func(prefabs, prefabs.filter.pattern);
   } else {
+    if (prefabs.all.length === 0) {
+      prefabs.status = 'No prefabs';
+    } else {
+      prefabs.status = 'All prefabs';
+    }
     prefabs.filtered = prefabs.all;
   }
 }
@@ -96,35 +108,37 @@ function sort(prefabs) {
 }
 
 function filterByPrefabs(prefabs, pattern) {
-  return flatMap(prefabs.all, (prefab) => {
-    const result = matchAndHighlight(prefab.name, pattern);
-    if (result) {
+  const results = flatMap(prefabs.all, (prefab) => {
+    const m = matchAndHighlight(prefab.name, pattern);
+    if (m) {
       // Clone and add a new field;
-      return Object.assign({}, prefab, { highlightedName: result });
+      return Object.assign({}, prefab, { highlightedName: m });
     }
     return [];
   });
+  prefabs.status = `${results.length} matched prefabs`;
+  return results;
 }
 
 function filterByBlocks(prefabs, pattern) {
   const { all: allPrefabs, blockPrefabIndex, blockLabels } = prefabs;
   const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
-  console.log('%d matched blocks', matchedBlocks.length);
   if (matchedBlocks.length >= 20) {
-    console.warn('Abort block filter: too many blocks are matched: filter=%s', pattern);
+    prefabs.status = `Abort: too many blocks are matched: num=${matchedBlocks.length}`;
     return allPrefabs;
   }
   if (matchedBlocks.length === 0) {
+    prefabs.status = 'No matched blocks';
     return [];
   }
 
   const matchedPrefabBlocks = matchPrefabTypes(matchedBlocks);
   if (Object.keys(matchedPrefabBlocks).length === 0) {
+    prefabs.status = `No prefabs, ${matchedBlocks.length} matched blocks`;
     return [];
   }
-  console.log('%d matched prefab types', Object.keys(matchedPrefabBlocks).length);
 
-  return flatMap(allPrefabs, (prefab) => {
+  const results = flatMap(allPrefabs, (prefab) => {
     const blocks = matchedPrefabBlocks[prefab.name];
     if (!blocks) {
       return [];
@@ -132,6 +146,8 @@ function filterByBlocks(prefabs, pattern) {
     // Clone and add a new field;
     return Object.assign({}, prefab, { matchedBlocks: blocks });
   });
+  prefabs.status = `${results.length} prefabs, ${matchedBlocks.length} matched blocks`;
+  return results;
 }
 
 /**
