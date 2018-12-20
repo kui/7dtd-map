@@ -1,4 +1,5 @@
 import flatMap from 'lodash/flatMap';
+import lazy from './lazy-invoker';
 
 export default class Prefabs {
   constructor(window) {
@@ -12,9 +13,14 @@ export default class Prefabs {
     this.blockPrefabIndex = {};
     this.blockLabels = {};
     this.updateListeners = [];
+    this.lazyUpdater = lazy(window, async () => this.updateImmediately());
   }
 
   update() {
+    this.lazyUpdater();
+  }
+
+  updateImmediately() {
     applyFilter(this);
     updateDist(this);
     sort(this);
@@ -27,6 +33,7 @@ export default class Prefabs {
       this.filter = null;
     } else {
       this.filter = {
+        name: 'prefab name',
         func: filterByPrefabs,
         pattern: new RegExp(s, 'i'),
       };
@@ -39,6 +46,7 @@ export default class Prefabs {
       this.filter = null;
     } else {
       this.filter = {
+        name: 'block name',
         func: filterByBlocks,
         pattern: new RegExp(s, 'i'),
       };
@@ -101,9 +109,9 @@ function filterByPrefabs(prefabs, pattern) {
 function filterByBlocks(prefabs, pattern) {
   const { all: allPrefabs, blockPrefabIndex, blockLabels } = prefabs;
   const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
-  console.log('%d matched blocks: %o', matchedBlocks.length, matchedBlocks);
-  if (Object.keys(blockPrefabIndex).length === matchBlocks.length) {
-    console.warn('Abort block filter: all blocks are matched: filter=%s', pattern);
+  console.log('%d matched blocks', matchedBlocks.length);
+  if (matchedBlocks.length >= 20) {
+    console.warn('Abort block filter: too many blocks are matched: filter=%s', pattern);
     return allPrefabs;
   }
   if (matchedBlocks.length === 0) {
@@ -114,6 +122,7 @@ function filterByBlocks(prefabs, pattern) {
   if (Object.keys(matchedPrefabBlocks).length === 0) {
     return [];
   }
+  console.log('%d matched prefab types', Object.keys(matchedPrefabBlocks).length);
 
   return flatMap(allPrefabs, (prefab) => {
     const blocks = matchedPrefabBlocks[prefab.name];

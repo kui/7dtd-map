@@ -79,7 +79,8 @@ function main() {
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
-    prefabsFilterWorker.postMessage({ all: await loadPrefabsXmlByFile(window, prefabsInput.files[0]) });
+    const prefabs = await loadPrefabsXmlByFile(window, prefabsInput.files[0]);
+    prefabsFilterWorker.postMessage({ all: prefabs });
   });
   ['input', 'focus'].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, async () => {
@@ -292,7 +293,7 @@ function main() {
   downloadButton.addEventListener('click', () => {
     const a = document.createElement('a');
     a.href = mapCanvas.toDataURL('image/png');
-    a.download = `7DtD-renderer.png`;
+    a.download = '7DtD-renderer.png';
     a.click();
   });
 

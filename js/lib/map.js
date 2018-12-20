@@ -1,3 +1,5 @@
+import lazy from './lazy-invoker';
+
 const signChar = '✘';
 const markChar = '🚩️';
 
@@ -24,8 +26,7 @@ export default class Map {
     // flag
     this.markCoords = {};
 
-    this.updateRequest = null;
-    this.updatePromise = null;
+    this.lazyUpdater = lazy(window, () => this.updateImmediately());
   }
 
   get width() {
@@ -42,24 +43,8 @@ export default class Map {
     );
   }
 
-  async update() {
-    if (this.updateRequest) {
-      return;
-    }
-    this.updateRequest = true;
-    if (this.updatePromise) {
-      return;
-    }
-
-    while (this.updateRequest) {
-      this.updateRequest = false;
-      this.updatePromise = this.updateImmediately();
-      // eslint-disable-next-line no-await-in-loop
-      await this.updatePromise;
-      // eslint-disable-next-line no-await-in-loop
-      await waitAnimationFrame(this.window);
-      this.updatePromise = null;
-    }
+  update() {
+    this.lazyUpdater();
   }
 
   async updateImmediately() {
@@ -86,7 +71,6 @@ export default class Map {
     if (this.markCoords && this.markCoords.x && this.markCoords.y) {
       await drawMark(this, context);
     }
-    this.updateRequest = null;
     console.log('update');
   }
 }
@@ -133,10 +117,6 @@ async function drawMark(map, ctx) {
   });
   ctx.strokeText(markChar, x, y);
   ctx.fillText(markChar, x, y);
-}
-
-function waitAnimationFrame(w) {
-  return new Promise(r => w.requestAnimationFrame(r));
 }
 
 function putText({
