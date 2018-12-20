@@ -125,10 +125,6 @@ function filterByPrefabs(prefabs, pattern) {
 function filterByBlocks(prefabs, pattern) {
   const { all: allPrefabs, blockPrefabIndex, blockLabels } = prefabs;
   const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
-  if (matchedBlocks.length >= 20) {
-    prefabs.status = `Abort: too many blocks are matched: num=${matchedBlocks.length}`;
-    return allPrefabs;
-  }
   if (matchedBlocks.length === 0) {
     prefabs.status = 'No matched blocks';
     return [];
