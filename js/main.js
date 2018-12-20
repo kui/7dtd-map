@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
-import Prefabs from './lib/prefabs';
+import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
 
 function main() {
   const controllerFieldset = document.getElementById('controller');
@@ -30,7 +30,7 @@ function main() {
   const sampleLoadButton = document.getElementById('sample_load');
 
   const mapRendererWorker = new Worker('map-renderer.js');
-  const prefabs = new Prefabs(window, prefabsResultSpan, prefabListDiv);
+  const prefabsFilterWorker = new Worker('prefabs-filter.js');
 
   // init
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
@@ -44,6 +44,15 @@ function main() {
     brightness: `${brightnessInput.value}%`,
     scale: scaleInput.value,
   }, [rendererCanvas]);
+
+  (async () => {
+    const m = await import(/* webpackChunkName: "block-prefab-index" */ './lib/block-prefab-index');
+    prefabsFilterWorker.postMessage({ blockPrefabIndex: m.default });
+  })();
+  (async () => {
+    const m = await import(/* webpackChunkName: "block-labels" */ './lib/block-labels');
+    prefabsFilterWorker.postMessage({ blockLabels: m.default });
+  })();
 
   // -------------------------------------------------
   // map update events
@@ -70,26 +79,23 @@ function main() {
   });
   prefabsInput.addEventListener('input', async () => {
     console.log('Load prefabs');
-    await prefabs.setByFile(prefabsInput.files[0]);
-    mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-    prefabs.update();
+    prefabsFilterWorker.postMessage({ all: await loadPrefabsXmlByFile(window, prefabsInput.files[0]) });
   });
   ['input', 'focus'].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, async () => {
       console.log('Update prefab list');
-      await prefabs.setPrefabsFilterString(prefabsFilterInput.value);
-      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-      prefabs.update();
+      prefabsFilterWorker.postMessage({ prefabsFilterString: prefabsFilterInput.value });
     });
     blocksFilterInput.addEventListener(eventName, async () => {
       console.log('Update prefab list');
-      await prefabs.setBlocksFilterString(blocksFilterInput.value);
-      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-      prefabs.update();
+      prefabsFilterWorker.postMessage({ blocksFilterString: blocksFilterInput.value });
     });
   });
-  [showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
-    signSizeInput, brightnessInput, scaleInput].forEach((e) => {
+  const restInputs = [
+    showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
+    signSizeInput, brightnessInput, scaleInput,
+  ];
+  restInputs.forEach((e) => {
     e.addEventListener('input', () => {
       mapRendererWorker.postMessage({
         showBiomes: showBiomesInput.checked,
@@ -103,6 +109,13 @@ function main() {
     });
   });
 
+  // trigger by prefabs update
+  prefabsFilterWorker.addEventListener('message', (event) => {
+    if (event.data.prefabs) {
+      mapRendererWorker.postMessage({ prefabs: event.data.prefabs });
+    }
+  });
+
   // drag and drop
   document.addEventListener('drop', async (event) => {
     if (!event.dataTransfer.types.includes('Files')) {
@@ -110,7 +123,6 @@ function main() {
     }
     event.preventDefault();
     await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
-    prefabs.update();
   });
 
   // prefab presets
@@ -131,44 +143,79 @@ function main() {
   // flag mark
   mapCanvas.addEventListener('click', async (event) => {
     const markCoords = convertCursorPositionToMapCoords(event);
-    prefabs.setMarkCoords(markCoords);
-    prefabs.update();
-    mapRendererWorker.postMessage({ markCoords, prefabs: prefabs.filtered });
+    prefabsFilterWorker.postMessage({ markCoords });
+    mapRendererWorker.postMessage({ markCoords });
   });
   resetFlagButton.addEventListener('click', async () => {
-    prefabs.setMarkCoords(null);
-    prefabs.update();
-    mapRendererWorker.postMessage({ markCoords: null, prefabs: prefabs.filtered });
+    prefabsFilterWorker.postMessage({ markCoords: null });
+    mapRendererWorker.postMessage({ markCoords: null });
   });
 
   // sample load
   sampleLoadButton.addEventListener('click', () => {
-    Promise.all([
-      loadBitmapByUrl(window, 'sample_world/biomes.png'),
-      loadBitmapByUrl(window, 'sample_world/splat3.png'),
-      loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
-    ]).then(([biomesImg, splat3Img, radImg]) => {
+    (async () => {
+      const [biomesImg, splat3Img, radImg] = await Promise.all([
+        loadBitmapByUrl(window, 'sample_world/biomes.png'),
+        loadBitmapByUrl(window, 'sample_world/splat3.png'),
+        loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
+      ]);
       mapRendererWorker.postMessage(
         { biomesImg, splat3Img, radImg },
         [biomesImg, splat3Img, radImg],
       );
+    })();
+    (async () => {
+      const all = await loadPrefabsXmlByUrl(window, 'sample_world/prefabs.xml');
+      prefabsFilterWorker.postMessage({ all });
+    })();
+  });
+
+  // -------------------------------------------------
+  // prefab list updates
+  // -------------------------------------------------
+  prefabsFilterWorker.addEventListener('message', (event) => {
+    const { prefabs } = event.data;
+    if (!prefabs) {
+      return;
+    }
+
+    if (prefabs.length === 0) {
+      prefabsResultSpan.textContent = 'No prefabs';
+    } else {
+      prefabsResultSpan.textContent = `${prefabs.length} prefabs`;
+    }
+
+    const ul = document.createElement('ul');
+    prefabs.forEach((prefab) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${prefab.dist ? `${formatDist(prefab.dist)}, ` : ''}
+        <a href="prefabs/${prefab.name}.html" target="_blank">
+          ${prefab.highlightedName || prefab.name}
+        </a>
+        (${prefab.x}, ${prefab.y})
+      `;
+      if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
+        const blocksUl = document.createElement('ul');
+        prefab.matchedBlocks.forEach((block) => {
+          const blockLi = document.createElement('li');
+          blockLi.innerHTML = `${block.count}x ${block.highlightedLabel} <small>${block.highlightedName}</small>`;
+          blocksUl.appendChild(blockLi);
+        });
+        li.appendChild(blocksUl);
+      }
+      ul.appendChild(li);
     });
-    prefabs
-      .setByUrl('sample_world/prefabs.xml')
-      .then(() => {
-        mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
-        prefabs.update();
-      });
+    prefabListDiv.replaceChild(ul, prefabListDiv.firstChild);
   });
 
   // -------------------------------------------------
   // other model updates
   // -------------------------------------------------
 
+  // Scroll with the mark at the center of the screen
   let markPosition = null;
   let prevCanvasSize = { width: 0, height: 0 };
-
-  // Scroll with the mark at the center of the screen
   mapCanvas.addEventListener('click', (e) => { markPosition = e; });
   resetFlagButton.addEventListener('click', () => { markPosition = null; });
   (new MutationObserver((mutationsList) => {
@@ -245,14 +292,7 @@ function main() {
   downloadButton.addEventListener('click', () => {
     const a = document.createElement('a');
     a.href = mapCanvas.toDataURL('image/png');
-    let filterString;
-    if (prefabs.prefabsFilterString.length !== 0) {
-      filterString = prefabs.prefabsFilterString;
-    } else if (prefabs.blocksFilterString.length !== 0) {
-      filterString = prefabs.blocksFilterString;
-    }
-    const filterSuffix = filterString ? `-${filterString}` : '';
-    a.download = `7DtD-renderer${filterSuffix}.png`;
+    a.download = `7DtD-renderer.png`;
     a.click();
   });
 
@@ -329,8 +369,8 @@ function main() {
       radInput.value = '';
     } else if (file.name === 'prefabs.xml') {
       console.log('Update prefab list');
-      await prefabs.setByFile(file);
-      mapRendererWorker.postMessage({ prefabs: prefabs.filtered });
+      const prefabs = await loadPrefabsXmlByFile(window, file);
+      prefabsFilterWorker.postMessage({ all: prefabs });
       prefabsInput.value = '';
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
@@ -356,7 +396,7 @@ function main() {
     const context = canvas.getContext('2d');
     context.filter = 'url("#rad_filter")';
     context.drawImage(orig, 0, 0);
-    return window.createImageBitmap(canvas);
+    return createImageBitmap(canvas);
   }
 
   function convertCursorPositionToMapCoords({ offsetX, offsetY }) {
@@ -366,8 +406,12 @@ function main() {
     };
   }
 
-  // init
-  prefabs.update();
+  function formatDist(dist) {
+    if (dist < 1000) {
+      return `${dist}m`;
+    }
+    return `${(dist / 1000).toFixed(2)}km`;
+  }
 }
 
 if (document.readyState === 'loading') {

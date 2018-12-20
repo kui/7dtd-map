@@ -3,6 +3,9 @@ extends: airbnb-base
 rules:
   no-console: off
   no-use-before-define: off
+  no-param-reassign:
+    - error
+    - props: false
   import/no-extraneous-dependencies:
     - error
     - devDependencies: [ "**" ]

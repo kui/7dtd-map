@@ -23,7 +23,6 @@ const knownParamNames = new Set([
 let map;
 
 onmessage = (event) => {
-  console.log('event %o', event.data);
   const { canvas, ...restParams } = event.data;
 
   if (canvas) {
