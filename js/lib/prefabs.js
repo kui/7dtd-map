@@ -27,9 +27,11 @@ export default class Prefabs {
     updateDist(this);
     sort(this);
     const updateData = { status: this.status };
-    if (this.prevFiltered !== this.filtered) {
+    if (this.prevFiltered !== this.filtered
+       || this.prevMarkCoords !== this.markCoords) {
       updateData.prefabs = this.filtered;
       this.prevFiltered = this.filtered;
+      this.prevMarkCoords = this.markCoords;
     }
     this.updateListeners.forEach(f => f(updateData));
   }

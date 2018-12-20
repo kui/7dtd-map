@@ -187,8 +187,8 @@ function main() {
 
     prefabListUl = document.createElement('ul');
     restPrefabs = prefabs;
-    renderTailPrefabs();
     prefabListDiv.replaceChild(prefabListUl, prefabListDiv.firstChild);
+    requestAnimationFrame(renderTailPrefabs);
   });
 
   controllerFieldset.addEventListener('scroll', () => {
