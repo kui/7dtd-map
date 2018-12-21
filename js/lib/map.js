@@ -72,7 +72,7 @@ export default class Map {
     if (this.showPrefabs) {
       await drawPrefabs(this, context);
     }
-    if (this.markCoords && this.markCoords.x && this.markCoords.y) {
+    if (this.markCoords && this.markCoords.x && this.markCoords.z) {
       await drawMark(this, context);
     }
   }
@@ -113,7 +113,7 @@ async function drawMark(map, ctx) {
 
   const x = offsetX + map.markCoords.x + charOffsetX;
   // prefab vertical positions are inverted for canvas coodinates
-  const y = offsetY - map.markCoords.y + charOffsetY;
+  const y = offsetY - map.markCoords.z + charOffsetY;
 
   putText({
     ctx, text: markChar, x, y, textSize: map.signSize,

@@ -203,7 +203,7 @@ function matchBlocks(pattern, blockPrefabIndex, blockLabels) {
 
 function calcDist(targetCoords, baseCoords) {
   return Math.round(Math.sqrt(((targetCoords.x - baseCoords.x) ** 2)
-                              + ((targetCoords.y - baseCoords.y) ** 2)));
+                              + ((targetCoords.y - baseCoords.z) ** 2)));
 }
 
 function matchAndHighlight(str, regex) {
