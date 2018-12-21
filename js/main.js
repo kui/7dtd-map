@@ -2,12 +2,13 @@
 
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
+//import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
+import loadDtmRawByFile from './lib/dtm-loader';
 
 function main() {
   const loadingIndicatorP = document.getElementById('loading_indicator');
   const controllerFieldset = document.getElementById('controller');
-  const coodWESpan = document.getElementById('cood_we');
-  const coodNSSpan = document.getElementById('cood_ns');
+  const coodsSpan = document.getElementById('coods');
   const downloadButton = document.getElementById('download');
   const resetFlagButton = document.getElementById('reset_flag');
   const showBiomesInput = document.getElementById('show_biomes');
@@ -28,11 +29,14 @@ function main() {
   const mapCanvas = document.getElementById('map');
   const sampleLoadButton = document.getElementById('sample_load');
 
+  const waterMapCanvas = document.getElementById('water-map');
+
   const mapRendererWorker = new Worker('map-renderer.js');
   const prefabsFilterWorker = new Worker('prefabs-filter.js');
 
   // init
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
+  const waterRendererCanvas = waterMapCanvas.transferControlToOffscreen();
   mapRendererWorker.postMessage({
     canvas: rendererCanvas,
     showBiomes: showBiomesInput.checked,
@@ -42,7 +46,8 @@ function main() {
     signSize: signSizeInput.value,
     brightness: `${brightnessInput.value}%`,
     scale: scaleInput.value,
-  }, [rendererCanvas]);
+    waterCanvas: waterRendererCanvas,
+  }, [rendererCanvas, waterRendererCanvas]);
 
   (async () => {
     const res = await fetch('block-prefab-index.json');
@@ -58,6 +63,7 @@ function main() {
   // -------------------------------------------------
 
   const loadingFiles = new Set();
+  let dtmRaw = null;
 
   // inputs
   biomesInput.addEventListener('input', async () => {
@@ -151,6 +157,12 @@ function main() {
       const prefabs = await loadPrefabsXmlByFile(window, file);
       prefabsFilterWorker.postMessage({ all: prefabs });
       prefabsInput.value = '';
+    } else if (file.name === 'dtm.raw') {
+      dtmRaw = await loadDtmRawByFile(window, file);
+    // mapRendererWorker.postMessage({ dtm: dtmRaw }, [dtmRaw]);
+    // } else if (file.name === 'water_info.xml') {
+    //   const waterInfo = await loadWaterInfoXmlByFile(window, file);
+    //   mapRendererWorker.postMessage({ waterInfo });
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
@@ -399,13 +411,16 @@ function main() {
     }
   });
   mapCanvas.addEventListener('mousemove', (event) => {
-    const { x, y } = convertCursorPositionToMapCoords(event);
-    coodWESpan.textContent = x;
-    coodNSSpan.textContent = y;
+    const { x, z } = convertCursorPositionToMapCoords(event);
+    if (dtmRaw) {
+      const e = getElevation(x, z);
+      coodsSpan.textContent = `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
+    } else {
+      coodsSpan.textContent = `E/W: ${x}, N/S: ${z}`;
+    }
   });
   mapCanvas.addEventListener('mouseout', () => {
-    coodWESpan.textContent = '-';
-    coodNSSpan.textContent = '-';
+    coodsSpan.textContent = 'E/W: -, N/S: -';
   });
 
   // download
@@ -445,7 +460,6 @@ function main() {
       return;
     }
     event.preventDefault();
-    /* eslint no-param-reassign: off */
     event.dataTransfer.dropEffect = 'copy';
     document.body.classList.add('dragovered');
   });
@@ -506,8 +520,17 @@ function main() {
   function convertCursorPositionToMapCoords({ offsetX, offsetY }) {
     return {
       x: -Math.round((0.5 - offsetX / mapCanvas.width) * mapSizes.width),
-      y: Math.round((0.5 - offsetY / mapCanvas.height) * mapSizes.height),
+      z: Math.round((0.5 - offsetY / mapCanvas.height) * mapSizes.height),
     };
+  }
+
+  function getElevation(x, z) {
+    const nx = x + mapSizes.width / 2;
+    const nz = -1 * z + mapSizes.height / 2;
+    const i = nx + mapSizes.width * nz;
+    console.log({ nx, nz, i });
+    // eslint-disable-next-line no-bitwise
+    return Buffer.from(dtmRaw).readInt16LE(i) & 0b11111111;
   }
 
   function formatDist(dist) {

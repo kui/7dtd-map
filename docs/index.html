@@ -13,13 +13,13 @@
       Only supported in latest Google Chrome.
     </p>
     <nav>
-    <ul>
-      <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
-      <li><a href="prefabs">Prefab List</a></li>
-    </ul>
+      <ul>
+        <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+        <li><a href="prefabs">Prefab List</a></li>
+      </ul>
     </nav>
     <fieldset id="controller">
-      <p>E/W: <span id="cood_we">-</span>, N/S: <span id="cood_ns">-</span></p>
+      <p id="coods">E/W: -, N/S: -</p>
       <p>
         <button id="download">Download</button>
         <button id="reset_flag">Reset Flag</button>
@@ -149,11 +149,13 @@
       <filter id="rad_filter">
         <fecolormatrix
           type="matrix"
-          values="1   0 0 0 0
-                  0   0 0 0 0
-                  0   0 0 0 0
-                  0.3 0 0 0 0 " />
+          values="
+          1   0 0 0 0
+          0   0 0 0 0
+          0   0 0 0 0
+          0.3 0 0 0 0 " />
       </filter>
     </svg>
+    <canvas id="water-map" width="0" height="0"></canvas>
   </body>
 </html>
