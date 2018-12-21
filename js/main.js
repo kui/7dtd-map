@@ -201,8 +201,9 @@ function main() {
   // -------------------------------------------------
   let prefabListUl;
   let restPrefabs;
+  let isShowedAllPrefabs = true;
   const renderedPrefabsNum = 10;
-  prefabsFilterWorker.addEventListener('message', (event) => {
+  prefabsFilterWorker.addEventListener('message', async (event) => {
     const { prefabs, status } = event.data;
     prefabsResultSpan.innerHTML = status;
 
@@ -213,20 +214,55 @@ function main() {
     prefabListUl = document.createElement('ul');
     restPrefabs = prefabs;
     prefabListDiv.replaceChild(prefabListUl, prefabListDiv.firstChild);
-    requestAnimationFrame(renderTailPrefabs);
+
+    // Show a part of result until the scroll bar are shown
+    await showHeadOfPrefabList();
+
+    // Shows all results, once scrolled.
+    if (isShowedAllPrefabs) {
+      isShowedAllPrefabs = false;
+      controllerFieldset.addEventListener('scroll', () => {
+        isShowedAllPrefabs = true;
+        showAllPrefabs();
+      }, { once: true });
+    }
   });
 
-  controllerFieldset.addEventListener('scroll', () => {
-    renderTailPrefabs();
-  }, { passive: true });
+  async function showHeadOfPrefabList() {
+    while (restPrefabs.length !== 0) {
+      const scrollBottom = controllerFieldset.offsetHeight + controllerFieldset.scrollTop;
+      if (scrollBottom + 100 < controllerFieldset.scrollHeight) {
+        return;
+      }
+
+      renderTailPrefabs();
+      // eslint-disable-next-line no-await-in-loop
+      await waitAnimationFrame();
+    }
+  }
+
+  // Note: showAllPrefabs loop could run in duplicate,
+  // if new result come when showAllPrefabs are running
+  // We can avoid it by some status check in the `while` loop condition.
+  // But it will make the implementation too complex while it is not significant one.
+  // So we don't take care it.
+  async function showAllPrefabs() {
+    while (restPrefabs.length !== 0) {
+      renderTailPrefabs();
+      // eslint-disable-next-line no-await-in-loop
+      await waitAnimationFrame();
+    }
+  }
+
+  async function waitAnimationFrame() {
+    return new Promise(r => requestAnimationFrame(r));
+  }
 
   function renderTailPrefabs() {
-    if (restPrefabs.length === 0) {
-      return;
-    }
-
-    const scrollBottom = controllerFieldset.offsetHeight + controllerFieldset.scrollTop;
-    if (scrollBottom + 100 < controllerFieldset.scrollHeight) {
+    const liCount = prefabListUl.getElementsByTagName('li');
+    if (liCount.length >= 20000) {
+      restPrefabs = [];
+      prefabListUl.appendChild(warnLi('<strong>Abort: too many matching results</strong>'));
       return;
     }
 
@@ -240,8 +276,6 @@ function main() {
     prefabListUl.appendChild(df);
 
     restPrefabs = tail;
-
-    requestAnimationFrame(renderTailPrefabs);
   }
 
   function prefabLi(prefab) {
@@ -266,6 +300,12 @@ function main() {
       });
       li.appendChild(blocksUl);
     }
+    return li;
+  }
+
+  function warnLi(message) {
+    const li = document.createElement('li');
+    li.innerHTML = message;
     return li;
   }
 
