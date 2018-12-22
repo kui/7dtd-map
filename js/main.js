@@ -3,7 +3,7 @@
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
 //import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
-import loadDtmRawByFile from './lib/dtm-loader';
+import { loadDtmRawByFile, Dtm } from './lib/dtm-loader';
 
 function main() {
   const loadingIndicatorP = document.getElementById('loading_indicator');
@@ -63,7 +63,7 @@ function main() {
   // -------------------------------------------------
 
   const loadingFiles = new Set();
-  let dtmRaw = null;
+  let dtm = null;
 
   // inputs
   biomesInput.addEventListener('input', async () => {
@@ -158,7 +158,7 @@ function main() {
       prefabsFilterWorker.postMessage({ all: prefabs });
       prefabsInput.value = '';
     } else if (file.name === 'dtm.raw') {
-      dtmRaw = await loadDtmRawByFile(window, file);
+      dtm = new Dtm(await loadDtmRawByFile(window, file), mapSizes.width);
     // mapRendererWorker.postMessage({ dtm: dtmRaw }, [dtmRaw]);
     // } else if (file.name === 'water_info.xml') {
     //   const waterInfo = await loadWaterInfoXmlByFile(window, file);
@@ -411,14 +411,22 @@ function main() {
     }
   });
   mapCanvas.addEventListener('mousemove', (event) => {
-    const { x, z } = convertCursorPositionToMapCoords(event);
-    if (dtmRaw) {
-      const e = getElevation(x, z);
+    // coords with left-top offset
+    const ox = event.offsetX * mapSizes.width / mapCanvas.width;
+    const oz = event.offsetY * mapSizes.height / mapCanvas.height;
+
+    // in-game coords (center offset)
+    const x = Math.round(ox - mapSizes.width / 2);
+    const z = Math.round(mapSizes.height / 2 - oz);
+
+    if (dtm) {
+      dtm.width = mapSizes.width;
+      const e = dtm.getElevation(Math.round(ox), Math.round(oz));
       coodsSpan.textContent = `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
     } else {
       coodsSpan.textContent = `E/W: ${x}, N/S: ${z}`;
     }
-  });
+  }, { passive: true });
   mapCanvas.addEventListener('mouseout', () => {
     coodsSpan.textContent = 'E/W: -, N/S: -';
   });
