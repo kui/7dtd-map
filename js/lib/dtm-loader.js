@@ -9,11 +9,11 @@ export async function loadDtmRawByFile(window, file) {
 
 export class Dtm {
   constructor(raw, width) {
-    Object.assign(this, { data: Buffer.from(raw), width });
+    Object.assign(this, { data: new DataView(raw), width });
   }
 
   getElevation(x, z) {
     // eslint-disable-next-line no-bitwise
-    return this.data.readUInt8((x + z * this.width) * 2 + 1);
+    return this.data.getUint8((x + z * this.width) * 2 + 1);
   }
 }
