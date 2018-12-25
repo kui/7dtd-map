@@ -1,10 +1,13 @@
 /* eslint-env node */
 
 const path = require('path');
+const flatMap = require('lodash/flatMap');
 const parseXml = require('./lib/xml-parser');
 const localInfo = require('../local.json');
 
 const usage = `${path.basename(process.argv[1])} <item name regexp>`;
+
+// TODO cache recursive call result
 
 async function main() {
   if (process.argv.length <= 2) {
@@ -22,51 +25,56 @@ async function main() {
   const lootIndex = buildLootIndex(loot);
   const blockIndex = buildBlockIndex(blocks);
 
-  blocks.blocks.block.forEach((block) => {
-    const lootId = getLootId(block, blockIndex);
-    if (!lootId) {
-      return;
-    }
+  const matchedItems = new Set();
 
-    const lootList = lootIndex[lootId];
-    if (!lootList) {
-      return;
+  const matchedBlocks = flatMap(blocks.blocks.block, (block) => {
+    const lootIds = getLootIds(block, blockIndex);
+    const lootList = flatMap(lootIds, i => lootIndex[i]);
+    const items = matchItems(lootList, pattern);
+    if (items.length > 0) {
+      items.forEach(i => matchedItems.add(i));
+      return block.$.name;
     }
-    if (lootList.some(i => findItem(i, pattern))) {
-      console.log(block.$.name);
-    }
+    return [];
   });
+
+  console.log('matched items: ', Array.from(matchedItems));
+  console.log('matched loot containers: ', matchedBlocks);
 
   return 0;
 }
 
-function getLootId(block, blockIndex, stack = []) {
+function getLootIds(block, blockIndex, stack = []) {
+  let lootIds = [];
+
   const lootListProp = block.property.find(p => p.$.name === 'LootList');
   if (lootListProp) {
-    return lootListProp.$.value;
+    lootIds.push(lootListProp.$.value);
   }
 
   const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
   if (downgradeBlockProp
       && !stack.includes(downgradeBlockProp.$.value)
       && blockIndex[downgradeBlockProp.$.value]) {
-    return getLootId(
+    lootIds = lootIds.concat(getLootIds(
       blockIndex[downgradeBlockProp.$.value],
       stack.concat(downgradeBlockProp.$.value),
-    );
+    ));
   }
 
-  const extendsProp = block.property.find(p => p.$.name === 'Extends');
-  if (extendsProp
-      && !stack.includes(extendsProp.$.value)
-      && blockIndex[extendsProp.$.value]) {
-    return getLootId(
-      blockIndex[extendsProp.$.value],
-      stack.concat(extendsProp.$.value),
-    );
+  if (!lootListProp) {
+    const extendsProp = block.property.find(p => p.$.name === 'Extends');
+    if (extendsProp
+        && !stack.includes(extendsProp.$.value)
+        && blockIndex[extendsProp.$.value]) {
+      lootIds = lootIds.concat(getLootIds(
+        blockIndex[extendsProp.$.value],
+        stack.concat(extendsProp.$.value),
+      ));
+    }
   }
 
-  return null;
+  return lootIds;
 }
 
 function buildBlockIndex(blocks) {
@@ -76,11 +84,16 @@ function buildBlockIndex(blocks) {
   }, {});
 }
 
-function findItem(item, pattern) {
-  if (item.group) {
-    return item.groupItems.some(i => findItem(i, pattern));
-  }
-  return pattern.test(item.name);
+function matchItems(items, pattern) {
+  return flatMap(items, (item) => {
+    if (item.group) {
+      return matchItems(item.items, pattern);
+    }
+    if (pattern.test(item.name)) {
+      return item.name;
+    }
+    return [];
+  });
 }
 
 function buildLootIndex(loot) {
@@ -100,7 +113,7 @@ function expandLootGroup(groups, item) {
     return Object.assign(
       {},
       item.$,
-      { groupItems: (g || []).map(i => expandLootGroup(groups, i)) },
+      { items: (g || []).map(i => expandLootGroup(groups, i)) },
     );
   }
   return item.$;
