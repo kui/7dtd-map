@@ -1,10 +1,9 @@
 /* eslint-env node */
 
 const path = require('path');
-const fsPromise = require('fs').promises;
-const parseXmlString = require('xml2js').parseString;
 const parseNim = require('./nim-parser');
 const parseTts = require('./tts-parser');
+const parseXml = require('./xml-parser');
 
 function html(model) {
   return `<!doctype html>
@@ -90,17 +89,6 @@ module.exports = async ({
 async function parsePrefabXml(xmlFileName) {
   const xml = await parseXml(xmlFileName);
   return xml.prefab.property.map(p => p.$);
-}
-
-async function parseXml(xmlFileName) {
-  const xml = await fsPromise.readFile(xmlFileName);
-  return new Promise((resolve, reject) => {
-    parseXmlString(xml, (err, result) => {
-      if (err) reject(err);
-      if (result) resolve(result);
-      reject(Error('Unexpected state'));
-    });
-  });
 }
 
 function sortByProperty(arr, propName) {
