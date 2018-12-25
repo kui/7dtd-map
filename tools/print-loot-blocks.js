@@ -47,19 +47,12 @@ async function main() {
 function getLootIds(block, blockIndex, stack = []) {
   let lootIds = [];
 
+  const classProp = block.property.find(p => p.$.name === 'Class');
   const lootListProp = block.property.find(p => p.$.name === 'LootList');
-  if (lootListProp) {
-    lootIds.push(lootListProp.$.value);
-  }
-
-  const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
-  if (downgradeBlockProp
-      && !stack.includes(downgradeBlockProp.$.value)
-      && blockIndex[downgradeBlockProp.$.value]) {
-    lootIds = lootIds.concat(getLootIds(
-      blockIndex[downgradeBlockProp.$.value],
-      stack.concat(downgradeBlockProp.$.value),
-    ));
+  if (classProp && classProp.$.value === 'Loot') {
+    if (lootListProp) {
+      lootIds.push(lootListProp.$.value);
+    }
   }
 
   if (!lootListProp) {
@@ -72,6 +65,16 @@ function getLootIds(block, blockIndex, stack = []) {
         stack.concat(extendsProp.$.value),
       ));
     }
+  }
+
+  const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
+  if (downgradeBlockProp
+      && !stack.includes(downgradeBlockProp.$.value)
+      && blockIndex[downgradeBlockProp.$.value]) {
+    lootIds = lootIds.concat(getLootIds(
+      blockIndex[downgradeBlockProp.$.value],
+      stack.concat(downgradeBlockProp.$.value),
+    ));
   }
 
   return lootIds;
