@@ -20,24 +20,60 @@ async function main() {
   const loot = await parseXml(path.join(vanillaDir, 'Data', 'Config', 'loot.xml'));
 
   const lootIndex = buildLootIndex(loot);
+  const blockIndex = buildBlockIndex(blocks);
 
   blocks.blocks.block.forEach((block) => {
-    const lootListProp = block.property.find(p => p.$.name === 'LootList');
-    if (!lootListProp) {
+    const lootId = getLootId(block, blockIndex);
+    if (!lootId) {
       return;
     }
 
-    const lootList = lootIndex[lootListProp.$.value];
+    const lootList = lootIndex[lootId];
     if (!lootList) {
       return;
     }
     if (lootList.some(i => findItem(i, pattern))) {
       console.log(block.$.name);
-      // console.log(JSON.stringify(lootList, 0, 2));
     }
   });
 
   return 0;
+}
+
+function getLootId(block, blockIndex, stack = []) {
+  const lootListProp = block.property.find(p => p.$.name === 'LootList');
+  if (lootListProp) {
+    return lootListProp.$.value;
+  }
+
+  const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
+  if (downgradeBlockProp
+      && !stack.includes(downgradeBlockProp.$.value)
+      && blockIndex[downgradeBlockProp.$.value]) {
+    return getLootId(
+      blockIndex[downgradeBlockProp.$.value],
+      stack.concat(downgradeBlockProp.$.value),
+    );
+  }
+
+  const extendsProp = block.property.find(p => p.$.name === 'Extends');
+  if (extendsProp
+      && !stack.includes(extendsProp.$.value)
+      && blockIndex[extendsProp.$.value]) {
+    return getLootId(
+      blockIndex[extendsProp.$.value],
+      stack.concat(extendsProp.$.value),
+    );
+  }
+
+  return null;
+}
+
+function buildBlockIndex(blocks) {
+  return blocks.blocks.block.reduce((obj, block) => {
+    obj[block.$.name] = block;
+    return obj;
+  }, {});
 }
 
 function findItem(item, pattern) {
