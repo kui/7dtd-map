@@ -2,7 +2,7 @@
 
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
-//import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
+import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
 import { loadDtmRawByFile, Dtm } from './lib/dtm-loader';
 
 function main() {
@@ -29,14 +29,11 @@ function main() {
   const mapCanvas = document.getElementById('map');
   const sampleLoadButton = document.getElementById('sample_load');
 
-  const waterMapCanvas = document.getElementById('water-map');
-
   const mapRendererWorker = new Worker('map-renderer.js');
   const prefabsFilterWorker = new Worker('prefabs-filter.js');
 
   // init
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
-  const waterRendererCanvas = waterMapCanvas.transferControlToOffscreen();
   mapRendererWorker.postMessage({
     canvas: rendererCanvas,
     showBiomes: showBiomesInput.checked,
@@ -46,8 +43,7 @@ function main() {
     signSize: signSizeInput.value,
     brightness: `${brightnessInput.value}%`,
     scale: scaleInput.value,
-    waterCanvas: waterRendererCanvas,
-  }, [rendererCanvas, waterRendererCanvas]);
+  }, [rendererCanvas]);
 
   (async () => {
     const res = await fetch('block-prefab-index.json');
@@ -158,11 +154,13 @@ function main() {
       prefabsFilterWorker.postMessage({ all: prefabs });
       prefabsInput.value = '';
     } else if (file.name === 'dtm.raw') {
-      dtm = new Dtm(await loadDtmRawByFile(window, file), mapSizes.width);
-    // mapRendererWorker.postMessage({ dtm: dtmRaw }, [dtmRaw]);
-    // } else if (file.name === 'water_info.xml') {
-    //   const waterInfo = await loadWaterInfoXmlByFile(window, file);
-    //   mapRendererWorker.postMessage({ waterInfo });
+      const dtmRaw = await loadDtmRawByFile(window, file);
+      dtm = new Dtm(dtmRaw, mapSizes.width);
+      const copiedDtmRaw = dtmRaw.slice(0);
+      mapRendererWorker.postMessage({ dtm: copiedDtmRaw }, [copiedDtmRaw]);
+    } else if (file.name === 'water_info.xml') {
+      const waterInfo = await loadWaterInfoXmlByFile(window, file);
+      mapRendererWorker.postMessage({ waterInfo });
     } else {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
@@ -530,15 +528,6 @@ function main() {
       x: -Math.round((0.5 - offsetX / mapCanvas.width) * mapSizes.width),
       z: Math.round((0.5 - offsetY / mapCanvas.height) * mapSizes.height),
     };
-  }
-
-  function getElevation(x, z) {
-    const nx = x + mapSizes.width / 2;
-    const nz = -1 * z + mapSizes.height / 2;
-    const i = nx + mapSizes.width * nz;
-    console.log({ nx, nz, i });
-    // eslint-disable-next-line no-bitwise
-    return Buffer.from(dtmRaw).readInt16LE(i) & 0b11111111;
   }
 
   function formatDist(dist) {

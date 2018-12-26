@@ -1,14 +1,21 @@
-export default async function renderWaterImg(window, canvas, map, dtm, waterInfo) {
+import { Dtm } from './dtm-loader';
+
+export default async function renderWaterImg(window, map, dtmRaw, waterInfo) {
   const { height, width } = map;
 
-  canvas.width = width * map.scale;
-  canvas.height = height * map.scale;
+  const canvas = new window.OffscreenCanvas(width, height);
+
+  // canvas.width = width * map.scale;
+  // canvas.height = height * map.scale;
+
+  const dtm = new Dtm(dtmRaw, width);
 
   const context = canvas.getContext('2d');
   context.fillStyle = 'blue';
-  context.scale(map.scale, map.scale);
+  // context.scale(map.scale, map.scale);
 
-  waterInfo.forEach((water) => {
+  for (let i = 0, len = waterInfo.length; i < len; i += 1) {
+    const water = waterInfo[i];
     const { x, y, z } = water;
 
     const minx = parseInt(water.minx, 10) + width / 2;
@@ -16,10 +23,10 @@ export default async function renderWaterImg(window, canvas, map, dtm, waterInfo
     const minz = parseInt(water.maxz, 10) * -1 + height / 2;
     const maxz = parseInt(water.minz, 10) * -1 + height / 2;
 
-    console.log('Start water render: %o', water);
+    console.log('Start water render: ', water);
     const result = renderWater({
       context,
-      dtm: new Dtm(dtm, width),
+      dtm,
       elevationThreshold: y,
       minx,
       maxx,
@@ -31,14 +38,28 @@ export default async function renderWaterImg(window, canvas, map, dtm, waterInfo
         width,
       ),
     });
-    console.log('End water render: %o', result);
+    console.log('End water render:', result);
+
+    // await new Promise(window.requestAnimationFrame);
+  }
+
+  const blob = await canvas.convertToBlob({
+    type: 'image/jpeg',
+    quality: 0.95,
   });
+  console.log(URL.createObjectURL(blob));
+
   return window.createImageBitmap(canvas);
 }
 
 function renderWater({
   context, dtm, elevationThreshold, minx, maxx, minz, maxz, basePoint,
 }) {
+  if (isPlotted(context, basePoint)) {
+    console.log('Abort water render: already water exists');
+    return 0;
+  }
+
   let points = [basePoint];
   let num = 0;
   const plotted = new Set();
@@ -56,6 +77,7 @@ function renderWater({
     }
 
     const elevation = dtm.getElevation(point.x, point.z);
+    console.log(elevation, elevationThreshold);
     if (elevation > elevationThreshold) {
       continue;
     }
@@ -77,7 +99,7 @@ class Point {
   }
 
   get hash() {
-    return this.width * this.z + this.x;
+    return this.x + this.width * this.z;
   }
 
   get nextPoints() {
@@ -90,12 +112,8 @@ class Point {
   }
 }
 
-class Dtm {
-  constructor(dtm, width) {
-    Object.assign(this, { dtm: Buffer.from(dtm), width });
-  }
-
-  getElevation(x, z) {
-    return this.dtm.readInt16BE((x + this.width * z) * 2);
-  }
+function isPlotted(context, { x, z }) {
+  const { data } = context.getImageData(x, z, 1, 1);
+  // is blue?
+  return data[2] === 255;
 }

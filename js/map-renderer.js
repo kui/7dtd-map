@@ -2,7 +2,7 @@
 /* eslint no-restricted-globals: 1 */
 
 import Map from './lib/map';
-import renderWaterImg from './lib/water-renderer';
+// import renderWaterImg from './lib/water-renderer';
 
 const knownParamNames = new Set([
   'biomesImg',
@@ -22,7 +22,6 @@ const knownParamNames = new Set([
 ]);
 
 let map;
-let waterCanvas;
 let dtm;
 let waterInfo;
 
@@ -31,7 +30,6 @@ onmessage = (event) => {
     canvas,
     dtm: newDtm,
     waterInfo: newWaterInfo,
-    waterCanvas: newWaterCanvas,
     ...restParams
   } = event.data;
 
@@ -50,10 +48,6 @@ onmessage = (event) => {
     map[paramName] = restParams[paramName];
   });
 
-  if (newWaterCanvas) {
-    waterCanvas = newWaterCanvas;
-  }
-
   if (newDtm) {
     dtm = newDtm;
   }
@@ -63,7 +57,10 @@ onmessage = (event) => {
   }
 
   if ((newDtm || newWaterInfo) && map && dtm && waterInfo) {
-    map.waterImg = renderWaterImg(self, waterCanvas, map, dtm, waterInfo);
+    // renderWaterImg(self, map, dtm, waterInfo).then((w) => {
+    //   map.waterImg = w;
+    //   map.update();
+    // });
   }
 
   postMessage({
