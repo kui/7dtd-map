@@ -56,13 +56,11 @@ function getLootIds(block, blockIndex, stack = []) {
   }
 
   if (!lootListProp) {
-    const extendsProp = block.property.find(p => p.$.name === 'Extends');
-    if (extendsProp
-        && !stack.includes(extendsProp.$.value)
-        && blockIndex[extendsProp.$.value]) {
+    const parentBlock = getParentBlock(block, blockIndex);
+    if (parentBlock && !stack.includes(parentBlock.$.name)) {
       lootIds = lootIds.concat(getLootIds(
-        blockIndex[extendsProp.$.value],
-        stack.concat(extendsProp.$.value),
+        parentBlock,
+        stack.concat(parentBlock.$.name),
       ));
     }
   }
@@ -78,6 +76,22 @@ function getLootIds(block, blockIndex, stack = []) {
   }
 
   return lootIds;
+}
+
+function getParentBlock(block, blockIndex) {
+  const extendsProp = block.property.find(p => p.$.name === 'Extends');
+  if (!extendsProp) {
+    return null;
+  }
+
+  const { param1 } = extendsProp.$;
+  const extendsExcludes = param1 ? param1.split(',').map(s => s.trim()) : [];
+  const isExcluded = extendsExcludes.includes('LootList');
+  if (isExcluded) {
+    return null;
+  }
+
+  return blockIndex[extendsProp.$.value];
 }
 
 function buildBlockIndex(blocks) {
