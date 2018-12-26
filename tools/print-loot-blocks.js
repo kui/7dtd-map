@@ -9,6 +9,15 @@ const usage = `${path.basename(process.argv[1])} <item name regexp>`;
 
 // TODO cache recursive call result
 
+const excludeBlocks = new Set([
+  // test blocks
+  'cntLootWeapons', 'cntLootWeaponsInsecure',
+  'cntQuestTestLoot',
+
+  // quest blocks
+  'cntQuestLootBox', 'treasureChest',
+]);
+
 async function main() {
   if (process.argv.length <= 2) {
     console.error(usage);
@@ -27,58 +36,62 @@ async function main() {
 
   const matchedItems = new Set();
 
-  const matchedBlocks = flatMap(blocks.blocks.block, (block) => {
-    const lootIds = getLootIds(block, blockIndex);
-    const lootList = flatMap(lootIds, i => lootIndex[i]);
-    const items = matchItems(lootList, pattern);
-    if (items.length > 0) {
-      items.forEach(i => matchedItems.add(i));
-      return block.$.name;
+  const results = blocks.blocks.block.map((block) => {
+    if (excludeBlocks.has(block.$.name)) {
+      return [];
     }
-    return [];
-  });
+    const lootResults = matchLootItems(pattern, block, blockIndex, lootIndex);
+    lootResults.forEach(r => matchedItems.add(r.item));
+    return lootResults;
+  }).filter(r => r.length > 0);
 
   console.log('matched items: ', Array.from(matchedItems));
-  console.log('matched loot containers: ', matchedBlocks);
+  console.log('matched results: ', results);
 
   return 0;
 }
 
-function getLootIds(block, blockIndex, stack = []) {
-  let lootIds = [];
-
-  const classProp = block.property.find(p => p.$.name === 'Class');
-  const lootListProp = block.property.find(p => p.$.name === 'LootList');
-  if (classProp && classProp.$.value === 'Loot') {
-    if (lootListProp) {
-      lootIds.push(lootListProp.$.value);
-    }
-  }
-
-  if (!lootListProp) {
-    const parentBlock = getParentBlock(block, blockIndex);
-    if (parentBlock && !stack.includes(parentBlock.$.name)) {
-      lootIds = lootIds.concat(getLootIds(
-        parentBlock,
-        stack.concat(parentBlock.$.name),
-      ));
-    }
-  }
-
+function traverseDowngradeBlock(pattern, block, blockIndex, lootIndex, stack = []) {
   const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
-  if (downgradeBlockProp
-      && !stack.includes(downgradeBlockProp.$.value)
-      && blockIndex[downgradeBlockProp.$.value]) {
-    lootIds = lootIds.concat(getLootIds(
-      blockIndex[downgradeBlockProp.$.value],
-      stack.concat(downgradeBlockProp.$.value),
-    ));
+  if (!downgradeBlockProp) {
+    return [];
   }
 
-  return lootIds;
+  const name = downgradeBlockProp.$.value;
+  if (stack.includes(downgradeBlockProp.$.value)) {
+    return [];
+  }
+
+  return matchLootItems(pattern, blockIndex[name], blockIndex, lootIndex, stack.concat(name));
 }
 
-function getParentBlock(block, blockIndex) {
+function matchLootItems(pattern, block, blockIndex, lootIndex, downgradeStack = []) {
+  const clazz = getProp(block, 'Class', blockIndex);
+  if (!(/(CarExplode)?Loot/).test(clazz)) {
+    return [];
+  }
+  const lootId = getProp(block, 'LootList', blockIndex);
+  const lootList = lootIndex[lootId];
+  const result = matchItems(lootList, pattern, [`LootID: ${lootId}`]).map((r) => {
+    r.block = block.$.name;
+    if (downgradeStack.length === 0) {
+      return r;
+    }
+    r.downgrade = downgradeStack.join(' -> ');
+    return r;
+  });
+  const downgradeBlockResult = traverseDowngradeBlock(
+    pattern, block, blockIndex, lootIndex, downgradeStack,
+  );
+  return result.concat(downgradeBlockResult);
+}
+
+function getProp(block, propName, blockIndex) {
+  const prop = block.property.find(p => p.$.name === propName);
+  if (prop) {
+    return prop.$.value;
+  }
+
   const extendsProp = block.property.find(p => p.$.name === 'Extends');
   if (!extendsProp) {
     return null;
@@ -86,12 +99,12 @@ function getParentBlock(block, blockIndex) {
 
   const { param1 } = extendsProp.$;
   const extendsExcludes = param1 ? param1.split(',').map(s => s.trim()) : [];
-  const isExcluded = extendsExcludes.includes('LootList');
+  const isExcluded = extendsExcludes.includes(propName);
   if (isExcluded) {
     return null;
   }
 
-  return blockIndex[extendsProp.$.value];
+  return getProp(blockIndex[extendsProp.$.value], propName, blockIndex);
 }
 
 function buildBlockIndex(blocks) {
@@ -101,13 +114,13 @@ function buildBlockIndex(blocks) {
   }, {});
 }
 
-function matchItems(items, pattern) {
+function matchItems(items, pattern, stack) {
   return flatMap(items, (item) => {
     if (item.group) {
-      return matchItems(item.items, pattern);
+      return matchItems(item.items, pattern, stack.concat(`LootGroup: ${item.group}`));
     }
     if (pattern.test(item.name)) {
-      return item.name;
+      return { item: item.name, lootList: stack.join(' -> ') };
     }
     return [];
   });
