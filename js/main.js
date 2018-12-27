@@ -8,9 +8,10 @@ import { loadDtmRawByFile, Dtm } from './lib/dtm-loader';
 function main() {
   const loadingIndicatorP = document.getElementById('loading_indicator');
   const controllerFieldset = document.getElementById('controller');
-  const coodsSpan = document.getElementById('coods');
+  const cursorCoodsSpan = document.getElementById('cursor_coods');
+  const markCoodsSpan = document.getElementById('mark_coods');
   const downloadButton = document.getElementById('download');
-  const resetFlagButton = document.getElementById('reset_flag');
+  const resetMarkButton = document.getElementById('reset_mark');
   const showBiomesInput = document.getElementById('show_biomes');
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
@@ -169,11 +170,15 @@ function main() {
 
   // flag mark
   mapCanvas.addEventListener('click', async (event) => {
-    const markCoords = convertCursorPositionToMapCoords(event);
+    // in-game coords (center offset)
+    const markCoords = {
+      x: Math.round(event.offsetX * mapSizes.width / mapCanvas.width - mapSizes.width / 2),
+      z: -Math.round(event.offsetY * mapSizes.height / mapCanvas.height - mapSizes.height / 2),
+    };
     prefabsFilterWorker.postMessage({ markCoords });
     mapRendererWorker.postMessage({ markCoords });
   });
-  resetFlagButton.addEventListener('click', async () => {
+  resetMarkButton.addEventListener('click', async () => {
     prefabsFilterWorker.postMessage({ markCoords: null });
     mapRendererWorker.postMessage({ markCoords: null });
   });
@@ -347,7 +352,7 @@ function main() {
   let markPosition = null;
   let prevCanvasSize = { width: 0, height: 0 };
   mapCanvas.addEventListener('click', (e) => { markPosition = e; });
-  resetFlagButton.addEventListener('click', () => { markPosition = null; });
+  resetMarkButton.addEventListener('click', () => { markPosition = null; });
   (new MutationObserver((mutationsList) => {
     const widthMutation = mutationsList.find(m => m.attributeName === 'width');
     if (!widthMutation) return;
@@ -401,7 +406,7 @@ function main() {
     sourceInput.addEventListener('input', () => { display.textContent = sourceInput.value; });
   });
 
-  // cursor position
+  // cursor/mark position
   let mapSizes = { width: 0, height: 0 };
   mapRendererWorker.addEventListener('message', (event) => {
     if (event.data.mapSizes) {
@@ -409,24 +414,16 @@ function main() {
     }
   });
   mapCanvas.addEventListener('mousemove', (event) => {
-    // coords with left-top offset
-    const ox = event.offsetX * mapSizes.width / mapCanvas.width;
-    const oz = event.offsetY * mapSizes.height / mapCanvas.height;
-
-    // in-game coords (center offset)
-    const x = Math.round(ox - mapSizes.width / 2);
-    const z = Math.round(mapSizes.height / 2 - oz);
-
-    if (dtm) {
-      dtm.width = mapSizes.width;
-      const e = dtm.getElevation(Math.round(ox), Math.round(oz));
-      coodsSpan.textContent = `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
-    } else {
-      coodsSpan.textContent = `E/W: ${x}, N/S: ${z}`;
-    }
+    cursorCoodsSpan.textContent = formatCoords(event);
   }, { passive: true });
   mapCanvas.addEventListener('mouseout', () => {
-    coodsSpan.textContent = 'E/W: -, N/S: -';
+    cursorCoodsSpan.textContent = formatCoords();
+  });
+  mapCanvas.addEventListener('click', async (event) => {
+    markCoodsSpan.textContent = formatCoords(event);
+  });
+  resetMarkButton.addEventListener('click', async () => {
+    markCoodsSpan.textContent = formatCoords();
   });
 
   // download
@@ -523,11 +520,26 @@ function main() {
     return createImageBitmap(canvas);
   }
 
-  function convertCursorPositionToMapCoords({ offsetX, offsetY }) {
-    return {
-      x: -Math.round((0.5 - offsetX / mapCanvas.width) * mapSizes.width),
-      z: Math.round((0.5 - offsetY / mapCanvas.height) * mapSizes.height),
-    };
+  function formatCoords({ offsetX, offsetY } = {}) {
+    if (!offsetX || !offsetY) {
+      return 'E/W: -, N/S: -';
+    }
+
+    // coords with left-top offset
+    const ox = offsetX * mapSizes.width / mapCanvas.width;
+    const oz = offsetY * mapSizes.height / mapCanvas.height;
+
+    // in-game coords (center offset)
+    const x = Math.round(ox - mapSizes.width / 2);
+    const z = Math.round(mapSizes.height / 2 - oz);
+
+    if (dtm) {
+      dtm.width = mapSizes.width;
+      const e = dtm.getElevation(Math.round(ox), Math.round(oz));
+      return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
+    }
+
+    return `E/W: ${x}, N/S: ${z}`;
   }
 
   function formatDist(dist) {
