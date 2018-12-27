@@ -19,29 +19,27 @@ main() {
     echo "Src:  $src"
     echo "Dest: $dest"
 
+    set -x
+
+    rm -frv "$dest/*"
+
     for file in "$src"/*
     do
-        if [[ "$file" =~ \.png$ ]]
+        bname="$(basename "$file")"
+        if [[ "$bname" =~ \.png$ ]]
         then
-            copy_compressed_png "$file" "$dest/$(basename "$file")"
-        elif [[ "$(basename "$file")" =~ ^dtm\. ]]
+            convert "$file" \
+                    -define png:compression-filter=2 \
+                    -define png:compression-level=9 \
+                    -define png:compression-strategy=1 \
+                    "$dest/$bname"
+        elif [[ "$bname" = dtm.raw ]]
         then
-            echo "Do nothing because useless and too large for github: $file"
+            gzip -v --keep --best --stdout "$file" > "$dest/dtm.raw.gz"
         else
             cp -v "$file" "$dest"
         fi
     done
-}
-
-copy_compressed_png() {
-    echo "copy and compress:"
-    echo "  src:  $1"
-    echo "  dest: $2"
-    convert "$1" \
-            -define png:compression-filter=2 \
-            -define png:compression-level=9 \
-            -define png:compression-strategy=1 \
-            "$2"
 }
 
 main "$@"
