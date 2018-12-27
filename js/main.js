@@ -548,9 +548,16 @@ function main() {
       return 'E/W: -, N/S: -, Elev: -';
     }
 
+    // relative coords on the canvas with left-top offset and these ranges should be [0, 1)
+    const rx = offsetX / mapCanvas.width;
+    const rz = offsetY / mapCanvas.height;
+    if (rx < 0 || rx >= 1 || rz < 0 || rz >= 1) {
+      return 'E/W: -, N/S: -, Elev: -';
+    }
+
     // coords with left-top offset
-    const ox = offsetX * mapSizes.width / mapCanvas.width;
-    const oz = offsetY * mapSizes.height / mapCanvas.height;
+    const ox = rx * mapSizes.width;
+    const oz = rz * mapSizes.height;
 
     // in-game coords (center offset)
     const x = Math.round(ox - mapSizes.width / 2);
