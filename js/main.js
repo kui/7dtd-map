@@ -3,7 +3,7 @@
 import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
 import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
-import { loadDtmRawByFile, Dtm } from './lib/dtm-loader';
+import { loadDtmRawByFile, loadDtmRawGzByUrl, Dtm } from './lib/dtm-loader';
 
 function main() {
   const loadingIndicatorP = document.getElementById('loading_indicator');
@@ -20,6 +20,7 @@ function main() {
   const radInput = document.getElementById('radiation');
   const showPrefabsInput = document.getElementById('show_prefabs');
   const prefabsInput = document.getElementById('prefabs');
+  const dtmInput = document.getElementById('dtm');
   const scaleInput = document.getElementById('scale');
   const signSizeInput = document.getElementById('sign_size');
   const brightnessInput = document.getElementById('brightness');
@@ -94,6 +95,11 @@ function main() {
     loadingFiles.delete('prefabs.xml');
     prefabsFilterWorker.postMessage({ all: prefabs });
   });
+  dtmInput.addEventListener('input', async () => {
+    loadingFiles.add('dtm.xml');
+    handleDtmRaw(await loadDtmRawByFile(window, dtmInput.files[0]));
+    loadingFiles.delete('dtm.xml');
+  });
   ['input', 'focus'].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, async () => {
       prefabsFilterWorker.postMessage({ prefabsFilterString: prefabsFilterInput.value });
@@ -155,10 +161,7 @@ function main() {
       prefabsFilterWorker.postMessage({ all: prefabs });
       prefabsInput.value = '';
     } else if (file.name === 'dtm.raw') {
-      const dtmRaw = await loadDtmRawByFile(window, file);
-      dtm = new Dtm(dtmRaw, mapSizes.width);
-      const copiedDtmRaw = dtmRaw.slice(0);
-      mapRendererWorker.postMessage({ dtm: copiedDtmRaw }, [copiedDtmRaw]);
+      handleDtmRaw(await loadDtmRawByFile(window, file));
     } else if (file.name === 'water_info.xml') {
       const waterInfo = await loadWaterInfoXmlByFile(window, file);
       mapRendererWorker.postMessage({ waterInfo });
@@ -166,6 +169,17 @@ function main() {
       console.warn('Unknown file: %s, %s', file.name, file.type);
     }
     loadingFiles.delete(file.name);
+  }
+
+  function handleDtmRaw(dtmRaw) {
+    if (!dtmRaw) {
+      dtm = null;
+      return;
+    }
+
+    dtm = new Dtm(dtmRaw, mapSizes.width);
+    // const copiedDtmRaw = dtmRaw.slice(0);
+    // mapRendererWorker.postMessage({ dtm: copiedDtmRaw }, [copiedDtmRaw]);
   }
 
   // flag mark
@@ -184,31 +198,40 @@ function main() {
   });
 
   // sample load
-  sampleLoadButton.addEventListener('click', () => {
-    (async () => {
-      loadingFiles.add('biomes.png');
-      mapRendererWorker.postMessage({
-        biomesImg: await loadBitmapByUrl(window, 'sample_world/biomes.png'),
-      });
-      loadingFiles.delete('biomes.png');
-    })();
-    (async () => {
-      loadingFiles.add('splat3.png');
-      loadingFiles.add('radiation.png');
-      const [splat3Img, radImg] = await Promise.all([
-        loadBitmapByUrl(window, 'sample_world/splat3.png'),
-        loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
-      ]);
-      mapRendererWorker.postMessage({ splat3Img, radImg }, [splat3Img, radImg]);
-      loadingFiles.delete('splat3.png');
-      loadingFiles.delete('radiation.png');
-    })();
-    (async () => {
-      loadingFiles.add('prefab.xml');
-      const all = await loadPrefabsXmlByUrl(window, 'sample_world/prefabs.xml');
-      loadingFiles.delete('prefab.xml');
-      prefabsFilterWorker.postMessage({ all });
-    })();
+  sampleLoadButton.addEventListener('click', async () => {
+    sampleLoadButton.disabled = true;
+    await Promise.all([
+      (async () => {
+        loadingFiles.add('biomes.png');
+        mapRendererWorker.postMessage({
+          biomesImg: await loadBitmapByUrl(window, 'sample_world/biomes.png'),
+        });
+        loadingFiles.delete('biomes.png');
+      })(),
+      (async () => {
+        loadingFiles.add('splat3.png');
+        loadingFiles.add('radiation.png');
+        const [splat3Img, radImg] = await Promise.all([
+          loadBitmapByUrl(window, 'sample_world/splat3.png'),
+          loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
+        ]);
+        mapRendererWorker.postMessage({ splat3Img, radImg }, [splat3Img, radImg]);
+        loadingFiles.delete('splat3.png');
+        loadingFiles.delete('radiation.png');
+      })(),
+      (async () => {
+        loadingFiles.add('prefab.xml');
+        const all = await loadPrefabsXmlByUrl(window, 'sample_world/prefabs.xml');
+        loadingFiles.delete('prefab.xml');
+        prefabsFilterWorker.postMessage({ all });
+      })(),
+      (async () => {
+        loadingFiles.add('dtm.raw');
+        handleDtmRaw(await loadDtmRawGzByUrl(window, 'sample_world/dtm.raw.gz'));
+        loadingFiles.delete('dtm.raw');
+      })(),
+    ]);
+    sampleLoadButton.disabled = false;
   });
 
   // -------------------------------------------------
@@ -522,7 +545,7 @@ function main() {
 
   function formatCoords({ offsetX, offsetY } = {}) {
     if (!offsetX || !offsetY) {
-      return 'E/W: -, N/S: -';
+      return 'E/W: -, N/S: -, Elev: -';
     }
 
     // coords with left-top offset
@@ -539,7 +562,7 @@ function main() {
       return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
     }
 
-    return `E/W: ${x}, N/S: ${z}`;
+    return `E/W: ${x}, N/S: ${z}, Elev: -`;
   }
 
   function formatDist(dist) {

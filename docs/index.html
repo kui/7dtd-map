@@ -19,13 +19,18 @@
       </ul>
     </nav>
     <fieldset id="controller">
-      <p>Cursor: <span id="cursor_coods">E/W: -, N/S: -</span></p>
-      <p>Flag: <span id="mark_coods">E/W: -, N/S: -</span></p>
       <p>
         <button id="download">Download</button>
-        <button id="reset_mark">Reset Flag</button>
       </p>
       <table>
+        <tr>
+          <th>Cursor</th>
+          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
+        </tr>
+        <tr>
+          <th>Flag <button id="reset_mark">☓</button></th>
+          <td><span id="mark_coods">E/W: -, N/S: -, Elev: -</span></td>
+        </tr>
         <tr>
           <th><label for="biomes">biomes.png</label></th>
           <td>
@@ -52,6 +57,12 @@
           <td>
             <input id="show_prefabs" type="checkbox" checked title="Show prefabs">
             <input id="prefabs" name="prefabs" type="file">
+          </td>
+        </tr>
+        <tr>
+          <th><label for="dtm">dtm.raw</label></th>
+          <td>
+            <input id="dtm" name="dtm" type="file">
           </td>
         </tr>
         <tr>
@@ -123,29 +134,24 @@
     </fieldset>
     <canvas id="map" width="0" height="0" title="Click to mark"></canvas>
     <p id="loading_indicator"></p>
-    <p><button id="sample_load">Load Sample World</button></p>
+    <p><button id="sample_load" title="Seed: 187, Name: West Yajino Territory, Version: A17 b240">Load Sample World</button></p>
     <ol>
-      <li>Browse 7DtD local files</li>
-      <li>Select folders: <code>Data</code> → <code>Worlds</code> → Random world name folder</li>
-      <li>Drug and drop world files:
-        <ul>
-          <li>biomes.png</li>
-          <li>splat3.png</li>
-          <li>radiation.png</li>
-          <li>prefabs.xml</li>
-        </ul>
-      </li>
+      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">?</a>)</li>
+      <li>Select folders: <code>Data</code> → <code>Worlds</code> → World name folder</li>
+      <li>Drag and drop all files in the world folder</li>
     </ol>
     <p>Note: Navezgane are not supported</p>
     <div id="overlay">
       <div>
-        <p>Drug and drop world files:</p>
+        <p>Drop world files:</p>
         <ul>
           <li>biomes.png</li>
           <li>splat3.png</li>
           <li>radiation.png</li>
           <li>prefabs.xml</li>
+          <li>dtm.raw</li>
         </ul>
+        <p>Rest files are ignored.</p>
       </div>
     </div>
     <svg style="display: none">
