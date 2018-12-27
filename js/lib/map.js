@@ -1,3 +1,4 @@
+import forEachRight from 'lodash/forEachRight';
 import lazy from './lazy-invoker';
 
 const signChar = '✘';
@@ -90,7 +91,7 @@ async function drawPrefabs(map, ctx) {
   const charOffsetX = Math.round(map.signSize * 0.01);
   const charOffsetY = Math.round(map.signSize * 0.05);
 
-  map.prefabs.forEach((prefab) => {
+  forEachRight(map.prefabs, (prefab) => {
     const x = offsetX + prefab.x + charOffsetX;
     // prefab vertical positions are inverted for canvas coodinates
     const y = offsetY - prefab.y + charOffsetY;
