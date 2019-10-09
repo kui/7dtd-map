@@ -37,17 +37,18 @@ async function filterRad(window, orig) {
 }
 
 async function loadSplat3BitmapByJimp(window, jimp) {
-  convertSplat3(jimp);
+  convertSplat3(window, jimp);
   return loadBitmapByUrl(window, await jimp.getBase64Async(Jimp.MIME_PNG));
 }
 
-async function convertSplat3(jimp) {
+async function convertSplat3(window, jimp) {
   const { data } = jimp.bitmap;
   for (let i = 0; i < data.length; i += 4) {
     const [red, green, blue] = data.slice(i, i + 3);
     if (red !== 0 || green !== 0 || blue !== 0) {
       data[i + 3] = 255;
     }
+    if (i % 100000 === 0) waitAnimationFrame(window);
   }
 }
 
@@ -67,4 +68,8 @@ async function loadImageByUrl(window, url) {
     image.addEventListener('error', reject);
     image.src = url;
   });
+}
+
+async function waitAnimationFrame(window) {
+  return new Promise(r => window.requestAnimationFrame(r));
 }
