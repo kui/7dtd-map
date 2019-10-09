@@ -67,7 +67,13 @@ module.exports = async ({
       localizedName: labels[b.name],
       num: blockNums.get(b.id) || 0,
     })));
-  const xmlPromise = parsePrefabXml(xml);
+  const xmlPromise = parsePrefabXml(xml).then(p => p.map((node) => {
+    if (!node.name) {
+      // This node might be a branch node contains child nodes.
+      return null;
+    }
+    return { name: node.name, value: node.value };
+  }).filter(e => e));
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
 
   const blockIdSet = new Set(blocks.map(b => b.id));

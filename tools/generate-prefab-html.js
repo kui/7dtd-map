@@ -53,7 +53,7 @@ async function generateHtml(labels) {
         xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels,
       });
     } catch (e) {
-      console.log(e.message);
+      console.warn('Ignore Prefab: %s', e.message);
       return null;
     }
     const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
@@ -76,7 +76,7 @@ async function copyJpg(prefabNames) {
     try {
       await fsPromise.copyFile(jpgFileName, dist);
     } catch (e) {
-      console.warn(e.message);
+      console.warn('JPG Copy fail: ', e.message);
       failNum += 1;
     }
   }));
