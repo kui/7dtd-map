@@ -33,12 +33,15 @@
 <tr><th>EditorGroups</th><td>industrial</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>RotationToFaceNorth</th><td>0</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False,False,False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False,True,True</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td>,easy,</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,5,6,S_-_Group_Ghost_Town,3,4,S_-_Group_Ghost_Town,3,4</td></tr>
-<tr><th>SleeperVolumeSize</th><td>61, 16, 52#17, 16, 21#24, 15, 24</td></tr>
-<tr><th>SleeperVolumeStart</th><td>0, 0, 0#30, 0, 0#6, 1, 0</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,3,3,S_-_Group_Ghost_Town,3,3,S_-_Group_Ghost_Town,3,4</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>0,0,0</td></tr>
+<tr><th>SleeperVolumeSize</th><td>61, 16, 50#16, 10, 17#22, 11, 21</td></tr>
+<tr><th>SleeperVolumeStart</th><td>0, 0, 2#30, 0, 3#8, 1, 1</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-3</td></tr>
 <tr><th>Zoning</th><td>Industrial</td></tr></table>
@@ -47,7 +50,7 @@
   <section>
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>61</td></tr>
-<tr><th>y</th><td>24</td></tr>
+<tr><th>y</th><td>18</td></tr>
 <tr><th>z</th><td>52</td></tr></table>
   </section>
 
@@ -55,23 +58,24 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>62687</td></tr>
+      <tr><td>air</td><td>Air</td><td>43655</td></tr>
 <tr><td>airConditioner</td><td>Air Conditioner</td><td>1</td></tr>
 <tr><td>barbedWireSheet</td><td>Barbed Wire</td><td>160</td></tr>
 <tr><td>bed01</td><td>An Old Bed</td><td>1</td></tr>
 <tr><td>brickBlock</td><td>Bricks</td><td>1402</td></tr>
 <tr><td>campfire</td><td>Campfire</td><td>1</td></tr>
+<tr><td>carWrecksRandomHelper</td><td>= Car Wrecks = Random Helper</td><td>2</td></tr>
 <tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>3</td></tr>
 <tr><td>ceilingLight04</td><td>Warehouse Ceiling Light (POI)</td><td>4</td></tr>
 <tr><td>chairCouchSofa01</td><td>Sofa Chair 01</td><td>1</td></tr>
 <tr><td>cinderBlocks02</td><td>Cinder Blocks02</td><td>3</td></tr>
+<tr><td>cntBarrelGasOld</td><td>Gas Barrel</td><td>3</td></tr>
 <tr><td>cntBeerCooler</td><td>Beverage Cooler</td><td>2</td></tr>
 <tr><td>cntBin</td><td>Small Trash Bin</td><td>2</td></tr>
 <tr><td>cntBirdnest</td><td>Birdnest</td><td>2</td></tr>
 <tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>1</td></tr>
 <tr><td>cntCabinetOldBottomLootHelper</td><td>= Cabinet Old = Random Helper</td><td>1</td></tr>
 <tr><td>cntCabinetOldSink</td><td>Old Sink</td><td>1</td></tr>
-<tr><td>cntCar03SedanDamage2</td><td>Car Wreck</td><td>2</td></tr>
 <tr><td>cntCardboardBox</td><td>Cardboard Box</td><td>2</td></tr>
 <tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
 <tr><td>cntCupboardCabinetOldTopLootHelper</td><td>= Cupboard Old = Random Helper</td><td>2</td></tr>
@@ -112,7 +116,6 @@
 <tr><td>conduit01</td><td>Conduit01</td><td>4</td></tr>
 <tr><td>conduit01End</td><td>Conduit01 End</td><td>1</td></tr>
 <tr><td>controlPanelBase01</td><td>Control Panel Base 01</td><td>1</td></tr>
-<tr><td>cookingPot</td><td>undefined</td><td>2</td></tr>
 <tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>38</td></tr>
 <tr><td>corrugatedMetalPillar0.025</td><td>Corr. Metal Pillar 2.5cm</td><td>1</td></tr>
 <tr><td>corrugatedMetalPillar100</td><td>Corr. Metal Pillar 100</td><td>8</td></tr>
@@ -123,6 +126,8 @@
 <tr><td>corrugatedMetalSheetBent2</td><td>Corr. Metal Sheet Bent 2</td><td>11</td></tr>
 <tr><td>corrugatedMetalSheetBent4</td><td>Corr. Metal Sheet Bent 4</td><td>50</td></tr>
 <tr><td>couchSofa01</td><td>Sofa 01</td><td>1</td></tr>
+<tr><td>decoCarTireSmallFlat</td><td>Car Tire Small Flat</td><td>12</td></tr>
+<tr><td>decoCookingPot</td><td>Cooking Pot (POI)</td><td>2</td></tr>
 <tr><td>ductControlPanelCorner</td><td>Duct Control Panel Corner</td><td>4</td></tr>
 <tr><td>faucet02</td><td>Household Faucet</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>5</td></tr>
@@ -138,9 +143,8 @@
 <tr><td>metalSignLetter_n</td><td>Metal Sign N</td><td>1</td></tr>
 <tr><td>metalSignLetter_u</td><td>Metal Sign U</td><td>1</td></tr>
 <tr><td>metalTrussingBlockOld</td><td>Metal Trussing Block (Old)</td><td>31</td></tr>
-<tr><td>miniblindBottomSheet</td><td>Miniblind Bottom Sheet</td><td>6</td></tr>
-<tr><td>miniblindTopSheet</td><td>Miniblind Top Sheet</td><td>6</td></tr>
-<tr><td>oilBarrel</td><td>Gas Barrel</td><td>3</td></tr>
+<tr><td>miniblindBottomSheet</td><td>Mini Blind Bottom Sheet</td><td>6</td></tr>
+<tr><td>miniblindTopSheet</td><td>Mini Blind Top Sheet</td><td>6</td></tr>
 <tr><td>oldChair1</td><td>Old Chair</td><td>2</td></tr>
 <tr><td>plainWoodBarricade02CTRPlate</td><td>Plain Wood Barricade02 Center Plate</td><td>21</td></tr>
 <tr><td>plywoodOsbCTRPlate</td><td>Plywood Osb Center Plate</td><td>6</td></tr>
@@ -162,8 +166,7 @@
 <tr><td>terrDesertGround</td><td>Desert Ground</td><td>20</td></tr>
 <tr><td>terrDestroyedStone</td><td>Destroyed Stone</td><td>280</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>2142</td></tr>
-<tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>6506</td></tr>
-<tr><td>tire</td><td>undefined</td><td>12</td></tr>
+<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>6506</td></tr>
 <tr><td>trapSpikesDamage1</td><td>Trap Spikes Damage 1</td><td>1</td></tr>
 <tr><td>trapSpikesNew</td><td>Wood Spikes</td><td>2</td></tr>
 <tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>2</td></tr>

@@ -28,7 +28,7 @@
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>AllowedTownships</th><td>town,rural,wilderness</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>out buildings</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
@@ -37,8 +37,10 @@
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,5,6</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,0,2</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>14, 10, 12</td></tr>
 <tr><th>SleeperVolumeStart</th><td>3, 0, 7</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
@@ -57,13 +59,14 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>3735</td></tr>
+      <tr><td>air</td><td>Air</td><td>3736</td></tr>
 <tr><td>boardedWindowsSheet4</td><td>Window Boards</td><td>58</td></tr>
+<tr><td>cntBarrelGasOld</td><td>Gas Barrel</td><td>1</td></tr>
 <tr><td>cntBirdnest</td><td>Birdnest</td><td>2</td></tr>
 <tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
 <tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>1</td></tr>
-<tr><td>cntShippingCrateWorkingStiffs</td><td>Working Stiff Sealed Shipping Crate</td><td>1</td></tr>
 <tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>1</td></tr>
+<tr><td>cntToolBoxRandomLootHelper</td><td>= Toolbox = Random Helper</td><td>1</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
 <tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>4</td></tr>
 <tr><td>cobweb</td><td>Cobweb</td><td>1</td></tr>
@@ -72,8 +75,8 @@
 <tr><td>corrugatedMetalWedge</td><td>Corr. Metal Wedge</td><td>76</td></tr>
 <tr><td>corrugatedMetalWedgeIncline</td><td>Corr. Metal Wedge Incline</td><td>34</td></tr>
 <tr><td>corrugatedMetalWedgeTip</td><td>Corr. Metal Wedge Tip</td><td>106</td></tr>
-<tr><td>corrugatedRampIncline</td><td>undefined</td><td>12</td></tr>
-<tr><td>corrugatedRampInclineFiller</td><td>undefined</td><td>16</td></tr>
+<tr><td>corrugatedRampIncline</td><td>Corrugated Ramp Incline</td><td>12</td></tr>
+<tr><td>corrugatedRampInclineFiller</td><td>Corrugated Ramp Incline Filler</td><td>16</td></tr>
 <tr><td>flashlightDecor</td><td>Flashlight (POI)</td><td>1</td></tr>
 <tr><td>garageDoorMetal_v1</td><td>Garage Door Metal</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>2</td></tr>
@@ -82,12 +85,10 @@
 <tr><td>ladderWood</td><td>Wooden Ladder</td><td>4</td></tr>
 <tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>1</td></tr>
 <tr><td>looseBoardsTrapBlock1x1</td><td>Loose Boards Block 1x1</td><td>4</td></tr>
-<tr><td>oilBarrel</td><td>Gas Barrel</td><td>1</td></tr>
 <tr><td>palletBricksBase</td><td>Pallet, Bricks, Base</td><td>2</td></tr>
 <tr><td>palletEmpty</td><td>Empty Pallet</td><td>1</td></tr>
 <tr><td>palletWhiteBagsLoose</td><td>Pallet, White Bags, Loose</td><td>2</td></tr>
 <tr><td>palletWhiteBagsPartial2</td><td>Pallet, White Bags, Partial 2</td><td>3</td></tr>
-<tr><td>questRallyMarker</td><td>undefined</td><td>1</td></tr>
 <tr><td>scrapIronPole</td><td>Iron Pole</td><td>3</td></tr>
 <tr><td>secureDoorWooden</td><td>Secure Wood Door</td><td>1</td></tr>
 <tr><td>sleeperBack</td><td>Sleeper Back</td><td>3</td></tr>
@@ -98,7 +99,7 @@
 <tr><td>solidWoodFrameRamp</td><td>S Wood Frame Ramp</td><td>48</td></tr>
 <tr><td>terrDirt</td><td>Dirt</td><td>182</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>134</td></tr>
-<tr><td>terrainFiller</td><td>Terrain Filler (POI)</td><td>146</td></tr>
+<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>146</td></tr>
 <tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>2</td></tr>
 <tr><td>woodBlock</td><td>Wood Block</td><td>52</td></tr>
 <tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>20</td></tr>

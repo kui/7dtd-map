@@ -37,10 +37,12 @@
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False,False,False,False,False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>True,True,True,True,False</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td>,,,,</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,2,S_-Group_Generic_Zombie,3,4,S_-Group_Generic_Zombie,3,4,S_-Group_Generic_Zombie,5,6,S_-Group_Generic_Zombie,5,6</td></tr>
-<tr><th>SleeperVolumeSize</th><td>8, 3, 9#8, 3, 9#9, 3, 9#25, 4, 20#31, 9, 43</td></tr>
-<tr><th>SleeperVolumeStart</th><td>17, 1, 34#9, 1, 34#0, 1, 34#0, 1, 14#0, 1, 1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Hospital,1,2,S_Zom_Utility_Worker,1,2,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,3,4,S_-Group_Generic_Zombie,2,2</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0</td></tr>
+<tr><th>SleeperVolumeSize</th><td>7, 4, 8#8, 4, 8#8, 4, 8#23, 4, 19#31, 4, 43</td></tr>
+<tr><th>SleeperVolumeStart</th><td>17, 1, 34#9, 1, 34#1, 1, 34#1, 1, 15#0, 6, 1</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>Commercial</td></tr></table>
@@ -57,17 +59,18 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>14033</td></tr>
+      <tr><td>air</td><td>Air</td><td>14035</td></tr>
 <tr><td>airConditioner</td><td>Air Conditioner</td><td>2</td></tr>
+<tr><td>carWrecksRandomHelper</td><td>= Car Wrecks = Random Helper</td><td>2</td></tr>
 <tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
 <tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>12</td></tr>
 <tr><td>cinderBlocks01</td><td>Cinder Blocks01</td><td>1</td></tr>
 <tr><td>cinderBlocks03</td><td>Cinder Blocks03</td><td>2</td></tr>
 <tr><td>cntBeerCooler</td><td>Beverage Cooler</td><td>4</td></tr>
 <tr><td>cntBin</td><td>Small Trash Bin</td><td>1</td></tr>
+<tr><td>cntBookcaseEmpty</td><td>Empty Bookcase</td><td>2</td></tr>
 <tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>21</td></tr>
 <tr><td>cntCabinetBottomRandomLootHelper</td><td>= Cabinet = Random Helper</td><td>10</td></tr>
-<tr><td>cntCar03SedanDamage2</td><td>Car Wreck</td><td>2</td></tr>
 <tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>4</td></tr>
 <tr><td>cntChemistryStationBustedRandomLootHelper</td><td>= Chemistry Station = Random Helper</td><td>1</td></tr>
 <tr><td>cntDuffle01</td><td>Duffle Bag</td><td>1</td></tr>
@@ -75,9 +78,12 @@
 <tr><td>cntFileCabinetTallRandomLootHelper</td><td>= File Cabinet Tall = Random Helper</td><td>4</td></tr>
 <tr><td>cntGraniteSink</td><td>Sink</td><td>2</td></tr>
 <tr><td>cntLootCrateLabEquipment</td><td>Lab Equipment Box</td><td>1</td></tr>
-<tr><td>cntPillCase</td><td>Pill Case</td><td>45</td></tr>
+<tr><td>cntMedicLootPileB</td><td>Medical Supplies</td><td>1</td></tr>
+<tr><td>cntPillCase</td><td>Pill Case</td><td>39</td></tr>
+<tr><td>cntPillCaseClosed</td><td>Medical Cabinet</td><td>1</td></tr>
 <tr><td>cntShippingCrateLabEquipment</td><td>Pop-N-Pills Sealed Shipping Crate</td><td>6</td></tr>
-<tr><td>cntShoppingBasket</td><td>Shopping Basket</td><td>1</td></tr>
+<tr><td>cntShoppingBasketEmpty</td><td>Empty Shopping Basket</td><td>2</td></tr>
+<tr><td>cntShoppingBasketRandomLootHelper</td><td>= Shopping Basket = Random Helper</td><td>1</td></tr>
 <tr><td>cntShoppingCartRandomLootHelper</td><td>= Shopping Cart = Random Helper</td><td>3</td></tr>
 <tr><td>cntToilet03</td><td>Commercial Toilet</td><td>2</td></tr>
 <tr><td>cntTrashPile01</td><td>Trash Pile</td><td>3</td></tr>
@@ -100,7 +106,7 @@
 <tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>5</td></tr>
 <tr><td>faucet04</td><td>Household Faucet</td><td>2</td></tr>
 <tr><td>flagstoneBlock</td><td>Flagstone Block</td><td>1705</td></tr>
-<tr><td>flagstonePlate</td><td>flagstone Plate</td><td>4</td></tr>
+<tr><td>flagstonePlate</td><td>Flagstone Plate</td><td>4</td></tr>
 <tr><td>fountain</td><td>Fountain</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>2</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>1</td></tr>
@@ -115,7 +121,6 @@
 <tr><td>plainWoodBarricade02CTRPlate</td><td>Plain Wood Barricade02 Center Plate</td><td>4</td></tr>
 <tr><td>plywoodOsbCTRPlate</td><td>Plywood Osb Center Plate</td><td>3</td></tr>
 <tr><td>scrapMetalPile</td><td>Scrap Metal Pile</td><td>2</td></tr>
-<tr><td>shoppingBasketEmpty</td><td>undefined</td><td>2</td></tr>
 <tr><td>signShopColdBeer</td><td>Sign (C)old Beer</td><td>2</td></tr>
 <tr><td>signShopOpen</td><td>Shop Sign: Open</td><td>1</td></tr>
 <tr><td>signShopPharmacyLargeLit</td><td>Sign Shop Pharmacy Large Lit</td><td>1</td></tr>
