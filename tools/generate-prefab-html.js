@@ -47,13 +47,19 @@ async function generateHtml(labels) {
     const prefabName = path.basename(xmlFileName, '.xml');
     const nimFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.blocks.nim`);
     const ttsFileName = path.join(vanillaDir, 'Data', 'Prefabs', `${prefabName}.tts`);
-    const html = await prefabHtml({
-      xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels,
-    });
+    let html;
+    try {
+      html = await prefabHtml({
+        xml: xmlFileName, nim: nimFileName, tts: ttsFileName, labels,
+      });
+    } catch (e) {
+      console.log(e.message);
+      return null;
+    }
     const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
     await fsPromise.writeFile(dist, html);
     return prefabName;
-  }));
+  })).then(ns => ns.filter(n => n)); // Filter out failed prefabs.
   console.log('Write %d html files', xmlFiles.length);
 
   return prefabNames;
