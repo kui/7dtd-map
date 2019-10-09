@@ -5,6 +5,8 @@ import {
   loadBitmapByUrl,
   loadSplat3BitmapByFile,
   loadSplat3BitmapByUrl,
+  loadRadBitmapByFile,
+  loadRadBitmapByUrl,
 } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
 import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
@@ -531,28 +533,6 @@ function main() {
     requestAnimationFrame(updateLoadingIndicator);
   }
   updateLoadingIndicator();
-
-  async function loadRadBitmapByFile(window, file) {
-    const orig = await loadBitmapByFile(window, file);
-    return filterRad(window, orig);
-  }
-
-  async function loadRadBitmapByUrl(window, url) {
-    const orig = await loadBitmapByUrl(window, url);
-    return filterRad(window, orig);
-  }
-
-  async function filterRad(window, orig) {
-    // We cannot use OffscreenCanvas with url() filter.
-    // So, instead of it, un-rendering canvas element is used.
-    const canvas = window.document.createElement('canvas');
-    canvas.width = orig.width;
-    canvas.height = orig.height;
-    const context = canvas.getContext('2d');
-    context.filter = 'url("#rad_filter")';
-    context.drawImage(orig, 0, 0);
-    return createImageBitmap(canvas);
-  }
 
   function formatCoords({ offsetX, offsetY } = {}) {
     if (!offsetX || !offsetY) {

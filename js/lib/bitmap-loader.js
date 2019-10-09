@@ -15,6 +15,26 @@ export async function loadSplat3BitmapByFile(window, file) {
   const buffer = await loadBufferByFile(window, file);
   return loadSplat3BitmapByJimp(window, await Jimp.read(buffer));
 }
+export async function loadRadBitmapByFile(window, file) {
+  const orig = await loadBitmapByFile(window, file);
+  return filterRad(window, orig);
+}
+export async function loadRadBitmapByUrl(window, url) {
+  const orig = await loadBitmapByUrl(window, url);
+  return filterRad(window, orig);
+}
+
+async function filterRad(window, orig) {
+  // We cannot use OffscreenCanvas with url() filter.
+  // So, instead of it, un-rendering canvas element is used.
+  const canvas = window.document.createElement('canvas');
+  canvas.width = orig.width;
+  canvas.height = orig.height;
+  const context = canvas.getContext('2d');
+  context.filter = 'url("#rad_filter")';
+  context.drawImage(orig, 0, 0);
+  return window.createImageBitmap(canvas);
+}
 
 async function loadSplat3BitmapByJimp(window, jimp) {
   convertSplat3(jimp);
