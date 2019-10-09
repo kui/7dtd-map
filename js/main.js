@@ -1,6 +1,11 @@
 /* eslint-env browser */
 
-import { loadBitmapByFile, loadBitmapByUrl } from './lib/bitmap-loader';
+import {
+  loadBitmapByFile,
+  loadBitmapByUrl,
+  loadSplat3BitmapByFile,
+  loadSplat3BitmapByUrl,
+} from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
 import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
 import { loadDtmRawByFile, loadDtmRawGzByUrl, Dtm } from './lib/dtm-loader';
@@ -75,7 +80,7 @@ function main() {
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
     loadingFiles.add('splat3.png');
-    const splat3Img = await loadBitmapByFile(window, splat3Input.files[0]);
+    const splat3Img = await loadSplat3BitmapByFile(window, splat3Input.files[0]);
     loadingFiles.delete('splat3.png');
     if (!splat3Img) return;
     mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
@@ -144,29 +149,35 @@ function main() {
 
   async function handleDroppedFiles(file) {
     loadingFiles.add(file.name);
-    if (file.name === 'biomes.png') {
-      const biomesImg = await loadBitmapByFile(window, file);
-      mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
-      biomesInput.value = '';
-    } else if (file.name === 'splat3.png') {
-      const splat3Img = await loadBitmapByFile(window, file);
-      mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
-      splat3Input.value = '';
-    } else if (file.name === 'radiation.png') {
-      const radImg = await loadRadBitmapByFile(window, file);
-      mapRendererWorker.postMessage({ radImg }, [radImg]);
-      radInput.value = '';
-    } else if (file.name === 'prefabs.xml') {
-      const prefabs = await loadPrefabsXmlByFile(window, file);
-      prefabsFilterWorker.postMessage({ all: prefabs });
-      prefabsInput.value = '';
-    } else if (file.name === 'dtm.raw') {
-      handleDtmRaw(await loadDtmRawByFile(window, file));
-    } else if (file.name === 'water_info.xml') {
-      const waterInfo = await loadWaterInfoXmlByFile(window, file);
-      mapRendererWorker.postMessage({ waterInfo });
-    } else {
-      console.warn('Unknown file: %s, %s', file.name, file.type);
+    try {
+      if (file.name === 'biomes.png') {
+        const biomesImg = await loadBitmapByFile(window, file);
+        mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
+        biomesInput.value = '';
+      } else if (file.name === 'splat3.png') {
+        const splat3Img = await loadSplat3BitmapByFile(window, file);
+        mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
+        splat3Input.value = '';
+      } else if (file.name === 'radiation.png') {
+        const radImg = await loadRadBitmapByFile(window, file);
+        mapRendererWorker.postMessage({ radImg }, [radImg]);
+        radInput.value = '';
+      } else if (file.name === 'prefabs.xml') {
+        const prefabs = await loadPrefabsXmlByFile(window, file);
+        prefabsFilterWorker.postMessage({ all: prefabs });
+        prefabsInput.value = '';
+      } else if (file.name === 'dtm.raw') {
+        handleDtmRaw(await loadDtmRawByFile(window, file));
+      } else if (file.name === 'water_info.xml') {
+        const waterInfo = await loadWaterInfoXmlByFile(window, file);
+        mapRendererWorker.postMessage({ waterInfo });
+      } else {
+        console.warn('Unknown file: %s, %s', file.name, file.type);
+      }
+    } catch (e) {
+      console.error(e);
+      loadingFiles.delete(file.name);
+      loadingFiles.add(`LoadError(${file.name})`);
     }
     loadingFiles.delete(file.name);
   }
@@ -212,7 +223,7 @@ function main() {
         loadingFiles.add('splat3.png');
         loadingFiles.add('radiation.png');
         const [splat3Img, radImg] = await Promise.all([
-          loadBitmapByUrl(window, 'sample_world/splat3.png'),
+          loadSplat3BitmapByUrl(window, 'sample_world/splat3.png'),
           loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
         ]);
         mapRendererWorker.postMessage({ splat3Img, radImg }, [splat3Img, radImg]);
