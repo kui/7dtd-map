@@ -146,8 +146,16 @@ function main() {
       return;
     }
     event.preventDefault();
-    await Promise.all(Array.from(event.dataTransfer.files).map(handleDroppedFiles));
+    const files = Array.from(event.dataTransfer.files);
+    await sequential(files.map(f => () => handleDroppedFiles(f)));
   });
+
+  async function sequential(promiseGenerators) {
+    await promiseGenerators.reduce(
+      (prevPromise, generator) => prevPromise.then(() => generator()),
+      Promise.resolve(),
+    );
+  }
 
   async function handleDroppedFiles(file) {
     loadingFiles.add(file.name);
@@ -213,15 +221,15 @@ function main() {
   // sample load
   sampleLoadButton.addEventListener('click', async () => {
     sampleLoadButton.disabled = true;
-    await Promise.all([
-      (async () => {
+    await sequential([
+      async () => {
         loadingFiles.add('biomes.png');
         mapRendererWorker.postMessage({
           biomesImg: await loadBitmapByUrl(window, 'sample_world/biomes.png'),
         });
         loadingFiles.delete('biomes.png');
-      })(),
-      (async () => {
+      },
+      async () => {
         loadingFiles.add('splat3.png');
         loadingFiles.add('radiation.png');
         const [splat3Img, radImg] = await Promise.all([
@@ -231,18 +239,18 @@ function main() {
         mapRendererWorker.postMessage({ splat3Img, radImg }, [splat3Img, radImg]);
         loadingFiles.delete('splat3.png');
         loadingFiles.delete('radiation.png');
-      })(),
-      (async () => {
+      },
+      async () => {
         loadingFiles.add('prefab.xml');
         const all = await loadPrefabsXmlByUrl(window, 'sample_world/prefabs.xml');
         loadingFiles.delete('prefab.xml');
         prefabsFilterWorker.postMessage({ all });
-      })(),
-      (async () => {
+      },
+      async () => {
         loadingFiles.add('dtm.raw');
         handleDtmRaw(await loadDtmRawGzByUrl(window, 'sample_world/dtm.raw.gz'));
         loadingFiles.delete('dtm.raw');
-      })(),
+      },
     ]);
     sampleLoadButton.disabled = false;
   });
