@@ -20,20 +20,40 @@ export async function loadSplat3BitmapByFile(window, file) {
   return loadBitmapByPngJs(window, p);
 }
 export async function loadRadBitmapByFile(window, file) {
-  const orig = await loadBitmapByFile(window, file);
-  return filterRad(window, orig);
+  const p = await loadPngJsByFile(window, file);
+  convertPngJsForRad(p);
+  return loadBitmapByPngJs(window, p);
 }
 export async function loadRadBitmapByUrl(window, url) {
-  const orig = await loadBitmapByUrl(window, url);
-  return filterRad(window, orig);
+  const p = await loadPngJsByUrl(window, url);
+  convertPngJsForRad(p);
+  return loadBitmapByPngJs(window, p);
 }
 
-function convertPngJsForSplat3(pngjs) {
-  const { data } = pngjs;
+// splat3.png should convert the pixels which:
+//   * black to transparent
+//   * other to non-transparent
+function convertPngJsForSplat3({ data }) {
   for (let i = 0; i < data.length; i += 4) {
     const [red, green, blue] = data.slice(i, i + 3);
     if (red !== 0 || green !== 0 || blue !== 0) {
       data[i + 3] = 255;
+    } else {
+      data[i + 3] = 0;
+    }
+  }
+}
+
+// radioation.png should convert the pixels which:
+//   * red to half-transparent
+//   * other to transparent
+function convertPngJsForRad({ data }) {
+  for (let i = 0; i < data.length; i += 4) {
+    const red = data[i];
+    if (red !== 0) {
+      data[i + 3] = 80;
+    } else {
+      data[i + 3] = 0;
     }
   }
 }
@@ -59,16 +79,4 @@ async function loadPngJs(buffer) {
       else resolve(data);
     });
   });
-}
-
-async function filterRad(window, orig) {
-  // We cannot use OffscreenCanvas with url() filter.
-  // So, instead of it, un-rendering canvas element is used.
-  const canvas = window.document.createElement('canvas');
-  canvas.width = orig.width;
-  canvas.height = orig.height;
-  const context = canvas.getContext('2d');
-  context.filter = 'url("#rad_filter")';
-  context.drawImage(orig, 0, 0);
-  return window.createImageBitmap(canvas);
 }
