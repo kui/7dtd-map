@@ -11,7 +11,7 @@ import {
   loadRadBitmapByUrl,
 } from './lib/bitmap-loader';
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from './lib/prefabs-xml-loader';
-import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
+// import { loadWaterInfoXmlByFile } from './lib/water-info-xml-loader';
 import { loadDtmRawByFile, loadDtmRawGzByUrl, Dtm } from './lib/dtm-loader';
 
 function main() {
@@ -197,9 +197,9 @@ function main() {
         prefabsInput.value = '';
       } else if (file.name === 'dtm.raw') {
         handleDtmRaw(await loadDtmRawByFile(window, file));
-      } else if (file.name === 'water_info.xml') {
-        const waterInfo = await loadWaterInfoXmlByFile(window, file);
-        mapRendererWorker.postMessage({ waterInfo });
+      // } else if (file.name === 'water_info.xml') {
+      //   const waterInfo = await loadWaterInfoXmlByFile(window, file);
+      //   mapRendererWorker.postMessage({ waterInfo });
       } else {
         console.warn('Unknown file: %s, %s', file.name, file.type);
       }

@@ -2,7 +2,7 @@
 /* eslint no-restricted-globals: 1 */
 
 import Map from './lib/map';
-// import renderWaterImg from './lib/water-renderer';
+import renderWaterImg from './lib/water-renderer';
 
 const knownParamNames = new Set([
   'biomesImg',
@@ -59,10 +59,10 @@ onmessage = (event) => {
   }
 
   if ((newDtm || newWaterInfo) && map && dtm && waterInfo) {
-    // renderWaterImg(self, map, dtm, waterInfo).then((w) => {
-    //   map.waterImg = w;
-    //   map.update();
-    // });
+    renderWaterImg(self, map, dtm, waterInfo).then((w) => {
+      map.waterImg = w;
+      map.update();
+    });
   }
 
   postMessage({
