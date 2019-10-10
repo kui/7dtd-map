@@ -6,7 +6,7 @@ import {
   loadSplat3BitmapByFile,
   loadSplat3BitmapByUrl,
   loadSplat4BitmapByFile,
-  loadSplat4BitmapByUrl,
+  loadSplat4BitmapByGzUrl,
   loadRadBitmapByFile,
   loadRadBitmapByUrl,
 } from './lib/bitmap-loader';
@@ -251,13 +251,23 @@ function main() {
       },
       async () => {
         loadingFiles.add('splat3.png');
-        loadingFiles.add('radiation.png');
-        const [splat3Img, radImg] = await Promise.all([
-          loadSplat3BitmapByUrl(window, 'sample_world/splat3.png'),
-          loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
-        ]);
-        mapRendererWorker.postMessage({ splat3Img, radImg }, [splat3Img, radImg]);
+        mapRendererWorker.postMessage({
+          splat3Img: await loadSplat3BitmapByUrl(window, 'sample_world/splat3.png'),
+        });
         loadingFiles.delete('splat3.png');
+      },
+      async () => {
+        loadingFiles.add('splat4_processed.tga');
+        mapRendererWorker.postMessage({
+          splat4Img: await loadSplat4BitmapByGzUrl(window, 'sample_world/splat4_processed.tga.gz'),
+        });
+        loadingFiles.delete('splat4_processed.tga');
+      },
+      async () => {
+        loadingFiles.add('radiation.png');
+        mapRendererWorker.postMessage({
+          radImg: await loadRadBitmapByUrl(window, 'sample_world/radiation.png'),
+        });
         loadingFiles.delete('radiation.png');
       },
       async () => {

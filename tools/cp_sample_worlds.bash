@@ -33,9 +33,9 @@ main() {
                     -define png:compression-level=9 \
                     -define png:compression-strategy=1 \
                     "$dest/$bname"
-        elif [[ "$bname" = dtm.raw ]]
+        elif [[ "$bname" =~ dtm\.raw|splat4_processed\.tga ]]
         then
-            gzip -v --keep --best --stdout "$file" > "$dest/dtm.raw.gz"
+            gzip -v --keep --best --stdout "$file" > "$dest/$bname.gz"
         else
             cp -v "$file" "$dest"
         fi

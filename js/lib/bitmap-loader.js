@@ -5,7 +5,7 @@ import streamToBlob from 'stream-to-blob';
 
 export async function loadBitmapByUrl(window, url) {
   const res = await window.fetch(url);
-  return window.createImageBitmap(await res.body.blob());
+  return window.createImageBitmap(await res.blob());
 }
 export async function loadBitmapByFile(window, file) {
   if (!file) return null;
@@ -96,7 +96,7 @@ async function loadBitmapByPngJs(window, pngjs) {
 
 async function loadPngJsByUrl(window, url) {
   const res = await window.fetch(url);
-  return loadPngJsByBlob(await res.body);
+  return loadPngJsByBlob(window, res);
 }
 
 async function loadPngJsByBlob(window, blob) {
