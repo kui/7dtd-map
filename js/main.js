@@ -5,6 +5,8 @@ import {
   loadBitmapByUrl,
   loadSplat3BitmapByFile,
   loadSplat3BitmapByUrl,
+  loadSplat4BitmapByFile,
+  loadSplat4BitmapByUrl,
   loadRadBitmapByFile,
   loadRadBitmapByUrl,
 } from './lib/bitmap-loader';
@@ -23,6 +25,8 @@ function main() {
   const biomesInput = document.getElementById('biomes');
   const showSplat3Input = document.getElementById('show_splat3');
   const splat3Input = document.getElementById('splat3');
+  const showSplat4Input = document.getElementById('show_splat4');
+  const splat4Input = document.getElementById('splat4');
   const showRadInput = document.getElementById('show_radiation');
   const radInput = document.getElementById('radiation');
   const showPrefabsInput = document.getElementById('show_prefabs');
@@ -47,6 +51,7 @@ function main() {
     canvas: rendererCanvas,
     showBiomes: showBiomesInput.checked,
     showSplat3: showSplat3Input.checked,
+    showSplat4: showSplat4Input.checked,
     showRad: showRadInput.checked,
     showPrefabs: showPrefabsInput.checked,
     signSize: signSizeInput.value,
@@ -87,6 +92,14 @@ function main() {
     if (!splat3Img) return;
     mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
   });
+  splat4Input.addEventListener('input', async () => {
+    console.log('Load splat4');
+    loadingFiles.add('splat4_processed.tga');
+    const splat4Img = await loadSplat4BitmapByFile(window, splat4Input.files[0]);
+    loadingFiles.delete('splat4_processed.png');
+    if (!splat4Img) return;
+    mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
+  });
   radInput.addEventListener('input', async () => {
     console.log('Load radiation');
     loadingFiles.add('radiation.png');
@@ -116,7 +129,7 @@ function main() {
     });
   });
   const restInputs = [
-    showBiomesInput, showSplat3Input, showRadInput, showPrefabsInput,
+    showBiomesInput, showSplat3Input, showSplat4Input, showRadInput, showPrefabsInput,
     signSizeInput, brightnessInput, scaleInput,
   ];
   restInputs.forEach((e) => {
@@ -124,6 +137,7 @@ function main() {
       mapRendererWorker.postMessage({
         showBiomes: showBiomesInput.checked,
         showSplat3: showSplat3Input.checked,
+        showSplat4: showSplat4Input.checked,
         showRad: showRadInput.checked,
         showPrefabs: showPrefabsInput.checked,
         signSize: signSizeInput.value,
@@ -169,6 +183,10 @@ function main() {
         const splat3Img = await loadSplat3BitmapByFile(window, file);
         mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
         splat3Input.value = '';
+      } else if (file.name === 'splat4_processed.tga') {
+        const splat4Img = await loadSplat4BitmapByFile(window, file);
+        mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
+        splat4Input.value = '';
       } else if (file.name === 'radiation.png') {
         const radImg = await loadRadBitmapByFile(window, file);
         mapRendererWorker.postMessage({ radImg }, [radImg]);

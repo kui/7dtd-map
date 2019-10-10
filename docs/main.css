@@ -24,6 +24,10 @@ td {
   border-bottom: 1px lightgray solid;
 }
 
+td.file-inputs {
+  white-space: nowrap;
+}
+
 .disable-prefabs-filter [for="prefabs_filter"],
 .disable-prefabs-filter #prefabs_filter {
   text-decoration: line-through;

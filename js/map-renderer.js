@@ -7,9 +7,11 @@ import Map from './lib/map';
 const knownParamNames = new Set([
   'biomesImg',
   'splat3Img',
+  'splat4Img',
   'radImg',
   'showBiomes',
   'showSplat3',
+  'showSplat4',
   'showRad',
   'showPrefabs',
   'brightness',

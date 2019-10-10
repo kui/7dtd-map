@@ -10,10 +10,12 @@ export default class Map {
     this.canvas = canvas;
     this.showBiomes = true;
     this.showSplat3 = true;
+    this.showSplat4 = true;
     this.showRad = true;
     this.showPrefabs = true;
     this.biomesImg = null;
     this.splat3Img = null;
+    this.splat4Img = null;
     this.radImg = null;
     this.waterImg = null;
     this.brightness = '100%';
@@ -35,6 +37,7 @@ export default class Map {
     return Math.max(
       this.biomesImg ? this.biomesImg.width : 0,
       this.splat3Img ? this.splat3Img.width : 0,
+      this.splat4Img ? this.splat4Img.width : 0,
     );
   }
 
@@ -42,6 +45,7 @@ export default class Map {
     return Math.max(
       this.biomesImg ? this.biomesImg.height : 0,
       this.splat3Img ? this.splat3Img.height : 0,
+      this.splat4Img ? this.splat4Img.height : 0,
     );
   }
 
@@ -63,6 +67,9 @@ export default class Map {
     }
     if (this.splat3Img && this.showSplat3) {
       context.drawImage(this.splat3Img, 0, 0, this.width, this.height);
+    }
+    if (this.splat4Img && this.showSplat4) {
+      context.drawImage(this.splat4Img, 0, 0, this.width, this.height);
     }
     context.filter = 'none';
     if (this.radImg && this.showRad) {
