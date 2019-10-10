@@ -160,6 +160,7 @@ function main() {
   async function handleDroppedFiles(file) {
     loadingFiles.add(file.name);
     try {
+      console.time(file.name);
       if (file.name === 'biomes.png') {
         const biomesImg = await loadBitmapByFile(window, file);
         mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
@@ -184,6 +185,7 @@ function main() {
       } else {
         console.warn('Unknown file: %s, %s', file.name, file.type);
       }
+      console.timeEnd(file.name);
     } catch (e) {
       console.error(e);
       loadingFiles.delete(file.name);
