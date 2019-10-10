@@ -15,12 +15,12 @@ export async function loadSplat3BitmapByUrl(window, url) {
   return loadBitmapByPngJs(window, p);
 }
 export async function loadSplat3BitmapByFile(window, file) {
-  const p = await loadPngJsByFile(window, file);
+  const p = await loadPngJsByBlob(window, file);
   convertPngJsForSplat3(p);
   return loadBitmapByPngJs(window, p);
 }
 export async function loadRadBitmapByFile(window, file) {
-  const p = await loadPngJsByFile(window, file);
+  const p = await loadPngJsByBlob(window, file);
   convertPngJsForRad(p);
   return loadBitmapByPngJs(window, p);
 }
@@ -65,11 +65,11 @@ async function loadBitmapByPngJs(window, pngjs) {
 
 async function loadPngJsByUrl(window, url) {
   const res = await window.fetch(url);
-  return loadPngJs(await res.body.arrayBuffer());
+  return loadPngJsByBlob(await res.body);
 }
 
-async function loadPngJsByFile(window, file) {
-  return loadPngJs(await file.arrayBuffer());
+async function loadPngJsByBlob(window, blob) {
+  return loadPngJs(await blob.arrayBuffer());
 }
 
 async function loadPngJs(buffer) {
