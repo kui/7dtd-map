@@ -45,9 +45,7 @@ async function main() {
     return lootResults;
   }).filter(r => r.length > 0);
 
-  console.log('matched items: ', Array.from(matchedItems));
-  console.log('matched results: ', results);
-
+  console.log(JSON.stringify(flatMap(results, r => r), 0, 2));
   return 0;
 }
 
