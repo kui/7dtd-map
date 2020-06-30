@@ -1,4 +1,9 @@
-World Name: South Mofara County
-Original Seed: Marksman
-Data Export Time: 3 minutes 57 seconds
-Total Generation Time: 10 minutes 32 seconds
+World Name: Tulilu Territory
+Original Seed: Doglife
+Biome Weight (Snow): 2.455882
+Biome Weight (Pine): 5.235294
+Biome Weight (Burnt): 2.323529
+Biome Weight (Desert): 1.992647
+Biome Weight (Wasteland): 1.992647
+Data Export Time: 2 minutes 50 seconds
+Total Generation Time: 13 minutes 56 seconds

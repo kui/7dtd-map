@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="description" content="Map renderer for 7 Day to Die Alpha 17">
-    <title>7 Days to Die Map Renderer for A18</title>
+    <title>7 Days to Die Map Renderer Alpha 19</title>
     <script src="main.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" type="text/css" href="main.css"></head>
   <body>
-    <h1>7 Days to Die Map Renderer for A18</h1>
+    <h1>7 Days to Die Map Renderer Alpha 19</h1>
     <p>Only supported in latest Google Chrome.</p>
     <p>Note: <code>splat3.png</code> rendering need time. It could be more than 20 seconds. See <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.</p>
 
@@ -114,12 +114,12 @@
             <button data-input-for="prefabs_filter">football_stadium</button>
             <button
               data-input-for="prefabs_filter"
-              data-input-text="business_(strip_old_03|burnt_02)|church_01|house_old_(tudor_01|victorian_03)|skyscraper_04|utility_waterworks_01">
+              data-input-text="^(business_strip_old_03|church_01|house_old_(tudor_01|victorian_03)|installation_red_mesa|school_01|skyscraper_04|store_(clothing_02|grocery_02|gun_02)|utility_waterworks_01)$">
               Tier 4
             </button>
             <button
               data-input-for="prefabs_filter"
-              data-input-text="apartment_brick_6_flr|factory_lg_0[12]|hospital_01|skyscraper_0[1-3]">
+              data-input-text="^(apartment_brick_6_flr|factory_lg_0[12]|hospital_01|skyscraper_0[1-3])$">
               Tier 5
             </button>
           </td>
@@ -150,7 +150,7 @@
     </fieldset>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
-    <p><button id="sample_load" title="PREGEN01">Load Sample World</button></p>
+    <p><button id="sample_load">Load Sample World(PREGEN01)</button></p>
     <h2>How to Use</h2>
     <p>Drag and drop world files.</p>
     <h3>Generated Worlds (Windows)</h3>
@@ -158,7 +158,7 @@
       <li>Select folders: <code>%HOME%/<a href="https://www.google.com/search?q=appdata+folder">AppData</a>/Roaming/7DaysToDie/GeneratedWorlds/&lt;<strong>World Name</strong>&gt;</code></li>
       <li>Drag and drop all files in the world folder</li>
     </ol>
-    <h3>Pre-bundled Worlds</h3>
+    <h3>Bundled Worlds</h3>
     <ol>
       <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">?</a>)</li>
       <li>Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code></li>

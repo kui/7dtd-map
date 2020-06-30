@@ -7,6 +7,20 @@ USAGE="$(basename $0) <World Dir>"
 project_root=$(cd "$(dirname $0)/.."; pwd)
 dest="${project_root}/docs/sample_world"
 
+target_files=(
+    biomes.png
+    dtm.raw
+    GenerationInfo.txt
+    main.ttw
+    map_info.xml
+    prefabs.xml
+    radiation.png
+    spawnpoints.xml
+    splat3.png
+    splat4_processed.tga
+    water_info.xml
+)
+
 main() {
     if [[ $# -ne 1 ]]
     then
@@ -23,17 +37,10 @@ main() {
 
     rm -frv "$dest/*"
 
-    for file in "$src"/*
+    for bname in "${target_files[@]}"
     do
-        bname="$(basename "$file")"
-        if [[ "$bname" =~ \.png$ ]]
-        then
-            convert "$file" \
-                    -define png:compression-filter=2 \
-                    -define png:compression-level=9 \
-                    -define png:compression-strategy=1 \
-                    "$dest/$bname"
-        elif [[ "$bname" =~ dtm\.raw|splat4_processed\.tga ]]
+        file="$src/$bname"
+        if [[ "$bname" =~ dtm\.raw|splat4_processed\.tga ]]
         then
             gzip -v --keep --best --stdout "$file" > "$dest/$bname.gz"
         else
