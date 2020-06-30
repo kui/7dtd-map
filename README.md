@@ -5,6 +5,8 @@ Map renderer for 7 Day to Die Alpha 19.
 
 * https://kui.github.io/7dtd-map/
 
+Alpha 18 map renderer is https://github.com/kui/7dtd-map-a18.
+
 Build
 --------
 
