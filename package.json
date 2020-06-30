@@ -16,10 +16,9 @@
   "author": "Keiichiro UI",
   "license": "MIT",
   "devDependencies": {
-    "bunyan": "^1.8.12",
+    "bunyan": "^1.8.14",
     "bunyan-format": "^0.2.1",
-    "commander": "^2.19.0",
-    "csv-parse": "^4.6.3",
+    "csv-parse": "^4.10.1",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
