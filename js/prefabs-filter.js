@@ -25,4 +25,4 @@ onmessage = (event) => {
   prefabs.update();
 };
 
-prefabs.addUpdateListener(d => postMessage(d));
+prefabs.addUpdateListener((d) => postMessage(d));

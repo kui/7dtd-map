@@ -59,7 +59,7 @@ async function generateHtml(labels) {
     const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
     await fsPromise.writeFile(dist, html);
     return prefabName;
-  })).then(ns => ns.filter(n => n)); // Filter out failed prefabs.
+  })).then((ns) => ns.filter((n) => n)); // Filter out failed prefabs.
   console.log('Write %d html files', xmlFiles.length);
 
   return prefabNames;
@@ -68,7 +68,7 @@ async function generateHtml(labels) {
 async function copyJpg(prefabNames) {
   const { vanillaDir } = localInfo;
   const jpgFiles = prefabNames
-    .map(n => path.join(vanillaDir, 'Data', 'Prefabs', `${n}.jpg`));
+    .map((n) => path.join(vanillaDir, 'Data', 'Prefabs', `${n}.jpg`));
 
   let failNum = 0;
   await Promise.all(jpgFiles.map(async (jpgFileName) => {
@@ -101,7 +101,7 @@ async function generateIndex(prefabNames) {
     </ul>
   </nav>
   <ul>
-   ${prefabNames.map(p => `<li><a href="${p}.html">${p}</a></li>`).join('\n')}
+   ${prefabNames.map((p) => `<li><a href="${p}.html">${p}</a></li>`).join('\n')}
   </ul>
 </body>
 </html>

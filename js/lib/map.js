@@ -24,7 +24,7 @@ export default class Map {
     this.prefabs = [];
 
     const fontFace = new window.FontFace('Noto Sans', 'url(NotoEmoji-Regular.ttf)');
-    fontFace.load().then(a => window.fonts.add(a));
+    fontFace.load().then((a) => window.fonts.add(a));
     this.fontFace = fontFace.load();
 
     // flag

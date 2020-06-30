@@ -41,16 +41,16 @@ async function main() {
       return [];
     }
     const lootResults = matchLootItems(pattern, block, blockIndex, lootIndex);
-    lootResults.forEach(r => matchedItems.add(r.item));
+    lootResults.forEach((r) => matchedItems.add(r.item));
     return lootResults;
-  }).filter(r => r.length > 0);
+  }).filter((r) => r.length > 0);
 
-  console.log(JSON.stringify(flatMap(results, r => r), 0, 2));
+  console.log(JSON.stringify(flatMap(results, (r) => r), 0, 2));
   return 0;
 }
 
 function traverseDowngradeBlock(pattern, block, blockIndex, lootIndex, stack = []) {
-  const downgradeBlockProp = block.property.find(p => p.$.name === 'DowngradeBlock');
+  const downgradeBlockProp = block.property.find((p) => p.$.name === 'DowngradeBlock');
   if (!downgradeBlockProp) {
     return [];
   }
@@ -85,18 +85,18 @@ function matchLootItems(pattern, block, blockIndex, lootIndex, downgradeStack = 
 }
 
 function getProp(block, propName, blockIndex) {
-  const prop = block.property.find(p => p.$.name === propName);
+  const prop = block.property.find((p) => p.$.name === propName);
   if (prop) {
     return prop.$.value;
   }
 
-  const extendsProp = block.property.find(p => p.$.name === 'Extends');
+  const extendsProp = block.property.find((p) => p.$.name === 'Extends');
   if (!extendsProp) {
     return null;
   }
 
   const { param1 } = extendsProp.$;
-  const extendsExcludes = param1 ? param1.split(',').map(s => s.trim()) : [];
+  const extendsExcludes = param1 ? param1.split(',').map((s) => s.trim()) : [];
   const isExcluded = extendsExcludes.includes(propName);
   if (isExcluded) {
     return null;
@@ -130,7 +130,7 @@ function buildLootIndex(loot) {
     return idx;
   }, {});
   return loot.lootcontainers.lootcontainer.reduce((idx, lc) => {
-    idx[lc.$.id] = (lc.item || []).map(i => expandLootGroup(lootGroups, i));
+    idx[lc.$.id] = (lc.item || []).map((i) => expandLootGroup(lootGroups, i));
     return idx;
   }, {});
 }
@@ -138,11 +138,11 @@ function buildLootIndex(loot) {
 function expandLootGroup(groups, item) {
   if (item.$.group) {
     const g = groups[item.$.group];
-    return Object.assign(
-      {},
-      item.$,
-      { items: (g || []).map(i => expandLootGroup(groups, i)) },
-    );
+    return {
+
+      ...item.$,
+      items: (g || []).map((i) => expandLootGroup(groups, i)),
+    };
   }
   return item.$;
 }

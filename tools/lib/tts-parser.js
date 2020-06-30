@@ -68,7 +68,7 @@ module.exports = async function parseTts(ttsFileName) {
   }
   const stream = fs.createReadStream(ttsFileName);
   return new Promise((resolve, reject) => {
-    stream.on('data', data => data.forEach(handleByte));
+    stream.on('data', (data) => data.forEach(handleByte));
     stream.on('close', () => {
       resolve(new Tts({
         maxx: dimensions.x,

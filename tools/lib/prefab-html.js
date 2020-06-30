@@ -33,19 +33,19 @@ function html(model) {
 
   <section>
     <h2>XML</h2>
-    <table>${model.xml.map(p => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join('\n')}</table>
+    <table>${model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join('\n')}</table>
   </section>
 
   <section>
     <h2>Dimensions</h2>
-    <table>${['x', 'y', 'z'].map(d => `<tr><th>${d}</th><td>${model.dimensions[d]}</td></tr>`).join('\n')}</table>
+    <table>${['x', 'y', 'z'].map((d) => `<tr><th>${d}</th><td>${model.dimensions[d]}</td></tr>`).join('\n')}</table>
   </section>
 
   <section>
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      ${model.blocks.map(b => `<tr><td>${b.name}</td><td>${b.localizedName}</td><td>${b.num}</td></tr>`).join('\n')}
+      ${model.blocks.map((b) => `<tr><td>${b.name}</td><td>${b.localizedName}</td><td>${b.num}</td></tr>`).join('\n')}
     </table>
   </section>
 </body>
@@ -61,27 +61,27 @@ module.exports = async ({
     maxx, maxy, maxz, blockNums,
   } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
-    .then(bs => bs.map(b => ({
+    .then((bs) => bs.map((b) => ({
       id: b.id,
       name: b.name,
       localizedName: labels[b.name],
       num: blockNums.get(b.id) || 0,
     })));
-  const xmlPromise = parsePrefabXml(xml).then(p => p.map((node) => {
+  const xmlPromise = parsePrefabXml(xml).then((p) => p.map((node) => {
     if (!node.name) {
       // This node might be a branch node contains child nodes.
       return null;
     }
     return { name: node.name, value: node.value };
-  }).filter(e => e));
+  }).filter((e) => e));
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
 
-  const blockIdSet = new Set(blocks.map(b => b.id));
-  if ([...blockNums.keys()].filter(i => !blockIdSet.has(i)).length > 0) {
-    console.warn('Unexpected state: unused block num: file=%s, idList=%s', xml, [...blockNums.keys()].filter(i => !blockIdSet.has(i)));
+  const blockIdSet = new Set(blocks.map((b) => b.id));
+  if ([...blockNums.keys()].filter((i) => !blockIdSet.has(i)).length > 0) {
+    console.warn('Unexpected state: unused block num: file=%s, idList=%s', xml, [...blockNums.keys()].filter((i) => !blockIdSet.has(i)));
   }
-  if (blocks.filter(b => b.num === 0).length > 0) {
-    console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter(b => b.num === 0));
+  if (blocks.filter((b) => b.num === 0).length > 0) {
+    console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter((b) => b.num === 0));
   }
 
   sortByProperty(dom, 'name');
@@ -94,7 +94,7 @@ module.exports = async ({
 
 async function parsePrefabXml(xmlFileName) {
   const xml = await parseXml(xmlFileName);
-  return xml.prefab.property.map(p => p.$);
+  return xml.prefab.property.map((p) => p.$);
 }
 
 function sortByProperty(arr, propName) {

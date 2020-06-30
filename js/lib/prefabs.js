@@ -33,7 +33,7 @@ export default class Prefabs {
       this.prevFiltered = this.filtered;
       this.prevMarkCoords = this.markCoords;
     }
-    this.updateListeners.forEach(f => f(updateData));
+    this.updateListeners.forEach((f) => f(updateData));
   }
 
   set prefabsFilterString(filterString) {
@@ -114,7 +114,7 @@ function filterByPrefabs(prefabs, pattern) {
     const m = matchAndHighlight(prefab.name, pattern);
     if (m) {
       // Clone and add a new field;
-      return Object.assign({}, prefab, { highlightedName: m });
+      return { ...prefab, highlightedName: m };
     }
     return [];
   });
@@ -142,7 +142,7 @@ function filterByBlocks(prefabs, pattern) {
       return [];
     }
     // Clone and add a new field;
-    return Object.assign({}, prefab, { matchedBlocks: blocks });
+    return { ...prefab, matchedBlocks: blocks };
   });
   prefabs.status = `${results.length} prefabs, ${matchedBlocks.length} matched blocks`;
   return results;

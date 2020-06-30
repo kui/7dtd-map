@@ -22,5 +22,5 @@ export default function lazyInvoke(window, asyncFunc) {
 }
 
 function waitAnimationFrame(w) {
-  return new Promise(r => w.requestAnimationFrame(r));
+  return new Promise((r) => w.requestAnimationFrame(r));
 }

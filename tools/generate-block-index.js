@@ -88,8 +88,8 @@ async function readNim(nimFiles) {
     return {
       name: prefabName,
       blocks: blocks
-        .filter(b => !excludedBlocks.has(b.name))
-        .map(b => ({ name: b.name, count: blockNums.get(b.id) || 0 })),
+        .filter((b) => !excludedBlocks.has(b.name))
+        .map((b) => ({ name: b.name, count: blockNums.get(b.id) || 0 })),
     };
   }));
   return parsedNimFiles.reduce(
@@ -107,7 +107,7 @@ function invertIndex(prefabs) {
   return Object
     .entries(prefabs)
     .reduce((arr, [name, blocks]) => {
-      const flatten = blocks.map(block => ({ prefab: name, block }));
+      const flatten = blocks.map((block) => ({ prefab: name, block }));
       return arr.concat(flatten);
     }, [])
     .reduce((obj, { prefab, block }) => Object.assign(obj, {

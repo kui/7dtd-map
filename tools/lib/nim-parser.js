@@ -85,7 +85,7 @@ module.exports = async function parseNim(nimFileName) {
   }
   const stream = fs.createReadStream(nimFileName);
   return new Promise((resolve, reject) => {
-    stream.on('data', data => data.forEach(handleByte));
+    stream.on('data', (data) => data.forEach(handleByte));
     stream.on('close', () => {
       if (buffer) {
         log.warn('Unexpected state: Unflushed buffer exists: %s', nimFileName);

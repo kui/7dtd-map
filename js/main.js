@@ -161,7 +161,7 @@ function main() {
     }
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
-    await sequential(files.map(f => () => handleDroppedFiles(f)));
+    await sequential(files.map((f) => () => handleDroppedFiles(f)));
   });
 
   async function sequential(promiseGenerators) {
@@ -227,8 +227,8 @@ function main() {
   mapCanvas.addEventListener('click', async (event) => {
     // in-game coords (center offset)
     const markCoords = {
-      x: Math.round(event.offsetX * mapSizes.width / mapCanvas.width - mapSizes.width / 2),
-      z: -Math.round(event.offsetY * mapSizes.height / mapCanvas.height - mapSizes.height / 2),
+      x: Math.round((event.offsetX * mapSizes.width) / mapCanvas.width - mapSizes.width / 2),
+      z: -Math.round((event.offsetY * mapSizes.height) / mapCanvas.height - mapSizes.height / 2),
     };
     prefabsFilterWorker.postMessage({ markCoords });
     mapRendererWorker.postMessage({ markCoords });
@@ -344,7 +344,7 @@ function main() {
   }
 
   async function waitAnimationFrame() {
-    return new Promise(r => requestAnimationFrame(r));
+    return new Promise((r) => requestAnimationFrame(r));
   }
 
   function renderTailPrefabs() {
@@ -361,7 +361,7 @@ function main() {
     ];
 
     const df = document.createDocumentFragment();
-    head.forEach(p => df.appendChild(prefabLi(p)));
+    head.forEach((p) => df.appendChild(prefabLi(p)));
     prefabListUl.appendChild(df);
 
     restPrefabs = tail;
@@ -428,9 +428,9 @@ function main() {
   mapCanvas.addEventListener('click', (e) => { markPosition = e; });
   resetMarkButton.addEventListener('click', () => { markPosition = null; });
   (new MutationObserver((mutationsList) => {
-    const widthMutation = mutationsList.find(m => m.attributeName === 'width');
+    const widthMutation = mutationsList.find((m) => m.attributeName === 'width');
     if (!widthMutation) return;
-    const heightMutation = mutationsList.find(m => m.attributeName === 'height');
+    const heightMutation = mutationsList.find((m) => m.attributeName === 'height');
     if (!heightMutation) return;
     const newCanvasSize = { width: mapCanvas.width, height: mapCanvas.height };
 
@@ -440,8 +440,8 @@ function main() {
     }
 
     markPosition = {
-      offsetX: markPosition.offsetX * newCanvasSize.width / prevCanvasSize.width,
-      offsetY: markPosition.offsetY * newCanvasSize.height / prevCanvasSize.height,
+      offsetX: (markPosition.offsetX * newCanvasSize.width) / prevCanvasSize.width,
+      offsetY: (markPosition.offsetY * newCanvasSize.height) / prevCanvasSize.height,
     };
 
     const canvasRect = mapCanvas.getBoundingClientRect();
