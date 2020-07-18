@@ -1,4 +1,3 @@
-import forEachRight from 'lodash/forEachRight';
 import lazy from './lazy-invoker';
 
 const signChar = '✘';
@@ -98,14 +97,16 @@ async function drawPrefabs(map, ctx) {
   const charOffsetX = Math.round(map.signSize * 0.01);
   const charOffsetY = Math.round(map.signSize * 0.05);
 
-  forEachRight(map.prefabs, (prefab) => {
+  // Inverted iteration to overwrite signs by higher order prefabs
+  for (let i = map.prefabs.length - 1; i >= 0; i -= 1) {
+    const prefab = map.prefabs[i];
     const x = offsetX + prefab.x + charOffsetX;
     // prefab vertical positions are inverted for canvas coodinates
     const y = offsetY - prefab.y + charOffsetY;
     putText({
       ctx, text: signChar, x, y, textSize: map.signSize,
     });
-  });
+  }
 }
 
 async function drawMark(map, ctx) {

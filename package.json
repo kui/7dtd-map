@@ -25,7 +25,6 @@
     "glob": "^7.1.6",
     "glob-promise": "^3.4.0",
     "htmlhint": "^0.14.1",
-    "lodash": "^4.17.15",
     "pako": "^1.0.11",
     "pngjs": "^5.0.0",
     "stream-to-blob": "^2.0.1",
