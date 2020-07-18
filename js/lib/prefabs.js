@@ -1,4 +1,3 @@
-import flatMap from 'lodash/flatMap';
 import lazy from './lazy-invoker';
 
 export default class Prefabs {
@@ -110,7 +109,7 @@ function sort(prefabs) {
 }
 
 function filterByPrefabs(prefabs, pattern) {
-  const results = flatMap(prefabs.all, (prefab) => {
+  const results = prefabs.all.flatMap((prefab) => {
     const m = matchAndHighlight(prefab.name, pattern);
     if (m) {
       // Clone and add a new field;
@@ -136,7 +135,7 @@ function filterByBlocks(prefabs, pattern) {
     return [];
   }
 
-  const results = flatMap(allPrefabs, (prefab) => {
+  const results = allPrefabs.flatMap((prefab) => {
     const blocks = matchedPrefabBlocks[prefab.name];
     if (!blocks) {
       return [];
