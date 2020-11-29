@@ -6,6 +6,8 @@
 #controller {
   position: fixed;
   margin: 10px;
+  padding: 5px;
+  border: solid lightgray 1px;
   width: 30%;
   max-width: 500px;
   max-height: calc(100% - 40px);

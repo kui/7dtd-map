@@ -14,7 +14,7 @@ import { loadDtmRawByFile, loadDtmRawGzByUrl, Dtm } from './lib/dtm-loader';
 
 function main() {
   const loadingIndicatorP = document.getElementById('loading_indicator');
-  const controllerFieldset = document.getElementById('controller');
+  const controllerDiv = document.getElementById('controller');
   const cursorCoodsSpan = document.getElementById('cursor_coods');
   const markCoodsSpan = document.getElementById('mark_coods');
   const downloadButton = document.getElementById('download');
@@ -308,7 +308,7 @@ function main() {
     // Shows all results, once scrolled.
     if (isShowedAllPrefabs) {
       isShowedAllPrefabs = false;
-      controllerFieldset.addEventListener('scroll', () => {
+      controllerDiv.addEventListener('scroll', () => {
         isShowedAllPrefabs = true;
         showAllPrefabs();
       }, { once: true });
@@ -317,8 +317,8 @@ function main() {
 
   async function showHeadOfPrefabList() {
     while (restPrefabs.length !== 0) {
-      const scrollBottom = controllerFieldset.offsetHeight + controllerFieldset.scrollTop;
-      if (scrollBottom + 100 < controllerFieldset.scrollHeight) {
+      const scrollBottom = controllerDiv.offsetHeight + controllerDiv.scrollTop;
+      if (scrollBottom + 100 < controllerDiv.scrollHeight) {
         return;
       }
 
@@ -400,8 +400,8 @@ function main() {
   // other model updates
   // -------------------------------------------------
 
-  // auto input button
-  controllerFieldset.addEventListener('click', (event) => {
+  // preset input button
+  controllerDiv.addEventListener('click', (event) => {
     const button = event.srcElement;
     if (button.dataset.inputFor == null) {
       return;
@@ -458,7 +458,7 @@ function main() {
     // frameSize is based by map display area.
     // So, the width is not innerWidth.
     const frameSize = {
-      width: controllerFieldset.offsetLeft,
+      width: controllerDiv.offsetLeft,
       height: window.innerHeight,
     };
 
