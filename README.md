@@ -3,8 +3,7 @@
 
 Map renderer for 7 Day to Die.
 
-* Alpha 19 https://kui.github.io/7dtd-map/
-* Alpha 18 https://kui.github.io/7dtd-map-a18/
+* https://kui.github.io/7dtd-map/
 
 Build
 --------
