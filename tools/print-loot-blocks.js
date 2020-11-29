@@ -1,7 +1,6 @@
 /* eslint-env node */
 
 const path = require('path');
-const flatMap = require('lodash/flatMap');
 const parseXml = require('./lib/xml-parser');
 const localInfo = require('../local.json');
 
@@ -45,7 +44,7 @@ async function main() {
     return lootResults;
   }).filter((r) => r.length > 0);
 
-  console.log(JSON.stringify(flatMap(results, (r) => r), 0, 2));
+  console.log(JSON.stringify(results.flatMap((r) => r), 0, 2));
   return 0;
 }
 
@@ -113,7 +112,7 @@ function buildBlockIndex(blocks) {
 }
 
 function matchItems(items, pattern, stack) {
-  return flatMap(items, (item) => {
+  return items.flatMap((item) => {
     if (item.group) {
       return matchItems(item.items, pattern, stack.concat(`LootGroup: ${item.group}`));
     }

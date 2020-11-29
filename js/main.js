@@ -83,10 +83,11 @@ function main() {
     mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
   });
   splat3Input.addEventListener('input', async () => {
+    const file = splat3Input.files[0];
     console.log('Load splat3');
-    loadingFiles.add('splat3.png');
-    const splat3Img = await loadSplatBitmapByFile(window, splat3Input.files[0]);
-    loadingFiles.delete('splat3.png');
+    loadingFiles.add(file.name);
+    const splat3Img = await loadSplatBitmapByFile(window, file);
+    loadingFiles.delete(file.name);
     if (!splat3Img) return;
     mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
   });
@@ -158,7 +159,13 @@ function main() {
       return;
     }
     event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
+    let files = Array.from(event.dataTransfer.files);
+    const hasSplat3ProcessedPng = files.some((f) => f.name === 'splat3_processed.png');
+    if (hasSplat3ProcessedPng) {
+      console.log('Ignore "splat3.png" because "splat3_processed.png" was given.'
+          + ' Because `splat3.png` is a subset data of `splat3_processed.png`.');
+    }
+    files = files.filter((f) => !hasSplat3ProcessedPng || f.name !== 'splat3.png');
     await sequential(files.map((f) => () => handleDroppedFiles(f)));
   });
 
@@ -177,7 +184,7 @@ function main() {
         const biomesImg = await loadBitmapByFile(window, file);
         mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
         biomesInput.value = '';
-      } else if (file.name === 'splat3.png') {
+      } else if (file.name === 'splat3.png' || file.name === 'splat3_processed.png') {
         const splat3Img = await loadSplatBitmapByFile(window, file);
         mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
         splat3Input.value = '';
@@ -248,11 +255,11 @@ function main() {
         loadingFiles.delete('biomes.png');
       },
       async () => {
-        loadingFiles.add('splat3.png');
+        loadingFiles.add('splat3_processed.png');
         mapRendererWorker.postMessage({
-          splat3Img: await loadSplatBitmapByUrl(window, 'sample_world/splat3.png'),
+          splat3Img: await loadSplatBitmapByUrl(window, 'sample_world/splat3_processed.png'),
         });
-        loadingFiles.delete('splat3.png');
+        loadingFiles.delete('splat3_processed.png');
       },
       async () => {
         loadingFiles.add('splat4_processed.png');

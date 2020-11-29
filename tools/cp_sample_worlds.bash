@@ -16,7 +16,7 @@ target_files=(
     prefabs.xml
     radiation.png
     spawnpoints.xml
-    splat3.png
+    splat3_processed.png
     splat4_processed.png
     water_info.xml
 )
@@ -35,7 +35,7 @@ main() {
 
     set -x
 
-    rm -frv "$dest/*"
+    rm -frv "$dest/"*
 
     for bname in "${target_files[@]}"
     do

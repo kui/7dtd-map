@@ -25,6 +25,7 @@
     "glob": "^7.1.6",
     "glob-promise": "^3.4.0",
     "htmlhint": "^0.14.1",
+    "pako": "^2.0.2",
     "pngjs": "^5.0.0",
     "stream-to-blob": "^2.0.1",
     "stylelint": "^13.6.1",
