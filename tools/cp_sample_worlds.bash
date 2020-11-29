@@ -17,7 +17,7 @@ target_files=(
     radiation.png
     spawnpoints.xml
     splat3.png
-    splat4_processed.tga
+    splat4_processed.png
     water_info.xml
 )
 
@@ -40,7 +40,7 @@ main() {
     for bname in "${target_files[@]}"
     do
         file="$src/$bname"
-        if [[ "$bname" =~ dtm\.raw|splat4_processed\.tga ]]
+        if [[ "$bname" =~ dtm\.raw ]]
         then
             gzip -v --keep --best --stdout "$file" > "$dest/$bname.gz"
         else

@@ -3,10 +3,8 @@
 import {
   loadBitmapByFile,
   loadBitmapByUrl,
-  loadSplat3BitmapByFile,
-  loadSplat3BitmapByUrl,
-  loadSplat4BitmapByFile,
-  loadSplat4BitmapByGzUrl,
+  loadSplatBitmapByFile,
+  loadSplatBitmapByUrl,
   loadRadBitmapByFile,
   loadRadBitmapByUrl,
 } from './lib/bitmap-loader';
@@ -87,15 +85,15 @@ function main() {
   splat3Input.addEventListener('input', async () => {
     console.log('Load splat3');
     loadingFiles.add('splat3.png');
-    const splat3Img = await loadSplat3BitmapByFile(window, splat3Input.files[0]);
+    const splat3Img = await loadSplatBitmapByFile(window, splat3Input.files[0]);
     loadingFiles.delete('splat3.png');
     if (!splat3Img) return;
     mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
   });
   splat4Input.addEventListener('input', async () => {
     console.log('Load splat4');
-    loadingFiles.add('splat4_processed.tga');
-    const splat4Img = await loadSplat4BitmapByFile(window, splat4Input.files[0]);
+    loadingFiles.add('splat4_processed.png');
+    const splat4Img = await loadSplatBitmapByFile(window, splat4Input.files[0]);
     loadingFiles.delete('splat4_processed.png');
     if (!splat4Img) return;
     mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
@@ -180,11 +178,11 @@ function main() {
         mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
         biomesInput.value = '';
       } else if (file.name === 'splat3.png') {
-        const splat3Img = await loadSplat3BitmapByFile(window, file);
+        const splat3Img = await loadSplatBitmapByFile(window, file);
         mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
         splat3Input.value = '';
-      } else if (file.name === 'splat4_processed.tga') {
-        const splat4Img = await loadSplat4BitmapByFile(window, file);
+      } else if (file.name === 'splat4_processed.png') {
+        const splat4Img = await loadSplatBitmapByFile(window, file);
         mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
         splat4Input.value = '';
       } else if (file.name === 'radiation.png') {
@@ -252,16 +250,16 @@ function main() {
       async () => {
         loadingFiles.add('splat3.png');
         mapRendererWorker.postMessage({
-          splat3Img: await loadSplat3BitmapByUrl(window, 'sample_world/splat3.png'),
+          splat3Img: await loadSplatBitmapByUrl(window, 'sample_world/splat3.png'),
         });
         loadingFiles.delete('splat3.png');
       },
       async () => {
-        loadingFiles.add('splat4_processed.tga');
+        loadingFiles.add('splat4_processed.png');
         mapRendererWorker.postMessage({
-          splat4Img: await loadSplat4BitmapByGzUrl(window, 'sample_world/splat4_processed.tga.gz'),
+          splat4Img: await loadSplatBitmapByUrl(window, 'sample_world/splat4_processed.png'),
         });
-        loadingFiles.delete('splat4_processed.tga');
+        loadingFiles.delete('splat4_processed.png');
       },
       async () => {
         loadingFiles.add('radiation.png');
