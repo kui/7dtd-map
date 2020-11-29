@@ -45,7 +45,7 @@ function html(model) {
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      ${model.blocks.map((b) => `<tr><td>${b.name}</td><td>${b.localizedName}</td><td>${b.num}</td></tr>`).join('\n')}
+      ${model.blocks.map((b) => `<tr><td>${b.name}</td><td>${escapeHtml(b.localizedName)}</td><td>${b.num}</td></tr>`).join('\n')}
     </table>
   </section>
 </body>
@@ -103,4 +103,15 @@ function sortByProperty(arr, propName) {
     if (a[propName] < b[propName]) return -1;
     return 0;
   });
+}
+
+const ESCAPE_HTML_PATTERNS = [
+  [/</g, '&lt;'],
+  [/>/g, '&gt;'],
+  [/&/g, '&amp;'],
+];
+
+function escapeHtml(s) {
+  if (!s) return s;
+  return ESCAPE_HTML_PATTERNS.reduce((str, [regex, newStr]) => str.replace(regex, newStr), s);
 }
