@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const path = require('path');
 const glob = require('glob');
 
@@ -11,19 +10,5 @@ module.exports = {
   output: {
     filename: '[name]',
     path: path.resolve(__dirname, 'docs'),
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      // https://github.com/browserify/node-util/issues/43#issuecomment-724353093
-      process: 'process/browser',
-      // https://github.com/webpack/changelog-v5/issues/10#issuecomment-615877593
-      Buffer: ['buffer', 'Buffer'],
-    }),
-  ],
-  resolve: {
-    fallback: {
-      zlib: require.resolve('browserify-zlib'),
-      stream: require.resolve('stream-browserify'),
-    },
   },
 };
