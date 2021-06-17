@@ -1,4 +1,4 @@
-import { PNG } from 'pngjs';
+import { PNG } from 'pngjs/browser';
 import streamToBlob from 'stream-to-blob';
 
 export async function loadBitmapByUrl(window, url) {
