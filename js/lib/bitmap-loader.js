@@ -17,13 +17,13 @@ export async function loadSplatBitmapByUrl(window, url) {
 export async function loadSplatBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
   convertPngJsForSplat(p, file.name);
-  return loadBitmapByPngJs(window, p, url);
+  return loadBitmapByPngJs(window, p, file.name);
 }
 
 export async function loadRadBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
   convertPngJsForRad(p);
-  return loadBitmapByPngJs(window, p, url);
+  return loadBitmapByPngJs(window, p, file.name);
 }
 export async function loadRadBitmapByUrl(window, url) {
   const p = await loadPngJsByUrl(window, url);
@@ -35,7 +35,7 @@ export async function loadRadBitmapByUrl(window, url) {
 //   * black to transparent
 //   * other to non-transparent
 function convertPngJsForSplat({ data }, label) {
-  console.time(`convert_splat: ${label}`)
+  console.time(`convert_splat: ${label}`);
   for (let i = 0; i < data.length; i += 4) {
     if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
       data[i + 3] = 0;
@@ -43,7 +43,7 @@ function convertPngJsForSplat({ data }, label) {
       data[i + 3] = 255;
     }
   }
-  console.timeEnd(`convert_splat: ${label}`)
+  console.timeEnd(`convert_splat: ${label}`);
 }
 
 // radioation.png should convert the pixels which:
@@ -61,9 +61,9 @@ function convertPngJsForRad({ data }) {
 }
 
 async function loadBitmapByPngJs(window, pngjs, label) {
-  console.time(`stream_to_blob: ${label}`)
+  console.time(`stream_to_blob: ${label}`);
   const blob = await streamToBlob(pngjs.pack(), 'image/png');
-  console.timeEnd(`stream_to_blob: ${label}`)
+  console.timeEnd(`stream_to_blob: ${label}`);
   return window.createImageBitmap(blob);
 }
 
