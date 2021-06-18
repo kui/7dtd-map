@@ -37,11 +37,10 @@ export async function loadRadBitmapByUrl(window, url) {
 function convertPngJsForSplat({ data }, label) {
   console.time(`convert_splat: ${label}`)
   for (let i = 0; i < data.length; i += 4) {
-    const [red, green, blue] = data.slice(i, i + 3);
-    if (red !== 0 || green !== 0 || blue !== 0) {
-      data[i + 3] = 255;
-    } else {
+    if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
       data[i + 3] = 0;
+    } else {
+      data[i + 3] = 255;
     }
   }
   console.timeEnd(`convert_splat: ${label}`)
