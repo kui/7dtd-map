@@ -1,5 +1,4 @@
 import { PNG } from 'pngjs/browser';
-import streamToBlob from 'stream-to-blob';
 
 export async function loadBitmapByUrl(window, url) {
   const res = await window.fetch(url);
@@ -62,7 +61,7 @@ function convertPngJsForRad({ data }) {
 
 async function loadBitmapByPngJs(window, pngjs, label) {
   console.time(`stream_to_blob: ${label}`);
-  const blob = await streamToBlob(pngjs.pack(), 'image/png');
+  const blob = await convertBlobByPngJs(window, pngjs);
   console.timeEnd(`stream_to_blob: ${label}`);
   return window.createImageBitmap(blob);
 }
@@ -82,5 +81,15 @@ async function loadPngJs(buffer) {
       if (err) reject(err);
       else resolve(data);
     });
+  });
+}
+
+function convertBlobByPngJs(window, pngjs) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    pngjs.pack()
+      .on('data', (c) => chunks.push(c))
+      .once('end', () => resolve(new window.Blob(chunks, { type: 'image/png' })))
+      .once('error', reject);
   });
 }

@@ -27,7 +27,6 @@
     "htmlhint": "^0.15.1",
     "pako": "^2.0.3",
     "pngjs": "^6.0.0",
-    "stream-to-blob": "^2.0.1",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
     "webpack": "^5.39.1",
