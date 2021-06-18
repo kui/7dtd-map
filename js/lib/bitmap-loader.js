@@ -11,30 +11,31 @@ export async function loadBitmapByFile(window, file) {
 }
 export async function loadSplatBitmapByUrl(window, url) {
   const p = await loadPngJsByUrl(window, url);
-  convertPngJsForSplat(p);
-  return loadBitmapByPngJs(window, p);
+  convertPngJsForSplat(p, url);
+  return loadBitmapByPngJs(window, p, url);
 }
 export async function loadSplatBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
-  convertPngJsForSplat(p);
-  return loadBitmapByPngJs(window, p);
+  convertPngJsForSplat(p, file.name);
+  return loadBitmapByPngJs(window, p, url);
 }
 
 export async function loadRadBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
   convertPngJsForRad(p);
-  return loadBitmapByPngJs(window, p);
+  return loadBitmapByPngJs(window, p, url);
 }
 export async function loadRadBitmapByUrl(window, url) {
   const p = await loadPngJsByUrl(window, url);
   convertPngJsForRad(p);
-  return loadBitmapByPngJs(window, p);
+  return loadBitmapByPngJs(window, p, url);
 }
 
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function convertPngJsForSplat({ data }) {
+function convertPngJsForSplat({ data }, label) {
+  console.time(`convert_splat: ${label}`)
   for (let i = 0; i < data.length; i += 4) {
     const [red, green, blue] = data.slice(i, i + 3);
     if (red !== 0 || green !== 0 || blue !== 0) {
@@ -43,6 +44,7 @@ function convertPngJsForSplat({ data }) {
       data[i + 3] = 0;
     }
   }
+  console.timeEnd(`convert_splat: ${label}`)
 }
 
 // radioation.png should convert the pixels which:
@@ -59,8 +61,10 @@ function convertPngJsForRad({ data }) {
   }
 }
 
-async function loadBitmapByPngJs(window, pngjs) {
+async function loadBitmapByPngJs(window, pngjs, label) {
+  console.time(`stream_to_blob: ${label}`)
   const blob = await streamToBlob(pngjs.pack(), 'image/png');
+  console.timeEnd(`stream_to_blob: ${label}`)
   return window.createImageBitmap(blob);
 }
 
