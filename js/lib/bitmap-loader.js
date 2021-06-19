@@ -91,7 +91,7 @@ async function loadPngjsFromBlob(window, blob) {
 
 async function loadPngjs(buffer) {
   return new Promise((resolve, reject) => {
-    new PNG().parse(buffer, (err, data) => {
+    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer, (err, data) => {
       if (err) reject(err);
       else resolve(data);
     });
