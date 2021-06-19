@@ -10,60 +10,65 @@ export async function loadBitmapByFile(window, file) {
 }
 export async function loadSplatBitmapByUrl(window, url) {
   const p = await loadPngJsByUrl(window, url);
-  convertPngJsForSplat(p, url);
-  return loadBitmapByPngJs(window, p, url);
+  return renderSplat(window, p);
 }
 export async function loadSplatBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
-  convertPngJsForSplat(p, file.name);
-  return loadBitmapByPngJs(window, p, file.name);
+  return renderSplat(window, p);
 }
 
 export async function loadRadBitmapByFile(window, file) {
   const p = await loadPngJsByBlob(window, file);
-  convertPngJsForRad(p);
-  return loadBitmapByPngJs(window, p, file.name);
+  return renderRad(window, p);
 }
 export async function loadRadBitmapByUrl(window, url) {
   const p = await loadPngJsByUrl(window, url);
-  convertPngJsForRad(p);
-  return loadBitmapByPngJs(window, p, url);
+  return renderRad(window, p);
 }
 
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function convertPngJsForSplat({ data }, label) {
-  console.time(`convert_splat: ${label}`);
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
-      data[i + 3] = 0;
-    } else {
-      data[i + 3] = 255;
+function renderSplat(window, pngjs) {
+  return render(window, pngjs, (indata, out) => {
+    for (let i = 0; i < indata.length; i += 4) {
+      out[i] = indata[i];
+      out[i + 1] = indata[i + 1];
+      out[i + 2] = indata[i + 2];
+      if (indata[i] === 0 && indata[i + 1] === 0 && indata[i + 2] === 0) {
+        out[i + 3] = 0;
+      } else {
+        out[i + 3] = 255;
+      }
     }
-  }
-  console.timeEnd(`convert_splat: ${label}`);
+  });
 }
 
 // radioation.png should convert the pixels which:
 //   * red to half-transparent
 //   * other to transparent
-function convertPngJsForRad({ data }) {
-  for (let i = 0; i < data.length; i += 4) {
-    const red = data[i];
-    if (red !== 0) {
-      data[i + 3] = 80;
-    } else {
-      data[i + 3] = 0;
+function renderRad(window, pngjs) {
+  return render(window, pngjs, (indata, out) => {
+    for (let i = 0; i < indata.length; i += 4) {
+      out[i] = indata[i];
+      out[i + 1] = 0;
+      out[i + 2] = 0;
+      if (indata[i] !== 0) {
+        out[i + 3] = 80;
+      } else {
+        out[i + 3] = 0;
+      }
     }
-  }
+  });
 }
 
-async function loadBitmapByPngJs(window, pngjs, label) {
-  console.time(`stream_to_blob: ${label}`);
-  const blob = await convertBlobByPngJs(window, pngjs);
-  console.timeEnd(`stream_to_blob: ${label}`);
-  return window.createImageBitmap(blob);
+function render(window, { data, height, width }, copyFunction) {
+  const canvas = new window.OffscreenCanvas(width, height);
+  const context = canvas.getContext("2d");
+  const imageData = context.getImageData(0, 0, width, height);
+  copyFunction(data, imageData.data)
+  context.putImageData(imageData, 0, 0);
+  return window.createImageBitmap(canvas);
 }
 
 async function loadPngJsByUrl(window, url) {
@@ -81,15 +86,5 @@ async function loadPngJs(buffer) {
       if (err) reject(err);
       else resolve(data);
     });
-  });
-}
-
-function convertBlobByPngJs(window, pngjs) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    pngjs.pack()
-      .on('data', (c) => chunks.push(c))
-      .once('end', () => resolve(new window.Blob(chunks, { type: 'image/png' })))
-      .once('error', reject);
   });
 }
