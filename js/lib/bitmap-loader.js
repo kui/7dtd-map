@@ -9,12 +9,22 @@ export async function loadBitmapByFile(window, file) {
   return window.createImageBitmap(file);
 }
 export async function loadSplatBitmapByUrl(window, url) {
+  console.time(`loadPng: ${url}`);
   const p = await loadPngjsByUrl(window, url);
-  return renderSplat(window, p);
+  console.timeEnd(`loadPng: ${url}`);
+  console.time(`renderSplat: ${url}`);
+  const i = renderSplat(window, p);
+  console.timeEnd(`renderSplat: ${url}`);
+  return i;
 }
 export async function loadSplatBitmapByFile(window, file) {
+  console.time(`loadPng: ${file.name}`);
   const p = await loadPngjsFromBlob(window, file);
-  return renderSplat(window, p);
+  console.timeEnd(`loadPng: ${file.name}`);
+  console.time(`renderSplat: ${file.name}`);
+  const i = renderSplat(window, p);
+  console.timeEnd(`renderSplat: ${file.name}`);
+  return i;
 }
 export async function loadRadBitmapByFile(window, file) {
   const p = await loadPngjsFromBlob(window, file);
