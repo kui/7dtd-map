@@ -9,20 +9,19 @@ export async function loadBitmapByFile(window, file) {
   return window.createImageBitmap(file);
 }
 export async function loadSplatBitmapByUrl(window, url) {
-  const p = await loadPngJsByUrl(window, url);
+  const p = await loadPngjsByUrl(window, url);
   return renderSplat(window, p);
 }
 export async function loadSplatBitmapByFile(window, file) {
-  const p = await loadPngJsByBlob(window, file);
+  const p = await loadPngjsFromBlob(window, file);
   return renderSplat(window, p);
 }
-
 export async function loadRadBitmapByFile(window, file) {
-  const p = await loadPngJsByBlob(window, file);
+  const p = await loadPngjsFromBlob(window, file);
   return renderRad(window, p);
 }
 export async function loadRadBitmapByUrl(window, url) {
-  const p = await loadPngJsByUrl(window, url);
+  const p = await loadPngjsByUrl(window, url);
   return renderRad(window, p);
 }
 
@@ -64,23 +63,23 @@ function renderRad(window, pngjs) {
 
 function render(window, { data, height, width }, copyFunction) {
   const canvas = new window.OffscreenCanvas(width, height);
-  const context = canvas.getContext("2d");
+  const context = canvas.getContext('2d');
   const imageData = context.getImageData(0, 0, width, height);
-  copyFunction(data, imageData.data)
+  copyFunction(data, imageData.data);
   context.putImageData(imageData, 0, 0);
   return window.createImageBitmap(canvas);
 }
 
-async function loadPngJsByUrl(window, url) {
+async function loadPngjsByUrl(window, url) {
   const res = await window.fetch(url);
-  return loadPngJsByBlob(window, res);
+  return loadPngjs(await res.arrayBuffer());
 }
 
-async function loadPngJsByBlob(window, blob) {
-  return loadPngJs(await blob.arrayBuffer());
+async function loadPngjsFromBlob(window, blob) {
+  return loadPngjs(await blob.arrayBuffer());
 }
 
-async function loadPngJs(buffer) {
+async function loadPngjs(buffer) {
   return new Promise((resolve, reject) => {
     new PNG().parse(buffer, (err, data) => {
       if (err) reject(err);

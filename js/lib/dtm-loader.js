@@ -22,7 +22,6 @@ export class Dtm {
   }
 
   getElevation(x, z) {
-    // eslint-disable-next-line no-bitwise
     return this.data.getUint8((x + z * this.width) * 2 + 1);
   }
 }
