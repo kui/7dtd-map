@@ -9,4 +9,5 @@ jobs:
       with:
         node-version: '14'
     - run: npm install
+    - run: echo '{}' > local.json
     - run: npm run lint
