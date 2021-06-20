@@ -8,7 +8,7 @@ export async function loadDtmRawGzByUrl(window, url) {
 
 export async function loadDtmRawByFile(window, file) {
   if (!file) return null;
-  return await file.arrayBuffer();
+  return file.arrayBuffer();
 }
 
 export class Dtm {
