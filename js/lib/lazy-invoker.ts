@@ -1,6 +1,6 @@
-export default function lazyInvoke(window, asyncFunc) {
+export default function lazyInvoke(window: any, asyncFunc: any) {
   let updateRequest = null;
-  let workerPromise = null;
+  let workerPromise: any = null;
   return async () => {
     updateRequest = true;
 
@@ -21,6 +21,6 @@ export default function lazyInvoke(window, asyncFunc) {
   };
 }
 
-function waitAnimationFrame(w) {
+function waitAnimationFrame(w: any) {
   return new Promise((r) => w.requestAnimationFrame(r));
 }

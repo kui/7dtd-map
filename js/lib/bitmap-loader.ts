@@ -1,14 +1,15 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'pngj... Remove this comment to see the full error message
 import { PNG } from 'pngjs/browser';
 
-export async function loadBitmapByUrl(window, url) {
+export async function loadBitmapByUrl(window: any, url: any) {
   const res = await window.fetch(url);
   return window.createImageBitmap(await res.blob());
 }
-export async function loadBitmapByFile(window, file) {
+export async function loadBitmapByFile(window: any, file: any) {
   if (!file) return null;
   return window.createImageBitmap(file);
 }
-export async function loadSplatBitmapByUrl(window, url) {
+export async function loadSplatBitmapByUrl(window: any, url: any) {
   console.time(`loadPng: ${url}`);
   const p = await loadPngjsByUrl(window, url);
   console.timeEnd(`loadPng: ${url}`);
@@ -17,7 +18,7 @@ export async function loadSplatBitmapByUrl(window, url) {
   console.timeEnd(`renderSplat: ${url}`);
   return i;
 }
-export async function loadSplatBitmapByFile(window, file) {
+export async function loadSplatBitmapByFile(window: any, file: any) {
   console.time(`loadPng: ${file.name}`);
   const p = await loadPngjsFromBlob(window, file);
   console.timeEnd(`loadPng: ${file.name}`);
@@ -26,11 +27,11 @@ export async function loadSplatBitmapByFile(window, file) {
   console.timeEnd(`renderSplat: ${file.name}`);
   return i;
 }
-export async function loadRadBitmapByFile(window, file) {
+export async function loadRadBitmapByFile(window: any, file: any) {
   const p = await loadPngjsFromBlob(window, file);
   return renderRad(window, p);
 }
-export async function loadRadBitmapByUrl(window, url) {
+export async function loadRadBitmapByUrl(window: any, url: any) {
   const p = await loadPngjsByUrl(window, url);
   return renderRad(window, p);
 }
@@ -38,8 +39,8 @@ export async function loadRadBitmapByUrl(window, url) {
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function renderSplat(window, pngjs) {
-  return render(window, pngjs, (indata, out) => {
+function renderSplat(window: any, pngjs: any) {
+  return render(window, pngjs, (indata: any, out: any) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
       out[i + 1] = indata[i + 1];
@@ -56,8 +57,8 @@ function renderSplat(window, pngjs) {
 // radioation.png should convert the pixels which:
 //   * red to half-transparent
 //   * other to transparent
-function renderRad(window, pngjs) {
-  return render(window, pngjs, (indata, out) => {
+function renderRad(window: any, pngjs: any) {
+  return render(window, pngjs, (indata: any, out: any) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
       out[i + 1] = 0;
@@ -71,7 +72,11 @@ function renderRad(window, pngjs) {
   });
 }
 
-function render(window, { data, height, width }, copyFunction) {
+function render(window: any, {
+  data,
+  height,
+  width
+}: any, copyFunction: any) {
   const canvas = new window.OffscreenCanvas(width, height);
   const context = canvas.getContext('2d');
   const imageData = context.getImageData(0, 0, width, height);
@@ -80,18 +85,18 @@ function render(window, { data, height, width }, copyFunction) {
   return window.createImageBitmap(canvas);
 }
 
-async function loadPngjsByUrl(window, url) {
+async function loadPngjsByUrl(window: any, url: any) {
   const res = await window.fetch(url);
   return loadPngjs(await res.arrayBuffer());
 }
 
-async function loadPngjsFromBlob(window, blob) {
+async function loadPngjsFromBlob(window: any, blob: any) {
   return loadPngjs(await blob.arrayBuffer());
 }
 
-async function loadPngjs(buffer) {
+async function loadPngjs(buffer: any) {
   return new Promise((resolve, reject) => {
-    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer, (err, data) => {
+    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer, (err: any, data: any) => {
       if (err) reject(err);
       else resolve(data);
     });

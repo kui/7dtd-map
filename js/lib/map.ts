@@ -4,7 +4,25 @@ const signChar = '✘';
 const markChar = '🚩️';
 
 export default class Map {
-  constructor(window, canvas) {
+  biomesImg: any;
+  brightness: any;
+  canvas: any;
+  fontFace: any;
+  lazyUpdater: any;
+  markCoords: any;
+  prefabs: any;
+  radImg: any;
+  scale: any;
+  showBiomes: any;
+  showPrefabs: any;
+  showRad: any;
+  showSplat3: any;
+  showSplat4: any;
+  signSize: any;
+  splat3Img: any;
+  splat4Img: any;
+  window: any;
+  constructor(window: any, canvas: any) {
     this.window = window;
     this.canvas = canvas;
     this.showBiomes = true;
@@ -22,7 +40,7 @@ export default class Map {
     this.prefabs = [];
 
     const fontFace = new window.FontFace('Noto Sans', 'url(NotoEmoji-Regular.ttf)');
-    fontFace.load().then((a) => window.fonts.add(a));
+    fontFace.load().then((a: any) => window.fonts.add(a));
     this.fontFace = fontFace.load();
 
     // flag
@@ -81,7 +99,7 @@ export default class Map {
   }
 }
 
-async function drawPrefabs(map, ctx) {
+async function drawPrefabs(map: any, ctx: any) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
   ctx.fillStyle = 'red';
   ctx.textAlign = 'center';
@@ -105,7 +123,7 @@ async function drawPrefabs(map, ctx) {
   }
 }
 
-async function drawMark(map, ctx) {
+async function drawMark(map: any, ctx: any) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
   ctx.fillStyle = 'red';
   ctx.textAlign = 'left';
@@ -128,8 +146,12 @@ async function drawMark(map, ctx) {
 }
 
 function putText({
-  ctx, text, x, y, textSize,
-}) {
+  ctx,
+  text,
+  x,
+  y,
+  textSize
+}: any) {
   ctx.lineWidth = Math.round(textSize * 0.2);
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
   ctx.strokeText(text, x, y);

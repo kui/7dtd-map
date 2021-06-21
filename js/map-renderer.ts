@@ -22,7 +22,7 @@ const knownParamNames = new Set([
   'markCoords',
 ]);
 
-let map;
+let map: any;
 
 onmessage = (event) => {
   const {
@@ -45,6 +45,7 @@ onmessage = (event) => {
     map[paramName] = restParams[paramName];
   });
 
+  // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-3 arguments, but got 1.
   postMessage({
     mapSizes: {
       width: map.width,
