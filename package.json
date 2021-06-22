@@ -5,11 +5,10 @@
   "private": true,
   "scripts": {
     "build": "npm run resources && npm run js",
-    "resources": "node ./tools/generate-block-index.js && node ./tools/generate-prefab-html.js",
+    "resources": "ts-node ./tools/generate-block-index.ts && ts-node ./tools/generate-prefab-html.ts",
     "js": "webpack --mode production",
     "dev-server": "webpack serve --mode development --content-base docs",
-    "lint": "npm run jslint && npm run htmllint && npm run csslint",
-    "jslint": "eslint tools/**/*.js --fix",
+    "lint": "npm run htmllint && npm run csslint",
     "htmllint": "htmlhint docs/**/*.html",
     "csslint": "stylelint docs/**/*.css --fix"
   },
