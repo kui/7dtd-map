@@ -1,13 +1,7 @@
-/* eslint-env node */
-
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseNim'.
-const parseNim = require('./nim-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseTts'.
-const parseTts = require('./tts-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseXml'.
-const parseXml = require('./xml-parser');
+import * as path from 'path';
+import { parseNim } from './nim-parser';
+import { parseTts } from './tts-parser';
+import { parseXml } from './xml-parser';
 
 function html(model: any) {
   return `<!doctype html>
@@ -57,16 +51,9 @@ function html(model: any) {
 `;
 }
 
-module.exports = async ({
-  xml,
-  nim,
-  tts,
-  labels
-}: any) => {
+export async function prefabHtml({ xml, nim, tts, labels }: any) {
   const name = path.basename(xml, '.xml');
-  const {
-    maxx, maxy, maxz, blockNums,
-  } = await parseTts(tts);
+  const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
     .then((bs: any) => bs.map((b: any) => ({
     id: b.id,
@@ -100,7 +87,7 @@ module.exports = async ({
 };
 
 async function parsePrefabXml(xmlFileName: any) {
-  const xml = await parseXml(xmlFileName);
+  const xml: any = await parseXml(xmlFileName);
   return xml.prefab.property.map((p: any) => p.$);
 }
 

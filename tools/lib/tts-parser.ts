@@ -1,24 +1,21 @@
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
-const fs = require('fs');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bunyan'.
-const bunyan = require('bunyan');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bformat'.
-const bformat = require('bunyan-format');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'log'.
+import * as fs from 'fs';
+import * as path from 'path';
+import bunyan from 'bunyan';
+import bformat from 'bunyan-format';
+
 const log = bunyan.createLogger({
     name: path.basename(__filename, '.js'),
-    stream: bformat(),
+    stream: bformat({}),
     level: 'info',
     // level: 'debug',
 });
+
 // TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
 // But the current version is "13". (The version is "10" in wiki)
 // There maight bee some defferences but I didn't know.
 // I think there are some changes around block data,
 // because block ID limit seems to increase to 32k from 2048
-module.exports = async function parseTts(ttsFileName: any) {
+export async function parseTts(ttsFileName: any): Promise<any> {
     const blocks: any = [];
     const dimensions = {};
     let digits: any = [];

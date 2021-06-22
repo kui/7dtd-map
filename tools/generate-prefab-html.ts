@@ -1,22 +1,14 @@
 /* eslint-env node */
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fsPromise'... Remove this comment to see the full error message
-const fsPromise = require('fs').promises;
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'glob'.
-const glob = require('glob-promise');
+import * as path from 'path';
+import { promises as fs } from 'fs';
+import glob from 'glob-promise';
+import { prefabHtml } from './lib/prefab-html';
+import { parseLabel } from './lib/label-parser';
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'prefabHtml... Remove this comment to see the full error message
-const prefabHtml = require('./lib/prefab-html');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'localInfo'... Remove this comment to see the full error message
-const localInfo = require('../local.json');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseLabel... Remove this comment to see the full error message
-const parseLabel = require('./lib/label-parser');
-
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'projectRoo... Remove this comment to see the full error message
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');
-const baseDist = 'docs/prefabs';
+const baseDist = path.join(projectRoot, 'docs/prefabs');
+const localInfo = fs.readFile(path.join(projectRoot, 'local.json')).then(j => JSON.parse(j.toString()));
 
 async function main() {
   await remove();
@@ -26,17 +18,17 @@ async function main() {
     await generateIndex(prefabNames),
     await copyJpg(prefabNames),
   ]);
+  return 0;
 }
 
 async function remove() {
-  const globPath = path.join(projectRoot, baseDist, '*.{jpg,html}');
-  await Promise.all((await glob(globPath)).map(fsPromise.unlink));
+  const globPath = path.join(baseDist, '*.{jpg,html}');
+  await Promise.all((await glob(globPath)).map(fs.unlink));
   console.log('Remove %s', globPath);
 }
 
-// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 async function loadLabels() {
-  const { vanillaDir } = localInfo;
+  const { vanillaDir } = await localInfo;
   const fileName = path.join(vanillaDir, 'Data', 'Config', 'Localization.txt');
   const labels = await parseLabel(fileName);
   console.log('Load %s labels', Object.keys(labels).length);
@@ -44,7 +36,7 @@ async function loadLabels() {
 }
 
 async function generateHtml(labels: any) {
-  const { vanillaDir } = localInfo;
+  const { vanillaDir } = await localInfo;
   const xmlGlob = path.join(vanillaDir, 'Data', 'Prefabs', '*.xml');
   const xmlFiles = await glob(xmlGlob);
   if (xmlFiles.length === 0) {
@@ -64,25 +56,25 @@ async function generateHtml(labels: any) {
       console.warn('Ignore Prefab: %s', e.message);
       return null;
     }
-    const dist = path.join(projectRoot, baseDist, `${prefabName}.html`);
-    await fsPromise.writeFile(dist, html);
+    const dist = path.join(baseDist, `${prefabName}.html`);
+    await fs.writeFile(dist, html);
     return prefabName;
-  })).then((ns) => ns.filter((n) => n)); // Filter out failed prefabs.
-  console.log('Write %d html files', xmlFiles.length);
+  })).then((ns) => ns.filter((n): n is string => n != null));
+  console.log('Write html files: %d/%d', prefabNames.length, xmlFiles.length);
 
   return prefabNames;
 }
 
 async function copyJpg(prefabNames: any) {
-  const { vanillaDir } = localInfo;
+  const { vanillaDir } = await localInfo;
   const jpgFiles = prefabNames
     .map((n: any) => path.join(vanillaDir, 'Data', 'Prefabs', `${n}.jpg`));
 
   let failNum = 0;
   await Promise.all(jpgFiles.map(async (jpgFileName: any) => {
-    const dist = path.join(projectRoot, baseDist, path.basename(jpgFileName));
+    const dist = path.join(baseDist, path.basename(jpgFileName));
     try {
-      await fsPromise.copyFile(jpgFileName, dist);
+      await fs.copyFile(jpgFileName, dist);
     } catch (e) {
       console.warn('JPG Copy fail: ', e.message);
       failNum += 1;
@@ -92,8 +84,8 @@ async function copyJpg(prefabNames: any) {
 }
 
 async function generateIndex(prefabNames: any) {
-  const dist = path.join(projectRoot, baseDist, 'index.html');
-  await fsPromise.writeFile(dist, `<!doctype html>
+  const dist = path.join(baseDist, 'index.html');
+  await fs.writeFile(dist, `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -117,6 +109,10 @@ async function generateIndex(prefabNames: any) {
   console.log('Write index.html');
 }
 
-main().then((exitCode) => {
-  process.on('exit', () => process.exit(exitCode));
-});
+main()
+  .catch((e) => {
+    console.error(e);
+    return 1;
+  }).then((exitCode) => {
+    process.on('exit', () => process.exit(exitCode));
+  });

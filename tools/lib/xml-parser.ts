@@ -1,9 +1,8 @@
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fsPromise'... Remove this comment to see the full error message
-const fsPromise = require('fs').promises;
-const parseXmlString = require('xml2js').parseString;
+import { promises as fs } from 'fs';
+import { parseString as parseXmlString } from 'xml2js';
 
-module.exports = async function parseXml(xmlFileName: any) {
-  const xml = await fsPromise.readFile(xmlFileName);
+export async function parseXml(xmlFileName: any): Promise<any> {
+  const xml = await fs.readFile(xmlFileName);
   return new Promise((resolve, reject) => {
     parseXmlString(xml, (err: any, result: any) => {
       if (err) reject(err);

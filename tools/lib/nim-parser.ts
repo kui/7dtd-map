@@ -1,16 +1,11 @@
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
-const fs = require('fs');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bunyan'.
-const bunyan = require('bunyan');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bformat'.
-const bformat = require('bunyan-format');
+import * as fs from 'fs';
+import * as path from 'path';
+import bunyan from 'bunyan';
+import bformat from 'bunyan-format';
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'log'.
 const log = bunyan.createLogger({
   name: path.basename(__filename, '.js'),
-  stream: bformat(),
+  stream: bformat({}),
   level: 'info',
   // level: 'debug',
 });
@@ -24,7 +19,7 @@ const log = bunyan.createLogger({
 // 5:   (int) the number of chars of block name
 // 6-:  (string) block name
 
-module.exports = async function parseNim(nimFileName: any) {
+export async function parseNim(nimFileName: any): Promise<any> {
   const blocks: any = [];
   let blockId: any = null;
   let blockIdSecondDigit: any = null;

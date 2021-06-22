@@ -1,10 +1,10 @@
-/* eslint-env node */
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fsPromise'... Remove this comment to see the full error message
-const fsPromise = require('fs').promises;
-const csvParse = require('csv-parse');
+import { promises as fs } from 'fs';
+import csvParse from 'csv-parse';
+
 const EN_INDEX = 5;
-module.exports = async (localizationFileName: any) => {
-    const localization = await fsPromise.readFile(localizationFileName);
+
+export async function parseLabel(localizationFileName: any) {
+    const localization = await fs.readFile(localizationFileName);
     const labelArr = await new Promise((resolve, reject) => {
         csvParse(localization, (err: any, out: any) => { resolve(out); reject(err); });
     });

@@ -1,13 +1,9 @@
 /* eslint-env node */
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseXml'.
-const parseXml = require('./lib/xml-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'localInfo'... Remove this comment to see the full error message
-const localInfo = require('../local.json');
+import { promises as fs } from 'fs';
+import * as path from 'path';
+import { parseXml } from './lib/xml-parser';
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'usage'.
 const usage = `${path.basename(process.argv[1])} <item name regexp>`;
 
 // TODO cache recursive call result
@@ -21,6 +17,9 @@ const excludeBlocks = new Set([
   'cntQuestLootBox', 'treasureChest',
 ]);
 
+const projectRoot = path.join(path.dirname(process.argv[1]), '..');
+const localInfo = fs.readFile(path.join(projectRoot, 'local.json')).then(p => JSON.parse(p.toString()));
+
 async function main() {
   if (process.argv.length <= 2) {
     console.error(usage);
@@ -29,7 +28,7 @@ async function main() {
 
   const pattern = new RegExp(process.argv[2]);
 
-  const { vanillaDir } = localInfo;
+  const { vanillaDir } = await localInfo;
 
   const blocks = await parseXml(path.join(vanillaDir, 'Data', 'Config', 'blocks.xml'));
   const loot = await parseXml(path.join(vanillaDir, 'Data', 'Config', 'loot.xml'));
@@ -148,7 +147,6 @@ function expandLootGroup(groups: any, item: any) {
   if (item.$.group) {
     const g = groups[item.$.group];
     return {
-
       ...item.$,
       items: (g || []).map((i: any) => expandLootGroup(groups, i)),
     };
@@ -156,6 +154,10 @@ function expandLootGroup(groups: any, item: any) {
   return item.$;
 }
 
-main().then((exitCode) => {
+main()
+.catch((e) => {
+  console.error(e);
+  return 1;
+}).then((exitCode) => {
   process.on('exit', () => process.exit(exitCode));
 });

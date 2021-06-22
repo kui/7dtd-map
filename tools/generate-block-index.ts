@@ -1,20 +1,13 @@
 /* eslint-env node */
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fsPromise'... Remove this comment to see the full error message
-const fsPromise = require('fs').promises;
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'glob'.
-const glob = require('glob-promise');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseNim'.
-const parseNim = require('./lib/nim-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseLabel... Remove this comment to see the full error message
-const parseLabel = require('./lib/label-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseTts'.
-const parseTts = require('./lib/tts-parser');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'localInfo'... Remove this comment to see the full error message
-const localInfo = require('../local.json');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'projectRoo... Remove this comment to see the full error message
+import { promises as fs } from 'fs';
+import * as path from 'path';
+import glob from 'glob-promise';
+import { parseNim } from './lib/nim-parser';
+import { parseLabel } from './lib/label-parser';
+import { parseTts } from './lib/tts-parser';
+
 const projectRoot = path.join(path.dirname(process.argv[1]), '..');
+const localJsonFile = path.join(projectRoot, 'local.json');
 const blockPrefabIndexFile = 'docs/block-prefab-index.json';
 const prefabBlockIndexFile = 'docs/prefab-block-index.json';
 const blockLabelsFile = 'docs/block-labels.json';
@@ -22,9 +15,9 @@ const excludedBlocks = new Set([
     'air',
     'terrainFiller',
 ]);
-// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
+
 async function main() {
-    const { vanillaDir } = localInfo;
+    const { vanillaDir } = JSON.parse((await fs.readFile(localJsonFile)).toString());
     const fileGlob = path.join(vanillaDir, 'Data', 'Prefabs', '*.blocks.nim');
     const nimFiles = await glob(fileGlob);
     if (nimFiles.length === 0) {
@@ -47,7 +40,7 @@ async function main() {
     return 0;
 }
 async function writeJsonFile(file: any, json: any) {
-    await fsPromise.writeFile(path.join(projectRoot, file), JSON.stringify(json));
+    await fs.writeFile(path.join(projectRoot, file), JSON.stringify(json));
     console.log('Write %s', file);
 }
 async function readLabels(vanillaDir: any, blocks: any) {
@@ -104,11 +97,14 @@ function invertIndex(prefabs: any) {
         }));
         return arr.concat(flatten);
     }, [])
-        .reduce((obj, { prefab, block }) => Object.assign(obj, {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        .reduce((obj: any, { prefab, block }) => Object.assign(obj, {
         [(block as any).name]: (obj[(block as any).name] || []).concat({ name: prefab, count: (block as any).count }),
     }), {});
 }
-main().then((exitCode) => {
+main()
+.catch((e) => {
+    console.error(e);
+    return 1;
+  }).then((exitCode) => {
     process.on('exit', () => process.exit(exitCode));
-});
+  });

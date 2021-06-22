@@ -1,11 +1,8 @@
 /* eslint-env node */
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
-const path = require('path');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseTts'.
-const parseTts = require('./lib/tts-parser');
+import * as path from 'path';
+import { parseTts } from './lib/tts-parser';
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'usage'.
 const usage = `${path.basename(process.argv[1])} <tts file>`;
 
 async function main() {
@@ -13,7 +10,7 @@ async function main() {
     console.error(usage);
     return 1;
   }
-  const tts = await parseTts(process.argv[2]);
+  const tts: any = await parseTts(process.argv[2]);
   console.log('Prefab dimension:');
   console.log({ x: tts.maxx, y: tts.maxy, z: tts.maxz });
 
@@ -34,6 +31,10 @@ async function main() {
   return 0;
 }
 
-main().then((exitCode) => {
+main()
+.catch((e) => {
+  console.error(e);
+  return 1;
+}).then((exitCode) => {
   process.on('exit', () => process.exit(exitCode));
 });
