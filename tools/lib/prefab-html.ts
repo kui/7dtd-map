@@ -1,11 +1,15 @@
 /* eslint-env node */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require('path');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseNim'.
 const parseNim = require('./nim-parser');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseTts'.
 const parseTts = require('./tts-parser');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseXml'.
 const parseXml = require('./xml-parser');
 
-function html(model) {
+function html(model: any) {
   return `<!doctype html>
 <html>
 <head>
@@ -33,7 +37,7 @@ function html(model) {
 
   <section>
     <h2>XML</h2>
-    <table>${model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join('\n')}</table>
+    <table>${model.xml.map((p: any) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join('\n')}</table>
   </section>
 
   <section>
@@ -45,7 +49,7 @@ function html(model) {
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      ${model.blocks.map((b) => `<tr><td>${b.name}</td><td>${escapeHtml(b.localizedName)}</td><td>${b.num}</td></tr>`).join('\n')}
+      ${model.blocks.map((b: any) => `<tr><td>${b.name}</td><td>${escapeHtml(b.localizedName)}</td><td>${b.num}</td></tr>`).join('\n')}
     </table>
   </section>
 </body>
@@ -54,34 +58,37 @@ function html(model) {
 }
 
 module.exports = async ({
-  xml, nim, tts, labels,
-}) => {
+  xml,
+  nim,
+  tts,
+  labels
+}: any) => {
   const name = path.basename(xml, '.xml');
   const {
     maxx, maxy, maxz, blockNums,
   } = await parseTts(tts);
   const blocksPromise = parseNim(nim)
-    .then((bs) => bs.map((b) => ({
-      id: b.id,
-      name: b.name,
-      localizedName: labels[b.name],
-      num: blockNums.get(b.id) || 0,
-    })));
-  const xmlPromise = parsePrefabXml(xml).then((p) => p.map((node) => {
+    .then((bs: any) => bs.map((b: any) => ({
+    id: b.id,
+    name: b.name,
+    localizedName: labels[b.name],
+    num: blockNums.get(b.id) || 0
+  })));
+  const xmlPromise = parsePrefabXml(xml).then((p) => p.map((node: any) => {
     if (!node.name) {
       // This node might be a branch node contains child nodes.
       return null;
     }
     return { name: node.name, value: node.value };
-  }).filter((e) => e));
+  }).filter((e: any) => e));
   const [blocks, dom] = await Promise.all([blocksPromise, xmlPromise]);
 
-  const blockIdSet = new Set(blocks.map((b) => b.id));
+  const blockIdSet = new Set(blocks.map((b: any) => b.id));
   if ([...blockNums.keys()].filter((i) => !blockIdSet.has(i)).length > 0) {
     console.warn('Unexpected state: unused block num: file=%s, idList=%s', xml, [...blockNums.keys()].filter((i) => !blockIdSet.has(i)));
   }
-  if (blocks.filter((b) => b.num === 0).length > 0) {
-    console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter((b) => b.num === 0));
+  if (blocks.filter((b: any) => b.num === 0).length > 0) {
+    console.warn('Unexpected state: unused block was asigned a ID: file=%s, blocks=%s', xml, blocks.filter((b: any) => b.num === 0));
   }
 
   sortByProperty(dom, 'name');
@@ -92,13 +99,13 @@ module.exports = async ({
   });
 };
 
-async function parsePrefabXml(xmlFileName) {
+async function parsePrefabXml(xmlFileName: any) {
   const xml = await parseXml(xmlFileName);
-  return xml.prefab.property.map((p) => p.$);
+  return xml.prefab.property.map((p: any) => p.$);
 }
 
-function sortByProperty(arr, propName) {
-  arr.sort((a, b) => {
+function sortByProperty(arr: any, propName: any) {
+  arr.sort((a: any, b: any) => {
     if (a[propName] > b[propName]) return 1;
     if (a[propName] < b[propName]) return -1;
     return 0;
@@ -111,7 +118,7 @@ const ESCAPE_HTML_PATTERNS = [
   [/&/g, '&amp;'],
 ];
 
-function escapeHtml(s) {
+function escapeHtml(s: any) {
   if (!s) return s;
   return ESCAPE_HTML_PATTERNS.reduce((str, [regex, newStr]) => str.replace(regex, newStr), s);
 }

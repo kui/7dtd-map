@@ -1,9 +1,13 @@
 /* eslint-env node */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require('path');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseXml'.
 const parseXml = require('./lib/xml-parser');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'localInfo'... Remove this comment to see the full error message
 const localInfo = require('../local.json');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'usage'.
 const usage = `${path.basename(process.argv[1])} <item name regexp>`;
 
 // TODO cache recursive call result
@@ -35,26 +39,29 @@ async function main() {
 
   const matchedItems = new Set();
 
-  const results = blocks.blocks.block.map((block) => {
+  const results = blocks.blocks.block.map((block: any) => {
     if (excludeBlocks.has(block.$.name)) {
       return [];
     }
     const lootResults = matchLootItems(pattern, block, blockIndex, lootIndex);
-    lootResults.forEach((r) => matchedItems.add(r.item));
+    lootResults.forEach((r: any) => matchedItems.add(r.item));
     return lootResults;
-  }).filter((r) => r.length > 0);
+  }).filter((r: any) => r.length > 0);
 
-  console.log(JSON.stringify(results.flatMap((r) => r), 0, 2));
+  // @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
+  console.log(JSON.stringify(results.flatMap((r: any) => r), 0, 2));
   return 0;
 }
 
-function traverseDowngradeBlock(pattern, block, blockIndex, lootIndex, stack = []) {
-  const downgradeBlockProp = block.property.find((p) => p.$.name === 'DowngradeBlock');
+// @ts-expect-error ts-migrate(7023) FIXME: 'traverseDowngradeBlock' implicitly has return typ... Remove this comment to see the full error message
+function traverseDowngradeBlock(pattern: any, block: any, blockIndex: any, lootIndex: any, stack = []) {
+  const downgradeBlockProp = block.property.find((p: any) => p.$.name === 'DowngradeBlock');
   if (!downgradeBlockProp) {
     return [];
   }
 
   const name = downgradeBlockProp.$.value;
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
   if (stack.includes(downgradeBlockProp.$.value)) {
     return [];
   }
@@ -62,14 +69,15 @@ function traverseDowngradeBlock(pattern, block, blockIndex, lootIndex, stack = [
   return matchLootItems(pattern, blockIndex[name], blockIndex, lootIndex, stack.concat(name));
 }
 
-function matchLootItems(pattern, block, blockIndex, lootIndex, downgradeStack = []) {
+// @ts-expect-error ts-migrate(7023) FIXME: 'matchLootItems' implicitly has return type 'any' ... Remove this comment to see the full error message
+function matchLootItems(pattern: any, block: any, blockIndex: any, lootIndex: any, downgradeStack = []) {
   const clazz = getProp(block, 'Class', blockIndex);
-  if (!(/(CarExplode)?Loot/).test(clazz)) {
+  if (!(((/(CarExplode)?Loot/))).test(clazz)) {
     return [];
   }
   const lootId = getProp(block, 'LootList', blockIndex);
   const lootList = lootIndex[lootId];
-  const result = matchItems(lootList, pattern, [`LootID: ${lootId}`]).map((r) => {
+  const result = matchItems(lootList, pattern, [`LootID: ${lootId}`]).map((r: any) => {
     r.block = block.$.name;
     if (downgradeStack.length === 0) {
       return r;
@@ -77,25 +85,27 @@ function matchLootItems(pattern, block, blockIndex, lootIndex, downgradeStack = 
     r.downgrade = downgradeStack.join(' -> ');
     return r;
   });
+  // @ts-expect-error ts-migrate(7022) FIXME: 'downgradeBlockResult' implicitly has type 'any' b... Remove this comment to see the full error message
   const downgradeBlockResult = traverseDowngradeBlock(
     pattern, block, blockIndex, lootIndex, downgradeStack,
   );
   return result.concat(downgradeBlockResult);
 }
 
-function getProp(block, propName, blockIndex) {
-  const prop = block.property.find((p) => p.$.name === propName);
+// @ts-expect-error ts-migrate(7023) FIXME: 'getProp' implicitly has return type 'any' because... Remove this comment to see the full error message
+function getProp(block: any, propName: any, blockIndex: any) {
+  const prop = block.property.find((p: any) => p.$.name === propName);
   if (prop) {
     return prop.$.value;
   }
 
-  const extendsProp = block.property.find((p) => p.$.name === 'Extends');
+  const extendsProp = block.property.find((p: any) => p.$.name === 'Extends');
   if (!extendsProp) {
     return null;
   }
 
   const { param1 } = extendsProp.$;
-  const extendsExcludes = param1 ? param1.split(',').map((s) => s.trim()) : [];
+  const extendsExcludes = param1 ? param1.split(',').map((s: any) => s.trim()) : [];
   const isExcluded = extendsExcludes.includes(propName);
   if (isExcluded) {
     return null;
@@ -104,15 +114,15 @@ function getProp(block, propName, blockIndex) {
   return getProp(blockIndex[extendsProp.$.value], propName, blockIndex);
 }
 
-function buildBlockIndex(blocks) {
-  return blocks.blocks.block.reduce((obj, block) => {
+function buildBlockIndex(blocks: any) {
+  return blocks.blocks.block.reduce((obj: any, block: any) => {
     obj[block.$.name] = block;
     return obj;
   }, {});
 }
 
-function matchItems(items, pattern, stack) {
-  return items.flatMap((item) => {
+function matchItems(items: any, pattern: any, stack: any) {
+  return items.flatMap((item: any) => {
     if (item.group) {
       return matchItems(item.items, pattern, stack.concat(`LootGroup: ${item.group}`));
     }
@@ -123,24 +133,24 @@ function matchItems(items, pattern, stack) {
   });
 }
 
-function buildLootIndex(loot) {
-  const lootGroups = loot.lootcontainers.lootgroup.reduce((idx, group) => {
+function buildLootIndex(loot: any) {
+  const lootGroups = loot.lootcontainers.lootgroup.reduce((idx: any, group: any) => {
     idx[group.$.name] = group.item || [];
     return idx;
   }, {});
-  return loot.lootcontainers.lootcontainer.reduce((idx, lc) => {
-    idx[lc.$.id] = (lc.item || []).map((i) => expandLootGroup(lootGroups, i));
+  return loot.lootcontainers.lootcontainer.reduce((idx: any, lc: any) => {
+    idx[lc.$.id] = (lc.item || []).map((i: any) => expandLootGroup(lootGroups, i));
     return idx;
   }, {});
 }
 
-function expandLootGroup(groups, item) {
+function expandLootGroup(groups: any, item: any) {
   if (item.$.group) {
     const g = groups[item.$.group];
     return {
 
       ...item.$,
-      items: (g || []).map((i) => expandLootGroup(groups, i)),
+      items: (g || []).map((i: any) => expandLootGroup(groups, i)),
     };
   }
   return item.$;

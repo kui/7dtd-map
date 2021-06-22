@@ -1,10 +1,15 @@
 /* eslint-env node */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require('path');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'prefabHtml... Remove this comment to see the full error message
 const prefabHtml = require('./lib/prefab-html');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'localInfo'... Remove this comment to see the full error message
 const localInfo = require('../local.json');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseLabel... Remove this comment to see the full error message
 const parseLabel = require('./lib/label-parser');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'usage'.
 const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
 
 async function main() {

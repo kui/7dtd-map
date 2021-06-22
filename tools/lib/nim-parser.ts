@@ -1,8 +1,13 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require('fs');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require('path');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bunyan'.
 const bunyan = require('bunyan');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'bformat'.
 const bformat = require('bunyan-format');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'log'.
 const log = bunyan.createLogger({
   name: path.basename(__filename, '.js'),
   stream: bformat(),
@@ -19,17 +24,17 @@ const log = bunyan.createLogger({
 // 5:   (int) the number of chars of block name
 // 6-:  (string) block name
 
-module.exports = async function parseNim(nimFileName) {
-  const blocks = [];
-  let blockId = null;
-  let blockIdSecondDigit = null;
-  let buffer;
-  let bufferIndex;
+module.exports = async function parseNim(nimFileName: any) {
+  const blocks: any = [];
+  let blockId: any = null;
+  let blockIdSecondDigit: any = null;
+  let buffer: any;
+  let bufferIndex: any;
 
-  let blockNum = null;
-  let blockNumSecondDigit = null;
+  let blockNum: any = null;
+  let blockNumSecondDigit: any = null;
   let skipBytes = 4;
-  function handleByte(byte) {
+  function handleByte(byte: any) {
     log.debug(
       '16: %s, 10: %s, c: %s',
       Number(byte).toString(16),
@@ -85,7 +90,7 @@ module.exports = async function parseNim(nimFileName) {
   }
   const stream = fs.createReadStream(nimFileName);
   return new Promise((resolve, reject) => {
-    stream.on('data', (data) => data.forEach(handleByte));
+    stream.on('data', (data: any) => data.forEach(handleByte));
     stream.on('close', () => {
       if (buffer) {
         log.warn('Unexpected state: Unflushed buffer exists: %s', nimFileName);

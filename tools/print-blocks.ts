@@ -1,8 +1,11 @@
 /* eslint-env node */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require('path');
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parseNim'.
 const parseNim = require('./lib/nim-parser');
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'usage'.
 const usage = `${path.basename(process.argv[1])} <nim file>`;
 
 async function main() {
@@ -10,7 +13,7 @@ async function main() {
     console.error(usage);
     return 1;
   }
-  (await parseNim(process.argv[2])).forEach((b) => {
+  (await parseNim(process.argv[2])).forEach((b: any) => {
     console.log('%d: %s', b.id, b.name);
   });
   return 0;
