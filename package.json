@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run resources && npm run js",
     "resources": "ts-node ./tools/generate-block-index.ts && ts-node ./tools/generate-prefab-html.ts",
-    "js": "webpack --mode production",
+    "tsbuild": "webpack --mode production",
     "dev-server": "webpack serve --mode development --content-base docs",
     "fix": "prettier --write . && eslint --ext .ts --fix .",
     "lint": "prettier --check . && eslint --ext .ts ."
