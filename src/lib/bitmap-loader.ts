@@ -1,5 +1,5 @@
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'pngj... Remove this comment to see the full error message
-import { PNG } from 'pngjs/browser';
+import { PNG } from "pngjs/browser";
 
 export async function loadBitmapByUrl(window: any, url: any) {
   const res = await window.fetch(url);
@@ -72,13 +72,9 @@ function renderRad(window: any, pngjs: any) {
   });
 }
 
-function render(window: any, {
-  data,
-  height,
-  width
-}: any, copyFunction: any) {
+function render(window: any, { data, height, width }: any, copyFunction: any) {
   const canvas = new window.OffscreenCanvas(width, height);
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext("2d");
   const imageData = context.getImageData(0, 0, width, height);
   copyFunction(data, imageData.data);
   context.putImageData(imageData, 0, 0);
@@ -96,9 +92,12 @@ async function loadPngjsFromBlob(window: any, blob: any) {
 
 async function loadPngjs(buffer: any) {
   return new Promise((resolve, reject) => {
-    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer, (err: any, data: any) => {
-      if (err) reject(err);
-      else resolve(data);
-    });
+    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(
+      buffer,
+      (err: any, data: any) => {
+        if (err) reject(err);
+        else resolve(data);
+      }
+    );
   });
 }

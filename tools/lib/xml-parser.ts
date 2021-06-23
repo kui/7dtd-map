@@ -1,5 +1,5 @@
-import { promises as fs } from 'fs';
-import { parseString as parseXmlString } from 'xml2js';
+import { promises as fs } from "fs";
+import { parseString as parseXmlString } from "xml2js";
 
 export async function parseXml(xmlFileName: any): Promise<any> {
   const xml = await fs.readFile(xmlFileName);
@@ -7,7 +7,7 @@ export async function parseXml(xmlFileName: any): Promise<any> {
     parseXmlString(xml, (err: any, result: any) => {
       if (err) reject(err);
       if (result) resolve(result);
-      reject(Error('Unexpected state'));
+      reject(Error("Unexpected state"));
     });
   });
-};
+}

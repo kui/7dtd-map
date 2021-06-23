@@ -9,13 +9,11 @@ export default function lazyInvoke(window: any, asyncFunc: any) {
     }
 
     workerPromise = (async () => {
-      /* eslint-disable no-await-in-loop */
       while (updateRequest) {
         updateRequest = false;
         await asyncFunc();
         await waitAnimationFrame(window);
       }
-      /* eslint-enable no-await-in-loop */
       workerPromise = null;
     })();
   };

@@ -1,15 +1,12 @@
-/* eslint-env worker */
-/* eslint no-restricted-globals: 1 */
-
-import Prefabs from './lib/prefabs';
+import Prefabs from "./lib/prefabs";
 
 const knownParamNames = new Set([
-  'all',
-  'prefabsFilterString',
-  'blocksFilterString',
-  'markCoords',
-  'blockPrefabIndex',
-  'blockLabels',
+  "all",
+  "prefabsFilterString",
+  "blocksFilterString",
+  "markCoords",
+  "blockPrefabIndex",
+  "blockLabels",
 ]);
 
 const prefabs = new Prefabs(self);
@@ -20,7 +17,7 @@ onmessage = (event) => {
       // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       prefabs[key] = value;
     } else {
-      console.warn('Unknown prop: %s', key);
+      console.warn("Unknown prop: %s", key);
     }
   });
   prefabs.update();

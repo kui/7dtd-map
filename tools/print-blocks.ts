@@ -1,7 +1,5 @@
-/* eslint-env node */
-
-import * as path from 'path';
-import { parseNim } from './lib/nim-parser';
+import * as path from "path";
+import { parseNim } from "./lib/nim-parser";
 
 const usage = `${path.basename(process.argv[1])} <nim file>`;
 
@@ -11,15 +9,16 @@ async function main() {
     return 1;
   }
   (await parseNim(process.argv[2])).forEach((b: any) => {
-    console.log('%d: %s', b.id, b.name);
+    console.log("%d: %s", b.id, b.name);
   });
   return 0;
 }
 
 main()
-.catch((e) => {
-  console.error(e);
-  return 1;
-}).then((exitCode) => {
-  process.on('exit', () => process.exit(exitCode));
-});
+  .catch((e) => {
+    console.error(e);
+    return 1;
+  })
+  .then((exitCode) => {
+    process.on("exit", () => process.exit(exitCode));
+  });

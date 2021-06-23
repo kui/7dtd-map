@@ -8,9 +8,8 @@
     "resources": "ts-node ./tools/generate-block-index.ts && ts-node ./tools/generate-prefab-html.ts",
     "js": "webpack --mode production",
     "dev-server": "webpack serve --mode development --content-base docs",
-    "lint": "eslint . --ext .ts && npm run htmllint && npm run csslint",
-    "htmllint": "htmlhint docs/**/*.html",
-    "csslint": "stylelint docs/**/*.css --fix"
+    "fix": "prettier --write . && eslint --ext .ts --fix .",
+    "lint": "prettier --check . && eslint --ext .ts ."
   },
   "author": "Keiichiro UI",
   "license": "MIT",
