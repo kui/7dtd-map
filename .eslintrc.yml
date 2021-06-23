@@ -1,10 +1,12 @@
-extends: airbnb-base
+root: true
+parser: "@typescript-eslint/parser"
+plugins:
+- "@typescript-eslint"
+extends:
+- eslint:recommended
+- plugin:@typescript-eslint/recommended
+- prettier
 rules:
-  no-console: off
-  no-use-before-define: off
-  no-param-reassign:
-    - error
-    - props: false
-  import/no-extraneous-dependencies:
-    - error
-    - devDependencies: [ "**" ]
+  # FIXME later
+  "@typescript-eslint/no-explicit-any": off
+  "@typescript-eslint/explicit-module-boundary-types": off
