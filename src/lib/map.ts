@@ -1,7 +1,10 @@
+import { FontFaceSet } from "css-font-loading-module";
 import lazy from "./lazy-invoker";
 
 const signChar = "✘";
 const markChar = "🚩️";
+
+declare const fonts: FontFaceSet;
 
 export default class Map {
   biomesImg: any;
@@ -22,7 +25,7 @@ export default class Map {
   splat3Img: any;
   splat4Img: any;
   window: any;
-  constructor(window: any, canvas: any) {
+  constructor(window: Window, canvas: HTMLCanvasElement) {
     this.window = window;
     this.canvas = canvas;
     this.showBiomes = true;
@@ -39,11 +42,8 @@ export default class Map {
     this.signSize = 200;
     this.prefabs = [];
 
-    const fontFace = new window.FontFace(
-      "Noto Sans",
-      "url(NotoEmoji-Regular.ttf)"
-    );
-    fontFace.load().then((a: any) => window.fonts.add(a));
+    const fontFace = new FontFace("Noto Sans", "url(NotoEmoji-Regular.ttf)");
+    fontFace.load().then((a) => fonts.add(a));
     this.fontFace = fontFace.load();
 
     // flag
@@ -52,7 +52,7 @@ export default class Map {
     this.lazyUpdater = lazy(window, () => this.updateImmediately());
   }
 
-  get width() {
+  get width(): number {
     return Math.max(
       this.biomesImg ? this.biomesImg.width : 0,
       this.splat3Img ? this.splat3Img.width : 0,
@@ -60,7 +60,7 @@ export default class Map {
     );
   }
 
-  get height() {
+  get height(): number {
     return Math.max(
       this.biomesImg ? this.biomesImg.height : 0,
       this.splat3Img ? this.splat3Img.height : 0,
@@ -68,11 +68,11 @@ export default class Map {
     );
   }
 
-  update() {
+  update(): void {
     this.lazyUpdater();
   }
 
-  async updateImmediately() {
+  async updateImmediately(): Promise<void> {
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
     const context = this.canvas.getContext("2d");

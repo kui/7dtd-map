@@ -1,15 +1,17 @@
 // @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'pngj... Remove this comment to see the full error message
 import { PNG } from "pngjs/browser";
 
-export async function loadBitmapByUrl(window: any, url: any) {
+export async function loadBitmapByUrl(
+  window: Window,
+  url: string
+): Promise<ImageBitmap> {
   const res = await window.fetch(url);
   return window.createImageBitmap(await res.blob());
 }
-export async function loadBitmapByFile(window: any, file: any) {
-  if (!file) return null;
-  return window.createImageBitmap(file);
-}
-export async function loadSplatBitmapByUrl(window: any, url: any) {
+export async function loadSplatBitmapByUrl(
+  window: Window,
+  url: string
+): Promise<ImageBitmap> {
   console.time(`loadPng: ${url}`);
   const p = await loadPngjsByUrl(window, url);
   console.timeEnd(`loadPng: ${url}`);
@@ -18,7 +20,10 @@ export async function loadSplatBitmapByUrl(window: any, url: any) {
   console.timeEnd(`renderSplat: ${url}`);
   return i;
 }
-export async function loadSplatBitmapByFile(window: any, file: any) {
+export async function loadSplatBitmapByFile(
+  window: Window,
+  file: File
+): Promise<ImageBitmap> {
   console.time(`loadPng: ${file.name}`);
   const p = await loadPngjsFromBlob(window, file);
   console.timeEnd(`loadPng: ${file.name}`);
@@ -27,11 +32,17 @@ export async function loadSplatBitmapByFile(window: any, file: any) {
   console.timeEnd(`renderSplat: ${file.name}`);
   return i;
 }
-export async function loadRadBitmapByFile(window: any, file: any) {
+export async function loadRadBitmapByFile(
+  window: Window,
+  file: File
+): Promise<ImageBitmap> {
   const p = await loadPngjsFromBlob(window, file);
   return renderRad(window, p);
 }
-export async function loadRadBitmapByUrl(window: any, url: any) {
+export async function loadRadBitmapByUrl(
+  window: Window,
+  url: string
+): Promise<ImageBitmap> {
   const p = await loadPngjsByUrl(window, url);
   return renderRad(window, p);
 }

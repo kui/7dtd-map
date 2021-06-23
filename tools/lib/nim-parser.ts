@@ -19,7 +19,7 @@ const log = bunyan.createLogger({
 // 5:   (int) the number of chars of block name
 // 6-:  (string) block name
 
-export async function parseNim(nimFileName: any): Promise<any> {
+export async function parseNim(nimFileName: string): Promise<any> {
   const blocks: any = [];
   let blockId: any = null;
   let blockIdSecondDigit: any = null;

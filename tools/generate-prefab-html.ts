@@ -60,12 +60,7 @@ async function generateHtml(labels: any) {
       );
       let html;
       try {
-        html = await prefabHtml({
-          xml: xmlFileName,
-          nim: nimFileName,
-          tts: ttsFileName,
-          labels,
-        });
+        html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
       } catch (e) {
         console.warn("Ignore Prefab: %s", e.message);
         return null;

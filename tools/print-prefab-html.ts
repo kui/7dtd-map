@@ -20,14 +20,7 @@ async function main() {
   const pathBasename = path.join(path.dirname(xml), path.basename(xml, ".xml"));
   const nim = `${pathBasename}.blocks.nim`;
   const tts = `${pathBasename}.tts`;
-  console.log(
-    await prefabHtml({
-      xml,
-      nim,
-      tts,
-      labels,
-    })
-  );
+  console.log(await prefabHtml(xml, nim, tts, labels));
   return 0;
 }
 

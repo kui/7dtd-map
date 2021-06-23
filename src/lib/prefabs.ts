@@ -12,7 +12,7 @@ export default class Prefabs {
   status: any;
   updateListeners: any;
   window: any;
-  constructor(window: any) {
+  constructor(window: Window) {
     this.window = window;
     this.all = [];
     this.filtered = [];
@@ -27,10 +27,10 @@ export default class Prefabs {
     this.status = "";
     this.lazyUpdater = lazy(window, async () => this.updateImmediately());
   }
-  update() {
+  update(): void {
     this.lazyUpdater();
   }
-  updateImmediately() {
+  updateImmediately(): void {
     applyFilter(this);
     updateDist(this);
     sort(this);
@@ -45,8 +45,8 @@ export default class Prefabs {
     }
     this.updateListeners.forEach((f: any) => f(updateData));
   }
-  set prefabsFilterString(filterString: any) {
-    const s = filterString.trim();
+  set prefabsFilterString(filter: string) {
+    const s = filter.trim();
     if (s.length === 0) {
       this.filter = null;
     } else {
@@ -57,8 +57,8 @@ export default class Prefabs {
       };
     }
   }
-  set blocksFilterString(filterString: any) {
-    const s = filterString.trim();
+  set blocksFilterString(filter: string) {
+    const s = filter.trim();
     if (s.length === 0) {
       this.filter = null;
     } else {
@@ -69,7 +69,7 @@ export default class Prefabs {
       };
     }
   }
-  addUpdateListener(func: any) {
+  addUpdateListener(func: (update: any) => void): void {
     this.updateListeners.push(func);
   }
 }

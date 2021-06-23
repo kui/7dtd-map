@@ -1,5 +1,4 @@
 import {
-  loadBitmapByFile,
   loadBitmapByUrl,
   loadSplatBitmapByFile,
   loadSplatBitmapByUrl,
@@ -74,10 +73,9 @@ function main() {
   biomesInput.addEventListener("input", async () => {
     console.log("Load biome");
     loadingFiles.add("biomes.png");
-    const biomesImg = await loadBitmapByFile(
-      window,
-      (biomesInput as any).files[0]
-    );
+    const file = (biomesInput as any).files[0];
+    const biomesImg: ImageBitmap | null =
+      file ?? (await createImageBitmap(file));
     loadingFiles.delete("biomes.png");
     if (!biomesImg) return;
     mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
@@ -207,12 +205,12 @@ function main() {
       Promise.resolve()
     );
   }
-  async function handleDroppedFiles(file: any) {
+  async function handleDroppedFiles(file: File) {
     loadingFiles.add(file.name);
     try {
       console.time(file.name);
       if (file.name === "biomes.png") {
-        const biomesImg = await loadBitmapByFile(window, file);
+        const biomesImg = await createImageBitmap(file);
         mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
         (biomesInput as any).value = "";
       } else if (

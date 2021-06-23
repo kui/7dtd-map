@@ -15,7 +15,7 @@ const log = bunyan.createLogger({
 // There maight bee some defferences but I didn't know.
 // I think there are some changes around block data,
 // because block ID limit seems to increase to 32k from 2048
-export async function parseTts(ttsFileName: any): Promise<any> {
+export async function parseTts(ttsFileName: string): Promise<any> {
   const blocks: any = [];
   const dimensions = {};
   let digits: any = [];

@@ -1,4 +1,7 @@
-export default function lazyInvoke(window: any, asyncFunc: any) {
+export default function lazyInvoke(
+  window: Window,
+  asyncFunc: () => Promise<void>
+): () => Promise<void> {
   let updateRequest = null;
   let workerPromise: any = null;
   return async () => {

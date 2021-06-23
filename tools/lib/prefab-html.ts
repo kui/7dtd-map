@@ -3,7 +3,7 @@ import { parseNim } from "./nim-parser";
 import { parseTts } from "./tts-parser";
 import { parseXml } from "./xml-parser";
 
-function html(model: any) {
+function html(model: any): string {
   return `<!doctype html>
 <html>
 <head>
@@ -62,14 +62,19 @@ function html(model: any) {
 `;
 }
 
-export async function prefabHtml({ xml, nim, tts, labels }: any) {
+export async function prefabHtml(
+  xml: string,
+  nim: string,
+  tts: string,
+  labels: Map<string, string>
+): Promise<string> {
   const name = path.basename(xml, ".xml");
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim).then((bs: any) =>
     bs.map((b: any) => ({
       id: b.id,
       name: b.name,
-      localizedName: labels[b.name],
+      localizedName: labels.get(b.name),
       num: blockNums.get(b.id) || 0,
     }))
   );
