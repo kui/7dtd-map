@@ -170,21 +170,18 @@ function main() {
   });
   // drag and drop
   document.addEventListener("drop", async (event) => {
-    // @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
-    if (!event.dataTransfer.types.includes("Files")) {
+    if (!event.dataTransfer?.types.includes("Files")) {
       return;
     }
     event.preventDefault();
-    // @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
     let files = Array.from(event.dataTransfer.files);
     const hasSplat3ProcessedPng = files.some((f) => f.name === "splat3_processed.png");
     if (hasSplat3ProcessedPng) {
       console.log(
-        'Ignore "splat3.png" because "splat3_processed.png" was given.' +
-          " Because `splat3.png` is a subset data of `splat3_processed.png`."
+        "Ignore `splat3.png` because `splat3_processed.png` was given. " + "`splat3.png` is a subset data of `splat3_processed.png`."
       );
+      files = files.filter((f) => f.name !== "splat3.png");
     }
-    files = files.filter((f) => !hasSplat3ProcessedPng || f.name !== "splat3.png");
     await Promise.all(files.map((f) => handleDroppedFiles(f)));
   });
   async function handleDroppedFiles(file: File) {

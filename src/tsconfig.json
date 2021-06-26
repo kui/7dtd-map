@@ -9,6 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "noEmit": true,
-    "typeRoots": ["src/types"]
+    "typeRoots": ["types"]
   }
 }
