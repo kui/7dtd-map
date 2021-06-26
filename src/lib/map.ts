@@ -1,5 +1,5 @@
 import { FontFaceSet } from "css-font-loading-module";
-import lazy from "./lazy-invoker";
+import throttledInvoker from "./throttled-invoker";
 
 const signChar = "✘";
 const markChar = "🚩️";
@@ -11,7 +11,7 @@ export default class Map {
   brightness: string;
   canvas: OffscreenCanvas;
   fontFace: Promise<FontFace>;
-  lazyUpdater: () => Promise<void>;
+  throttledUpdater: () => Promise<void>;
   markCoords: Coords | null;
   prefabs: HighlightedPrefab[];
   radImg: ImageBitmap | null;
@@ -46,7 +46,7 @@ export default class Map {
     this.fontFace = fontFace.load();
     this.markCoords = null;
 
-    this.lazyUpdater = lazy(() => this.updateImmediately());
+    this.throttledUpdater = throttledInvoker(() => this.updateImmediately());
   }
 
   get width(): number {
@@ -66,7 +66,7 @@ export default class Map {
   }
 
   update(): void {
-    this.lazyUpdater();
+    this.throttledUpdater();
   }
 
   async updateImmediately(): Promise<void> {

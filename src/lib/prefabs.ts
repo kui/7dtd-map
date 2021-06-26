@@ -1,4 +1,4 @@
-import lazy from "./lazy-invoker";
+import throttledInvoker from "./throttled-invoker";
 
 declare interface PrefabFilter {
   name: string;
@@ -21,7 +21,7 @@ export default class Prefabs {
   blockPrefabIndex: BlockPrefabIndex;
   filter: PrefabFilter | null;
   filtered: HighlightedPrefab[];
-  lazyUpdater: () => void;
+  throttledUpdater: () => void;
   markCoords: Coords | null;
   status: string;
   updateListeners: ((u: PrefabUpdate) => void)[];
@@ -37,10 +37,10 @@ export default class Prefabs {
     this.blockLabels = {};
     this.updateListeners = [];
     this.status = "";
-    this.lazyUpdater = lazy(async () => this.updateImmediately());
+    this.throttledUpdater = throttledInvoker(async () => this.updateImmediately());
   }
   update(): void {
-    this.lazyUpdater();
+    this.throttledUpdater();
   }
   updateImmediately(): void {
     applyFilter(this);

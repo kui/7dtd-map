@@ -1,4 +1,4 @@
-export default function lazyInvoke(asyncFunc: () => Promise<void>): () => Promise<void> {
+export default function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
   let updateRequest = null;
   let workerPromise: Promise<void> | null = null;
   return async () => {
