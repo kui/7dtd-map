@@ -8,7 +8,7 @@ async function main() {
     console.error(usage);
     return 1;
   }
-  const tts: any = await parseTts(process.argv[2]);
+  const tts = await parseTts(process.argv[2]);
   console.log("Prefab dimension:");
   console.log({ x: tts.maxx, y: tts.maxy, z: tts.maxz });
 

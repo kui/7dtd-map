@@ -6,6 +6,3 @@ extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
   - prettier
-rules:
-  # FIXME later
-  "@typescript-eslint/no-explicit-any": off

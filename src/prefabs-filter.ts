@@ -1,27 +1,19 @@
 import Prefabs from "./lib/prefabs";
 
-const knownParamNames = new Set([
-  "all",
-  "prefabsFilterString",
-  "blocksFilterString",
-  "markCoords",
-  "blockPrefabIndex",
-  "blockLabels",
-]);
+export declare interface PrefabsFilterInMessage {
+  all: Prefab[];
+  prefabsFilterString: string;
+  blocksFilterString: string;
+  markCoords: Coords | null;
+  blockPrefabIndex: BlockPrefabIndex;
+  blockLabels: BlockLabels;
+}
 
-const prefabs = new Prefabs(self);
+const prefabs = new Prefabs();
 
-onmessage = (event) => {
-  Object.entries(event.data).forEach(([key, value]) => {
-    if (knownParamNames.has(key)) {
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      prefabs[key] = value;
-    } else {
-      console.warn("Unknown prop: %s", key);
-    }
-  });
+onmessage = ({ data }) => {
+  Object.assign(prefabs, data);
   prefabs.update();
 };
 
-// @ts-expect-error ts-migrate(2554) FIXME: Expected 2-3 arguments, but got 1.
-prefabs.addUpdateListener((d: any) => postMessage(d));
+prefabs.addUpdateListener((u) => postMessage(u));

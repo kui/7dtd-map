@@ -7,26 +7,25 @@ const markChar = "🚩️";
 declare const fonts: FontFaceSet;
 
 export default class Map {
-  biomesImg: any;
-  brightness: any;
-  canvas: any;
-  fontFace: any;
-  lazyUpdater: any;
-  markCoords: any;
-  prefabs: any;
-  radImg: any;
-  scale: any;
-  showBiomes: any;
-  showPrefabs: any;
-  showRad: any;
-  showSplat3: any;
-  showSplat4: any;
-  signSize: any;
-  splat3Img: any;
-  splat4Img: any;
-  window: any;
-  constructor(window: Window, canvas: HTMLCanvasElement) {
-    this.window = window;
+  biomesImg: ImageBitmap | null;
+  brightness: string;
+  canvas: OffscreenCanvas;
+  fontFace: Promise<FontFace>;
+  lazyUpdater: () => Promise<void>;
+  markCoords: Coords | null;
+  prefabs: HighlightedPrefab[];
+  radImg: ImageBitmap | null;
+  scale: number;
+  showBiomes: boolean;
+  showPrefabs: boolean;
+  showRad: boolean;
+  showSplat3: boolean;
+  showSplat4: boolean;
+  signSize: number;
+  splat3Img: ImageBitmap | null;
+  splat4Img: ImageBitmap | null;
+
+  constructor(canvas: OffscreenCanvas) {
     this.canvas = canvas;
     this.showBiomes = true;
     this.showSplat3 = true;
@@ -38,18 +37,16 @@ export default class Map {
     this.splat4Img = null;
     this.radImg = null;
     this.brightness = "100%";
-    this.scale = "0.1";
+    this.scale = 0.1;
     this.signSize = 200;
     this.prefabs = [];
 
     const fontFace = new FontFace("Noto Sans", "url(NotoEmoji-Regular.ttf)");
     fontFace.load().then((a) => fonts.add(a));
     this.fontFace = fontFace.load();
+    this.markCoords = null;
 
-    // flag
-    this.markCoords = {};
-
-    this.lazyUpdater = lazy(window, () => this.updateImmediately());
+    this.lazyUpdater = lazy(() => this.updateImmediately());
   }
 
   get width(): number {
@@ -75,7 +72,9 @@ export default class Map {
   async updateImmediately(): Promise<void> {
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
+
     const context = this.canvas.getContext("2d");
+    if (!context) return;
     context.scale(this.scale, this.scale);
     context.filter = `brightness(${this.brightness})`;
     if (this.biomesImg && this.showBiomes) {
@@ -96,13 +95,13 @@ export default class Map {
     if (this.showPrefabs) {
       await drawPrefabs(this, context);
     }
-    if (this.markCoords && this.markCoords.x && this.markCoords.z) {
+    if (this.markCoords) {
       await drawMark(this, context);
     }
   }
 }
 
-async function drawPrefabs(map: any, ctx: any) {
+async function drawPrefabs(map: Map, ctx: OffscreenCanvasRenderingContext2D) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
@@ -119,18 +118,14 @@ async function drawPrefabs(map: any, ctx: any) {
     const prefab = map.prefabs[i];
     const x = offsetX + prefab.x + charOffsetX;
     // prefab vertical positions are inverted for canvas coodinates
-    const y = offsetY - prefab.y + charOffsetY;
-    putText({
-      ctx,
-      text: signChar,
-      x,
-      y,
-      textSize: map.signSize,
-    });
+    const z = offsetY - prefab.z + charOffsetY;
+    putText(ctx, { text: signChar, x, z, size: map.signSize });
   }
 }
 
-async function drawMark(map: any, ctx: any) {
+async function drawMark(map: Map, ctx: OffscreenCanvasRenderingContext2D) {
+  if (!map.markCoords) return;
+
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
   ctx.fillStyle = "red";
   ctx.textAlign = "left";
@@ -143,27 +138,28 @@ async function drawMark(map: any, ctx: any) {
 
   const x = offsetX + map.markCoords.x + charOffsetX;
   // prefab vertical positions are inverted for canvas coodinates
-  const y = offsetY - map.markCoords.z + charOffsetY;
+  const z = offsetY - map.markCoords.z + charOffsetY;
 
-  putText({
-    ctx,
-    text: markChar,
-    x,
-    y,
-    textSize: map.signSize,
-  });
-  ctx.strokeText(markChar, x, y);
-  ctx.fillText(markChar, x, y);
+  putText(ctx, { text: markChar, x, z, size: map.signSize });
+  ctx.strokeText(markChar, x, z);
+  ctx.fillText(markChar, x, z);
 }
 
-function putText({ ctx, text, x, y, textSize }: any) {
-  ctx.lineWidth = Math.round(textSize * 0.2);
+interface MapSign {
+  text: string;
+  x: number;
+  z: number;
+  size: number;
+}
+
+function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: MapSign) {
+  ctx.lineWidth = Math.round(size * 0.2);
   ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.strokeText(text, x, y);
+  ctx.strokeText(text, x, z);
 
-  ctx.lineWidth = Math.round(textSize * 0.1);
+  ctx.lineWidth = Math.round(size * 0.1);
   ctx.strokeStyle = "white";
-  ctx.strokeText(text, x, y);
+  ctx.strokeText(text, x, z);
 
-  ctx.fillText(text, x, y);
+  ctx.fillText(text, x, z);
 }

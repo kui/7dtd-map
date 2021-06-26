@@ -2,9 +2,9 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
-import { parseNim } from "./lib/nim-parser";
+import { BlockIdName, parseNim } from "./lib/nim-parser";
 import { parseLabel } from "./lib/label-parser";
-import { parseTts } from "./lib/tts-parser";
+import { parseTts, BlockId } from "./lib/tts-parser";
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
 const localJsonFile = path.join(projectRoot, "local.json");
@@ -14,9 +14,7 @@ const blockLabelsFile = "docs/block-labels.json";
 const excludedBlocks = new Set(["air", "terrainFiller"]);
 
 async function main() {
-  const { vanillaDir } = JSON.parse(
-    (await fs.readFile(localJsonFile)).toString()
-  );
+  const { vanillaDir } = JSON.parse((await fs.readFile(localJsonFile)).toString());
   const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*.blocks.nim");
   const nimFiles = await glob(fileGlob);
   if (nimFiles.length === 0) {
@@ -24,7 +22,6 @@ async function main() {
   }
   const waitTasks = [];
   const prefabs = await readNim(nimFiles);
-  // @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
   console.log("Load %d prefabs", Object.keys(prefabs).length);
   waitTasks.push(writeJsonFile(prefabBlockIndexFile, prefabs));
   const blocks = invertIndex(prefabs);
@@ -40,75 +37,80 @@ async function main() {
   await Promise.all(waitTasks);
   return 0;
 }
-async function writeJsonFile(file: any, json: any) {
+async function writeJsonFile(file: string, json: unknown) {
   await fs.writeFile(path.join(projectRoot, file), JSON.stringify(json));
   console.log("Write %s", file);
 }
-async function readLabels(vanillaDir: any, blocks: any) {
+async function readLabels(vanillaDir: string, blocks: string[]) {
   const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
-  return blocks.reduce((result: any, block: any) => {
-    const label = labels[block];
+  return blocks.reduce((result, block) => {
+    const label = labels.get(block);
     if (label) {
-      return Object.assign(result, { [block]: labels[block] });
+      return Object.assign(result, { [block]: label });
     }
     return result;
   }, {});
 }
-async function readNim(nimFiles: any) {
-  const parsedNimFiles = await Promise.all(
-    nimFiles.map(async (nimFileName: any) => {
+
+interface PrefabBlocks {
+  name: string;
+  blocks: { name: string; count: number }[];
+}
+
+interface PrefabBlockIndex {
+  [prefabName: string]: { name: string; count: number }[];
+}
+interface BlockPrefabIndex {
+  [blockName: string]: { name: string; count: number }[];
+}
+
+async function readNim(nimFiles: string[]): Promise<PrefabBlockIndex> {
+  const parsedNimFiles: (PrefabBlocks | null)[] = await Promise.all(
+    nimFiles.map(async (nimFileName) => {
       const prefabName = path.basename(nimFileName, ".blocks.nim");
-      const ttsFileName = path.join(
-        path.dirname(nimFileName),
-        `${prefabName}.tts`
-      );
-      let blocks;
-      let blockNums: any;
+      const ttsFileName = path.join(path.dirname(nimFileName), `${prefabName}.tts`);
+      let blocks: BlockIdName[];
+      let blockNums: Map<BlockId, number>;
       try {
-        [blocks, { blockNums }] = await Promise.all([
-          parseNim(nimFileName),
-          parseTts(ttsFileName),
-        ]);
+        [blocks, { blockNums }] = await Promise.all([parseNim(nimFileName), parseTts(ttsFileName)]);
       } catch (e) {
-        console.warn(e);
-        return {};
+        console.warn("File load failure: %o", e);
+        return null;
       }
       return {
         name: prefabName,
         blocks: blocks
-          .filter((b: any) => !excludedBlocks.has(b.name))
-          .map((b: any) => ({
+          .filter((b) => !excludedBlocks.has(b.name))
+          .map((b) => ({
             name: b.name,
-            count: blockNums.get(b.id) || 0,
+            count: blockNums.get(b.id) ?? 0,
           })),
       };
     })
   );
-  return parsedNimFiles.reduce((obj, prefab) => {
-    if ((prefab as any).name) {
-      return Object.assign(obj, {
-        [(prefab as any).name]: (prefab as any).blocks,
-      });
+  return parsedNimFiles.reduce<PrefabBlockIndex>((obj, prefab) => {
+    if (prefab?.name) {
+      obj[prefab.name] = prefab.blocks;
     }
     return obj;
   }, {});
 }
-function invertIndex(prefabs: any) {
+function invertIndex(prefabs: PrefabBlockIndex) {
   return Object.entries(prefabs)
-    .reduce((arr, [name, blocks]) => {
-      const flatten = (blocks as any).map((block: any) => ({
+    .reduce<{ prefab: string; block: { name: string; count: number } }[]>((arr, [name, blocks]) => {
+      const flatten = blocks.map((block) => ({
         prefab: name,
         block,
       }));
       return arr.concat(flatten);
     }, [])
-    .reduce(
-      (obj: any, { prefab, block }) =>
+    .reduce<BlockPrefabIndex>(
+      (obj, { prefab, block }) =>
         Object.assign(obj, {
-          [(block as any).name]: (obj[(block as any).name] || []).concat({
+          [block.name]: (obj[block.name] || []).concat({
             name: prefab,
-            count: (block as any).count,
+            count: block.count,
           }),
         }),
       {}

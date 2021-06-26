@@ -19,23 +19,23 @@ const log = bunyan.createLogger({
 // 5:   (int) the number of chars of block name
 // 6-:  (string) block name
 
-export async function parseNim(nimFileName: string): Promise<any> {
-  const blocks: any = [];
-  let blockId: any = null;
-  let blockIdSecondDigit: any = null;
-  let buffer: any;
-  let bufferIndex: any;
+export interface BlockIdName {
+  id: number;
+  name: string;
+}
 
-  let blockNum: any = null;
-  let blockNumSecondDigit: any = null;
+export async function parseNim(nimFileName: string): Promise<BlockIdName[]> {
+  const blocks: BlockIdName[] = [];
+  let blockId: number | null = null;
+  let blockIdSecondDigit: number | null = null;
+  let buffer: Buffer | null;
+  let bufferIndex: number;
+
+  let blockNum: number | null = null;
+  let blockNumSecondDigit: number | null = null;
   let skipBytes = 4;
-  function handleByte(byte: any) {
-    log.debug(
-      "16: %s, 10: %s, c: %s",
-      Number(byte).toString(16),
-      byte,
-      String.fromCharCode(byte)
-    );
+  function handleByte(byte: number) {
+    log.debug("16: %s, 10: %s, c: %s", Number(byte).toString(16), byte, String.fromCharCode(byte));
     if (skipBytes !== 0) {
       skipBytes -= 1;
     } else if (blockNumSecondDigit === null) {
@@ -60,13 +60,8 @@ export async function parseNim(nimFileName: string): Promise<any> {
       } else {
         const blockName = buffer.toString();
         log.debug("add block name: %s (id=%s)", blockName, blockId);
-        if (blocks.includes(blockName)) {
-          log.warn(
-            "Unexpected state: Dupricated blocks: blockId=%d, blockName=%s, fileName=%s",
-            blockId,
-            blockName,
-            nimFileName
-          );
+        if (blocks.some((n) => n.name === blockName)) {
+          log.warn("Unexpected state: Dupricated blocks: blockId=%d, blockName=%s, fileName=%s", blockId, blockName, nimFileName);
         }
         blocks.push({
           id: blockId,
@@ -90,16 +85,13 @@ export async function parseNim(nimFileName: string): Promise<any> {
   }
   const stream = fs.createReadStream(nimFileName);
   return new Promise((resolve, reject) => {
-    stream.on("data", (data: any) => data.forEach(handleByte));
+    stream.on("data", (data) => (data as Buffer).forEach(handleByte));
     stream.on("close", () => {
       if (buffer) {
         log.warn("Unexpected state: Unflushed buffer exists: %s", nimFileName);
       }
       if (blocks.length !== blockNum) {
-        log.warn(
-          "Unexpected state: Unreach defined blocks num: %s",
-          nimFileName
-        );
+        log.warn("Unexpected state: Unreach defined blocks num: %s", nimFileName);
       }
       resolve(blocks);
     });

@@ -6,9 +6,7 @@ import { parseLabel } from "./lib/label-parser";
 const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
-const localInfo = fs
-  .readFile(path.join(projectRoot, "local.json"))
-  .then((j) => JSON.parse(j.toString()));
+const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((j) => JSON.parse(j.toString()));
 
 async function main() {
   if (process.argv.length <= 2) {

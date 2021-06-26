@@ -1,16 +1,10 @@
 import path from "path";
 import glob from "glob";
 
-module.exports = (_: any, argv: any) => {
+module.exports = (_: void, argv: { mode: string }) => {
   const isDev = argv.mode == "development";
   return {
-    entry: glob
-      .sync("./src/*.ts")
-      .reduce(
-        (obj, current) =>
-          Object.assign(obj, { [path.basename(current, ".ts")]: current }),
-        {}
-      ),
+    entry: glob.sync("./src/*.ts").reduce((obj, current) => Object.assign(obj, { [path.basename(current, ".ts")]: current }), {}),
     output: {
       filename: "[name].js",
       path: path.resolve(__dirname, "docs"),

@@ -2,11 +2,13 @@
   "compilerOptions": {
     "target": "es2019",
     "module": "commonjs",
+    "lib": ["esnext", "dom", "webworker"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "noEmit": true
+    "noEmit": true,
+    "typeRoots": ["src/types"]
   }
 }

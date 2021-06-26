@@ -1,28 +1,18 @@
 import pako from "pako";
 
-export async function loadDtmRawGzByUrl(
-  window: Window,
-  url: string
-): Promise<ArrayBuffer> {
-  const res = await window.fetch(url);
+export async function loadDtmRawGzByUrl(url: string): Promise<ArrayBuffer> {
+  const res = await fetch(url);
   const dtmRawGz = new Uint8Array(await res.arrayBuffer());
   return pako.inflate(dtmRawGz).buffer;
 }
 
-export async function loadDtmRawByFile(
-  window: Window,
-  file: File
-): Promise<ArrayBuffer | null> {
-  if (!file) return null;
-  return file.arrayBuffer();
-}
-
 export class Dtm {
-  data: any;
-  width: any;
+  data: DataView;
+  width: number;
 
   constructor(raw: ArrayBufferLike, width: number) {
-    Object.assign(this, { data: new DataView(raw), width });
+    this.data = new DataView(raw);
+    this.width = width;
   }
 
   getElevation(x: number, z: number): number {

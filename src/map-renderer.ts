@@ -1,45 +1,49 @@
 import Map from "./lib/map";
 
-const knownParamNames = new Set([
-  "biomesImg",
-  "splat3Img",
-  "splat4Img",
-  "radImg",
-  "showBiomes",
-  "showSplat3",
-  "showSplat4",
-  "showRad",
-  "showPrefabs",
-  "brightness",
-  "scale",
-  "signSize",
-  "prefabs",
-  "signChar",
-  "markChar",
-  "markCoords",
-]);
+export interface MapRendererInMessage {
+  canvas?: OffscreenCanvas;
 
-let map: any;
+  biomesImg?: ImageBitmap;
+  splat3Img?: ImageBitmap;
+  splat4Img?: ImageBitmap;
+  radImg?: ImageBitmap;
 
-onmessage = (event) => {
+  showBiomes?: boolean;
+  showSplat3?: boolean;
+  showSplat4?: boolean;
+  showRad?: boolean;
+  showPrefabs?: boolean;
+
+  brightness?: string;
+  scale?: number;
+  signSize?: number;
+  prefabs?: Prefab[];
+  signChar?: string;
+  markChar?: string;
+  markCoords?: Coords | null;
+}
+
+export interface MapRendererOutMessage {
+  mapSizes: { width: number; height: number };
+}
+
+declare function postMessage(message: MapRendererOutMessage): void;
+
+let map: Map;
+
+onmessage = (event: { data: MapRendererInMessage }) => {
   const { canvas, ...restParams } = event.data;
 
   if (canvas) {
     if (map) {
       map.canvas = canvas;
     } else {
-      map = new Map(self, canvas);
+      map = new Map(canvas);
     }
   }
 
-  Object.keys(restParams).forEach((paramName) => {
-    if (!knownParamNames.has(paramName)) {
-      return;
-    }
-    map[paramName] = restParams[paramName];
-  });
+  Object.assign(map, restParams);
 
-  // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-3 arguments, but got 1.
   postMessage({
     mapSizes: {
       width: map.width,

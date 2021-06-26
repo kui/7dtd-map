@@ -1,57 +1,41 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'pngj... Remove this comment to see the full error message
 import { PNG } from "pngjs/browser";
 
-export async function loadBitmapByUrl(
-  window: Window,
-  url: string
-): Promise<ImageBitmap> {
+export async function loadBitmapByUrl(url: string): Promise<ImageBitmap> {
   const res = await window.fetch(url);
   return window.createImageBitmap(await res.blob());
 }
-export async function loadSplatBitmapByUrl(
-  window: Window,
-  url: string
-): Promise<ImageBitmap> {
+export async function loadSplatBitmapByUrl(url: string): Promise<ImageBitmap> {
   console.time(`loadPng: ${url}`);
-  const p = await loadPngjsByUrl(window, url);
+  const p = await loadPngjsByUrl(url);
   console.timeEnd(`loadPng: ${url}`);
   console.time(`renderSplat: ${url}`);
-  const i = renderSplat(window, p);
+  const i = renderSplat(p);
   console.timeEnd(`renderSplat: ${url}`);
   return i;
 }
-export async function loadSplatBitmapByFile(
-  window: Window,
-  file: File
-): Promise<ImageBitmap> {
+export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
   console.time(`loadPng: ${file.name}`);
-  const p = await loadPngjsFromBlob(window, file);
+  const p = await loadPngjsFromBlob(file);
   console.timeEnd(`loadPng: ${file.name}`);
   console.time(`renderSplat: ${file.name}`);
-  const i = renderSplat(window, p);
+  const i = renderSplat(p);
   console.timeEnd(`renderSplat: ${file.name}`);
   return i;
 }
-export async function loadRadBitmapByFile(
-  window: Window,
-  file: File
-): Promise<ImageBitmap> {
-  const p = await loadPngjsFromBlob(window, file);
-  return renderRad(window, p);
+export async function loadRadBitmapByFile(file: File): Promise<ImageBitmap> {
+  const p = await loadPngjsFromBlob(file);
+  return renderRad(p);
 }
-export async function loadRadBitmapByUrl(
-  window: Window,
-  url: string
-): Promise<ImageBitmap> {
-  const p = await loadPngjsByUrl(window, url);
-  return renderRad(window, p);
+export async function loadRadBitmapByUrl(url: string): Promise<ImageBitmap> {
+  const p = await loadPngjsByUrl(url);
+  return renderRad(p);
 }
 
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function renderSplat(window: any, pngjs: any) {
-  return render(window, pngjs, (indata: any, out: any) => {
+function renderSplat(pngjs: PNG) {
+  return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
       out[i + 1] = indata[i + 1];
@@ -68,8 +52,8 @@ function renderSplat(window: any, pngjs: any) {
 // radioation.png should convert the pixels which:
 //   * red to half-transparent
 //   * other to transparent
-function renderRad(window: any, pngjs: any) {
-  return render(window, pngjs, (indata: any, out: any) => {
+function renderRad(pngjs: PNG) {
+  return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
       out[i + 1] = 0;
@@ -83,32 +67,32 @@ function renderRad(window: any, pngjs: any) {
   });
 }
 
-function render(window: any, { data, height, width }: any, copyFunction: any) {
+type ConvertImageBitmap = (indata: Uint8Array, outData: Uint8ClampedArray) => void;
+
+function render({ data, height, width }: PNG, copyFunction: ConvertImageBitmap) {
   const canvas = new window.OffscreenCanvas(width, height);
   const context = canvas.getContext("2d");
+  if (!context) throw Error("Unexpected error: Canvas context not found");
   const imageData = context.getImageData(0, 0, width, height);
   copyFunction(data, imageData.data);
   context.putImageData(imageData, 0, 0);
   return window.createImageBitmap(canvas);
 }
 
-async function loadPngjsByUrl(window: any, url: any) {
+async function loadPngjsByUrl(url: string) {
   const res = await window.fetch(url);
   return loadPngjs(await res.arrayBuffer());
 }
 
-async function loadPngjsFromBlob(window: any, blob: any) {
+async function loadPngjsFromBlob(blob: Blob) {
   return loadPngjs(await blob.arrayBuffer());
 }
 
-async function loadPngjs(buffer: any) {
+async function loadPngjs(buffer: ArrayBuffer): Promise<PNG> {
   return new Promise((resolve, reject) => {
-    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(
-      buffer,
-      (err: any, data: any) => {
-        if (err) reject(err);
-        else resolve(data);
-      }
-    );
+    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer as Buffer, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
   });
 }

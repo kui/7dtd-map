@@ -1,19 +1,34 @@
 import lazy from "./lazy-invoker";
+
+declare interface PrefabFilter {
+  name: string;
+  func: (prefabs: Prefabs, pattern: RegExp) => HighlightedPrefab[];
+  pattern: RegExp;
+}
+
+export declare interface PrefabUpdate {
+  status: string;
+  prefabs: HighlightedPrefab[];
+}
+
+declare interface PrefabHighlightedBlocks {
+  [prefabName: string]: HighlightedBlock[];
+}
+
 export default class Prefabs {
-  all: any;
-  blockLabels: any;
-  blockPrefabIndex: any;
-  filter: any;
-  filtered: any;
-  lazyUpdater: any;
-  markCoords: any;
-  prevFiltered: any;
-  prevMarkCoords: any;
-  status: any;
-  updateListeners: any;
-  window: any;
-  constructor(window: Window) {
-    this.window = window;
+  all: Prefab[];
+  blockLabels: BlockLabels;
+  blockPrefabIndex: BlockPrefabIndex;
+  filter: PrefabFilter | null;
+  filtered: HighlightedPrefab[];
+  lazyUpdater: () => void;
+  markCoords: Coords | null;
+  prevFiltered: HighlightedPrefab[];
+  prevMarkCoords: Coords | null;
+  status: string;
+  updateListeners: ((u: PrefabUpdate) => void)[];
+
+  constructor() {
     this.all = [];
     this.filtered = [];
     this.prevFiltered = [];
@@ -21,11 +36,12 @@ export default class Prefabs {
     this.prefabsFilterString = "";
     this.blocksFilterString = "";
     this.markCoords = null;
+    this.prevMarkCoords = null;
     this.blockPrefabIndex = {};
     this.blockLabels = {};
     this.updateListeners = [];
     this.status = "";
-    this.lazyUpdater = lazy(window, async () => this.updateImmediately());
+    this.lazyUpdater = lazy(async () => this.updateImmediately());
   }
   update(): void {
     this.lazyUpdater();
@@ -34,16 +50,13 @@ export default class Prefabs {
     applyFilter(this);
     updateDist(this);
     sort(this);
-    const updateData = { status: this.status };
-    if (
-      this.prevFiltered !== this.filtered ||
-      this.prevMarkCoords !== this.markCoords
-    ) {
-      (updateData as any).prefabs = this.filtered;
+    const updateData: PrefabUpdate = { status: this.status, prefabs: [] };
+    if (this.prevFiltered !== this.filtered || this.prevMarkCoords !== this.markCoords) {
+      updateData.prefabs = this.filtered;
       this.prevFiltered = this.filtered;
       this.prevMarkCoords = this.markCoords;
     }
-    this.updateListeners.forEach((f: any) => f(updateData));
+    this.updateListeners.forEach((f) => f(updateData));
   }
   set prefabsFilterString(filter: string) {
     const s = filter.trim();
@@ -69,11 +82,11 @@ export default class Prefabs {
       };
     }
   }
-  addUpdateListener(func: (update: any) => void): void {
+  addUpdateListener(func: (update: PrefabUpdate) => void): void {
     this.updateListeners.push(func);
   }
 }
-function applyFilter(prefabs: any) {
+function applyFilter(prefabs: Prefabs) {
   if (prefabs.filter) {
     prefabs.filtered = prefabs.filter.func(prefabs, prefabs.filter.pattern);
   } else {
@@ -85,35 +98,33 @@ function applyFilter(prefabs: any) {
     prefabs.filtered = prefabs.all;
   }
 }
-function updateDist(map: any) {
+function updateDist(map: Prefabs) {
   if (map.markCoords) {
-    map.filtered.forEach((p: any) => {
-      const dist = calcDist(p, map.markCoords);
-      p.dist = dist;
-    });
+    map.filtered.forEach((p) => (p.dist = calcDist(p, map.markCoords as Coords)));
   } else {
-    map.filtered.forEach((p: any) => {
-      p.dist = null;
-    });
+    map.filtered.forEach((p) => (p.dist = null));
   }
 }
-function sort(prefabs: any) {
+function sort(prefabs: Prefabs) {
   if (prefabs.markCoords) {
-    prefabs.filtered.sort((a: any, b: any) => {
-      if (a.dist > b.dist) return 1;
-      if (a.dist < b.dist) return -1;
-      return 0;
-    });
+    prefabs.filtered.sort(distSorter);
   } else {
-    prefabs.filtered.sort((a: any, b: any) => {
-      if (a.name > b.name) return 1;
-      if (a.name < b.name) return -1;
-      return 0;
-    });
+    prefabs.filtered.sort(nameSorter);
   }
 }
-function filterByPrefabs(prefabs: any, pattern: any) {
-  const results = prefabs.all.flatMap((prefab: any) => {
+function nameSorter(a: { name: string }, b: { name: string }) {
+  if (a.name > b.name) return 1;
+  if (a.name < b.name) return -1;
+  return 0;
+}
+function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
+  if (!a.dist || !b.dist) return nameSorter(a, b);
+  if (a.dist > b.dist) return 1;
+  if (a.dist < b.dist) return -1;
+  return 0;
+}
+function filterByPrefabs(prefabs: Prefabs, pattern: RegExp) {
+  const results = prefabs.all.flatMap((prefab) => {
     const m = matchAndHighlight(prefab.name, pattern);
     if (m) {
       // Clone and add a new field;
@@ -124,7 +135,7 @@ function filterByPrefabs(prefabs: any, pattern: any) {
   prefabs.status = `${results.length} matched prefabs`;
   return results;
 }
-function filterByBlocks(prefabs: any, pattern: any) {
+function filterByBlocks(prefabs: Prefabs, pattern: RegExp) {
   const { all: allPrefabs, blockPrefabIndex, blockLabels } = prefabs;
   const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
   if (matchedBlocks.length === 0) {
@@ -136,7 +147,7 @@ function filterByBlocks(prefabs: any, pattern: any) {
     prefabs.status = `No prefabs, ${matchedBlocks.length} matched blocks`;
     return [];
   }
-  const results = allPrefabs.flatMap((prefab: any) => {
+  const results = allPrefabs.flatMap((prefab: Prefab) => {
     const blocks = matchedPrefabBlocks[prefab.name];
     if (!blocks) {
       return [];
@@ -147,31 +158,11 @@ function filterByBlocks(prefabs: any, pattern: any) {
   prefabs.status = `${results.length} prefabs, ${matchedBlocks.length} matched blocks`;
   return results;
 }
-/**
-  this returned value is a index that indicates what blocks are containded by the prefab.
 
-  retrund value format:
-  {
-    <prefab name 1>: [
-      {
-        name: <block name 1>,
-        count: 10,
-        highlightedName: ...,
-        highlightedLabel: ...
-      },
-      { name: <block name 2>, ... },
-      { name: <block name 3>, ... },
-      ...
-    ],
-    <prefab name 2>: [<blocks>...],
-    <prefab name 3>: [<blocks>...],
-    ...
-  }
-*/
-function matchPrefabTypes(matchedBlocks: any) {
-  return matchedBlocks.reduce((idx: any, block: any) => {
+function matchPrefabTypes(matchedBlocks: HighlightedBlock[]): PrefabHighlightedBlocks {
+  return matchedBlocks.reduce<PrefabHighlightedBlocks>((idx, block) => {
     const { name, highlightedName, highlightedLabel } = block;
-    block.prefabs.forEach((p: any) => {
+    block.prefabs?.forEach((p) => {
       const b = {
         name,
         highlightedName,
@@ -183,16 +174,15 @@ function matchPrefabTypes(matchedBlocks: any) {
     return idx;
   }, {});
 }
-function matchBlocks(pattern: any, blockPrefabIndex: any, blockLabels: any) {
-  return Object.entries(blockPrefabIndex).reduce(
+
+function matchBlocks(pattern: RegExp, blockPrefabIndex: BlockPrefabIndex, blockLabels: BlockLabels) {
+  return (Object.entries(blockPrefabIndex) as [string, { name: string; count: number }[]][]).reduce<HighlightedBlock[]>(
     (arr, [blockName, prefabs]) => {
       const highlightedName = matchAndHighlight(blockName, pattern);
       const blockLabel = blockLabels[blockName];
-      const highlightedLabel =
-        blockLabel && matchAndHighlight(blockLabel, pattern);
+      const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, pattern);
       if (highlightedName || highlightedLabel) {
         return arr.concat({
-          // @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
           name: blockName,
           highlightedName: highlightedName || blockName,
           highlightedLabel: highlightedLabel || blockLabel,
@@ -204,17 +194,12 @@ function matchBlocks(pattern: any, blockPrefabIndex: any, blockLabels: any) {
     []
   );
 }
-function calcDist(targetCoords: any, baseCoords: any) {
-  return Math.round(
-    Math.sqrt(
-      (targetCoords.x - baseCoords.x) ** 2 +
-        (targetCoords.y - baseCoords.z) ** 2
-    )
-  );
+function calcDist(targetCoords: Coords, baseCoords: Coords) {
+  return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
 }
-function matchAndHighlight(str: any, regex: any) {
+function matchAndHighlight(str: string, regex: RegExp) {
   let isMatched = false;
-  const highlighted = str.replace(regex, (m: any) => {
+  const highlighted = str.replace(regex, (m) => {
     isMatched = m.length > 0;
     return `<mark>${m}</mark>`;
   });

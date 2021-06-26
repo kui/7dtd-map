@@ -6,18 +6,13 @@ import { parseLabel } from "./lib/label-parser";
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
 const baseDist = path.join(projectRoot, "docs/prefabs");
-const localInfo = fs
-  .readFile(path.join(projectRoot, "local.json"))
-  .then((j) => JSON.parse(j.toString()));
+const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((j) => JSON.parse(j.toString()));
 
 async function main() {
   await remove();
   const labels = await loadLabels();
   const prefabNames = await generateHtml(labels);
-  await Promise.all([
-    await generateIndex(prefabNames),
-    await copyJpg(prefabNames),
-  ]);
+  await Promise.all([await generateIndex(prefabNames), await copyJpg(prefabNames)]);
   return 0;
 }
 
@@ -31,11 +26,11 @@ async function loadLabels() {
   const { vanillaDir } = await localInfo;
   const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
-  console.log("Load %s labels", Object.keys(labels).length);
+  console.log("Load %s labels", labels.size);
   return labels;
 }
 
-async function generateHtml(labels: any) {
+async function generateHtml(labels: Map<string, string>) {
   const { vanillaDir } = await localInfo;
   const xmlGlob = path.join(vanillaDir, "Data", "Prefabs", "*.xml");
   const xmlFiles = await glob(xmlGlob);
@@ -44,25 +39,15 @@ async function generateHtml(labels: any) {
   }
 
   const prefabNames = await Promise.all(
-    xmlFiles.map(async (xmlFileName: any) => {
+    xmlFiles.map(async (xmlFileName) => {
       const prefabName = path.basename(xmlFileName, ".xml");
-      const nimFileName = path.join(
-        vanillaDir,
-        "Data",
-        "Prefabs",
-        `${prefabName}.blocks.nim`
-      );
-      const ttsFileName = path.join(
-        vanillaDir,
-        "Data",
-        "Prefabs",
-        `${prefabName}.tts`
-      );
+      const nimFileName = path.join(vanillaDir, "Data", "Prefabs", `${prefabName}.blocks.nim`);
+      const ttsFileName = path.join(vanillaDir, "Data", "Prefabs", `${prefabName}.tts`);
       let html;
       try {
         html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
       } catch (e) {
-        console.warn("Ignore Prefab: %s", e.message);
+        console.warn("Ignore Prefab %s", prefabName, e);
         return null;
       }
       const dist = path.join(baseDist, `${prefabName}.html`);
@@ -75,15 +60,13 @@ async function generateHtml(labels: any) {
   return prefabNames;
 }
 
-async function copyJpg(prefabNames: any) {
+async function copyJpg(prefabNames: string[]) {
   const { vanillaDir } = await localInfo;
-  const jpgFiles = prefabNames.map((n: any) =>
-    path.join(vanillaDir, "Data", "Prefabs", `${n}.jpg`)
-  );
+  const jpgFiles = prefabNames.map((n) => path.join(vanillaDir, "Data", "Prefabs", `${n}.jpg`));
 
   let failNum = 0;
   await Promise.all(
-    jpgFiles.map(async (jpgFileName: any) => {
+    jpgFiles.map(async (jpgFileName) => {
       const dist = path.join(baseDist, path.basename(jpgFileName));
       try {
         await fs.copyFile(jpgFileName, dist);
@@ -96,7 +79,7 @@ async function copyJpg(prefabNames: any) {
   console.log("Copy %d jpg files", jpgFiles.length - failNum);
 }
 
-async function generateIndex(prefabNames: any) {
+async function generateIndex(prefabNames: string[]) {
   const dist = path.join(baseDist, "index.html");
   await fs.writeFile(
     dist,
@@ -116,9 +99,7 @@ async function generateIndex(prefabNames: any) {
     </ul>
   </nav>
   <ul>
-   ${prefabNames
-     .map((p: any) => `<li><a href="${p}.html">${p}</a></li>`)
-     .join("\n")}
+   ${prefabNames.map((p) => `<li><a href="${p}.html">${p}</a></li>`).join("\n")}
   </ul>
 </body>
 </html>

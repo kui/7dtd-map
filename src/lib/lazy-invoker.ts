@@ -1,9 +1,6 @@
-export default function lazyInvoke(
-  window: Window,
-  asyncFunc: () => Promise<void>
-): () => Promise<void> {
+export default function lazyInvoke(asyncFunc: () => Promise<void>): () => Promise<void> {
   let updateRequest = null;
-  let workerPromise: any = null;
+  let workerPromise: Promise<void> | null = null;
   return async () => {
     updateRequest = true;
 
@@ -15,13 +12,13 @@ export default function lazyInvoke(
       while (updateRequest) {
         updateRequest = false;
         await asyncFunc();
-        await waitAnimationFrame(window);
+        await waitAnimationFrame();
       }
       workerPromise = null;
     })();
   };
 }
 
-function waitAnimationFrame(w: any) {
-  return new Promise((r) => w.requestAnimationFrame(r));
+function waitAnimationFrame() {
+  return new Promise((r) => requestAnimationFrame(r));
 }
