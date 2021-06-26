@@ -60,3 +60,7 @@ td.file-inputs {
 #overlay > div {
   margin: auto;
 }
+
+[data-copy-for]:focus:after {
+  content: attr(data-message);
+}

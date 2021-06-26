@@ -4,6 +4,7 @@ import { loadDtmRawGzByUrl, Dtm } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
 import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
+import * as copyButton from "./lib/copy-button";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -68,6 +69,8 @@ function main() {
     const res = await fetch("block-labels.json");
     prefabsFilterWorker.postMessage({ blockLabels: await res.json() });
   })();
+
+  copyButton.init();
 
   // -------------------------------------------------
   // map update events

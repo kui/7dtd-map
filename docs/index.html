@@ -172,29 +172,34 @@
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
     <p><button id="sample_load">Load Sample World(PREGEN01)</button></p>
+
     <h2>How to Use</h2>
+
     <p>Drag and drop world files.</p>
+
     <h3>Generated Worlds (Windows)</h3>
+
     <ol>
       <li>
         Select folders:
-        <code
-          >%HOME%/<a href="https://www.google.com/search?q=appdata+folder">AppData</a>/Roaming/7DaysToDie/GeneratedWorlds/&lt;<strong
-            >World Name</strong
-          >&gt;</code
-        >
+        <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
+        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Paste it into Explorer">
+          📋️
+        </button>
       </li>
       <li>Drag and drop all files in the world folder</li>
     </ol>
+
     <h3>Bundled Worlds</h3>
+
     <ol>
-      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">?</a>)</li>
+      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
       <li>
-        Select folders:
-        <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
+        Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
       </li>
       <li>Drag and drop all files in the world folder</li>
     </ol>
+
     <div id="overlay">
       <div>
         <p>Drop world files:</p>
