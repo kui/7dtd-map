@@ -3,6 +3,7 @@ import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loa
 import { loadDtmRawGzByUrl, Dtm } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
+import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -10,6 +11,9 @@ declare class MapRendererWorker extends Worker {
 }
 
 function main() {
+  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
+  const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
+  const seedInput = document.getElementById("seed") as HTMLInputElement;
   const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const cursorCoodsSpan = document.getElementById("cursor_coods") as HTMLSpanElement;
@@ -36,6 +40,7 @@ function main() {
   const prefabListDiv = document.getElementById("prefabs_list") as HTMLDivElement;
   const mapCanvas = document.getElementById("map") as HTMLCanvasElement;
   const sampleLoadButton = document.getElementById("sample_load") as HTMLButtonElement;
+
   const mapRendererWorker = new Worker("map-renderer.js") as MapRendererWorker;
   const prefabsFilterWorker = new Worker("prefabs-filter.js");
 
@@ -122,9 +127,16 @@ function main() {
   dtmInput.addEventListener("input", async () => {
     const file = dtmInput.files?.[0];
     if (!file) return;
-    loadingFiles.add("dtm.xml");
+    loadingFiles.add("dtm.raw");
     handleDtmRaw(await file.arrayBuffer());
-    loadingFiles.delete("dtm.xml");
+    loadingFiles.delete("dtm.raw");
+  });
+  generationInfoInput.addEventListener("input", async () => {
+    const file = generationInfoInput.files?.[0];
+    if (!file) return;
+    loadingFiles.add("GenerationInfo.txt");
+    handleGenerationInfo(await loadGenerationInfoByFile(file));
+    loadingFiles.delete("GenerationInfo.txt");
   });
   ["input", "focus"].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, async () => {
@@ -177,9 +189,7 @@ function main() {
     let files = Array.from(event.dataTransfer.files);
     const hasSplat3ProcessedPng = files.some((f) => f.name === "splat3_processed.png");
     if (hasSplat3ProcessedPng) {
-      console.log(
-        "Ignore `splat3.png` because `splat3_processed.png` was given. " + "`splat3.png` is a subset data of `splat3_processed.png`."
-      );
+      console.log("Ignore `splat3.png` because `splat3_processed.png` was given. `splat3.png` is a subset data of `splat3_processed.png`.");
       files = files.filter((f) => f.name !== "splat3.png");
     }
     await Promise.all(files.map((f) => handleDroppedFiles(f)));
@@ -210,6 +220,10 @@ function main() {
         prefabsInput.value = "";
       } else if (file.name === "dtm.raw") {
         handleDtmRaw(await file.arrayBuffer());
+        dtmInput.value = "";
+      } else if (file.name === "GenerationInfo.txt") {
+        handleGenerationInfo(await loadGenerationInfoByFile(file));
+        generationInfoInput.value = "";
       } else {
         console.warn("Unknown file: %s, %s", file.name, file.type);
       }
@@ -221,12 +235,22 @@ function main() {
     }
     loadingFiles.delete(file.name);
   }
+
   function handleDtmRaw(dtmRaw: ArrayBuffer) {
     if (!dtmRaw) {
       dtm = null;
       return;
     }
     dtm = new Dtm(dtmRaw, mapSizes.width);
+  }
+
+  function handleGenerationInfo(generationInfo: GenerationInfo) {
+    if (generationInfo.worldName) {
+      mapNameInput.value = generationInfo.worldName;
+    }
+    if (generationInfo.originalSeed) {
+      seedInput.value = generationInfo.originalSeed;
+    }
   }
 
   // flag mark
@@ -287,6 +311,11 @@ function main() {
           loadingFiles.add("dtm.raw");
           handleDtmRaw(await loadDtmRawGzByUrl("sample_world/dtm.raw.gz"));
           loadingFiles.delete("dtm.raw");
+        },
+        async () => {
+          loadingFiles.add("GenerationInfo.txt");
+          handleGenerationInfo(await loadGenerationInfoByUrl("sample_world/GenerationInfo.txt"));
+          loadingFiles.delete("GenerationInfo.txt");
         },
       ].map((p) => p())
     );
@@ -510,13 +539,14 @@ function main() {
   downloadButton.addEventListener("click", () => {
     const a = document.createElement("a");
     a.href = mapCanvas.toDataURL("image/png");
-    a.download = "7DtD-renderer.png";
+    a.download = mapNameInput.value ? `${mapNameInput.value}.png` : "7DtD-renderer.png";
     a.click();
   });
 
   // -------------------------------------------------
   // style handlers
   // -------------------------------------------------
+
   // filter input appearance
   ["input", "focus"].forEach((eventName) => {
     prefabsFilterInput.addEventListener(eventName, () => {
@@ -527,7 +557,11 @@ function main() {
       document.body.classList.remove("disable-blocks-filter");
       document.body.classList.add("disable-prefabs-filter");
     });
+    mapNameInput.addEventListener(eventName, () => {
+      generationInfoInput.value = "";
+    });
   });
+
   // drag and drop
   document.addEventListener("dragenter", (event) => {
     if (!event.dataTransfer?.types.includes("Files")) {
@@ -605,6 +639,7 @@ function main() {
     return `${(dist / 1000).toFixed(2)}km`;
   }
 }
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", main);
 } else {

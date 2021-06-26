@@ -37,3 +37,8 @@ interface BlockPrefabIndex {
 interface BlockLabels {
   [block: string]: string;
 }
+
+interface GenerationInfo {
+  worldName?: string;
+  originalSeed?: string;
+}
