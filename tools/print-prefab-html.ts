@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import { prefabHtml } from "./lib/prefab-html";
 import { parseLabel } from "./lib/label-parser";
+import { handleMain } from "./lib/utils";
 
 const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
 
@@ -30,11 +31,4 @@ async function loadLabels() {
   return labels;
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    return 1;
-  })
-  .then((exitCode) => {
-    process.on("exit", () => process.exit(exitCode));
-  });
+handleMain(main());

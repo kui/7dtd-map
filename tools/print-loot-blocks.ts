@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import { loadBlocks } from "./lib/blocks-xml";
 import { Loot, LootTable } from "./lib/loot";
+import { handleMain } from "./lib/utils";
 
 const CMD = `npx ts-node ${path.basename(process.argv[1])}`;
 const USAGE = `Usage: ${CMD} <item name regexp>
@@ -16,7 +17,7 @@ const projectRoot = path.join(path.dirname(process.argv[1]), "..");
 const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((p) => JSON.parse(p.toString()));
 
 async function main() {
-  if (process.argv.length <= 2) {
+  if (process.argv.length !== 3) {
     console.error(USAGE);
     return 1;
   }
@@ -47,11 +48,4 @@ function flattenItems(lootContainers: LootTable[]): Set<string> {
   return new Set(lootContainers.flatMap((c) => c.items.concat(Array.from(flattenItems(c.groups)))));
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    return 1;
-  })
-  .then((exitCode) => {
-    process.on("exit", () => process.exit(exitCode));
-  });
+handleMain(main());

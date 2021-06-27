@@ -1,5 +1,6 @@
 import * as path from "path";
 import { parseNim } from "./lib/nim-parser";
+import { handleMain } from "./lib/utils";
 
 const usage = `${path.basename(process.argv[1])} <nim file>`;
 
@@ -14,11 +15,4 @@ async function main() {
   return 0;
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    return 1;
-  })
-  .then((exitCode) => {
-    process.on("exit", () => process.exit(exitCode));
-  });
+handleMain(main());

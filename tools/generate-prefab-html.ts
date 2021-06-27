@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import glob from "glob-promise";
 import { prefabHtml } from "./lib/prefab-html";
 import { parseLabel } from "./lib/label-parser";
+import { handleMain } from "./lib/utils";
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
 const baseDist = path.join(projectRoot, "docs/prefabs");
@@ -108,11 +109,4 @@ async function generateIndex(prefabNames: string[]) {
   console.log("Write index.html");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    return 1;
-  })
-  .then((exitCode) => {
-    process.on("exit", () => process.exit(exitCode));
-  });
+handleMain(main());

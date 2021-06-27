@@ -1,10 +1,10 @@
-/* eslint-env node */
 import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
 import { BlockIdName, parseNim } from "./lib/nim-parser";
 import { parseLabel } from "./lib/label-parser";
 import { parseTts, BlockId } from "./lib/tts-parser";
+import { handleMain } from "./lib/utils";
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
 const localJsonFile = path.join(projectRoot, "local.json");
@@ -109,11 +109,4 @@ function invertIndex(prefabs: PrefabBlockIndex) {
     }, {});
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    return 1;
-  })
-  .then((exitCode) => {
-    process.on("exit", () => process.exit(exitCode));
-  });
+handleMain(main());
