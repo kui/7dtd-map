@@ -9,7 +9,7 @@
     "tsbuild": "webpack --mode production",
     "dev-server": "webpack serve --mode development --content-base docs",
     "fix": "prettier --write . && eslint --ext .ts --fix .",
-    "lint": "prettier --check . && eslint --ext .ts ."
+    "lint": "prettier --check . && eslint --ext .ts . && tsc -p src"
   },
   "author": "Keiichiro UI",
   "license": "MIT",
