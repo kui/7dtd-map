@@ -330,7 +330,6 @@ function main() {
   // -------------------------------------------------
   let prefabListUl: HTMLUListElement;
   let restPrefabs: HighlightedPrefab[];
-  let isShowedAllPrefabs = true;
   const renderedPrefabsNum = 10;
   prefabsFilterWorker.addEventListener("message", async (event: { data: PrefabUpdate }) => {
     const { prefabs, status } = event.data;
@@ -345,21 +344,9 @@ function main() {
     } else {
       prefabListDiv.appendChild(prefabListUl);
     }
-    // Show a part of result until the scroll bar are shown
+
+    controllerDiv.addEventListener("scroll", showAllPrefabs, { once: true });
     await showHeadOfPrefabList();
-    // Shows all results, once scrolled.
-    // TODO this `if` state can be removed.
-    if (isShowedAllPrefabs) {
-      isShowedAllPrefabs = false;
-      controllerDiv.addEventListener(
-        "scroll",
-        () => {
-          isShowedAllPrefabs = true;
-          showAllPrefabs();
-        },
-        { once: true }
-      );
-    }
   });
   async function showHeadOfPrefabList() {
     while (restPrefabs.length !== 0) {
