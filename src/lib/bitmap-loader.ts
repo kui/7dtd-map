@@ -1,4 +1,5 @@
 import { PNG } from "pngjs/browser";
+import { pngjsByBlob, pngjsByUrl } from "./pngjs";
 
 export async function loadBitmapByUrl(url: string): Promise<ImageBitmap> {
   const res = await window.fetch(url);
@@ -6,7 +7,7 @@ export async function loadBitmapByUrl(url: string): Promise<ImageBitmap> {
 }
 export async function loadSplatBitmapByUrl(url: string): Promise<ImageBitmap> {
   console.time(`loadPng: ${url}`);
-  const p = await loadPngjsByUrl(url);
+  const p = await pngjsByUrl(url);
   console.timeEnd(`loadPng: ${url}`);
   console.time(`renderSplat: ${url}`);
   const i = renderSplat(p);
@@ -15,7 +16,7 @@ export async function loadSplatBitmapByUrl(url: string): Promise<ImageBitmap> {
 }
 export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
   console.time(`loadPng: ${file.name}`);
-  const p = await loadPngjsFromBlob(file);
+  const p = await pngjsByBlob(file);
   console.timeEnd(`loadPng: ${file.name}`);
   console.time(`renderSplat: ${file.name}`);
   const i = renderSplat(p);
@@ -23,11 +24,11 @@ export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
   return i;
 }
 export async function loadRadBitmapByFile(file: File): Promise<ImageBitmap> {
-  const p = await loadPngjsFromBlob(file);
+  const p = await pngjsByBlob(file);
   return renderRad(p);
 }
 export async function loadRadBitmapByUrl(url: string): Promise<ImageBitmap> {
-  const p = await loadPngjsByUrl(url);
+  const p = await pngjsByUrl(url);
   return renderRad(p);
 }
 
@@ -77,22 +78,4 @@ function render({ data, height, width }: PNG, copyFunction: ConvertImageBitmap) 
   copyFunction(data, imageData.data);
   context.putImageData(imageData, 0, 0);
   return window.createImageBitmap(canvas);
-}
-
-async function loadPngjsByUrl(url: string) {
-  const res = await window.fetch(url);
-  return loadPngjs(await res.arrayBuffer());
-}
-
-async function loadPngjsFromBlob(blob: Blob) {
-  return loadPngjs(await blob.arrayBuffer());
-}
-
-async function loadPngjs(buffer: ArrayBuffer): Promise<PNG> {
-  return new Promise((resolve, reject) => {
-    new PNG({ deflateChunkSize: 1024 * 1024 }).parse(buffer as Buffer, (err, data) => {
-      if (err) reject(err);
-      else resolve(data);
-    });
-  });
 }

@@ -1,6 +1,6 @@
 import { loadBitmapByUrl, loadSplatBitmapByFile, loadSplatBitmapByUrl, loadRadBitmapByFile, loadRadBitmapByUrl } from "./lib/bitmap-loader";
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loader";
-import { loadDtmRawGzByUrl, Dtm } from "./lib/dtm-loader";
+import { loadDtmByPngUrl, Dtm, loadDtmByRaw } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
 import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
@@ -136,7 +136,7 @@ function main() {
     const file = dtmInput.files?.[0];
     if (!file) return;
     loadingFiles.add("dtm.raw");
-    handleDtmRaw(await file.arrayBuffer());
+    dtm = await loadDtmByRaw(file, mapSizes.width);
     loadingFiles.delete("dtm.raw");
   });
   generationInfoInput.addEventListener("input", async () => {
@@ -230,7 +230,7 @@ function main() {
         prefabsFilterWorker.postMessage({ all: prefabs });
         prefabsInput.value = "";
       } else if (file.name === "dtm.raw") {
-        handleDtmRaw(await file.arrayBuffer());
+        dtm = await loadDtmByRaw(file, mapSizes.width);
         dtmInput.value = "";
       } else if (file.name === "GenerationInfo.txt") {
         handleGenerationInfo(await loadGenerationInfoByFile(file));
@@ -245,14 +245,6 @@ function main() {
       loadingFiles.add(`LoadError(${file.name})`);
     }
     loadingFiles.delete(file.name);
-  }
-
-  function handleDtmRaw(dtmRaw: ArrayBuffer) {
-    if (!dtmRaw) {
-      dtm = null;
-      return;
-    }
-    dtm = new Dtm(dtmRaw, mapSizes.width);
   }
 
   function handleGenerationInfo(generationInfo: GenerationInfo) {
@@ -320,7 +312,7 @@ function main() {
         },
         async () => {
           loadingFiles.add("dtm.raw");
-          handleDtmRaw(await loadDtmRawGzByUrl("sample_world/dtm.raw.gz"));
+          dtm = await loadDtmByPngUrl("sample_world/dtm.png", mapSizes.width);
           loadingFiles.delete("dtm.raw");
         },
         async () => {

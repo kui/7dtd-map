@@ -7,9 +7,8 @@ USAGE="$(basename $0) <World Dir>"
 project_root=$(cd "$(dirname $0)/.."; pwd)
 dest="${project_root}/docs/sample_world"
 
-target_files=(
+copy_files=(
     biomes.png
-    dtm.raw
     GenerationInfo.txt
     main.ttw
     map_info.xml
@@ -28,25 +27,30 @@ main() {
         exit 1
     fi
 
+    cd "${project_root}"
+
     src="$1"
 
     echo "Src:  $src"
     echo "Dest: $dest"
 
+    map_width="$(identify -format '%[width]' "$src/splat3_processed.png")"
+    if [[ -z "${map_width}" ]]; then 
+        echo "Empty map width"
+        exit 1
+    fi
+    echo "MapWidth: ${map_width}"
+
     set -x
 
     rm -frv "$dest/"*
 
-    for bname in "${target_files[@]}"
-    do
-        file="$src/$bname"
-        if [[ "$bname" =~ dtm\.raw ]]
-        then
-            gzip -v --keep --best --stdout "$file" > "$dest/$bname.gz"
-        else
-            cp -v "$file" "$dest"
-        fi
-    done
+    (
+        cd "$src"
+        cp -v "${copy_files[@]}" "$dest"
+    )
+
+    npx ts-node ./tools/generate-dtm-png.ts "$src/dtm.raw" "${map_width}" "$dest/dtm.png"
 }
 
 main "$@"

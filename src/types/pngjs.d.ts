@@ -1,3 +1,3 @@
-declare module "pngjs/browser" {
+module "pngjs/browser" {
   export * from "pngjs";
 }
