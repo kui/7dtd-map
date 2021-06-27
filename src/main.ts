@@ -5,10 +5,15 @@ import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
 import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
 import * as copyButton from "./lib/copy-button";
+import { PrefabsFilterInMessage } from "./prefabs-filter";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
   postMessage(message: MapRendererInMessage, options?: PostMessageOptions): void;
+}
+
+declare class PrefabsFilterWorker extends Worker {
+  postMessage(message: PrefabsFilterInMessage): void;
 }
 
 function main() {
@@ -43,7 +48,7 @@ function main() {
   const sampleLoadButton = document.getElementById("sample_load") as HTMLButtonElement;
 
   const mapRendererWorker = new Worker("map-renderer.js") as MapRendererWorker;
-  const prefabsFilterWorker = new Worker("prefabs-filter.js");
+  const prefabsFilterWorker = new Worker("prefabs-filter.js") as PrefabsFilterWorker;
 
   // init
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
@@ -177,12 +182,14 @@ function main() {
       });
     });
   });
+
   // trigger by prefabs update
   prefabsFilterWorker.addEventListener("message", (event) => {
     if (event.data.prefabs) {
       mapRendererWorker.postMessage({ prefabs: event.data.prefabs });
     }
   });
+
   // drag and drop
   document.addEventListener("drop", async (event) => {
     if (!event.dataTransfer?.types.includes("Files")) {
@@ -197,6 +204,7 @@ function main() {
     }
     await Promise.all(files.map((f) => handleDroppedFiles(f)));
   });
+
   async function handleDroppedFiles(file: File) {
     loadingFiles.add(file.name);
     try {

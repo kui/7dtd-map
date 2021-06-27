@@ -23,20 +23,16 @@ export default class Prefabs {
   filtered: HighlightedPrefab[];
   lazyUpdater: () => void;
   markCoords: Coords | null;
-  prevFiltered: HighlightedPrefab[];
-  prevMarkCoords: Coords | null;
   status: string;
   updateListeners: ((u: PrefabUpdate) => void)[];
 
   constructor() {
     this.all = [];
     this.filtered = [];
-    this.prevFiltered = [];
     this.filter = null;
     this.prefabsFilterString = "";
     this.blocksFilterString = "";
     this.markCoords = null;
-    this.prevMarkCoords = null;
     this.blockPrefabIndex = {};
     this.blockLabels = {};
     this.updateListeners = [];
@@ -50,13 +46,8 @@ export default class Prefabs {
     applyFilter(this);
     updateDist(this);
     sort(this);
-    const updateData: PrefabUpdate = { status: this.status, prefabs: [] };
-    if (this.prevFiltered !== this.filtered || this.prevMarkCoords !== this.markCoords) {
-      updateData.prefabs = this.filtered;
-      this.prevFiltered = this.filtered;
-      this.prevMarkCoords = this.markCoords;
-    }
-    this.updateListeners.forEach((f) => f(updateData));
+    const update: PrefabUpdate = { status: this.status, prefabs: this.filtered };
+    this.updateListeners.forEach((f) => f(update));
   }
   set prefabsFilterString(filter: string) {
     const s = filter.trim();
