@@ -497,18 +497,6 @@ function main() {
     prevCanvasSize = newCanvasSize;
   }).observe(mapCanvas, { attributes: true });
 
-  // TODO this may be reailzed by <output> element
-  // range value display
-  Array.from(document.querySelectorAll("[data-source-input]")).forEach((display) => {
-    if (!(display instanceof HTMLElement)) return;
-    const sourceInput = document.querySelector(`#${display.dataset.sourceInput}`);
-    if (!(sourceInput instanceof HTMLInputElement)) return;
-    display.textContent = sourceInput.value;
-    sourceInput.addEventListener("input", () => {
-      display.textContent = sourceInput.value;
-    });
-  });
-
   // cursor/mark position
   let mapSizes = { width: 0, height: 0 };
   mapRendererWorker.addEventListener("message", (e: { data: MapRendererOutMessage }) => {
