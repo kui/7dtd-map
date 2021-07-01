@@ -61,6 +61,14 @@ td.file-inputs {
   margin: auto;
 }
 
-[data-copy-for]:focus:after {
+[data-copy-for]:focus::after {
   content: attr(data-message);
+}
+
+#generation_info_output_wrapper {
+  width: 100%;
+}
+#generation_info_output {
+  width: 100%;
+  resize: vertical;
 }

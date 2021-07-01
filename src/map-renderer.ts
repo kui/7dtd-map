@@ -1,4 +1,4 @@
-import Map from "./lib/map";
+import GameMap from "./lib/map";
 
 export interface MapRendererInMessage {
   canvas?: OffscreenCanvas;
@@ -29,20 +29,15 @@ export interface MapRendererOutMessage {
 
 declare function postMessage(message: MapRendererOutMessage): void;
 
-let map: Map;
+let map: GameMap;
 
 onmessage = (event: { data: MapRendererInMessage }) => {
-  const { canvas, ...restParams } = event.data;
-
-  if (canvas) {
-    if (map) {
-      map.canvas = canvas;
-    } else {
-      map = new Map(canvas);
-    }
+  const inMessage = event.data;
+  if (!map && inMessage.canvas) {
+    map = new GameMap(inMessage.canvas);
   }
 
-  Object.assign(map, restParams);
+  Object.assign(map, inMessage).update();
 
   postMessage({
     mapSizes: {
@@ -50,6 +45,4 @@ onmessage = (event: { data: MapRendererInMessage }) => {
       height: map.height,
     },
   });
-
-  map.update();
 };

@@ -30,16 +30,33 @@
       </p>
       <table>
         <tr>
+          <th>Select Map</th>
+          <td>
+            <select id="map_list">
+              <option data-map-id="1">1. New-World</option>
+            </select>
+            <button id="create_map" title="Create new map">➕</button>
+            <button id="delete_map" title="Delete current map">🗑️</button>
+            <input id="map_name" title="Map Name" type="text" value="New-World" />
+          </td>
+        </tr>
+        <tr>
           <th>GenerationInfo.txt</th>
-          <td><input id="generation_info" type="file" /></td>
+          <td>
+            <input
+              id="show_generation_info"
+              type="checkbox"
+              oninput="
+                generation_info_output_wrapper.style.display = checked ? '' : 'none';
+                generation_info_output.dispatchEvent(new Event('input'))"
+            />
+            <input id="generation_info" type="file" />
+          </td>
         </tr>
         <tr>
-          <th>Map Name</th>
-          <td><input id="map_name" type="text" value="None" /></td>
-        </tr>
-        <tr>
-          <th>Seed</th>
-          <td><input id="seed" type="text" /></td>
+          <td id="generation_info_output_wrapper" colspan="2" style="display: none">
+            <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
+          </td>
         </tr>
         <tr>
           <th>Cursor</th>

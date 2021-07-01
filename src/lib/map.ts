@@ -6,7 +6,7 @@ const markChar = "🚩️";
 
 declare const fonts: FontFaceSet;
 
-export default class Map {
+export default class GameMap {
   biomesImg: ImageBitmap | null;
   brightness: string;
   canvas: OffscreenCanvas;
@@ -101,7 +101,7 @@ export default class Map {
   }
 }
 
-async function drawPrefabs(map: Map, ctx: OffscreenCanvasRenderingContext2D) {
+async function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
@@ -123,7 +123,7 @@ async function drawPrefabs(map: Map, ctx: OffscreenCanvasRenderingContext2D) {
   }
 }
 
-async function drawMark(map: Map, ctx: OffscreenCanvasRenderingContext2D) {
+async function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
   if (!map.markCoords) return;
 
   ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;

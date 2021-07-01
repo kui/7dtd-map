@@ -3,9 +3,12 @@ import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loa
 import { loadDtmByPngUrl, Dtm, loadDtmByRaw } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
-import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
+import { GenerationInfo, loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
 import * as copyButton from "./lib/copy-button";
 import { PrefabsFilterInMessage } from "./prefabs-filter";
+import { MapSelector } from "./lib/map-selector";
+import { MapStorage } from "./lib/map-storage";
+import { requireNonnull } from "./lib/utils";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -16,10 +19,12 @@ declare class PrefabsFilterWorker extends Worker {
   postMessage(message: PrefabsFilterInMessage): void;
 }
 
+const DEFAULT_MAP_NAME = "New-World";
+
 function main() {
-  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
   const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
-  const seedInput = document.getElementById("seed") as HTMLInputElement;
+  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
+  const generationInfoOutputTextarea = document.getElementById("generation_info_output") as HTMLInputElement;
   const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const cursorCoodsSpan = document.getElementById("cursor_coods") as HTMLSpanElement;
@@ -76,6 +81,14 @@ function main() {
   })();
 
   copyButton.init();
+
+  const mapSelector = new MapSelector(new MapStorage());
+  mapSelector.init({
+    select: requireNonnull(document.getElementById("map_list")) as HTMLSelectElement,
+    create: requireNonnull(document.getElementById("create_map")) as HTMLButtonElement,
+    delete: requireNonnull(document.getElementById("delete_map")) as HTMLButtonElement,
+    mapName: requireNonnull(document.getElementById("map_name")) as HTMLInputElement,
+  });
 
   // -------------------------------------------------
   // map update events
@@ -248,12 +261,12 @@ function main() {
   }
 
   function handleGenerationInfo(generationInfo: GenerationInfo) {
-    if (generationInfo.worldName) {
+    if (generationInfo.worldName && [DEFAULT_MAP_NAME, ""].includes(mapNameInput.value)) {
       mapNameInput.value = generationInfo.worldName;
+      mapNameInput.dispatchEvent(new Event("input"));
     }
-    if (generationInfo.originalSeed) {
-      seedInput.value = generationInfo.originalSeed;
-    }
+    generationInfoOutputTextarea.value = generationInfo.outputFormat();
+    generationInfoOutputTextarea.dispatchEvent(new Event("input"));
   }
 
   // flag mark
