@@ -1,4 +1,6 @@
 import GameMap from "./lib/map";
+import { MapStorage } from "./lib/map-storage";
+import { assignAll, requireNonnull, requireType } from "./lib/utils";
 
 export interface MapRendererInMessage {
   canvas?: OffscreenCanvas;
@@ -29,16 +31,41 @@ export interface MapRendererOutMessage {
 
 declare function postMessage(message: MapRendererOutMessage): void;
 
-let map: GameMap;
+const FIELDNAME_STORAGENAME_MAP = {
+  biomesImg: "biomes",
+  splat3Img: "splat3",
+  splat4Img: "splat4",
+  radImg: "rad",
+} as const;
 
-onmessage = (event: { data: MapRendererInMessage }) => {
-  const inMessage = event.data;
-  if (!map && inMessage.canvas) {
-    map = new GameMap(inMessage.canvas);
+let map: GameMap | null = null;
+const storage = new MapStorage();
+
+storage.listeners.push(async () => {
+  init();
+});
+
+onmessage = async (event) => {
+  const inMessage = event.data as MapRendererInMessage;
+  if (!map) {
+    if (inMessage.canvas) {
+      map = new GameMap(inMessage.canvas);
+      await init();
+    } else {
+      return;
+    }
   }
 
-  Object.assign(map, inMessage).update();
-
+  await assignAll(map, inMessage).update();
+  for (const [name, value] of Object.entries(inMessage)) {
+    if (isStoreTarget(name)) {
+      storage.put(FIELDNAME_STORAGENAME_MAP[name], {
+        width: map.width,
+        height: map.height,
+        bitmap: requireType(value, ImageBitmap),
+      });
+    }
+  }
   postMessage({
     mapSizes: {
       width: map.width,
@@ -46,3 +73,20 @@ onmessage = (event: { data: MapRendererInMessage }) => {
     },
   });
 };
+
+function isStoreTarget(n: string): n is keyof typeof FIELDNAME_STORAGENAME_MAP {
+  return n in FIELDNAME_STORAGENAME_MAP;
+}
+
+async function init() {
+  console.log("init: Start");
+  for (const [fieldName, type] of Object.entries(FIELDNAME_STORAGENAME_MAP)) {
+    console.time(`init: Load ${fieldName}`);
+    const obj = await storage.getCurrent(type);
+    requireNonnull(map)[fieldName] = obj?.data.bitmap ?? null;
+    console.timeEnd(`init: Load ${fieldName}`);
+  }
+  console.time("init: Update");
+  await requireNonnull(map).update();
+  console.timeEnd("init: Update");
+}

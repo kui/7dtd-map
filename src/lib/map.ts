@@ -65,8 +65,8 @@ export default class GameMap {
     );
   }
 
-  update(): void {
-    this.throttledUpdater();
+  async update(): Promise<void> {
+    await this.throttledUpdater();
   }
 
   async updateImmediately(): Promise<void> {

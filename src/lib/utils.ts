@@ -17,3 +17,12 @@ export function removeAllChildren(e: HTMLElement): void {
     e.removeChild(e.lastChild);
   }
 }
+
+export function assignAll<T>(t: T, other: Partial<T>): T {
+  for (const n in t) {
+    if (n in other) {
+      t[n] = other[n] as T[Extract<keyof T, string>];
+    }
+  }
+  return t;
+}
