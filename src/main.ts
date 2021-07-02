@@ -3,12 +3,12 @@ import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loa
 import { loadDtmByPngUrl, Dtm, loadDtmByRaw } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
-import { GenerationInfo, loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
 import * as copyButton from "./lib/copy-button";
 import { PrefabsFilterInMessage } from "./prefabs-filter";
 import { MapSelector } from "./lib/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { requireNonnull } from "./lib/utils";
+import { component, requireNonnull } from "./lib/utils";
+import { GenerationInfoHandler } from "./lib/generation-info-handler";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -19,12 +19,9 @@ declare class PrefabsFilterWorker extends Worker {
   postMessage(message: PrefabsFilterInMessage): void;
 }
 
-const DEFAULT_MAP_NAME = "New-World";
-
 function main() {
   const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
   const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
-  const generationInfoOutputTextarea = document.getElementById("generation_info_output") as HTMLInputElement;
   const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const cursorCoodsSpan = document.getElementById("cursor_coods") as HTMLSpanElement;
@@ -82,12 +79,18 @@ function main() {
 
   copyButton.init();
 
-  const mapSelector = new MapSelector(new MapStorage());
+  const mapStorage = new MapStorage();
+  const mapSelector = new MapSelector(mapStorage);
   mapSelector.init({
     select: requireNonnull(document.getElementById("map_list")) as HTMLSelectElement,
     create: requireNonnull(document.getElementById("create_map")) as HTMLButtonElement,
     delete: requireNonnull(document.getElementById("delete_map")) as HTMLButtonElement,
     mapName: requireNonnull(document.getElementById("map_name")) as HTMLInputElement,
+  });
+
+  const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
+    mapName: component("map_name", HTMLInputElement),
+    output: component("generation_info_output", HTMLTextAreaElement),
   });
 
   // -------------------------------------------------
@@ -156,7 +159,7 @@ function main() {
     const file = generationInfoInput.files?.[0];
     if (!file) return;
     loadingFiles.add("GenerationInfo.txt");
-    handleGenerationInfo(await loadGenerationInfoByFile(file));
+    await generationInfoHandler.handle(file);
     loadingFiles.delete("GenerationInfo.txt");
   });
   ["input", "focus"].forEach((eventName) => {
@@ -246,7 +249,7 @@ function main() {
         dtm = await loadDtmByRaw(file, mapSizes.width);
         dtmInput.value = "";
       } else if (file.name === "GenerationInfo.txt") {
-        handleGenerationInfo(await loadGenerationInfoByFile(file));
+        await generationInfoHandler.handle(file);
         generationInfoInput.value = "";
       } else {
         console.warn("Unknown file: %s, %s", file.name, file.type);
@@ -258,15 +261,6 @@ function main() {
       loadingFiles.add(`LoadError(${file.name})`);
     }
     loadingFiles.delete(file.name);
-  }
-
-  function handleGenerationInfo(generationInfo: GenerationInfo) {
-    if (generationInfo.worldName && [DEFAULT_MAP_NAME, ""].includes(mapNameInput.value)) {
-      mapNameInput.value = generationInfo.worldName;
-      mapNameInput.dispatchEvent(new Event("input"));
-    }
-    generationInfoOutputTextarea.value = generationInfo.outputFormat();
-    generationInfoOutputTextarea.dispatchEvent(new Event("input"));
   }
 
   // flag mark
@@ -330,7 +324,7 @@ function main() {
         },
         async () => {
           loadingFiles.add("GenerationInfo.txt");
-          handleGenerationInfo(await loadGenerationInfoByUrl("sample_world/GenerationInfo.txt"));
+          await generationInfoHandler.handle(await fetch("sample_world/GenerationInfo.txt"));
           loadingFiles.delete("GenerationInfo.txt");
         },
       ].map((p) => p())

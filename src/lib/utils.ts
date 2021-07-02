@@ -1,6 +1,15 @@
 export function requireNonnull<T>(t: T | undefined | null, message = () => `Unexpected state: ${t}`): T {
-  if (!t) throw Error(message());
-  return t;
+  if (t) return t;
+  else throw Error(message());
+}
+
+export function requireType<T>(o: unknown, t: { new (...a: unknown[]): T }, message = () => `Unexpected type: ${o}`): T {
+  if (o instanceof t) return o;
+  throw Error(message());
+}
+
+export function component<T extends HTMLElement>(id: string, t: { new (...a: unknown[]): T }): T {
+  return requireType(requireNonnull(document.getElementById(id)), t);
 }
 
 export function removeAllChildren(e: HTMLElement): void {

@@ -9,50 +9,34 @@ type Doms = {
 };
 
 export class MapSelector {
-  static readonly DEFAULT_MAP_NAME = "New-World";
-
   storage: MapStorage;
-  listeners: ((m: MapObject) => Promise<void>)[];
 
   constructor(storage: MapStorage) {
     this.storage = storage;
-    this.listeners = [async (m) => console.log("Change Map", m)];
   }
 
   async init(doms: Doms): Promise<void> {
     const maps = await this.storage.listMaps();
     const df = new DocumentFragment();
-    for (const map of maps) {
-      df.appendChild(buildOptionElement(map));
-    }
+    for (const m of maps) df.appendChild(buildOptionElement(m));
     removeAllChildren(doms.select);
     doms.select.appendChild(df);
 
-    if (maps.length === 0) {
-      await create(this, doms);
-    } else {
-      await changeMapId(this, doms, maps[0].id);
-    }
+    const currentMapObject = await this.storage.getCurrent("maps");
+    await changeMap(this, doms, requireNonnull(currentMapObject?.id));
 
     // set hooks
     doms.mapName.addEventListener("input", () => {
       const mapId = selectedMapId(doms.select);
       const name = doms.mapName.value;
       doms.select.selectedOptions[0].textContent = `${mapId}. ${name}`;
-      this.storage.put("maps", { id: mapId, name: doms.mapName.value });
+      this.storage.put("maps", name);
     });
     doms.select.addEventListener("input", () => {
-      if (!doms.select.selectedOptions) {
-        doms.select.selectedIndex = 0;
-      }
-      changeMapId(this, doms, selectedMapId(doms.select));
+      changeMap(this, doms, selectedMapId(doms.select));
     });
     doms.create.addEventListener("click", () => create(this, doms));
     doms.delete.addEventListener("click", () => deleteMap(this, doms));
-  }
-
-  addListener(fn: (m: MapObject) => Promise<void>): void {
-    this.listeners.push(fn);
   }
 }
 
@@ -72,10 +56,11 @@ function selectedMapId(select: HTMLSelectElement) {
 
 async function create(self: MapSelector, doms: Doms) {
   console.log("Create Map");
-  const map = await self.storage.createMap(MapSelector.DEFAULT_MAP_NAME);
+  const map = await self.storage.createMap();
   doms.select.appendChild(buildOptionElement(map));
-  await changeMap(self, doms, map);
+  await changeMap(self, doms, map.id);
 }
+
 async function deleteMap(self: MapSelector, doms: Doms) {
   const optionElement = selectedOption(doms.select);
   const mapId = parseInt(optionElement.dataset.mapId as string);
@@ -88,14 +73,12 @@ async function deleteMap(self: MapSelector, doms: Doms) {
 
   doms.select.removeChild(optionElement);
   await self.storage.deleteMap(mapId);
-  await changeMapId(self, doms, selectedMapId(doms.select));
+  await changeMap(self, doms, selectedMapId(doms.select));
 }
 
-async function changeMapId(self: MapSelector, doms: Doms, mapId: number) {
-  await changeMap(self, doms, requireNonnull(await self.storage.get("maps", mapId)));
-}
-async function changeMap(self: MapSelector, doms: Doms, map: MapObject) {
+async function changeMap(self: MapSelector, doms: Doms, mapId: number) {
+  await self.storage.changeMap(mapId);
+  const map = requireNonnull(await self.storage.getCurrent("maps"));
   doms.select.selectedIndex = Array.from(doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === map.id);
   doms.mapName.value = map.name;
-  await Promise.allSettled(self.listeners.map((f) => f(map)));
 }

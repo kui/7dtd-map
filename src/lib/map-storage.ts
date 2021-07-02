@@ -1,8 +1,9 @@
-import { DBSchema, IDBPDatabase, openDB, StoreNames } from "idb";
-import { GenerationInfo } from "./generation-info-loader";
+import { DBSchema, IDBPDatabase, openDB } from "idb";
+import { requireNonnull } from "./utils";
 
 const DB_NAME = "7dtd-map";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
+const DEFAULT_WORLD_NAME = "New-World";
 
 type Db = IDBPDatabase<DbSchema>;
 interface DbSchema extends DBSchema {
@@ -15,15 +16,18 @@ interface DbSchema extends DBSchema {
     value: LargeObject<any>;
     key: [number, string];
   };
+  selectedMap: {
+    value: { id: number; mapId: number };
+    key: number;
+  };
 }
 
 export interface MapObject {
   id: number;
   name: string;
-  generationInfo?: GenerationInfo;
 }
 
-export const LARGE_OBJECT_TYPES = ["biomes", "splat3", "splat4", "rad", "height", "subHeight", "prefabs"] as const;
+export const LARGE_OBJECT_TYPES = ["biomes", "splat3", "splat4", "rad", "height", "subHeight", "prefabs", "generationInfo"] as const;
 type LargeObjectType = typeof LARGE_OBJECT_TYPES[number];
 export interface LargeObjects {
   biomes: ImageObject;
@@ -33,6 +37,7 @@ export interface LargeObjects {
   height: HeightsObject;
   subHeight: HeightsObject;
   prefabs: Prefab[];
+  generationInfo: string;
 }
 export interface LargeObject<T extends LargeObjectType> {
   mapId: number;
@@ -53,6 +58,9 @@ interface HeightsObject {
 const MAP_PROPERTY_TYPES = ["maps", ...LARGE_OBJECT_TYPES] as const;
 type MapPropertyType = typeof MAP_PROPERTY_TYPES[number];
 type MapPropertyValue<T extends MapPropertyType> = T extends LargeObjectType ? LargeObject<T> : DbSchema["maps"]["value"];
+type MapPropertyRawValue<T extends MapPropertyType> = T extends LargeObjectType
+  ? LargeObject<T>["data"]
+  : DbSchema["maps"]["value"]["name"];
 
 function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
   for (let version = oldVersion + 1; version <= newVersion; version++) {
@@ -60,29 +68,38 @@ function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
       db.createObjectStore("maps", { keyPath: "id", autoIncrement: true });
       db.createObjectStore("largeObjects", { keyPath: ["mapId", "type"] });
     }
+    if (version === 2) {
+      db.createObjectStore("selectedMap", { keyPath: "id" });
+    }
   }
 }
 
 export class MapStorage {
   _db?: Db;
+  listeners: ((mapId: number) => Promise<void>)[] = [];
 
-  async put<Type extends MapPropertyType>(type: Type, value: MapPropertyValue<Type>): Promise<void> {
+  async put<Type extends MapPropertyType>(type: Type, data: MapPropertyRawValue<Type>): Promise<void> {
     const db = await getDb(this);
-    await db.put(storeName(type), value);
+    const mapId = await currentId(db);
+    if (isLargeObjectType(type)) {
+      await db.put("largeObjects", { mapId, type, data });
+    } else if (type === "maps") {
+      await db.put("maps", { id: mapId, name: data as MapPropertyRawValue<"maps"> });
+    } else {
+      throw Error(`Unreachable code: type=${type}`);
+    }
   }
 
-  async get<Type extends MapPropertyType>(type: Type, mapId: number): Promise<MapPropertyValue<Type> | undefined> {
+  async getCurrent<Type extends MapPropertyType>(type: Type): Promise<MapPropertyValue<Type> | undefined> {
     const db = await getDb(this);
-    let key: number | [number, string];
+    const mapId = await currentId(db);
     if (isLargeObjectType(type)) {
-      key = [mapId, type];
+      return (await db.get("largeObjects", [mapId, type])) as MapPropertyValue<Type> | undefined;
     } else if (type === "maps") {
-      key = mapId;
+      return requireNonnull(await db.get("maps", mapId), () => `Unexpected state: ${mapId}`) as MapPropertyValue<Type> | undefined;
     } else {
       throw Error(`Unreachable code: ${type}`);
     }
-    const r = await db.get(storeName(type), key);
-    return r as MapPropertyValue<Type> | undefined;
   }
 
   async listMaps(): Promise<MapObject[]> {
@@ -90,16 +107,30 @@ export class MapStorage {
     return db.getAll("maps");
   }
 
-  async createMap(name = "New Map"): Promise<MapObject> {
+  async createMap(name = DEFAULT_WORLD_NAME): Promise<MapObject> {
     const db = await getDb(this);
-    const id = await db.put("maps", { name } as MapObject);
-    return { id, name };
+    return await createMap(db, name);
   }
 
-  async deleteMap(mapId: number): Promise<void> {
+  async deleteMap(mapIdOrUndefined?: number): Promise<void> {
     const db = await getDb(this);
+    const mapId = mapIdOrUndefined ?? (await currentId(db));
     await Promise.all([db.delete("maps", mapId), ...LARGE_OBJECT_TYPES.map((t) => db.delete("largeObjects", [mapId, t]))]);
   }
+
+  async changeMap(mapId: number): Promise<void> {
+    const db = await getDb(this);
+    await Promise.all([changeMap(db, mapId), ...this.listeners.map((fn) => fn(mapId))]);
+  }
+
+  async currentId(): Promise<number> {
+    return currentId(await getDb(this));
+  }
+}
+
+async function createMap(db: Db, name: string) {
+  const id = await db.put("maps", { name } as MapObject);
+  return { id, name };
 }
 
 async function getDb(self: MapStorage) {
@@ -113,12 +144,27 @@ function isLargeObjectType(type: MapPropertyType): type is LargeObjectType {
   return (LARGE_OBJECT_TYPES as readonly string[]).includes(type);
 }
 
-function storeName<Type extends MapPropertyType>(type: Type): StoreNames<DbSchema> {
-  if (isLargeObjectType(type)) {
-    return "largeObjects";
+async function changeMap(db: Db, mapId: number) {
+  await db.put("selectedMap", { id: 0, mapId });
+}
+
+export function isDefaultWorldName(name: string): boolean {
+  return name === DEFAULT_WORLD_NAME;
+}
+
+async function currentId(db: Db): Promise<number> {
+  const map = await db.get("selectedMap", 0);
+  if (map) {
+    return map.mapId;
   }
-  if (type === "maps") {
-    return type;
+
+  const all = await db.getAll("maps");
+  if (all[0]) {
+    await changeMap(db, all[0].id);
+    return currentId(db);
   }
-  throw Error(`Unreachable code: ${type}`);
+
+  const newMap = await createMap(db, DEFAULT_WORLD_NAME);
+  await changeMap(db, newMap.id);
+  return currentId(db);
 }
