@@ -66,7 +66,9 @@ export default class GameMap {
   }
 
   async update(): Promise<void> {
+    console.time("Map Update");
     await this.throttledUpdater();
+    console.timeEnd("Map Update");
   }
 
   async updateImmediately(): Promise<void> {

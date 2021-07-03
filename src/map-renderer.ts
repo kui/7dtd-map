@@ -1,6 +1,6 @@
 import GameMap from "./lib/map";
 import { MapStorage } from "./lib/map-storage";
-import { assignAll, requireNonnull, requireType } from "./lib/utils";
+import { assignAll, requireNonnull } from "./lib/utils";
 
 export interface MapRendererInMessage {
   canvas?: OffscreenCanvas;
@@ -57,12 +57,12 @@ onmessage = async (event) => {
   }
 
   await assignAll(map, inMessage).update();
-  for (const [name, value] of Object.entries(inMessage)) {
-    if (isStoreTarget(name)) {
-      storage.put(FIELDNAME_STORAGENAME_MAP[name], {
+  for (const entry of Object.entries(inMessage)) {
+    if (isStoreTarget(entry)) {
+      storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], {
         width: map.width,
         height: map.height,
-        bitmap: requireType(value, ImageBitmap),
+        bitmap: entry[1],
       });
     }
   }
@@ -74,8 +74,8 @@ onmessage = async (event) => {
   });
 };
 
-function isStoreTarget(n: string): n is keyof typeof FIELDNAME_STORAGENAME_MAP {
-  return n in FIELDNAME_STORAGENAME_MAP;
+function isStoreTarget(e: Entry<MapRendererInMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
+  return e[0] in FIELDNAME_STORAGENAME_MAP;
 }
 
 async function init() {
@@ -86,7 +86,6 @@ async function init() {
     requireNonnull(map)[fieldName] = obj?.data.bitmap ?? null;
     console.timeEnd(`init: Load ${fieldName}`);
   }
-  console.time("init: Update");
   await requireNonnull(map).update();
-  console.timeEnd("init: Update");
+  console.log("init: Done");
 }

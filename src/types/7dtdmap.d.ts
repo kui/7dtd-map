@@ -36,7 +36,3 @@ interface BlockPrefabIndex {
 interface BlockLabels {
   [block: string]: string;
 }
-
-interface ObjectConstructor {
-  entries<T, U extends string | number>(o: { [s in U]: T }): [U, T][];
-}
