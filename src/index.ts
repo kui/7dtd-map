@@ -1,12 +1,12 @@
 import { loadBitmapByUrl, loadSplatBitmapByFile, loadSplatBitmapByUrl, loadRadBitmapByFile, loadRadBitmapByUrl } from "./lib/bitmap-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import * as copyButton from "./lib/copy-button";
-import { MapSelector } from "./lib/map-selector";
+import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
 import { component, humanreadableDistance } from "./lib/utils";
-import { GenerationInfoHandler } from "./lib/generation-info-handler";
-import { DtmHandler } from "./lib/dtm-handler";
-import { PrefabsHandler } from "./lib/prefabs-handler";
+import { GenerationInfoHandler } from "./index/generation-info-handler";
+import { DtmHandler } from "./index/dtm-handler";
+import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
 
 declare class MapRendererWorker extends Worker {

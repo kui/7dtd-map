@@ -1,6 +1,6 @@
 import { PrefabsFilterInMessage } from "../prefabs-filter";
-import { MapStorage } from "./map-storage";
-import { PrefabUpdate } from "./prefabs";
+import { MapStorage } from "../lib/map-storage";
+import { PrefabUpdate } from "../lib/prefabs";
 
 interface Doms {
   status: HTMLElement;

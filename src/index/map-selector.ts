@@ -1,5 +1,5 @@
-import { MapObject, MapStorage } from "./map-storage";
-import { removeAllChildren, requireNonnull } from "./utils";
+import { MapObject, MapStorage } from "../lib/map-storage";
+import { removeAllChildren, requireNonnull } from "../lib/utils";
 
 type Doms = {
   select: HTMLSelectElement;

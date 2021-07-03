@@ -1,4 +1,4 @@
-import { isDefaultWorldName, MapStorage } from "./map-storage";
+import { isDefaultWorldName, MapStorage } from "../lib/map-storage";
 
 interface Doms {
   mapName: HTMLInputElement;

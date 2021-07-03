@@ -1,5 +1,5 @@
-import { MapStorage } from "./map-storage";
-import { pngjsByUrl } from "./pngjs";
+import { MapStorage } from "../lib/map-storage";
+import { pngjsByUrl } from "../lib/pngjs";
 
 export class Dtm {
   data: Uint8Array;
