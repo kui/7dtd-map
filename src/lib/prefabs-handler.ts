@@ -12,7 +12,7 @@ declare class PrefabsFilterWorker extends Worker {
   postMessage(message: PrefabsFilterInMessage): void;
 }
 
-export class PrefabHandler {
+export class PrefabsHandler {
   doms: Doms;
   worker: PrefabsFilterWorker;
   storage: MapStorage;

@@ -6,7 +6,7 @@ import { MapStorage } from "./lib/map-storage";
 import { component, humanreadableDistance } from "./lib/utils";
 import { GenerationInfoHandler } from "./lib/generation-info-handler";
 import { DtmHandler } from "./lib/dtm-handler";
-import { PrefabHandler } from "./lib/prefab-handler";
+import { PrefabsHandler } from "./lib/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
 
 declare class MapRendererWorker extends Worker {
@@ -77,7 +77,7 @@ function main() {
 
   const dtmHandler = new DtmHandler(mapStorage);
 
-  const prefabsHandler = new PrefabHandler(
+  const prefabsHandler = new PrefabsHandler(
     {
       status: component("prefabs_num", HTMLElement),
       prefabFilter: component("prefabs_filter", HTMLInputElement),
