@@ -10,7 +10,7 @@ export default class GameMap {
   biomesImg: ImageBitmap | null;
   brightness: string;
   canvas: OffscreenCanvas;
-  fontFace: Promise<FontFace>;
+  fontFace: FontFace | null = null;
   throttledUpdater: () => Promise<void>;
   markCoords: Coords | null;
   prefabs: HighlightedPrefab[];
@@ -42,27 +42,21 @@ export default class GameMap {
     this.prefabs = [];
 
     const fontFace = new FontFace("Noto Sans", "url(NotoEmoji-Regular.ttf)");
-    fontFace.load().then((a) => fonts.add(a));
-    this.fontFace = fontFace.load();
+    fontFace.load().then((ff) => {
+      this.fontFace = ff;
+      fonts.add(ff);
+    });
     this.markCoords = null;
 
     this.throttledUpdater = throttledInvoker(() => this.updateImmediately());
   }
 
   get width(): number {
-    return Math.max(
-      this.biomesImg ? this.biomesImg.width : 0,
-      this.splat3Img ? this.splat3Img.width : 0,
-      this.splat4Img ? this.splat4Img.width : 0
-    );
+    return Math.max(this.biomesImg?.width ?? 0, this.splat3Img?.width ?? 0, this.splat4Img?.width ?? 0);
   }
 
   get height(): number {
-    return Math.max(
-      this.biomesImg ? this.biomesImg.height : 0,
-      this.splat3Img ? this.splat3Img.height : 0,
-      this.splat4Img ? this.splat4Img.height : 0
-    );
+    return Math.max(this.biomesImg?.height ?? 0, this.splat3Img?.height ?? 0, this.splat4Img?.height ?? 0);
   }
 
   async update(): Promise<void> {
@@ -95,16 +89,16 @@ export default class GameMap {
       context.imageSmoothingEnabled = true;
     }
     if (this.showPrefabs) {
-      await drawPrefabs(this, context);
+      drawPrefabs(this, context);
     }
     if (this.markCoords) {
-      await drawMark(this, context);
+      drawMark(this, context);
     }
   }
 }
 
-async function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
-  ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
+function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
+  ctx.font = `${map.signSize}px ${map.fontFace?.family ?? ""}`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -125,10 +119,10 @@ async function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D)
   }
 }
 
-async function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
+function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
   if (!map.markCoords) return;
 
-  ctx.font = `${map.signSize}px ${(await map.fontFace).family}`;
+  ctx.font = `${map.signSize}px ${map.fontFace?.family ?? ""}`;
   ctx.fillStyle = "red";
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
