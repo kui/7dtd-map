@@ -12,7 +12,7 @@ export default class GameMap {
   canvas: OffscreenCanvas;
   fontFace: FontFace | null = null;
   throttledUpdater: () => Promise<void>;
-  markCoords: Coords | null;
+  markerCoords: Coords | null;
   prefabs: HighlightedPrefab[];
   radImg: ImageBitmap | null;
   scale: number;
@@ -46,7 +46,7 @@ export default class GameMap {
       this.fontFace = ff;
       fonts.add(ff);
     });
-    this.markCoords = null;
+    this.markerCoords = null;
 
     this.throttledUpdater = throttledInvoker(() => this.updateImmediately());
   }
@@ -91,7 +91,7 @@ export default class GameMap {
     if (this.showPrefabs) {
       drawPrefabs(this, context);
     }
-    if (this.markCoords) {
+    if (this.markerCoords) {
       drawMark(this, context);
     }
   }
@@ -120,7 +120,7 @@ function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
 }
 
 function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
-  if (!map.markCoords) return;
+  if (!map.markerCoords) return;
 
   ctx.font = `${map.signSize}px ${map.fontFace?.family ?? ""}`;
   ctx.fillStyle = "red";
@@ -132,9 +132,9 @@ function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
   const charOffsetX = -1 * Math.round(map.signSize * 0.32);
   const charOffsetY = -1 * Math.round(map.signSize * 0.1);
 
-  const x = offsetX + map.markCoords.x + charOffsetX;
+  const x = offsetX + map.markerCoords.x + charOffsetX;
   // prefab vertical positions are inverted for canvas coodinates
-  const z = offsetY - map.markCoords.z + charOffsetY;
+  const z = offsetY - map.markerCoords.z + charOffsetY;
 
   putText(ctx, { text: markChar, x, z, size: map.signSize });
   ctx.strokeText(markChar, x, z);

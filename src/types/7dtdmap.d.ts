@@ -16,6 +16,11 @@ interface HighlightedBlock {
   prefabs?: { name: string; count: number }[];
 }
 
+interface RectSize {
+  width: number;
+  height: number;
+}
+
 interface Coords {
   x: number;
   z: number;

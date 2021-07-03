@@ -1,7 +1,7 @@
 import { waitAnimationFrame } from "./utils";
 
 export default function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
-  let updateRequest = null;
+  let updateRequest = false;
   let workerPromise: Promise<void> | null = null;
   return async () => {
     updateRequest = true;

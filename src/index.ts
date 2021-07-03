@@ -8,6 +8,8 @@ import { GenerationInfoHandler } from "./index/generation-info-handler";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
+import { CursorCoodsHandler } from "./index/cursor-coods-handler";
+import { MarkerHandler } from "./index/marker-handler";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -19,10 +21,7 @@ function main() {
   const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
   const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
-  const cursorCoodsSpan = document.getElementById("cursor_coods") as HTMLSpanElement;
-  const markCoodsSpan = document.getElementById("mark_coods") as HTMLSpanElement;
   const downloadButton = document.getElementById("download") as HTMLButtonElement;
-  const resetMarkButton = document.getElementById("reset_mark") as HTMLButtonElement;
   const showBiomesInput = document.getElementById("show_biomes") as HTMLInputElement;
   const biomesInput = document.getElementById("biomes") as HTMLInputElement;
   const showSplat3Input = document.getElementById("show_splat3") as HTMLInputElement;
@@ -97,6 +96,33 @@ function main() {
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     prefabListRenderer.iterator = prefabs;
+  });
+
+  const cursorCoodsHandler = new CursorCoodsHandler(
+    {
+      canvas: component("map", HTMLCanvasElement),
+      output: component("cursor_coods", HTMLElement),
+    },
+    (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
+  );
+  mapRendererWorker.addEventListener("message", (event: MessageEvent<MapRendererOutMessage>) => {
+    cursorCoodsHandler.mapSize = event.data.mapSizes;
+  });
+
+  const markerHandler = new MarkerHandler(
+    {
+      canvas: component("map", HTMLCanvasElement),
+      output: component("mark_coods", HTMLElement),
+      resetMarker: component("reset_mark", HTMLButtonElement),
+    },
+    (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
+  );
+  mapRendererWorker.addEventListener("message", (event: MessageEvent<MapRendererOutMessage>) => {
+    markerHandler.mapSize = event.data.mapSizes;
+  });
+  markerHandler.listeners.push(async (coords) => {
+    prefabsHandler.marker = coords;
+    mapRendererWorker.postMessage({ markerCoords: coords });
   });
 
   // -------------------------------------------------
@@ -249,21 +275,6 @@ function main() {
     loadingFiles.delete(file.name);
   }
 
-  // flag mark
-  mapCanvas.addEventListener("click", async (event) => {
-    // in-game coords (center offset)
-    const markCoords = {
-      x: Math.round((event.offsetX * mapSizes.width) / mapCanvas.width - mapSizes.width / 2),
-      z: -Math.round((event.offsetY * mapSizes.height) / mapCanvas.height - mapSizes.height / 2),
-    };
-    prefabsHandler.marker = markCoords;
-    mapRendererWorker.postMessage({ markCoords });
-  });
-  resetMarkButton.addEventListener("click", async () => {
-    prefabsHandler.marker = null;
-    mapRendererWorker.postMessage({ markCoords: null });
-  });
-
   // sample load
   sampleLoadButton.addEventListener("click", async () => {
     sampleLoadButton.disabled = true;
@@ -339,81 +350,6 @@ function main() {
     target.focus();
   });
 
-  // Scroll with the mark at the center of the screen
-  let markEvent: MouseEvent | null = null;
-  let prevCanvasSize = { width: 0, height: 0 };
-  mapCanvas.addEventListener("click", (e) => {
-    markEvent = e;
-  });
-  resetMarkButton.addEventListener("click", () => {
-    markEvent = null;
-  });
-  new MutationObserver((mutationsList) => {
-    const widthMutation = mutationsList.find((m) => m.attributeName === "width");
-    if (!widthMutation) return;
-    const heightMutation = mutationsList.find((m) => m.attributeName === "height");
-    if (!heightMutation) return;
-    const newCanvasSize = {
-      width: mapCanvas.width,
-      height: mapCanvas.height,
-    };
-    if (!markEvent) {
-      prevCanvasSize = newCanvasSize;
-      return;
-    }
-    const markPosition = {
-      offsetX: (markEvent.offsetX * newCanvasSize.width) / prevCanvasSize.width,
-      offsetY: (markEvent.offsetY * newCanvasSize.height) / prevCanvasSize.height,
-    };
-    const canvasRect = mapCanvas.getBoundingClientRect();
-    const rootRect = document.documentElement.getBoundingClientRect();
-    const absCanvasPosition = {
-      left: canvasRect.left - rootRect.left,
-      top: canvasRect.top - rootRect.top,
-    };
-    const absMarkPosition = {
-      left: markPosition.offsetX + absCanvasPosition.left,
-      top: markPosition.offsetY + absCanvasPosition.top,
-    };
-
-    // frameSize is based by map display area.
-    // So, the width is not innerWidth.
-    const frameSize = {
-      width: controllerDiv.offsetLeft,
-      height: window.innerHeight,
-    };
-    const scrollArg = {
-      left: absMarkPosition.left - frameSize.width / 2,
-      top: absMarkPosition.top - frameSize.height / 2,
-    };
-    window.scrollTo(scrollArg);
-    prevCanvasSize = newCanvasSize;
-  }).observe(mapCanvas, { attributes: true });
-
-  // cursor/mark position
-  let mapSizes = { width: 0, height: 0 };
-  mapRendererWorker.addEventListener("message", (e: { data: MapRendererOutMessage }) => {
-    if (e.data.mapSizes) {
-      mapSizes = e.data.mapSizes;
-    }
-  });
-  mapCanvas.addEventListener(
-    "mousemove",
-    (event) => {
-      cursorCoodsSpan.textContent = formatCoords(event);
-    },
-    { passive: true }
-  );
-  mapCanvas.addEventListener("mouseout", () => {
-    cursorCoodsSpan.textContent = formatCoords();
-  });
-  mapCanvas.addEventListener("click", async (event) => {
-    markCoodsSpan.textContent = formatCoords(event);
-  });
-  resetMarkButton.addEventListener("click", async () => {
-    markCoodsSpan.textContent = formatCoords();
-  });
-
   // download
   downloadButton.addEventListener("click", () => {
     const a = document.createElement("a");
@@ -479,33 +415,6 @@ function main() {
     requestAnimationFrame(updateLoadingIndicator);
   }
   updateLoadingIndicator();
-
-  function formatCoords({ offsetX, offsetY }: { offsetX?: number; offsetY?: number } = {}) {
-    if (!offsetX || !offsetY) {
-      return "E/W: -, N/S: -, Elev: -";
-    }
-
-    // relative coords on the canvas with left-top offset and these ranges should be [0, 1)
-    const rx = offsetX / mapCanvas.width;
-    const rz = offsetY / mapCanvas.height;
-    if (rx < 0 || rx >= 1 || rz < 0 || rz >= 1) {
-      return "E/W: -, N/S: -, Elev: -";
-    }
-
-    // coords with left-top offset
-    const ox = rx * mapSizes.width;
-    const oz = rz * mapSizes.height;
-
-    // in-game coords (center offset)
-    const x = Math.round(ox - mapSizes.width / 2);
-    const z = Math.round(mapSizes.height / 2 - oz);
-
-    if (dtmHandler.dtm) {
-      const e = dtmHandler.dtm.getElevation(Math.round(ox), Math.round(oz), mapSizes.width);
-      return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
-    }
-    return `E/W: ${x}, N/S: ${z}, Elev: -`;
-  }
 }
 
 function prefabLi(prefab: HighlightedPrefab) {

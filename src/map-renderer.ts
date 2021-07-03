@@ -19,7 +19,7 @@ export type MapRendererInMessage = Partial<
     | "scale"
     | "signSize"
     | "prefabs"
-    | "markCoords"
+    | "markerCoords"
   >
 >;
 
