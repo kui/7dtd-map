@@ -27,15 +27,24 @@ export interface MapObject {
   name: string;
 }
 
-export const LARGE_OBJECT_TYPES = ["biomes", "splat3", "splat4", "rad", "height", "subHeight", "prefabs", "generationInfo"] as const;
+export const LARGE_OBJECT_TYPES = [
+  "biomes",
+  "splat3",
+  "splat4",
+  "rad",
+  "elevations",
+  "subElevations",
+  "prefabs",
+  "generationInfo",
+] as const;
 type LargeObjectType = typeof LARGE_OBJECT_TYPES[number];
 export interface LargeObjects {
   biomes: ImageObject;
   splat3: ImageObject;
   splat4: ImageObject;
   rad: ImageObject;
-  height: HeightsObject;
-  subHeight: HeightsObject;
+  elevations: Uint8Array;
+  subElevations: Uint8Array;
   prefabs: Prefab[];
   generationInfo: string;
 }
@@ -45,14 +54,7 @@ export interface LargeObject<T extends LargeObjectType> {
   data: LargeObjects[T];
 }
 interface ImageObject {
-  width: number;
-  height: number;
   bitmap: ImageBitmap;
-}
-interface HeightsObject {
-  width: number;
-  height: number;
-  bitmap: Uint8Array;
 }
 
 const MAP_PROPERTY_TYPES = ["maps", ...LARGE_OBJECT_TYPES] as const;

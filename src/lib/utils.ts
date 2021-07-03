@@ -26,3 +26,10 @@ export function assignAll<T>(t: T, other: Partial<T>): T {
   }
   return t;
 }
+
+export function humanreadableDistance(d: number): string {
+  if (d < 1000) {
+    return `${d}m`;
+  }
+  return `${(d / 1000).toFixed(2)}km`;
+}

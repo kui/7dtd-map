@@ -60,8 +60,6 @@ onmessage = async (event) => {
   for (const entry of Object.entries(inMessage)) {
     if (isStoreTarget(entry)) {
       storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], {
-        width: map.width,
-        height: map.height,
         bitmap: entry[1],
       });
     }

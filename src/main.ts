@@ -1,14 +1,14 @@
 import { loadBitmapByUrl, loadSplatBitmapByFile, loadSplatBitmapByUrl, loadRadBitmapByFile, loadRadBitmapByUrl } from "./lib/bitmap-loader";
 import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loader";
-import { loadDtmByPngUrl, Dtm, loadDtmByRaw } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import { PrefabUpdate } from "./lib/prefabs";
 import * as copyButton from "./lib/copy-button";
 import { PrefabsFilterInMessage } from "./prefabs-filter";
 import { MapSelector } from "./lib/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, requireNonnull } from "./lib/utils";
+import { component, humanreadableDistance } from "./lib/utils";
 import { GenerationInfoHandler } from "./lib/generation-info-handler";
+import { DtmHandler } from "./lib/dtm-handler";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -82,10 +82,10 @@ function main() {
   const mapStorage = new MapStorage();
   const mapSelector = new MapSelector(mapStorage);
   mapSelector.init({
-    select: requireNonnull(document.getElementById("map_list")) as HTMLSelectElement,
-    create: requireNonnull(document.getElementById("create_map")) as HTMLButtonElement,
-    delete: requireNonnull(document.getElementById("delete_map")) as HTMLButtonElement,
-    mapName: requireNonnull(document.getElementById("map_name")) as HTMLInputElement,
+    select: component("map_list", HTMLSelectElement),
+    create: component("create_map", HTMLButtonElement),
+    delete: component("delete_map", HTMLButtonElement),
+    mapName: component("map_name", HTMLInputElement),
   });
 
   const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
@@ -93,11 +93,13 @@ function main() {
     output: component("generation_info_output", HTMLTextAreaElement),
   });
 
+  const dtmHandler = new DtmHandler(mapStorage);
+
   // -------------------------------------------------
   // map update events
   // -------------------------------------------------
   const loadingFiles = new Set();
-  let dtm: Dtm | null = null;
+
   // inputs
   biomesInput.addEventListener("input", async () => {
     console.log("Load biome");
@@ -152,7 +154,7 @@ function main() {
     const file = dtmInput.files?.[0];
     if (!file) return;
     loadingFiles.add("dtm.raw");
-    dtm = await loadDtmByRaw(file, mapSizes.width);
+    dtmHandler.handle(file);
     loadingFiles.delete("dtm.raw");
   });
   generationInfoInput.addEventListener("input", async () => {
@@ -246,7 +248,7 @@ function main() {
         prefabsFilterWorker.postMessage({ all: prefabs });
         prefabsInput.value = "";
       } else if (file.name === "dtm.raw") {
-        dtm = await loadDtmByRaw(file, mapSizes.width);
+        dtmHandler.handle(file);
         dtmInput.value = "";
       } else if (file.name === "GenerationInfo.txt") {
         await generationInfoHandler.handle(file);
@@ -319,7 +321,7 @@ function main() {
         },
         async () => {
           loadingFiles.add("dtm.raw");
-          dtm = await loadDtmByPngUrl("sample_world/dtm.png", mapSizes.width);
+          dtmHandler.handle("sample_world/dtm.png");
           loadingFiles.delete("dtm.raw");
         },
         async () => {
@@ -397,7 +399,7 @@ function main() {
     const li = document.createElement("li");
     li.innerHTML = [
       `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
-      `${prefab.dist ? `${formatDist(prefab.dist)},` : ""}`,
+      `${prefab.dist ? `${humanreadableDistance(prefab.dist)},` : ""}`,
       `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
       `(${prefab.x}, ${prefab.z})`,
     ].join(" ");
@@ -598,30 +600,27 @@ function main() {
     if (!offsetX || !offsetY) {
       return "E/W: -, N/S: -, Elev: -";
     }
+
     // relative coords on the canvas with left-top offset and these ranges should be [0, 1)
     const rx = offsetX / mapCanvas.width;
     const rz = offsetY / mapCanvas.height;
     if (rx < 0 || rx >= 1 || rz < 0 || rz >= 1) {
       return "E/W: -, N/S: -, Elev: -";
     }
+
     // coords with left-top offset
     const ox = rx * mapSizes.width;
     const oz = rz * mapSizes.height;
+
     // in-game coords (center offset)
     const x = Math.round(ox - mapSizes.width / 2);
     const z = Math.round(mapSizes.height / 2 - oz);
-    if (dtm) {
-      dtm.width = mapSizes.width;
-      const e = dtm.getElevation(Math.round(ox), Math.round(oz));
+
+    if (dtmHandler.dtm) {
+      const e = dtmHandler.dtm.getElevation(Math.round(ox), Math.round(oz), mapSizes.width);
       return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
     }
     return `E/W: ${x}, N/S: ${z}, Elev: -`;
-  }
-  function formatDist(dist: number) {
-    if (dist < 1000) {
-      return `${dist}m`;
-    }
-    return `${(dist / 1000).toFixed(2)}km`;
   }
 }
 
