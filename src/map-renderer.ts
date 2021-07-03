@@ -59,9 +59,7 @@ onmessage = async (event) => {
   await assignAll(map, inMessage).update();
   for (const entry of Object.entries(inMessage)) {
     if (isStoreTarget(entry)) {
-      storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], {
-        bitmap: entry[1],
-      });
+      storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], entry[1]);
     }
   }
   postMessage({
@@ -81,7 +79,7 @@ async function init() {
   for (const [fieldName, type] of Object.entries(FIELDNAME_STORAGENAME_MAP)) {
     console.time(`init: Load ${fieldName}`);
     const obj = await storage.getCurrent(type);
-    requireNonnull(map)[fieldName] = obj?.data.bitmap ?? null;
+    requireNonnull(map)[fieldName] = obj?.data ?? null;
     console.timeEnd(`init: Load ${fieldName}`);
   }
   await requireNonnull(map).update();

@@ -39,10 +39,10 @@ export const LARGE_OBJECT_TYPES = [
 ] as const;
 type LargeObjectType = typeof LARGE_OBJECT_TYPES[number];
 export interface LargeObjects {
-  biomes: ImageObject;
-  splat3: ImageObject;
-  splat4: ImageObject;
-  rad: ImageObject;
+  biomes: ImageBitmap;
+  splat3: ImageBitmap;
+  splat4: ImageBitmap;
+  rad: ImageBitmap;
   elevations: Uint8Array;
   subElevations: Uint8Array;
   prefabs: Prefab[];
@@ -52,9 +52,6 @@ export interface LargeObject<T extends LargeObjectType> {
   mapId: number;
   type: T;
   data: LargeObjects[T];
-}
-interface ImageObject {
-  bitmap: ImageBitmap;
 }
 
 const MAP_PROPERTY_TYPES = ["maps", ...LARGE_OBJECT_TYPES] as const;

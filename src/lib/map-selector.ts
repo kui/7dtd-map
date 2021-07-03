@@ -81,4 +81,5 @@ async function changeMap(self: MapSelector, doms: Doms, mapId: number) {
   const map = requireNonnull(await self.storage.getCurrent("maps"));
   doms.select.selectedIndex = Array.from(doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === map.id);
   doms.mapName.value = map.name;
+  doms.delete.disabled = (await self.storage.listMaps()).length <= 1;
 }
