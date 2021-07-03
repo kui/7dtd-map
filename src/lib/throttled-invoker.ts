@@ -1,3 +1,5 @@
+import { waitAnimationFrame } from "./utils";
+
 export default function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
   let updateRequest = null;
   let workerPromise: Promise<void> | null = null;
@@ -17,8 +19,4 @@ export default function throttledInvoker(asyncFunc: () => Promise<void>): () => 
       workerPromise = null;
     })();
   };
-}
-
-function waitAnimationFrame() {
-  return new Promise((r) => requestAnimationFrame(r));
 }

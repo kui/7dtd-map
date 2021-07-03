@@ -1,29 +1,27 @@
 import GameMap from "./lib/map";
 import { MapStorage } from "./lib/map-storage";
-import { assignAll, requireNonnull } from "./lib/utils";
+import { requireNonnull } from "./lib/utils";
 
-export interface MapRendererInMessage {
-  canvas?: OffscreenCanvas;
-
-  biomesImg?: ImageBitmap;
-  splat3Img?: ImageBitmap;
-  splat4Img?: ImageBitmap;
-  radImg?: ImageBitmap;
-
-  showBiomes?: boolean;
-  showSplat3?: boolean;
-  showSplat4?: boolean;
-  showRad?: boolean;
-  showPrefabs?: boolean;
-
-  brightness?: string;
-  scale?: number;
-  signSize?: number;
-  prefabs?: Prefab[];
-  signChar?: string;
-  markChar?: string;
-  markCoords?: Coords | null;
-}
+export type MapRendererInMessage = Partial<
+  Pick<
+    GameMap,
+    | "canvas"
+    | "biomesImg"
+    | "splat3Img"
+    | "splat4Img"
+    | "radImg"
+    | "showBiomes"
+    | "showSplat3"
+    | "showSplat4"
+    | "showRad"
+    | "showPrefabs"
+    | "brightness"
+    | "scale"
+    | "signSize"
+    | "prefabs"
+    | "markCoords"
+  >
+>;
 
 export interface MapRendererOutMessage {
   mapSizes: { width: number; height: number };
@@ -56,7 +54,7 @@ onmessage = async (event) => {
     }
   }
 
-  await assignAll(map, inMessage).update();
+  await Object.assign(map, inMessage).update();
   for (const entry of Object.entries(inMessage)) {
     if (isStoreTarget(entry)) {
       storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], entry[1]);

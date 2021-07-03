@@ -30,14 +30,22 @@ td.file-inputs {
   white-space: nowrap;
 }
 
-.disable-prefabs-filter [for="prefabs_filter"],
-.disable-prefabs-filter #prefabs_filter {
+label[for="prefabs_filter"],
+#prefabs_filter,
+label[for="blocks_filter"],
+#blocks_filter {
   text-decoration: line-through;
 }
 
-.disable-blocks-filter [for="blocks_filter"],
-.disable-blocks-filter #blocks_filter {
-  text-decoration: line-through;
+label[for="prefabs_filter"]:hover,
+#prefabs_filter:hover,
+label[for="blocks_filter"]:hover,
+#blocks_filter:hover,
+body[data-active-filter="prefab"] label[for="prefabs_filter"],
+body[data-active-filter="prefab"] #prefabs_filter,
+body[data-active-filter="block"] label[for="blocks_filter"],
+body[data-active-filter="block"] #blocks_filter {
+  text-decoration: unset;
 }
 
 #overlay {

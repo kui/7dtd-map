@@ -13,18 +13,7 @@ export function component<T extends HTMLElement>(id: string, t: { new (...a: unk
 }
 
 export function removeAllChildren(e: HTMLElement): void {
-  while (e.lastChild) {
-    e.removeChild(e.lastChild);
-  }
-}
-
-export function assignAll<T>(t: T, other: Partial<T>): T {
-  for (const n in t) {
-    if (n in other) {
-      t[n] = other[n] as T[Extract<keyof T, string>];
-    }
-  }
-  return t;
+  while (e.lastChild) e.removeChild(e.lastChild);
 }
 
 export function humanreadableDistance(d: number): string {
@@ -32,4 +21,8 @@ export function humanreadableDistance(d: number): string {
     return `${d}m`;
   }
   return `${(d / 1000).toFixed(2)}km`;
+}
+
+export function waitAnimationFrame(): Promise<number> {
+  return new Promise((r) => requestAnimationFrame(r));
 }
