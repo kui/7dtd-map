@@ -8,8 +8,9 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="main.css" />
   </head>
-  <body>
+  <body data-active-filter="prefab">
     <h1>7 Days to Die Map Renderer Alpha 19</h1>
+
     <p>Only supported in latest Google Chrome.</p>
     <p>
       Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
@@ -22,22 +23,40 @@
         <li><a href="prefabs">Prefab List</a></li>
       </ul>
     </nav>
+
     <div id="controller">
       <p>
         <button id="download">Download</button>
       </p>
       <table>
         <tr>
+          <th>Select Map</th>
+          <td>
+            <select id="map_list">
+              <option data-map-id="1">1. New-World</option>
+            </select>
+            <button id="create_map" title="Create new map">➕</button>
+            <button id="delete_map" title="Delete current map">🗑️</button>
+            <input id="map_name" title="Map Name" type="text" value="New-World" />
+          </td>
+        </tr>
+        <tr>
           <th>GenerationInfo.txt</th>
-          <td><input id="generation_info" type="file" /></td>
+          <td>
+            <input
+              id="show_generation_info"
+              type="checkbox"
+              oninput="
+                generation_info_output_wrapper.style.display = checked ? '' : 'none';
+                generation_info_output.dispatchEvent(new Event('input'))"
+            />
+            <input id="generation_info" type="file" />
+          </td>
         </tr>
         <tr>
-          <th>Map Name</th>
-          <td><input id="map_name" type="text" /></td>
-        </tr>
-        <tr>
-          <th>Seed</th>
-          <td><input id="seed" type="text" /></td>
+          <td id="generation_info_output_wrapper" colspan="2" style="display: none">
+            <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
+          </td>
         </tr>
         <tr>
           <th>Cursor</th>
@@ -120,7 +139,7 @@
           <th><label for="prefabs_filter">Prefabs Filter</label></th>
           <td>
             <input id="prefabs_filter" placeholder="Input prefab name" />
-            <button data-input-for="prefabs_filter" data-input-text="">Clear</button>
+            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
           </td>
         </tr>
         <tr>
@@ -147,7 +166,7 @@
           <th><label for="blocks_filter">Blocks Filter</label></th>
           <td>
             <input id="blocks_filter" placeholder="Input block name" />
-            <button data-input-for="blocks_filter" data-input-text="">Clear</button>
+            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
           </td>
         </tr>
         <tr>
@@ -167,7 +186,7 @@
         </tr>
       </table>
       <p id="prefabs_num"></p>
-      <div id="prefabs_list"><ul></ul></div>
+      <ul id="prefabs_list"></ul>
     </div>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
@@ -183,7 +202,7 @@
       <li>
         Select folders:
         <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
-        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Paste it into Explorer">
+        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
           📋️
         </button>
       </li>
@@ -196,6 +215,15 @@
       <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
       <li>
         Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
+        <ul>
+          <li>
+            e.g.
+            <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
+            <button title="Copy this path" data-copy-for="bundled_world_path_windows" data-success-message="✅ Press Win+R then paste this">
+              📋️
+            </button>
+          </li>
+        </ul>
       </li>
       <li>Drag and drop all files in the world folder</li>
     </ol>
@@ -212,7 +240,7 @@
           <li>prefabs.xml</li>
           <li>dtm.raw</li>
         </ul>
-        <p>Rest files are ignored.</p>
+        <p>The rest of files are ignored.</p>
       </div>
     </div>
   </body>

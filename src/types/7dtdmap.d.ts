@@ -1,11 +1,10 @@
 interface Prefab {
   name: string;
-  highlightedName: string;
   x: number;
   z: number;
 }
 interface HighlightedPrefab extends Prefab {
-  highlightedName: string;
+  highlightedName?: string;
   matchedBlocks?: HighlightedBlock[];
   dist?: number | null;
 }
@@ -36,9 +35,4 @@ interface BlockPrefabIndex {
 
 interface BlockLabels {
   [block: string]: string;
-}
-
-interface GenerationInfo {
-  worldName?: string;
-  originalSeed?: string;
 }

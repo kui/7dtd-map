@@ -1,25 +1,22 @@
 import { loadBitmapByUrl, loadSplatBitmapByFile, loadSplatBitmapByUrl, loadRadBitmapByFile, loadRadBitmapByUrl } from "./lib/bitmap-loader";
-import { loadPrefabsXmlByFile, loadPrefabsXmlByUrl } from "./lib/prefabs-xml-loader";
-import { loadDtmByPngUrl, Dtm, loadDtmByRaw } from "./lib/dtm-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
-import { PrefabUpdate } from "./lib/prefabs";
-import { loadGenerationInfoByFile, loadGenerationInfoByUrl } from "./lib/generation-info-loader";
 import * as copyButton from "./lib/copy-button";
-import { PrefabsFilterInMessage } from "./prefabs-filter";
+import { MapSelector } from "./lib/map-selector";
+import { MapStorage } from "./lib/map-storage";
+import { component, humanreadableDistance } from "./lib/utils";
+import { GenerationInfoHandler } from "./lib/generation-info-handler";
+import { DtmHandler } from "./lib/dtm-handler";
+import { PrefabsHandler } from "./lib/prefabs-handler";
+import { DelayedRenderer } from "./lib/delayed-renderer";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
   postMessage(message: MapRendererInMessage, options?: PostMessageOptions): void;
 }
 
-declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: PrefabsFilterInMessage): void;
-}
-
 function main() {
-  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
   const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
-  const seedInput = document.getElementById("seed") as HTMLInputElement;
+  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
   const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const cursorCoodsSpan = document.getElementById("cursor_coods") as HTMLSpanElement;
@@ -40,15 +37,10 @@ function main() {
   const scaleInput = document.getElementById("scale") as HTMLInputElement;
   const signSizeInput = document.getElementById("sign_size") as HTMLInputElement;
   const brightnessInput = document.getElementById("brightness") as HTMLInputElement;
-  const prefabsFilterInput = document.getElementById("prefabs_filter") as HTMLInputElement;
-  const blocksFilterInput = document.getElementById("blocks_filter") as HTMLInputElement;
-  const prefabsResultSpan = document.getElementById("prefabs_num") as HTMLSpanElement;
-  const prefabListDiv = document.getElementById("prefabs_list") as HTMLDivElement;
   const mapCanvas = document.getElementById("map") as HTMLCanvasElement;
   const sampleLoadButton = document.getElementById("sample_load") as HTMLButtonElement;
 
   const mapRendererWorker = new Worker("map-renderer.js") as MapRendererWorker;
-  const prefabsFilterWorker = new Worker("prefabs-filter.js") as PrefabsFilterWorker;
 
   // init
   const rendererCanvas = mapCanvas.transferControlToOffscreen();
@@ -66,22 +58,52 @@ function main() {
     },
     [rendererCanvas]
   );
-  (async () => {
-    const res = await fetch("block-prefab-index.json");
-    prefabsFilterWorker.postMessage({ blockPrefabIndex: await res.json() });
-  })();
-  (async () => {
-    const res = await fetch("block-labels.json");
-    prefabsFilterWorker.postMessage({ blockLabels: await res.json() });
-  })();
 
   copyButton.init();
+
+  const mapStorage = new MapStorage();
+  const mapSelector = new MapSelector(mapStorage);
+  mapSelector.init({
+    select: component("map_list", HTMLSelectElement),
+    create: component("create_map", HTMLButtonElement),
+    delete: component("delete_map", HTMLButtonElement),
+    mapName: component("map_name", HTMLInputElement),
+  });
+
+  const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
+    mapName: component("map_name", HTMLInputElement),
+    output: component("generation_info_output", HTMLTextAreaElement),
+  });
+
+  const dtmHandler = new DtmHandler(mapStorage);
+
+  const prefabsHandler = new PrefabsHandler(
+    {
+      status: component("prefabs_num", HTMLElement),
+      prefabFilter: component("prefabs_filter", HTMLInputElement),
+      blockFilter: component("blocks_filter", HTMLInputElement),
+    },
+    new Worker("prefabs-filter.js"),
+    mapStorage
+  );
+  prefabsHandler.listeners.push(async (prefabs) => {
+    mapRendererWorker.postMessage({ prefabs });
+  });
+
+  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
+    component("controller", HTMLElement),
+    component("prefabs_list", HTMLElement),
+    (p) => prefabLi(p)
+  );
+  prefabsHandler.listeners.push(async (prefabs) => {
+    prefabListRenderer.iterator = prefabs;
+  });
 
   // -------------------------------------------------
   // map update events
   // -------------------------------------------------
   const loadingFiles = new Set();
-  let dtm: Dtm | null = null;
+
   // inputs
   biomesInput.addEventListener("input", async () => {
     console.log("Load biome");
@@ -128,36 +150,24 @@ function main() {
     if (!file) return;
     console.log("Load prefabs");
     loadingFiles.add("prefabs.xml");
-    const prefabs = await loadPrefabsXmlByFile(file);
+    prefabsHandler.handle(file);
     loadingFiles.delete("prefabs.xml");
-    prefabsFilterWorker.postMessage({ all: prefabs });
   });
   dtmInput.addEventListener("input", async () => {
     const file = dtmInput.files?.[0];
     if (!file) return;
     loadingFiles.add("dtm.raw");
-    dtm = await loadDtmByRaw(file, mapSizes.width);
+    dtmHandler.handle(file);
     loadingFiles.delete("dtm.raw");
   });
   generationInfoInput.addEventListener("input", async () => {
     const file = generationInfoInput.files?.[0];
     if (!file) return;
     loadingFiles.add("GenerationInfo.txt");
-    handleGenerationInfo(await loadGenerationInfoByFile(file));
+    await generationInfoHandler.handle(file);
     loadingFiles.delete("GenerationInfo.txt");
   });
-  ["input", "focus"].forEach((eventName) => {
-    prefabsFilterInput.addEventListener(eventName, async () => {
-      prefabsFilterWorker.postMessage({
-        prefabsFilterString: prefabsFilterInput.value,
-      });
-    });
-    blocksFilterInput.addEventListener(eventName, async () => {
-      prefabsFilterWorker.postMessage({
-        blocksFilterString: blocksFilterInput.value,
-      });
-    });
-  });
+
   const restInputs = [
     showBiomesInput,
     showSplat3Input,
@@ -181,13 +191,6 @@ function main() {
         scale: parseFloat(scaleInput.value),
       });
     });
-  });
-
-  // trigger by prefabs update
-  prefabsFilterWorker.addEventListener("message", (event) => {
-    if (event.data.prefabs) {
-      mapRendererWorker.postMessage({ prefabs: event.data.prefabs });
-    }
   });
 
   // drag and drop
@@ -226,14 +229,13 @@ function main() {
         mapRendererWorker.postMessage({ radImg }, [radImg]);
         radInput.value = "";
       } else if (file.name === "prefabs.xml") {
-        const prefabs = await loadPrefabsXmlByFile(file);
-        prefabsFilterWorker.postMessage({ all: prefabs });
+        prefabsHandler.handle(file);
         prefabsInput.value = "";
       } else if (file.name === "dtm.raw") {
-        dtm = await loadDtmByRaw(file, mapSizes.width);
+        dtmHandler.handle(file);
         dtmInput.value = "";
       } else if (file.name === "GenerationInfo.txt") {
-        handleGenerationInfo(await loadGenerationInfoByFile(file));
+        await generationInfoHandler.handle(file);
         generationInfoInput.value = "";
       } else {
         console.warn("Unknown file: %s, %s", file.name, file.type);
@@ -247,15 +249,6 @@ function main() {
     loadingFiles.delete(file.name);
   }
 
-  function handleGenerationInfo(generationInfo: GenerationInfo) {
-    if (generationInfo.worldName) {
-      mapNameInput.value = generationInfo.worldName;
-    }
-    if (generationInfo.originalSeed) {
-      seedInput.value = generationInfo.originalSeed;
-    }
-  }
-
   // flag mark
   mapCanvas.addEventListener("click", async (event) => {
     // in-game coords (center offset)
@@ -263,11 +256,11 @@ function main() {
       x: Math.round((event.offsetX * mapSizes.width) / mapCanvas.width - mapSizes.width / 2),
       z: -Math.round((event.offsetY * mapSizes.height) / mapCanvas.height - mapSizes.height / 2),
     };
-    prefabsFilterWorker.postMessage({ markCoords });
+    prefabsHandler.marker = markCoords;
     mapRendererWorker.postMessage({ markCoords });
   });
   resetMarkButton.addEventListener("click", async () => {
-    prefabsFilterWorker.postMessage({ markCoords: null });
+    prefabsHandler.marker = null;
     mapRendererWorker.postMessage({ markCoords: null });
   });
 
@@ -306,115 +299,23 @@ function main() {
         },
         async () => {
           loadingFiles.add("prefab.xml");
-          const all = await loadPrefabsXmlByUrl("sample_world/prefabs.xml");
+          prefabsHandler.handle(await fetch("sample_world/prefabs.xml"));
           loadingFiles.delete("prefab.xml");
-          prefabsFilterWorker.postMessage({ all });
         },
         async () => {
           loadingFiles.add("dtm.raw");
-          dtm = await loadDtmByPngUrl("sample_world/dtm.png", mapSizes.width);
+          dtmHandler.handle("sample_world/dtm.png");
           loadingFiles.delete("dtm.raw");
         },
         async () => {
           loadingFiles.add("GenerationInfo.txt");
-          handleGenerationInfo(await loadGenerationInfoByUrl("sample_world/GenerationInfo.txt"));
+          await generationInfoHandler.handle(await fetch("sample_world/GenerationInfo.txt"));
           loadingFiles.delete("GenerationInfo.txt");
         },
       ].map((p) => p())
     );
     sampleLoadButton.disabled = false;
   });
-
-  // -------------------------------------------------
-  // prefab list updates
-  // -------------------------------------------------
-  let prefabListUl: HTMLUListElement;
-  let restPrefabs: HighlightedPrefab[];
-  const renderedPrefabsNum = 10;
-  prefabsFilterWorker.addEventListener("message", async (event: { data: PrefabUpdate }) => {
-    const { prefabs, status } = event.data;
-    prefabsResultSpan.innerHTML = status;
-    if (!prefabs) {
-      return;
-    }
-    prefabListUl = document.createElement("ul");
-    restPrefabs = prefabs;
-    if (prefabListDiv.firstChild) {
-      prefabListDiv.replaceChild(prefabListUl, prefabListDiv.firstChild);
-    } else {
-      prefabListDiv.appendChild(prefabListUl);
-    }
-
-    controllerDiv.addEventListener("scroll", showAllPrefabs, { once: true });
-    await showHeadOfPrefabList();
-  });
-  async function showHeadOfPrefabList() {
-    while (restPrefabs.length !== 0) {
-      const scrollBottom = controllerDiv.offsetHeight + controllerDiv.scrollTop;
-      if (scrollBottom + 100 < controllerDiv.scrollHeight) {
-        return;
-      }
-      renderTailPrefabs();
-      await waitAnimationFrame();
-    }
-  }
-  // Note: showAllPrefabs loop could run in duplicate,
-  // if new result come when showAllPrefabs are running
-  // We can avoid it by some status check in the `while` loop condition.
-  // But it will make the implementation too complex while it is not significant one.
-  // So we don't take care it.
-  async function showAllPrefabs() {
-    while (restPrefabs.length !== 0) {
-      renderTailPrefabs();
-      await waitAnimationFrame();
-    }
-  }
-  async function waitAnimationFrame() {
-    return new Promise((r) => requestAnimationFrame(r));
-  }
-  function renderTailPrefabs() {
-    const liCount = prefabListUl.getElementsByTagName("li");
-    if (liCount.length >= 20000) {
-      restPrefabs = [];
-      prefabListUl.appendChild(warnLi("<strong>Abort: too many matching results</strong>"));
-      return;
-    }
-    const head = restPrefabs.slice(0, renderedPrefabsNum);
-    const tail = restPrefabs.slice(renderedPrefabsNum);
-    const df = document.createDocumentFragment();
-    head.forEach((p) => df.appendChild(prefabLi(p)));
-    prefabListUl.appendChild(df);
-    restPrefabs = tail;
-  }
-  function prefabLi(prefab: HighlightedPrefab) {
-    const li = document.createElement("li");
-    li.innerHTML = [
-      `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
-      `${prefab.dist ? `${formatDist(prefab.dist)},` : ""}`,
-      `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
-      `(${prefab.x}, ${prefab.z})`,
-    ].join(" ");
-    if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
-      const blocksUl = document.createElement("ul");
-      prefab.matchedBlocks.forEach((block) => {
-        const blockLi = document.createElement("li");
-        blockLi.innerHTML = [
-          `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
-          `${block.count}x`,
-          block.highlightedLabel,
-          `<small>${block.highlightedName}</small>`,
-        ].join(" ");
-        blocksUl.appendChild(blockLi);
-      });
-      li.appendChild(blocksUl);
-    }
-    return li;
-  }
-  function warnLi(message: string) {
-    const li = document.createElement("li");
-    li.innerHTML = message;
-    return li;
-  }
 
   // -------------------------------------------------
   // other model updates
@@ -429,13 +330,13 @@ function main() {
     }
 
     const inputContent = button.dataset.inputText ?? button.textContent;
-    if (!inputContent) return;
+    if (inputContent === null) return;
 
     const target = document.getElementById(button.dataset.inputFor);
     if (!target || !(target instanceof HTMLInputElement)) return;
     target.value = inputContent;
 
-    target.dispatchEvent(new Event("input"));
+    target.focus();
   });
 
   // Scroll with the mark at the center of the screen
@@ -527,14 +428,6 @@ function main() {
 
   // filter input appearance
   ["input", "focus"].forEach((eventName) => {
-    prefabsFilterInput.addEventListener(eventName, () => {
-      document.body.classList.remove("disable-prefabs-filter");
-      document.body.classList.add("disable-blocks-filter");
-    });
-    blocksFilterInput.addEventListener(eventName, () => {
-      document.body.classList.remove("disable-blocks-filter");
-      document.body.classList.add("disable-prefabs-filter");
-    });
     mapNameInput.addEventListener(eventName, () => {
       generationInfoInput.value = "";
     });
@@ -591,31 +484,53 @@ function main() {
     if (!offsetX || !offsetY) {
       return "E/W: -, N/S: -, Elev: -";
     }
+
     // relative coords on the canvas with left-top offset and these ranges should be [0, 1)
     const rx = offsetX / mapCanvas.width;
     const rz = offsetY / mapCanvas.height;
     if (rx < 0 || rx >= 1 || rz < 0 || rz >= 1) {
       return "E/W: -, N/S: -, Elev: -";
     }
+
     // coords with left-top offset
     const ox = rx * mapSizes.width;
     const oz = rz * mapSizes.height;
+
     // in-game coords (center offset)
     const x = Math.round(ox - mapSizes.width / 2);
     const z = Math.round(mapSizes.height / 2 - oz);
-    if (dtm) {
-      dtm.width = mapSizes.width;
-      const e = dtm.getElevation(Math.round(ox), Math.round(oz));
+
+    if (dtmHandler.dtm) {
+      const e = dtmHandler.dtm.getElevation(Math.round(ox), Math.round(oz), mapSizes.width);
       return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
     }
     return `E/W: ${x}, N/S: ${z}, Elev: -`;
   }
-  function formatDist(dist: number) {
-    if (dist < 1000) {
-      return `${dist}m`;
-    }
-    return `${(dist / 1000).toFixed(2)}km`;
+}
+
+function prefabLi(prefab: HighlightedPrefab) {
+  const li = document.createElement("li");
+  li.innerHTML = [
+    `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
+    `${prefab.dist ? `${humanreadableDistance(prefab.dist)},` : ""}`,
+    `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
+    `(${prefab.x}, ${prefab.z})`,
+  ].join(" ");
+  if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
+    const blocksUl = document.createElement("ul");
+    prefab.matchedBlocks.forEach((block) => {
+      const blockLi = document.createElement("li");
+      blockLi.innerHTML = [
+        `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+        `${block.count}x`,
+        block.highlightedLabel,
+        `<small>${block.highlightedName}</small>`,
+      ].join(" ");
+      blocksUl.appendChild(blockLi);
+    });
+    li.appendChild(blocksUl);
   }
+  return li;
 }
 
 if (document.readyState === "loading") {
