@@ -36,7 +36,6 @@
     "csv-parse": "^4.16.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
     "idb": "^6.1.2",

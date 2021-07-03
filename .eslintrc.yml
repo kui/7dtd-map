@@ -5,7 +5,4 @@ plugins:
 extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
-  # TODO
-  #- plugin:import/recommended
-  #- plugin:import/typescript
   - prettier
