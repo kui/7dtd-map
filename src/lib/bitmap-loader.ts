@@ -34,7 +34,7 @@ function renderSplat(pngjs: PNG) {
 }
 
 // radioation.png should convert the pixels which:
-//   * red to half-transparent
+//   * red to non-transparent
 //   * other to transparent
 function renderRad(pngjs: PNG) {
   return render(pngjs, (indata, out) => {
@@ -43,7 +43,7 @@ function renderRad(pngjs: PNG) {
       out[i + 1] = 0;
       out[i + 2] = 0;
       if (indata[i] !== 0) {
-        out[i + 3] = 80;
+        out[i + 3] = 255;
       } else {
         out[i + 3] = 0;
       }
