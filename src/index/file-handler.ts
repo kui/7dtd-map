@@ -1,8 +1,8 @@
 import throttledInvoker from "../lib/throttled-invoker";
 import { waitAnimationFrame } from "../lib/utils";
+import { LoadingHandler } from "./loading-handler";
 
 interface Doms {
-  indicator: HTMLElement;
   input: HTMLInputElement;
 }
 
@@ -11,9 +11,11 @@ type Listener = (file: File) => Promise<unknown> | unknown;
 export class FileHandler {
   private doms: Doms;
   private listeners: Map<RegExp | string, Listener[]> = new Map();
+  loadingHandler: LoadingHandler;
 
-  constructor(doms: Doms) {
+  constructor(doms: Doms, loadingHandler: LoadingHandler) {
     this.doms = doms;
+    this.loadingHandler = loadingHandler;
 
     const throttledProcess = throttledInvoker(() => this.processFiles());
     doms.input.addEventListener("input", throttledProcess);
@@ -35,6 +37,7 @@ export class FileHandler {
   }
 
   private async processFiles() {
+    this.loadingHandler.add(Array.from(this.doms.input.files ?? []).map((f) => f.name));
     let file = this.popFile();
     while (file instanceof File) {
       const listeners = this.getListeners(file.name);
@@ -47,6 +50,7 @@ export class FileHandler {
         await Promise.all(listeners.map(async (fn) => fn(file as File)));
         console.timeEnd(`Processed: ${file.name}`);
       }
+      this.loadingHandler.delete(file.name);
       await waitAnimationFrame();
       file = this.popFile();
     }
@@ -60,18 +64,7 @@ export class FileHandler {
     });
   }
 
-  private updateIndicator() {
-    const names = Array.from(this.doms.input.files ?? []).map((f) => f.name);
-    console.log("Update indicator", names);
-    if (names.length === 0) {
-      this.doms.indicator.textContent = `-`;
-    } else {
-      this.doms.indicator.textContent = `Loading: ${names.join(", ")}`;
-    }
-  }
-
   private popFile(): File | null {
-    this.updateIndicator();
     if (!this.doms.input.files?.length) return null;
     const files = Array.from(this.doms.input.files);
     this.updateFiles(files.slice(1));

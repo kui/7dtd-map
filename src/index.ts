@@ -14,12 +14,24 @@ import { FileHandler } from "./index/file-handler";
 import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
+import { LoadingHandler } from "./index/loading-handler";
 
 function main() {
   // init
 
   presetButton.init();
   copyButton.init();
+
+  const loadingHandler = new LoadingHandler({
+    indicator: component("loading_indicator"),
+    disablings: {
+      files: component("files", HTMLInputElement),
+      select: component("map_list", HTMLSelectElement),
+      create: component("create_map", HTMLButtonElement),
+      delete: component("delete_map", HTMLButtonElement),
+      mapName: component("map_name", HTMLInputElement),
+    },
+  });
 
   const mapStorage = new MapStorage();
   new MapSelector(
@@ -45,7 +57,8 @@ function main() {
       scale: component("scale", HTMLInputElement),
     },
     new Worker("map-renderer.js"),
-    mapStorage
+    mapStorage,
+    loadingHandler
   );
 
   const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
@@ -100,10 +113,7 @@ function main() {
     mapCanvasHandler.update({ markerCoords: coords });
   });
 
-  const fileHandler = new FileHandler({
-    input: component("files", HTMLInputElement),
-    indicator: component("loading_indicator", HTMLElement),
-  });
+  const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
     ["biomes.png", async (file) => mapCanvasHandler.update({ biomesImg: await createImageBitmap(file) })],
     [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.update({ splat3Img: await loadSplatBitmapByFile(file) })],

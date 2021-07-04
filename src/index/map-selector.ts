@@ -77,7 +77,6 @@ export class MapSelector {
   }
 
   private async changeMap(mapId: number, isInit = false) {
-    this.disableDoms(true);
     if (!isInit) await this.initPromise;
     console.time("Change map");
     await this.storage.changeMap(mapId);
@@ -85,7 +84,6 @@ export class MapSelector {
     const map = requireNonnull(await this.storage.getCurrent("maps"));
     this.selectOptionByMapId(map.id);
     this.doms.mapName.value = map.name;
-    this.disableDoms(false);
   }
 
   private selectOptionByMapId(mapId: number) {

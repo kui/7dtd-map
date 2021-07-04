@@ -1,5 +1,6 @@
 import { MapStorage } from "../lib/map-storage";
 import { MapRendererInMessage, MapRendererOutMessage } from "../map-renderer";
+import { LoadingHandler } from "./loading-handler";
 
 const FIELDNAME_STORAGENAME_MAP = {
   biomesImg: "biomes",
@@ -26,7 +27,7 @@ export class MapCanvasHandler {
   private storage: MapStorage;
   private mapSizeListeners: ((mapSize: RectSize) => Promise<unknown> | unknown)[] = [];
 
-  constructor(doms: Doms, worker: Worker, storage: MapStorage) {
+  constructor(doms: Doms, worker: Worker, storage: MapStorage, loadingHandler: LoadingHandler) {
     this.doms = doms;
     this.worker = worker;
     this.storage = storage;
@@ -45,11 +46,16 @@ export class MapCanvasHandler {
 
     MapStorage.addListener(async () => {
       console.log("Change map: ", await storage.currentId());
-      this.update({ biomesImg: null, splat3Img: null, splat4Img: null }, false);
+      this.update({ biomesImg: null, splat3Img: null, splat4Img: null, radImg: null }, false);
+      loadingHandler.add(["bioms", "splat3", "splat4", "radiation"]);
       this.update({ biomesImg: (await storage.getCurrent("biomes"))?.data }, false);
+      loadingHandler.delete("bioms");
       this.update({ splat3Img: (await storage.getCurrent("splat3"))?.data }, false);
+      loadingHandler.delete("splat3");
       this.update({ splat4Img: (await storage.getCurrent("splat4"))?.data }, false);
+      loadingHandler.delete("splat4");
       this.update({ radImg: (await storage.getCurrent("rad"))?.data }, false);
+      loadingHandler.delete("radiation");
     });
 
     worker.addEventListener("message", (e: MessageEvent<MapRendererOutMessage>) => {
