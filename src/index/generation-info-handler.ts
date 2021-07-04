@@ -17,7 +17,7 @@ export class GenerationInfoHandler {
 
     MapStorage.addListener(async () => {
       const i = await storage.getCurrent("generationInfo");
-      if (i) doms.output.value = i?.data;
+      doms.output.value = i?.data ?? "";
     });
   }
 
