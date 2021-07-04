@@ -25,7 +25,6 @@
     "@types/bunyan-format": "^0.2.3",
     "@types/css-font-loading-module": "0.0.4",
     "@types/node": "^15.12.4",
-    "@types/pako": "^1.0.1",
     "@types/pngjs": "^6.0.0",
     "@types/webpack": "^5.28.0",
     "@types/xml2js": "^0.4.8",
