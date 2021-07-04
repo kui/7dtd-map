@@ -6,11 +6,11 @@ interface Doms {
   input: HTMLInputElement;
 }
 
-type Listener = (file: File) => Promise<void>;
+type Listener = (file: File) => Promise<unknown> | unknown;
 
 export class FileHandler {
   private doms: Doms;
-  private listeners: Map<RegExp | string, ((file: File) => Promise<void>)[]> = new Map();
+  private listeners: Map<RegExp | string, Listener[]> = new Map();
 
   constructor(doms: Doms) {
     this.doms = doms;

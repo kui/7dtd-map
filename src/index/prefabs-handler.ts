@@ -23,11 +23,11 @@ export class PrefabsHandler {
     this.worker = worker;
     this.storage = storage;
 
-    storage.listeners.push(async () => {
+    MapStorage.addListener(async () => {
       const o = await storage.getCurrent("prefabs");
       worker.postMessage({ all: o?.data ?? [] });
     });
-    worker.addEventListener("message", (event: { data: PrefabUpdate }) => {
+    worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
       const { prefabs, status } = event.data;
       this.listeners.map((fn) => fn(prefabs));
       doms.status.textContent = status;

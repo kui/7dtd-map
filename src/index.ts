@@ -1,5 +1,4 @@
 import { loadSplatBitmapByFile, loadRadBitmapByFile } from "./lib/bitmap-loader";
-import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import * as copyButton from "./lib/copy-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
@@ -11,56 +10,38 @@ import { DelayedRenderer } from "./lib/delayed-renderer";
 import { CursorCoodsHandler } from "./index/cursor-coods-handler";
 import { MarkerHandler } from "./index/marker-handler";
 import { FileHandler } from "./index/file-handler";
-
-declare class MapRendererWorker extends Worker {
-  postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
-  postMessage(message: MapRendererInMessage, options?: PostMessageOptions): void;
-}
+import { MapCanvasHandler } from "./index/map-canvas-handler";
 
 function main() {
   const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const downloadButton = document.getElementById("download") as HTMLButtonElement;
-  const showBiomesInput = document.getElementById("show_biomes") as HTMLInputElement;
-  const showSplat3Input = document.getElementById("show_splat3") as HTMLInputElement;
-  const showSplat4Input = document.getElementById("show_splat4") as HTMLInputElement;
-  const showRadInput = document.getElementById("show_radiation") as HTMLInputElement;
-  const showPrefabsInput = document.getElementById("show_prefabs") as HTMLInputElement;
-  const scaleInput = document.getElementById("scale") as HTMLInputElement;
-  const signSizeInput = document.getElementById("sign_size") as HTMLInputElement;
-  const brightnessInput = document.getElementById("brightness") as HTMLInputElement;
   const mapCanvas = document.getElementById("map") as HTMLCanvasElement;
   const sampleLoadButton = document.getElementById("sample_load") as HTMLButtonElement;
 
-  const mapRendererWorker = new Worker("map-renderer.js") as MapRendererWorker;
-
   // init
-  const rendererCanvas = mapCanvas.transferControlToOffscreen();
-  mapRendererWorker.postMessage(
-    {
-      canvas: rendererCanvas,
-      showBiomes: showBiomesInput.checked,
-      showSplat3: showSplat3Input.checked,
-      showSplat4: showSplat4Input.checked,
-      showRad: showRadInput.checked,
-      showPrefabs: showPrefabsInput.checked,
-      signSize: parseInt(signSizeInput.value),
-      brightness: `${brightnessInput.value}%`,
-      scale: parseFloat(scaleInput.value),
-    },
-    [rendererCanvas]
-  );
 
   copyButton.init();
 
   const mapStorage = new MapStorage();
-  const mapSelector = new MapSelector(
+  new MapSelector(
     {
       select: component("map_list", HTMLSelectElement),
       create: component("create_map", HTMLButtonElement),
       delete: component("delete_map", HTMLButtonElement),
       mapName: component("map_name", HTMLInputElement),
     },
+    mapStorage
+  );
+
+  const mapCanvasHandler = new MapCanvasHandler(
+    {
+      canvas: component("map", HTMLCanvasElement),
+      signSize: component("sign_size", HTMLInputElement),
+      brightness: component("brightness", HTMLInputElement),
+      scale: component("scale", HTMLInputElement),
+    },
+    new Worker("map-renderer.js"),
     mapStorage
   );
 
@@ -81,7 +62,7 @@ function main() {
     mapStorage
   );
   prefabsHandler.listeners.push(async (prefabs) => {
-    mapRendererWorker.postMessage({ prefabs });
+    mapCanvasHandler.update({ prefabs });
   });
 
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
@@ -100,9 +81,7 @@ function main() {
     },
     (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
   );
-  mapRendererWorker.addEventListener("message", (event: MessageEvent<MapRendererOutMessage>) => {
-    cursorCoodsHandler.mapSize = event.data.mapSizes;
-  });
+  mapCanvasHandler.addMapSizeListener((size) => (cursorCoodsHandler.mapSize = size));
 
   const markerHandler = new MarkerHandler(
     {
@@ -112,12 +91,10 @@ function main() {
     },
     (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
   );
-  mapRendererWorker.addEventListener("message", (event: MessageEvent<MapRendererOutMessage>) => {
-    markerHandler.mapSize = event.data.mapSizes;
-  });
+  mapCanvasHandler.addMapSizeListener((size) => (markerHandler.mapSize = size));
   markerHandler.listeners.push(async (coords) => {
     prefabsHandler.marker = coords;
-    mapRendererWorker.postMessage({ markerCoords: coords });
+    mapCanvasHandler.update({ markerCoords: coords });
   });
 
   const fileHandler = new FileHandler({
@@ -125,65 +102,14 @@ function main() {
     indicator: component("loading_indicator", HTMLElement),
   });
   fileHandler.addListeners([
-    [
-      "biomes.png",
-      async (file) => {
-        const biomesImg = await createImageBitmap(file);
-        mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
-      },
-    ],
-    [
-      /splat3(_processed)?\.png/,
-      async (file) => {
-        const splat3Img = await loadSplatBitmapByFile(file);
-        mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
-      },
-    ],
-    [
-      "splat4.png",
-      async (file) => {
-        const splat4Img = await loadSplatBitmapByFile(file);
-        mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
-      },
-    ],
-    [
-      "radiation.png",
-      async (file) => {
-        const radImg = await loadRadBitmapByFile(file);
-        mapRendererWorker.postMessage({ radImg }, [radImg]);
-      },
-    ],
-    ["prefabs.xml", async (file) => prefabsHandler.handle(file)],
+    ["biomes.png", async (file) => mapCanvasHandler.update({ biomesImg: await createImageBitmap(file) })],
+    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.update({ splat3Img: await loadSplatBitmapByFile(file) })],
+    ["splat4.png", async (file) => mapCanvasHandler.update({ splat4Img: await loadSplatBitmapByFile(file) })],
+    ["radiation.png", async (file) => mapCanvasHandler.update({ radImg: await loadRadBitmapByFile(file) })],
+    ["prefabs.xml", async (file) => await prefabsHandler.handle(file)],
     [/dtm\.(raw|png)/, async (file) => await dtmHandler.handle(file)],
-    ["GenerationInfo.txt", async (file) => generationInfoHandler.handle(file)],
+    ["GenerationInfo.txt", async (file) => await generationInfoHandler.handle(file)],
   ]);
-
-  //
-
-  const restInputs = [
-    showBiomesInput,
-    showSplat3Input,
-    showSplat4Input,
-    showRadInput,
-    showPrefabsInput,
-    signSizeInput,
-    brightnessInput,
-    scaleInput,
-  ];
-  restInputs.forEach((e) => {
-    e.addEventListener("input", () => {
-      mapRendererWorker.postMessage({
-        showBiomes: showBiomesInput.checked,
-        showSplat3: showSplat3Input.checked,
-        showSplat4: showSplat4Input.checked,
-        showRad: showRadInput.checked,
-        showPrefabs: showPrefabsInput.checked,
-        signSize: parseInt(signSizeInput.value),
-        brightness: `${brightnessInput.value}%`,
-        scale: parseFloat(scaleInput.value),
-      });
-    });
-  });
 
   // drag and drop
   document.addEventListener("drop", async (event) => {
