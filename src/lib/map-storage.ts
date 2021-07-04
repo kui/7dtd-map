@@ -147,10 +147,6 @@ async function changeMap(db: Db, mapId: number) {
   await db.put("selectedMap", { id: 0, mapId });
 }
 
-export function isDefaultWorldName(name: string): boolean {
-  return name === DEFAULT_WORLD_NAME;
-}
-
 async function currentId(db: Db): Promise<number> {
   const map = await db.get("selectedMap", 0);
   if (map) {

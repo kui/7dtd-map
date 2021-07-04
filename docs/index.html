@@ -27,6 +27,7 @@
     <div id="controller">
       <p>
         <button id="download">Download</button>
+        <input id="files" type="file" />
       </p>
       <table>
         <tr>
@@ -41,7 +42,7 @@
           </td>
         </tr>
         <tr>
-          <th>GenerationInfo.txt</th>
+          <th><label for="show_generation_info">GenerationInfo.txt</label></th>
           <td>
             <input
               id="show_generation_info"
@@ -50,7 +51,6 @@
                 generation_info_output_wrapper.style.display = checked ? '' : 'none';
                 generation_info_output.dispatchEvent(new Event('input'))"
             />
-            <input id="generation_info" type="file" />
           </td>
         </tr>
         <tr>
@@ -70,47 +70,40 @@
           </td>
         </tr>
         <tr>
-          <th><label for="biomes">biomes.png</label></th>
+          <th><label for="show_biomes">biomes.png</label></th>
           <td class="file-inputs">
             <input id="show_biomes" type="checkbox" checked title="Show biomes.png" />
-            <input id="biomes" type="file" />
           </td>
         </tr>
         <tr>
           <th>
-            <label for="splat3">splat3.png or splat3_processed.png</label>
+            <label for="show_splat3">splat3.png or splat3_processed.png</label>
           </th>
           <td class="file-inputs">
             <input id="show_splat3" type="checkbox" checked title="Show splat3.png" />
-            <input id="splat3" type="file" />
           </td>
         </tr>
         <tr>
-          <th><label for="splat4">splat4_processed.png</label></th>
+          <th><label for="show_splat4">splat4_processed.png</label></th>
           <td class="file-inputs">
             <input id="show_splat4" type="checkbox" checked title="Show splat4_processed.png" />
-            <input id="splat4" type="file" />
           </td>
         </tr>
         <tr>
-          <th><label for="radiation">radiation.png</label></th>
+          <th><label for="show_radiation">radiation.png</label></th>
           <td class="file-inputs">
             <input id="show_radiation" type="checkbox" checked title="Show radiation.png" />
-            <input id="radiation" type="file" />
           </td>
         </tr>
         <tr>
-          <th><label for="prefabs">prefabs.xml</label></th>
+          <th><label for="show_prefabs">prefabs.xml</label></th>
           <td class="file-inputs">
             <input id="show_prefabs" type="checkbox" checked title="Show prefabs" />
-            <input id="prefabs" name="prefabs" type="file" />
           </td>
         </tr>
         <tr>
           <th><label for="dtm">dtm.raw</label></th>
-          <td>
-            <input id="dtm" name="dtm" type="file" />
-          </td>
+          <td></td>
         </tr>
         <tr>
           <th><label for="scale">Scale</label></th>

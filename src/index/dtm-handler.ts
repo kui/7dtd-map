@@ -1,5 +1,6 @@
+import { PNG } from "pngjs/browser";
 import { MapStorage } from "../lib/map-storage";
-import { pngjsByUrl } from "../lib/pngjs";
+import { pngjsByBlob, pngjsByUrl } from "../lib/pngjs";
 
 export class Dtm {
   data: Uint8Array;
@@ -29,19 +30,29 @@ export class DtmHandler {
     });
   }
 
-  async handle(blobOrUrl: Blob | string): Promise<Dtm> {
+  async handle(blobOrUrl: File | string): Promise<void> {
     if (typeof blobOrUrl === "string") {
       this.dtm = await loadDtmByPngUrl(blobOrUrl);
-    } else {
+    } else if (blobOrUrl.type.toLocaleLowerCase() === "image/png") {
+      this.dtm = await loadDtmByPngBlob(blobOrUrl);
+    } else if (blobOrUrl.type.toLocaleLowerCase() === "image/raw") {
       this.dtm = await loadDtmByRaw(blobOrUrl);
+    } else {
+      throw Error(`Unknown data type: name=${blobOrUrl.name}, type=${blobOrUrl.type}`);
     }
     this.storage.put("elevations", this.dtm.data);
-    return this.dtm;
   }
 }
 
 async function loadDtmByPngUrl(url: string): Promise<Dtm> {
-  const png = await pngjsByUrl(url);
+  return convertPng(await pngjsByUrl(url));
+}
+
+async function loadDtmByPngBlob(blob: Blob): Promise<Dtm> {
+  return convertPng(await pngjsByBlob(blob));
+}
+
+function convertPng(png: PNG) {
   const data = new Uint8Array(png.data.length / 4);
   for (let i = 0; i < data.length; i++) {
     data[i] = png.data[i * 4];

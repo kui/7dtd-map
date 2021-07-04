@@ -1,4 +1,4 @@
-import { isDefaultWorldName, MapStorage } from "../lib/map-storage";
+import { MapStorage } from "../lib/map-storage";
 
 interface Doms {
   mapName: HTMLInputElement;
@@ -30,7 +30,7 @@ export class GenerationInfoHandler {
     }
 
     const worldName = extractWorldName(generationInfo);
-    if (worldName && isOverwritableWorldName(this.doms.mapName.value.trim())) {
+    if (worldName) {
       this.doms.mapName.value = worldName;
       this.doms.mapName.dispatchEvent(new Event("input"));
     }
@@ -40,10 +40,6 @@ export class GenerationInfoHandler {
 
     this.storage.put("generationInfo", generationInfo);
   }
-}
-
-function isOverwritableWorldName(name: string) {
-  return name.length === 0 || isDefaultWorldName(name);
 }
 
 function extractWorldName(generationInfo: string) {

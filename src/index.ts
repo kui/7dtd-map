@@ -1,4 +1,4 @@
-import { loadBitmapByUrl, loadSplatBitmapByFile, loadSplatBitmapByUrl, loadRadBitmapByFile, loadRadBitmapByUrl } from "./lib/bitmap-loader";
+import { loadSplatBitmapByFile, loadRadBitmapByFile } from "./lib/bitmap-loader";
 import { MapRendererInMessage, MapRendererOutMessage } from "./map-renderer";
 import * as copyButton from "./lib/copy-button";
 import { MapSelector } from "./index/map-selector";
@@ -10,6 +10,7 @@ import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
 import { CursorCoodsHandler } from "./index/cursor-coods-handler";
 import { MarkerHandler } from "./index/marker-handler";
+import { FileHandler } from "./index/file-handler";
 
 declare class MapRendererWorker extends Worker {
   postMessage(message: MapRendererInMessage, transfer: Transferable[]): void;
@@ -18,21 +19,13 @@ declare class MapRendererWorker extends Worker {
 
 function main() {
   const mapNameInput = document.getElementById("map_name") as HTMLInputElement;
-  const generationInfoInput = document.getElementById("generation_info") as HTMLInputElement;
-  const loadingIndicatorP = document.getElementById("loading_indicator") as HTMLParagraphElement;
   const controllerDiv = document.getElementById("controller") as HTMLDivElement;
   const downloadButton = document.getElementById("download") as HTMLButtonElement;
   const showBiomesInput = document.getElementById("show_biomes") as HTMLInputElement;
-  const biomesInput = document.getElementById("biomes") as HTMLInputElement;
   const showSplat3Input = document.getElementById("show_splat3") as HTMLInputElement;
-  const splat3Input = document.getElementById("splat3") as HTMLInputElement;
   const showSplat4Input = document.getElementById("show_splat4") as HTMLInputElement;
-  const splat4Input = document.getElementById("splat4") as HTMLInputElement;
   const showRadInput = document.getElementById("show_radiation") as HTMLInputElement;
-  const radInput = document.getElementById("radiation") as HTMLInputElement;
   const showPrefabsInput = document.getElementById("show_prefabs") as HTMLInputElement;
-  const prefabsInput = document.getElementById("prefabs") as HTMLInputElement;
-  const dtmInput = document.getElementById("dtm") as HTMLInputElement;
   const scaleInput = document.getElementById("scale") as HTMLInputElement;
   const signSizeInput = document.getElementById("sign_size") as HTMLInputElement;
   const brightnessInput = document.getElementById("brightness") as HTMLInputElement;
@@ -125,74 +118,45 @@ function main() {
     mapRendererWorker.postMessage({ markerCoords: coords });
   });
 
-  // -------------------------------------------------
-  // map update events
-  // -------------------------------------------------
-  const loadingFiles = new Set();
+  const fileHandler = new FileHandler({
+    input: component("files", HTMLInputElement),
+    indicator: component("loading_indicator", HTMLElement),
+  });
+  fileHandler.addListeners([
+    [
+      "biomes.png",
+      async (file) => {
+        const biomesImg = await createImageBitmap(file);
+        mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
+      },
+    ],
+    [
+      /splat3(_processed)?\.png/,
+      async (file) => {
+        const splat3Img = await loadSplatBitmapByFile(file);
+        mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
+      },
+    ],
+    [
+      "splat4.png",
+      async (file) => {
+        const splat4Img = await loadSplatBitmapByFile(file);
+        mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
+      },
+    ],
+    [
+      "radiation.png",
+      async (file) => {
+        const radImg = await loadRadBitmapByFile(file);
+        mapRendererWorker.postMessage({ radImg }, [radImg]);
+      },
+    ],
+    ["prefabs.xml", async (file) => prefabsHandler.handle(file)],
+    [/dtm\.(raw|png)/, async (file) => await dtmHandler.handle(file)],
+    ["GenerationInfo.txt", async (file) => generationInfoHandler.handle(file)],
+  ]);
 
-  // inputs
-  biomesInput.addEventListener("input", async () => {
-    console.log("Load biome");
-    const file = biomesInput.files?.[0];
-    if (!file) return;
-    loadingFiles.add("biomes.png");
-    const biomesImg: ImageBitmap = await createImageBitmap(file);
-    loadingFiles.delete("biomes.png");
-    if (!biomesImg) return;
-    mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
-  });
-  splat3Input.addEventListener("input", async () => {
-    const file = splat3Input.files?.[0];
-    if (!file) return;
-    console.log("Load splat3");
-    loadingFiles.add(file.name);
-    const splat3Img = await loadSplatBitmapByFile(file);
-    loadingFiles.delete(file.name);
-    if (!splat3Img) return;
-    mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
-  });
-  splat4Input.addEventListener("input", async () => {
-    const file = splat4Input.files?.[0];
-    if (!file) return;
-    console.log("Load splat4");
-    loadingFiles.add("splat4_processed.png");
-    const splat4Img = await loadSplatBitmapByFile(file);
-    loadingFiles.delete("splat4_processed.png");
-    if (!splat4Img) return;
-    mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
-  });
-  radInput.addEventListener("input", async () => {
-    const file = radInput.files?.[0];
-    if (!file) return;
-    console.log("Load radiation");
-    loadingFiles.add("radiation.png");
-    const radImg = await loadRadBitmapByFile(file);
-    loadingFiles.delete("radiation.png");
-    if (!radImg) return;
-    mapRendererWorker.postMessage({ radImg }, [radImg]);
-  });
-  prefabsInput.addEventListener("input", async () => {
-    const file = prefabsInput.files?.[0];
-    if (!file) return;
-    console.log("Load prefabs");
-    loadingFiles.add("prefabs.xml");
-    prefabsHandler.handle(file);
-    loadingFiles.delete("prefabs.xml");
-  });
-  dtmInput.addEventListener("input", async () => {
-    const file = dtmInput.files?.[0];
-    if (!file) return;
-    loadingFiles.add("dtm.raw");
-    dtmHandler.handle(file);
-    loadingFiles.delete("dtm.raw");
-  });
-  generationInfoInput.addEventListener("input", async () => {
-    const file = generationInfoInput.files?.[0];
-    if (!file) return;
-    loadingFiles.add("GenerationInfo.txt");
-    await generationInfoHandler.handle(file);
-    loadingFiles.delete("GenerationInfo.txt");
-  });
+  //
 
   const restInputs = [
     showBiomesInput,
@@ -225,106 +189,24 @@ function main() {
       return;
     }
     event.preventDefault();
-    let files = Array.from(event.dataTransfer.files);
-    const hasSplat3ProcessedPng = files.some((f) => f.name === "splat3_processed.png");
-    if (hasSplat3ProcessedPng) {
-      console.log("Ignore `splat3.png` because `splat3_processed.png` was given. `splat3.png` is a subset data of `splat3_processed.png`.");
-      files = files.filter((f) => f.name !== "splat3.png");
-    }
-    await Promise.all(files.map((f) => handleDroppedFiles(f)));
+    fileHandler.pushFiles(Array.from(event.dataTransfer.files));
   });
 
-  async function handleDroppedFiles(file: File) {
-    loadingFiles.add(file.name);
-    try {
-      console.time(file.name);
-      if (file.name === "biomes.png") {
-        const biomesImg = await createImageBitmap(file);
-        mapRendererWorker.postMessage({ biomesImg }, [biomesImg]);
-        biomesInput.value = "";
-      } else if (file.name === "splat3.png" || file.name === "splat3_processed.png") {
-        const splat3Img = await loadSplatBitmapByFile(file);
-        mapRendererWorker.postMessage({ splat3Img }, [splat3Img]);
-        splat3Input.value = "";
-      } else if (file.name === "splat4_processed.png") {
-        const splat4Img = await loadSplatBitmapByFile(file);
-        mapRendererWorker.postMessage({ splat4Img }, [splat4Img]);
-        splat4Input.value = "";
-      } else if (file.name === "radiation.png") {
-        const radImg = await loadRadBitmapByFile(file);
-        mapRendererWorker.postMessage({ radImg }, [radImg]);
-        radInput.value = "";
-      } else if (file.name === "prefabs.xml") {
-        prefabsHandler.handle(file);
-        prefabsInput.value = "";
-      } else if (file.name === "dtm.raw") {
-        dtmHandler.handle(file);
-        dtmInput.value = "";
-      } else if (file.name === "GenerationInfo.txt") {
-        await generationInfoHandler.handle(file);
-        generationInfoInput.value = "";
-      } else {
-        console.warn("Unknown file: %s, %s", file.name, file.type);
-      }
-      console.timeEnd(file.name);
-    } catch (e) {
-      console.error(e);
-      loadingFiles.delete(file.name);
-      loadingFiles.add(`LoadError(${file.name})`);
-    }
-    loadingFiles.delete(file.name);
-  }
-
   // sample load
+  const sampleWorldDir = "sample_world";
+  const filenames = [
+    "biomes.png",
+    "splat3_processed.png",
+    "splat4_processed.png",
+    "radiation.png",
+    "prefabs.xml",
+    "dtm.png",
+    "GenerationInfo.txt",
+  ];
   sampleLoadButton.addEventListener("click", async () => {
     sampleLoadButton.disabled = true;
-    await Promise.all(
-      [
-        async () => {
-          loadingFiles.add("biomes.png");
-          mapRendererWorker.postMessage({
-            biomesImg: await loadBitmapByUrl("sample_world/biomes.png"),
-          });
-          loadingFiles.delete("biomes.png");
-        },
-        async () => {
-          loadingFiles.add("splat3_processed.png");
-          mapRendererWorker.postMessage({
-            splat3Img: await loadSplatBitmapByUrl("sample_world/splat3_processed.png"),
-          });
-          loadingFiles.delete("splat3_processed.png");
-        },
-        async () => {
-          loadingFiles.add("splat4_processed.png");
-          mapRendererWorker.postMessage({
-            splat4Img: await loadSplatBitmapByUrl("sample_world/splat4_processed.png"),
-          });
-          loadingFiles.delete("splat4_processed.png");
-        },
-        async () => {
-          loadingFiles.add("radiation.png");
-          mapRendererWorker.postMessage({
-            radImg: await loadRadBitmapByUrl("sample_world/radiation.png"),
-          });
-          loadingFiles.delete("radiation.png");
-        },
-        async () => {
-          loadingFiles.add("prefab.xml");
-          prefabsHandler.handle(await fetch("sample_world/prefabs.xml"));
-          loadingFiles.delete("prefab.xml");
-        },
-        async () => {
-          loadingFiles.add("dtm.raw");
-          dtmHandler.handle("sample_world/dtm.png");
-          loadingFiles.delete("dtm.raw");
-        },
-        async () => {
-          loadingFiles.add("GenerationInfo.txt");
-          await generationInfoHandler.handle(await fetch("sample_world/GenerationInfo.txt"));
-          loadingFiles.delete("GenerationInfo.txt");
-        },
-      ].map((p) => p())
-    );
+    const files = await Promise.all(filenames.map((name) => fetchAsFile(`${sampleWorldDir}/${name}`)));
+    fileHandler.pushFiles(files);
     sampleLoadButton.disabled = false;
   });
 
@@ -362,13 +244,6 @@ function main() {
   // style handlers
   // -------------------------------------------------
 
-  // filter input appearance
-  ["input", "focus"].forEach((eventName) => {
-    mapNameInput.addEventListener(eventName, () => {
-      generationInfoInput.value = "";
-    });
-  });
-
   // drag and drop
   document.addEventListener("dragenter", (event) => {
     if (!event.dataTransfer?.types.includes("Files")) {
@@ -402,19 +277,19 @@ function main() {
     event.preventDefault();
     document.body.classList.remove("dragovered");
   });
+}
 
-  // -------------------------------------------------
-  // helper methods
-  // -------------------------------------------------
-  function updateLoadingIndicator() {
-    if (loadingFiles.size === 0) {
-      loadingIndicatorP.textContent = "-";
-    } else {
-      loadingIndicatorP.textContent = `Loading: ${Array.from(loadingFiles).join(", ")}`;
-    }
-    requestAnimationFrame(updateLoadingIndicator);
-  }
-  updateLoadingIndicator();
+async function fetchAsFile(uri: string): Promise<File> {
+  console.time(`fetchAsFile: ${uri}`);
+  const res = await fetch(uri);
+  const blob = await res.blob();
+  const file = new File([blob], basename(uri), { type: blob.type });
+  console.timeEnd(`fetchAsFile: ${uri}`);
+  return file;
+}
+
+function basename(path: string) {
+  return path.substring(path.lastIndexOf("/") + 1);
 }
 
 function prefabLi(prefab: HighlightedPrefab) {

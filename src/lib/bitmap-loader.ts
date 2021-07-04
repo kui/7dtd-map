@@ -1,19 +1,6 @@
 import { PNG } from "pngjs/browser";
-import { pngjsByBlob, pngjsByUrl } from "./pngjs";
+import { pngjsByBlob } from "./pngjs";
 
-export async function loadBitmapByUrl(url: string): Promise<ImageBitmap> {
-  const res = await window.fetch(url);
-  return window.createImageBitmap(await res.blob());
-}
-export async function loadSplatBitmapByUrl(url: string): Promise<ImageBitmap> {
-  console.time(`loadPng: ${url}`);
-  const p = await pngjsByUrl(url);
-  console.timeEnd(`loadPng: ${url}`);
-  console.time(`renderSplat: ${url}`);
-  const i = renderSplat(p);
-  console.timeEnd(`renderSplat: ${url}`);
-  return i;
-}
 export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
   console.time(`loadPng: ${file.name}`);
   const p = await pngjsByBlob(file);
@@ -25,10 +12,6 @@ export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
 }
 export async function loadRadBitmapByFile(file: File): Promise<ImageBitmap> {
   const p = await pngjsByBlob(file);
-  return renderRad(p);
-}
-export async function loadRadBitmapByUrl(url: string): Promise<ImageBitmap> {
-  const p = await pngjsByUrl(url);
   return renderRad(p);
 }
 
@@ -71,11 +54,11 @@ function renderRad(pngjs: PNG) {
 type ConvertImageBitmap = (indata: Uint8Array, outData: Uint8ClampedArray) => void;
 
 function render({ data, height, width }: PNG, copyFunction: ConvertImageBitmap) {
-  const canvas = new window.OffscreenCanvas(width, height);
+  const canvas = new OffscreenCanvas(width, height);
   const context = canvas.getContext("2d");
   if (!context) throw Error("Unexpected error: Canvas context not found");
   const imageData = context.getImageData(0, 0, width, height);
   copyFunction(data, imageData.data);
   context.putImageData(imageData, 0, 0);
-  return window.createImageBitmap(canvas);
+  return createImageBitmap(canvas);
 }

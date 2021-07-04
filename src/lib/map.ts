@@ -66,6 +66,11 @@ export default class GameMap {
   }
 
   async updateImmediately(): Promise<void> {
+    if (!this.biomesImg && !this.splat3Img && !this.splat4Img) {
+      this.canvas.width = this.canvas.height = 0;
+      return;
+    }
+
     this.canvas.width = this.width * this.scale;
     this.canvas.height = this.height * this.scale;
 
