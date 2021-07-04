@@ -77,15 +77,23 @@ export class MapSelector {
   }
 
   private async changeMap(mapId: number, isInit = false) {
+    this.disableDoms(true);
     if (!isInit) await this.initPromise;
+    console.time("Change map");
     await this.storage.changeMap(mapId);
+    console.timeEnd("Change map");
     const map = requireNonnull(await this.storage.getCurrent("maps"));
     this.selectOptionByMapId(map.id);
     this.doms.mapName.value = map.name;
+    this.disableDoms(false);
   }
 
   private selectOptionByMapId(mapId: number) {
     this.doms.select.selectedIndex = Array.from(this.doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === mapId);
+  }
+
+  private disableDoms(isDisabled: boolean) {
+    Object.values(this.doms).forEach((d) => (d.disabled = isDisabled));
   }
 }
 
