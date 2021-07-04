@@ -1,5 +1,4 @@
 import GameMap from "./lib/map";
-import { MapStorage } from "./lib/map-storage";
 
 export type MapRendererInMessage = Partial<
   Pick<
@@ -29,16 +28,7 @@ export interface MapRendererOutMessage {
 
 declare function postMessage(message: MapRendererOutMessage): void;
 
-const FIELDNAME_STORAGENAME_MAP = {
-  biomesImg: "biomes",
-  splat3Img: "splat3",
-  splat4Img: "splat4",
-  radImg: "rad",
-} as const;
-
 let map: GameMap | null = null;
-const storage = new MapStorage();
-
 onmessage = async (event) => {
   const inMessage = event.data as MapRendererInMessage;
   if (!map) {
@@ -50,11 +40,7 @@ onmessage = async (event) => {
   }
 
   await Object.assign(map, inMessage).update();
-  for (const entry of Object.entries(inMessage)) {
-    if (isStoreTarget(entry)) {
-      storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], entry[1]);
-    }
-  }
+
   postMessage({
     mapSize: {
       width: map.width,
@@ -62,7 +48,3 @@ onmessage = async (event) => {
     },
   });
 };
-
-function isStoreTarget(e: Entry<MapRendererInMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
-  return e[0] in FIELDNAME_STORAGENAME_MAP;
-}

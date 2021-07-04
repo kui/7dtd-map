@@ -1,6 +1,13 @@
 import { MapStorage } from "../lib/map-storage";
 import { MapRendererInMessage, MapRendererOutMessage } from "../map-renderer";
 
+const FIELDNAME_STORAGENAME_MAP = {
+  biomesImg: "biomes",
+  splat3Img: "splat3",
+  splat4Img: "splat4",
+  radImg: "rad",
+} as const;
+
 interface Doms {
   canvas: HTMLCanvasElement;
   biomesAlpha: HTMLInputElement;
@@ -16,11 +23,13 @@ interface Doms {
 export class MapCanvasHandler {
   private doms: Doms;
   private worker: Worker;
+  private storage: MapStorage;
   private mapSizeListeners: ((mapSize: RectSize) => Promise<unknown> | unknown)[] = [];
 
   constructor(doms: Doms, worker: Worker, storage: MapStorage) {
     this.doms = doms;
     this.worker = worker;
+    this.storage = storage;
 
     this.update({
       canvas: doms.canvas.transferControlToOffscreen(),
@@ -36,10 +45,11 @@ export class MapCanvasHandler {
 
     MapStorage.addListener(async () => {
       console.log("Change map: ", await storage.currentId());
-      this.update({ biomesImg: (await storage.getCurrent("biomes"))?.data });
-      this.update({ splat3Img: (await storage.getCurrent("splat3"))?.data });
-      this.update({ splat4Img: (await storage.getCurrent("splat4"))?.data });
-      this.update({ radImg: (await storage.getCurrent("rad"))?.data });
+      this.update({ biomesImg: null, splat3Img: null, splat4Img: null }, false);
+      this.update({ biomesImg: (await storage.getCurrent("biomes"))?.data }, false);
+      this.update({ splat3Img: (await storage.getCurrent("splat3"))?.data }, false);
+      this.update({ splat4Img: (await storage.getCurrent("splat4"))?.data }, false);
+      this.update({ radImg: (await storage.getCurrent("rad"))?.data }, false);
     });
 
     worker.addEventListener("message", (e: MessageEvent<MapRendererOutMessage>) => {
@@ -56,8 +66,14 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => this.update(this.scale()));
   }
 
-  update(msg: MapRendererInMessage): void {
-    console.log(msg);
+  async update(msg: MapRendererInMessage, shouldStore = true): Promise<void> {
+    if (shouldStore) {
+      for (const entry of Object.entries(msg)) {
+        if (isStoreTarget(entry)) {
+          await this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], entry[1]);
+        }
+      }
+    }
     const transferables = Object.values(msg).filter(isTransferable);
     this.worker.postMessage(msg, transferables);
   }
@@ -94,4 +110,8 @@ export class MapCanvasHandler {
 
 function isTransferable(v: unknown): v is ImageBitmap | OffscreenCanvas {
   return v instanceof ImageBitmap || v instanceof OffscreenCanvas;
+}
+
+function isStoreTarget(e: Entry<MapRendererInMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
+  return e[0] in FIELDNAME_STORAGENAME_MAP;
 }
