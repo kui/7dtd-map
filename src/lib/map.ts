@@ -8,37 +8,39 @@ declare const fonts: FontFaceSet;
 
 export default class GameMap {
   biomesImg: ImageBitmap | null;
+  biomesAlpha: number;
+  splat3Img: ImageBitmap | null;
+  splat3Alpha: number;
+  splat4Img: ImageBitmap | null;
+  splat4Alpha: number;
+  radImg: ImageBitmap | null;
+  radAlpha: number;
   brightness: string;
   canvas: OffscreenCanvas;
   fontFace: FontFace | null = null;
   throttledUpdater: () => Promise<void>;
   markerCoords: Coords | null;
-  prefabs: HighlightedPrefab[];
-  radImg: ImageBitmap | null;
   scale: number;
-  showBiomes: boolean;
   showPrefabs: boolean;
-  showRad: boolean;
-  showSplat3: boolean;
-  showSplat4: boolean;
   signSize: number;
-  splat3Img: ImageBitmap | null;
-  splat4Img: ImageBitmap | null;
+  signAlpha: number;
+  prefabs: HighlightedPrefab[];
 
   constructor(canvas: OffscreenCanvas) {
     this.canvas = canvas;
-    this.showBiomes = true;
-    this.showSplat3 = true;
-    this.showSplat4 = true;
-    this.showRad = true;
     this.showPrefabs = true;
     this.biomesImg = null;
+    this.biomesAlpha = 1;
     this.splat3Img = null;
+    this.splat3Alpha = 1;
     this.splat4Img = null;
+    this.splat4Alpha = 1;
     this.radImg = null;
+    this.radAlpha = 1;
     this.brightness = "100%";
     this.scale = 0.1;
     this.signSize = 200;
+    this.signAlpha = 1;
     this.prefabs = [];
 
     const fontFace = new FontFace("Noto Sans", "url(NotoEmoji-Regular.ttf)");
@@ -83,21 +85,30 @@ export default class GameMap {
     if (!context) return;
     context.scale(this.scale, this.scale);
     context.filter = `brightness(${this.brightness})`;
-    if (this.biomesImg && this.showBiomes) {
+
+    if (this.biomesImg && this.biomesAlpha !== 0) {
+      context.globalAlpha = this.biomesAlpha;
       context.drawImage(this.biomesImg, 0, 0, this.width, this.height);
     }
-    if (this.splat3Img && this.showSplat3) {
+
+    if (this.splat3Img && this.splat3Alpha !== 0) {
+      context.globalAlpha = this.splat3Alpha;
       context.drawImage(this.splat3Img, 0, 0, this.width, this.height);
     }
-    if (this.splat4Img && this.showSplat4) {
+    if (this.splat4Img && this.splat4Alpha !== 0) {
+      context.globalAlpha = this.splat4Alpha;
       context.drawImage(this.splat4Img, 0, 0, this.width, this.height);
     }
+
     context.filter = "none";
-    if (this.radImg && this.showRad) {
+    if (this.radImg && this.radAlpha !== 0) {
+      context.globalAlpha = this.radAlpha;
       context.imageSmoothingEnabled = false;
       context.drawImage(this.radImg, 0, 0, this.width, this.height);
       context.imageSmoothingEnabled = true;
     }
+
+    context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
       drawPrefabs(this, context);
     }

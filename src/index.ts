@@ -35,7 +35,12 @@ function main() {
   const mapCanvasHandler = new MapCanvasHandler(
     {
       canvas: component("map", HTMLCanvasElement),
+      biomesAlpha: component("biomes_alpha", HTMLInputElement),
+      splat3Alpha: component("splat3_alpha", HTMLInputElement),
+      splat4Alpha: component("splat4_alpha", HTMLInputElement),
+      radAlpha: component("rad_alpha", HTMLInputElement),
       signSize: component("sign_size", HTMLInputElement),
+      signAlpha: component("sign_alpha", HTMLInputElement),
       brightness: component("brightness", HTMLInputElement),
       scale: component("scale", HTMLInputElement),
     },

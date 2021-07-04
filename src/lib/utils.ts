@@ -9,8 +9,11 @@ export function requireType<T>(o: unknown, t: { new (...a: unknown[]): T }, mess
 }
 
 export function component<T extends HTMLElement = HTMLElement>(id: string | null | undefined, t?: { new (...a: unknown[]): T }): T {
-  const e = document.getElementById(requireNonnull(id));
-  return t ? requireType(requireNonnull(e), t) : (requireNonnull(e) as T);
+  const e = requireNonnull(
+    document.getElementById(requireNonnull(id, () => `Element ID must not null: ${id}`)),
+    () => `Element not found: #${id}`
+  );
+  return t ? requireType(e, t) : (e as T);
 }
 
 export function removeAllChildren(e: HTMLElement): void {

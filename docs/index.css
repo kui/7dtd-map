@@ -26,10 +26,6 @@ td {
   border-bottom: 1px lightgray solid;
 }
 
-td.file-inputs {
-  white-space: nowrap;
-}
-
 label[for="prefabs_filter"],
 #prefabs_filter,
 label[for="blocks_filter"],
