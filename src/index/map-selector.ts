@@ -28,7 +28,7 @@ export class MapSelector {
   }
 
   private async init(): Promise<void> {
-    await this.buildOptions();
+    MapStorage.addListener(async (mapId) => this.buildOptions(mapId));
     await this.changeMap(await this.storage.currentId(), true);
 
     this.doms.mapName.addEventListener("input", () => {
@@ -42,12 +42,13 @@ export class MapSelector {
     this.doms.delete.addEventListener("click", () => this.deleteMap());
   }
 
-  private async buildOptions() {
+  private async buildOptions(mapId: number) {
     const maps = await this.storage.listMaps();
     const df = new DocumentFragment();
     for (const m of maps) df.appendChild(buildOptionElement(m));
     removeAllChildren(this.doms.select);
     this.doms.select.appendChild(df);
+    this.selectOptionByMapId(mapId);
   }
 
   private async create() {
@@ -79,8 +80,12 @@ export class MapSelector {
     if (!isInit) await this.initPromise;
     await this.storage.changeMap(mapId);
     const map = requireNonnull(await this.storage.getCurrent("maps"));
-    this.doms.select.selectedIndex = Array.from(this.doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === map.id);
+    this.selectOptionByMapId(map.id);
     this.doms.mapName.value = map.name;
+  }
+
+  private selectOptionByMapId(mapId: number) {
+    this.doms.select.selectedIndex = Array.from(this.doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === mapId);
   }
 }
 

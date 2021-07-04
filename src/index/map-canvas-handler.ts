@@ -26,8 +26,17 @@ export class MapCanvasHandler {
       ...this.scale(),
     });
 
+    MapStorage.addListener(async () => {
+      console.log("Change map: ", await storage.currentId());
+      this.update({ biomesImg: (await storage.getCurrent("biomes"))?.data });
+      this.update({ splat3Img: (await storage.getCurrent("splat3"))?.data });
+      this.update({ splat4Img: (await storage.getCurrent("splat4"))?.data });
+      this.update({ radImg: (await storage.getCurrent("rad"))?.data });
+    });
+
     worker.addEventListener("message", (e: MessageEvent<MapRendererOutMessage>) => {
-      this.mapSizeListeners.map((fn) => fn(e.data.mapSizes));
+      const { mapSize: mapSizes } = e.data;
+      this.mapSizeListeners.map((fn) => fn(mapSizes));
     });
     doms.signSize.addEventListener("input", () => this.update(this.signSize()));
     doms.brightness.addEventListener("input", () => this.update(this.brightness()));
@@ -35,6 +44,7 @@ export class MapCanvasHandler {
   }
 
   update(msg: MapRendererInMessage): void {
+    console.log(msg);
     const transferables = Object.values(msg).filter(isTransferable);
     this.worker.postMessage(msg, transferables);
   }

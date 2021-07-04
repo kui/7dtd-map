@@ -25,8 +25,13 @@ export class DelayedRenderer<T> {
     }
     this.appendee.innerHTML = "";
     this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback);
-    this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: true });
-    renderUntil(this, () => isFill(this.scrollableWrapper));
+
+    // Require a delay because flashing childlen like the above fires "scroll" events.
+    requestAnimationFrame(() => {
+      this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback);
+      this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: true });
+      renderUntil(this, () => isFill(this.scrollableWrapper));
+    });
   }
 
   async renderAll(): Promise<void> {

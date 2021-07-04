@@ -8,8 +8,9 @@ export function requireType<T>(o: unknown, t: { new (...a: unknown[]): T }, mess
   throw Error(message());
 }
 
-export function component<T extends HTMLElement>(id: string, t: { new (...a: unknown[]): T }): T {
-  return requireType(requireNonnull(document.getElementById(id)), t);
+export function component<T extends HTMLElement = HTMLElement>(id: string | null | undefined, t?: { new (...a: unknown[]): T }): T {
+  const e = document.getElementById(requireNonnull(id));
+  return t ? requireType(requireNonnull(e), t) : (requireNonnull(e) as T);
 }
 
 export function removeAllChildren(e: HTMLElement): void {
@@ -52,4 +53,11 @@ export function formatCoords(
   const z = Math.round(map.height / 2 - gz);
   const e = elevation({ x: Math.round(gx), z: Math.round(gz) }, map.width) ?? "-";
   return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
+}
+
+export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
+  const a = document.createElement("a");
+  a.download = fileName;
+  a.href = canvas.toDataURL("image/png");
+  a.click();
 }

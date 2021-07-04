@@ -73,7 +73,9 @@ function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
   }
 }
 
-const LISTENERS: ((mapId: number, instance: MapStorage) => Promise<void>)[] = [];
+const CHANGE_LISTENERS: ((mapId: number, instance: MapStorage) => Promise<unknown> | unknown)[] = [
+  (mapId) => console.log("MapStorage change current map", mapId),
+];
 
 export class MapStorage {
   _db?: Db;
@@ -120,7 +122,7 @@ export class MapStorage {
 
   async changeMap(mapId: number): Promise<void> {
     const db = await getDb(this);
-    await Promise.all([changeMap(db, mapId), ...LISTENERS.map((fn) => fn(mapId, this))]);
+    await Promise.all([changeMap(db, mapId), ...CHANGE_LISTENERS.map((fn) => fn(mapId, this))]);
   }
 
   async currentId(): Promise<number> {
@@ -128,7 +130,7 @@ export class MapStorage {
   }
 
   static addListener(listener: (mapId: number, self: MapStorage) => Promise<void>): void {
-    LISTENERS.push(listener);
+    CHANGE_LISTENERS.push(listener);
   }
 }
 

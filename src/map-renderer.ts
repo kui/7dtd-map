@@ -1,6 +1,5 @@
 import GameMap from "./lib/map";
 import { MapStorage } from "./lib/map-storage";
-import { requireNonnull } from "./lib/utils";
 
 export type MapRendererInMessage = Partial<
   Pick<
@@ -24,7 +23,7 @@ export type MapRendererInMessage = Partial<
 >;
 
 export interface MapRendererOutMessage {
-  mapSizes: { width: number; height: number };
+  mapSize: RectSize;
 }
 
 declare function postMessage(message: MapRendererOutMessage): void;
@@ -39,18 +38,13 @@ const FIELDNAME_STORAGENAME_MAP = {
 let map: GameMap | null = null;
 const storage = new MapStorage();
 
-MapStorage.addListener(async () => {
-  init();
-});
-
 onmessage = async (event) => {
   const inMessage = event.data as MapRendererInMessage;
   if (!map) {
     if (inMessage.canvas) {
       map = new GameMap(inMessage.canvas);
-      await init();
     } else {
-      return;
+      throw Error("Unexpected state");
     }
   }
 
@@ -61,7 +55,7 @@ onmessage = async (event) => {
     }
   }
   postMessage({
-    mapSizes: {
+    mapSize: {
       width: map.width,
       height: map.height,
     },
@@ -70,16 +64,4 @@ onmessage = async (event) => {
 
 function isStoreTarget(e: Entry<MapRendererInMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
   return e[0] in FIELDNAME_STORAGENAME_MAP;
-}
-
-async function init() {
-  console.log("init: Start");
-  for (const [fieldName, type] of Object.entries(FIELDNAME_STORAGENAME_MAP)) {
-    console.time(`init: Load ${fieldName}`);
-    const obj = await storage.getCurrent(type);
-    requireNonnull(map)[fieldName] = obj?.data ?? null;
-    console.timeEnd(`init: Load ${fieldName}`);
-  }
-  await requireNonnull(map).update();
-  console.log("init: Done");
 }

@@ -24,11 +24,13 @@ export class FileHandler {
   }
 
   addListener(fileName: RegExp | string, listener: Listener | Listener[]): void {
-    this.listeners.set(fileName, this.listeners.get(fileName)?.concat(listener) ?? []);
+    const old = this.listeners.get(fileName) ?? [];
+    this.listeners.set(fileName, old.concat(listener));
   }
 
   pushFiles(files: File[]): void {
-    this.updateFiles([...Array.from(this.doms.input.files ?? []), ...files]);
+    const filtered = files.filter((file) => this.getListeners(file.name).length !== 0);
+    this.updateFiles([...Array.from(this.doms.input.files ?? []), ...filtered]);
     this.doms.input.dispatchEvent(new Event("input"));
   }
 

@@ -65,9 +65,14 @@ export default class GameMap {
     console.timeEnd("Map Update");
   }
 
+  private isBlank(): boolean {
+    return !this.biomesImg && !this.splat3Img && !this.splat4Img;
+  }
+
   async updateImmediately(): Promise<void> {
-    if (!this.biomesImg && !this.splat3Img && !this.splat4Img) {
-      this.canvas.width = this.canvas.height = 0;
+    if (this.isBlank()) {
+      this.canvas.width = 1;
+      this.canvas.height = 1;
       return;
     }
 
