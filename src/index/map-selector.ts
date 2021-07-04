@@ -9,34 +9,78 @@ type Doms = {
 };
 
 export class MapSelector {
-  storage: MapStorage;
+  private storage: MapStorage;
+  private doms: Doms;
+  private initPromise: Promise<void>;
 
-  constructor(storage: MapStorage) {
+  constructor(doms: Doms, storage: MapStorage) {
+    this.doms = doms;
     this.storage = storage;
+    this.initPromise = this.init();
   }
 
-  async init(doms: Doms): Promise<void> {
+  private get selectedOption() {
+    return requireNonnull(this.doms.select.selectedOptions)[0];
+  }
+
+  private get selectedOptionMapId() {
+    return parseInt(this.selectedOption.dataset.mapId as string);
+  }
+
+  private async init(): Promise<void> {
+    await this.buildOptions();
+    await this.changeMap(await this.storage.currentId(), true);
+
+    this.doms.mapName.addEventListener("input", () => {
+      const mapId = this.selectedOptionMapId;
+      const name = this.doms.mapName.value;
+      this.doms.select.selectedOptions[0].textContent = `${mapId}. ${name}`;
+      this.storage.put("maps", name);
+    });
+    this.doms.select.addEventListener("input", () => this.changeMap(this.selectedOptionMapId));
+    this.doms.create.addEventListener("click", () => this.create());
+    this.doms.delete.addEventListener("click", () => this.deleteMap());
+  }
+
+  private async buildOptions() {
     const maps = await this.storage.listMaps();
     const df = new DocumentFragment();
     for (const m of maps) df.appendChild(buildOptionElement(m));
-    removeAllChildren(doms.select);
-    doms.select.appendChild(df);
+    removeAllChildren(this.doms.select);
+    this.doms.select.appendChild(df);
+  }
 
-    const currentMapObject = await this.storage.getCurrent("maps");
-    await changeMap(this, doms, requireNonnull(currentMapObject?.id));
+  private async create() {
+    this.doms.create.disabled = true;
+    console.log("Create Map");
+    const map = await this.storage.createMap();
+    this.doms.select.appendChild(buildOptionElement(map));
+    await this.changeMap(map.id);
+    this.doms.create.disabled = false;
+  }
 
-    // set hooks
-    doms.mapName.addEventListener("input", () => {
-      const mapId = selectedMapId(doms.select);
-      const name = doms.mapName.value;
-      doms.select.selectedOptions[0].textContent = `${mapId}. ${name}`;
-      this.storage.put("maps", name);
-    });
-    doms.select.addEventListener("input", () => {
-      changeMap(this, doms, selectedMapId(doms.select));
-    });
-    doms.create.addEventListener("click", () => create(this, doms));
-    doms.delete.addEventListener("click", () => deleteMap(this, doms));
+  private async deleteMap() {
+    this.doms.delete.disabled = true;
+    const mapId = this.selectedOptionMapId;
+
+    console.log("Delete Map", mapId);
+    if (this.doms.select.options.length <= 1) {
+      console.log("Reject delete");
+      return;
+    }
+
+    this.doms.select.removeChild(this.selectedOption);
+    await this.storage.deleteMap(mapId);
+    await this.changeMap(this.selectedOptionMapId);
+    this.doms.delete.disabled = this.doms.select.options.length <= 1;
+  }
+
+  private async changeMap(mapId: number, isInit = false) {
+    if (!isInit) await this.initPromise;
+    await this.storage.changeMap(mapId);
+    const map = requireNonnull(await this.storage.getCurrent("maps"));
+    this.doms.select.selectedIndex = Array.from(this.doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === map.id);
+    this.doms.mapName.value = map.name;
   }
 }
 
@@ -45,41 +89,4 @@ function buildOptionElement(map: MapObject) {
   e.dataset.mapId = requireNonnull(map.id).toString();
   e.textContent = `${map.id}. ${map.name}`;
   return e;
-}
-
-function selectedOption(select: HTMLSelectElement) {
-  return requireNonnull(select.selectedOptions)[0];
-}
-function selectedMapId(select: HTMLSelectElement) {
-  return parseInt(selectedOption(select).dataset.mapId as string);
-}
-
-async function create(self: MapSelector, doms: Doms) {
-  console.log("Create Map");
-  const map = await self.storage.createMap();
-  doms.select.appendChild(buildOptionElement(map));
-  await changeMap(self, doms, map.id);
-}
-
-async function deleteMap(self: MapSelector, doms: Doms) {
-  const optionElement = selectedOption(doms.select);
-  const mapId = parseInt(optionElement.dataset.mapId as string);
-
-  console.log("Delete Map", mapId);
-  if (doms.select.getElementsByTagName("option").length <= 1) {
-    console.log("Reject delete");
-    return;
-  }
-
-  doms.select.removeChild(optionElement);
-  await self.storage.deleteMap(mapId);
-  await changeMap(self, doms, selectedMapId(doms.select));
-}
-
-async function changeMap(self: MapSelector, doms: Doms, mapId: number) {
-  await self.storage.changeMap(mapId);
-  const map = requireNonnull(await self.storage.getCurrent("maps"));
-  doms.select.selectedIndex = Array.from(doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === map.id);
-  doms.mapName.value = map.name;
-  doms.delete.disabled = (await self.storage.listMaps()).length <= 1;
 }

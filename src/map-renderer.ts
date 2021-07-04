@@ -39,7 +39,7 @@ const FIELDNAME_STORAGENAME_MAP = {
 let map: GameMap | null = null;
 const storage = new MapStorage();
 
-storage.listeners.push(async () => {
+MapStorage.addListener(async () => {
   init();
 });
 

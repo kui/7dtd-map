@@ -73,9 +73,10 @@ function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
   }
 }
 
+const LISTENERS: ((mapId: number, instance: MapStorage) => Promise<void>)[] = [];
+
 export class MapStorage {
   _db?: Db;
-  listeners: ((mapId: number) => Promise<void>)[] = [];
 
   async put<Type extends MapPropertyType>(type: Type, data: MapPropertyRawValue<Type>): Promise<void> {
     const db = await getDb(this);
@@ -119,11 +120,15 @@ export class MapStorage {
 
   async changeMap(mapId: number): Promise<void> {
     const db = await getDb(this);
-    await Promise.all([changeMap(db, mapId), ...this.listeners.map((fn) => fn(mapId))]);
+    await Promise.all([changeMap(db, mapId), ...LISTENERS.map((fn) => fn(mapId, this))]);
   }
 
   async currentId(): Promise<number> {
     return currentId(await getDb(this));
+  }
+
+  static addListener(listener: (mapId: number, self: MapStorage) => Promise<void>): void {
+    LISTENERS.push(listener);
   }
 }
 

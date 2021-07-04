@@ -20,7 +20,7 @@ export class DtmHandler {
 
   constructor(storage: MapStorage) {
     this.storage = storage;
-    storage.listeners.push(async () => {
+    MapStorage.addListener(async () => {
       const h = await storage.getCurrent("elevations");
       if (h) {
         this.dtm = new Dtm(h.data);

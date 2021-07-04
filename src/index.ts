@@ -54,13 +54,15 @@ function main() {
   copyButton.init();
 
   const mapStorage = new MapStorage();
-  const mapSelector = new MapSelector(mapStorage);
-  mapSelector.init({
-    select: component("map_list", HTMLSelectElement),
-    create: component("create_map", HTMLButtonElement),
-    delete: component("delete_map", HTMLButtonElement),
-    mapName: component("map_name", HTMLInputElement),
-  });
+  const mapSelector = new MapSelector(
+    {
+      select: component("map_list", HTMLSelectElement),
+      create: component("create_map", HTMLButtonElement),
+      delete: component("delete_map", HTMLButtonElement),
+      mapName: component("map_name", HTMLInputElement),
+    },
+    mapStorage
+  );
 
   const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
     mapName: component("map_name", HTMLInputElement),
