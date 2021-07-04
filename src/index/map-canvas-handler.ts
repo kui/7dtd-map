@@ -67,28 +67,28 @@ export class MapCanvasHandler {
   }
 
   private biomesAlpha() {
-    return { biomesAlpha: parseFloat(this.doms.biomesAlpha.value) };
+    return { biomesAlpha: this.doms.biomesAlpha.valueAsNumber };
   }
   private splat3Alpha() {
-    return { splat3Alpha: parseFloat(this.doms.splat3Alpha.value) };
+    return { splat3Alpha: this.doms.splat3Alpha.valueAsNumber };
   }
   private splat4Alpha() {
-    return { splat4Alpha: parseFloat(this.doms.splat4Alpha.value) };
+    return { splat4Alpha: this.doms.splat4Alpha.valueAsNumber };
   }
   private radAlpha() {
-    return { radAlpha: parseFloat(this.doms.radAlpha.value) };
+    return { radAlpha: this.doms.radAlpha.valueAsNumber };
   }
   private signSize() {
-    return { signSize: parseInt(this.doms.signSize.value) };
+    return { signSize: this.doms.signSize.valueAsNumber };
   }
   private signAlpha() {
-    return { signAlpha: parseFloat(this.doms.signAlpha.value) };
+    return { signAlpha: this.doms.signAlpha.valueAsNumber };
   }
   private brightness() {
-    return { brightness: `${this.doms.brightness.value}%` };
+    return { brightness: `${this.doms.brightness.valueAsNumber}%` };
   }
   private scale() {
-    return { scale: parseFloat(this.doms.scale.value) };
+    return { scale: this.doms.scale.valueAsNumber };
   }
 }
 
