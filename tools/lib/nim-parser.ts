@@ -26,6 +26,7 @@ export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
     const name = (await r.read(nameLength)).toString();
     blocks.set(id, name);
   }
+  stream.close();
 
   if (version !== 1) throw Error(`Unexpected version: filename=${nimFileName} version=${version}`);
 
