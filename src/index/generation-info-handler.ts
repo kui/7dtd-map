@@ -11,7 +11,7 @@ export class GenerationInfoHandler {
   doms: Doms;
   storage: MapStorage;
 
-  constructor(storage: MapStorage, doms: Doms) {
+  constructor(doms: Doms, storage: MapStorage) {
     this.doms = doms;
     this.storage = storage;
 

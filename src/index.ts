@@ -61,10 +61,13 @@ function main() {
     loadingHandler
   );
 
-  const generationInfoHandler = new GenerationInfoHandler(mapStorage, {
-    mapName: component("map_name", HTMLInputElement),
-    output: component("generation_info_output", HTMLTextAreaElement),
-  });
+  const generationInfoHandler = new GenerationInfoHandler(
+    {
+      mapName: component("map_name", HTMLInputElement),
+      output: component("generation_info_output", HTMLTextAreaElement),
+    },
+    mapStorage
+  );
 
   const dtmHandler = new DtmHandler(mapStorage);
 
