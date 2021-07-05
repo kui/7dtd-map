@@ -1,100 +1,33 @@
 import * as fs from "fs";
-import * as path from "path";
-import bunyan from "bunyan";
-import bformat from "bunyan-format";
+import { ByteReader } from "./byte-reader";
 
-const log = bunyan.createLogger({
-  name: path.basename(__filename, ".js"),
-  stream: bformat({}),
-  level: "info",
-  // level: 'debug',
-});
+export type BlockId = number;
 
-// ".blocks.nim" format (Specification just I could guess, refered to no docs)
+export type BlockIdNames = Map<BlockId, string>;
+
+// ".blocks.nim" format (Its just my guess, refered to no docs.)
 // * Header part
-// 1-4: file format prefix and version?
-// 5-8: (int) the number of block types `blockNum`
+// 1-4: (uint32) file format version?
+// 5-8: (uint32) the number of block types `blockNum`
 // * Body part: repeated each block ID-Name definisions
-// 1-4: (int) block ID (but actualy block ID is int16, so higher 2 digits are dropped)
-// 5:   (int) the number of chars of block name
+// 1-4: (uint32) block ID for a tts file
+// 5:   (uint8) the number of chars of the block name
 // 6-:  (string) block name
-
-export interface BlockIdName {
-  id: number;
-  name: string;
-}
-
-export async function parseNim(nimFileName: string): Promise<BlockIdName[]> {
-  const blocks: BlockIdName[] = [];
-  let blockId: number | null = null;
-  let blockIdSecondDigit: number | null = null;
-  let buffer: Buffer | null;
-  let bufferIndex: number;
-
-  let blockNum: number | null = null;
-  let blockNumSecondDigit: number | null = null;
-  let skipBytes = 4;
-  function handleByte(byte: number) {
-    log.debug("16: %s, 10: %s, c: %s", Number(byte).toString(16), byte, String.fromCharCode(byte));
-    if (skipBytes !== 0) {
-      skipBytes -= 1;
-    } else if (blockNumSecondDigit === null) {
-      log.debug("pick as a second digit of block num: %d", byte);
-      blockNumSecondDigit = byte;
-    } else if (blockNum === null) {
-      log.debug("pick as a first digit of block num: %d", byte);
-      blockNum = Buffer.from([blockNumSecondDigit, byte]).readInt16LE();
-      skipBytes = 2;
-    } else if (blockIdSecondDigit === null) {
-      log.debug("pick as a second digit of block ID: %d", byte);
-      blockIdSecondDigit = byte;
-    } else if (blockId === null) {
-      log.debug("pick as a first digit of block ID: %d", byte);
-      blockId = Buffer.from([blockIdSecondDigit, byte]).readInt16LE();
-      skipBytes = 2;
-    } else if (buffer) {
-      log.debug("pick as a char of block name: %s", String.fromCharCode(byte));
-      buffer[bufferIndex] = byte;
-      if (bufferIndex + 1 < buffer.length) {
-        bufferIndex += 1;
-      } else {
-        const blockName = buffer.toString();
-        log.debug("add block name: %s (id=%s)", blockName, blockId);
-        if (blocks.some((n) => n.name === blockName)) {
-          log.warn("Unexpected state: Dupricated blocks: blockId=%d, blockName=%s, fileName=%s", blockId, blockName, nimFileName);
-        }
-        blocks.push({
-          id: blockId,
-          name: blockName,
-        });
-
-        blockId = null;
-        blockIdSecondDigit = null;
-        buffer = null;
-
-        if (blocks.length === blockNum) {
-          log.debug("parse all %d block", blockNum);
-          skipBytes = Infinity;
-        }
-      }
-    } else {
-      log.debug("pick as a block name length: %d", byte);
-      buffer = Buffer.allocUnsafe(byte);
-      bufferIndex = 0;
-    }
-  }
+export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   const stream = fs.createReadStream(nimFileName);
-  return new Promise((resolve, reject) => {
-    stream.on("data", (data) => (data as Buffer).forEach(handleByte));
-    stream.on("close", () => {
-      if (buffer) {
-        log.warn("Unexpected state: Unflushed buffer exists: %s", nimFileName);
-      }
-      if (blocks.length !== blockNum) {
-        log.warn("Unexpected state: Unreach defined blocks num: %s", nimFileName);
-      }
-      resolve(blocks);
-    });
-    stream.on("error", reject);
-  });
+  const r = new ByteReader(stream);
+
+  const version = (await r.read(4)).readUInt32LE();
+  const idsNum = (await r.read(4)).readUInt32LE();
+  const blocks: BlockIdNames = new Map();
+  for (let i = 0; i < idsNum; i++) {
+    const id = (await r.read(4)).readUInt32LE();
+    const nameLength = (await r.read(1)).readUInt8();
+    const name = (await r.read(nameLength)).toString();
+    blocks.set(id, name);
+  }
+
+  if (version !== 1) throw Error(`Unexpected version: filename=${nimFileName} version=${version}`);
+
+  return blocks;
 }

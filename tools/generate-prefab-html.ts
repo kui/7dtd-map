@@ -48,7 +48,7 @@ async function generateHtml(labels: Map<string, string>) {
       try {
         html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
       } catch (e) {
-        console.warn("Ignore Prefab %s", prefabName, e);
+        console.warn("Ignore Prefab %s, %s", prefabName, e);
         return null;
       }
       const dist = path.join(baseDist, `${prefabName}.html`);
@@ -65,19 +65,20 @@ async function copyJpg(prefabNames: string[]) {
   const { vanillaDir } = await localInfo;
   const jpgFiles = prefabNames.map((n) => path.join(vanillaDir, "Data", "Prefabs", `${n}.jpg`));
 
-  let failNum = 0;
+  const failedFiles: string[] = [];
   await Promise.all(
     jpgFiles.map(async (jpgFileName) => {
       const dist = path.join(baseDist, path.basename(jpgFileName));
       try {
         await fs.copyFile(jpgFileName, dist);
       } catch (e) {
-        console.warn("JPG Copy fail: ", e.message);
-        failNum += 1;
+        //console.warn("JPG Copy fail: ", e.message);
+        failedFiles.push(path.basename(jpgFileName));
       }
     })
   );
-  console.log("Copy %d jpg files", jpgFiles.length - failNum);
+  console.log("Copy %d jpg files", jpgFiles.length - failedFiles.length);
+  console.log("Copy failure %d files", failedFiles.length, failedFiles);
 }
 
 async function generateIndex(prefabNames: string[]) {

@@ -1,4 +1,6 @@
 import * as fs from "fs";
+import { ByteReader } from "./byte-reader";
+import { BlockId } from "./nim-parser";
 
 // TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
 // There maight bee some defferences but I didn't know.
@@ -36,31 +38,6 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
   return new Tts(version, dim, blockIds);
 }
 
-class ByteReader {
-  iter: AsyncIterator<number>;
-  constructor(stream: fs.ReadStream) {
-    this.iter = (async function* () {
-      for await (const c of stream) {
-        for (const b of c as Buffer) {
-          yield b;
-        }
-      }
-    })();
-  }
-
-  async read(bytesNum: number): Promise<Buffer> {
-    const b = Buffer.alloc(bytesNum);
-    for (let i = 0; i < bytesNum; i++) {
-      const r = await this.iter.next();
-      if (r.done) throw Error(`Unexpeted byte length: ${bytesNum}`);
-      b[i] = r.value;
-    }
-    return b;
-  }
-}
-
-export type BlockId = number;
-
 export class Tts {
   version: number;
   blockIds: Uint32Array;
@@ -75,7 +52,7 @@ export class Tts {
     this.maxy = dim.y;
     this.maxz = dim.z;
     this.blockIds = blockIds;
-    this.blockNums = countBlocks2(blockIds);
+    this.blockNums = countBlocks(blockIds);
   }
   getBlockId(x: number, y: number, z: number): BlockId {
     if (x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z) {
@@ -85,7 +62,7 @@ export class Tts {
   }
 }
 
-function countBlocks2(ids: Uint32Array) {
+function countBlocks(ids: Uint32Array) {
   return ids.reduce<Map<number, number>>((map, id) => {
     map.set(id, (map.get(id) ?? 0) + 1);
     return map;

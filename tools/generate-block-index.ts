@@ -1,9 +1,9 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
-import { BlockIdName, parseNim } from "./lib/nim-parser";
+import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
 import { parseLabel } from "./lib/label-parser";
-import { parseTts, BlockId } from "./lib/tts-parser";
+import { parseTts } from "./lib/tts-parser";
 import { handleMain } from "./lib/utils";
 
 const projectRoot = path.join(path.dirname(process.argv[1]), "..");
@@ -70,7 +70,7 @@ async function readIndex(nimFiles: string[]) {
   const readIndices = nimFiles.map(async (nimFileName): Promise<PrefabBlockIndex | null> => {
     const prefabName = path.basename(nimFileName, ".blocks.nim");
     const ttsFileName = path.join(path.dirname(nimFileName), `${prefabName}.tts`);
-    let blocks: BlockIdName[];
+    let blocks: BlockIdNames;
     let blockNums: Map<BlockId, number>;
     try {
       [blocks, { blockNums }] = await Promise.all([parseNim(nimFileName), parseTts(ttsFileName)]);
@@ -84,11 +84,11 @@ async function readIndex(nimFiles: string[]) {
     }
 
     return {
-      [prefabName]: blocks
-        .filter((b) => !excludedBlocks.has(b.name))
-        .map((b) => ({
-          name: b.name,
-          count: blockNums.get(b.id) ?? 0,
+      [prefabName]: Array.from(blocks)
+        .filter(([, name]) => !excludedBlocks.has(name))
+        .map(([id, name]) => ({
+          name: name,
+          count: blockNums.get(id) ?? 0,
         })),
     };
   });

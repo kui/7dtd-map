@@ -9,8 +9,8 @@ async function main() {
     console.error(usage);
     return 1;
   }
-  (await parseNim(process.argv[2])).forEach((b) => {
-    console.log("%d: %s", b.id, b.name);
+  Array.from(await parseNim(process.argv[2])).forEach(([id, name]) => {
+    console.log("%d: %s", id, name);
   });
   return 0;
 }

@@ -79,11 +79,11 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
   const name = path.basename(xml, ".xml");
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim).then((bs) =>
-    bs.map((b) => ({
-      id: b.id,
-      name: b.name,
-      localizedName: labels.get(b.name) ?? "-",
-      count: blockNums.get(b.id) || 0,
+    Array.from(bs).map(([id, name]) => ({
+      id,
+      name,
+      localizedName: labels.get(name) ?? "-",
+      count: blockNums.get(id) ?? 0,
     }))
   );
   const propertiesPromise = parsePrefabXml(xml);
