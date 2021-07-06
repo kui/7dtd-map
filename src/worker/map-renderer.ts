@@ -1,4 +1,4 @@
-import GameMap from "./lib/map";
+import GameMap from "../lib/map";
 
 export type MapRendererInMessage = Partial<
   Pick<
@@ -28,18 +28,20 @@ export interface MapRendererOutMessage {
 
 declare function postMessage(message: MapRendererOutMessage): void;
 
+const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)").load();
+
 let map: GameMap | null = null;
-onmessage = async (event) => {
-  const inMessage = event.data as MapRendererInMessage;
+async function handleMessage(message: MapRendererInMessage) {
+  console.debug(message);
   if (!map) {
-    if (inMessage.canvas) {
-      map = new GameMap(inMessage.canvas);
+    if (message.canvas) {
+      map = new GameMap(message.canvas, await FONT_FACE);
     } else {
       throw Error("Unexpected state");
     }
   }
 
-  await Object.assign(map, inMessage).update();
+  await Object.assign(map, message).update();
 
   postMessage({
     mapSize: {
@@ -47,4 +49,18 @@ onmessage = async (event) => {
       height: map.height,
     },
   });
-};
+}
+
+async function* messageQeue(): AsyncGenerator<void, void, MapRendererInMessage> {
+  while (true) {
+    try {
+      await handleMessage(yield);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
+
+const queue = messageQeue();
+queue.next();
+onmessage = async (event) => await queue.next(event.data);

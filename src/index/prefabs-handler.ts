@@ -1,4 +1,4 @@
-import { PrefabsFilterInMessage } from "../prefabs-filter";
+import { PrefabsFilterInMessage } from "../worker/prefabs-filter";
 import { MapStorage } from "../lib/map-storage";
 import { PrefabUpdate } from "../lib/prefabs";
 

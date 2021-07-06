@@ -56,7 +56,7 @@ function main() {
       brightness: component("brightness", HTMLInputElement),
       scale: component("scale", HTMLInputElement),
     },
-    new Worker("map-renderer.js"),
+    new Worker("worker/map-renderer.js"),
     mapStorage,
     loadingHandler
   );
@@ -77,7 +77,7 @@ function main() {
       prefabFilter: component("prefabs_filter", HTMLInputElement),
       blockFilter: component("blocks_filter", HTMLInputElement),
     },
-    new Worker("prefabs-filter.js"),
+    new Worker("worker/prefabs-filter.js"),
     mapStorage
   );
   prefabsHandler.listeners.push(async (prefabs) => {

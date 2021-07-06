@@ -1,5 +1,5 @@
 import { MapStorage } from "../lib/map-storage";
-import { MapRendererInMessage, MapRendererOutMessage } from "../map-renderer";
+import { MapRendererInMessage, MapRendererOutMessage } from "../worker/map-renderer";
 import { LoadingHandler } from "./loading-handler";
 
 const FIELDNAME_STORAGENAME_MAP = {

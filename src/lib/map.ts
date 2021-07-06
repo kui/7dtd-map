@@ -26,7 +26,7 @@ export default class GameMap {
   signAlpha: number;
   prefabs: HighlightedPrefab[];
 
-  constructor(canvas: OffscreenCanvas) {
+  constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
     this.canvas = canvas;
     this.showPrefabs = true;
     this.biomesImg = null;
@@ -43,11 +43,9 @@ export default class GameMap {
     this.signAlpha = 1;
     this.prefabs = [];
 
-    const fontFace = new FontFace("Noto Sans", "url(NotoEmoji-Regular.ttf)");
-    fontFace.load().then((ff) => {
-      this.fontFace = ff;
-      fonts.add(ff);
-    });
+    this.fontFace = fontFace;
+    fonts.add(fontFace);
+
     this.markerCoords = null;
 
     this.throttledUpdater = throttledInvoker(() => this.updateImmediately());
