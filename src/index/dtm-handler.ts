@@ -1,6 +1,5 @@
-import { PNG } from "pngjs/browser";
 import { MapStorage } from "../lib/map-storage";
-import { pngjsByBlob, pngjsByUrl } from "../lib/pngjs";
+import { Png, PngParser } from "../lib/png-parser";
 
 export class Dtm {
   data: Uint8Array;
@@ -15,11 +14,14 @@ export class Dtm {
 }
 
 export class DtmHandler {
-  storage: MapStorage;
+  private storage: MapStorage;
+  private pngParser: PngParser;
+
   dtm: Dtm | null = null;
 
-  constructor(storage: MapStorage) {
+  constructor(storage: MapStorage, workerFactory: () => Worker) {
     this.storage = storage;
+    this.pngParser = new PngParser(workerFactory);
     MapStorage.addListener(async () => {
       const h = await storage.getCurrent("elevations");
       if (h) {
@@ -32,9 +34,9 @@ export class DtmHandler {
 
   async handle(blobOrUrl: File | string): Promise<void> {
     if (typeof blobOrUrl === "string") {
-      this.dtm = await loadDtmByPngUrl(blobOrUrl);
+      this.dtm = await this.loadDtmByPngUrl(blobOrUrl);
     } else if (blobOrUrl.type.toLocaleLowerCase() === "image/png") {
-      this.dtm = await loadDtmByPngBlob(blobOrUrl);
+      this.dtm = await this.loadByPngBlob(blobOrUrl);
     } else if (blobOrUrl.type.toLocaleLowerCase() === "image/raw") {
       this.dtm = await loadDtmByRaw(blobOrUrl);
     } else {
@@ -42,20 +44,22 @@ export class DtmHandler {
     }
     this.storage.put("elevations", this.dtm.data);
   }
+
+  private async loadDtmByPngUrl(url: string): Promise<Dtm> {
+    const res = await fetch(url);
+    return this.loadByPngBlob(await res.blob());
+  }
+
+  private async loadByPngBlob(blob: Blob): Promise<Dtm> {
+    return convertPng(await this.pngParser.parse(blob));
+  }
 }
 
-async function loadDtmByPngUrl(url: string): Promise<Dtm> {
-  return convertPng(await pngjsByUrl(url));
-}
-
-async function loadDtmByPngBlob(blob: Blob): Promise<Dtm> {
-  return convertPng(await pngjsByBlob(blob));
-}
-
-function convertPng(png: PNG) {
-  const data = new Uint8Array(png.data.length / 4);
+function convertPng(png: Png) {
+  const pngData = new Uint8Array(png.data);
+  const data = new Uint8Array(pngData.length / 4);
   for (let i = 0; i < data.length; i++) {
-    data[i] = png.data[i * 4];
+    data[i] = pngData[i * 4];
   }
   return new Dtm(data);
 }

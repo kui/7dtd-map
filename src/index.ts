@@ -1,4 +1,4 @@
-import { loadSplatBitmapByFile, loadRadBitmapByFile } from "./lib/bitmap-loader";
+import { ImageBitmapLoader } from "./lib/bitmap-loader";
 import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
@@ -17,8 +17,6 @@ import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
 
 function main() {
-  // init
-
   presetButton.init();
   copyButton.init();
 
@@ -69,7 +67,7 @@ function main() {
     mapStorage
   );
 
-  const dtmHandler = new DtmHandler(mapStorage);
+  const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
 
   const prefabsHandler = new PrefabsHandler(
     {
@@ -116,12 +114,13 @@ function main() {
     mapCanvasHandler.update({ markerCoords: coords });
   });
 
+  const imageLoader = new ImageBitmapLoader(() => new Worker("worker/pngjs.js"));
   const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
     ["biomes.png", async (file) => mapCanvasHandler.update({ biomesImg: await createImageBitmap(file) })],
-    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.update({ splat3Img: await loadSplatBitmapByFile(file) })],
-    ["splat4_processed.png", async (file) => mapCanvasHandler.update({ splat4Img: await loadSplatBitmapByFile(file) })],
-    ["radiation.png", async (file) => mapCanvasHandler.update({ radImg: await loadRadBitmapByFile(file) })],
+    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.update({ splat3Img: await imageLoader.loadSplat(file) })],
+    ["splat4_processed.png", async (file) => mapCanvasHandler.update({ splat4Img: await imageLoader.loadSplat(file) })],
+    ["radiation.png", async (file) => mapCanvasHandler.update({ radImg: await imageLoader.loadRad(file) })],
     ["prefabs.xml", async (file) => await prefabsHandler.handle(file)],
     [/dtm\.(raw|png)/, async (file) => await dtmHandler.handle(file)],
     ["GenerationInfo.txt", async (file) => await generationInfoHandler.handle(file)],

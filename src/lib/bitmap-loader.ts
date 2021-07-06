@@ -1,24 +1,25 @@
-import { PNG } from "pngjs/browser";
-import { pngjsByBlob } from "./pngjs";
+import { Png, PngParser } from "./png-parser";
 
-export async function loadSplatBitmapByFile(file: File): Promise<ImageBitmap> {
-  console.time(`loadPng: ${file.name}`);
-  const p = await pngjsByBlob(file);
-  console.timeEnd(`loadPng: ${file.name}`);
-  console.time(`renderSplat: ${file.name}`);
-  const i = renderSplat(p);
-  console.timeEnd(`renderSplat: ${file.name}`);
-  return i;
-}
-export async function loadRadBitmapByFile(file: File): Promise<ImageBitmap> {
-  const p = await pngjsByBlob(file);
-  return renderRad(p);
+export class ImageBitmapLoader {
+  private pngParser: PngParser;
+
+  constructor(workerFactory: () => Worker) {
+    this.pngParser = new PngParser(workerFactory);
+  }
+
+  async loadSplat(file: File): Promise<ImageBitmap> {
+    return renderSplat(await this.pngParser.parse(file));
+  }
+
+  async loadRad(file: File): Promise<ImageBitmap> {
+    return renderRad(await this.pngParser.parse(file));
+  }
 }
 
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function renderSplat(pngjs: PNG) {
+function renderSplat(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
@@ -36,7 +37,7 @@ function renderSplat(pngjs: PNG) {
 // radioation.png should convert the pixels which:
 //   * red to non-transparent
 //   * other to transparent
-function renderRad(pngjs: PNG) {
+function renderRad(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
@@ -53,12 +54,12 @@ function renderRad(pngjs: PNG) {
 
 type ConvertImageBitmap = (indata: Uint8Array, outData: Uint8ClampedArray) => void;
 
-function render({ data, height, width }: PNG, copyFunction: ConvertImageBitmap) {
+function render({ data, height, width }: Png, copyFunction: ConvertImageBitmap) {
   const canvas = new OffscreenCanvas(width, height);
   const context = canvas.getContext("2d");
   if (!context) throw Error("Unexpected error: Canvas context not found");
   const imageData = context.getImageData(0, 0, width, height);
-  copyFunction(data, imageData.data);
+  copyFunction(new Uint8Array(data), imageData.data);
   context.putImageData(imageData, 0, 0);
   return createImageBitmap(canvas);
 }
