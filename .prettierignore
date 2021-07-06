@@ -2,5 +2,5 @@
 
 # generated files
 /docs/*.json
-/docs/*.js
+/docs/**/*.js
 /docs/prefabs/*.html
