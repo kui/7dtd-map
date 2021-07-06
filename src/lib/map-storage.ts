@@ -78,10 +78,10 @@ const CHANGE_LISTENERS: ((mapId: number, instance: MapStorage) => Promise<unknow
 ];
 
 export class MapStorage {
-  _db?: Db;
+  private _db?: Db;
 
   async put<Type extends MapPropertyType>(type: Type, data: MapPropertyRawValue<Type>): Promise<void> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     const mapId = await currentId(db);
     if (isLargeObjectType(type)) {
       await db.put("largeObjects", { mapId, type, data });
@@ -93,7 +93,7 @@ export class MapStorage {
   }
 
   async getCurrent<Type extends MapPropertyType>(type: Type): Promise<MapPropertyValue<Type> | undefined> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     const mapId = await currentId(db);
     if (isLargeObjectType(type)) {
       return (await db.get("largeObjects", [mapId, type])) as MapPropertyValue<Type> | undefined;
@@ -105,45 +105,45 @@ export class MapStorage {
   }
 
   async listMaps(): Promise<MapObject[]> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     return db.getAll("maps");
   }
 
   async createMap(name = DEFAULT_WORLD_NAME): Promise<MapObject> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     return await createMap(db, name);
   }
 
   async deleteMap(mapIdOrUndefined?: number): Promise<void> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     const mapId = mapIdOrUndefined ?? (await currentId(db));
     await Promise.all([db.delete("maps", mapId), ...LARGE_OBJECT_TYPES.map((t) => db.delete("largeObjects", [mapId, t]))]);
   }
 
   async changeMap(mapId: number): Promise<void> {
-    const db = await getDb(this);
+    const db = await this.getDb();
     await Promise.all([changeMap(db, mapId), ...CHANGE_LISTENERS.map((fn) => fn(mapId, this))]);
   }
 
   async currentId(): Promise<number> {
-    return currentId(await getDb(this));
+    return currentId(await this.getDb());
   }
 
   static addListener(listener: (mapId: number, self: MapStorage) => Promise<void>): void {
     CHANGE_LISTENERS.push(listener);
+  }
+
+  private async getDb() {
+    if (!this._db) {
+      this._db = await openDB<DbSchema>(DB_NAME, DB_VERSION, { upgrade: dbUpgrade });
+    }
+    return this._db;
   }
 }
 
 async function createMap(db: Db, name: string) {
   const id = await db.put("maps", { name } as MapObject);
   return { id, name };
-}
-
-async function getDb(self: MapStorage) {
-  if (!self._db) {
-    self._db = await openDB<DbSchema>(DB_NAME, DB_VERSION, { upgrade: dbUpgrade });
-  }
-  return self._db;
 }
 
 function isLargeObjectType(type: MapPropertyType): type is LargeObjectType {
