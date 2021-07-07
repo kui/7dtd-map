@@ -1,4 +1,7 @@
+import { FontFaceSet } from "css-font-loading-module";
 import GameMap from "../lib/map";
+
+declare const fonts: FontFaceSet;
 
 export type InMessage = Partial<
   Pick<
@@ -32,7 +35,10 @@ const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
 
 let map: GameMap | null = null;
 
-FONT_FACE.load().then(() => map?.update());
+FONT_FACE.load().then(() => {
+  fonts.add(FONT_FACE);
+  map?.update();
+});
 
 onmessage = async (event: MessageEvent<InMessage>) => {
   const message = event.data;

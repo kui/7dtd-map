@@ -1,54 +1,34 @@
-import { FontFaceSet } from "css-font-loading-module";
 import throttledInvoker from "./throttled-invoker";
 
 const signChar = "✘";
 const markChar = "🚩️";
 
-declare const fonts: FontFaceSet;
-
 export default class GameMap {
-  biomesImg: ImageBitmap | null;
-  biomesAlpha: number;
-  splat3Img: ImageBitmap | null;
-  splat3Alpha: number;
-  splat4Img: ImageBitmap | null;
-  splat4Alpha: number;
-  radImg: ImageBitmap | null;
-  radAlpha: number;
-  brightness: string;
+  biomesAlpha = 1;
+  splat3Alpha = 1;
+  splat4Alpha = 1;
+  radAlpha = 0.5;
+  signAlpha = 1;
+  brightness = "100%";
+  scale = 0.1;
+  showPrefabs = true;
+  signSize = 200;
+  prefabs: HighlightedPrefab[] = [];
+
+  biomesImg: ImageBitmap | null = null;
+  splat3Img: ImageBitmap | null = null;
+  splat4Img: ImageBitmap | null = null;
+  radImg: ImageBitmap | null = null;
+
   canvas: OffscreenCanvas;
-  fontFace: FontFace | null = null;
-  throttledUpdater: () => Promise<void>;
-  markerCoords: Coords | null;
-  scale: number;
-  showPrefabs: boolean;
-  signSize: number;
-  signAlpha: number;
-  prefabs: HighlightedPrefab[];
+  markerCoords: Coords | null = null;
+  private fontFace: FontFace;
+
+  private throttledUpdater = throttledInvoker(() => this.updateImmediately());
 
   constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
     this.canvas = canvas;
-    this.showPrefabs = true;
-    this.biomesImg = null;
-    this.biomesAlpha = 1;
-    this.splat3Img = null;
-    this.splat3Alpha = 1;
-    this.splat4Img = null;
-    this.splat4Alpha = 1;
-    this.radImg = null;
-    this.radAlpha = 1;
-    this.brightness = "100%";
-    this.scale = 0.1;
-    this.signSize = 200;
-    this.signAlpha = 1;
-    this.prefabs = [];
-
     this.fontFace = fontFace;
-    fonts.add(fontFace);
-
-    this.markerCoords = null;
-
-    this.throttledUpdater = throttledInvoker(() => this.updateImmediately());
   }
 
   get width(): number {
@@ -108,56 +88,56 @@ export default class GameMap {
 
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
-      drawPrefabs(this, context);
+      this.drawPrefabs(context);
     }
     if (this.markerCoords) {
-      drawMark(this, context);
+      this.drawMark(context);
     }
   }
-}
 
-function drawPrefabs(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
-  ctx.font = `${map.signSize}px ${map.fontFace?.family ?? ""}`;
-  ctx.fillStyle = "red";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D) {
+    ctx.font = `${this.signSize}px ${this.fontFace.family}`;
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-  const offsetX = map.width / 2;
-  const offsetY = map.height / 2;
+    const offsetX = this.width / 2;
+    const offsetY = this.height / 2;
 
-  const charOffsetX = Math.round(map.signSize * 0.01);
-  const charOffsetY = Math.round(map.signSize * 0.05);
+    const charOffsetX = Math.round(this.signSize * 0.01);
+    const charOffsetY = Math.round(this.signSize * 0.05);
 
-  // Inverted iteration to overwrite signs by higher order prefabs
-  for (let i = map.prefabs.length - 1; i >= 0; i -= 1) {
-    const prefab = map.prefabs[i];
-    const x = offsetX + prefab.x + charOffsetX;
-    // prefab vertical positions are inverted for canvas coodinates
-    const z = offsetY - prefab.z + charOffsetY;
-    putText(ctx, { text: signChar, x, z, size: map.signSize });
+    // Inverted iteration to overwrite signs by higher order prefabs
+    for (let i = this.prefabs.length - 1; i >= 0; i -= 1) {
+      const prefab = this.prefabs[i];
+      const x = offsetX + prefab.x + charOffsetX;
+      // prefab vertical positions are inverted for canvas coodinates
+      const z = offsetY - prefab.z + charOffsetY;
+      putText(ctx, { text: signChar, x, z, size: this.signSize });
+    }
   }
-}
 
-function drawMark(map: GameMap, ctx: OffscreenCanvasRenderingContext2D) {
-  if (!map.markerCoords) return;
+  private drawMark(ctx: OffscreenCanvasRenderingContext2D) {
+    if (!this.markerCoords) return;
 
-  ctx.font = `${map.signSize}px ${map.fontFace?.family ?? ""}`;
-  ctx.fillStyle = "red";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "alphabetic";
+    ctx.font = `${this.signSize}px ${this.fontFace.family}`;
+    ctx.fillStyle = "red";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
 
-  const offsetX = map.width / 2;
-  const offsetY = map.height / 2;
-  const charOffsetX = -1 * Math.round(map.signSize * 0.32);
-  const charOffsetY = -1 * Math.round(map.signSize * 0.1);
+    const offsetX = this.width / 2;
+    const offsetY = this.height / 2;
+    const charOffsetX = -1 * Math.round(this.signSize * 0.32);
+    const charOffsetY = -1 * Math.round(this.signSize * 0.1);
 
-  const x = offsetX + map.markerCoords.x + charOffsetX;
-  // prefab vertical positions are inverted for canvas coodinates
-  const z = offsetY - map.markerCoords.z + charOffsetY;
+    const x = offsetX + this.markerCoords.x + charOffsetX;
+    // prefab vertical positions are inverted for canvas coodinates
+    const z = offsetY - this.markerCoords.z + charOffsetY;
 
-  putText(ctx, { text: markChar, x, z, size: map.signSize });
-  ctx.strokeText(markChar, x, z);
-  ctx.fillText(markChar, x, z);
+    putText(ctx, { text: markChar, x, z, size: this.signSize });
+    ctx.strokeText(markChar, x, z);
+    ctx.fillText(markChar, x, z);
+  }
 }
 
 interface MapSign {
