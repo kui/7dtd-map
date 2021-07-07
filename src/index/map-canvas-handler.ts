@@ -1,5 +1,5 @@
 import { MapStorage } from "../lib/map-storage";
-import { MapRendererInMessage, MapRendererOutMessage } from "../worker/map-renderer";
+import * as mapRenderer from "../worker/map-renderer";
 import { LoadingHandler } from "./loading-handler";
 
 const FIELDNAME_STORAGENAME_MAP = {
@@ -58,7 +58,7 @@ export class MapCanvasHandler {
       loadingHandler.delete("radiation");
     });
 
-    worker.addEventListener("message", (e: MessageEvent<MapRendererOutMessage>) => {
+    worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
       const { mapSize: mapSizes } = e.data;
       this.mapSizeListeners.map((fn) => fn(mapSizes));
     });
@@ -72,7 +72,7 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => this.update(this.scale()));
   }
 
-  async update(msg: MapRendererInMessage, shouldStore = true): Promise<void> {
+  async update(msg: mapRenderer.InMessage, shouldStore = true): Promise<void> {
     if (shouldStore) {
       for (const entry of Object.entries(msg)) {
         if (isStoreTarget(entry)) {
@@ -118,6 +118,6 @@ function isTransferable(v: unknown): v is ImageBitmap | OffscreenCanvas {
   return v instanceof ImageBitmap || v instanceof OffscreenCanvas;
 }
 
-function isStoreTarget(e: Entry<MapRendererInMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
+function isStoreTarget(e: Entry<mapRenderer.InMessage>): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
   return e[0] in FIELDNAME_STORAGENAME_MAP;
 }

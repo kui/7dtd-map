@@ -1,6 +1,6 @@
 import GameMap from "../lib/map";
 
-export type MapRendererInMessage = Partial<
+export type InMessage = Partial<
   Pick<
     GameMap,
     | "canvas"
@@ -22,11 +22,11 @@ export type MapRendererInMessage = Partial<
   >
 >;
 
-export interface MapRendererOutMessage {
+export interface OutMessage {
   mapSize: RectSize;
 }
 
-declare function postMessage(message: MapRendererOutMessage): void;
+declare function postMessage(message: OutMessage): void;
 
 const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
 
@@ -34,7 +34,7 @@ let map: GameMap | null = null;
 
 FONT_FACE.load().then(() => map?.update());
 
-onmessage = async (event: MessageEvent<MapRendererInMessage>) => {
+onmessage = async (event: MessageEvent<InMessage>) => {
   const message = event.data;
   console.debug(message);
   if (!map) {
