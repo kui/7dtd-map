@@ -28,14 +28,18 @@ export interface MapRendererOutMessage {
 
 declare function postMessage(message: MapRendererOutMessage): void;
 
-const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)").load();
+const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
 
 let map: GameMap | null = null;
-async function handleMessage(message: MapRendererInMessage) {
+
+FONT_FACE.load().then(() => map?.update());
+
+onmessage = async (event: MessageEvent<MapRendererInMessage>) => {
+  const message = event.data;
   console.debug(message);
   if (!map) {
     if (message.canvas) {
-      map = new GameMap(message.canvas, await FONT_FACE);
+      map = new GameMap(message.canvas, FONT_FACE);
     } else {
       throw Error("Unexpected state");
     }
@@ -49,18 +53,4 @@ async function handleMessage(message: MapRendererInMessage) {
       height: map.height,
     },
   });
-}
-
-async function* messageQeue(): AsyncGenerator<void, void, MapRendererInMessage> {
-  while (true) {
-    try {
-      await handleMessage(yield);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-}
-
-const queue = messageQeue();
-queue.next();
-onmessage = async (event) => await queue.next(event.data);
+};
