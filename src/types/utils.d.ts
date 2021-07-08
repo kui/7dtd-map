@@ -7,3 +7,11 @@ type Entry<T> = NonNullable<
     [K in keyof T]: [K, T[K]];
   }[keyof T]
 >;
+
+interface PngBlob extends Blob {
+  type: "image/png";
+}
+
+interface OffscreenCanvas {
+  convertToBlob(): Promise<PngBlob>;
+}

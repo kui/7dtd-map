@@ -8,9 +8,9 @@ module.exports = (_: void, argv: { mode: string }) => {
 
   const entry = glob.sync(path.join(BASE_DIR, "{,worker}", "*.ts")).reduce((obj, p) => {
     const name = path.relative(BASE_DIR, p).replace(/\.ts$/, "");
-    console.log(name);
     return Object.assign(obj, { [name]: p });
   }, {});
+  console.log(entry);
 
   return {
     entry,

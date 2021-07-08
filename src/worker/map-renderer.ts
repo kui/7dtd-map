@@ -53,10 +53,5 @@ onmessage = async (event: MessageEvent<InMessage>) => {
 
   await Object.assign(map, message).update();
 
-  postMessage({
-    mapSize: {
-      width: map.width,
-      height: map.height,
-    },
-  });
+  postMessage({ mapSize: await map.inGameSize() });
 };

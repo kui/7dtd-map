@@ -1,108 +1,120 @@
+import { ImageBitmapHolder } from "./image-bitmap-holder";
 import throttledInvoker from "./throttled-invoker";
 
 const signChar = "✘";
 const markChar = "🚩️";
 
 export default class GameMap {
+  radImg: ImageBitmap | null = null;
+  brightness = "100%";
+  markerCoords: Coords | null = null;
+  scale = 0.1;
+  showPrefabs = true;
+  prefabs: HighlightedPrefab[] = [];
+  signSize = 200;
+  signAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
   splat4Alpha = 1;
-  radAlpha = 0.5;
-  signAlpha = 1;
-  brightness = "100%";
-  scale = 0.1;
-  showPrefabs = true;
-  signSize = 200;
-  prefabs: HighlightedPrefab[] = [];
-
-  biomesImg: ImageBitmap | null = null;
-  splat3Img: ImageBitmap | null = null;
-  splat4Img: ImageBitmap | null = null;
-  radImg: ImageBitmap | null = null;
+  radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  markerCoords: Coords | null = null;
-  private fontFace: FontFace;
+  throttledUpdater = throttledInvoker(() => this.updateImmediately());
 
-  private throttledUpdater = throttledInvoker(() => this.updateImmediately());
+  private _biomesImg: ImageBitmapHolder | null = null;
+  private _splat3Img: ImageBitmapHolder | null = null;
+  private _splat4Img: ImageBitmapHolder | null = null;
+  private fontFace: FontFace | null = null;
 
   constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
     this.canvas = canvas;
     this.fontFace = fontFace;
   }
 
-  get width(): number {
-    return Math.max(this.biomesImg?.width ?? 0, this.splat3Img?.width ?? 0, this.splat4Img?.width ?? 0);
+  set biomesImg(img: ImageBitmap | PngBlob | null) {
+    this._biomesImg = img ? new ImageBitmapHolder("biomes", img) : null;
+  }
+  set splat3Img(img: ImageBitmap | PngBlob | null) {
+    this._splat3Img = img ? new ImageBitmapHolder("splat3", img) : null;
+  }
+  set splat4Img(img: ImageBitmap | PngBlob | null) {
+    this._splat4Img = img ? new ImageBitmapHolder("splat4", img) : null;
   }
 
-  get height(): number {
-    return Math.max(this.biomesImg?.height ?? 0, this.splat3Img?.height ?? 0, this.splat4Img?.height ?? 0);
+  async inGameSize(): Promise<RectSize> {
+    const rects = await Promise.all([this._biomesImg?.get(), this._splat3Img?.get(), this._splat4Img?.get()]);
+    return {
+      width: Math.max(...rects.map((r) => r?.width ?? 0)),
+      height: Math.max(...rects.map((r) => r?.height ?? 0)),
+    };
   }
 
   async update(): Promise<void> {
-    console.time("Map Update");
     await this.throttledUpdater();
-    console.timeEnd("Map Update");
   }
 
   private isBlank(): boolean {
-    return !this.biomesImg && !this.splat3Img && !this.splat4Img;
+    return !this._biomesImg && !this._splat3Img && !this._splat4Img;
   }
 
   async updateImmediately(): Promise<void> {
+    console.time("Map Update");
+
     if (this.isBlank()) {
       this.canvas.width = 1;
       this.canvas.height = 1;
       return;
     }
 
-    this.canvas.width = this.width * this.scale;
-    this.canvas.height = this.height * this.scale;
+    const { width, height } = await this.inGameSize();
+
+    this.canvas.width = width * this.scale;
+    this.canvas.height = height * this.scale;
 
     const context = this.canvas.getContext("2d");
     if (!context) return;
     context.scale(this.scale, this.scale);
     context.filter = `brightness(${this.brightness})`;
 
-    if (this.biomesImg && this.biomesAlpha !== 0) {
+    if (this._biomesImg && this.biomesAlpha !== 0) {
       context.globalAlpha = this.biomesAlpha;
-      context.drawImage(this.biomesImg, 0, 0, this.width, this.height);
+      context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
     }
-
-    if (this.splat3Img && this.splat3Alpha !== 0) {
+    if (this._splat3Img && this.splat3Alpha !== 0) {
       context.globalAlpha = this.splat3Alpha;
-      context.drawImage(this.splat3Img, 0, 0, this.width, this.height);
+      context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
     }
-    if (this.splat4Img && this.splat4Alpha !== 0) {
+    if (this._splat4Img && this.splat4Alpha !== 0) {
       context.globalAlpha = this.splat4Alpha;
-      context.drawImage(this.splat4Img, 0, 0, this.width, this.height);
+      context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
     }
 
     context.filter = "none";
     if (this.radImg && this.radAlpha !== 0) {
       context.globalAlpha = this.radAlpha;
       context.imageSmoothingEnabled = false;
-      context.drawImage(this.radImg, 0, 0, this.width, this.height);
+      context.drawImage(this.radImg, 0, 0, width, height);
       context.imageSmoothingEnabled = true;
     }
 
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
-      this.drawPrefabs(context);
+      this.drawPrefabs(context, width, height);
     }
     if (this.markerCoords) {
-      this.drawMark(context);
+      this.drawMark(context, width, height);
     }
+    console.timeEnd("Map Update");
   }
 
-  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D) {
-    ctx.font = `${this.signSize}px ${this.fontFace.family}`;
+  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
+    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const offsetX = this.width / 2;
-    const offsetY = this.height / 2;
+    const offsetX = width / 2;
+    const offsetY = height / 2;
 
     const charOffsetX = Math.round(this.signSize * 0.01);
     const charOffsetY = Math.round(this.signSize * 0.05);
@@ -117,16 +129,16 @@ export default class GameMap {
     }
   }
 
-  private drawMark(ctx: OffscreenCanvasRenderingContext2D) {
+  private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize}px ${this.fontFace.family}`;
+    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
 
-    const offsetX = this.width / 2;
-    const offsetY = this.height / 2;
+    const offsetX = width / 2;
+    const offsetY = height / 2;
     const charOffsetX = -1 * Math.round(this.signSize * 0.32);
     const charOffsetY = -1 * Math.round(this.signSize * 0.1);
 
