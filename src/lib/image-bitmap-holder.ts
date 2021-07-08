@@ -3,6 +3,7 @@ import { requireNonnull } from "./utils";
 const IMG_AGE_MSEC = 10000;
 
 export class ImageBitmapHolder {
+  private label;
   private _png: PngBlob | Promise<PngBlob>;
   private img?: ImageBitmap | null;
   private fallbackPromise: Promise<ImageBitmap> | null = null;
@@ -10,6 +11,7 @@ export class ImageBitmapHolder {
   private imgAge;
 
   constructor(label: string, original: PngBlob | ImageBitmap, imgAge = IMG_AGE_MSEC) {
+    this.label = label;
     if (isPngBlob(original)) {
       this._png = original;
     } else {
@@ -30,7 +32,7 @@ export class ImageBitmapHolder {
   }
 
   private async getImageBitmap() {
-    console.debug("Fallback");
+    console.debug("Fallback", this.label);
     const img = await createImageBitmap(await this._png);
     this.setImg(img);
     this.fallbackPromise = null;
@@ -44,7 +46,7 @@ export class ImageBitmapHolder {
 
   private expireImage() {
     if (Date.now() - this.lastAccessAt > this.imgAge) {
-      console.log("Expire");
+      console.debug("Expire", this.label);
       requireNonnull(this.img).close();
       this.img = null;
     } else {
@@ -61,5 +63,5 @@ async function imgToBlob(img: ImageBitmap): Promise<PngBlob> {
   const canvas = new OffscreenCanvas(img.height, img.width);
   const context = requireNonnull(canvas.getContext("2d"));
   context.drawImage(img, 0, 0);
-  return canvas.convertToBlob();
+  return (await canvas.convertToBlob()) as PngBlob;
 }

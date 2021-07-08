@@ -11,7 +11,3 @@ type Entry<T> = NonNullable<
 interface PngBlob extends Blob {
   type: "image/png";
 }
-
-interface OffscreenCanvas {
-  convertToBlob(): Promise<PngBlob>;
-}
