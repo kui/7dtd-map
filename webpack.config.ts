@@ -2,11 +2,12 @@ import path from "path";
 import glob from "glob";
 
 const BASE_DIR = path.resolve("src");
+const EXCLUDE_FILES = ["**/jest.config.*"];
 
 module.exports = (_: void, argv: { mode: string }) => {
   const isDev = argv.mode == "development";
 
-  const entry = glob.sync(path.join(BASE_DIR, "{,worker}", "*.ts")).reduce((obj, p) => {
+  const entry = glob.sync(path.join(BASE_DIR, "{,worker}", "*.ts"), { ignore: EXCLUDE_FILES }).reduce((obj, p) => {
     const name = path.relative(BASE_DIR, p).replace(/\.ts$/, "");
     return Object.assign(obj, { [name]: p });
   }, {});
