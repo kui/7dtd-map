@@ -71,3 +71,7 @@ export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
   context.drawImage(img, 0, 0);
   return (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
 }
+
+export async function sleep(msec: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, msec));
+}

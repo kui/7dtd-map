@@ -7,6 +7,7 @@ export default function throttledInvoker(asyncFunc: () => Promise<void>): () => 
     updateRequest = true;
 
     if (workerPromise) {
+      await workerPromise;
       return;
     }
 
@@ -18,5 +19,6 @@ export default function throttledInvoker(asyncFunc: () => Promise<void>): () => 
       }
       workerPromise = null;
     })();
+    await workerPromise;
   };
 }
