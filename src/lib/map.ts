@@ -5,7 +5,6 @@ const signChar = "✘";
 const markChar = "🚩️";
 
 export default class GameMap {
-  radImg: ImageBitmap | null = null;
   brightness = "100%";
   markerCoords: Coords | null = null;
   scale = 0.1;
@@ -24,7 +23,8 @@ export default class GameMap {
   private _biomesImg: ImageBitmapHolder | null = null;
   private _splat3Img: ImageBitmapHolder | null = null;
   private _splat4Img: ImageBitmapHolder | null = null;
-  private fontFace: FontFace | null = null;
+  private _radImg: ImageBitmapHolder | null = null;
+  private fontFace: FontFace;
 
   constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
     this.canvas = canvas;
@@ -39,6 +39,9 @@ export default class GameMap {
   }
   set splat4Img(img: ImageBitmap | PngBlob | null) {
     this._splat4Img = img ? new ImageBitmapHolder("splat4", img) : null;
+  }
+  set radImg(img: ImageBitmap | PngBlob | null) {
+    this._radImg = img ? new ImageBitmapHolder("rad", img) : null;
   }
 
   async inGameSize(): Promise<RectSize> {
@@ -90,10 +93,10 @@ export default class GameMap {
     }
 
     context.filter = "none";
-    if (this.radImg && this.radAlpha !== 0) {
+    if (this._radImg && this.radAlpha !== 0) {
       context.globalAlpha = this.radAlpha;
       context.imageSmoothingEnabled = false;
-      context.drawImage(this.radImg, 0, 0, width, height);
+      context.drawImage(await this._radImg.get(), 0, 0, width, height);
       context.imageSmoothingEnabled = true;
     }
 

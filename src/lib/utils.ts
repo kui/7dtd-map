@@ -64,3 +64,10 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
   a.href = canvas.toDataURL("image/png");
   a.click();
 }
+
+export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
+  const canvas = new OffscreenCanvas(img.height, img.width);
+  const context = requireNonnull(canvas.getContext("2d"));
+  context.drawImage(img, 0, 0);
+  return (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
+}

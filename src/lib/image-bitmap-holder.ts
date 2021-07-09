@@ -1,10 +1,10 @@
-import { requireNonnull } from "./utils";
+import { imageBitmapToPngBlob, requireNonnull } from "./utils";
 
 const IMG_AGE_MSEC = 10000;
 
 export class ImageBitmapHolder {
   private label;
-  private _png: PngBlob | Promise<PngBlob>;
+  _png: PngBlob | Promise<PngBlob>;
   private img?: ImageBitmap | null;
   private fallbackPromise: Promise<ImageBitmap> | null = null;
   private lastAccessAt = 0;
@@ -15,7 +15,7 @@ export class ImageBitmapHolder {
     if (isPngBlob(original)) {
       this._png = original;
     } else {
-      this._png = imgToBlob(original);
+      this._png = imageBitmapToPngBlob(original);
       this.setImg(original);
     }
     this.imgAge = imgAge;
@@ -57,11 +57,4 @@ export class ImageBitmapHolder {
 
 function isPngBlob(o: unknown): o is PngBlob {
   return o instanceof Blob && o.type.toLowerCase() === "image/png";
-}
-
-async function imgToBlob(img: ImageBitmap): Promise<PngBlob> {
-  const canvas = new OffscreenCanvas(img.height, img.width);
-  const context = requireNonnull(canvas.getContext("2d"));
-  context.drawImage(img, 0, 0);
-  return (await canvas.convertToBlob()) as PngBlob;
 }

@@ -39,10 +39,11 @@ export const LARGE_OBJECT_TYPES = [
 ] as const;
 type LargeObjectType = typeof LARGE_OBJECT_TYPES[number];
 export interface LargeObjects {
-  biomes: ImageBitmap;
-  splat3: ImageBitmap;
-  splat4: ImageBitmap;
-  rad: ImageBitmap;
+  // ImageBitmap for backward compatibility
+  biomes: ImageBitmap | PngBlob;
+  splat3: ImageBitmap | PngBlob;
+  splat4: ImageBitmap | PngBlob;
+  rad: ImageBitmap | PngBlob;
   elevations: Uint8Array;
   subElevations: Uint8Array;
   prefabs: Prefab[];

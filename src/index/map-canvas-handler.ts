@@ -1,4 +1,5 @@
 import { MapStorage } from "../lib/map-storage";
+import { imageBitmapToPngBlob } from "../lib/utils";
 import * as mapRenderer from "../worker/map-renderer";
 import { LoadingHandler } from "./loading-handler";
 
@@ -76,7 +77,7 @@ export class MapCanvasHandler {
     if (shouldStore) {
       for (const entry of Object.entries(msg)) {
         if (isStoreTarget(entry)) {
-          await this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], entry[1]);
+          this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], await imageBitmapToPngBlob(entry[1]));
         }
       }
     }
