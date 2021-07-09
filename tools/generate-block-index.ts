@@ -4,31 +4,30 @@ import glob from "glob-promise";
 import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
 import { parseLabel } from "./lib/label-parser";
 import { parseTts } from "./lib/tts-parser";
-import { handleMain } from "./lib/utils";
+import * as utils from "./lib/utils";
 
-const projectRoot = path.join(path.dirname(process.argv[1]), "..");
-const localJsonFile = path.join(projectRoot, "local.json");
-const blockPrefabIndexFile = "docs/block-prefab-index.json";
-const prefabBlockIndexFile = "docs/prefab-block-index.json";
-const blockLabelsFile = "docs/block-labels.json";
-const excludedBlocks = new Set(["air", "terrainFiller"]);
+const DOCS_DIR = utils.projectRoot("docs");
+const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
 
 async function main() {
-  const { vanillaDir } = JSON.parse((await fs.readFile(localJsonFile)).toString());
+  const vanillaDir = await utils.vanillaDir();
   const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*.blocks.nim");
   const nimFiles = await glob(fileGlob);
   if (nimFiles.length === 0) {
     throw Error(`No nim file: ${fileGlob}`);
   }
 
+  const prefabBlockIndexFile = path.join(DOCS_DIR, "prefab-block-index.json");
   const prefabBlockIndex = await readIndex(nimFiles);
   console.log("Load %d prefabs", Object.keys(prefabBlockIndex).length);
   await writeJsonFile(prefabBlockIndexFile, prefabBlockIndex);
 
+  const blockPrefabIndexFile = path.join(DOCS_DIR, "block-prefab-index.json");
   const blockPrefabIndex = invertIndex(prefabBlockIndex);
   console.log("Load %d blocks", Object.keys(blockPrefabIndex).length);
   await writeJsonFile(blockPrefabIndexFile, blockPrefabIndex);
 
+  const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
   const labels = await readLabels(vanillaDir, Object.keys(blockPrefabIndex));
   console.log("Load %d block labels", Object.keys(labels).length);
   await writeJsonFile(blockLabelsFile, labels);
@@ -37,7 +36,7 @@ async function main() {
 }
 
 async function writeJsonFile(file: string, json: unknown) {
-  await fs.writeFile(path.join(projectRoot, file), JSON.stringify(json));
+  await fs.writeFile(file, JSON.stringify(json));
   console.log("Write %s", file);
 }
 
@@ -85,7 +84,7 @@ async function readIndex(nimFiles: string[]) {
 
     return {
       [prefabName]: Array.from(blocks)
-        .filter(([, name]) => !excludedBlocks.has(name))
+        .filter(([, name]) => !EXCLUD_BLOCKS.has(name))
         .map(([id, name]) => ({
           name: name,
           count: blockNums.get(id) ?? 0,
@@ -109,4 +108,4 @@ function invertIndex(prefabs: PrefabBlockIndex) {
     }, {});
 }
 
-handleMain(main());
+utils.handleMain(main());

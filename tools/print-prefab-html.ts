@@ -1,13 +1,9 @@
-import { promises as fs } from "fs";
 import * as path from "path";
 import { prefabHtml } from "./lib/prefab-html";
 import { parseLabel } from "./lib/label-parser";
-import { handleMain } from "./lib/utils";
+import { handleMain, vanillaDir } from "./lib/utils";
 
 const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
-
-const projectRoot = path.join(path.dirname(process.argv[1]), "..");
-const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((j) => JSON.parse(j.toString()));
 
 async function main() {
   if (process.argv.length <= 2) {
@@ -24,8 +20,7 @@ async function main() {
 }
 
 async function loadLabels() {
-  const { vanillaDir } = await localInfo;
-  const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
+  const fileName = await vanillaDir("Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
   console.log("Load %s labels", Object.keys(labels).length);
   return labels;

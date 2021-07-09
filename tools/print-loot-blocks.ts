@@ -1,8 +1,7 @@
-import { promises as fs } from "fs";
 import * as path from "path";
 import { loadBlocks } from "./lib/blocks-xml";
 import { Loot, LootTable } from "./lib/loot";
-import { handleMain } from "./lib/utils";
+import { handleMain, vanillaDir } from "./lib/utils";
 
 const CMD = `npx ts-node ${path.basename(process.argv[1])}`;
 const USAGE = `Usage: ${CMD} <item name regexp>
@@ -13,18 +12,15 @@ Search acid can:
 Search shotguns: 
     ${CMD} '(?!.*Schematic$)^gunShotgun'`;
 
-const projectRoot = path.join(path.dirname(process.argv[1]), "..");
-const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((p) => JSON.parse(p.toString()));
-
 async function main() {
   if (process.argv.length !== 3) {
     console.error(USAGE);
     return 1;
   }
 
+  const configDir = await vanillaDir("Data", "Config");
   const pattern = new RegExp(process.argv[2]);
-  const { vanillaDir } = await localInfo;
-  const lootXml = new Loot(path.join(vanillaDir, "Data", "Config", "loot.xml"));
+  const lootXml = new Loot(path.join(configDir, "loot.xml"));
   const lootContainers = await lootXml.findLootContainer(pattern);
   const items = flattenItems(lootContainers);
 
@@ -35,7 +31,7 @@ async function main() {
   console.log("Items");
   for (const i of items) console.log(i);
 
-  const blocks = await loadBlocks(path.join(vanillaDir, "Data", "Config", "blocks.xml"));
+  const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
   const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.id)));
   console.log();
   console.log("Blocks");

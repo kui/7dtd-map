@@ -3,11 +3,9 @@ import { promises as fs } from "fs";
 import glob from "glob-promise";
 import { prefabHtml } from "./lib/prefab-html";
 import { parseLabel } from "./lib/label-parser";
-import { handleMain } from "./lib/utils";
+import { handleMain, projectRoot, vanillaDir } from "./lib/utils";
 
-const projectRoot = path.join(path.dirname(process.argv[1]), "..");
-const baseDist = path.join(projectRoot, "docs/prefabs");
-const localInfo = fs.readFile(path.join(projectRoot, "local.json")).then((j) => JSON.parse(j.toString()));
+const BASE_DEST = projectRoot("docs", "prefabs");
 
 async function main() {
   await remove();
@@ -18,32 +16,31 @@ async function main() {
 }
 
 async function remove() {
-  const globPath = path.join(baseDist, "*.{jpg,html}");
+  const globPath = path.join(BASE_DEST, "*.{jpg,html}");
   await Promise.all((await glob(globPath)).map(fs.unlink));
   console.log("Remove %s", globPath);
 }
 
 async function loadLabels() {
-  const { vanillaDir } = await localInfo;
-  const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
+  const fileName = await vanillaDir("Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
   console.log("Load %s labels", labels.size);
   return labels;
 }
 
 async function generateHtml(labels: Map<string, string>) {
-  const { vanillaDir } = await localInfo;
-  const xmlGlob = path.join(vanillaDir, "Data", "Prefabs", "*.xml");
+  const prefabsDir = await vanillaDir("Data", "Prefabs");
+  const xmlGlob = path.join(prefabsDir, "*.xml");
   const xmlFiles = await glob(xmlGlob);
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);
   }
 
   const prefabNames = await Promise.all(
-    xmlFiles.map(async (xmlFileName) => {
+    xmlFiles.flatMap(async (xmlFileName) => {
       const prefabName = path.basename(xmlFileName, ".xml");
-      const nimFileName = path.join(vanillaDir, "Data", "Prefabs", `${prefabName}.blocks.nim`);
-      const ttsFileName = path.join(vanillaDir, "Data", "Prefabs", `${prefabName}.tts`);
+      const nimFileName = path.join(prefabsDir, `${prefabName}.blocks.nim`);
+      const ttsFileName = path.join(prefabsDir, `${prefabName}.tts`);
       let html;
       try {
         html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
@@ -51,7 +48,7 @@ async function generateHtml(labels: Map<string, string>) {
         console.warn("Ignore Prefab %s, %s", prefabName, e);
         return null;
       }
-      const dist = path.join(baseDist, `${prefabName}.html`);
+      const dist = path.join(BASE_DEST, `${prefabName}.html`);
       await fs.writeFile(dist, html);
       return prefabName;
     })
@@ -62,13 +59,13 @@ async function generateHtml(labels: Map<string, string>) {
 }
 
 async function copyJpg(prefabNames: string[]) {
-  const { vanillaDir } = await localInfo;
-  const jpgFiles = prefabNames.map((n) => path.join(vanillaDir, "Data", "Prefabs", `${n}.jpg`));
+  const prefabsDir = await vanillaDir("Data", "Prefabs");
+  const jpgFiles = prefabNames.map((n) => path.join(prefabsDir, `${n}.jpg`));
 
   const failedFiles: string[] = [];
   await Promise.all(
     jpgFiles.map(async (jpgFileName) => {
-      const dist = path.join(baseDist, path.basename(jpgFileName));
+      const dist = path.join(BASE_DEST, path.basename(jpgFileName));
       try {
         await fs.copyFile(jpgFileName, dist);
       } catch (e) {
@@ -82,7 +79,7 @@ async function copyJpg(prefabNames: string[]) {
 }
 
 async function generateIndex(prefabNames: string[]) {
-  const dist = path.join(baseDist, "index.html");
+  const dist = path.join(BASE_DEST, "index.html");
   await fs.writeFile(
     dist,
     `<!doctype html>
