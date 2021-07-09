@@ -4,7 +4,7 @@ import throttledInvoker from "./throttled-invoker";
 const signChar = "✘";
 const markChar = "🚩️";
 
-export default class GameMap {
+export default class MapRenderer {
   brightness = "100%";
   markerCoords: Coords | null = null;
   scale = 0.1;

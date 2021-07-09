@@ -1,11 +1,11 @@
 import { FontFaceSet } from "css-font-loading-module";
-import GameMap from "../lib/map";
+import MapRenderer from "../lib/map-renderer";
 
 declare const fonts: FontFaceSet;
 
 export type InMessage = Partial<
   Pick<
-    GameMap,
+    MapRenderer,
     | "canvas"
     | "biomesImg"
     | "splat3Img"
@@ -33,7 +33,7 @@ declare function postMessage(message: OutMessage): void;
 
 const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
 
-let map: GameMap | null = null;
+let map: MapRenderer | null = null;
 
 FONT_FACE.load().then(() => {
   fonts.add(FONT_FACE);
@@ -45,7 +45,7 @@ onmessage = async (event: MessageEvent<InMessage>) => {
   console.debug(message);
   if (!map) {
     if (message.canvas) {
-      map = new GameMap(message.canvas, FONT_FACE);
+      map = new MapRenderer(message.canvas, FONT_FACE);
     } else {
       throw Error("Unexpected state");
     }
