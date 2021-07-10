@@ -1,9 +1,9 @@
 import { ImageBitmapHolder } from "./image-bitmap-holder";
-import throttledInvoker from "./throttled-invoker";
+import { throttledInvoker } from "./throttled-invoker";
 import { gameMapSize } from "./utils";
 
-const signChar = "✘";
-const markChar = "🚩️";
+const SIGN_CHAR = "✘";
+const MARK_CHAR = "🚩️";
 
 export default class MapRenderer {
   brightness = "100%";
@@ -19,7 +19,11 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  throttledUpdater = throttledInvoker(() => this.updateImmediately());
+  throttledUpdater = throttledInvoker(async () => {
+    console.time("MapUpdate");
+    await this.updateImmediately();
+    console.timeEnd("MapUpdate");
+  });
 
   private _biomesImg: ImageBitmapHolder | null = null;
   private _splat3Img: ImageBitmapHolder | null = null;
@@ -62,8 +66,6 @@ export default class MapRenderer {
   }
 
   async updateImmediately(): Promise<void> {
-    console.time("Map Update");
-
     if (this.isBlank()) {
       this.canvas.width = 1;
       this.canvas.height = 1;
@@ -108,7 +110,6 @@ export default class MapRenderer {
     if (this.markerCoords) {
       this.drawMark(context, width, height);
     }
-    console.timeEnd("Map Update");
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
@@ -129,7 +130,7 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      putText(ctx, { text: signChar, x, z, size: this.signSize });
+      putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
     }
   }
 
@@ -149,9 +150,9 @@ export default class MapRenderer {
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(ctx, { text: markChar, x, z, size: this.signSize });
-    ctx.strokeText(markChar, x, z);
-    ctx.fillText(markChar, x, z);
+    putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
+    ctx.strokeText(MARK_CHAR, x, z);
+    ctx.fillText(MARK_CHAR, x, z);
   }
 }
 

@@ -50,8 +50,6 @@ onmessage = async (event: MessageEvent<InMessage>) => {
       throw Error("Unexpected state");
     }
   }
-
   await Object.assign(map, message).update();
-
   postMessage({ mapSize: await map.size() });
 };

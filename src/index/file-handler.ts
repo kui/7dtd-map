@@ -1,4 +1,4 @@
-import throttledInvoker from "../lib/throttled-invoker";
+import { throttledInvoker } from "../lib/throttled-invoker";
 import { waitAnimationFrame } from "../lib/utils";
 import { LoadingHandler } from "./loading-handler";
 

@@ -1,24 +1,28 @@
 import { waitAnimationFrame } from "./utils";
 
-export default function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
-  let updateRequest = false;
+export function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
   let workerPromise: Promise<void> | null = null;
-  return async () => {
-    updateRequest = true;
+  let isDirty = false;
+  return () => {
+    isDirty = true;
 
     if (workerPromise) {
-      await workerPromise;
-      return;
+      return workerPromise.then(() => {
+        if (isDirty) {
+          return (workerPromise = (async () => {
+            isDirty = false;
+            await waitAnimationFrame();
+            await asyncFunc();
+            workerPromise = null;
+          })());
+        }
+      });
     }
 
-    workerPromise = (async () => {
-      while (updateRequest) {
-        updateRequest = false;
-        await asyncFunc();
-        await waitAnimationFrame();
-      }
+    return (workerPromise = (async () => {
+      isDirty = false;
+      await asyncFunc();
       workerPromise = null;
-    })();
-    await workerPromise;
+    })());
   };
 }

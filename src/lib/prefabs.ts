@@ -1,4 +1,4 @@
-import throttledInvoker from "./throttled-invoker";
+import { throttledInvoker } from "./throttled-invoker";
 
 declare interface PrefabFilter {
   name: string;
