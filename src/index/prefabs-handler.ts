@@ -1,4 +1,4 @@
-import { PrefabsFilterInMessage } from "../worker/prefabs-filter";
+import * as prefabsFilter from "../worker/prefabs-filter";
 import { MapStorage } from "../lib/map-storage";
 import { PrefabUpdate } from "../lib/prefabs";
 
@@ -9,7 +9,7 @@ interface Doms {
 }
 
 declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: PrefabsFilterInMessage): void;
+  postMessage(message: prefabsFilter.InMessage): void;
 }
 
 export class PrefabsHandler {
