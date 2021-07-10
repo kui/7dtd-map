@@ -75,6 +75,7 @@ export default class Prefabs {
   }
   private sort() {
     if (this.markCoords) {
+      this.status = `${this.status}, order by distances from the flag`;
       this.filtered.sort(distSorter);
     } else {
       this.filtered.sort(nameSorter);
