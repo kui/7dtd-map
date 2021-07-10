@@ -219,7 +219,10 @@
             <button data-input-for="blocks_filter">Workbench</button>
             <button data-input-for="blocks_filter">Super Corn</button>
             <!-- npx ts-node --files tools/print-loot-blocks.ts '(?!.*Schematic$)vehicle4x4' -->
-            <button data-input-for="blocks_filter" data-input-text="^(cntLootCrateCarParts|cntCollapsedWorkbench)$">
+            <button
+              data-input-for="blocks_filter"
+              data-input-text="^(cntLootCrateCarParts|cntShippingCrateCarParts|cntCollapsedWorkbench)$"
+            >
               Vehicle Parts Containers
             </button>
             <button data-input-for="blocks_filter" data-input-text="^(?!.*Empty$)cnt.*book(case|shelf|store)">Book Containers</button>
