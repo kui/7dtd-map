@@ -1,5 +1,5 @@
 export function requireNonnull<T>(t: T | undefined | null, message = () => `Unexpected state: ${t}`): T {
-  if (t) return t;
+  if (t != null) return t;
   else throw Error(message());
 }
 

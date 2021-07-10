@@ -1,12 +1,11 @@
 import { component, requireNonnull } from "./utils";
 
 export function init(): void {
-  for (const button of Array.from(document.querySelectorAll("[data-input-for]"))) {
-    if (!(button instanceof HTMLElement)) continue;
-    button.addEventListener("click", () => {
-      const target = component(button.dataset.inputFor, HTMLInputElement);
-      target.value = requireNonnull(button.dataset.inputText ?? button.textContent);
-      target.dispatchEvent(new Event("input"));
-    });
-  }
+  document.body.addEventListener("click", ({ target }) => {
+    if (target instanceof HTMLButtonElement && target.dataset.inputFor != null) {
+      const input = component(target.dataset.inputFor, HTMLInputElement);
+      input.value = requireNonnull(target.dataset.inputText ?? target.textContent);
+      input.dispatchEvent(new Event("input"));
+    }
+  });
 }
