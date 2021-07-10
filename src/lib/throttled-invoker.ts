@@ -1,28 +1,34 @@
 import { waitAnimationFrame } from "./utils";
 
 export function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
-  let workerPromise: Promise<void> | null = null;
-  let isDirty = false;
+  const workerPromises: Promise<void>[] = [];
   return () => {
-    isDirty = true;
-
-    if (workerPromise) {
-      return workerPromise.then(() => {
-        if (isDirty) {
-          return (workerPromise = (async () => {
-            isDirty = false;
+    switch (workerPromises.length) {
+      case 0: {
+        workerPromises.push(
+          (async () => {
+            await asyncFunc();
+            workerPromises.shift();
+          })()
+        );
+        return workerPromises[0];
+      }
+      case 1: {
+        const prev = workerPromises[0];
+        workerPromises.push(
+          (async () => {
+            await prev;
             await waitAnimationFrame();
             await asyncFunc();
-            workerPromise = null;
-          })());
-        }
-      });
+            workerPromises.shift();
+          })()
+        );
+        return workerPromises[1];
+      }
+      case 2:
+        return workerPromises[1];
+      default:
+        throw Error(`Unexpected state: promiceses=${workerPromises.length}`);
     }
-
-    return (workerPromise = (async () => {
-      isDirty = false;
-      await asyncFunc();
-      workerPromise = null;
-    })());
   };
 }
