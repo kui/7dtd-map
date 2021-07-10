@@ -34,8 +34,13 @@ async function main() {
   const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
   const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.id)));
   console.log();
-  console.log("Blocks");
+  console.log("Container Blocks");
   for (const b of matchedBlocks) console.log(b.name);
+
+  const downgradeGraph = matchedBlocks.flatMap((b) => blocks.findByDowngradeBlocks([b]));
+  console.log();
+  console.log("Downgrade");
+  for (const g of downgradeGraph) if (g.length > 1) console.log(g.map((b) => b.name).join(" -> "));
 
   return 0;
 }
