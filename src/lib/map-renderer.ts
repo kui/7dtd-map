@@ -1,12 +1,13 @@
 import { ImageBitmapHolder } from "./image-bitmap-holder";
 import throttledInvoker from "./throttled-invoker";
+import { gameMapSize } from "./utils";
 
 const signChar = "✘";
 const markChar = "🚩️";
 
 export default class MapRenderer {
   brightness = "100%";
-  markerCoords: Coords | null = null;
+  markerCoords: GameCoords | null = null;
   scale = 0.1;
   showPrefabs = true;
   prefabs: HighlightedPrefab[] = [];
@@ -44,12 +45,12 @@ export default class MapRenderer {
     this._radImg = img ? new ImageBitmapHolder("rad", img) : null;
   }
 
-  async inGameSize(): Promise<RectSize> {
+  async size(): Promise<GameMapSize> {
     const rects = await Promise.all([this._biomesImg?.get(), this._splat3Img?.get(), this._splat4Img?.get()]);
-    return {
+    return gameMapSize({
       width: Math.max(...rects.map((r) => r?.width ?? 0)),
       height: Math.max(...rects.map((r) => r?.height ?? 0)),
-    };
+    });
   }
 
   async update(): Promise<void> {
@@ -69,7 +70,7 @@ export default class MapRenderer {
       return;
     }
 
-    const { width, height } = await this.inGameSize();
+    const { width, height } = await this.size();
 
     this.canvas.width = width * this.scale;
     this.canvas.height = height * this.scale;
@@ -146,7 +147,6 @@ export default class MapRenderer {
     const charOffsetY = -1 * Math.round(this.signSize * 0.1);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
-    // prefab vertical positions are inverted for canvas coodinates
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
     putText(ctx, { text: markChar, x, z, size: this.signSize });

@@ -96,7 +96,7 @@ function main() {
       canvas: component("map", HTMLCanvasElement),
       output: component("cursor_coods", HTMLElement),
     },
-    (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
   );
   mapCanvasHandler.addMapSizeListener((size) => (cursorCoodsHandler.mapSize = size));
 
@@ -106,7 +106,7 @@ function main() {
       output: component("mark_coods", HTMLElement),
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
-    (coords, width) => dtmHandler.dtm?.getElevation(coords.x, coords.z, width) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
   );
   mapCanvasHandler.addMapSizeListener((size) => (markerHandler.mapSize = size));
   markerHandler.listeners.push(async (coords) => {

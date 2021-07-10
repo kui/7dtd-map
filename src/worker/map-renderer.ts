@@ -26,7 +26,7 @@ export type InMessage = Partial<
 >;
 
 export interface OutMessage {
-  mapSize: RectSize;
+  mapSize: GameMapSize;
 }
 
 declare function postMessage(message: OutMessage): void;
@@ -53,5 +53,5 @@ onmessage = async (event: MessageEvent<InMessage>) => {
 
   await Object.assign(map, message).update();
 
-  postMessage({ mapSize: await map.inGameSize() });
+  postMessage({ mapSize: await map.size() });
 };

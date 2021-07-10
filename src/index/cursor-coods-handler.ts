@@ -1,4 +1,4 @@
-import { formatCoords } from "../lib/utils";
+import { formatCoords, gameMapSize } from "../lib/utils";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -6,11 +6,11 @@ interface Doms {
 }
 
 export class CursorCoodsHandler {
-  mapSize: RectSize = { width: 0, height: 0 };
-  elevationFunction: (coods: Coords, width: number) => number | null;
+  mapSize: GameMapSize = gameMapSize({ width: 0, height: 0 });
+  elevationFunction: (coods: GameCoords, mapSize: GameMapSize) => number | null;
   doms: Doms;
 
-  constructor(doms: Doms, elevationFunction: (coords: Coords, width: number) => number | null) {
+  constructor(doms: Doms, elevationFunction: (coords: GameCoords, mapSize: GameMapSize) => number | null) {
     this.elevationFunction = elevationFunction;
     this.doms = doms;
 

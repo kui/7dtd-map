@@ -26,7 +26,7 @@ export class MapCanvasHandler {
   private doms: Doms;
   private worker: Worker;
   private storage: MapStorage;
-  private mapSizeListeners: ((mapSize: RectSize) => Promise<unknown> | unknown)[] = [];
+  private mapSizeListeners: ((mapSize: GameMapSize) => Promise<unknown> | unknown)[] = [];
 
   constructor(doms: Doms, worker: Worker, storage: MapStorage, loadingHandler: LoadingHandler) {
     this.doms = doms;
@@ -60,8 +60,8 @@ export class MapCanvasHandler {
     });
 
     worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
-      const { mapSize: mapSizes } = e.data;
-      this.mapSizeListeners.map((fn) => fn(mapSizes));
+      const { mapSize } = e.data;
+      this.mapSizeListeners.map((fn) => fn(mapSize));
     });
     doms.biomesAlpha.addEventListener("input", () => this.update(this.biomesAlpha()));
     doms.splat3Alpha.addEventListener("input", () => this.update(this.splat3Alpha()));
@@ -85,7 +85,7 @@ export class MapCanvasHandler {
     this.worker.postMessage(msg, transferables);
   }
 
-  addMapSizeListener(ln: (mapSize: RectSize) => Promise<unknown> | unknown): void {
+  addMapSizeListener(ln: (mapSize: GameMapSize) => Promise<unknown> | unknown): void {
     this.mapSizeListeners.push(ln);
   }
 

@@ -37,25 +37,20 @@ interface EventOffsets {
 }
 
 export function formatCoords(
-  map: RectSize,
-  canvas: RectSize,
-  elevation: (coods: Coords, width: number) => number | null,
+  map: GameMapSize,
+  canvas: HTMLCanvasElement,
+  elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
   event: EventOffsets | null
 ): string {
   if (!event) return "E/W: -, N/S: -, Elev: -";
 
-  // in-game scale coords with left-top offset
-  const gx = (event.offsetX * map.width) / canvas.width;
-  const gz = (event.offsetY * map.height) / canvas.height;
-  if (gx < 0 || gx >= map.width || gz < 0 || gz >= map.height) {
+  const gameCoords = canvasEventToGameCoords(event, map, canvas);
+  if (gameCoords === null) {
     return "E/W: -, N/S: -, Elev: -";
   }
 
-  // in-game coords (center offset)
-  const x = Math.round(gx - map.width / 2);
-  const z = Math.round(map.height / 2 - gz);
-  const e = elevation({ x: Math.round(gx), z: Math.round(gz) }, map.width) ?? "-";
-  return `E/W: ${x}, N/S: ${z}, Elev: ${e}`;
+  const y = elevation(gameCoords, map) ?? "-";
+  return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
 }
 
 export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
@@ -74,4 +69,27 @@ export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
 
 export async function sleep(msec: number): Promise<void> {
   return new Promise((r) => setTimeout(r, msec));
+}
+
+export function gameMapSize(s: { width: number; height: number }): GameMapSize {
+  return { type: "game", ...s };
+}
+
+export function gameCoords(c: { x: number; z: number }): GameCoords {
+  return { type: "game", ...c };
+}
+
+/** Returns null if the event was fired out of the canvas */
+export function canvasEventToGameCoords(event: EventOffsets, mapSize: GameMapSize, canvasSize: HTMLCanvasElement): GameCoords | null {
+  // in-game scale coords with left-top offset
+  const gx = (event.offsetX * mapSize.width) / canvasSize.width;
+  const gz = (event.offsetY * mapSize.height) / canvasSize.height;
+  if (gx < 0 || gx >= mapSize.width || gz < 0 || gz >= mapSize.height) {
+    return null;
+  }
+
+  // in-game coords (center offset)
+  const x = gx - Math.floor(mapSize.width / 2);
+  const z = Math.floor(mapSize.height / 2) - gz;
+  return gameCoords({ x: Math.round(x), z: Math.round(z) });
 }

@@ -50,7 +50,7 @@ export class PrefabsHandler {
     this.worker.postMessage({ all: prefabs });
   }
 
-  set marker(markCoords: Coords | null) {
+  set marker(markCoords: GameCoords | null) {
     this.worker.postMessage({ markCoords });
   }
 }

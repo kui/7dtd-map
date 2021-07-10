@@ -8,8 +8,14 @@ export class Dtm {
     this.data = bitmap;
   }
 
-  getElevation(x: number, z: number, width: number): number {
-    return this.data[x + z * width];
+  getElevation(coords: GameCoords, size: GameMapSize): number {
+    if (Math.floor(this.data.byteLength / size.width) !== size.height) {
+      console.warn("Game map size does not match with DTM byte array length: inputMapSize=%o, byteLength=%d", size, this.data.byteLength);
+    }
+    // In-game coords with left-top offset
+    const x = Math.floor(size.width / 2) + coords.x;
+    const z = Math.floor(size.height / 2) - coords.z;
+    return this.data[x + z * size.width];
   }
 }
 

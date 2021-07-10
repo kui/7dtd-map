@@ -1,4 +1,4 @@
-import { formatCoords } from "../lib/utils";
+import { canvasEventToGameCoords, formatCoords, gameMapSize } from "../lib/utils";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -7,22 +7,18 @@ interface Doms {
 }
 
 export class MarkerHandler {
-  mapSize: RectSize = { width: 0, height: 0 };
-  elevationFunction: (coods: Coords, width: number) => number | null;
+  mapSize: GameMapSize = gameMapSize({ width: 0, height: 0 });
+  elevationFunction: (coods: GameCoords, size: GameMapSize) => number | null;
   doms: Doms;
-  listeners: ((c: Coords | null) => Promise<void>)[] = [];
+  listeners: ((c: GameCoords | null) => Promise<void>)[] = [];
 
-  constructor(doms: Doms, elevationFunction: (coords: Coords, width: number) => number | null) {
+  constructor(doms: Doms, elevationFunction: (coords: GameCoords, width: GameMapSize) => number | null) {
     this.elevationFunction = elevationFunction;
     this.doms = doms;
 
     doms.canvas.addEventListener("click", (e) => {
       updateMarker(this, e);
-      const markCoords = {
-        x: Math.round((e.offsetX * this.mapSize.width) / doms.canvas.width - this.mapSize.width / 2),
-        z: -Math.round((e.offsetY * this.mapSize.height) / doms.canvas.height - this.mapSize.height / 2),
-      };
-      this.listeners.forEach((fn) => fn(markCoords));
+      this.listeners.forEach((fn) => fn(canvasEventToGameCoords(e, this.mapSize, doms.canvas)));
     });
     doms.resetMarker.addEventListener("click", () => {
       updateMarker(this);

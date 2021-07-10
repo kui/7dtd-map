@@ -16,15 +16,19 @@ interface HighlightedBlock {
   prefabs?: { name: string; count: number }[];
 }
 
-interface RectSize {
+interface GameMapSize {
+  type: "game";
   width: number;
   height: number;
 }
 
-interface Coords {
-  x: number;
-  z: number;
-}
+type GameCoords =
+  | {
+      type: "game";
+      x: number;
+      z: number;
+    }
+  | Prefab;
 
 // key: prefab name
 // value: block name and # of block

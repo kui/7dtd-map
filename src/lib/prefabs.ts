@@ -22,7 +22,7 @@ export default class Prefabs {
   filter: PrefabFilter | null;
   filtered: HighlightedPrefab[];
   throttledUpdater: () => void;
-  markCoords: Coords | null;
+  markCoords: GameCoords | null;
   status: string;
   updateListeners: ((u: PrefabUpdate) => void)[];
 
@@ -91,7 +91,8 @@ function applyFilter(prefabs: Prefabs) {
 }
 function updateDist(map: Prefabs) {
   if (map.markCoords) {
-    map.filtered.forEach((p) => (p.dist = calcDist(p, map.markCoords as Coords)));
+    const { markCoords } = map;
+    map.filtered.forEach((p) => (p.dist = calcDist(p, markCoords)));
   } else {
     map.filtered.forEach((p) => (p.dist = null));
   }
@@ -185,9 +186,11 @@ function matchBlocks(pattern: RegExp, blockPrefabIndex: BlockPrefabIndex, blockL
     []
   );
 }
-function calcDist(targetCoords: Coords, baseCoords: Coords) {
+
+function calcDist(targetCoords: GameCoords, baseCoords: GameCoords) {
   return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
 }
+
 function matchAndHighlight(str: string, regex: RegExp) {
   let isMatched = false;
   const highlighted = str.replace(regex, (m) => {
