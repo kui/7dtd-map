@@ -1,51 +1,33 @@
 import { throttledInvoker } from "./throttled-invoker";
 
-declare interface PrefabFilter {
-  name: string;
-  func: (prefabs: Prefabs, pattern: RegExp) => HighlightedPrefab[];
-  pattern: RegExp;
-}
-
-export declare interface PrefabUpdate {
+export interface PrefabUpdate {
   status: string;
   prefabs: HighlightedPrefab[];
 }
 
-declare interface PrefabHighlightedBlocks {
+interface PrefabHighlightedBlocks {
   [prefabName: string]: HighlightedBlock[];
 }
 
 export default class Prefabs {
-  all: Prefab[];
-  blockLabels: BlockLabels;
-  blockPrefabIndex: BlockPrefabIndex;
-  filter: PrefabFilter | null;
-  filtered: HighlightedPrefab[];
-  throttledUpdater: () => void;
-  markCoords: GameCoords | null;
-  status: string;
-  updateListeners: ((u: PrefabUpdate) => void)[];
+  all: Prefab[] = [];
+  blockLabels: BlockLabels = {};
+  blockPrefabIndex: BlockPrefabIndex = {};
+  filter: PrefabMatcher | null = null;
+  filtered: HighlightedPrefab[] = [];
+  markCoords: GameCoords | null = null;
+  status = "";
 
-  constructor() {
-    this.all = [];
-    this.filtered = [];
-    this.filter = null;
-    this.prefabsFilterString = "";
-    this.blocksFilterString = "";
-    this.markCoords = null;
-    this.blockPrefabIndex = {};
-    this.blockLabels = {};
-    this.updateListeners = [];
-    this.status = "";
-    this.throttledUpdater = throttledInvoker(async () => this.updateImmediately());
-  }
+  private throttledUpdater = throttledInvoker(async () => this.updateImmediately());
+  private updateListeners: ((u: PrefabUpdate) => void)[] = [];
+
   update(): void {
     this.throttledUpdater();
   }
   updateImmediately(): void {
-    applyFilter(this);
-    updateDist(this);
-    sort(this);
+    this.applyFilter();
+    this.updateDist();
+    this.sort();
     const update: PrefabUpdate = { status: this.status, prefabs: this.filtered };
     this.updateListeners.forEach((f) => f(update));
   }
@@ -54,11 +36,7 @@ export default class Prefabs {
     if (s.length === 0) {
       this.filter = null;
     } else {
-      this.filter = {
-        name: "prefab name",
-        func: filterByPrefabs,
-        pattern: new RegExp(s, "i"),
-      };
+      this.filter = new PrefabNameMatcher(new RegExp(s, "i"));
     }
   }
   set blocksFilterString(filter: string) {
@@ -66,125 +44,55 @@ export default class Prefabs {
     if (s.length === 0) {
       this.filter = null;
     } else {
-      this.filter = {
-        name: "block name",
-        func: filterByBlocks,
-        pattern: new RegExp(s, "i"),
-      };
+      this.filter = new BlockNameMatcher(new RegExp(s, "i"), this.blockPrefabIndex, this.blockLabels);
     }
   }
   addUpdateListener(func: (update: PrefabUpdate) => void): void {
     this.updateListeners.push(func);
   }
-}
-function applyFilter(prefabs: Prefabs) {
-  if (prefabs.filter) {
-    prefabs.filtered = prefabs.filter.func(prefabs, prefabs.filter.pattern);
-  } else {
-    if (prefabs.all.length === 0) {
-      prefabs.status = "No prefabs";
+
+  private applyFilter() {
+    if (this.filter) {
+      const result = this.filter.match(this.all);
+      this.status = result.status;
+      this.filtered = result.matched;
+    } else if (this.all.length === 0) {
+      this.status = "No prefabs";
+      this.filtered = [];
     } else {
-      prefabs.status = "All prefabs";
+      this.status = "All prefabs";
+      this.filtered = this.all;
     }
-    prefabs.filtered = prefabs.all;
+  }
+
+  private updateDist() {
+    if (this.markCoords) {
+      const { markCoords } = this;
+      this.filtered.forEach((p) => (p.dist = calcDist(p, markCoords)));
+    } else {
+      this.filtered.forEach((p) => (p.dist = null));
+    }
+  }
+  private sort() {
+    if (this.markCoords) {
+      this.filtered.sort(distSorter);
+    } else {
+      this.filtered.sort(nameSorter);
+    }
   }
 }
-function updateDist(map: Prefabs) {
-  if (map.markCoords) {
-    const { markCoords } = map;
-    map.filtered.forEach((p) => (p.dist = calcDist(p, markCoords)));
-  } else {
-    map.filtered.forEach((p) => (p.dist = null));
-  }
-}
-function sort(prefabs: Prefabs) {
-  if (prefabs.markCoords) {
-    prefabs.filtered.sort(distSorter);
-  } else {
-    prefabs.filtered.sort(nameSorter);
-  }
-}
+
 function nameSorter(a: { name: string }, b: { name: string }) {
   if (a.name > b.name) return 1;
   if (a.name < b.name) return -1;
   return 0;
 }
+
 function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
   if (!a.dist || !b.dist) return nameSorter(a, b);
   if (a.dist > b.dist) return 1;
   if (a.dist < b.dist) return -1;
-  return 0;
-}
-function filterByPrefabs(prefabs: Prefabs, pattern: RegExp) {
-  const results = prefabs.all.flatMap((prefab) => {
-    const m = matchAndHighlight(prefab.name, pattern);
-    if (m) {
-      // Clone and add a new field;
-      return { ...prefab, highlightedName: m };
-    }
-    return [];
-  });
-  prefabs.status = `${results.length} matched prefabs`;
-  return results;
-}
-function filterByBlocks(prefabs: Prefabs, pattern: RegExp) {
-  const { all: allPrefabs, blockPrefabIndex, blockLabels } = prefabs;
-  const matchedBlocks = matchBlocks(pattern, blockPrefabIndex, blockLabels);
-  if (matchedBlocks.length === 0) {
-    prefabs.status = "No matched blocks";
-    return [];
-  }
-  const matchedPrefabBlocks = matchPrefabTypes(matchedBlocks);
-  if (Object.keys(matchedPrefabBlocks).length === 0) {
-    prefabs.status = `No prefabs, ${matchedBlocks.length} matched blocks`;
-    return [];
-  }
-  const results = allPrefabs.flatMap((prefab: Prefab) => {
-    const blocks = matchedPrefabBlocks[prefab.name];
-    if (!blocks) {
-      return [];
-    }
-    // Clone and add a new field;
-    return { ...prefab, matchedBlocks: blocks };
-  });
-  prefabs.status = `${results.length} prefabs, ${matchedBlocks.length} matched blocks`;
-  return results;
-}
-
-function matchPrefabTypes(matchedBlocks: HighlightedBlock[]): PrefabHighlightedBlocks {
-  return matchedBlocks.reduce<PrefabHighlightedBlocks>((idx, block) => {
-    const { name, highlightedName, highlightedLabel } = block;
-    block.prefabs?.forEach((p) => {
-      const b = {
-        name,
-        highlightedName,
-        highlightedLabel,
-        count: p.count,
-      };
-      idx[p.name] = (idx[p.name] || []).concat(b);
-    });
-    return idx;
-  }, {});
-}
-
-function matchBlocks(pattern: RegExp, blockPrefabIndex: BlockPrefabIndex, blockLabels: BlockLabels) {
-  return (Object.entries(blockPrefabIndex) as [string, { name: string; count: number }[]][]).reduce<HighlightedBlock[]>(
-    (arr, [blockName, prefabs]) => {
-      const highlightedName = matchAndHighlight(blockName, pattern);
-      const blockLabel = blockLabels[blockName];
-      const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, pattern);
-      if (highlightedName || highlightedLabel) {
-        return arr.concat({
-          name: blockName,
-          highlightedName: highlightedName || blockName,
-          highlightedLabel: highlightedLabel || blockLabel,
-          prefabs,
-        });
-      }
-      return arr;
-    },
-    []
-  );
+  return nameSorter(a, b);
 }
 
 function calcDist(targetCoords: GameCoords, baseCoords: GameCoords) {
@@ -198,4 +106,105 @@ function matchAndHighlight(str: string, regex: RegExp) {
     return `<mark>${m}</mark>`;
   });
   return isMatched ? highlighted : null;
+}
+
+interface PrefabMatcher {
+  match(prefabs: Prefab[]): PrefabMatcherResult;
+}
+interface PrefabMatcherResult {
+  status: string;
+  matched: HighlightedPrefab[];
+}
+
+class PrefabNameMatcher implements PrefabMatcher {
+  regexp: RegExp;
+
+  constructor(regexp: RegExp) {
+    this.regexp = regexp;
+  }
+
+  match(prefabs: Prefab[]) {
+    const results = prefabs.flatMap<HighlightedPrefab>((prefab) => {
+      const m = matchAndHighlight(prefab.name, this.regexp);
+      if (m) {
+        // Clone and add a new field;
+        return { ...prefab, highlightedName: m };
+      }
+      return [];
+    });
+    return {
+      status: `${results.length} matched prefabs`,
+      matched: results,
+    };
+  }
+}
+
+class BlockNameMatcher implements PrefabNameMatcher {
+  regexp: RegExp;
+  blockPrefabIndex: BlockPrefabIndex;
+  blockLabels: BlockLabels;
+
+  constructor(regexp: RegExp, blockPrefabIndex: BlockPrefabIndex, blockLabels: BlockLabels) {
+    this.regexp = regexp;
+    this.blockPrefabIndex = blockPrefabIndex;
+    this.blockLabels = blockLabels;
+  }
+
+  match(prefabs: Prefab[]) {
+    const matchedBlocks = this.matchBlocks();
+    if (matchedBlocks.length === 0) {
+      return { status: "No matched blocks", matched: [] };
+    }
+
+    const matchedPrefabBlocks = this.matchPrefabTypes(matchedBlocks);
+    if (Object.keys(matchedPrefabBlocks).length === 0) {
+      return { status: `No prefabs, ${matchedBlocks.length} matched blocks`, matched: [] };
+    }
+
+    const results = prefabs.flatMap((prefab: Prefab) => {
+      const blocks = matchedPrefabBlocks[prefab.name];
+      if (!blocks) {
+        return [];
+      }
+      // Clone and add a new field;
+      return { ...prefab, matchedBlocks: blocks };
+    });
+    return {
+      status: `${results.length} prefabs, ${matchedBlocks.length} matched blocks`,
+      matched: results,
+    };
+  }
+
+  private matchBlocks() {
+    return Object.entries(this.blockPrefabIndex).reduce<HighlightedBlock[]>((arr, [blockName, prefabs]) => {
+      const highlightedName = matchAndHighlight(blockName, this.regexp);
+      const blockLabel = this.blockLabels[blockName];
+      const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, this.regexp);
+      if (highlightedName || highlightedLabel) {
+        return arr.concat({
+          name: blockName,
+          highlightedName: highlightedName || blockName,
+          highlightedLabel: highlightedLabel || blockLabel,
+          prefabs,
+        });
+      }
+      return arr;
+    }, []);
+  }
+
+  private matchPrefabTypes(matchedBlocks: HighlightedBlock[]): PrefabHighlightedBlocks {
+    return matchedBlocks.reduce<PrefabHighlightedBlocks>((idx, block) => {
+      const { name, highlightedName, highlightedLabel } = block;
+      block.prefabs?.forEach((p) => {
+        const b = {
+          name,
+          highlightedName,
+          highlightedLabel,
+          count: p.count,
+        };
+        idx[p.name] = (idx[p.name] || []).concat(b);
+      });
+      return idx;
+    }, {});
+  }
 }
