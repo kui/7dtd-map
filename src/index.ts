@@ -69,8 +69,11 @@ function main() {
   );
 
   const terrainViewer = new TerrainViewer(
-    component("terrain_viewer"),
-    component("map", HTMLCanvasElement),
+    {
+      outputCanvas: component("terrain_viewer", HTMLCanvasElement),
+      textureCanvas: component("map", HTMLCanvasElement),
+      showButton: component("show_terrain", HTMLButtonElement),
+    },
     innerHeight,
     threePlaneSize(1024, 1024)
   );
@@ -80,7 +83,6 @@ function main() {
   mapCanvasHandler.addMapSizeListener((size) => {
     terrainViewer.markCanvasUpdate();
     if (terrainViewer.mapSize?.width === size.width && terrainViewer.mapSize.height === size.height) {
-      terrainViewer.render();
       return;
     }
     terrainViewer.mapSize = size;

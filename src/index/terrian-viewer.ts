@@ -2,22 +2,32 @@ import * as three from "three";
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
 
+interface Doms {
+  outputCanvas: HTMLCanvasElement;
+  textureCanvas: HTMLCanvasElement;
+  showButton: HTMLButtonElement;
+}
+
 export class TerrainViewer {
+  private doms: Doms;
   private renderer: three.WebGLRenderer;
   camera: three.PerspectiveCamera;
   private scene: three.Scene;
   private terrain: three.Mesh | null = null;
   private terrainSize: ThreePlaneSize;
   private texture: three.Texture;
+  private animationRequestId: number | null = null;
+  private cameraMoveSpeed: { x: number; y: number };
   dtm: Dtm | null = null;
   mapSize: GameMapSize | null = null;
   updateElevations = throttledInvoker(() => this.updateElevationsImmediatly());
-  render = throttledInvoker(() => this.renderImmediatly());
 
-  constructor(canvas: HTMLCanvasElement, textureCanvas: HTMLCanvasElement, canvasWidth: number, terrainSize: ThreePlaneSize) {
+  constructor(doms: Doms, canvasWidth: number, terrainSize: ThreePlaneSize) {
+    this.doms = doms;
+    this.cameraMoveSpeed = { x: 0, y: 0 };
     this.terrainSize = terrainSize;
-    this.texture = new three.CanvasTexture(textureCanvas);
-    this.renderer = new three.WebGLRenderer({ canvas, antialias: false });
+    this.texture = new three.CanvasTexture(doms.textureCanvas);
+    this.renderer = new three.WebGLRenderer({ canvas: doms.outputCanvas, antialias: false });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(canvasWidth, canvasWidth);
     this.camera = new three.PerspectiveCamera();
@@ -28,14 +38,64 @@ export class TerrainViewer {
     this.scene.add(light);
 
     this.scene.add(new three.AmbientLight(0xffffff, 0.1));
+
+    this.startRender();
+    doms.showButton.addEventListener("click", () => {
+      doms.outputCanvas.style.display = "block";
+      this.camera.updateProjectionMatrix();
+      this.startRender();
+    });
+    doms.outputCanvas.addEventListener("keydown", (event) => {
+      switch (event.code) {
+        case "KeyA":
+          this.startCameraMove(-1, 0);
+          return;
+        case "KeyD":
+          this.startCameraMove(1, 0);
+          return;
+        case "KeyS":
+          this.startCameraMove(0, -1);
+          return;
+        case "KeyW":
+          this.startCameraMove(0, 1);
+          return;
+      }
+    });
+    doms.outputCanvas.addEventListener("keyup", (event) => {
+      switch (event.code) {
+        case "KeyA":
+          this.stopCameraMove(-1, 0);
+          return;
+        case "KeyD":
+          this.stopCameraMove(1, 0);
+          return;
+        case "KeyS":
+          this.stopCameraMove(0, -1);
+          return;
+        case "KeyW":
+          this.stopCameraMove(0, 1);
+          return;
+      }
+    });
   }
 
   markCanvasUpdate(): void {
     this.texture.needsUpdate = true;
   }
 
-  renderImmediatly(): void {
-    this.renderer.render(this.scene, this.camera);
+  startRender(): void {
+    if (this.animationRequestId) return;
+    const r = (prevTime: number, currentTime: number) => {
+      const delta = currentTime - prevTime;
+      if (this.doms.outputCanvas.style.display === "none") {
+        this.animationRequestId = null;
+        return;
+      }
+      this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
+      this.moveCamera(delta);
+      this.renderer.render(this.scene, this.camera);
+    };
+    r(0, 0);
   }
 
   updateElevationsImmediatly(): void {
@@ -67,6 +127,27 @@ export class TerrainViewer {
     this.terrain = new three.Mesh(geo, material);
     this.scene.add(this.terrain);
     console.timeEnd("updateElevations");
-    this.render();
+  }
+
+  private startCameraMove(xAxis: number, yAxis: number) {
+    if (xAxis) this.cameraMoveSpeed.x = xAxis;
+    if (yAxis) this.cameraMoveSpeed.y = yAxis;
+  }
+  private stopCameraMove(xAxis: number, yAxis: number) {
+    if (xAxis) this.cameraMoveSpeed.x = 0;
+    if (yAxis) this.cameraMoveSpeed.y = 0;
+  }
+
+  private moveCamera(deltaMsec: number) {
+    if (!this.mapSize) return;
+    if (this.cameraMoveSpeed.x === 0 && this.cameraMoveSpeed.y === 0) return;
+
+    const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
+
+    // 120 km/h
+    const deltaDist = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
+
+    this.camera.position.x += deltaDist * this.cameraMoveSpeed.x;
+    this.camera.position.y += deltaDist * this.cameraMoveSpeed.y;
   }
 }
