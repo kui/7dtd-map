@@ -22,6 +22,7 @@ export class Dtm {
 export class DtmHandler {
   private storage: MapStorage;
   private pngParser: PngParser;
+  private listeners: ((dtm: Dtm | null) => void)[] = [];
 
   dtm: Dtm | null = null;
 
@@ -35,6 +36,7 @@ export class DtmHandler {
       } else {
         this.dtm = null;
       }
+      this.listeners.forEach((ln) => ln(this.dtm));
     });
   }
 
@@ -49,6 +51,7 @@ export class DtmHandler {
       throw Error(`Unknown data type: name=${blobOrUrl.name}, type=${blobOrUrl.type}`);
     }
     this.storage.put("elevations", this.dtm.data);
+    this.listeners.forEach((ln) => ln(this.dtm));
   }
 
   private async loadDtmByPngUrl(url: string): Promise<Dtm> {
@@ -58,6 +61,10 @@ export class DtmHandler {
 
   private async loadByPngBlob(blob: Blob): Promise<Dtm> {
     return convertPng(await this.pngParser.parse(blob));
+  }
+
+  addListener(ln: (dtm: Dtm | null) => void): void {
+    this.listeners.push(ln);
   }
 }
 

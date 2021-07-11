@@ -22,6 +22,12 @@ interface GameMapSize {
   height: number;
 }
 
+interface ThreePlaneSize {
+  type: "threePlane";
+  width: number;
+  height: number;
+}
+
 type GameCoords =
   | {
       type: "game";

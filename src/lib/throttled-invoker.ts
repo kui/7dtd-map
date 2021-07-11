@@ -1,6 +1,6 @@
 import { waitAnimationFrame } from "./utils";
 
-export function throttledInvoker(asyncFunc: () => Promise<void>): () => Promise<void> {
+export function throttledInvoker(asyncFunc: () => Promise<void> | void): () => Promise<void> {
   const workerPromises: Promise<void>[] = [];
   return () => {
     switch (workerPromises.length) {

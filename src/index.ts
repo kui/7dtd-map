@@ -3,7 +3,7 @@ import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, humanreadableDistance } from "./lib/utils";
+import { component, downloadCanvasPng, humanreadableDistance, threePlaneSize } from "./lib/utils";
 import { GenerationInfoHandler } from "./index/generation-info-handler";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -15,6 +15,7 @@ import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
+import { TerrainViewer } from "./index/terrian-viewer";
 
 function main() {
   presetButton.init();
@@ -67,7 +68,31 @@ function main() {
     mapStorage
   );
 
+  const terrainViewer = new TerrainViewer(
+    component("terrain_viewer"),
+    component("map", HTMLCanvasElement),
+    innerHeight,
+    threePlaneSize(1024, 1024)
+  );
+  terrainViewer.camera.position.z = 1200;
+  terrainViewer.camera.position.y = -1000;
+  terrainViewer.camera.lookAt(0, 0, 0);
+  mapCanvasHandler.addMapSizeListener((size) => {
+    terrainViewer.markCanvasUpdate();
+    if (terrainViewer.mapSize?.width === size.width && terrainViewer.mapSize.height === size.height) {
+      terrainViewer.render();
+      return;
+    }
+    terrainViewer.mapSize = size;
+    terrainViewer.updateElevations();
+  });
+
   const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
+  dtmHandler.addListener((dtm) => {
+    if (terrainViewer.dtm === dtm) return;
+    terrainViewer.dtm = dtm;
+    terrainViewer.updateElevations();
+  });
 
   const prefabsHandler = new PrefabsHandler(
     {

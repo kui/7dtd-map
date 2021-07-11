@@ -167,8 +167,8 @@
         <tr>
           <th><label for="sign_size">Sign Size</label></th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="20" value="250" oninput="sign_size_out.value = this.value" />
-            <output id="sign_size_out">250</output>px
+            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" oninput="sign_size_out.value = this.value" />
+            <output id="sign_size_out">200</output>px
           </td>
         </tr>
         <tr>
@@ -232,6 +232,7 @@
       <p id="prefabs_num"></p>
       <ul id="prefabs_list"></ul>
     </div>
+    <canvas id="terrain_viewer" width="0" height="0" tabindex="0"></canvas>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
     <p><button id="sample_load" data-sample-dir="sample_world">Load Sample World(PREGEN01)</button></p>
