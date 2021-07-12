@@ -77,6 +77,11 @@ export class TerrainViewer {
           return;
       }
     });
+    doms.outputCanvas.addEventListener("wheel", (event) => {
+      if (doms.outputCanvas !== document.activeElement || event.deltaY === 0) return;
+      event.preventDefault();
+      this.moveCameraForward(event.deltaY);
+    });
   }
 
   markCanvasUpdate(): void {
@@ -149,5 +154,13 @@ export class TerrainViewer {
 
     this.camera.position.x += deltaDist * this.cameraMoveSpeed.x;
     this.camera.position.y += deltaDist * this.cameraMoveSpeed.y;
+  }
+
+  private moveCameraForward(pixels: number) {
+    if (!this.mapSize) return;
+    const moveDelta = pixels / -10;
+    const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
+    const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
+    this.camera.position.add(moveVector);
   }
 }
