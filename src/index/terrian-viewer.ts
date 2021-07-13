@@ -1,12 +1,17 @@
 import * as three from "three";
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
+import { requireNonnull } from "../lib/utils";
 
 interface Doms {
   outputCanvas: HTMLCanvasElement;
   textureCanvas: HTMLCanvasElement;
   showButton: HTMLButtonElement;
 }
+
+const PRIMARY_MOUSE_BUTTON_BITMASK = 0b00000001;
+const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
+const TILT_AXIS = new three.Vector3(1, 0, 0);
 
 export class TerrainViewer {
   private doms: Doms;
@@ -17,14 +22,15 @@ export class TerrainViewer {
   private terrainSize: ThreePlaneSize;
   private texture: three.Texture;
   private animationRequestId: number | null = null;
-  private cameraMoveSpeed: { x: number; y: number };
+  private deltaYPixels = 0;
   dtm: Dtm | null = null;
   mapSize: GameMapSize | null = null;
   updateElevations = throttledInvoker(() => this.updateElevationsImmediatly());
 
+  private cameraXYMoveSpeed: { x: number; y: number } = { x: 0, y: 0 };
+
   constructor(doms: Doms, canvasWidth: number, terrainSize: ThreePlaneSize) {
     this.doms = doms;
-    this.cameraMoveSpeed = { x: 0, y: 0 };
     this.terrainSize = terrainSize;
     this.texture = new three.CanvasTexture(doms.textureCanvas);
     this.renderer = new three.WebGLRenderer({ canvas: doms.outputCanvas, antialias: false });
@@ -82,6 +88,12 @@ export class TerrainViewer {
       event.preventDefault();
       this.moveCameraForward(event.deltaY);
     });
+
+    doms.outputCanvas.addEventListener("mousemove", (event) => {
+      if ((event.buttons & PRIMARY_MOUSE_BUTTON_BITMASK) !== 1) return;
+      event.preventDefault();
+      this.deltaYPixels += event.movementY;
+    });
   }
 
   markCanvasUpdate(): void {
@@ -97,7 +109,8 @@ export class TerrainViewer {
         return;
       }
       this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
-      this.moveCamera(delta);
+      this.moveCameraXY(delta);
+      this.tiltCamera();
       this.renderer.render(this.scene, this.camera);
     };
     r(0, 0);
@@ -135,32 +148,51 @@ export class TerrainViewer {
   }
 
   private startCameraMove(xAxis: number, yAxis: number) {
-    if (xAxis) this.cameraMoveSpeed.x = xAxis;
-    if (yAxis) this.cameraMoveSpeed.y = yAxis;
+    if (xAxis) this.cameraXYMoveSpeed.x = xAxis;
+    if (yAxis) this.cameraXYMoveSpeed.y = yAxis;
   }
   private stopCameraMove(xAxis: number, yAxis: number) {
-    if (xAxis) this.cameraMoveSpeed.x = 0;
-    if (yAxis) this.cameraMoveSpeed.y = 0;
+    if (xAxis) this.cameraXYMoveSpeed.x = 0;
+    if (yAxis) this.cameraXYMoveSpeed.y = 0;
   }
 
-  private moveCamera(deltaMsec: number) {
+  private moveCameraXY(deltaMsec: number) {
     if (!this.mapSize) return;
-    if (this.cameraMoveSpeed.x === 0 && this.cameraMoveSpeed.y === 0) return;
+    if (this.cameraXYMoveSpeed.x === 0 && this.cameraXYMoveSpeed.y === 0) return;
 
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
 
     // 120 km/h
     const deltaDist = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
 
-    this.camera.position.x += deltaDist * this.cameraMoveSpeed.x;
-    this.camera.position.y += deltaDist * this.cameraMoveSpeed.y;
+    this.camera.position.x += deltaDist * this.cameraXYMoveSpeed.x;
+    this.camera.position.y += deltaDist * this.cameraXYMoveSpeed.y;
   }
 
   private moveCameraForward(pixels: number) {
-    if (!this.mapSize) return;
+    if (!this.mapSize || pixels === 0) return;
     const moveDelta = pixels / -10;
     const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
     const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
+  }
+
+  private tiltCamera() {
+    if (this.deltaYPixels === 0) return;
+    // PI rad = 180°
+    // -(PI/2) rad / 200 pixels
+    const deltaRad = this.deltaYPixels * (-(Math.PI / 2) / 1000);
+    const center = requireNonnull(this.pointLookAtXYPlane());
+    this.camera.position.sub(center);
+    this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
+    this.camera.position.add(center);
+    this.camera.lookAt(center);
+    this.deltaYPixels = 0;
+  }
+
+  private pointLookAtXYPlane() {
+    const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
+    const cameraRay = new three.Ray(this.camera.position, cameraDirection);
+    return cameraRay.intersectPlane(XY_PLANE, new three.Vector3());
   }
 }
