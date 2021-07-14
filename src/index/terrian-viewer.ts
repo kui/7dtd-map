@@ -9,7 +9,10 @@ interface Doms {
   showButton: HTMLButtonElement;
 }
 
-const PRIMARY_MOUSE_BUTTON_BITMASK = 0b00000001;
+const MOUSE_BUTTON_BITMASK = {
+  left: 0b00000001,
+  center: 0b00000100,
+};
 
 const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
@@ -28,12 +31,16 @@ export class TerrainViewer {
   private terrainSize: ThreePlaneSize;
   private texture: three.Texture;
   private animationRequestId: number | null = null;
-  private deltaYPixels = 0;
+  private mouseDeltaPixels = {
+    left: { x: 0, y: 0 },
+    center: { x: 0, y: 0 },
+  };
   dtm: Dtm | null = null;
   mapSize: GameMapSize | null = null;
   updateElevations = throttledInvoker(() => this.updateElevationsImmediatly());
 
-  private cameraXYMoveSpeed: { x: number; y: number } = { x: 0, y: 0 };
+  private cameraXYMoveSpeed = { x: 0, y: 0 };
+  private cameraTiltSpeed = 0;
 
   constructor(doms: Doms, canvasWidth: number, terrainSize: ThreePlaneSize) {
     this.doms = doms;
@@ -60,32 +67,38 @@ export class TerrainViewer {
     doms.outputCanvas.addEventListener("keydown", (event) => {
       switch (event.code) {
         case "KeyA":
-          this.startCameraMove(-1, 0);
+          this.cameraXYMoveSpeed.x = -1;
           return;
         case "KeyD":
-          this.startCameraMove(1, 0);
+          this.cameraXYMoveSpeed.x = 1;
           return;
         case "KeyS":
-          this.startCameraMove(0, -1);
+          this.cameraXYMoveSpeed.y = -1;
           return;
         case "KeyW":
-          this.startCameraMove(0, 1);
+          this.cameraXYMoveSpeed.y = 1;
+          return;
+        case "KeyR":
+          this.cameraTiltSpeed = 1;
+          return;
+        case "KeyF":
+          this.cameraTiltSpeed = -1;
           return;
       }
     });
     doms.outputCanvas.addEventListener("keyup", (event) => {
       switch (event.code) {
         case "KeyA":
-          this.stopCameraMove(-1, 0);
-          return;
         case "KeyD":
-          this.stopCameraMove(1, 0);
+          this.cameraXYMoveSpeed.x = 0;
           return;
         case "KeyS":
-          this.stopCameraMove(0, -1);
-          return;
         case "KeyW":
-          this.stopCameraMove(0, 1);
+          this.cameraXYMoveSpeed.y = 0;
+          return;
+        case "KeyR":
+        case "KeyF":
+          this.cameraTiltSpeed = 0;
           return;
       }
     });
@@ -96,9 +109,19 @@ export class TerrainViewer {
     });
 
     doms.outputCanvas.addEventListener("mousemove", (event) => {
-      if ((event.buttons & PRIMARY_MOUSE_BUTTON_BITMASK) !== 1) return;
-      event.preventDefault();
-      this.deltaYPixels += event.movementY;
+      if (doms.outputCanvas !== document.activeElement) return;
+
+      if ((event.buttons & MOUSE_BUTTON_BITMASK.left) > 0) {
+        event.preventDefault();
+        this.mouseDeltaPixels.left.x += event.movementX;
+        this.mouseDeltaPixels.left.y += event.movementY;
+      }
+
+      if ((event.buttons & MOUSE_BUTTON_BITMASK.center) > 0) {
+        event.preventDefault();
+        this.mouseDeltaPixels.center.x += event.movementX;
+        this.mouseDeltaPixels.center.y += event.movementY;
+      }
     });
   }
 
@@ -116,7 +139,7 @@ export class TerrainViewer {
       }
       this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
       this.moveCameraXY(delta);
-      this.tiltCamera();
+      this.tiltCamera(delta);
       this.renderer.render(this.scene, this.camera);
     };
     r(0, 0);
@@ -153,34 +176,36 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
-  private startCameraMove(xAxis: number, yAxis: number) {
-    if (xAxis) this.cameraXYMoveSpeed.x = xAxis;
-    if (yAxis) this.cameraXYMoveSpeed.y = yAxis;
-  }
-  private stopCameraMove(xAxis: number, yAxis: number) {
-    if (xAxis) this.cameraXYMoveSpeed.x = 0;
-    if (yAxis) this.cameraXYMoveSpeed.y = 0;
-  }
-
   private moveCameraXY(deltaMsec: number) {
-    if (!this.mapSize) return;
-    if (this.cameraXYMoveSpeed.x === 0 && this.cameraXYMoveSpeed.y === 0) return;
-    if (!this.terrain) return;
+    if (!this.mapSize || !this.terrain) return;
+    if (
+      this.cameraXYMoveSpeed.x === 0 &&
+      this.cameraXYMoveSpeed.y === 0 &&
+      this.mouseDeltaPixels.left.x === 0 &&
+      this.mouseDeltaPixels.left.y === 0
+    )
+      return;
 
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
 
-    // 120 km/h
-    const deltaDist = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
+    // 120 km/h by key press
+    const deltaDistKey = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
 
-    this.camera.position.x += deltaDist * this.cameraXYMoveSpeed.x;
-    this.camera.position.y += deltaDist * this.cameraXYMoveSpeed.y;
+    const deltaMouse = this.mouseDeltaPixels.left;
+
+    const oldPosition = new three.Vector3().copy(this.camera.position);
+    this.camera.position.x += deltaDistKey * this.cameraXYMoveSpeed.x - deltaMouse.x;
+    this.camera.position.y += deltaDistKey * this.cameraXYMoveSpeed.y + deltaMouse.y;
+
+    this.mouseDeltaPixels.left.x = 0;
+    this.mouseDeltaPixels.left.y = 0;
 
     const lookAt = requireNonnull(this.pointLookAtXYPlane());
     if (lookAt.x < -this.terrainSize.width / 2 || this.terrainSize.width / 2 < lookAt.x) {
-      this.camera.position.x -= deltaDist * this.cameraXYMoveSpeed.x;
+      this.camera.position.x = oldPosition.x;
     }
     if (lookAt.y < -this.terrainSize.height / 2 || this.terrainSize.height / 2 < lookAt.y) {
-      this.camera.position.y -= deltaDist * this.cameraXYMoveSpeed.y;
+      this.camera.position.y = oldPosition.y;
     }
   }
 
@@ -195,11 +220,19 @@ export class TerrainViewer {
     }
   }
 
-  private tiltCamera() {
-    if (this.deltaYPixels === 0) return;
+  private tiltCamera(deltaMsec: number) {
+    if (this.mouseDeltaPixels.center.y === 0 && this.cameraTiltSpeed === 0) return;
+
     // PI rad = 180°
-    // -(PI/2) rad / 1000 pixels
-    const deltaRad = this.deltaYPixels * (-(Math.PI / 2) / 1000);
+    // -(PI/2) rad / 1000 pixels by mouse
+    const deltaRadMouse = this.mouseDeltaPixels.center.y * (-(Math.PI / 2) / 1000);
+
+    // PI/4 rad/sec by keypress
+    const deltaRadKey = (((this.cameraTiltSpeed * Math.PI) / 4) * deltaMsec) / 1000;
+
+    const deltaRad = deltaRadMouse + deltaRadKey;
+    this.mouseDeltaPixels.center.y = 0;
+
     const center = requireNonnull(this.pointLookAtXYPlane());
     this.camera.position.sub(center);
     this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
@@ -211,7 +244,6 @@ export class TerrainViewer {
 
     this.camera.position.add(center);
     this.camera.lookAt(center);
-    this.deltaYPixels = 0;
   }
 
   private pointLookAtXYPlane() {
