@@ -3,7 +3,7 @@ import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, humanreadableDistance, threePlaneSize } from "./lib/utils";
+import { component, downloadCanvasPng, humanreadableDistance } from "./lib/utils";
 import { GenerationInfoHandler } from "./index/generation-info-handler";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -68,18 +68,14 @@ function main() {
     mapStorage
   );
 
-  const terrainViewer = new TerrainViewer(
-    {
-      outputCanvas: component("terrain_viewer", HTMLCanvasElement),
-      textureCanvas: component("map", HTMLCanvasElement),
-      showButton: component("show_terrain", HTMLButtonElement),
-    },
-    innerHeight,
-    threePlaneSize(1024, 1024)
-  );
-  terrainViewer.camera.position.z = 1200;
-  terrainViewer.camera.position.y = -1000;
-  terrainViewer.camera.lookAt(0, 0, 0);
+  const terrainViewer = new TerrainViewer({
+    output: component("terrain_viewer", HTMLCanvasElement),
+    texture: component("map", HTMLCanvasElement),
+    show: component("terrain_viewer_show", HTMLButtonElement),
+    close: component("terrain_viewer_close", HTMLButtonElement),
+    hud: component("terrarian_viewer_hud"),
+  });
+
   mapCanvasHandler.addMapSizeListener((size) => {
     terrainViewer.markCanvasUpdate();
     if (terrainViewer.mapSize?.width === size.width && terrainViewer.mapSize.height === size.height) {

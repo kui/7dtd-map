@@ -1,12 +1,14 @@
 import * as three from "three";
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
-import { requireNonnull } from "../lib/utils";
+import { requireNonnull, threePlaneSize } from "../lib/utils";
 
 interface Doms {
-  outputCanvas: HTMLCanvasElement;
-  textureCanvas: HTMLCanvasElement;
-  showButton: HTMLButtonElement;
+  output: HTMLCanvasElement;
+  texture: HTMLCanvasElement;
+  show: HTMLButtonElement;
+  close: HTMLButtonElement;
+  hud: HTMLElement;
 }
 
 const MOUSE_BUTTON_BITMASK = {
@@ -14,13 +16,14 @@ const MOUSE_BUTTON_BITMASK = {
   center: 0b00000100,
 };
 
+const TERRAIN_WIDTH = 2048;
 const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
 const TILT_RADIAN_BASE = new three.Vector3(0, -1, 0);
 const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MIN_Z = 255;
-const MAX_Z = 1500;
+const MAX_Z = TERRAIN_WIDTH;
 
 export class TerrainViewer {
   private doms: Doms;
@@ -28,7 +31,7 @@ export class TerrainViewer {
   camera: three.PerspectiveCamera;
   private scene: three.Scene;
   private terrain: three.Mesh | null = null;
-  private terrainSize: ThreePlaneSize;
+  private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   private texture: three.Texture;
   private animationRequestId: number | null = null;
   private mouseDeltaPixels = {
@@ -43,13 +46,12 @@ export class TerrainViewer {
   private cameraXYMoveSpeed = { x: 0, y: 0 };
   private cameraTiltSpeed = 0;
 
-  constructor(doms: Doms, canvasWidth: number, terrainSize: ThreePlaneSize) {
+  constructor(doms: Doms) {
     this.doms = doms;
-    this.terrainSize = terrainSize;
-    this.texture = new three.CanvasTexture(doms.textureCanvas);
-    this.renderer = new three.WebGLRenderer({ canvas: doms.outputCanvas, antialias: false });
+    this.texture = new three.CanvasTexture(doms.texture);
+    this.renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
     this.renderer.setPixelRatio(devicePixelRatio);
-    this.renderer.setSize(canvasWidth, canvasWidth);
+    //this.renderer.setSize(canvasWidth, canvasWidth);
     this.camera = new three.PerspectiveCamera();
     this.scene = new three.Scene();
 
@@ -60,12 +62,19 @@ export class TerrainViewer {
     this.scene.add(new three.AmbientLight(0xffffff, 0.1));
 
     this.startRender();
-    doms.showButton.addEventListener("click", () => {
-      doms.outputCanvas.style.display = "block";
+    doms.show.addEventListener("click", () => {
+      const { clientWidth, clientHeight } = document.documentElement;
+      this.renderer.setSize(clientWidth, clientHeight);
+      this.show();
+      this.camera.aspect = clientWidth / clientHeight;
       this.camera.updateProjectionMatrix();
+      this.doms.output.focus();
       this.startRender();
     });
-    doms.outputCanvas.addEventListener("keydown", (event) => {
+    doms.close.addEventListener("click", () => {
+      this.close();
+    });
+    doms.output.addEventListener("keydown", (event) => {
       switch (event.code) {
         case "KeyA":
           this.cameraXYMoveSpeed.x = -1;
@@ -85,9 +94,12 @@ export class TerrainViewer {
         case "KeyF":
           this.cameraTiltSpeed = -1;
           return;
+        case "Escape":
+          this.close();
+          return;
       }
     });
-    doms.outputCanvas.addEventListener("keyup", (event) => {
+    doms.output.addEventListener("keyup", (event) => {
       switch (event.code) {
         case "KeyA":
         case "KeyD":
@@ -103,14 +115,19 @@ export class TerrainViewer {
           return;
       }
     });
-    doms.outputCanvas.addEventListener("wheel", (event) => {
-      if (doms.outputCanvas !== document.activeElement || event.deltaY === 0) return;
+    doms.output.addEventListener("wheel", (event) => {
+      if (doms.output !== document.activeElement || event.deltaY === 0) return;
       event.preventDefault();
       this.mouseDeltaPixels.wheel += event.deltaY;
     });
-
-    doms.outputCanvas.addEventListener("mousemove", (event) => {
-      if (doms.outputCanvas !== document.activeElement) return;
+    doms.output.addEventListener("mousedown", (event) => {
+      if (doms.output !== document.activeElement) return;
+      if (event.button === 0 || event.button === 1) {
+        event.preventDefault();
+      }
+    });
+    doms.output.addEventListener("mousemove", (event) => {
+      if (doms.output !== document.activeElement) return;
 
       if ((event.buttons & MOUSE_BUTTON_BITMASK.left) > 0) {
         event.preventDefault();
@@ -133,12 +150,12 @@ export class TerrainViewer {
   startRender(): void {
     if (this.animationRequestId) return;
     const r = (prevTime: number, currentTime: number) => {
-      const delta = currentTime - prevTime;
-      if (this.doms.outputCanvas.style.display === "none") {
+      if (this.doms.output.style.display === "none") {
         this.animationRequestId = null;
         return;
       }
       this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
+      const delta = currentTime - prevTime;
       this.moveCameraXY(delta);
       this.tiltCamera(delta);
       this.moveCameraForward();
@@ -151,6 +168,10 @@ export class TerrainViewer {
     if (this.terrain) this.scene.remove(this.terrain);
     if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
 
+    this.terrainSize.width = TERRAIN_WIDTH;
+    this.terrainSize.height = Math.floor((TERRAIN_WIDTH / this.mapSize.width) * this.mapSize.height);
+
+    console.log("terrainSize=", this.terrain, "mapSize=", this.mapSize);
     console.time("updateElevations");
     const geo = new three.PlaneBufferGeometry(
       this.terrainSize.width,
@@ -175,6 +196,13 @@ export class TerrainViewer {
     geo.computeVertexNormals();
     this.terrain = new three.Mesh(geo, material);
     this.scene.add(this.terrain);
+
+    this.camera.far = this.terrainSize.height * 2;
+    this.camera.position.x = 0;
+    this.camera.position.y = -this.terrainSize.height;
+    this.camera.position.z = this.terrainSize.height;
+    this.camera.lookAt(0, 0, 0);
+
     console.timeEnd("updateElevations");
   }
 
@@ -190,9 +218,7 @@ export class TerrainViewer {
 
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
 
-    // 120 km/h by key press
     const deltaDistKey = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
-
     const deltaMouse = this.mouseDeltaPixels.left;
 
     const oldPosition = new three.Vector3().copy(this.camera.position);
@@ -253,5 +279,39 @@ export class TerrainViewer {
     const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
     const cameraRay = new three.Ray(this.camera.position, cameraDirection);
     return cameraRay.intersectPlane(XY_PLANE, new three.Vector3());
+  }
+
+  private show() {
+    Object.assign(this.doms.output.style, {
+      display: "block",
+      zIndex: "100",
+      position: "fixed",
+      top: "0",
+      left: "0",
+    });
+    Object.assign(this.doms.hud.style, {
+      display: "block",
+      zIndex: "101",
+      position: "fixed",
+      top: "0",
+      left: "0",
+      backgroundColor: "rgba(100, 100, 100, 0.5)",
+      color: "#fff",
+      padding: "10px",
+    });
+    Object.assign(this.doms.close.style, {
+      display: "block",
+      zIndex: "101",
+      position: "fixed",
+      top: "0",
+      right: "0",
+    });
+  }
+
+  private close() {
+    this.doms.output.blur();
+    this.doms.output.style.display = "none";
+    this.doms.hud.style.display = "none";
+    this.doms.close.style.display = "none";
   }
 }

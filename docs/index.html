@@ -153,7 +153,7 @@
         </tr>
         <tr>
           <th><label for="dtm">dtm.raw</label></th>
-          <td></td>
+          <td><button id="terrain_viewer_show">Show terrain</button></td>
         </tr>
         <tr>
           <th><label for="scale">Scale</label></th>
@@ -232,12 +232,24 @@
       <p id="prefabs_num"></p>
       <ul id="prefabs_list"></ul>
     </div>
-    <canvas id="terrain_viewer" width="0" height="0" tabindex="0"></canvas>
+    <div id="terrarian_viewer_hud" style="display: none">
+      <dl>
+        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
+        <dd>Move horizontal</dd>
+        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
+        <dd>Tilt</dd>
+        <dt>Rotate Mouse Wheel</dt>
+        <dd>Move forward</dd>
+        <dt><code>Esc</code> key</dt>
+        <dd>Close</dd>
+      </dl>
+    </div>
+    <button id="terrain_viewer_close" style="display: none">X</button>
+    <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
     <p>
       <button id="sample_load" data-sample-dir="sample_world">Load Sample World(PREGEN01)</button>
-      <button id="show_terrain">Show terrain</button>
     </p>
 
     <h2>How to Use</h2>
