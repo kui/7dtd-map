@@ -34,6 +34,7 @@ export class TerrainViewer {
   private mouseDeltaPixels = {
     left: { x: 0, y: 0 },
     center: { x: 0, y: 0 },
+    wheel: 0,
   };
   dtm: Dtm | null = null;
   mapSize: GameMapSize | null = null;
@@ -105,7 +106,7 @@ export class TerrainViewer {
     doms.outputCanvas.addEventListener("wheel", (event) => {
       if (doms.outputCanvas !== document.activeElement || event.deltaY === 0) return;
       event.preventDefault();
-      this.moveCameraForward(event.deltaY);
+      this.mouseDeltaPixels.wheel += event.deltaY;
     });
 
     doms.outputCanvas.addEventListener("mousemove", (event) => {
@@ -140,6 +141,7 @@ export class TerrainViewer {
       this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
       this.moveCameraXY(delta);
       this.tiltCamera(delta);
+      this.moveCameraForward();
       this.renderer.render(this.scene, this.camera);
     };
     r(0, 0);
@@ -209,9 +211,10 @@ export class TerrainViewer {
     }
   }
 
-  private moveCameraForward(pixels: number) {
-    if (!this.mapSize || pixels === 0) return;
-    const moveDelta = pixels / -5;
+  private moveCameraForward() {
+    if (this.mouseDeltaPixels.wheel === 0) return;
+    const moveDelta = this.mouseDeltaPixels.wheel / -5;
+    this.mouseDeltaPixels.wheel = 0;
     const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
     const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
