@@ -66,7 +66,7 @@
           <th>Flag</th>
           <td>
             <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
-            <button id="reset_mark" title="Reset">×</button>
+            <button id="reset_mark" title="Reset">X</button>
           </td>
         </tr>
         <tr>
@@ -110,13 +110,13 @@
               id="splat4_alpha"
               type="range"
               title="Alpha splat4"
-              value="1"
+              value="0.7"
               step="0.1"
               min="0"
               max="1"
               oninput="splat4_alpha_out.value = this.value"
             />
-            <output id="splat4_alpha_out">1</output>
+            <output id="splat4_alpha_out">0.7</output>
           </td>
         </tr>
         <tr>
@@ -152,7 +152,7 @@
           </td>
         </tr>
         <tr>
-          <th><label for="dtm">dtm.raw</label></th>
+          <th><label for="terrain_viewer_show">dtm.raw</label></th>
           <td><button id="terrain_viewer_show">Show terrain</button></td>
         </tr>
         <tr>
@@ -233,7 +233,11 @@
       <ul id="prefabs_list"></ul>
     </div>
     <div id="terrarian_viewer_hud" style="display: none">
-      <dl>
+      <label style="user-select: none">
+        <input type="checkbox" checked oninput="op_desc.style.display = this.checked ? 'block' : 'none'" />
+        Show/Hide Help
+      </label>
+      <dl id="op_desc">
         <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
         <dd>Move horizontal</dd>
         <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
@@ -244,7 +248,7 @@
         <dd>Close</dd>
       </dl>
     </div>
-    <button id="terrain_viewer_close" style="display: none">X</button>
+    <button id="terrain_viewer_close" style="display: none">❌</button>
     <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>

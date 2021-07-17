@@ -132,7 +132,7 @@ export class TerrainViewer {
       position: "fixed",
       top: "0",
       left: "0",
-      backgroundColor: "rgba(100, 100, 100, 0.5)",
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
       color: "#fff",
       padding: "0 16px",
     });
