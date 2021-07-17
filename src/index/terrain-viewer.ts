@@ -71,7 +71,7 @@ export class TerrainViewer {
   }
 
   updateShowButton(): void {
-    this.doms.show.disabled = !this.mapSize || !this.dtm;
+    this.doms.show.disabled = !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0 || !this.dtm;
   }
 
   markCanvasUpdate(): void {
