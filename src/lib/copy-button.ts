@@ -6,6 +6,9 @@ export function init(): void {
     if (!target) continue;
 
     button.addEventListener("click", () => copy(target, button));
+    button.addEventListener("mouseover", () => selectNode(target));
+    button.addEventListener("mousemove", () => selectNode(target), { passive: true });
+    button.addEventListener("mouseout", () => clearSelection());
   }
 }
 
@@ -34,4 +37,8 @@ function selectNode(target: HTMLElement) {
   const range = document.createRange();
   range.selectNodeContents(target);
   selection?.addRange(range);
+}
+
+function clearSelection() {
+  getSelection()?.removeAllRanges();
 }
