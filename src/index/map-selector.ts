@@ -98,6 +98,6 @@ export class MapSelector {
 function buildOptionElement(map: MapObject) {
   const e = document.createElement("option");
   e.dataset.mapId = requireNonnull(map.id).toString();
-  e.textContent = `${map.id}. ${map.name}`;
+  e.textContent = map.name;
   return e;
 }
