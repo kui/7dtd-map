@@ -19,7 +19,8 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  throttledUpdater = throttledInvoker(async () => {
+
+  update = throttledInvoker(async () => {
     console.time("MapUpdate");
     await this.updateImmediately();
     console.timeEnd("MapUpdate");
@@ -55,10 +56,6 @@ export default class MapRenderer {
       width: Math.max(...rects.map((r) => r?.width ?? 0)),
       height: Math.max(...rects.map((r) => r?.height ?? 0)),
     });
-  }
-
-  async update(): Promise<void> {
-    await this.throttledUpdater();
   }
 
   private isBlank(): boolean {

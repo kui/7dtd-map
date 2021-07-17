@@ -23,8 +23,10 @@ export class TerrainViewer {
   private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   private texture: three.Texture;
   private animationRequestId: number | null = null;
-  dtm: Dtm | null = null;
-  mapSize: GameMapSize | null = null;
+
+  private _dtm: Dtm | null = null;
+  private _mapSize: GameMapSize | null = null;
+
   updateElevations = throttledInvoker(() => this.updateElevationsImmediatly());
 
   constructor(doms: Doms) {
@@ -46,6 +48,30 @@ export class TerrainViewer {
     doms.output.addEventListener("keydown", (event) => {
       if (event.code === "Escape") this.close();
     });
+
+    this.updateShowButton();
+  }
+
+  get dtm(): Dtm | null {
+    return this._dtm;
+  }
+
+  set dtm(d: Dtm | null) {
+    this._dtm = d;
+    this.updateShowButton();
+  }
+
+  get mapSize(): GameMapSize | null {
+    return this._mapSize;
+  }
+
+  set mapSize(s: GameMapSize | null) {
+    this._mapSize = s;
+    this.updateShowButton();
+  }
+
+  updateShowButton(): void {
+    this.doms.show.disabled = !this.mapSize || !this.dtm;
   }
 
   markCanvasUpdate(): void {
