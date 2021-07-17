@@ -7,8 +7,12 @@ export class ImageBitmapLoader {
     this.pngParser = new PngParser(workerFactory);
   }
 
-  async loadSplat(file: File): Promise<ImageBitmap> {
-    return renderSplat(await this.pngParser.parse(file));
+  async loadSplat3(file: File): Promise<ImageBitmap> {
+    return renderSplat3(await this.pngParser.parse(file));
+  }
+
+  async loadSplat4(file: File): Promise<ImageBitmap> {
+    return renderSplat4(await this.pngParser.parse(file));
   }
 
   async loadRad(file: File): Promise<ImageBitmap> {
@@ -19,12 +23,31 @@ export class ImageBitmapLoader {
 // splatX.png should convert the pixels which:
 //   * black to transparent
 //   * other to non-transparent
-function renderSplat(pngjs: Png) {
+function renderSplat3(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
       out[i] = indata[i];
       out[i + 1] = indata[i + 1];
       out[i + 2] = indata[i + 2];
+      if (indata[i] === 0 && indata[i + 1] === 0 && indata[i + 2] === 0) {
+        out[i + 3] = 0;
+      } else {
+        out[i + 3] = 255;
+      }
+    }
+  });
+}
+
+// splat4.png should convert the pixels which:
+//   * black to 100% transparent
+//   * other to non-transparent
+//   * swap green and blue
+function renderSplat4(pngjs: Png) {
+  return render(pngjs, (indata, out) => {
+    for (let i = 0; i < indata.length; i += 4) {
+      out[i] = indata[i];
+      out[i + 1] = indata[i + 2];
+      out[i + 2] = indata[i + 1];
       if (indata[i] === 0 && indata[i + 1] === 0 && indata[i + 2] === 0) {
         out[i + 3] = 0;
       } else {
