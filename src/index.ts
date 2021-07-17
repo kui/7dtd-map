@@ -15,7 +15,7 @@ import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
-import { TerrainViewer } from "./index/terrian-viewer";
+import { TerrainViewer } from "./index/terrain-viewer";
 
 function main() {
   presetButton.init();
