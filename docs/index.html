@@ -72,17 +72,8 @@
         <tr>
           <th><label for="biomes_alpha">biomes.png</label></th>
           <td>
-            <input
-              id="biomes_alpha"
-              type="range"
-              title="Alpha biomes.png"
-              value="1"
-              step="0.1"
-              min="0"
-              max="1"
-              oninput="biomes_alpha_out.value = this.value"
-            />
-            <output id="biomes_alpha_out">1</output>
+            <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="biomes_alpha">1</output>
           </td>
         </tr>
         <tr>
@@ -90,92 +81,56 @@
             <label for="splat3_alpha">splat3.png or splat3_processed.png</label>
           </th>
           <td>
-            <input
-              id="splat3_alpha"
-              type="range"
-              title="Alpha splat3"
-              value="1"
-              step="0.1"
-              min="0"
-              max="1"
-              oninput="splat3_alpha_out.value = this.value"
-            />
-            <output id="splat3_alpha_out">1</output>
+            <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="splat3_alpha">1</output>
           </td>
         </tr>
         <tr>
           <th><label for="splat4_alpha">splat4_processed.png</label></th>
           <td>
-            <input
-              id="splat4_alpha"
-              type="range"
-              title="Alpha splat4"
-              value="0.7"
-              step="0.1"
-              min="0"
-              max="1"
-              oninput="splat4_alpha_out.value = this.value"
-            />
-            <output id="splat4_alpha_out">0.7</output>
+            <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
+            <output data-sync-for="splat4_alpha">0.7</output>
           </td>
         </tr>
         <tr>
           <th><label for="rad_alpha">radiation.png</label></th>
           <td>
-            <input
-              id="rad_alpha"
-              type="range"
-              title="Alpha radiation"
-              value="0.5"
-              step="0.1"
-              min="0"
-              max="1"
-              oninput="rad_alpha_out.value = this.value"
-            />
-            <output id="rad_alpha_out">0.5</output>
+            <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
+            <output data-sync-for="rad_alpha">0.5</output>
           </td>
         </tr>
         <tr>
           <th><label for="sign_alpha">prefabs.xml</label></th>
           <td>
-            <input
-              id="sign_alpha"
-              type="range"
-              title="Alpha signs for prefab or other markers"
-              value="1"
-              step="0.1"
-              min="0"
-              max="1"
-              oninput="sign_alpha_out.value = this.value"
-            />
-            <output id="sign_alpha_out">1</output>
+            <input id="sign_alpha" type="range" title="Alpha signs for prefab or other markers" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="sign_alpha">1</output>
           </td>
         </tr>
         <tr>
           <th><label for="terrain_viewer_show">dtm.raw</label></th>
-          <td><button id="terrain_viewer_show">Show terrain</button></td>
+          <td><button id="terrain_viewer_show" disabled>Show terrain</button></td>
         </tr>
         <tr>
           <th><label for="scale">Scale</label></th>
           <td>
             <label>
-              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" oninput="scale_out.value = this.value" />
-              <output id="scale_out">0.1</output>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
+              <output data-sync-for="scale">0.1</output>
             </label>
           </td>
         </tr>
         <tr>
           <th><label for="sign_size">Sign Size</label></th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" oninput="sign_size_out.value = this.value" />
-            <output id="sign_size_out">200</output>px
+            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+            <output data-sync-for="sign_size">200</output>px
           </td>
         </tr>
         <tr>
           <th><label for="brightness">Brightness</label></th>
           <td>
             <input id="brightness" type="range" max="100" min="0" step="1" value="60" oninput="brightness_out.value = this.value" />
-            <output id="brightness_out">60</output>%
+            <output data-sync-for="brightness">60</output>%
           </td>
         </tr>
         <tr>
@@ -234,7 +189,7 @@
     </div>
     <div id="terrarian_viewer_hud" style="display: none">
       <label style="user-select: none">
-        <input type="checkbox" checked oninput="op_desc.style.display = this.checked ? 'block' : 'none'" />
+        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
         Show/Hide Help
       </label>
       <dl id="op_desc">
