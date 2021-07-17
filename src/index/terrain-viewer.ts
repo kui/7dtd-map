@@ -82,7 +82,13 @@ export class TerrainViewer {
       this.terrainSize.width - 1,
       this.terrainSize.height - 1
     );
-    const material = new three.MeshLambertMaterial({ map: this.texture });
+    geo.clearGroups();
+    geo.addGroup(0, Infinity, 0);
+    geo.addGroup(0, Infinity, 1);
+    const materials = [
+      new three.MeshLambertMaterial({ map: this.texture, transparent: true }),
+      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
+    ];
     const pos = geo.attributes.position;
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
     for (let i = 0; i < pos.count; i++) {
@@ -97,7 +103,7 @@ export class TerrainViewer {
     }
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
-    this.terrain = new three.Mesh(geo, material);
+    this.terrain = new three.Mesh(geo, materials);
     this.scene.add(this.terrain);
     this.cameraController.onUpdateTerrain(this.mapSize.width, this.terrainSize);
     console.timeEnd("updateElevations");
