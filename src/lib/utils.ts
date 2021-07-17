@@ -93,3 +93,7 @@ export function canvasEventToGameCoords(event: EventOffsets, mapSize: GameMapSiz
   const z = Math.floor(mapSize.height / 2) - gz;
   return gameCoords({ x: Math.round(x), z: Math.round(z) });
 }
+
+export function threePlaneSize(width: number, height: number): ThreePlaneSize {
+  return { type: "threePlane", width, height };
+}

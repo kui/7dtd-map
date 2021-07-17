@@ -15,6 +15,7 @@ import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
+import { TerrainViewer } from "./index/terrain-viewer";
 
 function main() {
   presetButton.init();
@@ -67,7 +68,29 @@ function main() {
     mapStorage
   );
 
+  const terrainViewer = new TerrainViewer({
+    output: component("terrain_viewer", HTMLCanvasElement),
+    texture: component("map", HTMLCanvasElement),
+    show: component("terrain_viewer_show", HTMLButtonElement),
+    close: component("terrain_viewer_close", HTMLButtonElement),
+    hud: component("terrarian_viewer_hud"),
+  });
+
+  mapCanvasHandler.addMapSizeListener((size) => {
+    terrainViewer.markCanvasUpdate();
+    if (terrainViewer.mapSize?.width === size.width && terrainViewer.mapSize.height === size.height) {
+      return;
+    }
+    terrainViewer.mapSize = size;
+    terrainViewer.updateElevations();
+  });
+
   const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
+  dtmHandler.addListener((dtm) => {
+    if (terrainViewer.dtm === dtm) return;
+    terrainViewer.dtm = dtm;
+    terrainViewer.updateElevations();
+  });
 
   const prefabsHandler = new PrefabsHandler(
     {
