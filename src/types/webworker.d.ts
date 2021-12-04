@@ -57,4 +57,3 @@ interface OffscreenCanvasRenderingContext2D
   readonly canvas: OffscreenCanvas;
   commit(): void;
 }
-declare function createImageBitmap(image: OffscreenCanvas, options?: ImageBitmapOptions): Promise<ImageBitmap>;

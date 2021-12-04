@@ -1,5 +1,9 @@
 import { Png, PngParser } from "./png-parser";
 
+// Workaround for weird semver of typescript :(
+// See https://github.com/microsoft/TypeScript/issues/45745
+declare function createImageBitmap(image: OffscreenCanvas, options?: ImageBitmapOptions): Promise<ImageBitmap>;
+
 export class ImageBitmapLoader {
   private pngParser: PngParser;
 
