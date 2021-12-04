@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import csvParse from "csv-parse";
+import { parse as csvParse } from "csv-parse";
 
 const EN_INDEX = 5;
 
