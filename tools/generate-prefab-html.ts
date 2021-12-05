@@ -11,7 +11,7 @@ async function main() {
   await remove();
   const labels = await loadLabels();
   const prefabNames = await generateHtml(labels);
-  await Promise.all([await generateIndex(prefabNames), await copyJpg(prefabNames)]);
+  await copyJpg(prefabNames);
   return 0;
 }
 
@@ -76,35 +76,6 @@ async function copyJpg(prefabNames: string[]) {
   );
   console.log("Copy %d jpg files", jpgFiles.length - failedFiles.length);
   console.log("Copy failure %d files", failedFiles.length, failedFiles);
-}
-
-async function generateIndex(prefabNames: string[]) {
-  const dist = path.join(BASE_DEST, "index.html");
-  await fs.writeFile(
-    dist,
-    `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="description" content="">
-  <title>Prefab List</title>
-</head>
-<body>
-  <h1>Prefab List</h1>
-  <nav>
-    <ul>
-      <li><a href="..">7dtd-map</a></li>
-      <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
-    </ul>
-  </nav>
-  <ul>
-   ${prefabNames.map((p) => `<li><a href="${p}.html">${p}</a></li>`).join("\n")}
-  </ul>
-</body>
-</html>
-`
-  );
-  console.log("Write index.html");
 }
 
 handleMain(main());

@@ -17,15 +17,6 @@
   overflow: auto;
 }
 
-tr:first-child > * {
-  border-top: 1px lightgray solid;
-}
-
-th,
-td {
-  border-bottom: 1px lightgray solid;
-}
-
 label[for="prefabs_filter"],
 #prefabs_filter,
 label[for="blocks_filter"],
