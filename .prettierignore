@@ -1,6 +1,6 @@
 /local.json
 
 # generated files
-/docs/*.json
+/docs/**/*.json
 /docs/**/*.js
-/docs/prefabs/*.html
+/docs/**/prefabs/*.html

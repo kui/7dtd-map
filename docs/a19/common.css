@@ -1,0 +1,8 @@
+tr:first-child > * {
+  border-top: 1px lightgray solid;
+}
+
+th,
+td {
+  border-bottom: 1px lightgray solid;
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Map renderer for 7 Day to Die Alpha 19" />
+    <title>7 Days to Die Map Renderer Alpha 19</title>
+    <script src="index.js" async></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+  </head>
+  <body data-active-filter="prefab">
+    <h1>7 Days to Die Map Renderer Alpha 19</h1>
+
+    <p>Only supported in latest Google Chrome.</p>
+    <p>
+      Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
+      <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.
+    </p>
+
+    <nav>
+      <ul>
+        <li><a href="prefabs.html">Prefab List</a></li>
+        <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      </ul>
+    </nav>
+
+    <div id="controller">
+      <p>
+        <button id="download">Download</button>
+        <input id="files" type="file" />
+      </p>
+      <table>
+        <tr>
+          <th>Select Map</th>
+          <td>
+            <select id="map_list">
+              <option data-map-id="1">1. New-World</option>
+            </select>
+            <button id="create_map" title="Create new map">➕</button>
+            <button id="delete_map" title="Delete current map">🗑️</button>
+            <input id="map_name" title="Map Name" type="text" value="New-World" />
+          </td>
+        </tr>
+        <tr>
+          <th><label for="show_generation_info">GenerationInfo.txt</label></th>
+          <td>
+            <input
+              id="show_generation_info"
+              type="checkbox"
+              oninput="
+                generation_info_output_wrapper.style.display = checked ? '' : 'none';
+                generation_info_output.dispatchEvent(new Event('input'))"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td id="generation_info_output_wrapper" colspan="2" style="display: none">
+            <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
+          </td>
+        </tr>
+        <tr>
+          <th>Cursor</th>
+          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
+        </tr>
+        <tr>
+          <th>Flag</th>
+          <td>
+            <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
+            <button id="reset_mark" title="Reset">X</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="biomes_alpha">biomes.png</label></th>
+          <td>
+            <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="biomes_alpha">1</output>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <label for="splat3_alpha">splat3.png or splat3_processed.png</label>
+          </th>
+          <td>
+            <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="splat3_alpha">1</output>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="splat4_alpha">splat4_processed.png</label></th>
+          <td>
+            <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
+            <output data-sync-for="splat4_alpha">0.7</output>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="rad_alpha">radiation.png</label></th>
+          <td>
+            <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
+            <output data-sync-for="rad_alpha">0.5</output>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="sign_alpha">prefabs.xml</label></th>
+          <td>
+            <input id="sign_alpha" type="range" title="Alpha signs for prefab or other markers" value="1" step="0.1" min="0" max="1" />
+            <output data-sync-for="sign_alpha">1</output>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="terrain_viewer_show">dtm.raw</label></th>
+          <td><button id="terrain_viewer_show" disabled>Show terrain</button></td>
+        </tr>
+        <tr>
+          <th><label for="scale">Scale</label></th>
+          <td>
+            <label>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
+              <output data-sync-for="scale">0.1</output>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="sign_size">Sign Size</label></th>
+          <td>
+            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+            <output data-sync-for="sign_size">200</output>px
+          </td>
+        </tr>
+        <tr>
+          <th><label for="brightness">Brightness</label></th>
+          <td>
+            <input id="brightness" type="range" max="100" min="0" step="1" value="60" oninput="brightness_out.value = this.value" />
+            <output data-sync-for="brightness">60</output>%
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefabs_filter">Prefabs Filter</label></th>
+          <td>
+            <input id="prefabs_filter" placeholder="Input prefab name" />
+            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+        <tr>
+          <th>Prefabs Preset</th>
+          <td>
+            <button data-input-for="prefabs_filter">trader</button>
+            <button data-input-for="prefabs_filter">store</button>
+            <button data-input-for="prefabs_filter">skyscraper</button>
+            <button
+              data-input-for="prefabs_filter"
+              data-input-text="^(business_strip_old_03|church_01|house_old_(tudor_01|victorian_03)|installation_red_mesa|school_01|skyscraper_04|store_(clothing_02|grocery_02|gun_02)|utility_waterworks_01)$"
+            >
+              Tier 4
+            </button>
+            <button
+              data-input-for="prefabs_filter"
+              data-input-text="^(apartment_brick_6_flr|factory_lg_0[12]|hospital_01|skyscraper_0[1-3])$"
+            >
+              Tier 5
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="blocks_filter">Blocks Filter</label></th>
+          <td>
+            <input id="blocks_filter" placeholder="Input block name" />
+            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+        <tr>
+          <th>Blocks Preset</th>
+          <td>
+            <button data-input-for="blocks_filter">Forge</button>
+            <button data-input-for="blocks_filter">Workbench</button>
+            <button data-input-for="blocks_filter">Super Corn</button>
+            <!-- npx ts-node --files tools/print-loot-blocks.ts '(?!.*Schematic$)vehicle4x4' -->
+            <button
+              data-input-for="blocks_filter"
+              data-input-text="^(cntLootCrateCarParts|cntShippingCrateCarParts|cntCollapsedWorkbench)$"
+            >
+              Vehicle Parts Containers
+            </button>
+            <button data-input-for="blocks_filter" data-input-text="^(?!.*Empty$)cnt.*book(case|shelf|store)">Book Containers</button>
+          </td>
+        </tr>
+      </table>
+      <p id="prefabs_num"></p>
+      <ul id="prefabs_list"></ul>
+    </div>
+    <div id="terrarian_viewer_hud" style="display: none">
+      <label style="user-select: none">
+        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
+        Show/Hide Help
+      </label>
+      <dl id="op_desc">
+        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
+        <dd>Move horizontal</dd>
+        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
+        <dd>Tilt</dd>
+        <dt>Rotate Mouse Wheel</dt>
+        <dd>Move forward</dd>
+        <dt><code>Esc</code> key</dt>
+        <dd>Close</dd>
+      </dl>
+    </div>
+    <button id="terrain_viewer_close" style="display: none">❌</button>
+    <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+    <p id="loading_indicator"></p>
+    <canvas id="map" width="0" height="0"></canvas>
+    <p>
+      <button id="sample_load" data-sample-dir="sample_world">Load Sample World(PREGEN01)</button>
+    </p>
+
+    <h2>How to Use</h2>
+
+    <p>Drag and drop world files.</p>
+
+    <h3>Generated Worlds (Windows)</h3>
+
+    <ol>
+      <li>
+        Select folders:
+        <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
+        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
+          📋️
+        </button>
+      </li>
+      <li>Drag and drop all files in the world folder</li>
+    </ol>
+
+    <h3>Bundled Worlds</h3>
+
+    <ol>
+      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
+      <li>
+        Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
+        <ul>
+          <li>
+            e.g.
+            <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
+            <button title="Copy this path" data-copy-for="bundled_world_path_windows" data-success-message="✅ Press Win+R then paste this">
+              📋️
+            </button>
+          </li>
+        </ul>
+      </li>
+      <li>Drag and drop all files in the world folder</li>
+    </ol>
+
+    <div id="overlay">
+      <div>
+        <p>Drop world files:</p>
+        <ul>
+          <li>GenerationInfo.txt</li>
+          <li>biomes.png</li>
+          <li>splat3.png</li>
+          <li>splat4_processed.png</li>
+          <li>radiation.png</li>
+          <li>prefabs.xml</li>
+          <li>dtm.raw</li>
+        </ul>
+        <p>The rest of files are ignored.</p>
+      </div>
+    </div>
+  </body>
+</html>
