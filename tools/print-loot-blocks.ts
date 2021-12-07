@@ -24,15 +24,15 @@ async function main() {
   const lootContainers = await lootXml.findLootContainer(pattern);
   const items = flattenItems(lootContainers);
 
-  console.log("Container IDs");
-  console.log(lootContainers.map((c) => c.id).join(", "));
+  console.log("Container Names");
+  console.log(lootContainers.map((c) => c.name).join(", "));
 
   console.log();
   console.log("Items");
   for (const i of items) console.log(i);
 
   const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
-  const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.id)));
+  const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.name)));
   console.log();
   console.log("Container Blocks");
   for (const b of matchedBlocks) console.log(b.name);

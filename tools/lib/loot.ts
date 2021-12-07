@@ -6,7 +6,7 @@ export interface LootTable {
 }
 
 export interface LootContainer extends LootTable {
-  id: string;
+  name: string;
 }
 
 export interface LootGroup extends LootTable {
@@ -30,7 +30,7 @@ export class Loot {
     return lootXml.lootcontainers.lootcontainer.flatMap((lootContainer) => {
       const m = matchLootTable(pattern, lootContainer.item ?? [], groups);
       if (m) {
-        return { id: lootContainer.$.id, ...m };
+        return { name: lootContainer.$.name, ...m };
       } else {
         return [];
       }
