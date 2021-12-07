@@ -33,8 +33,10 @@
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
 <tr><th>RotationToFaceNorth</th><td>0</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
 <tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,0,1</td></tr>
@@ -57,11 +59,10 @@
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
       <tr><td>air</td><td>Air</td><td>7138</td></tr>
-<tr><td>awningGable</td><td>Awning Gable</td><td>6</td></tr>
-<tr><td>awningRampSheet</td><td>Awning Ramp Sheet</td><td>17</td></tr>
-<tr><td>awningRampSheetEdgeLeft</td><td>Awning Ramp S Edge Left</td><td>4</td></tr>
-<tr><td>awningRampSheetEdgeRight</td><td>Awning Ramp S Edge Right</td><td>4</td></tr>
-<tr><td>boardedWindowsSheet4</td><td>Window Boards</td><td>14</td></tr>
+<tr><td>awningShapes:rampGlassSheet</td><td>-</td><td>17</td></tr>
+<tr><td>awningShapes:rampGlassSheetCap</td><td>-</td><td>4</td></tr>
+<tr><td>awningShapes:rampGlassSheetCap2</td><td>-</td><td>4</td></tr>
+<tr><td>awningShapes:wedgeTipHalf</td><td>-</td><td>6</td></tr>
 <tr><td>burningBarrel</td><td>Burning Barrel (POI)</td><td>1</td></tr>
 <tr><td>cntAmmoPileSmall</td><td>Ammo Pile, Small</td><td>1</td></tr>
 <tr><td>cntRollingToolBoxRandomLootHelper</td><td>= Rolling Toolbox = Random Helper</td><td>1</td></tr>
@@ -71,12 +72,13 @@
 <tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
 <tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
 <tr><td>controlPanelBase06</td><td>Control Panel Base 06</td><td>1</td></tr>
-<tr><td>corrugatedMetalPillar0.025CTR</td><td>Corr. Metal Pillar 2.5cm Centered</td><td>1</td></tr>
-<tr><td>corrugatedMetalPillar0.025SCTR</td><td>Corr. Metal Pillar 2.5cm SCtr</td><td>2</td></tr>
-<tr><td>corrugatedMetalPoleSCTR</td><td>Corr. Metal Pole SCTR</td><td>1</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>49</td></tr>
-<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>1</td></tr>
-<tr><td>corrugatedMetalSheetBent4</td><td>Corr. Metal Sheet Bent 4</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:billboard</td><td>-</td><td>56</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025Centered</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025Middle</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:poleCentered</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:poleSideCentered</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:shantywall01</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:shantywall04</td><td>-</td><td>1</td></tr>
 <tr><td>decoCarTireSmallFlat</td><td>Car Tire Small Flat</td><td>4</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>2</td></tr>
@@ -92,8 +94,6 @@
 <tr><td>palletEmpty</td><td>Empty Pallet</td><td>1</td></tr>
 <tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>3</td></tr>
 <tr><td>palletWhiteBagsLoose</td><td>Pallet, White Bags, Loose</td><td>2</td></tr>
-<tr><td>scrapIronCTRpole</td><td>Iron Pole Centered</td><td>1</td></tr>
-<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>7</td></tr>
 <tr><td>secureDoorWooden</td><td>Secure Wood Door</td><td>1</td></tr>
 <tr><td>sleeperBack</td><td>Sleeper Back</td><td>1</td></tr>
 <tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
@@ -106,21 +106,22 @@
 <tr><td>windowStoreFourSided</td><td>Window Store Four Sided</td><td>2</td></tr>
 <tr><td>windowStoreFourSidedEmpty</td><td>Window Store Four Sided Empty</td><td>1</td></tr>
 <tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>6</td></tr>
-<tr><td>woodCross</td><td>Wood Cross</td><td>5</td></tr>
-<tr><td>woodCrossHalf</td><td>Wood Cross Half</td><td>1</td></tr>
-<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>20</td></tr>
-<tr><td>woodFenceFarmSheetBroken1</td><td>Wood Farm Fence Broken 1</td><td>2</td></tr>
-<tr><td>woodFenceFarmSheetBroken2</td><td>Wood Farm Fence Broken 2</td><td>1</td></tr>
 <tr><td>woodFenceSheet</td><td>Wood Fence</td><td>1</td></tr>
-<tr><td>woodHalfPlate</td><td>Wood Half Plate</td><td>43</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>8</td></tr>
-<tr><td>woodPillar50CNR</td><td>Wood Pillar 50 Corner</td><td>218</td></tr>
-<tr><td>woodPillar50CNRPlate</td><td>Wood Pillar 50 Corner Plate</td><td>14</td></tr>
-<tr><td>woodPlate</td><td>Wood Plate</td><td>129</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>321</td></tr>
-<tr><td>woodPoleSupport</td><td>Wood Pole Support</td><td>14</td></tr>
-<tr><td>woodPoleSupport2</td><td>Wood Pole Support 2</td><td>14</td></tr>
-<tr><td>woodStairsBoardRailing</td><td>Wood Board Stairs With Railing</td><td>1</td></tr>
+<tr><td>woodShapes:fence</td><td>-</td><td>20</td></tr>
+<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:pillar50</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:pillar50Corner</td><td>-</td><td>218</td></tr>
+<tr><td>woodShapes:pillar50CornerPlate</td><td>-</td><td>14</td></tr>
+<tr><td>woodShapes:plate</td><td>-</td><td>129</td></tr>
+<tr><td>woodShapes:plateHalf</td><td>-</td><td>43</td></tr>
+<tr><td>woodShapes:pole</td><td>-</td><td>321</td></tr>
+<tr><td>woodShapes:poleCross</td><td>-</td><td>5</td></tr>
+<tr><td>woodShapes:poleCrossHalf</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:poleSupport</td><td>-</td><td>14</td></tr>
+<tr><td>woodShapes:poleSupport2</td><td>-</td><td>14</td></tr>
+<tr><td>woodShapes:stairsRailing</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:windowBoarded</td><td>-</td><td>14</td></tr>
     </table>
   </section>
 </body>

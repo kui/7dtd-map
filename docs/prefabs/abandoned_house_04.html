@@ -28,20 +28,31 @@
     <table><tr><th>AllowTopSoilDecorations</th><td>True</td></tr>
 <tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>house old</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>POIMarkerGroup</th><td>new</td></tr>
+<tr><th>POIMarkerPartRotations</th><td>0</td></tr>
+<tr><th>POIMarkerPartSpawnChance</th><td>1</td></tr>
+<tr><th>POIMarkerPartToSpawn</th><td></td></tr>
+<tr><th>POIMarkerSize</th><td>4, 1, 4</td></tr>
+<tr><th>POIMarkerStart</th><td>9, 0, -2</td></tr>
+<tr><th>POIMarkerTags</th><td></td></tr>
+<tr><th>POIMarkerType</th><td>RoadExit</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
 <tr><th>SleeperVolumeGroup</th><td>S_-_Group_Abandoned_House,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>16, 13, 19</td></tr>
 <tr><th>SleeperVolumeStart</th><td>8, 1, 8</td></tr>
+<tr><th>Tags</th><td>wilderness</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>ResidentialOld</td></tr></table>
@@ -58,13 +69,10 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>WindowPlug01</td><td>-</td><td>3</td></tr>
-<tr><td>WindowPlug02</td><td>-</td><td>3</td></tr>
-<tr><td>WindowPlug03</td><td>-</td><td>1</td></tr>
-<tr><td>air</td><td>Air</td><td>10918</td></tr>
-<tr><td>brickBlock</td><td>Bricks</td><td>66</td></tr>
-<tr><td>brickDestroyedBlock01</td><td>Brick Destroyed Block 01</td><td>10</td></tr>
-<tr><td>brickRamp</td><td>Brick Ramp</td><td>3</td></tr>
+      <tr><td>air</td><td>Air</td><td>10918</td></tr>
+<tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>10</td></tr>
+<tr><td>brickShapes:cube</td><td>-</td><td>66</td></tr>
+<tr><td>brickShapes:ramp</td><td>-</td><td>3</td></tr>
 <tr><td>bunkBedRandomHelper</td><td>= Bunk Bed = Random Helper</td><td>1</td></tr>
 <tr><td>burntWoodBlock1</td><td>Burnt Wood Block 1</td><td>2</td></tr>
 <tr><td>burntWoodBlock2</td><td>Burnt Wood Block 2</td><td>35</td></tr>
@@ -81,45 +89,42 @@
 <tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>1</td></tr>
 <tr><td>cntCabinetOldSink</td><td>Old Sink</td><td>1</td></tr>
 <tr><td>cntCupboardCabinetOldTopLootHelper</td><td>= Cupboard Old = Random Helper</td><td>2</td></tr>
+<tr><td>cntFoodPileSmallRandomHelper</td><td>= Small Food Pile = Random Helper</td><td>1</td></tr>
 <tr><td>cntFridgeStainlessSteelRandomLootHelper</td><td>= S Steel Fridge = Random Helper</td><td>1</td></tr>
-<tr><td>cntMailBox01</td><td>Mail Box</td><td>1</td></tr>
+<tr><td>cntMailBox01White</td><td>White Mailbox</td><td>1</td></tr>
 <tr><td>cntMedicLootPileA</td><td>Medical Supplies</td><td>1</td></tr>
 <tr><td>cntMedicineCabinetClosedRandomLootHelper</td><td>= Medicine Cabinet = Random Helper</td><td>1</td></tr>
-<tr><td>cntMicrowaveOvenRandomLootHelper</td><td>= Microwave Oven = Random Helper</td><td>1</td></tr>
-<tr><td>cntStoveOldRandomLootHelper</td><td>= Old Stove = Random Helper</td><td>1</td></tr>
+<tr><td>cntMicrowaveRandomLootHelper</td><td>= Microwave = Random Helper</td><td>1</td></tr>
+<tr><td>cntStoveRandomLootHelper</td><td>= Stove = Random Helper</td><td>1</td></tr>
 <tr><td>cntToilet03</td><td>Commercial Toilet</td><td>1</td></tr>
 <tr><td>cntTrashPile01</td><td>Trash Pile</td><td>3</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
 <tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
 <tr><td>cntTrashPile09</td><td>Old Trash</td><td>1</td></tr>
 <tr><td>cntTrash_can01</td><td>Trash Can</td><td>2</td></tr>
-<tr><td>cobweb</td><td>Cobweb</td><td>8</td></tr>
-<tr><td>coffeeTable</td><td>Coffee Table</td><td>1</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>9</td></tr>
-<tr><td>corrugatedMetalPillar0.025CTR</td><td>Corr. Metal Pillar 2.5cm Centered</td><td>3</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>4</td></tr>
-<tr><td>corrugatedMetalWedge</td><td>Corr. Metal Wedge</td><td>1</td></tr>
+<tr><td>cobweb</td><td>Cobweb</td><td>7</td></tr>
+<tr><td>concreteShapes:cube</td><td>-</td><td>9</td></tr>
+<tr><td>corrugatedMetalShapes:billboard</td><td>-</td><td>7</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025Centered</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:table</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60</td><td>-</td><td>1</td></tr>
 <tr><td>couchSofa01</td><td>Sofa 01</td><td>1</td></tr>
 <tr><td>decoCarTireSmallFlat</td><td>Car Tire Small Flat</td><td>4</td></tr>
-<tr><td>doorTrim2m</td><td>Door Trim 2m</td><td>4</td></tr>
-<tr><td>doorTrimTop</td><td>Door Trim Top</td><td>2</td></tr>
 <tr><td>emberPileDeco1</td><td>Ember Pile 1 Deco</td><td>1</td></tr>
 <tr><td>emberPileDeco4</td><td>Ember Pile 4 Deco</td><td>1</td></tr>
 <tr><td>faucet02</td><td>Household Faucet 2</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>2</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>3</td></tr>
 <tr><td>garbage_decor3</td><td>Garbage decor3</td><td>1</td></tr>
-<tr><td>heatVent</td><td>Heat Vent Small with Block</td><td>3</td></tr>
 <tr><td>houseFrontDoor2_v1</td><td>House Front Door 2</td><td>3</td></tr>
 <tr><td>looseBoardsTrapBlock1x1</td><td>Loose Boards Block 1x1</td><td>16</td></tr>
 <tr><td>looseBoardsTrapBlock3x3Destroyed</td><td>Loose Boards Block 3x3 Destroyed</td><td>1</td></tr>
 <tr><td>metalReinforcedDoorWooden</td><td>Metal Reinforced Door</td><td>1</td></tr>
 <tr><td>paintingPictureRandomHelper</td><td>= Painting = Random Helper</td><td>2</td></tr>
-<tr><td>plainWoodWindowPlug</td><td>-</td><td>1</td></tr>
+<tr><td>pedestalSink</td><td>Pedestal Sink</td><td>1</td></tr>
+<tr><td>plainWoodWindowPlugCTRPlate</td><td>Plain Wood Window Plug</td><td>1</td></tr>
 <tr><td>porchLight04</td><td>Iron Outdoor Light (POI)</td><td>1</td></tr>
-<tr><td>rScrapIronTable</td><td>Iron Table</td><td>1</td></tr>
 <tr><td>radiatorHouse01</td><td>Radiator</td><td>1</td></tr>
-<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>3</td></tr>
 <tr><td>sectionalPlaidCouchSofaMiddle</td><td>Old Couch Middle</td><td>1</td></tr>
 <tr><td>secureDoorWooden</td><td>Secure Wood Door</td><td>1</td></tr>
 <tr><td>signYardSign01</td><td>Yard Sign: Condemned</td><td>1</td></tr>
@@ -133,46 +138,52 @@
 <tr><td>terrGravel</td><td>Gravel</td><td>350</td></tr>
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>1167</td></tr>
 <tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>1</td></tr>
-<tr><td>wallHungSink</td><td>-</td><td>1</td></tr>
 <tr><td>window03Wood</td><td>Wood Window</td><td>1</td></tr>
 <tr><td>window03WoodBroke1</td><td>Window 3 Wood Broke 1</td><td>14</td></tr>
 <tr><td>window03WoodFrame</td><td>Window03 Wood Frame</td><td>13</td></tr>
-<tr><td>woodArch</td><td>Wood Arch 2m</td><td>2</td></tr>
-<tr><td>woodBlock</td><td>Wood Block</td><td>548</td></tr>
-<tr><td>woodBlockBaseboard1</td><td>Wood Block Baseboard 1</td><td>14</td></tr>
-<tr><td>woodBlockBaseboardChairRail1</td><td>Wood Block Baseboard Chair Rail 1</td><td>43</td></tr>
-<tr><td>woodBlockBaseboardChairRail4</td><td>Wood Block Baseboard Chair Rail 4</td><td>1</td></tr>
-<tr><td>woodBlockTileBroken01</td><td>Wood Block, Broken Tile</td><td>9</td></tr>
-<tr><td>woodCNRInside</td><td>Wood Corner Inside</td><td>8</td></tr>
+<tr><td>windowPlug01CTRPlate</td><td>Window Plug 01</td><td>3</td></tr>
+<tr><td>windowPlug02CTRPlate</td><td>Window Plug 02</td><td>3</td></tr>
+<tr><td>windowPlug03CTRPlate</td><td>Window Plug 03</td><td>1</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>2</td></tr>
-<tr><td>woodCrown</td><td>Wood Crown</td><td>32</td></tr>
-<tr><td>woodCrownInsideCorner</td><td>Wood Crown Inside Corner</td><td>10</td></tr>
-<tr><td>woodDebris01</td><td>Wood Debris 01</td><td>1</td></tr>
 <tr><td>woodDestroyed06</td><td>Wood Destroyed Block 06</td><td>3</td></tr>
-<tr><td>woodGable</td><td>wood Gable</td><td>16</td></tr>
-<tr><td>woodGableInvertedRampHalf</td><td>Wood Gable Inverted Ramp Half</td><td>1</td></tr>
-<tr><td>woodGablehalf</td><td>Wood Gable half</td><td>1</td></tr>
-<tr><td>woodHalf</td><td>Wood 1/2 Block</td><td>10</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>53</td></tr>
-<tr><td>woodPoleSCTR</td><td>Wood Pole SCTR</td><td>15</td></tr>
-<tr><td>woodRailing3d</td><td>Wood Railing</td><td>12</td></tr>
-<tr><td>woodRailing3dBroke</td><td>Broken Wood Railing</td><td>15</td></tr>
-<tr><td>woodRamp</td><td>Wood Ramp</td><td>164</td></tr>
-<tr><td>woodRampInclineFillerHalf1</td><td>Wood Ramp Incline Filler Half 1</td><td>9</td></tr>
-<tr><td>woodRampInclineFillerHalf2</td><td>Wood Ramp Incline Filler Half 2</td><td>9</td></tr>
-<tr><td>woodRampInclineHalf1</td><td>Wood Ramp Incline Half 1</td><td>12</td></tr>
-<tr><td>woodRampInclineHalf2</td><td>Wood Ramp Incline Half 2</td><td>12</td></tr>
-<tr><td>woodStairs25</td><td>Wood Stairs</td><td>8</td></tr>
-<tr><td>woodStairsFilledRailingLeft</td><td>Wood Stairs, Railing Left</td><td>1</td></tr>
-<tr><td>woodStairsFilledRailingRight</td><td>Wood Stairs, Railing Right</td><td>2</td></tr>
-<tr><td>woodTable</td><td>Wood Table</td><td>3</td></tr>
-<tr><td>woodWedge</td><td>Wood Wedge</td><td>24</td></tr>
-<tr><td>woodWedgeIncline</td><td>Wood Wedge Incline</td><td>10</td></tr>
-<tr><td>woodWedgeTip</td><td>Wood Wedge Tip</td><td>32</td></tr>
-<tr><td>woodWindowTrim</td><td>Wood Window Trim</td><td>23</td></tr>
-<tr><td>woodWindowTrimBottom</td><td>Wood Window Trim Bottom</td><td>24</td></tr>
-<tr><td>woodWindowTrimSides</td><td>Wood Window Trim 2 Sides</td><td>8</td></tr>
-<tr><td>woodWindowTrimTop</td><td>Wood Window Trim Top</td><td>5</td></tr>
+<tr><td>woodShapes:arch</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:arrowSlitQuarter</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:coffeeTable</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:crown</td><td>-</td><td>32</td></tr>
+<tr><td>woodShapes:crownInsideCorner</td><td>-</td><td>10</td></tr>
+<tr><td>woodShapes:cube</td><td>-</td><td>548</td></tr>
+<tr><td>woodShapes:cubeBaseboard</td><td>-</td><td>14</td></tr>
+<tr><td>woodShapes:cubeBaseboardChairRail</td><td>-</td><td>43</td></tr>
+<tr><td>woodShapes:cubeBaseboardChairRail4Sided</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:cubeHalf</td><td>-</td><td>10</td></tr>
+<tr><td>woodShapes:cubeHeatVent</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:cubeTileBroken</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:doorTrim2m</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:doorTrimTop</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:gableHalf</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:pole</td><td>-</td><td>53</td></tr>
+<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>15</td></tr>
+<tr><td>woodShapes:railing</td><td>-</td><td>12</td></tr>
+<tr><td>woodShapes:railingBroke01</td><td>-</td><td>15</td></tr>
+<tr><td>woodShapes:ramp</td><td>-</td><td>164</td></tr>
+<tr><td>woodShapes:rampInclineFillerHalfLeft</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:rampInclineFillerHalfRight</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:rampInclineHalfLeft</td><td>-</td><td>12</td></tr>
+<tr><td>woodShapes:rampInclineHalfRight</td><td>-</td><td>12</td></tr>
+<tr><td>woodShapes:rampInsideCornerFull</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:stairsFilledRailingLeft</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:stairsFilledRailingRight</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:stairsFilledVerticalUV</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:table</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:wedge60</td><td>-</td><td>24</td></tr>
+<tr><td>woodShapes:wedge60Incline</td><td>-</td><td>10</td></tr>
+<tr><td>woodShapes:wedge60Tip</td><td>-</td><td>32</td></tr>
+<tr><td>woodShapes:wedgeTipHalf</td><td>-</td><td>16</td></tr>
+<tr><td>woodShapes:windowTrim</td><td>-</td><td>23</td></tr>
+<tr><td>woodShapes:windowTrimBottom</td><td>-</td><td>24</td></tr>
+<tr><td>woodShapes:windowTrimSides</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:windowTrimTop</td><td>-</td><td>5</td></tr>
+<tr><td>woodShapes:woodDebris01</td><td>-</td><td>1</td></tr>
     </table>
   </section>
 </body>

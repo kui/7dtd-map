@@ -10,8 +10,7 @@ const BASE_DEST = projectRoot("docs", "prefabs");
 async function main() {
   await remove();
   const labels = await loadLabels();
-  const prefabNames = await generateHtml(labels);
-  await copyJpg(prefabNames);
+  await buildHtmls(labels);
   return 0;
 }
 
@@ -28,54 +27,47 @@ async function loadLabels() {
   return labels;
 }
 
-async function generateHtml(labels: Map<string, string>) {
+async function buildHtmls(labels: Map<string, string>) {
   const prefabsDir = await vanillaDir("Data", "Prefabs");
-  const xmlGlob = path.join(prefabsDir, "*.xml");
+  const xmlGlob = path.join(prefabsDir, "*", "*.xml");
   const xmlFiles = await glob(xmlGlob);
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);
   }
 
-  const prefabNames = await Promise.all(
-    xmlFiles.flatMap(async (xmlFileName) => {
-      const prefabName = path.basename(xmlFileName, ".xml");
-      const nimFileName = path.join(prefabsDir, `${prefabName}.blocks.nim`);
-      const ttsFileName = path.join(prefabsDir, `${prefabName}.tts`);
-      let html;
-      try {
-        html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
-      } catch (e) {
-        console.warn("Ignore Prefab %s, %s", prefabName, e);
-        return null;
-      }
-      const dist = path.join(BASE_DEST, `${prefabName}.html`);
-      await fs.writeFile(dist, html);
-      return prefabName;
-    })
-  ).then((ns) => ns.filter((n): n is string => n != null));
-  console.log("Write html files: %d/%d", prefabNames.length, xmlFiles.length);
-
-  return prefabNames;
-}
-
-async function copyJpg(prefabNames: string[]) {
-  const prefabsDir = await vanillaDir("Data", "Prefabs");
-  const jpgFiles = prefabNames.map((n) => path.join(prefabsDir, `${n}.jpg`));
-
-  const failedFiles: string[] = [];
+  let successCount = 0;
   await Promise.all(
-    jpgFiles.map(async (jpgFileName) => {
-      const dist = path.join(BASE_DEST, path.basename(jpgFileName));
+    xmlFiles.map(async (xmlFileName) => {
       try {
-        await fs.copyFile(jpgFileName, dist);
+        await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
       } catch (e) {
-        //console.warn("JPG Copy fail: ", e.message);
-        failedFiles.push(path.basename(jpgFileName));
+        console.warn("build HTML failure: %o", e);
+        return;
+      }
+      if (++successCount % 50 === 0) {
+        console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
       }
     })
   );
-  console.log("Copy %d jpg files", jpgFiles.length - failedFiles.length);
-  console.log("Copy failure %d files", failedFiles.length, failedFiles);
+  console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
+}
+
+async function generateHtml(xmlFileName: string, labels: Map<string, string>) {
+  const prefabName = path.basename(xmlFileName, ".xml");
+  const prefabDir = path.dirname(xmlFileName);
+  const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`);
+  const ttsFileName = path.join(prefabDir, `${prefabName}.tts`);
+  const html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
+  const dist = path.join(BASE_DEST, `${prefabName}.html`);
+  await fs.writeFile(dist, html);
+}
+
+async function copyJpg(xmlFileName: string) {
+  const prefabName = path.basename(xmlFileName, ".xml");
+  const prefabDir = path.dirname(xmlFileName);
+  const jpgFileName = path.join(prefabDir, `${prefabName}.jpg`);
+  const dist = path.join(BASE_DEST, path.basename(jpgFileName));
+  await fs.copyFile(jpgFileName, dist);
 }
 
 handleMain(main());

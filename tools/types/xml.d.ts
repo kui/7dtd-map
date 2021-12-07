@@ -26,7 +26,7 @@ interface LootXml {
       item?: LootXmlItem[];
     }[];
     lootcontainer: {
-      $: { id: string };
+      $: { name: string };
       item?: LootXmlItem[];
     }[];
   };

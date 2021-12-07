@@ -35,10 +35,13 @@
 <tr><th>ExcludePOICulling</th><td>True</td></tr>
 <tr><th>QuestTags</th><td>trader</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
+<tr><th>Tags</th><td>gateway,trader</td></tr>
+<tr><th>ThemeTags</th><td>trader</td></tr>
 <tr><th>TraderArea</th><td>True</td></tr>
 <tr><th>TraderAreaProtect</th><td>20,0,20</td></tr>
-<tr><th>TraderAreaTeleportCenter</th><td>1, 1, 1</td></tr>
-<tr><th>TraderAreaTeleportSize</th><td>36, 20, 36</td></tr>
+<tr><th>TraderAreaTeleportCenter</th><td>0, 0, 0</td></tr>
+<tr><th>TraderAreaTeleportSize</th><td>37, 21, 37</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>any</td></tr></table>
   </section>
@@ -46,7 +49,7 @@
   <section>
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>37</td></tr>
-<tr><th>y</th><td>24</td></tr>
+<tr><th>y</th><td>21</td></tr>
 <tr><th>z</th><td>37</td></tr></table>
   </section>
 
@@ -54,152 +57,214 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>WindowPlug01</td><td>-</td><td>1</td></tr>
-<tr><td>WindowPlug02</td><td>-</td><td>1</td></tr>
-<tr><td>air</td><td>Air</td><td>28798</td></tr>
-<tr><td>boardedWindowsSheet4</td><td>Window Boards</td><td>14</td></tr>
-<tr><td>brickBlock</td><td>Bricks</td><td>1</td></tr>
-<tr><td>bunkBedRandomHelper</td><td>= Bunk Bed = Random Helper</td><td>2</td></tr>
-<tr><td>burningBarrel</td><td>Burning Barrel (POI)</td><td>1</td></tr>
-<tr><td>burntWoodBlock2</td><td>Burnt Wood Block 2</td><td>1</td></tr>
-<tr><td>burntWoodBlock3</td><td>Burnt Wood Block 3</td><td>7</td></tr>
-<tr><td>burntWoodBlock4</td><td>Burnt Wood Block 4</td><td>1</td></tr>
-<tr><td>burntWoodBlock6</td><td>Burnt Wood Block 6</td><td>3</td></tr>
-<tr><td>burntWoodRamp7</td><td>Burnt Wood Ramp 7</td><td>3</td></tr>
+      <tr><td>air</td><td>Air</td><td>24903</td></tr>
+<tr><td>airConditionVentFan</td><td>Vent Fan</td><td>1</td></tr>
+<tr><td>barbedWireSheet</td><td>Barbed Wire</td><td>68</td></tr>
+<tr><td>bedroll</td><td>Bedroll</td><td>1</td></tr>
+<tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>4</td></tr>
+<tr><td>brickShapes:cube</td><td>-</td><td>8</td></tr>
+<tr><td>bunkBedMessy</td><td>Bunk Bed, Messy</td><td>1</td></tr>
 <tr><td>campfire</td><td>Campfire</td><td>1</td></tr>
 <tr><td>ceilingLight01</td><td>Simple Light (POI)</td><td>1</td></tr>
-<tr><td>cntBarrelGasOld</td><td>Rusty Barrel</td><td>1</td></tr>
-<tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>1</td></tr>
-<tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>4</td></tr>
-<tr><td>cntCabinetOldSink</td><td>Old Sink</td><td>1</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>1</td></tr>
+<tr><td>ceilingLight04</td><td>Warehouse Ceiling Light (POI)</td><td>2</td></tr>
+<tr><td>chimneyPOI</td><td>Chimney White Smoke</td><td>1</td></tr>
+<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
+<tr><td>cntBarrelWhiteQuadA</td><td>Rusty Barrel</td><td>1</td></tr>
+<tr><td>cntBookPile03</td><td>Pile of Books</td><td>1</td></tr>
+<tr><td>cntBruteStyleTrashCanRandomLootHelper</td><td>= Trash Can = Random Helper</td><td>2</td></tr>
+<tr><td>cntBusShuttle</td><td>Shuttle Bus</td><td>1</td></tr>
+<tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>9</td></tr>
+<tr><td>cntCabinetOldBottom</td><td>Cabinet</td><td>2</td></tr>
+<tr><td>cntCabinetOldCNRRoundFiller</td><td>Cabinet Rounded (No Loot)</td><td>4</td></tr>
+<tr><td>cntCar03SedanDamage0v06</td><td>Green Sedan</td><td>1</td></tr>
+<tr><td>cntCashRegister</td><td>Cash Register</td><td>1</td></tr>
 <tr><td>cntCementMixerBustedRandomLootHelper</td><td>= Destroyed Cement Mixer = Random Helper</td><td>1</td></tr>
 <tr><td>cntChemistryStationBustedRandomLootHelper</td><td>= Chemistry Station = Random Helper</td><td>1</td></tr>
-<tr><td>cntCollapsedSolarbank</td><td>Destroyed Solar Bank</td><td>1</td></tr>
-<tr><td>cntCupboardCabinetOldTopLootHelper</td><td>= Cupboard Old = Random Helper</td><td>1</td></tr>
+<tr><td>cntClothesPileFloor01</td><td>Clothes Pile</td><td>1</td></tr>
+<tr><td>cntCoolerOpen</td><td>Cooler (Open)</td><td>2</td></tr>
+<tr><td>cntDisplayCaseEmptyLeft</td><td>Display Case Empty Left</td><td>2</td></tr>
+<tr><td>cntDisplayCaseEmptyRight</td><td>Display Case Empty Right</td><td>2</td></tr>
+<tr><td>cntFoodPileSmall</td><td>Food Pile, Small</td><td>1</td></tr>
 <tr><td>cntForgeBustedRandomLootHelper</td><td>= Destroyed Forge = Random Helper</td><td>1</td></tr>
-<tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
-<tr><td>cntLockersShortRandomLootHelper</td><td>= Lockers Short = Random Helper</td><td>4</td></tr>
-<tr><td>cntStoreShelfSingleBottomEmpty</td><td>Store Shelf Single Bottom Empty</td><td>6</td></tr>
-<tr><td>cntStoreShelfSingleBottomTrash01</td><td>Store Shelf Single Bottom Trash 01</td><td>3</td></tr>
-<tr><td>cntStoreShelfSingleBottomTrash02</td><td>Store Shelf Single Bottom Trash 02</td><td>2</td></tr>
-<tr><td>cntStoreShelfSingleTopEmpty</td><td>Store Shelf Single Top Empty</td><td>3</td></tr>
-<tr><td>cntStoreShelfSingleTopTrash01</td><td>Store Shelf Single Top Trash 01</td><td>2</td></tr>
-<tr><td>cntStoreShelfSingleTopTrash02</td><td>Store Shelf Single Top Trash 02</td><td>2</td></tr>
-<tr><td>cntStoveOldRandomLootHelper</td><td>= Old Stove = Random Helper</td><td>1</td></tr>
-<tr><td>cntToilet01</td><td>Toilet</td><td>1</td></tr>
+<tr><td>cntIceMachine</td><td>Ice Machine</td><td>1</td></tr>
+<tr><td>cntLaundryBasketVer2Full</td><td>Laundry Basket</td><td>1</td></tr>
+<tr><td>cntMetalDesk02Closed</td><td>Iron Desk</td><td>1</td></tr>
+<tr><td>cntNightstandRandomLootHelper</td><td>= Nightstand = Random Helper</td><td>1</td></tr>
+<tr><td>cntShoesPileLeatherBoots</td><td>Shoes</td><td>1</td></tr>
+<tr><td>cntStoreProduceBasketCornerEmpty2</td><td>Produce Basket Corner Empty 2</td><td>1</td></tr>
+<tr><td>cntStoreProduceBasketLettuce1</td><td>Produce Basket Lettuce 1</td><td>1</td></tr>
+<tr><td>cntStoreProduceBasketLettuce2</td><td>Produce Basket Lettuce 2</td><td>1</td></tr>
+<tr><td>cntStoreProduceBasketMelons1</td><td>Produce Basket Melons 1</td><td>1</td></tr>
+<tr><td>cntStoreProduceBasketMelons2</td><td>Produce Basket Melons 2</td><td>1</td></tr>
+<tr><td>cntStoreShelfDoubleBottomFood01</td><td>Shelf</td><td>1</td></tr>
+<tr><td>cntStoreShelfDoubleBottomFood02</td><td>Shelf</td><td>2</td></tr>
+<tr><td>cntStoreShelfSingleBottomFood01</td><td>Shelf</td><td>2</td></tr>
+<tr><td>cntStoreShelfSingleBottomFood02</td><td>Shelf</td><td>2</td></tr>
 <tr><td>cntTrashPile01</td><td>Trash Pile</td><td>1</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
+<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>1</td></tr>
+<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
 <tr><td>cntVendingMachine2</td><td>Vending Machine</td><td>1</td></tr>
-<tr><td>cntVendingMachineTrader</td><td>Vending Machine Rental</td><td>3</td></tr>
 <tr><td>cntWorkbenchBustedRandomLootHelper</td><td>= Destroyed Workbench = Random Helper</td><td>1</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>124</td></tr>
-<tr><td>concreteRamp</td><td>Concrete Ramp</td><td>8</td></tr>
-<tr><td>conduit01</td><td>Conduit01</td><td>17</td></tr>
-<tr><td>conduit01Corner</td><td>Conduit01 Corner</td><td>2</td></tr>
-<tr><td>conduit01Curve</td><td>Conduit01 Curve</td><td>4</td></tr>
-<tr><td>conduit01End</td><td>Conduit01 End</td><td>4</td></tr>
-<tr><td>controlPanelBase01</td><td>Control Panel Base 01</td><td>2</td></tr>
-<tr><td>controlPanelBase03</td><td>Control Panel Base 03</td><td>2</td></tr>
-<tr><td>controlPanelBase07</td><td>Control Panel Base 07</td><td>1</td></tr>
-<tr><td>controlPanelBase08</td><td>Control Panel Base 08</td><td>6</td></tr>
-<tr><td>controlPanelTop01</td><td>Control Panel Top 01</td><td>2</td></tr>
-<tr><td>controlPanelTop05</td><td>Control Panel Top 05</td><td>1</td></tr>
-<tr><td>controlPanelTop06</td><td>Control Panel Top 06</td><td>1</td></tr>
-<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>86</td></tr>
-<tr><td>corrugatedMetalCNRRound</td><td>Corr. Metal Corner Round</td><td>40</td></tr>
-<tr><td>corrugatedMetalCNRRoundTop</td><td>Corr. Metal Corner Round Top</td><td>8</td></tr>
-<tr><td>corrugatedMetalCTRPlate</td><td>Corr. Metal Center Plate</td><td>18</td></tr>
-<tr><td>corrugatedMetalPillar0.025SCTR</td><td>Corr. Metal Pillar 2.5cm SCtr</td><td>2</td></tr>
-<tr><td>corrugatedMetalPillar0.05SCTR</td><td>Corr. Metal Pillar 5cm SCtr</td><td>4</td></tr>
-<tr><td>corrugatedMetalPillar100</td><td>Corr. Metal Pillar 100</td><td>24</td></tr>
-<tr><td>corrugatedMetalPillar50</td><td>Corr. Metal Pillar 50</td><td>2</td></tr>
-<tr><td>corrugatedMetalPlate</td><td>Corr. Metal Plate</td><td>31</td></tr>
-<tr><td>corrugatedMetalRamp</td><td>Corr. Metal Ramp</td><td>3</td></tr>
-<tr><td>corrugatedMetalSheet</td><td>Corr. Metal Sheet</td><td>4</td></tr>
-<tr><td>corrugatedMetalSheetBent1</td><td>Corr. Metal Sheet Bent 1</td><td>116</td></tr>
-<tr><td>corrugatedMetalSheetBent2</td><td>Corr. Metal Sheet Bent 2</td><td>1</td></tr>
-<tr><td>corrugatedMetalSheetBent3</td><td>Corr. Metal Sheet Bent 3</td><td>4</td></tr>
-<tr><td>corrugatedMetalSheetBent4</td><td>Corr. Metal Sheet Bent 4</td><td>1</td></tr>
-<tr><td>curtain_bottom1Sheet3</td><td>Curtain 1 Bottom</td><td>2</td></tr>
-<tr><td>curtain_top1Sheet3</td><td>Curtain 1 Top</td><td>2</td></tr>
-<tr><td>decoCarTireSmallFlat</td><td>Car Tire Small Flat</td><td>2</td></tr>
-<tr><td>ductControlPanel</td><td>Duct Control Panel</td><td>2</td></tr>
-<tr><td>ductControlPanelCorner</td><td>Duct Control Panel Corner</td><td>2</td></tr>
-<tr><td>endTableLamp</td><td>End Table Lamp</td><td>1</td></tr>
-<tr><td>faucet02</td><td>Household Faucet 2</td><td>1</td></tr>
+<tr><td>cobblestoneShapes:cube</td><td>-</td><td>77</td></tr>
+<tr><td>concreteShapes:cubeTrimHalfSplit</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>239</td></tr>
+<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:cubeTrimQuarterCornerInside</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:cubeTrimQuarterEdge</td><td>-</td><td>12</td></tr>
+<tr><td>corrugatedMetalShapes:gable3QuarterHalf</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:gableInvertedQuarterHalf</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:gableQuarterHalf</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025</td><td>-</td><td>6</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025Centered</td><td>-</td><td>9</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.05</td><td>-</td><td>36</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.05Middle</td><td>-</td><td>33</td></tr>
+<tr><td>corrugatedMetalShapes:pillar100</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:plate</td><td>-</td><td>125</td></tr>
+<tr><td>corrugatedMetalShapes:plateCentered</td><td>-</td><td>93</td></tr>
+<tr><td>corrugatedMetalShapes:plateHalf</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>35</td></tr>
+<tr><td>corrugatedMetalShapes:poleCross</td><td>-</td><td>8</td></tr>
+<tr><td>corrugatedMetalShapes:poleSideCentered</td><td>-</td><td>9</td></tr>
+<tr><td>corrugatedMetalShapes:poleSupport</td><td>-</td><td>16</td></tr>
+<tr><td>corrugatedMetalShapes:poleSupport2</td><td>-</td><td>16</td></tr>
+<tr><td>corrugatedMetalShapes:ramp</td><td>-</td><td>24</td></tr>
+<tr><td>corrugatedMetalShapes:rampCorner</td><td>-</td><td>12</td></tr>
+<tr><td>corrugatedMetalShapes:rampCornerFiller</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:rampIncline</td><td>-</td><td>10</td></tr>
+<tr><td>corrugatedMetalShapes:rampInclineFiller</td><td>-</td><td>6</td></tr>
+<tr><td>corrugatedMetalShapes:rampInclineInsideCnrFiller</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60</td><td>-</td><td>52</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60Incline</td><td>-</td><td>104</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60InclineHalfLeft</td><td>-</td><td>12</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60InclineHalfRight</td><td>-</td><td>12</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60Tip</td><td>-</td><td>147</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60TipHalfLeft</td><td>-</td><td>19</td></tr>
+<tr><td>corrugatedMetalShapes:wedge60TipHalfRight</td><td>-</td><td>19</td></tr>
+<tr><td>corrugatedMetalShapes:wedgeTipQuarter</td><td>-</td><td>16</td></tr>
+<tr><td>decoCarTireStack</td><td>Car Tire Stack</td><td>1</td></tr>
+<tr><td>decoCowSkull</td><td>Cow Skull</td><td>1</td></tr>
+<tr><td>decoHandTruck</td><td>Hand Truck</td><td>1</td></tr>
+<tr><td>decoWineBottleCorner</td><td>Wine Bottle Corner</td><td>1</td></tr>
+<tr><td>decoWineBottlePile01</td><td>Wine Bottle Pile 01</td><td>1</td></tr>
+<tr><td>decoWineBottlePile02</td><td>Wine Bottle Pile 02</td><td>1</td></tr>
 <tr><td>flagPoleWhiteRiver</td><td>White River Flagpole</td><td>1</td></tr>
-<tr><td>fusebox</td><td>Fusebox</td><td>4</td></tr>
-<tr><td>garageDoorMetal_v3</td><td>Iron Garage Door v3</td><td>1</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>3</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>3</td></tr>
-<tr><td>ironBars</td><td>Iron Bars</td><td>2</td></tr>
-<tr><td>ironBarsCentered</td><td>Iron Bars Centered</td><td>18</td></tr>
-<tr><td>ironDoor1_v1</td><td>Iron Door</td><td>1</td></tr>
-<tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>1</td></tr>
-<tr><td>loudspeaker</td><td>Loudspeaker (POI)</td><td>7</td></tr>
-<tr><td>metalPipeCap</td><td>Metal Pipe Cap</td><td>16</td></tr>
-<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>4</td></tr>
-<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>4</td></tr>
-<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>6</td></tr>
-<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>17</td></tr>
-<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>2</td></tr>
-<tr><td>metalRailing</td><td>Thin Metal Railing</td><td>10</td></tr>
-<tr><td>metalTrussingBlock</td><td>Metal Trussing Block</td><td>19</td></tr>
-<tr><td>miniblindBottomSheet</td><td>Mini Blind Bottom Sheet</td><td>3</td></tr>
-<tr><td>newTextureBlock01</td><td>-</td><td>1</td></tr>
-<tr><td>plainWoodBarricade02CTRPlate</td><td>Plain Wood Barricade02 Center Plate</td><td>6</td></tr>
-<tr><td>plantedCorn2Deco</td><td>Corn Plant 2 (POI)</td><td>3</td></tr>
-<tr><td>plantedCorn3Harvest</td><td>Corn Plant 3 (POI)</td><td>3</td></tr>
-<tr><td>plantedCornDead</td><td>Planted Corn, Dead (POI)</td><td>4</td></tr>
-<tr><td>rScrapIronTable</td><td>Iron Table</td><td>5</td></tr>
-<tr><td>railingBlackSheet</td><td>Flat Black Iron Railing</td><td>6</td></tr>
-<tr><td>rustyIronCrossCtr</td><td>Rusty Iron Cross Ctr</td><td>8</td></tr>
-<tr><td>rustyIronPoleSupportCtr</td><td>Rusty Iron Pole Support Ctr</td><td>34</td></tr>
-<tr><td>satelliteDish</td><td>Satellite Dish</td><td>1</td></tr>
-<tr><td>satelliteDishSmall</td><td>Satellite Dish Small</td><td>2</td></tr>
-<tr><td>scrapHatch_v1</td><td>Iron Hatch</td><td>8</td></tr>
-<tr><td>scrapIronBlock</td><td>Iron Block</td><td>35</td></tr>
-<tr><td>scrapIronPillar100Cap</td><td>Iron Pillar 100 Cap</td><td>3</td></tr>
-<tr><td>scrapIronSheet</td><td>Iron Sheet</td><td>2</td></tr>
-<tr><td>scrapIronWedge</td><td>Iron Wedge</td><td>2</td></tr>
-<tr><td>secureDoorWooden</td><td>Secure Wood Door</td><td>2</td></tr>
+<tr><td>fluorescentLight</td><td>Flourescent Light (POI)</td><td>1</td></tr>
+<tr><td>fusebox</td><td>Fusebox</td><td>2</td></tr>
+<tr><td>garageDoorMetal_v3</td><td>Iron Garage Door v3</td><td>2</td></tr>
+<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>1</td></tr>
+<tr><td>hayBaleSquare</td><td>Hay Bale</td><td>3</td></tr>
+<tr><td>industrialLight02</td><td>Industrial Light 02 (POI)</td><td>1</td></tr>
+<tr><td>ladderMetal</td><td>Iron Ladder</td><td>10</td></tr>
+<tr><td>ladderWood</td><td>Wooden Ladder</td><td>6</td></tr>
+<tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>2</td></tr>
+<tr><td>loudspeaker</td><td>Loudspeaker (POI)</td><td>2</td></tr>
+<tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>1</td></tr>
+<tr><td>metalCatwalkRailing1</td><td>Metal Catwalk, 1 Railing</td><td>17</td></tr>
+<tr><td>metalCatwalkRailingCNR</td><td>Metal Catwalk Corner</td><td>2</td></tr>
+<tr><td>metalCatwalkWedgeRailing</td><td>Metal Catwalk Wedge Corner Railing</td><td>8</td></tr>
+<tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>2</td></tr>
+<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>5</td></tr>
+<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>1</td></tr>
+<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>5</td></tr>
+<tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>1</td></tr>
+<tr><td>metalRailing</td><td>Thin Metal Railing</td><td>5</td></tr>
+<tr><td>metalSignLetter_cross</td><td>Metal Sign Cross</td><td>1</td></tr>
+<tr><td>metalSignLetter_d</td><td>Metal Sign D</td><td>1</td></tr>
+<tr><td>metalSignLetter_e</td><td>Metal Sign E</td><td>4</td></tr>
+<tr><td>metalSignLetter_k</td><td>Metal Sign K</td><td>2</td></tr>
+<tr><td>metalSignLetter_l</td><td>Metal Sign L</td><td>1</td></tr>
+<tr><td>metalSignLetter_p</td><td>Metal Sign P</td><td>2</td></tr>
+<tr><td>metalSignLetter_r</td><td>Metal Sign R</td><td>2</td></tr>
+<tr><td>metalSignLetter_s</td><td>Metal Sign S</td><td>4</td></tr>
+<tr><td>metalSignLetter_t</td><td>Metal Sign T</td><td>2</td></tr>
+<tr><td>metalSignLetter_u</td><td>Metal Sign U</td><td>1</td></tr>
+<tr><td>metalSignLetter_y</td><td>Metal Sign Y</td><td>1</td></tr>
+<tr><td>metalStairsBoardRailing</td><td>Metal Stairs With Railing</td><td>1</td></tr>
+<tr><td>metalTrussingSCTR</td><td>Metal Trussing SCTR</td><td>24</td></tr>
+<tr><td>modularFireWoodStackA</td><td>Firewood Stack A</td><td>4</td></tr>
+<tr><td>modularFireWoodStackB</td><td>Firewood Stack B</td><td>4</td></tr>
+<tr><td>modularFireWoodStackC</td><td>Firewood Stack C</td><td>2</td></tr>
+<tr><td>palletBlueTarpBase</td><td>Pallet, Blue Tarp, Base</td><td>1</td></tr>
+<tr><td>palletBrownBoxesBase</td><td>Pallet, Brown Boxes, Base</td><td>2</td></tr>
+<tr><td>palletBrownBoxesTile</td><td>Pallet, Brown Boxes, Tile</td><td>1</td></tr>
+<tr><td>palletBrownBoxesTop</td><td>Pallet, Brown Boxes, Top</td><td>3</td></tr>
+<tr><td>palletCompressedCardboard</td><td>Pallet, Compressed Cardboard</td><td>2</td></tr>
+<tr><td>palletEmpty</td><td>Empty Pallet</td><td>1</td></tr>
+<tr><td>palletWhiteBagsBase</td><td>Pallet, White Bags, Base</td><td>1</td></tr>
+<tr><td>palletWhiteBagsTop</td><td>Pallet, White Bags, Top</td><td>1</td></tr>
+<tr><td>pipeSmallCorner</td><td>Pipe Small Corner</td><td>1</td></tr>
+<tr><td>pipeSmallWall1x1</td><td>Pipe Small Wall 1x1</td><td>2</td></tr>
+<tr><td>pipeSmallWall1x3</td><td>Pipe Small Wall 1x3</td><td>3</td></tr>
+<tr><td>pipeSmallWallCorner</td><td>Pipe Small Wall Corner</td><td>2</td></tr>
+<tr><td>plantedBlueberry3Harvest</td><td>Blueberry Plant 3 (POI)</td><td>10</td></tr>
+<tr><td>plantedCorn2Deco</td><td>Corn Plant 2 (POI)</td><td>16</td></tr>
+<tr><td>plantedCorn3Harvest</td><td>Corn Plant 3 (POI)</td><td>18</td></tr>
+<tr><td>plantedCornDead</td><td>Planted Corn, Dead (POI)</td><td>18</td></tr>
+<tr><td>plantedPotato3Harvest</td><td>Potato Plant 3 (POI)</td><td>41</td></tr>
+<tr><td>rustyIronTable</td><td>Rusty Iron Table</td><td>2</td></tr>
+<tr><td>scrapHatch_v2</td><td>Iron Hatch v2</td><td>1</td></tr>
+<tr><td>secureReinforcedDoorWooden</td><td>Secure Reinforced Wooden Door</td><td>3</td></tr>
+<tr><td>signBread01</td><td>Sign: Bread 01</td><td>1</td></tr>
+<tr><td>signBulletinBoard01</td><td>Bulletin Board 01</td><td>1</td></tr>
+<tr><td>signExitLight</td><td>Exit Sign</td><td>1</td></tr>
+<tr><td>signSafetyWorkProtection</td><td>Sign: Safety Work Protection</td><td>1</td></tr>
 <tr><td>signShopOpen</td><td>Shop Sign: Open</td><td>2</td></tr>
-<tr><td>signShopTraderJoel2x5Wall</td><td>Trader Joel Sign 2x5m</td><td>1</td></tr>
-<tr><td>solidWoodFrameRamp</td><td>S Wood Frame Ramp</td><td>8</td></tr>
 <tr><td>spawnTrader</td><td>Trader Spawn Block</td><td>1</td></tr>
-<tr><td>spotlightNailedDownPOI</td><td>Spotlight (POI)</td><td>2</td></tr>
-<tr><td>stainlessSteelBlock</td><td>St Steel Block</td><td>39</td></tr>
-<tr><td>stainlessSteelCNRRound</td><td>St Steel Corner Round</td><td>36</td></tr>
-<tr><td>stainlessSteelCNRRoundTop</td><td>St Steel Corner Round Top</td><td>4</td></tr>
-<tr><td>steelBlock</td><td>Steel Block</td><td>2</td></tr>
-<tr><td>steelCTRpole</td><td>steel Pole Centered</td><td>2</td></tr>
-<tr><td>steelHalf</td><td>Steel 1/2 Block</td><td>28</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>35</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>185</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>1149</td></tr>
-<tr><td>trapSpikesDamage2</td><td>Trap Spikes Damage 2</td><td>8</td></tr>
-<tr><td>trapSpikesDamage3</td><td>Trap Spikes Damage 3</td><td>1</td></tr>
-<tr><td>trapSpikesNew</td><td>Wood Spikes</td><td>12</td></tr>
+<tr><td>spotlightNailedDownPOI</td><td>Spotlight (POI)</td><td>5</td></tr>
+<tr><td>steelShapes:pyramid</td><td>-</td><td>1</td></tr>
+<tr><td>terrConcrete</td><td>Concrete Terrain (POI)</td><td>49</td></tr>
+<tr><td>terrDirt</td><td>Dirt</td><td>281</td></tr>
+<tr><td>terrGravel</td><td>Gravel</td><td>654</td></tr>
+<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>385</td></tr>
+<tr><td>trapSpikesIronDmg0</td><td>Iron Spikes Trap</td><td>25</td></tr>
 <tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>1</td></tr>
-<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>1</td></tr>
-<tr><td>window03WoodBroke1</td><td>Window 3 Wood Broke 1</td><td>3</td></tr>
-<tr><td>window03WoodBroke2</td><td>Window 3 Wood Broke 2</td><td>1</td></tr>
-<tr><td>window03WoodBroke3</td><td>Window 3 Wood Broke 3</td><td>1</td></tr>
-<tr><td>window03WoodFrame</td><td>Window03 Wood Frame</td><td>7</td></tr>
-<tr><td>woodBlock</td><td>Wood Block</td><td>617</td></tr>
-<tr><td>woodCatwalk</td><td>Wood Catwalk</td><td>402</td></tr>
+<tr><td>wallClockRandomLootHelper</td><td>= Wall Clock = Random Helper</td><td>1</td></tr>
+<tr><td>wallLight01</td><td>Warehouse Outdoor Light (POI)</td><td>4</td></tr>
+<tr><td>window03Broke1</td><td>Window 3 Broke 1</td><td>15</td></tr>
+<tr><td>window04</td><td>Window 4</td><td>18</td></tr>
+<tr><td>wineBarrel</td><td>Wine Barrel</td><td>1</td></tr>
+<tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>1</td></tr>
+<tr><td>wineBarrelSet</td><td>Wine Barrel Set</td><td>1</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>2</td></tr>
-<tr><td>woodGable</td><td>wood Gable</td><td>8</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>82</td></tr>
-<tr><td>woodPlate</td><td>Wood Plate</td><td>89</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>46</td></tr>
-<tr><td>woodRailing</td><td>Crude Wood Railing</td><td>97</td></tr>
-<tr><td>woodRamp</td><td>Wood Ramp</td><td>282</td></tr>
-<tr><td>woodStairs25</td><td>Wood Stairs</td><td>34</td></tr>
-<tr><td>woodStairsBoard</td><td>Wood board stairs</td><td>2</td></tr>
-<tr><td>woodWedgeTip</td><td>Wood Wedge Tip</td><td>8</td></tr>
+<tr><td>woodShapes:catwalkV1RailOnly</td><td>-</td><td>21</td></tr>
+<tr><td>woodShapes:cornerRound</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:cube</td><td>-</td><td>382</td></tr>
+<tr><td>woodShapes:cubeBaseboardChairRail</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:cubeBaseboardChairRail4Sided</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:cubeHalf</td><td>-</td><td>12</td></tr>
+<tr><td>woodShapes:cubeQuarterCenter</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:cubeTrimQuarterCornerInside</td><td>-</td><td>6</td></tr>
+<tr><td>woodShapes:cubeTrimQuarterEdge</td><td>-</td><td>24</td></tr>
+<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:fence</td><td>-</td><td>81</td></tr>
+<tr><td>woodShapes:gable3Quarter</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:gable3QuarterHalf</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:plate</td><td>-</td><td>32</td></tr>
+<tr><td>woodShapes:plateCentered</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:plateHalf</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:platePole</td><td>-</td><td>9</td></tr>
+<tr><td>woodShapes:pole</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:rampInclineHalfLeft</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:rampInclineHalfRight</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:stairsRailing</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:table</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:tableDynamic</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:wedge60</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:wedge60InclineHalfLeft</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:wedge60InclineHalfRight</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:wedge60Tip</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:wedge60TipHalfLeft</td><td>-</td><td>11</td></tr>
+<tr><td>woodShapes:wedge60TipHalfRight</td><td>-</td><td>11</td></tr>
+<tr><td>woodShapes:wedgeNarrowHigh</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:wedgeNarrowLow</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:wedgeNarrowMid</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:wedgeNarrowTip</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:windowCentered</td><td>-</td><td>15</td></tr>
+<tr><td>woodShapes:windowTrim</td><td>-</td><td>40</td></tr>
+<tr><td>woodShapes:windowTrimBottom</td><td>-</td><td>66</td></tr>
+<tr><td>woodShapes:windowTrimSides</td><td>-</td><td>22</td></tr>
+<tr><td>woodShapes:woodDebris01</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:woodDebris02</td><td>-</td><td>1</td></tr>
     </table>
   </section>
 </body>

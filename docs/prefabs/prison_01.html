@@ -33,9 +33,19 @@
 <tr><th>EditorGroups</th><td>government</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>POIMarkerGroup</th><td>new</td></tr>
+<tr><th>POIMarkerPartRotations</th><td>2</td></tr>
+<tr><th>POIMarkerPartSpawnChance</th><td>1</td></tr>
+<tr><th>POIMarkerPartToSpawn</th><td></td></tr>
+<tr><th>POIMarkerSize</th><td>3, 1, 3</td></tr>
+<tr><th>POIMarkerStart</th><td>18, 0, -2</td></tr>
+<tr><th>POIMarkerTags</th><td></td></tr>
+<tr><th>POIMarkerType</th><td>RoadExit</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False,False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False,False</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td>,,hard</td></tr>
 <tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,3,S_-Group_Generic_Zombie,4,5</td></tr>
@@ -58,20 +68,20 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>27860</td></tr>
+      <tr><td>air</td><td>Air</td><td>27862</td></tr>
 <tr><td>airConditioner</td><td>Air Conditioner</td><td>2</td></tr>
-<tr><td>brickBlock</td><td>Bricks</td><td>872</td></tr>
+<tr><td>brickShapes:cube</td><td>-</td><td>872</td></tr>
 <tr><td>bunkBedRandomHelper</td><td>= Bunk Bed = Random Helper</td><td>14</td></tr>
 <tr><td>ceilingLight01</td><td>Simple Light (POI)</td><td>24</td></tr>
 <tr><td>ceilingLight07</td><td>Fluorescent Light (POI)</td><td>8</td></tr>
-<tr><td>chainLink</td><td>Chain Link Fence</td><td>192</td></tr>
-<tr><td>chainLinkCornerBottom</td><td>Chain Link Corner Bottom</td><td>2</td></tr>
-<tr><td>chainLinkCornerTop</td><td>Chain Link Corner Top</td><td>1</td></tr>
-<tr><td>chainLinkFenceBottomPole</td><td>Chain Link Bottom Pole</td><td>40</td></tr>
-<tr><td>chainLinkFenceTop</td><td>Chain Link Top</td><td>100</td></tr>
-<tr><td>chainLinkFenceTopPole</td><td>Chain Link Top Pole Right</td><td>18</td></tr>
-<tr><td>chainLinkFenceTopPole2</td><td>Chain Link Top Pole Left</td><td>2</td></tr>
-<tr><td>chainLinkPole</td><td>Chain Link Pole Single</td><td>48</td></tr>
+<tr><td>chainlinkFenceBottomPlain</td><td>Chain Link Bottom Plain</td><td>192</td></tr>
+<tr><td>chainlinkFenceBottomPlainCorner</td><td>Chain Link Bottom Plain Corner</td><td>2</td></tr>
+<tr><td>chainlinkFenceBottomPlainPoleRight</td><td>Chain Link Bottom Plain Pole Right</td><td>40</td></tr>
+<tr><td>chainlinkFencePole</td><td>Chain Link Pole</td><td>48</td></tr>
+<tr><td>chainlinkFenceTopPlainCorner</td><td>Chain Link Top Plain Corner</td><td>1</td></tr>
+<tr><td>chainlinkFenceTopPlainPoleLeft</td><td>Chain Link Top Plain Pole Left</td><td>2</td></tr>
+<tr><td>chainlinkFenceTopPlainPoleRight</td><td>Chain Link Top Plain Pole Right</td><td>18</td></tr>
+<tr><td>chainlinkFenceTopPlainRail</td><td>Chain Link Top Plain Rail</td><td>100</td></tr>
 <tr><td>cntBin</td><td>Small Trash Bin</td><td>1</td></tr>
 <tr><td>cntCabinetOldSink</td><td>Old Sink</td><td>1</td></tr>
 <tr><td>cntDeskSafe</td><td>Desk Safe</td><td>1</td></tr>
@@ -89,7 +99,6 @@
 <tr><td>cntTrashPile08</td><td>Foul Trash</td><td>4</td></tr>
 <tr><td>cntTrash_can01</td><td>Trash Can</td><td>4</td></tr>
 <tr><td>cntWallSafe</td><td>Wall Safe</td><td>2</td></tr>
-<tr><td>cntWashingMachine</td><td>Washing Machine</td><td>2</td></tr>
 <tr><td>cntWeaponsBagLarge</td><td>Weapons Bag</td><td>1</td></tr>
 <tr><td>commercialDoor1_v2</td><td>Commercial Door 1 v2</td><td>2</td></tr>
 <tr><td>commercialDoor1_v3</td><td>Commercial Door 1 v3</td><td>1</td></tr>
@@ -97,15 +106,15 @@
 <tr><td>commercialDoor2_v3</td><td>Commercial Door 2 v3</td><td>3</td></tr>
 <tr><td>commercialDoor4_v1</td><td>Commercial Door 4</td><td>1</td></tr>
 <tr><td>commercialDoor4_v3</td><td>Commercial Door 4 v3</td><td>1</td></tr>
-<tr><td>concreteBlock</td><td>Concrete Block</td><td>242</td></tr>
-<tr><td>concreteHalf</td><td>Concrete 1/2 Block</td><td>76</td></tr>
-<tr><td>concretePillar100</td><td>Concrete Pillar 100</td><td>8</td></tr>
-<tr><td>concreteRamp</td><td>Concrete Ramp</td><td>12</td></tr>
-<tr><td>concreteStairs25</td><td>Concrete Stairs</td><td>16</td></tr>
-<tr><td>corrugatedMetalBlock</td><td>Corr. Metal Block</td><td>10</td></tr>
-<tr><td>corrugatedMetalPillar50</td><td>Corr. Metal Pillar 50</td><td>16</td></tr>
-<tr><td>corrugatedMetalPole</td><td>Corr. Metal Pole</td><td>124</td></tr>
-<tr><td>corrugatedMetalRamp</td><td>Corr. Metal Ramp</td><td>5</td></tr>
+<tr><td>concreteShapes:cube</td><td>-</td><td>1590</td></tr>
+<tr><td>concreteShapes:cubeHalf</td><td>-</td><td>76</td></tr>
+<tr><td>concreteShapes:pillar100</td><td>-</td><td>8</td></tr>
+<tr><td>concreteShapes:ramp</td><td>-</td><td>36</td></tr>
+<tr><td>concreteShapes:stairsFilledVerticalUV</td><td>-</td><td>48</td></tr>
+<tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>10</td></tr>
+<tr><td>corrugatedMetalShapes:pillar50</td><td>-</td><td>16</td></tr>
+<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>124</td></tr>
+<tr><td>corrugatedMetalShapes:ramp</td><td>-</td><td>5</td></tr>
 <tr><td>faucet04</td><td>Household Faucet</td><td>1</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>1</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>6</td></tr>
@@ -122,13 +131,10 @@
 <tr><td>metalCatwalkRailing2</td><td>Metal Catwalk, 2 Railings</td><td>10</td></tr>
 <tr><td>metalRailing</td><td>Thin Metal Railing</td><td>402</td></tr>
 <tr><td>metalReinforcedDoorWooden</td><td>Metal Reinforced Door</td><td>4</td></tr>
-<tr><td>officeChair01</td><td>Office Chair</td><td>2</td></tr>
-<tr><td>oldChair1</td><td>Old Chair</td><td>5</td></tr>
+<tr><td>officeChair01</td><td>Office Chair Grey</td><td>2</td></tr>
+<tr><td>oldChair1</td><td>Old Chair Grey</td><td>5</td></tr>
 <tr><td>porchLight01</td><td>Old Outdoor Light (POI)</td><td>5</td></tr>
 <tr><td>porchLight04</td><td>Iron Outdoor Light (POI)</td><td>10</td></tr>
-<tr><td>rConcreteBlock</td><td>R Concrete Block</td><td>1348</td></tr>
-<tr><td>rConcreteRamp</td><td>R Concrete Ramp</td><td>24</td></tr>
-<tr><td>rConcreteStairs25</td><td>R Concrete Stairs 25</td><td>32</td></tr>
 <tr><td>rustyIronPoleSupportCtr</td><td>Rusty Iron Pole Support Ctr</td><td>4</td></tr>
 <tr><td>sleeperBack</td><td>Sleeper Back</td><td>5</td></tr>
 <tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>17</td></tr>
@@ -142,10 +148,10 @@
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>291</td></tr>
 <tr><td>tv</td><td>TV</td><td>8</td></tr>
 <tr><td>window02</td><td>Window 2</td><td>1</td></tr>
-<tr><td>woodBlock</td><td>Wood Block</td><td>436</td></tr>
-<tr><td>woodCNRFull</td><td>Wood Corner Full</td><td>48</td></tr>
-<tr><td>woodPyramid</td><td>wood Pyramid</td><td>4</td></tr>
-<tr><td>woodRamp</td><td>Wood Ramp</td><td>192</td></tr>
+<tr><td>woodShapes:cube</td><td>-</td><td>436</td></tr>
+<tr><td>woodShapes:pyramid</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:ramp</td><td>-</td><td>192</td></tr>
+<tr><td>woodShapes:rampOutsideCornerFull</td><td>-</td><td>48</td></tr>
     </table>
   </section>
 </body>

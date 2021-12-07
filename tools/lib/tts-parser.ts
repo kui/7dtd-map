@@ -6,7 +6,7 @@ import { BlockId } from "./nim-parser";
 // There maight bee some defferences but I didn't know.
 // I think there are some changes around block data,
 // because block ID limit seems to increase to 32k from 2048
-const KNOWN_VERSIONS = [13, 15];
+const KNOWN_VERSIONS = [13, 15, 16];
 const BLOCK_ID_BIT_MASK = 0b0011111111111111;
 
 export async function parseTts(ttsFileName: string): Promise<Tts> {
