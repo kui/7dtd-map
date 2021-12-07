@@ -33,8 +33,10 @@
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
 <tr><th>RotationToFaceNorth</th><td>0</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False,False,False</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False,False,False</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td>,,medium</td></tr>
 <tr><th>SleeperVolumeGroup</th><td>S_Zom_Utility_Worker,6,6,S_Zom_Utility_Worker,1,2,S_Zom_Utility_Worker,4,5</td></tr>
@@ -56,15 +58,15 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>41221</td></tr>
-<tr><td>brickBlock</td><td>Bricks</td><td>2832</td></tr>
-<tr><td>brickDestroyedBlock01</td><td>Brick Destroyed Block 01</td><td>138</td></tr>
-<tr><td>brickDestroyedBlock02</td><td>Brick Destroyed Block 02</td><td>36</td></tr>
-<tr><td>brickDestroyedBlock03</td><td>Brick Destroyed Block 03</td><td>4</td></tr>
-<tr><td>brickRamp</td><td>Brick Ramp</td><td>20</td></tr>
+      <tr><td>air</td><td>Air</td><td>41214</td></tr>
+<tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>138</td></tr>
+<tr><td>brickShapes:brickDestroyed02</td><td>-</td><td>36</td></tr>
+<tr><td>brickShapes:brickDestroyed03</td><td>-</td><td>4</td></tr>
+<tr><td>brickShapes:cube</td><td>-</td><td>2832</td></tr>
+<tr><td>brickShapes:ramp</td><td>-</td><td>20</td></tr>
 <tr><td>campfire</td><td>Campfire</td><td>1</td></tr>
 <tr><td>cntApacheArtifactChest</td><td>Apache Artifact Chest</td><td>1</td></tr>
-<tr><td>cntCoffin</td><td>Coffin</td><td>3</td></tr>
+<tr><td>cntCasketModernRandomHelper</td><td>= Casket = Random Helper</td><td>3</td></tr>
 <tr><td>cntMedicLootPileB</td><td>Medical Supplies</td><td>1</td></tr>
 <tr><td>cntMountainManStorageChest</td><td>Mountain Man Chest</td><td>1</td></tr>
 <tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>1</td></tr>
@@ -87,23 +89,25 @@
 <tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>4</td></tr>
 <tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>25</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>70</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>79979</td></tr>
+<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>79983</td></tr>
 <tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>7</td></tr>
-<tr><td>woodBlock</td><td>Wood Block</td><td>30</td></tr>
-<tr><td>woodCatwalk</td><td>Wood Catwalk</td><td>354</td></tr>
-<tr><td>woodCatwalkRailing2</td><td>Wood Catwalk, 2 Railings</td><td>8</td></tr>
-<tr><td>woodCatwalkRailingCNR</td><td>Wood Catwalk Corner</td><td>5</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>3</td></tr>
-<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>54</td></tr>
 <tr><td>woodHatch1_v1</td><td>Wooden Hatch</td><td>3</td></tr>
-<tr><td>woodPillar100</td><td>Wood Pillar 100</td><td>431</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>10</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>129</td></tr>
-<tr><td>woodPoleSupportCtr</td><td>Wood Pole Support Ctr</td><td>4</td></tr>
-<tr><td>woodRailing</td><td>Crude Wood Railing</td><td>80</td></tr>
-<tr><td>woodStairsBoardRailing</td><td>Wood Board Stairs With Railing</td><td>15</td></tr>
-<tr><td>woodSupport</td><td>Wood Support Beam</td><td>112</td></tr>
-<tr><td>woodTable</td><td>Wood Table</td><td>10</td></tr>
+<tr><td>woodShapes:catwalkV1</td><td>-</td><td>354</td></tr>
+<tr><td>woodShapes:catwalkV1Corner</td><td>-</td><td>5</td></tr>
+<tr><td>woodShapes:catwalkV1RailOnly</td><td>-</td><td>80</td></tr>
+<tr><td>woodShapes:catwalkV1Railing</td><td>-</td><td>8</td></tr>
+<tr><td>woodShapes:cube</td><td>-</td><td>30</td></tr>
+<tr><td>woodShapes:fence</td><td>-</td><td>54</td></tr>
+<tr><td>woodShapes:pillar100</td><td>-</td><td>431</td></tr>
+<tr><td>woodShapes:pillar50</td><td>-</td><td>10</td></tr>
+<tr><td>woodShapes:pole</td><td>-</td><td>129</td></tr>
+<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:poleSquareSideCenteredCornerBracket</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:poleSupport1m</td><td>-</td><td>109</td></tr>
+<tr><td>woodShapes:poleSupportCenter</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:stairsRailing</td><td>-</td><td>15</td></tr>
+<tr><td>woodShapes:table</td><td>-</td><td>10</td></tr>
     </table>
   </section>
 </body>

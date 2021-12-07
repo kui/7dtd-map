@@ -1,7 +1,7 @@
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { requireNonnull } from "./utils";
 
-const DB_NAME = "7dtd-map";
+const DB_NAME = "7dtd-map-a20";
 const DB_VERSION = 2;
 const DEFAULT_WORLD_NAME = "New-World";
 
@@ -67,8 +67,6 @@ function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
     if (version === 1) {
       db.createObjectStore("maps", { keyPath: "id", autoIncrement: true });
       db.createObjectStore("largeObjects", { keyPath: ["mapId", "type"] });
-    }
-    if (version === 2) {
       db.createObjectStore("selectedMap", { keyPath: "id" });
     }
   }

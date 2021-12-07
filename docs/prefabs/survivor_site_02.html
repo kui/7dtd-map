@@ -35,14 +35,17 @@
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
 <tr><th>QuestTags</th><td>clear</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsBossVolume</th><td>False,False,False,False</td></tr>
-<tr><th>SleeperIsLootVolume</th><td>False,True,True,True</td></tr>
-<tr><th>SleeperVolumeFlags</th><td>2,2,2,2</td></tr>
+<tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>0,0,0,2,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1</td></tr>
-<tr><th>SleeperVolumeGroupId</th><td>0,0,0,0</td></tr>
-<tr><th>SleeperVolumeSize</th><td>18, 5, 18#3, 5, 6#3, 5, 6#8, 5, 5</td></tr>
-<tr><th>SleeperVolumeStart</th><td>4, 0, 4#16, 0, 3#14, 0, 15#3, 0, 11</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,animalZombieVulture,1,1</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>1,1,1,1,0</td></tr>
+<tr><th>SleeperVolumeSize</th><td>3, 5, 4#3, 5, 4#7, 7, 7#10, 6, 10#9, 6, 9</td></tr>
+<tr><th>SleeperVolumeStart</th><td>16, 0, 3#14, 0, 17#3, 0, 10#10, 1, 7#1, 1, 1</td></tr>
+<tr><th>Tags</th><td>wilderness</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>NoZone</td></tr></table>
@@ -59,38 +62,40 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>5274</td></tr>
-<tr><td>awningGable</td><td>Awning Gable</td><td>8</td></tr>
-<tr><td>awningPyramid</td><td>Awning Pyramid</td><td>1</td></tr>
-<tr><td>awningRampSheet</td><td>Awning Ramp Sheet</td><td>43</td></tr>
-<tr><td>awningRampSheetCNRInside</td><td>Awning Ramp S Inside corner</td><td>12</td></tr>
-<tr><td>awningRampSheetEdgeLeft</td><td>Awning Ramp S Edge Left</td><td>4</td></tr>
-<tr><td>awningRampSheetEdgeRight</td><td>Awning Ramp S Edge Right</td><td>4</td></tr>
-<tr><td>awningSheet</td><td>Awning Sheet</td><td>110</td></tr>
+      <tr><td>air</td><td>Air</td><td>5286</td></tr>
+<tr><td>awningShapes:billboard</td><td>-</td><td>110</td></tr>
+<tr><td>awningShapes:pyramid</td><td>-</td><td>1</td></tr>
+<tr><td>awningShapes:rampGlassSheet</td><td>-</td><td>44</td></tr>
+<tr><td>awningShapes:rampGlassSheetCap</td><td>-</td><td>4</td></tr>
+<tr><td>awningShapes:rampGlassSheetCap2</td><td>-</td><td>4</td></tr>
+<tr><td>awningShapes:rampInsideCornerSheet</td><td>-</td><td>12</td></tr>
+<tr><td>awningShapes:wedgeTipHalf</td><td>-</td><td>8</td></tr>
 <tr><td>barracksChair</td><td>Barracks Chair</td><td>2</td></tr>
 <tr><td>bunkBedRandomHelper</td><td>= Bunk Bed = Random Helper</td><td>2</td></tr>
 <tr><td>chairCouchSofa01</td><td>Sofa Chair 01</td><td>1</td></tr>
+<tr><td>cntAmmoPileSmall</td><td>Ammo Pile, Small</td><td>1</td></tr>
 <tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>3</td></tr>
 <tr><td>cntCharcoalGrillRandomLootHelper</td><td>= Charcoal Grill = Random Helper</td><td>1</td></tr>
+<tr><td>cntChemPileLarge</td><td>Large Chemistry Set</td><td>1</td></tr>
 <tr><td>cntChemistryStationBustedRandomLootHelper</td><td>= Chemistry Station = Random Helper</td><td>1</td></tr>
 <tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
-<tr><td>cntFoodPileMedium</td><td>Food Pile, Medium</td><td>1</td></tr>
+<tr><td>cntFoodPileSmall</td><td>Food Pile, Small</td><td>1</td></tr>
 <tr><td>cntLockersTallRandomLootHelper</td><td>= Lockers Tall = Random Helper</td><td>2</td></tr>
-<tr><td>cntMedicalPileLarge</td><td>Large Medical Pile</td><td>1</td></tr>
+<tr><td>cntLootChestHeroInsecureT1</td><td>Wood Crate</td><td>1</td></tr>
 <tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>1</td></tr>
 <tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
 <tr><td>cntTrash_can01</td><td>Trash Can</td><td>1</td></tr>
-<tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
-<tr><td>corrugatedMetalPillar0.025</td><td>Corr. Metal Pillar 2.5cm</td><td>4</td></tr>
-<tr><td>corrugatedMetalPillar0.025SCTR</td><td>Corr. Metal Pillar 2.5cm SCtr</td><td>6</td></tr>
-<tr><td>corrugatedMetalPillar0.05</td><td>Corr. Metal Pillar 5cm</td><td>8</td></tr>
-<tr><td>corrugatedMetalPillar0.05CTR</td><td>Corr. Metal Pillar 5cm Centered</td><td>5</td></tr>
-<tr><td>corrugatedMetalPillar0.05SCTR</td><td>Corr. Metal Pillar 5cm SCtr</td><td>12</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.025Middle</td><td>-</td><td>6</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.05</td><td>-</td><td>8</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.05Centered</td><td>-</td><td>5</td></tr>
+<tr><td>corrugatedMetalShapes:pillar0.05Middle</td><td>-</td><td>12</td></tr>
 <tr><td>emberPileLightPOI2</td><td>Ember Pile 2 Light (POI)</td><td>1</td></tr>
 <tr><td>fakeCabinetDoorTrap1x2Sheet</td><td>Fake Cabinet Door 1x2</td><td>3</td></tr>
 <tr><td>garbage_decor1</td><td>Garbage decor1</td><td>3</td></tr>
 <tr><td>garbage_decor2</td><td>Garbage decor2</td><td>3</td></tr>
+<tr><td>goreBlockHumanCorpse2</td><td>Decaying Human Corpse 2</td><td>1</td></tr>
 <tr><td>lanternDecorLight</td><td>Lantern (POI)</td><td>1</td></tr>
 <tr><td>modularFireWoodStackA</td><td>Firewood Stack A</td><td>3</td></tr>
 <tr><td>modularFireWoodStackB</td><td>Firewood Stack B</td><td>8</td></tr>
@@ -107,18 +112,18 @@
 <tr><td>sandbagEnd02</td><td>Sandbags End 3</td><td>2</td></tr>
 <tr><td>sandbagStraight01</td><td>Sandbags Straight</td><td>7</td></tr>
 <tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>3</td></tr>
-<tr><td>sleeperVultureAnimal</td><td>Sleeper Vulture (zombie)</td><td>17</td></tr>
-<tr><td>tableDynamic</td><td>Dynamic Table</td><td>2</td></tr>
+<tr><td>sleeperVultureAnimal</td><td>Sleeper Vulture (zombie)</td><td>2</td></tr>
 <tr><td>terrDirt</td><td>Dirt</td><td>152</td></tr>
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>471</td></tr>
 <tr><td>treePlainsTree2</td><td>Tree Plains Tree 2</td><td>1</td></tr>
-<tr><td>woodFenceFarmSheet</td><td>Wood Farm Fence</td><td>7</td></tr>
-<tr><td>woodFenceFarmSheetBroken1</td><td>Wood Farm Fence Broken 1</td><td>4</td></tr>
-<tr><td>woodFenceFarmSheetBroken2</td><td>Wood Farm Fence Broken 2</td><td>3</td></tr>
-<tr><td>woodPillar50</td><td>Wood Pillar 50</td><td>1</td></tr>
-<tr><td>woodPole</td><td>Wood Pole</td><td>5</td></tr>
-<tr><td>woodPoleSCTR</td><td>Wood Pole SCTR</td><td>2</td></tr>
-<tr><td>woodTable</td><td>Wood Table</td><td>2</td></tr>
+<tr><td>woodShapes:fence</td><td>-</td><td>7</td></tr>
+<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:pillar50</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:pole</td><td>-</td><td>5</td></tr>
+<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:table</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:tableDynamic</td><td>-</td><td>2</td></tr>
     </table>
   </section>
 </body>
