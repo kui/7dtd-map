@@ -11,7 +11,7 @@ const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
 
 async function main() {
   const vanillaDir = await utils.vanillaDir();
-  const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*.blocks.nim");
+  const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim");
   const nimFiles = await glob(fileGlob);
   if (nimFiles.length === 0) {
     throw Error(`No nim file: ${fileGlob}`);
