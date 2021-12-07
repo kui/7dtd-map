@@ -36,17 +36,19 @@ async function buildHtmls(labels: Map<string, string>) {
   }
 
   let successCount = 0;
-  await Promise.all(xmlFiles.map(async (xmlFileName) => {
-    try {
-      await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
-    } catch (e) {
-      console.warn("build HTML failure: %o", e);
-      return;
-    }
-    if (++successCount % 50 === 0) {
-      console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
-    }
-  }));
+  await Promise.all(
+    xmlFiles.map(async (xmlFileName) => {
+      try {
+        await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
+      } catch (e) {
+        console.warn("build HTML failure: %o", e);
+        return;
+      }
+      if (++successCount % 50 === 0) {
+        console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
+      }
+    })
+  );
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 }
 
