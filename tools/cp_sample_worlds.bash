@@ -9,7 +9,6 @@ dest="${project_root}/docs/sample_world"
 
 copy_files=(
     biomes.png
-    GenerationInfo.txt
     main.ttw
     map_info.xml
     prefabs.xml
@@ -17,7 +16,6 @@ copy_files=(
     spawnpoints.xml
     splat3_processed.png
     splat4_processed.png
-    water_info.xml
 )
 
 main() {

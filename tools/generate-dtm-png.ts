@@ -46,7 +46,7 @@ async function main() {
   const srcSize = (await fs.promises.stat(src)).size;
   const dstSize = (await fs.promises.stat(dst)).size;
 
-  console.log("Compress: %.2d% (%d / %d)", (dstSize / srcSize) * 100, dstSize, srcSize);
+  console.log("Compress: %d (%d / %d)", (dstSize / srcSize) * 100, dstSize, srcSize);
 
   return 0;
 }
