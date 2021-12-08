@@ -43,7 +43,7 @@ function html(model: HtmlModel): string {
 
   <nav>
     <ul>
-      <li><a href="index.html">Prefab List</a></li>
+      <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
     </ul>
