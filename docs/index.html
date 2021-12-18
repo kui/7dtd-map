@@ -148,9 +148,18 @@
             <button data-input-for="prefabs_filter" data-input-text="^trader">trader</button>
             <button data-input-for="prefabs_filter">store</button>
             <button data-input-for="prefabs_filter">skyscraper</button>
+            <button data-input-for="prefabs_filter" data-input-text="^downtown_">downtown</button>
+            <!-- grep --files-with-matches 'name="DifficultyTier".*value="4"' "$(jq -r '.vanillaDir' local.json)/Data/Prefabs/POIs/"*.xml | sed -nre 's!^.*/([^/]+)\.xml$!\1!p' | tr '\n' '|' -->
             <button
               data-input-for="prefabs_filter"
-              data-input-text="^(apartment_brick_6_flr|factory_(03|lg_0[12])|hospital_01|skyscraper_0[1-3])$"
+              data-input-text="^(apartments_01|church_01|city_center_01|countrytown_business_05|downtown_building_02|downtown_building_03|downtown_strip_02|downtown_strip_03|downtown_strip_05|downtown_strip_07|downtown_strip_11|hotel_01|house_burnt_06|house_modern_18|house_modern_23|house_old_mansard_02|house_old_tudor_01|house_old_victorian_03|housing_development_01|installation_red_mesa|parking_garage_02|restaurant_01|rural_drive_in_01|school_01|skyscraper_04|store_clothing_02|store_grocery_02|store_gun_02|store_hardware_03|utility_waterworks_01|warehouse_01|warehouse_03)$"
+            >
+              Tier 4
+            </button>
+            <!-- grep --files-with-matches 'name="DifficultyTier".*value="5"' "$(jq -r '.vanillaDir' local.json)/Data/Prefabs/POIs/"*.xml | sed -nre 's!^.*/([^/]+)\.xml$!\1!p' | tr '\n' '|' -->
+            <button
+              data-input-for="prefabs_filter"
+              data-input-text="^(apartment_brick_6_flr|factory_03|factory_lg_01|factory_lg_02|hospital_01|skyscraper_01|skyscraper_02|skyscraper_03)$"
             >
               Tier 5
             </button>
