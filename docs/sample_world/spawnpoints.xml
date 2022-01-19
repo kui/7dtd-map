@@ -1,13 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <spawnpoints>
-  <spawnpoint position="2736,42,-1314" rotation="0,324.765,0" />
-  <spawnpoint position="1831.212,49.35079,-2467.749" rotation="0,344.4141,0" />
-  <spawnpoint position="2954.182,45.85939,2227.765" rotation="0,59.098,0" />
-  <spawnpoint position="1663.509,48.10177,1042.4" rotation="0,318.4629,0" />
-  <spawnpoint position="1746.4,51.11243,-2460.113" rotation="0,24.15414,0" />
-  <spawnpoint position="1938.84,42.16322,-2760.803" rotation="0,187.8008,0" />
-  <spawnpoint position="2718.577,44.68222,-1055.181" rotation="0,315.7626,0" />
-  <spawnpoint position="3053.535,46,2556.255" rotation="0,267.5112,0" />
-  <spawnpoint position="2015.043,46.27286,-2416.47" rotation="0,339.5654,0" />
-  <spawnpoint position="3040.325,41.82988,-1386.722" rotation="0,122.2908,0" />
+  <spawnpoint position="757,44,-1644" rotation="0,291.0861,0" />
+  <spawnpoint position="204,44.11385,-1660" rotation="0,196.7351,0" />
+  <spawnpoint position="722.4006,43.96081,-1660.057" rotation="0,230.1203,0" />
+  <spawnpoint position="1307.451,39.53373,-514.4072" rotation="0,89.19348,0" />
+  <spawnpoint position="15.20313,41.89962,-538.9697" rotation="0,352.8807,0" />
+  <spawnpoint position="821.5002,43.99194,-1650.648" rotation="0,292.217,0" />
 </spawnpoints>
