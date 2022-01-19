@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MapInfo>
   <property name="Scale" value="1" />
-  <property name="HeightMapSize" value="6144,6144" />
+  <property name="HeightMapSize" value="8192,8192" />
   <property name="Modes" value="Survival,SurvivalSP,SurvivalMP,Creative" />
   <property name="FixedWaterLevel" value="false" />
   <property name="RandomGeneratedWorld" value="true" />
   <property name="GameVersion" value="Alpha.20.0.210" />
-  <property name="GenerationSeed" value="1322" />
+  <property name="GenerationSeed" value="a20b207rww" />
 </MapInfo>
