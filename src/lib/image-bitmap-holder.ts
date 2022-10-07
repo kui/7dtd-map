@@ -55,6 +55,6 @@ export class ImageBitmapHolder {
   }
 }
 
-function isPngBlob(o: unknown): o is PngBlob {
-  return o instanceof Blob && o.type.toLowerCase() === "image/png";
+function isPngBlob(o: PngBlob | ImageBitmap): o is PngBlob {
+  return o instanceof Blob;
 }
