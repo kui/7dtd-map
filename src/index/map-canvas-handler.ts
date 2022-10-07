@@ -119,6 +119,6 @@ function isTransferable(v: unknown): v is ImageBitmap | OffscreenCanvas {
   return v instanceof ImageBitmap || v instanceof OffscreenCanvas;
 }
 
-function isStoreTarget(e: [string, any]): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
+function isStoreTarget(e: [string, unknown]): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
   return e[0] in FIELDNAME_STORAGENAME_MAP;
 }
