@@ -43,9 +43,9 @@ export class DtmHandler {
   async handle(blobOrUrl: File | string): Promise<void> {
     if (typeof blobOrUrl === "string") {
       this.dtm = await this.loadDtmByPngUrl(blobOrUrl);
-    } else if (blobOrUrl.type.toLocaleLowerCase() === "image/png") {
+    } else if (blobOrUrl.name.endsWith(".png")) {
       this.dtm = await this.loadByPngBlob(blobOrUrl);
-    } else if (blobOrUrl.type.toLocaleLowerCase() === "image/raw") {
+    } else if (blobOrUrl.name.endsWith(".raw")) {
       this.dtm = await loadDtmByRaw(blobOrUrl);
     } else {
       throw Error(`Unknown data type: name=${blobOrUrl.name}, type=${blobOrUrl.type}`);
