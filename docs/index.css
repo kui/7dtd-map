@@ -1,23 +1,56 @@
-/* COLORS */
+/* Variables */
 
 :root {
-  --main-background-color: #fff;
-  --main-text-color: rgb(50, 50, 50);
+  --main-background-color: rgb(209, 209, 209);
+  --main-text-color: rgb(70, 50, 50);
   --main-link-color: rgb(70, 70, 100);
+  --nav-parent-bg-color: rgb(169, 169, 169);
+  --nav-text-color: rgb(70, 50, 50);
+  --nav-border-color: rgb(132, 132, 132);
+  --nav-a-bg-color: rgb(194, 194, 194);
+  --controller-bg-color: rgba(184, 184, 184, 0.9);
+  --con-border-color: rgba(123, 123, 123, 0.9);
 }
 
 html[data-theme="light"] {
   margin: 0;
   padding: 0;
-  --main-background-color: #fff;
-  --main-text-color: rgb(50, 50, 50);
+  --main-background-color: rgb(255, 220, 220);
+  --main-text-color: rgb(70, 50, 50);
   --main-link-color: rgb(80, 80, 170);
+  --nav-text-color: rgb(70, 50, 50);
+  --nav-border-color: black;
+  --nav-a-bg-color: rgb(255, 200, 200);
 }
 
 html[data-theme="dark"] {
   --main-background-color: rgb(50, 50, 50);
   --main-text-color: rgb(200, 200, 200);
   --main-link-color: rgb(100, 100, 200);
+  --nav-text-color: rgb(255, 180, 180);
+}
+
+/* COLORS */
+body {
+  background-color: var(--main-background-color);
+}
+
+.nav-parent {
+  background-color: var(--nav-parent-bg-color);
+}
+
+.nav-bar {
+}
+
+.nav-item a {
+  color: var(--nav-text-color);
+  background-color: var(--nav-a-bg-color);
+  border-color: var(--nav-border-color);
+}
+
+#controller {
+  border-color: var(--con-border-color);
+  background-color: var(--controller-bg-color);
 }
 
 /* LAYOUT */
@@ -33,12 +66,13 @@ html {
 body {
   display: grid;
   position: fixed;
-  grid-template-rows: 5% 90% 5%;
-  grid-template-columns: 70% 500px;
+  grid-template-rows: 5% 5% 85% 5%;
+  grid-template-columns: 70vw 30vw;
   grid-template-areas:
-    "header top-sidebar"
+    "header sidebar-top"
+    "title sidebar"
     "main-info sidebar"
-    "bottom bottom";
+    "bottom sidebar-bottom";
 }
 
 .nav-parent {
@@ -68,26 +102,33 @@ body {
   border-style: solid;
   border-width: 1px;
   padding: 5px 10px;
+  text-decoration: none;
+  color: var(--a-text-color);
+}
+
+h1 {
+  grid-area: title;
+  margin: auto;
 }
 
 #map {
-  margin-right: 500px;
   cursor: crosshair;
 }
 
+.terrain-area {
+  grid-area: main-info;
+}
+
 #controller {
-  /* position: fixed; */
-  /* grid-area: sidebar; */
+  grid-area: span 4 / sidebar-top;
   margin: 0;
   padding: 5px;
-  border: solid lightgray 1px;
-  width: 30%;
-  max-width: 500px;
+  border-style: solid;
+  border-width: 1px;
   height: 100%;
   right: 0;
   top: 0;
-  background-color: var(--main-background-color);
-  overflow: auto;
+  overflow: hidden;
 }
 
 label[for="prefabs_filter"],

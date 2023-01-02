@@ -24,6 +24,95 @@
 
     <h1>7 Days to Die Map Renderer Alpha 20</h1>
 
+    <div id="terrarian_viewer_hud" style="display: none">
+      <label style="user-select: none">
+        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
+        Show/Hide Help
+      </label>
+      <dl id="op_desc">
+        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
+        <dd>Move horizontal</dd>
+        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
+        <dd>Tilt</dd>
+        <dt>Rotate Mouse Wheel</dt>
+        <dd>Move forward</dd>
+        <dt><code>Esc</code> key</dt>
+        <dd>Close</dd>
+      </dl>
+    </div>
+    <div class="terrain-area">
+      <button id="terrain_viewer_close" style="display: none">❌</button>
+      <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+      <p id="loading_indicator"></p>
+      <canvas id="map" width="0" height="0"></canvas>
+    </div>
+
+    <!-- <section class="instruction-area">
+      <h2>How to Use</h2>
+      <p>Drag and drop world files.</p>
+      <h3>Generated Worlds (Windows)</h3>
+      <p>
+        <button id="sample_load" data-sample-dir="sample_world">Load Sample World (PREGEN6k)</button>
+      </p>
+      <ol>
+        <li>
+          Select folders:
+          <code
+            ><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code
+          >
+          <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
+            📋️
+          </button>
+        </li>
+        <li>Drag and drop all files in the world folder</li>
+      </ol>
+      <h3>Bundled Worlds</h3>
+      <ol>
+        <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
+        <li>
+          Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
+          <ul>
+            <li>
+              e.g.
+              <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
+              <button
+                title="Copy this path"
+                data-copy-for="bundled_world_path_windows"
+                data-success-message="✅ Press Win+R then paste this"
+              >
+                📋️
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li>Drag and drop all files in the world folder</li>
+      </ol>
+    </section> -->
+
+    <div id="overlay">
+      <div>
+        <p>Drop world files:</p>
+        <ul>
+          <li>GenerationInfo.txt</li>
+          <li>biomes.png</li>
+          <li>splat3.png</li>
+          <li>splat4_processed.png</li>
+          <li>radiation.png</li>
+          <li>prefabs.xml</li>
+          <li>dtm.raw</li>
+        </ul>
+        <p>The rest of files are ignored.</p>
+      </div>
+    </div>
+
+    <!-- <div class="small-info">
+      <p>Only supported in latest Google Chrome.</p>
+      <p>
+        Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
+        <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.
+      </p>
+    </div> -->
+
     <div id="controller">
       <p>
         <button id="download">Download</button>
@@ -114,16 +203,16 @@
           <th><label for="scale">Scale</label></th>
           <td>
             <label>
-              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
-              <output data-sync-for="scale">0.1</output>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.25" />
+              <output data-sync-for="scale">0.25</output>
             </label>
           </td>
         </tr>
         <tr>
           <th><label for="sign_size">Sign Size</label></th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
-            <output data-sync-for="sign_size">200</output>px
+            <input id="sign_size" type="range" max="500" min="20" step="10" value="40" />
+            <output data-sync-for="sign_size">40</output>px
           </td>
         </tr>
         <tr>
@@ -188,94 +277,6 @@
       </table>
       <p id="prefabs_num"></p>
       <ul id="prefabs_list"></ul>
-    </div>
-    <div id="terrarian_viewer_hud" style="display: none">
-      <label style="user-select: none">
-        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
-        Show/Hide Help
-      </label>
-      <dl id="op_desc">
-        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
-        <dd>Move horizontal</dd>
-        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
-        <dd>Tilt</dd>
-        <dt>Rotate Mouse Wheel</dt>
-        <dd>Move forward</dd>
-        <dt><code>Esc</code> key</dt>
-        <dd>Close</dd>
-      </dl>
-    </div>
-    <div class="terrain-area">
-      <button id="terrain_viewer_close" style="display: none">❌</button>
-      <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
-      <p id="loading_indicator"></p>
-      <canvas id="map" width="0" height="0"></canvas>
-    </div>
-
-    <section class="instruction-area">
-      <h2>How to Use</h2>
-      <p>Drag and drop world files.</p>
-      <h3>Generated Worlds (Windows)</h3>
-      <p>
-        <button id="sample_load" data-sample-dir="sample_world">Load Sample World (PREGEN6k)</button>
-      </p>
-      <ol>
-        <li>
-          Select folders:
-          <code
-            ><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code
-          >
-          <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-            📋️
-          </button>
-        </li>
-        <li>Drag and drop all files in the world folder</li>
-      </ol>
-      <h3>Bundled Worlds</h3>
-      <ol>
-        <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
-        <li>
-          Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
-          <ul>
-            <li>
-              e.g.
-              <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
-              <button
-                title="Copy this path"
-                data-copy-for="bundled_world_path_windows"
-                data-success-message="✅ Press Win+R then paste this"
-              >
-                📋️
-              </button>
-            </li>
-          </ul>
-        </li>
-        <li>Drag and drop all files in the world folder</li>
-      </ol>
-    </section>
-
-    <div id="overlay">
-      <div>
-        <p>Drop world files:</p>
-        <ul>
-          <li>GenerationInfo.txt</li>
-          <li>biomes.png</li>
-          <li>splat3.png</li>
-          <li>splat4_processed.png</li>
-          <li>radiation.png</li>
-          <li>prefabs.xml</li>
-          <li>dtm.raw</li>
-        </ul>
-        <p>The rest of files are ignored.</p>
-      </div>
-    </div>
-
-    <div class="small-info">
-      <p>Only supported in latest Google Chrome.</p>
-      <p>
-        Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
-        <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.
-      </p>
     </div>
   </body>
 </html>
