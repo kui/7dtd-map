@@ -1,37 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
-/* Variables */
-
-:root {
+/* VARIABLES */
+html[data-theme="light"] {
   --main-background-color: rgb(209, 209, 209);
   --main-text-color: rgb(70, 50, 50);
   --main-link-color: rgb(70, 70, 100);
+  /* NAV */
   --nav-parent-bg-color: rgb(169, 169, 169);
+  --nav-a-bg-color: rgb(194, 194, 194);
   --nav-a-bg-color-hover: rgb(229, 229, 229);
   --nav-text-color: rgb(70, 50, 50);
   --nav-border-color: rgb(132, 132, 132);
-  --nav-a-bg-color: rgb(194, 194, 194);
+  /* CONTROLLER */
   --controller-bg-color: rgba(184, 184, 184, 0.9);
   --con-border-color: rgba(123, 123, 123, 0.9);
   --con-btm-border-color: rgba(101, 101, 101, 0.556);
-}
-
-html[data-theme="light"] {
-  margin: 0;
-  padding: 0;
-  --main-background-color: rgb(255, 220, 220);
-  --main-text-color: rgb(70, 50, 50);
-  --main-link-color: rgb(80, 80, 170);
-  --nav-text-color: rgb(70, 50, 50);
-  --nav-border-color: black;
-  --nav-a-bg-color: rgb(255, 200, 200);
 }
 
 html[data-theme="dark"] {
   --main-background-color: rgb(50, 50, 50);
   --main-text-color: rgb(200, 200, 200);
   --main-link-color: rgb(100, 100, 200);
-  --nav-text-color: rgb(255, 180, 180);
+  --title-text-color: rgb(255, 170, 170);
+  /* NAV */
+  --nav-parent-bg-color: rgb(56, 56, 56);
+  --nav-a-bg-color: rgb(115, 115, 115);
+  --nav-a-bg-color-hover: transparent;
+  --nav-text-color: rgb(230, 230, 230);
+  --nav-border-color: rgb(132, 132, 132);
+  /* CONTROLLER */
+  --controller-bg-color: rgba(80, 80, 80, 0.8);
+  --con-border-color: rgba(123, 123, 123, 0.9);
+  --con-btm-border-color: rgba(101, 101, 101, 0.556);
 }
 
 /* COLORS */
@@ -41,6 +41,18 @@ body {
 
 .nav-parent {
   background-color: var(--nav-parent-bg-color);
+}
+
+.slider:before {
+  background-color: #fff;
+}
+
+.slider {
+  background-color: #808080;
+}
+
+#theme-toggle:checked + .slider {
+  background-color: #555555;
 }
 
 .nav-bar {
@@ -61,6 +73,9 @@ body {
   box-shadow: 0 5px 5px rgba(50, 50, 50, 0.5);
 }
 
+h1 {
+}
+
 .controller-lowered {
   border-color: var(--con-border-color);
   background-color: var(--controller-bg-color);
@@ -72,6 +87,7 @@ body {
 }
 .controller-wrapped:hover {
   border-left-color: rgb(89, 89, 89);
+  background-color: var(--controller-bg-color);
 }
 .controller-wrapped:hover .input-map-img {
   box-shadow: inset 0 5px 5px rgba(90, 90, 90, 0.7);
@@ -84,7 +100,7 @@ th {
   margin: 0;
 }
 
-/* LAYOUT */
+/* LAYOUT ------------------------------------------------------------------------ */
 
 :root,
 body,
@@ -120,6 +136,42 @@ body {
   margin: auto 0 auto 1%;
 }
 
+.theme-label {
+  display: inline-block;
+}
+
+.slider:before {
+  content: "";
+  height: 26px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+.slider {
+  /* background-color: #ccc; */
+  cursor: pointer;
+  width: 50px;
+  height: 26px;
+  transition: 0.4s;
+}
+
+.theme-label input {
+  display: none;
+}
+
+#theme-toggle:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
 .nav-bar {
   display: flex;
   justify-items: center;
@@ -138,7 +190,6 @@ body {
   border-width: 1px;
   padding: 5px 10px;
   text-decoration: none;
-  color: var(--a-text-color);
 }
 
 h1 {

@@ -6,7 +6,6 @@
     <title>7 Days to Die Map Renderer Alpha 20</title>
     <script src="index.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
@@ -16,7 +15,7 @@
     <nav class="nav-parent">
       <label class="theme-label">
         <input type="checkbox" id="theme-toggle" />
-        <span class="slider"></span>
+        <div class="round slider"></div>
       </label>
       <ul class="nav-bar">
         <li class="nav-item"><a href="prefabs.html">Prefab List</a></li>
@@ -282,5 +281,6 @@
       <p id="prefabs_num"></p>
       <ul id="prefabs_list"></ul>
     </div>
+    <script src="theme-handler.js" async></script>
   </body>
 </html>

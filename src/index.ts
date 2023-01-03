@@ -16,7 +16,7 @@ import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
-import { ThemeHandler } from "./theme-handler";
+// import { ThemeHandler } from "./theme-handler";
 import * as syncOutput from "./lib/sync-output";
 
 function main() {
@@ -24,7 +24,7 @@ function main() {
   copyButton.init();
   syncOutput.init();
 
-  ThemeHandler();
+  // ThemeHandler();
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
