@@ -151,17 +151,13 @@
             <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
           </td>
         </tr>
-        <tr>
-          <th>Cursor</th>
-          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
-        </tr>
-        <tr>
+        <!-- <tr>
           <th>Flag</th>
           <td>
             <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
             <button id="reset_mark" title="Reset">X</button>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <th><label for="biomes_alpha">biomes.png</label></th>
           <td>
@@ -283,7 +279,17 @@
       <ul id="prefabs_list"></ul>
     </div>
 
-    <div class="bottom-bar-container"></div>
+    <div class="bottom-bar-container">
+      <div class="cursor-coords-parent">
+        <p class="coord-cat">Cursor:</p>
+        <p id="cursor_coods">E/W: -, N/S: -, Elev: -</p>
+      </div>
+      <div class="flag-coords-parent">
+        <p class="coord-cat">Flag:</p>
+        <p id="mark_coods">E/W: -, N/S: -, Elev: -</p>
+        <button id="reset_mark" title="Reset">X</button>
+      </div>
+    </div>
     <script src="theme-handler.js" async></script>
   </body>
 </html>
