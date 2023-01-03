@@ -119,8 +119,8 @@
     <div id="controller" class="controller-wrapped">
       <p class="hover-text">Hover Here to Lower Controls</p>
       <div class="input-map-img">
-        <button id="download">Download</button>
-        <input id="files" type="file" />
+        <button id="download">Download Current Map</button>
+        <button for="files" onclick="open_file()">Upload World Files<input id="files" type="file" style="display: none" /></button>
       </div>
       <table>
         <tr>
@@ -151,13 +151,6 @@
             <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
           </td>
         </tr>
-        <!-- <tr>
-          <th>Flag</th>
-          <td>
-            <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
-            <button id="reset_mark" title="Reset">X</button>
-          </td>
-        </tr> -->
         <tr>
           <th><label for="biomes_alpha">biomes.png</label></th>
           <td>
@@ -290,6 +283,6 @@
         <button id="reset_mark" title="Reset">X</button>
       </div>
     </div>
-    <script src="theme-handler.js" async></script>
+    <script type="text/javascript" src="ui-handler.js" async></script>
   </body>
 </html>

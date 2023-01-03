@@ -1,5 +1,4 @@
-console.log("Running Theme Handler!");
-
+// THEME TOGGLE
 const toggle = document.getElementById("theme-toggle");
 
 const storedTheme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
@@ -21,4 +20,9 @@ if (toggle) {
     document.documentElement.setAttribute("data-theme", targetTheme);
     localStorage.setItem("theme", targetTheme);
   };
+}
+
+// UPLOAD WORLD FILE BUTTON
+function open_file() {
+  document.getElementById("files").click();
 }
