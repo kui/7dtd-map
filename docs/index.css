@@ -39,7 +39,7 @@ html[data-theme="dark"] {
   --nav-text-color: rgb(230, 230, 230);
   --nav-border-color: rgb(132, 132, 132);
   /* MAIN */
-  --title-text-color: rgb(180, 180, 180);
+  --title-text-color: rgb(203, 203, 203);
   /* CONTROLLER */
   --controller-bg-color: rgba(47, 47, 47, 0.8);
   --con-border-color: rgba(123, 123, 123, 0.9);
@@ -75,15 +75,10 @@ body {
   background-color: #555555;
 }
 
-.nav-bar {
-}
-
 .nav-item a {
   color: var(--nav-text-color);
   background-color: var(--nav-a-bg-color);
   border-color: var(--nav-border-color);
-
-  /* transition: all 0.25s; */
 }
 .nav-item a:hover {
   color: var(--nav-text-color);
@@ -225,7 +220,6 @@ body {
 }
 
 .nav-item a {
-  border-radius: 1rem;
   border-style: solid;
   border-width: 1px;
   padding: 5px 10px;
@@ -341,12 +335,6 @@ td {
 
 #prefabs_num {
   text-align: center;
-}
-
-#prefabs_filter {
-  padding: 0.5em 0.5em;
-  border-radius: 1em;
-  border: none;
 }
 
 .dragovered #overlay {

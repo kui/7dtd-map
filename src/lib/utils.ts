@@ -52,6 +52,22 @@ export function formatCoords(
   const y = elevation(gameCoords, map) ?? "-";
   return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
 }
+// export function formatCoords(
+//   map: GameMapSize,
+//   canvas: HTMLCanvasElement,
+//   elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
+//   event: EventOffsets | null
+// ): MapCoord {
+//   if (!event) return {"-", "-", "-"};
+
+//   const gameCoords = canvasEventToGameCoords(event, map, canvas);
+//   // if (gameCoords === null) {
+//   //   return "E/W: -, N/S: -, Elev: -";
+//   // }
+
+//   const y = elevation(gameCoords, map) ?? "-";
+//   return {gameCoords.x, gameCoords.z, y};
+// }
 
 export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
   const a = document.createElement("a");
@@ -63,7 +79,11 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
 export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
   const canvas = new OffscreenCanvas(img.height, img.width);
   const context = requireNonnull(canvas.getContext("2d"));
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   context.drawImage(img, 0, 0);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
 }
 

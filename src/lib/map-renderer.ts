@@ -76,36 +76,47 @@ export default class MapRenderer {
 
     const context = this.canvas.getContext("2d");
     if (!context) return;
-    context.scale(this.scale, this.scale);
-    context.filter = `brightness(${this.brightness})`;
+    // context.scale(this.scale, this.scale);
+    // context.filter = `brightness(${this.brightness})`;
 
-    if (this._biomesImg && this.biomesAlpha !== 0) {
-      context.globalAlpha = this.biomesAlpha;
-      context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
-    }
-    if (this._splat3Img && this.splat3Alpha !== 0) {
-      context.globalAlpha = this.splat3Alpha;
-      context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
-    }
-    if (this._splat4Img && this.splat4Alpha !== 0) {
-      context.globalAlpha = this.splat4Alpha;
-      context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
-    }
+    // if (this._biomesImg && this.biomesAlpha !== 0) {
+    //   context.globalAlpha = this.biomesAlpha;
+    //   context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
+    // }
+    // if (this._splat3Img && this.splat3Alpha !== 0) {
+    //   context.globalAlpha = this.splat3Alpha;
+    //   context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
+    // }
+    // if (this._splat4Img && this.splat4Alpha !== 0) {
+    //   context.globalAlpha = this.splat4Alpha;
+    //   context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
+    // }
 
-    context.filter = "none";
-    if (this._radImg && this.radAlpha !== 0) {
-      context.globalAlpha = this.radAlpha;
-      context.imageSmoothingEnabled = false;
-      context.drawImage(await this._radImg.get(), 0, 0, width, height);
-      context.imageSmoothingEnabled = true;
-    }
+    // context.filter = "none";
+    // if (this._radImg && this.radAlpha !== 0) {
+    //   context.globalAlpha = this.radAlpha;
+    //   context.imageSmoothingEnabled = false;
+    //   context.drawImage(await this._radImg.get(), 0, 0, width, height);
+    //   context.imageSmoothingEnabled = true;
+    // }
 
-    context.globalAlpha = this.signAlpha;
-    if (this.showPrefabs) {
-      this.drawPrefabs(context, width, height);
-    }
-    if (this.markerCoords) {
-      this.drawMark(context, width, height);
+    // context.globalAlpha = this.signAlpha;
+    // if (this.showPrefabs) {
+    //   this.drawPrefabs(context, width, height);
+    // }
+    // if (this.markerCoords) {
+    //   this.drawMark(context, width, height);
+    // }
+  }
+
+  private assignPrefabCategorySign(prefab: HighlightedPrefab) {
+    const prefabName = prefab.name;
+    switch (prefabName) {
+      case "%gas%":
+        return "⛽";
+      default:
+        // return "✘";
+        return "⛽";
     }
   }
 
@@ -127,7 +138,8 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      // putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      putText(ctx, { text: this.assignPrefabCategorySign(prefab), x, z, size: this.signSize });
     }
   }
 

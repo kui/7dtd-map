@@ -32,7 +32,9 @@ class OffscreenCanvas extends EventTarget {
   getContext(contextId: "bitmaprenderer", options?: ImageBitmapRenderingContextSettings): ImageBitmapRenderingContext | null;
   getContext(contextId: "webgl", options?: WebGLContextAttributes): WebGLRenderingContext | null;
   getContext(contextId: "webgl2", options?: WebGLContextAttributes): WebGL2RenderingContext | null;
-  //getContext(contextId: OffscreenRenderingContextId, options?: any): OffscreenRenderingContext | null;
+
+  // Using Any will need to further develop
+  getContext(contextId: OffscreenRenderingContextId, options?: any): OffscreenRenderingContext | null;
   /**
    * Returns a newly created ImageBitmap object with the image in the OffscreenCanvas object. The image in the OffscreenCanvas object is replaced with a new blank image.
    */

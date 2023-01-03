@@ -196,3 +196,5 @@ if (document.readyState === "loading") {
 } else {
   main();
 }
+
+console.log("%cMADE A CHANGE!", "background-color:blue; font-weight:bold; font-size:50px");
