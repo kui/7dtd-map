@@ -8,6 +8,9 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+    </style>
   </head>
   <body data-active-filter="prefab">
     <nav class="nav-parent">
@@ -113,11 +116,12 @@
       </p>
     </div> -->
 
-    <div id="controller">
-      <p>
+    <div id="controller" class="controller-wrapped">
+      <p class="hover-text">Hover Here to Lower Controls</p>
+      <div class="input-map-img">
         <button id="download">Download</button>
         <input id="files" type="file" />
-      </p>
+      </div>
       <table>
         <tr>
           <th>Select Map</th>
@@ -223,13 +227,6 @@
           </td>
         </tr>
         <tr>
-          <th><label for="prefabs_filter">Prefabs Filter</label></th>
-          <td>
-            <input id="prefabs_filter" placeholder="Input prefab name" />
-            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
-          </td>
-        </tr>
-        <tr>
           <th>Prefabs Preset</th>
           <td>
             <button data-input-for="prefabs_filter" data-input-text="^trader">trader</button>
@@ -272,6 +269,13 @@
             <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
             <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
             <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+          </td>
+        </tr>
+        <tr>
+          <th class="prefabs-th"><label for="prefabs_filter">Filter Prefabs:</label></th>
+          <td class="prefabs-td">
+            <input id="prefabs_filter" placeholder="Input prefab name" />
+            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
           </td>
         </tr>
       </table>

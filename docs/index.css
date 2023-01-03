@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 /* Variables */
 
 :root {
@@ -5,11 +7,13 @@
   --main-text-color: rgb(70, 50, 50);
   --main-link-color: rgb(70, 70, 100);
   --nav-parent-bg-color: rgb(169, 169, 169);
+  --nav-a-bg-color-hover: rgb(229, 229, 229);
   --nav-text-color: rgb(70, 50, 50);
   --nav-border-color: rgb(132, 132, 132);
   --nav-a-bg-color: rgb(194, 194, 194);
   --controller-bg-color: rgba(184, 184, 184, 0.9);
   --con-border-color: rgba(123, 123, 123, 0.9);
+  --con-btm-border-color: rgba(101, 101, 101, 0.556);
 }
 
 html[data-theme="light"] {
@@ -46,11 +50,38 @@ body {
   color: var(--nav-text-color);
   background-color: var(--nav-a-bg-color);
   border-color: var(--nav-border-color);
+
+  transition: all 0.5s;
+}
+.nav-item a:hover {
+  color: var(--nav-text-color);
+  background-color: var(--nav-a-bg-color-hover);
+  border-color: var(--nav-border-color);
+
+  box-shadow: 0 5px 5px rgba(50, 50, 50, 0.5);
 }
 
-#controller {
+.controller-lowered {
   border-color: var(--con-border-color);
   background-color: var(--controller-bg-color);
+}
+
+.controller-wrapped {
+  background-color: var(--nav-parent-bg-color);
+  border-left-color: white;
+}
+.controller-wrapped:hover {
+  border-left-color: rgb(89, 89, 89);
+}
+.controller-wrapped:hover .input-map-img {
+  box-shadow: inset 0 5px 5px rgba(90, 90, 90, 0.7);
+}
+
+td,
+th {
+  border-bottom-color: var(--con-btm-border-color);
+  padding: 1% 0;
+  margin: 0;
 }
 
 /* LAYOUT */
@@ -61,6 +92,10 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -119,16 +154,43 @@ h1 {
   grid-area: main-info;
 }
 
+.hover-text {
+  text-align: center;
+}
+
 #controller {
   grid-area: span 4 / sidebar-top;
   margin: 0;
-  padding: 5px;
+}
+
+.controller-wrapped {
+  height: 5%;
+  border-left-style: solid;
+  border-left-width: 1px;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.controller-wrapped:hover {
+  height: 100%;
+  overflow-y: scroll;
+  box-shadow: -7px 0 7px rgba(90, 90, 90, 0.5);
+}
+
+.controller-lowered {
   border-style: solid;
   border-width: 1px;
   height: 100%;
-  right: 0;
-  top: 0;
-  overflow: hidden;
+  overflow: auto;
+}
+
+.input-map-img {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 3%;
+}
+
+table {
+  margin: 0;
 }
 
 label[for="prefabs_filter"],
@@ -160,6 +222,27 @@ body[data-active-filter="block"] #blocks_filter {
   z-index: 1;
   color: white;
   font-size: 55px;
+}
+
+th,
+td {
+  border-bottom-style: groove;
+  border-bottom-width: 1px;
+}
+
+.prefabs-td,
+.prefabs-th {
+  border: none;
+}
+
+#prefabs_num {
+  text-align: center;
+}
+
+#prefabs_filter {
+  padding: 0.5em 0.5em;
+  border-radius: 1em;
+  border: none;
 }
 
 .dragovered #overlay {
