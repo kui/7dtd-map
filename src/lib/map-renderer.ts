@@ -76,56 +76,60 @@ export default class MapRenderer {
 
     const context = this.canvas.getContext("2d");
     if (!context) return;
-    // context.scale(this.scale, this.scale);
-    // context.filter = `brightness(${this.brightness})`;
+    context.scale(this.scale, this.scale);
+    context.filter = `brightness(${this.brightness})`;
 
-    // if (this._biomesImg && this.biomesAlpha !== 0) {
-    //   context.globalAlpha = this.biomesAlpha;
-    //   context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
-    // }
-    // if (this._splat3Img && this.splat3Alpha !== 0) {
-    //   context.globalAlpha = this.splat3Alpha;
-    //   context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
-    // }
-    // if (this._splat4Img && this.splat4Alpha !== 0) {
-    //   context.globalAlpha = this.splat4Alpha;
-    //   context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
-    // }
+    if (this._biomesImg && this.biomesAlpha !== 0) {
+      context.globalAlpha = this.biomesAlpha;
+      context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
+    }
+    if (this._splat3Img && this.splat3Alpha !== 0) {
+      context.globalAlpha = this.splat3Alpha;
+      context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
+    }
+    if (this._splat4Img && this.splat4Alpha !== 0) {
+      context.globalAlpha = this.splat4Alpha;
+      context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
+    }
 
-    // context.filter = "none";
-    // if (this._radImg && this.radAlpha !== 0) {
-    //   context.globalAlpha = this.radAlpha;
-    //   context.imageSmoothingEnabled = false;
-    //   context.drawImage(await this._radImg.get(), 0, 0, width, height);
-    //   context.imageSmoothingEnabled = true;
-    // }
+    context.filter = "none";
+    if (this._radImg && this.radAlpha !== 0) {
+      context.globalAlpha = this.radAlpha;
+      context.imageSmoothingEnabled = false;
+      context.drawImage(await this._radImg.get(), 0, 0, width, height);
+      context.imageSmoothingEnabled = true;
+    }
 
-    // context.globalAlpha = this.signAlpha;
-    // if (this.showPrefabs) {
-    //   this.drawPrefabs(context, width, height);
-    // }
-    // if (this.markerCoords) {
-    //   this.drawMark(context, width, height);
-    // }
-  }
-
-  private assignPrefabCategorySign(prefab: HighlightedPrefab) {
-    const prefabName = prefab.name;
-    switch (prefabName) {
-      case "%gas%":
-        return "⛽";
-      default:
-        // return "✘";
-        return "⛽";
+    context.globalAlpha = this.signAlpha;
+    if (this.showPrefabs) {
+      this.drawPrefabs(context, width, height);
+    }
+    if (this.markerCoords) {
+      this.drawMark(context, width, height);
     }
   }
 
-  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  private assignPrefabCategorySign(prefab: HighlightedPrefab, ctx: OffscreenCanvasRenderingContext2D) {
+    const pfName = prefab.name.toLocaleLowerCase();
+    if (pfName.includes("gas")) {
+        const prefabInfo = {text: "⛽", ctx: {fillStyle: 'red', strokeStyle: 'white'}};
+        return prefabInfo;
+    }
+    else if (pfName.includes("trader")) {
+      const prefabInfo = {text: "💰", ctx: {fillStyle: 'yellow', strokeStyle: '#A47D00'}};
+        return prefabInfo;
+    }
+    else if (pfName.includes("book")) {
+      const prefabInfo = {text: "📖", ctx: {fillStyle: '#44F3FF', strokeStyle: '#147178'}};
+      return prefabInfo;
+    }
+      else {
+        const prefabInfo = {text: "❌", ctx: {fillStyle: 'white', strokeStyle: '#000'}};
+        return prefabInfo;
+      }
+  }
 
+  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     const offsetX = width / 2;
     const offsetY = height / 2;
 
@@ -139,7 +143,15 @@ export default class MapRenderer {
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
       // putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
-      putText(ctx, { text: this.assignPrefabCategorySign(prefab), x, z, size: this.signSize });
+
+      const prefabInfo = this.assignPrefabCategorySign(prefab, ctx);
+
+      ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+      ctx.fillStyle = prefabInfo.ctx.fillStyle;
+      ctx.strokeStyle = prefabInfo.ctx.strokeStyle;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      putText(ctx, { text: prefabInfo.text, x, z, size: this.signSize });
     }
   }
 
@@ -174,11 +186,11 @@ interface MapSign {
 
 function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: MapSign) {
   ctx.lineWidth = Math.round(size * 0.2);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
+  // ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
   ctx.strokeText(text, x, z);
 
   ctx.lineWidth = Math.round(size * 0.1);
-  ctx.strokeStyle = "white";
+  // ctx.strokeStyle = "white";
   ctx.strokeText(text, x, z);
 
   ctx.fillText(text, x, z);

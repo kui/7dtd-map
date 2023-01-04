@@ -16,7 +16,7 @@ import { DndHandler } from "./index/dnd-handler";
 import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
-// import { ThemeHandler } from "./theme-handler";
+import { UIHandler } from "./index/ui-handler";
 import * as syncOutput from "./lib/sync-output";
 
 function main() {
@@ -24,7 +24,8 @@ function main() {
   copyButton.init();
   syncOutput.init();
 
-  // ThemeHandler();
+  // UI Initialization
+  UIHandler();
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
@@ -196,5 +197,3 @@ if (document.readyState === "loading") {
 } else {
   main();
 }
-
-console.log("%cMADE A CHANGE!", "background-color:blue; font-weight:bold; font-size:50px");

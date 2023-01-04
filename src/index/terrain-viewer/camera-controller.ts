@@ -4,6 +4,7 @@ import { requireNonnull, threePlaneSize } from "../../lib/utils";
 const MOUSE_BUTTON_BITMASK = {
   left: 0b00000001,
   center: 0b00000100,
+  right: 0b00000010,
 };
 
 const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
@@ -24,6 +25,7 @@ export class TerrainViewerCameraController {
   private speeds = { x: 0, y: 0, tilt: 0 };
   private mouseMove = {
     left: { x: 0, y: 0 },
+    right: { x: 0, y: 0 },
     center: { x: 0, y: 0 },
     wheel: 0,
   };
@@ -74,16 +76,10 @@ export class TerrainViewerCameraController {
       event.preventDefault();
       this.mouseMove.wheel += event.deltaY;
     });
-    canvas.addEventListener("mousedown", (event) => {
-      if (canvas !== document.activeElement) return;
-      if (event.button === 0 || event.button === 1) {
-        event.preventDefault();
-      }
-    });
     canvas.addEventListener("mousemove", (event) => {
       if (canvas !== document.activeElement) return;
 
-      if ((event.buttons & MOUSE_BUTTON_BITMASK.left) > 0) {
+      if ((event.buttons & MOUSE_BUTTON_BITMASK.right) > 0) {
         event.preventDefault();
         this.mouseMove.left.x += event.movementX;
         this.mouseMove.left.y += event.movementY;
@@ -121,7 +117,7 @@ export class TerrainViewerCameraController {
     this.moveCameraForward();
   }
 
-  private moveCameraXY(deltaMsec: number) {
+  public moveCameraXY(deltaMsec: number) {
     if (this.speeds.x === 0 && this.speeds.y === 0 && this.mouseMove.left.x === 0 && this.mouseMove.left.y === 0) return;
 
     const scaleFactor = this.mapWidth / (this.terrainSize.width + 1);
@@ -162,21 +158,23 @@ export class TerrainViewerCameraController {
 
     // PI rad = 180°
     // -(PI/2) rad / 1000 pixels by mouse
-    const deltaRadMouse = this.mouseMove.center.y * (-(Math.PI / 2) / 1000);
+    const deltaRadMouseY = this.mouseMove.center.y * (-(Math.PI / 2) / 1000);
+    const deltaRadMouseX = this.mouseMove.center.x * (-(Math.PI / 2) / 1000);
 
     // PI/4 rad/sec by keypress
     const deltaRadKey = (((this.speeds.tilt * Math.PI) / 4) * deltaMsec) / 1000;
 
-    const deltaRad = deltaRadMouse + deltaRadKey;
+    const deltaRadY = deltaRadMouseY + deltaRadKey;
+    const deltaRadX = deltaRadMouseX + deltaRadKey;
     this.mouseMove.center.y = 0;
 
     const center = requireNonnull(this.pointLookAtXYPlane());
     this.camera.position.sub(center);
-    this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
+    this.camera.position.applyAxisAngle(TILT_AXIS, deltaRadY);
 
     const totalRad = TILT_RADIAN_BASE.angleTo(this.camera.position);
     if (totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad || this.camera.position.z < this.minZ || this.maxZ < this.camera.position.z) {
-      this.camera.position.applyAxisAngle(TILT_AXIS, -deltaRad);
+      this.camera.position.applyAxisAngle(TILT_AXIS, -deltaRadY);
     }
 
     this.camera.position.add(center);

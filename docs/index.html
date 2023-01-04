@@ -33,7 +33,7 @@
         Show/Hide Help
       </label>
       <dl id="op_desc">
-        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
+        <dt><code>WASD</code> key / Grab with Mouse Right Button</dt>
         <dd>Move horizontal</dd>
         <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
         <dd>Tilt</dd>
@@ -45,7 +45,7 @@
     </div>
     <div class="terrain-area">
       <button id="terrain_viewer_close" style="display: none">❌</button>
-      <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+      <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none" oncontextmenu="return false;"></canvas>
       <p id="loading_indicator"></p>
       <canvas id="map" width="0" height="0"></canvas>
     </div>
@@ -204,8 +204,8 @@
         <tr>
           <th><label for="sign_size">Sign Size</label></th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="10" value="40" />
-            <output data-sync-for="sign_size">40</output>px
+            <input id="sign_size" type="range" max="500" min="20" step="10" value="70" />
+            <output data-sync-for="sign_size">70</output>px
           </td>
         </tr>
         <tr>
@@ -283,6 +283,6 @@
         <button id="reset_mark" title="Reset">X</button>
       </div>
     </div>
-    <script type="text/javascript" src="ui-handler.js" async></script>
+    <!-- <script type="text/javascript" src="ui-handler.js" async></script> -->
   </body>
 </html>
