@@ -112,21 +112,18 @@ export default class MapRenderer {
   private assignPrefabCategorySign(prefab: HighlightedPrefab, ctx: OffscreenCanvasRenderingContext2D) {
     const pfName = prefab.name.toLocaleLowerCase();
     if (pfName.includes("gas")) {
-        const prefabInfo = {text: "⛽", ctx: {fillStyle: 'red', strokeStyle: 'white'}};
-        return prefabInfo;
-    }
-    else if (pfName.includes("trader")) {
-      const prefabInfo = {text: "💰", ctx: {fillStyle: 'yellow', strokeStyle: '#A47D00'}};
-        return prefabInfo;
-    }
-    else if (pfName.includes("book")) {
-      const prefabInfo = {text: "📖", ctx: {fillStyle: '#44F3FF', strokeStyle: '#147178'}};
+      const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "white" } };
+      return prefabInfo;
+    } else if (pfName.includes("trader")) {
+      const prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
+      return prefabInfo;
+    } else if (pfName.includes("book")) {
+      const prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
+      return prefabInfo;
+    } else {
+      const prefabInfo = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
       return prefabInfo;
     }
-      else {
-        const prefabInfo = {text: "❌", ctx: {fillStyle: 'white', strokeStyle: '#000'}};
-        return prefabInfo;
-      }
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
