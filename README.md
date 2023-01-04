@@ -2,7 +2,7 @@
 
 Map renderer for 7 Day to Die.
 
-- https://90sPixelDev-7dtd-map.vercel.app/
+- https://7dtd-map.vercel.app/
 
 ## Build
 
