@@ -121,11 +121,17 @@ export default class MapRenderer {
     } else if (pfName.includes("sham")) {
       const prefabInfo = { text: "🥫", ctx: { fillStyle: "yellow", strokeStyle: "white" } };
       return prefabInfo;
-    } else if (pfName.includes("farm")) {
+    } else if (pfName.includes("farm") || pfName.includes("barn")) {
       const prefabInfo = { text: "🚜", ctx: { fillStyle: "orange", strokeStyle: "#704D17" } };
       return prefabInfo;
     } else if (pfName.includes("survivor")) {
       const prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
+      return prefabInfo;
+    } else if (pfName.includes("skyscraper")) {
+      const prefabInfo = { text: "🏢", ctx: { fillStyle: "#8FA5CF", strokeStyle: "#1C2F51" } };
+      return prefabInfo;
+    } else if (pfName.includes("hospital") || pfName.includes("clinic") || pfName.includes("pharmacy")) {
+      const prefabInfo = { text: "💊", ctx: { fillStyle: "#2671FF", strokeStyle: "white" } };
       return prefabInfo;
     } else if (pfName.includes("book")) {
       const prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
