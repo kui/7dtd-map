@@ -31,7 +31,7 @@ export interface OutMessage {
 
 declare function postMessage(message: OutMessage): void;
 
-const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
+const FONT_FACE = new FontFace("Heebo", "url(../NotoEmoji-Regular.ttf)");
 
 let map: MapRenderer | null = null;
 

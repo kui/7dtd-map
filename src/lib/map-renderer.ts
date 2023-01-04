@@ -12,6 +12,7 @@ export default class MapRenderer {
   showPrefabs = true;
   prefabs: HighlightedPrefab[] = [];
   signSize = 200;
+  markerSize = 100;
   signAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
@@ -112,10 +113,19 @@ export default class MapRenderer {
   private assignPrefabCategorySign(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
     if (pfName.includes("gas")) {
-      const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "white" } };
+      const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
       return prefabInfo;
     } else if (pfName.includes("trader")) {
       const prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
+      return prefabInfo;
+    } else if (pfName.includes("sham")) {
+      const prefabInfo = { text: "🥫", ctx: { fillStyle: "yellow", strokeStyle: "white" } };
+      return prefabInfo;
+    } else if (pfName.includes("farm")) {
+      const prefabInfo = { text: "🚜", ctx: { fillStyle: "orange", strokeStyle: "#704D17" } };
+      return prefabInfo;
+    } else if (pfName.includes("survivor")) {
+      const prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
       return prefabInfo;
     } else if (pfName.includes("book")) {
       const prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
@@ -155,21 +165,25 @@ export default class MapRenderer {
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.markerSize}px ${this.fontFace?.family ?? ""}`;
     ctx.fillStyle = "red";
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = -2;
+    ctx.shadowBlur = 5;
+    ctx.strokeStyle = "#830000";
+    ctx.shadowColor = "rgba(75,75,75,0.75)";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.signSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.signSize * 0.1);
+    const charOffsetX = -1 * Math.round(this.markerSize * 0.32);
+    const charOffsetY = -1 * Math.round(this.markerSize * 0.1);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
-    ctx.strokeText(MARK_CHAR, x, z);
+    putText(ctx, { text: MARK_CHAR, x, z, size: this.markerSize });
     ctx.fillText(MARK_CHAR, x, z);
   }
 }

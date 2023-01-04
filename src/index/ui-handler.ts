@@ -26,6 +26,17 @@ export function UIHandler() {
     };
   }
 
+  // CONTROLLER WRAPPER
+  const con = document.getElementById("controller");
+  const conTop = document.querySelector(".con-top");
+  conTop?.addEventListener("click", () => {
+    con?.classList.toggle("controller-lowered");
+    // if (con.classList.contains(".controller-lowered")) {
+    // }
+    // else {
+    // };
+  });
+
   // UPLOAD WORLD FILE BUTTON
   const filesInput = document.getElementById("files-btn");
   filesInput?.addEventListener("click", () => {
