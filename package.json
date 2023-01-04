@@ -17,7 +17,8 @@
     "lint:eslint": "eslint --ext .ts .",
     "lint:tsc:src": "tsc -p src",
     "lint:tsc:tools": "tsc -p tools",
-    "test": "jest --config src/jest.config.ts"
+    "test": "jest --config src/jest.config.ts",
+    "ci": "run-p lint test"
   },
   "author": "Keiichiro UI",
   "license": "MIT",
