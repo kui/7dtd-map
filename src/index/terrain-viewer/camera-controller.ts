@@ -159,13 +159,11 @@ export class TerrainViewerCameraController {
     // PI rad = 180°
     // -(PI/2) rad / 1000 pixels by mouse
     const deltaRadMouseY = this.mouseMove.center.y * (-(Math.PI / 2) / 1000);
-    const deltaRadMouseX = this.mouseMove.center.x * (-(Math.PI / 2) / 1000);
 
     // PI/4 rad/sec by keypress
     const deltaRadKey = (((this.speeds.tilt * Math.PI) / 4) * deltaMsec) / 1000;
 
     const deltaRadY = deltaRadMouseY + deltaRadKey;
-    const deltaRadX = deltaRadMouseX + deltaRadKey;
     this.mouseMove.center.y = 0;
 
     const center = requireNonnull(this.pointLookAtXYPlane());

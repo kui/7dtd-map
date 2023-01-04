@@ -2,7 +2,7 @@ import { ImageBitmapHolder } from "./image-bitmap-holder";
 import { throttledInvoker } from "./throttled-invoker";
 import { gameMapSize } from "./utils";
 
-const SIGN_CHAR = "✘";
+// const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩️";
 
 export default class MapRenderer {
@@ -109,7 +109,7 @@ export default class MapRenderer {
     }
   }
 
-  private assignPrefabCategorySign(prefab: HighlightedPrefab, ctx: OffscreenCanvasRenderingContext2D) {
+  private assignPrefabCategorySign(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
     if (pfName.includes("gas")) {
       const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "white" } };
@@ -141,7 +141,7 @@ export default class MapRenderer {
       const z = offsetY - prefab.z + charOffsetY;
       // putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
 
-      const prefabInfo = this.assignPrefabCategorySign(prefab, ctx);
+      const prefabInfo = this.assignPrefabCategorySign(prefab);
 
       ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
       ctx.fillStyle = prefabInfo.ctx.fillStyle;

@@ -27,12 +27,13 @@ export function UIHandler() {
   }
 
   // UPLOAD WORLD FILE BUTTON
-  function open_file() {
+  const filesInput = document.getElementById("files-btn");
+  filesInput?.addEventListener("click", () => {
     const inputFile = document.getElementById("files");
     try {
       inputFile?.click();
     } catch (err) {
       console.log(err);
     }
-  }
+  });
 }
