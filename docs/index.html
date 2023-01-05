@@ -24,9 +24,6 @@
       </ul>
     </nav>
 
-    <h1>7 Days to Die Map Renderer Alpha 20</h1>
-    <p id="loading_indicator"></p>
-
     <div id="terrarian_viewer_hud" style="display: none">
       <label style="user-select: none">
         <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
@@ -46,15 +43,15 @@
     <div class="terrain-area">
       <button id="terrain_viewer_close" style="display: none">❌</button>
       <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none" oncontextmenu="return false;"></canvas>
-      <p id="loading_indicator"></p>
+      <p id="loading_indicator">Loaded</p>
       <canvas id="map" width="0" height="0"></canvas>
     </div>
 
     <!-- WILL INCORPORATE AFTER CUSTOM ICONS -->
 
-    <!-- <section class="instruction-area">
+    <section class="instruction-area">
       <h2>How to Use</h2>
-      <p>Drag and drop world files.</p>
+      <p>Drag and drop world files on to this web page.</p>
       <h3>Generated Worlds (Windows)</h3>
       <p>
         <button id="sample_load" data-sample-dir="sample_world">Load Sample World (PREGEN6k)</button>
@@ -69,7 +66,7 @@
             📋️
           </button>
         </li>
-        <li>Drag and drop all files in the world folder</li>
+        <li>Drag and drop all files in the world folder on to this webpage</li>
       </ol>
       <h3>Bundled Worlds</h3>
       <ol>
@@ -90,9 +87,9 @@
             </li>
           </ul>
         </li>
-        <li>Drag and drop all files in the world folder</li>
+        <li>Drag and drop all files in the world folder on to this webpage</li>
       </ol>
-    </section> -->
+    </section>
 
     <div id="overlay">
       <div>
@@ -277,6 +274,7 @@
     </div>
 
     <div class="bottom-bar-container">
+      <h1>7 Days to Die Map Renderer Alpha 20</h1>
       <div class="cursor-coords-parent">
         <p class="coord-cat">Cursor:</p>
         <p id="cursor_coods">E/W: -, N/S: -, Elev: -</p>
