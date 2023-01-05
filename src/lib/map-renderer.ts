@@ -110,7 +110,7 @@ export default class MapRenderer {
     }
   }
 
-  private assignPrefabCategorySign(prefab: HighlightedPrefab) {
+  private customizeSignByPrefabCategory(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
     if (pfName.includes("gas")) {
       const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
@@ -157,7 +157,7 @@ export default class MapRenderer {
       const z = offsetY - prefab.z + charOffsetY;
       // putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
 
-      const prefabInfo = this.assignPrefabCategorySign(prefab);
+      const prefabInfo = this.customizeSignByPrefabCategory(prefab);
 
       ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
       ctx.fillStyle = prefabInfo.ctx.fillStyle;
