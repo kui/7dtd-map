@@ -22,3 +22,5 @@ export class CursorCoodsHandler {
 function updateCursor(self: CursorCoodsHandler, event: MouseEvent | null = null) {
   self.doms.output.textContent = formatCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event);
 }
+
+// function displayPrefabName()

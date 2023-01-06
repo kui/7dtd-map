@@ -1,4 +1,5 @@
 import * as three from "three";
+// import { FontLoader, TextGeometry } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
 import { threePlaneSize } from "../lib/utils";
@@ -23,6 +24,8 @@ export class TerrainViewer {
   private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   private texture: three.Texture;
   private animationRequestId: number | null = null;
+  // private fontLoader: FontLoader = new FontLoader();
+  // private poiTextList: HighlightedPrefab[] = [];
 
   private _dtm: Dtm | null = null;
   private _mapSize: GameMapSize | null = null;
@@ -133,6 +136,26 @@ export class TerrainViewer {
     this.scene.add(this.terrain);
     this.cameraController.onUpdateTerrain(this.mapSize.width, this.terrainSize);
     console.timeEnd("updateElevations");
+  }
+
+  updatePOIText(prefabs: HighlightedPrefab[]) {
+    if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
+    this.fontLoader.load("..")
+    this.terrainSize.width = TERRAIN_WIDTH;
+    this.terrainSize.height = Math.floor((TERRAIN_WIDTH / this.mapSize.width) * this.mapSize.height);
+    const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
+
+    for (let i = 0; i < prefabs.length; i++) {
+      const currentPrefab = prefabs[i];
+      const geometry = new three.SphereGeometry(20, 12, 6);
+      const material = new three.MeshBasicMaterial({ color: "white", wireframe: true });
+      const prefab3D = new three.Mesh(geometry, material);
+      console.log(this.terrainSize.width / scaleFactor);
+      const posX = (currentPrefab.x  / scaleFactor);
+      const posZ = (currentPrefab.z / scaleFactor);
+      prefab3D.position.set(posX, posZ, 50);
+      this.scene.add(prefab3D);
+    }
   }
 
   private show() {

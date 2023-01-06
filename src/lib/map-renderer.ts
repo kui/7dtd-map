@@ -5,14 +5,23 @@ import { gameMapSize } from "./utils";
 // const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩️";
 
+export interface POIInfo {
+  prefabName: string;
+  x: number;
+  y: number;
+  z: number;
+}
+
 export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
   showPrefabs = true;
+  showToolTips = false;
   prefabs: HighlightedPrefab[] = [];
   signSize = 200;
   markerSize = 100;
+  toolTipSize = 300;
   signAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
@@ -32,10 +41,12 @@ export default class MapRenderer {
   private _splat4Img: ImageBitmapHolder | null = null;
   private _radImg: ImageBitmapHolder | null = null;
   private fontFace: FontFace;
+  private toolTipFontFace: FontFace;
 
-  constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
+  constructor(canvas: OffscreenCanvas, fontFace: FontFace, toolTipFontFace: FontFace) {
     this.canvas = canvas;
     this.fontFace = fontFace;
+    this.toolTipFontFace = toolTipFontFace;
   }
 
   set biomesImg(img: ImageBitmap | PngBlob | null) {
@@ -112,10 +123,16 @@ export default class MapRenderer {
 
   private customizeSignByPrefabCategory(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
-    if (pfName.includes("gas")) {
+    if (pfName.includes("filler")) {
+      const prefabInfo = { text: "🔶", ctx: { fillStyle: "gray", strokeStyle: "#1C2F51" } };
+      return prefabInfo;
+    } else if (pfName.includes("part") && !pfName.includes("apartment")) {
+      const prefabInfo = { text: "🔘", ctx: { fillStyle: "#576D98", strokeStyle: "#374869" } };
+      return prefabInfo;
+    } else if (pfName.includes("gas")) {
       const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
       return prefabInfo;
-    } else if (pfName.includes("trader")) {
+    } else if (pfName.includes("trader") && !pfName.includes("filler")) {
       const prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
       return prefabInfo;
     } else if (pfName.includes("sham")) {
@@ -127,7 +144,7 @@ export default class MapRenderer {
     } else if (pfName.includes("survivor")) {
       const prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
       return prefabInfo;
-    } else if (pfName.includes("skyscraper")) {
+    } else if (pfName.includes("skyscraper") && !pfName.includes("filler")) {
       const prefabInfo = { text: "🏢", ctx: { fillStyle: "#8FA5CF", strokeStyle: "#1C2F51" } };
       return prefabInfo;
     } else if (pfName.includes("hospital") || pfName.includes("clinic") || pfName.includes("pharmacy")) {
@@ -148,14 +165,17 @@ export default class MapRenderer {
 
     const charOffsetX = Math.round(this.signSize * 0.01);
     const charOffsetY = Math.round(this.signSize * 0.05);
+    const toolOffsetX = Math.round(this.signSize * 0.05);
+    const toolOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (let i = this.prefabs.length - 1; i >= 0; i -= 1) {
       const prefab = this.prefabs[i];
       const x = offsetX + prefab.x + charOffsetX;
+      const xT = offsetX + prefab.x + toolOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      // putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      const zT = offsetY - prefab.z + toolOffsetY - 80;
 
       const prefabInfo = this.customizeSignByPrefabCategory(prefab);
 
@@ -165,6 +185,10 @@ export default class MapRenderer {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       putText(ctx, { text: prefabInfo.text, x, z, size: this.signSize });
+      if (this.showToolTips) {
+        ctx.font = `${this.signSize}px ${this.toolTipFontFace?.family ?? ""}`;
+        putToolTipText(ctx, { text: prefab.name, xT, zT, sizeT: this.toolTipSize });
+      }
     }
   }
 
@@ -201,14 +225,28 @@ interface MapSign {
   size: number;
 }
 
+interface ToolTipSign {
+  text: string;
+  xT: number;
+  zT: number;
+  sizeT: number;
+}
+
 function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: MapSign) {
   ctx.lineWidth = Math.round(size * 0.2);
-  // ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
   ctx.strokeText(text, x, z);
 
   ctx.lineWidth = Math.round(size * 0.1);
-  // ctx.strokeStyle = "white";
   ctx.strokeText(text, x, z);
 
   ctx.fillText(text, x, z);
+}
+
+function putToolTipText(ctx: OffscreenCanvasRenderingContext2D, { text, xT, zT, sizeT }: ToolTipSign) {
+  ctx.lineWidth = Math.round(sizeT * 0.2);
+
+  ctx.lineWidth = Math.round(sizeT * 0.05);
+  ctx.strokeText(text, xT, zT);
+
+  ctx.fillText(text, xT, zT);
 }

@@ -109,6 +109,7 @@ function main() {
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     mapCanvasHandler.update({ prefabs });
+    terrainViewer.updatePOIText(prefabs);
   });
 
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
