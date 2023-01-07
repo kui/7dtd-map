@@ -1,4 +1,5 @@
 import * as three from "three";
+// import { OrbitControls } from "three/addons/controls/OrbitControls";
 // import { FontLoader, TextGeometry } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
@@ -26,6 +27,8 @@ export class TerrainViewer {
   private animationRequestId: number | null = null;
   // private fontLoader: FontLoader = new FontLoader();
   // private poiTextList: HighlightedPrefab[] = [];
+
+  // private test = new three.
 
   private _dtm: Dtm | null = null;
   private _mapSize: GameMapSize | null = null;
@@ -140,7 +143,7 @@ export class TerrainViewer {
 
   updatePOIText(prefabs: HighlightedPrefab[]) {
     if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
-    this.fontLoader.load("..")
+    // this.fontLoader.load("..")
     this.terrainSize.width = TERRAIN_WIDTH;
     this.terrainSize.height = Math.floor((TERRAIN_WIDTH / this.mapSize.width) * this.mapSize.height);
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
@@ -151,8 +154,8 @@ export class TerrainViewer {
       const material = new three.MeshBasicMaterial({ color: "white", wireframe: true });
       const prefab3D = new three.Mesh(geometry, material);
       console.log(this.terrainSize.width / scaleFactor);
-      const posX = (currentPrefab.x  / scaleFactor);
-      const posZ = (currentPrefab.z / scaleFactor);
+      const posX = currentPrefab.x / scaleFactor;
+      const posZ = currentPrefab.z / scaleFactor;
       prefab3D.position.set(posX, posZ, 50);
       this.scene.add(prefab3D);
     }
