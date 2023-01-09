@@ -1,8 +1,15 @@
-import { formatCoords, gameMapSize } from "../lib/utils";
+// import { formatCoords, gameMapSize } from "../lib/utils";
+import { sendCoords, gameMapSize } from "../lib/utils";
 
+// interface Doms {
+//   canvas: HTMLCanvasElement;
+//   output: HTMLElement;
+// }
 interface Doms {
   canvas: HTMLCanvasElement;
-  output: HTMLElement;
+  xOutput: HTMLElement;
+  zOutput: HTMLElement;
+  yOutput: HTMLElement;
 }
 
 export class CursorCoodsHandler {
@@ -20,7 +27,7 @@ export class CursorCoodsHandler {
 }
 
 function updateCursor(self: CursorCoodsHandler, event: MouseEvent | null = null) {
-  self.doms.output.textContent = formatCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event);
+  self.doms.xOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).x.toString();
+  self.doms.zOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).z.toString();
+  self.doms.yOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).y.toString();
 }
-
-// function displayPrefabName()

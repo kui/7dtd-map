@@ -36,38 +36,38 @@ interface EventOffsets {
   offsetY: number;
 }
 
-export function formatCoords(
-  map: GameMapSize,
-  canvas: HTMLCanvasElement,
-  elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
-  event: EventOffsets | null
-): string {
-  if (!event) return "E/W: -, N/S: -, Elev: -";
-
-  const gameCoords = canvasEventToGameCoords(event, map, canvas);
-  if (gameCoords === null) {
-    return "E/W: -, N/S: -, Elev: -";
-  }
-
-  const y = elevation(gameCoords, map) ?? "-";
-  return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
-}
 // export function formatCoords(
 //   map: GameMapSize,
 //   canvas: HTMLCanvasElement,
 //   elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
 //   event: EventOffsets | null
-// ): MapCoord {
-//   if (!event) return {"-", "-", "-"};
+// ): string {
+//   if (!event) return "E/W: -, N/S: -, Elev: -";
 
 //   const gameCoords = canvasEventToGameCoords(event, map, canvas);
-//   // if (gameCoords === null) {
-//   //   return "E/W: -, N/S: -, Elev: -";
-//   // }
+//   if (gameCoords === null) {
+//     return "E/W: -, N/S: -, Elev: -";
+//   }
 
 //   const y = elevation(gameCoords, map) ?? "-";
-//   return {gameCoords.x, gameCoords.z, y};
+//   return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
 // }
+export function sendCoords(
+  map: GameMapSize,
+  canvas: HTMLCanvasElement,
+  elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
+  event: EventOffsets | null
+): { x: number | string, z: number |  string, y: number | string; } {
+  if (!event) return {x: '-', z: '-', y: '-'};
+
+  const gameCoords = canvasEventToGameCoords(event, map, canvas);
+  if (gameCoords === null) {
+    return {x: '-', z: '-', y: '-'};
+  }
+
+  const y = elevation(gameCoords, map) ?? "-";
+  return {x: gameCoords.x, z: gameCoords.z, y};
+}
 
 export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
   const a = document.createElement("a");

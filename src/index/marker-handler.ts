@@ -1,8 +1,10 @@
-import { canvasEventToGameCoords, formatCoords, gameMapSize } from "../lib/utils";
+import { canvasEventToGameCoords, sendCoords, gameMapSize } from "../lib/utils";
 
 interface Doms {
   canvas: HTMLCanvasElement;
-  output: HTMLElement;
+  xOutput: HTMLElement;
+  zOutput: HTMLElement;
+  yOutput: HTMLElement;
   resetMarker: HTMLButtonElement;
 }
 
@@ -16,11 +18,12 @@ export class MarkerHandler {
     this.elevationFunction = elevationFunction;
     this.doms = doms;
 
-    doms.canvas.addEventListener("click", (e) => {
+    doms.canvas.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
       updateMarker(this, e);
       this.listeners.forEach((fn) => fn(canvasEventToGameCoords(e, this.mapSize, doms.canvas)));
     });
-    doms.resetMarker.addEventListener("click", () => {
+    doms.resetMarker.addEventListener("click", (e) => {
       updateMarker(this);
       this.listeners.forEach((fn) => fn(null));
     });
@@ -28,5 +31,7 @@ export class MarkerHandler {
 }
 
 function updateMarker(self: MarkerHandler, event: MouseEvent | null = null) {
-  self.doms.output.textContent = formatCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event);
+  self.doms.xOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).x.toString();
+  self.doms.zOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).z.toString();
+  self.doms.yOutput.textContent = sendCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event).y.toString();
 }

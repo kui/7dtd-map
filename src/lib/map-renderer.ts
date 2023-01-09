@@ -123,38 +123,40 @@ export default class MapRenderer {
 
   private customizeSignByPrefabCategory(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
+    let prefabInfo = {};
+
     if (pfName.includes("filler")) {
-      const prefabInfo = { text: "🔶", ctx: { fillStyle: "gray", strokeStyle: "#1C2F51" } };
+      prefabInfo = { text: "🔶", ctx: { fillStyle: "gray", strokeStyle: "#1C2F51" } };
       return prefabInfo;
     } else if (pfName.includes("part") && !pfName.includes("apartment")) {
-      const prefabInfo = { text: "🔘", ctx: { fillStyle: "#576D98", strokeStyle: "#374869" } };
+      prefabInfo = { text: "", ctx: { fillStyle: "#576D98", strokeStyle: "#374869" } };
       return prefabInfo;
     } else if (pfName.includes("gas")) {
-      const prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
+      prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
       return prefabInfo;
     } else if (pfName.includes("trader") && !pfName.includes("filler")) {
-      const prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
+      prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
       return prefabInfo;
     } else if (pfName.includes("sham")) {
-      const prefabInfo = { text: "🥫", ctx: { fillStyle: "yellow", strokeStyle: "white" } };
+      prefabInfo = { text: "🥫", ctx: { fillStyle: "yellow", strokeStyle: "white" } };
       return prefabInfo;
     } else if (pfName.includes("farm") || pfName.includes("barn")) {
-      const prefabInfo = { text: "🚜", ctx: { fillStyle: "orange", strokeStyle: "#704D17" } };
+      prefabInfo = { text: "🚜", ctx: { fillStyle: "orange", strokeStyle: "#704D17" } };
       return prefabInfo;
     } else if (pfName.includes("survivor")) {
-      const prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
+      prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
       return prefabInfo;
     } else if (pfName.includes("skyscraper") && !pfName.includes("filler")) {
-      const prefabInfo = { text: "🏢", ctx: { fillStyle: "#8FA5CF", strokeStyle: "#1C2F51" } };
+      prefabInfo = { text: "🏢", ctx: { fillStyle: "#8FA5CF", strokeStyle: "#1C2F51" } };
       return prefabInfo;
     } else if (pfName.includes("hospital") || pfName.includes("clinic") || pfName.includes("pharmacy")) {
-      const prefabInfo = { text: "💊", ctx: { fillStyle: "#2671FF", strokeStyle: "white" } };
+      prefabInfo = { text: "💊", ctx: { fillStyle: "#2671FF", strokeStyle: "white" } };
       return prefabInfo;
     } else if (pfName.includes("book")) {
-      const prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
+      prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
       return prefabInfo;
     } else {
-      const prefabInfo = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
+      prefabInfo = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
       return prefabInfo;
     }
   }

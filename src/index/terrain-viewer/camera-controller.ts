@@ -79,7 +79,7 @@ export class TerrainViewerCameraController {
     canvas.addEventListener("mousemove", (event) => {
       if (canvas !== document.activeElement) return;
 
-      if ((event.buttons & MOUSE_BUTTON_BITMASK.right) > 0) {
+      if ((event.buttons & MOUSE_BUTTON_BITMASK.left) > 0) {
         event.preventDefault();
         this.mouseMove.left.x += event.movementX;
         this.mouseMove.left.y += event.movementY;

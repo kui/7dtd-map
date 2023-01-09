@@ -29,6 +29,8 @@ html[data-theme="light"] {
   --bottom-bg-color: rgba(169, 169, 169, 0.85);
   --bar-border-color: rgba(255, 255, 255, 0.75);
   --coord-cat-text-color: rgba(255, 0, 0, 1);
+  --coords-ew-color: #956719;
+  --coords-ns-color: #14248A;
   --cursor-coords-text-color: rgb(0, 0, 0);
   --flag-coords-text-color: rgb(0, 0, 0);
   --cat-text-shadow-color: rgba(0, 0, 0, 1);
@@ -63,6 +65,8 @@ html[data-theme="dark"] {
   --bottom-bg-color: rgba(56, 56, 56, 0.85);
   --bar-border-color: rgba(150, 150, 150, 0.75);
   --coord-cat-text-color: rgba(255, 0, 0, 1);
+  --coords-ew-color: rgb(224, 189, 128);
+  --coords-ns-color: rgb(136, 148, 228);
   --cursor-coords-text-color: rgb(190, 190, 190);
   --flag-coords-text-color: rgb(190, 190, 190);
   --cat-text-shadow-color: rgba(0, 0, 0, 0.75);
@@ -157,11 +161,35 @@ th {
 .cursor-coords-parent {
   border-left-color: var(--bar-border-color);
 }
+.cursor-coords-parent .coord-ew {
+  color: var(--coords-ew-color);
+}
+.cursor-coords-parent .coord-ns {
+  color: var(--coords-ns-color);
+}
+#e-w {
+  color: var(--coords-ew-color);
+}
+#n-s {
+  color: var(--coords-ns-color);
+}
 .cursor-coords-parent > p {
   color: var(--cursor-coords-text-color);
 }
 .flag-coords-parent {
   border-left-color: var(--bar-border-color);
+}
+.flag-coords-parent .coord-ew {
+  color: var(--coords-ew-color);
+}
+.flag-coords-parent .coord-ns {
+  color: var(--coords-ns-color);
+}
+#mark-x {
+  color: var(--coords-ew-color);
+}
+#mark-z {
+  color: var(--coords-ns-color);
 }
 .flag-coords-parent p {
   color: var(--flag-coords-text-color);

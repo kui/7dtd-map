@@ -9,25 +9,28 @@ import * as utils from "./lib/utils";
 const DOCS_DIR = utils.projectRoot("docs");
 const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
 
+// If in windows environment the '/' must be switched on any path.joins : add -> .replace(/\\/g, '/');
+
 async function main() {
   const vanillaDir = await utils.vanillaDir();
-  const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim");
+  const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim").replace(/\\/g, "/");
   const nimFiles = await glob(fileGlob);
+  console.log(nimFiles);
   if (nimFiles.length === 0) {
     throw Error(`No nim file: ${fileGlob}`);
   }
 
-  const prefabBlockIndexFile = path.join(DOCS_DIR, "prefab-block-index.json");
+  const prefabBlockIndexFile = path.join(DOCS_DIR, "prefab-block-index.json").replace(/\\/g, "/");
   const prefabBlockIndex = await readIndex(nimFiles);
   console.log("Load %d prefabs", Object.keys(prefabBlockIndex).length);
   await writeJsonFile(prefabBlockIndexFile, prefabBlockIndex);
 
-  const blockPrefabIndexFile = path.join(DOCS_DIR, "block-prefab-index.json");
+  const blockPrefabIndexFile = path.join(DOCS_DIR, "block-prefab-index.json").replace(/\\/g, "/");
   const blockPrefabIndex = invertIndex(prefabBlockIndex);
   console.log("Load %d blocks", Object.keys(blockPrefabIndex).length);
   await writeJsonFile(blockPrefabIndexFile, blockPrefabIndex);
 
-  const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
+  const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json").replace(/\\/g, "/");
   const labels = await readLabels(vanillaDir, Object.keys(blockPrefabIndex));
   console.log("Load %d block labels", Object.keys(labels).length);
   await writeJsonFile(blockLabelsFile, labels);
@@ -45,7 +48,7 @@ interface Labels {
 }
 
 async function readLabels(vanillaDir: string, blocks: string[]) {
-  const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
+  const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt").replace(/\\/g, "/");
   const labels = await parseLabel(fileName);
   return blocks.reduce<Labels>((result, block) => {
     const label = labels.get(block);

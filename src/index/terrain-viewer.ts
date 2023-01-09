@@ -1,10 +1,11 @@
 import * as three from "three";
-// import { OrbitControls } from "three/addons/controls/OrbitControls";
-// import { FontLoader, TextGeometry } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
 import { threePlaneSize } from "../lib/utils";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
+import { CylinderGeometry } from "three";
 
 interface Doms {
   output: HTMLCanvasElement;
@@ -12,6 +13,12 @@ interface Doms {
   show: HTMLButtonElement;
   close: HTMLButtonElement;
   hud: HTMLElement;
+}
+
+interface POIText {
+  text: string;
+  color: string;
+  sidesColor: string;
 }
 
 const TERRAIN_WIDTH = 2048;
@@ -25,10 +32,7 @@ export class TerrainViewer {
   private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   private texture: three.Texture;
   private animationRequestId: number | null = null;
-  // private fontLoader: FontLoader = new FontLoader();
-  // private poiTextList: HighlightedPrefab[] = [];
-
-  // private test = new three.
+  private fontLoader: FontLoader = new FontLoader();
 
   private _dtm: Dtm | null = null;
   private _mapSize: GameMapSize | null = null;
@@ -43,7 +47,7 @@ export class TerrainViewer {
     this.scene = new three.Scene();
 
     const light = new three.DirectionalLight(0xffffff, 1.2);
-    light.position.set(1, 1, 1).normalize();
+    light.position.set(1, 0.25, 1).normalize();
     this.scene.add(light);
     this.scene.add(new three.AmbientLight(0xffffff, 0.2));
 
@@ -141,24 +145,113 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
+  assignPOISymbol(prefabName: string) {
+    const pfName = prefabName.toLocaleLowerCase();
+    const prefabInfo: POIText = { text: "", color: "white", sidesColor: "gray" };
+
+    if (pfName.includes("gas")) {
+      prefabInfo.text = "Gas";
+      prefabInfo.color = "red";
+      prefabInfo.sidesColor = "#910000";
+      return prefabInfo;
+    } else if (pfName.includes("trader") && !pfName.includes("filler")) {
+      prefabInfo.text = "Trader";
+      prefabInfo.color = "yellow";
+      prefabInfo.sidesColor = "#8B9100";
+      return prefabInfo;
+    } else if (pfName.includes("survivor")) {
+      prefabInfo.text = "Survivor";
+      prefabInfo.color = "purple";
+      prefabInfo.sidesColor = "#2B0091";
+      return prefabInfo;
+    } else if (pfName.includes("skyscraper") && !pfName.includes("filler")) {
+      prefabInfo.text = "Skyscraper";
+      prefabInfo.color = "#8FA5CF";
+      prefabInfo.sidesColor = "#58698A";
+      return prefabInfo;
+    } else if (pfName.includes("hospital") || pfName.includes("clinic") || pfName.includes("pharmacy")) {
+      prefabInfo.text = "Medicine";
+      prefabInfo.color = "#2671FF";
+      prefabInfo.sidesColor = "#1949A5";
+      return prefabInfo;
+    } else if (pfName.includes("book")) {
+      prefabInfo.text = "Book";
+      prefabInfo.color = "#44F3FF";
+      prefabInfo.sidesColor = "#2DA3AB";
+      return prefabInfo;
+    }
+
+    return prefabInfo;
+  }
+
   updatePOIText(prefabs: HighlightedPrefab[]) {
     if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
-    // this.fontLoader.load("..")
+
+    // this.scene.clear();
+
     this.terrainSize.width = TERRAIN_WIDTH;
     this.terrainSize.height = Math.floor((TERRAIN_WIDTH / this.mapSize.width) * this.mapSize.height);
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
+    const fontName = "Heebo Medium_Regular.json";
 
-    for (let i = 0; i < prefabs.length; i++) {
-      const currentPrefab = prefabs[i];
-      const geometry = new three.SphereGeometry(20, 12, 6);
-      const material = new three.MeshBasicMaterial({ color: "white", wireframe: true });
-      const prefab3D = new three.Mesh(geometry, material);
-      console.log(this.terrainSize.width / scaleFactor);
-      const posX = currentPrefab.x / scaleFactor;
-      const posZ = currentPrefab.z / scaleFactor;
-      prefab3D.position.set(posX, posZ, 50);
-      this.scene.add(prefab3D);
-    }
+    this.fontLoader.load(fontName, (font) => {
+      for (let i = 0; i < prefabs.length; i++) {
+        const currentPrefab = prefabs[i];
+        const pfNameLower = currentPrefab.name.toLocaleLowerCase();
+
+        if (
+          pfNameLower.includes("filler") ||
+          pfNameLower.includes("apartment") ||
+          (pfNameLower.includes("house") && !pfNameLower.includes("survivor")) ||
+          pfNameLower.includes("cabin") ||
+          pfNameLower.includes("farm") ||
+          pfNameLower.includes("barn") ||
+          pfNameLower.includes("part") ||
+          pfNameLower.includes("home")
+        ) {
+          continue;
+        }
+
+        const posX = currentPrefab.x / scaleFactor;
+        const posZ = currentPrefab.z / scaleFactor;
+        const randomHeight = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+
+        const poiInfo = this.assignPOISymbol(currentPrefab.name);
+
+        const geo = new TextGeometry(poiInfo?.text as string, {
+          font: font,
+          size: 20,
+          height: 2,
+          curveSegments: 1,
+        });
+
+        const mesh = new three.Mesh(geo, [
+          new three.MeshPhongMaterial({ color: poiInfo?.color }),
+          new three.MeshPhongMaterial({ color: poiInfo?.sidesColor }),
+        ]);
+
+        mesh.position.x = posX;
+        mesh.rotation.x = Math.PI / 6;
+        mesh.position.z = randomHeight;
+        mesh.position.y = posZ;
+
+        this.scene.add(mesh);
+
+        const poleGeo = new CylinderGeometry(2, 2, randomHeight * 2, 4);
+        const poleMesh = new three.Mesh(poleGeo, new three.MeshPhongMaterial({ color: poiInfo?.color }));
+
+        poleMesh.position.x = posX;
+        poleMesh.rotation.x = Math.PI / 2;
+        poleMesh.position.z = 0;
+        poleMesh.position.y = posZ;
+
+        if (poiInfo?.color == "white") {
+          poleMesh.position.z -= randomHeight;
+        }
+
+        this.scene.add(poleMesh);
+      }
+    });
   }
 
   private show() {

@@ -107,24 +107,23 @@ function main() {
     new Worker("worker/prefabs-filter.js"),
     mapStorage
   );
-  prefabsHandler.listeners.push(async (prefabs) => {
-    mapCanvasHandler.update({ prefabs });
-    terrainViewer.updatePOIText(prefabs);
-  });
-
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
     component("controller", HTMLElement),
     component("prefabs_list", HTMLElement),
     (p) => prefabLi(p)
   );
   prefabsHandler.listeners.push(async (prefabs) => {
+    mapCanvasHandler.update({ prefabs });
+    terrainViewer.updatePOIText(prefabs);
     prefabListRenderer.iterator = prefabs;
   });
 
   const cursorCoodsHandler = new CursorCoodsHandler(
     {
       canvas: component("map", HTMLCanvasElement),
-      output: component("cursor_coods", HTMLElement),
+      xOutput: component("e-w", HTMLElement),
+      zOutput: component("n-s", HTMLElement),
+      yOutput: component("elev", HTMLElement),
     },
     (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
   );
@@ -133,7 +132,9 @@ function main() {
   const markerHandler = new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
-      output: component("mark_coods", HTMLElement),
+      xOutput: component("mark-x", HTMLElement),
+      zOutput: component("mark-z", HTMLElement),
+      yOutput: component("mark-y", HTMLElement),
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
     (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
