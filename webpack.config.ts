@@ -7,7 +7,7 @@ const EXCLUDE_FILES = ["**/jest.config.*"];
 module.exports = (_: void, argv: { mode: string }) => {
   const isDev = argv.mode == "development";
 
-  const entry = glob.sync(path.join(BASE_DIR, "{,worker}", "*.ts"), { ignore: EXCLUDE_FILES }).reduce((obj, p) => {
+  const entry = glob.sync(path.join(BASE_DIR, "{,worker}", "*.ts").replace(/\.ts$/, ""), { ignore: EXCLUDE_FILES }).reduce((obj, p) => {
     const name = path.relative(BASE_DIR, p).replace(/\.ts$/, "");
     return Object.assign(obj, { [name]: p });
   }, {});
@@ -17,7 +17,7 @@ module.exports = (_: void, argv: { mode: string }) => {
     entry,
     output: {
       filename: "[name].js",
-      path: path.resolve(__dirname, "docs"),
+      path: path.resolve(__dirname, "docs").replace(/\.ts$/, ""),
     },
     devtool: isDev ? "inline-source-map" : "source-map",
     module: {
@@ -26,8 +26,8 @@ module.exports = (_: void, argv: { mode: string }) => {
           test: /\.ts$/,
           loader: "ts-loader",
           options: {
-            transpileOnly: true,
-            configFile: "src/tsconfig.json",
+            transpileOnly: false,
+            //configFile: "src/tsconfig.json",
           },
         },
       ],
