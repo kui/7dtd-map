@@ -1,10 +1,5 @@
-// import { formatCoords, gameMapSize } from "../lib/utils";
 import { sendCoords, gameMapSize } from "../lib/utils";
 
-// interface Doms {
-//   canvas: HTMLCanvasElement;
-//   output: HTMLElement;
-// }
 interface Doms {
   canvas: HTMLCanvasElement;
   xOutput: HTMLElement;

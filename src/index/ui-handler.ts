@@ -1,3 +1,5 @@
+import * as IndexMain from "../index";
+
 export function UIHandler() {
   const toggle: HTMLInputElement = document.getElementById("theme-toggle") as HTMLInputElement;
 
@@ -27,10 +29,13 @@ export function UIHandler() {
   const conTop = document.querySelector(".con-top");
   conTop?.addEventListener("click", () => {
     con?.classList.toggle("controller-lowered");
-    // if (con.classList.contains(".controller-lowered")) {
-    // }
-    // else {
-    // };
+
+    // To improve performance and reduce lag
+    if (con?.classList.contains(".controller-lowered")) {
+      //TODO: ADD LAZY LOADING
+    } else {
+      IndexMain.clearPrefabLi();
+    }
   });
 
   // UPLOAD WORLD FILE BUTTON

@@ -2,7 +2,6 @@ import { ImageBitmapHolder } from "./image-bitmap-holder";
 import { throttledInvoker } from "./throttled-invoker";
 import { gameMapSize } from "./utils";
 
-// const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩️";
 
 export interface POIInfo {
@@ -10,6 +9,13 @@ export interface POIInfo {
   x: number;
   y: number;
   z: number;
+}
+export interface SignChar {
+  text: string;
+  ctx: {
+    fillStyle: string;
+    strokeStyle: string;
+  }
 }
 
 export default class MapRenderer {
@@ -123,7 +129,7 @@ export default class MapRenderer {
 
   private customizeSignByPrefabCategory(prefab: HighlightedPrefab) {
     const pfName = prefab.name.toLocaleLowerCase();
-    let prefabInfo = {};
+    let prefabInfo: SignChar = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
 
     if (pfName.includes("filler")) {
       prefabInfo = { text: "🔶", ctx: { fillStyle: "gray", strokeStyle: "#1C2F51" } };
@@ -156,7 +162,6 @@ export default class MapRenderer {
       prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
       return prefabInfo;
     } else {
-      prefabInfo = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
       return prefabInfo;
     }
   }

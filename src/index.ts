@@ -114,7 +114,7 @@ function main() {
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     mapCanvasHandler.update({ prefabs });
-    terrainViewer.updatePOIText(prefabs);
+    // terrainViewer.updatePOIText(prefabs);
     prefabListRenderer.iterator = prefabs;
   });
 
@@ -172,26 +172,33 @@ function main() {
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
-    `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
-    prefab.dist ? `${humanreadableDistance(prefab.dist)},` : "",
+    `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name" class="poi-filter-btn">▲</button>`,
     `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
-    `(${prefab.x}, ${prefab.z})`,
+    prefab.dist ? `<p class="poi-distance">Distance: ${humanreadableDistance(prefab.dist)}</p>` : "",
+    `<div class="coord-holder">(<p class="e-w">${prefab.x}</p>, <p class="n-s">${prefab.z}</p>)</div>`,
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
+    blocksUl.classList.add("highlighted-block-info-ul");
     prefab.matchedBlocks.forEach((block) => {
       const blockLi = document.createElement("li");
       blockLi.innerHTML = [
-        `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
-        `${block.count}x`,
-        block.highlightedLabel,
-        `<small>${block.highlightedName}</small>`,
+        `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name" class="small-filter-btn">▲</button>`,
+        `<small>${block.count}x ${block.highlightedLabel}<small>`,
+        `${block.highlightedName}`,
       ].join(" ");
       blocksUl.appendChild(blockLi);
     });
     li.appendChild(blocksUl);
   }
   return li;
+}
+
+export function clearPrefabLi() {
+  const prefabsList = document.getElementById("prefabs_list");
+  while (prefabsList?.firstChild) {
+    prefabsList?.removeChild(prefabsList?.firstChild);
+  }
 }
 
 if (document.readyState === "loading") {

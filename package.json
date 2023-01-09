@@ -29,7 +29,7 @@
     "@types/jest": "^28.1.7",
     "@types/node": "^18.7.6",
     "@types/pngjs": "^6.0.1",
-    "@types/three": "^0.143.2",
+    "@types/three": "^0.143.1",
     "@types/webpack": "^5.28.0",
     "@types/xml2js": "^0.4.11",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
@@ -56,8 +56,5 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.10.0",
     "xml2js": "^0.4.23"
-  },
-  "eslintConfig": {
-    "rules": {}
   }
 }

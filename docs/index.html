@@ -115,7 +115,7 @@
 
     <div id="controller" class="controller-wrapped">
       <div class="con-top">
-        <p class="lower-text">Lower Controls <span>➜</span></p>
+        <p class="lower-text">Lower Options <span>➜</span></p>
       </div>
       <div class="input-map-img">
         <button id="download">Download Current Map</button>
@@ -214,6 +214,31 @@
             <output data-sync-for="brightness">60</output>%
           </td>
         </tr>
+
+        <tr>
+          <th>Blocks Preset</th>
+          <td>
+            <button data-input-for="blocks_filter">Super Corn</button>
+            <button
+              data-input-for="blocks_filter"
+              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
+            >
+              Steel with Wrench
+            </button>
+            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
+            <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Gas Containers</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="blocks_filter">Blocks Filter</label></th>
+          <td>
+            <input id="blocks_filter" placeholder="Input block name" />
+            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+
         <tr>
           <th>Prefabs Preset</th>
           <td>
@@ -238,54 +263,36 @@
           </td>
         </tr>
         <tr>
-          <th><label for="blocks_filter">Blocks Filter</label></th>
-          <td>
-            <input id="blocks_filter" placeholder="Input block name" />
-            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
-          </td>
-        </tr>
-        <tr>
-          <th>Blocks Preset</th>
-          <td>
-            <button data-input-for="blocks_filter">Super Corn</button>
-            <button
-              data-input-for="blocks_filter"
-              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
-            >
-              Steel with Wrench
-            </button>
-            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
-            <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
-          </td>
-        </tr>
-        <tr>
           <th class="prefabs-th"><label for="prefabs_filter">Filter Prefabs:</label></th>
           <td class="prefabs-td">
-            <input id="prefabs_filter" placeholder="Input prefab name" />
+            <input id="prefabs_filter" placeholder="Input prefab name" autocomplete="off" />
             <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
           </td>
         </tr>
       </table>
-      <p id="prefabs_num"></p>
-      <ul id="prefabs_list"></ul>
+      <p id="prefabs_num" class="prefabs-list-header"></p>
+      <ul id="prefabs_list" class="prefabs-list"></ul>
     </div>
 
     <div class="bottom-bar-container">
       <h1>7 Days to Die Map Renderer Alpha 20</h1>
       <div class="cursor-coords-parent">
         <p class="coord-cat">Cursor:</p>
-        <p class="coord-ew">E/W:<p id="e-w">-</p></p>
-        <p class="coord-ns">N/S:<p id="n-s">-</p></p>
-        <p>Elev:<p id="elev">-</p></p>
-        <!-- <p id="cursor_coods">E/W: -, N/S: -, Elev: -</p> -->
+        <p class="coord-ew">E/W:</p>
+        <p id="e-w">-</p>
+        <p class="coord-ns">N/S:</p>
+        <p id="n-s">-</p>
+        <p>Elev:</p>
+        <p id="elev">-</p>
       </div>
       <div class="flag-coords-parent">
         <p class="coord-cat">Flag:</p>
-        <p class="coord-ew">E/W:<p id="mark-x">-</p></p>
-        <p class="coord-ns">N/S:<p id="mark-z">-</p></p>
-        <p>Elev:<p id="mark-y">-</p></p>
-        <!-- <p id="mark_coods">E/W: -, N/S: -, Elev: -</p> -->
+        <p class="coord-ew">E/W:</p>
+        <p id="mark-x">-</p>
+        <p class="coord-ns">N/S:</p>
+        <p id="mark-z">-</p>
+        <p>Elev:</p>
+        <p id="mark-y">-</p>
         <button id="reset_mark" title="Reset">X</button>
       </div>
     </div>

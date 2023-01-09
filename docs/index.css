@@ -22,15 +22,20 @@ html[data-theme="light"] {
   --con-opacity: 0.75;
   --con-border-color: rgba(123, 123, 123, 0.9);
   --files-bg-color: rgb(200, 200, 200);
-  --con-text-color: rgb(50, 50, 50);
+  --con-text-color: rgb(25, 25, 25);
+  --con-poi-text-color: black;
   --con-box-shadow-color: rgba(50, 50, 50, 0.5);
   --con-btm-border-color: rgba(101, 101, 101, 0.556);
+  /* PREFABS FILTER LIGHT */
+  --prefabs-header-color: black;
+  --prefabs-ul-color: rgb(25, 25, 25);
+  --dis-text-color: rgb(144, 21, 21);
   /* BOTTOM LIGHT*/
   --bottom-bg-color: rgba(169, 169, 169, 0.85);
   --bar-border-color: rgba(255, 255, 255, 0.75);
   --coord-cat-text-color: rgba(255, 0, 0, 1);
   --coords-ew-color: #956719;
-  --coords-ns-color: #14248A;
+  --coords-ns-color: #14248a;
   --cursor-coords-text-color: rgb(0, 0, 0);
   --flag-coords-text-color: rgb(0, 0, 0);
   --cat-text-shadow-color: rgba(0, 0, 0, 1);
@@ -61,6 +66,10 @@ html[data-theme="dark"] {
   --con-text-color: rgb(220, 220, 220);
   --con-box-shadow-color: rgba(245, 245, 245, 0.25);
   --con-btm-border-color: rgba(101, 101, 101, 0.556);
+  /* PREFABS FILTER DARK */
+  --prefabs-header-color: white;
+  --prefabs-ul-color: rgb(220, 220, 220);
+  --dis-text-color: rgb(230, 50, 50);
   /* BOTTOM DARK */
   --bottom-bg-color: rgba(56, 56, 56, 0.85);
   --bar-border-color: rgba(150, 150, 150, 0.75);
@@ -151,6 +160,28 @@ th {
   color: var(--con-text-color);
 }
 
+/* FILTER PREFABS AREA */
+.prefabs-list-header {
+  color: var(--prefabs-header-color);
+}
+.prefabs-list li {
+  color: var(--prefabs-ul-color);
+  border-color: var(--prefabs-ul-color);
+}
+
+.prefabs-list li a {
+  color: var(--con-poi-text-color);
+}
+.prefabs-list li .poi-distance {
+  color: var(--dis-text-color);
+}
+.prefabs-list .coord-holder .e-w {
+  color: var(--coords-ew-color);
+}
+.prefabs-list .coord-holder .n-s {
+  color: var(--coords-ns-color);
+}
+
 /* BOTTOM BAR COLOR AREA  */
 .bottom-bar-container {
   background-color: var(--bottom-bg-color);
@@ -209,7 +240,7 @@ html {
 * {
   font-family: "Poppins", sans-serif;
 
-  transition: all 0.25s;
+  transition: all 0.25s ease-out;
 }
 
 body {
@@ -339,6 +370,7 @@ h1 {
   width: 100%;
   z-index: 1;
   margin: 0;
+  will-change: contents;
 }
 
 .lower-text span {
@@ -378,6 +410,8 @@ table {
   margin: 0;
 }
 
+/*? PREFABS LIST AREA */
+
 label[for="prefabs_filter"],
 #prefabs_filter,
 label[for="blocks_filter"],
@@ -394,6 +428,75 @@ body[data-active-filter="prefab"] #prefabs_filter,
 body[data-active-filter="block"] label[for="blocks_filter"],
 body[data-active-filter="block"] #blocks_filter {
   text-decoration: unset;
+}
+
+.prefabs-list {
+  margin: 1em 0 0 3%;
+  padding: 0;
+}
+.prefabs-list > li {
+  list-style: none;
+  display: grid;
+  width: 100%;
+  height: fit-content;
+  min-height: 60px;
+  max-height: max-content;
+  grid-template-columns: 8% 42% 50%;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "filter-btn poi-title poi-title poi-title"
+    "extra-info extra-info extra-info extra-info"
+    "coords coords distance distance";
+  flex-wrap: wrap;
+  padding-bottom: 1%;
+
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.poi-filter-btn {
+  grid-area: filter-btn;
+  height: 25px;
+  width: 25px;
+  padding: 0;
+  margin: auto 0;
+}
+.prefabs-list li a {
+  grid-area: poi-title;
+  font-weight: 600;
+  padding-left: 1%;
+  margin: auto 0;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+}
+.highlighted-block-info-ul {
+  grid-area: extra-info;
+}
+.highlighted-block-info-ul li {
+  list-style: none;
+}
+.small-filter-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+.prefabs-list .poi-distance {
+  display: inline;
+  font-weight: 600;
+  margin: auto 0 auto 1%;
+  grid-area: distance;
+
+  padding-left: 3%;
+  /* text-shadow: 0 1px 1px var(--dis-text-shadow-color); */
+}
+.prefabs-list .coord-holder {
+  grid-area: coords;
+  height: 100%;
+  border-right-width: 1px;
+  border-right-style: dashed;
+  padding-bottom: 0 0 1% 1%;
+}
+.prefabs-list .coord-holder p {
+  display: inline;
 }
 
 #overlay {
@@ -453,7 +556,7 @@ td {
 /*? BOTTOM BAR LAYOUT */
 .bottom-bar-container {
   display: grid;
-  grid-template-columns: 35vw 35vw 22vw 8vw;
+  grid-template-columns: 35vw 35vw 35vw;
   grid-template-areas:
     "left-bar mid-bar right-top-bar"
     "left-bar mid-bar right-bottom-bar";

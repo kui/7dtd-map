@@ -23,7 +23,7 @@ export class MarkerHandler {
       updateMarker(this, e);
       this.listeners.forEach((fn) => fn(canvasEventToGameCoords(e, this.mapSize, doms.canvas)));
     });
-    doms.resetMarker.addEventListener("click", (e) => {
+    doms.resetMarker.addEventListener("click", () => {
       updateMarker(this);
       this.listeners.forEach((fn) => fn(null));
     });
