@@ -37,7 +37,7 @@ export const LARGE_OBJECT_TYPES = [
   "prefabs",
   "generationInfo",
 ] as const;
-type LargeObjectType = (typeof LARGE_OBJECT_TYPES)[number];
+type LargeObjectType = typeof LARGE_OBJECT_TYPES[number];
 export interface LargeObjects {
   // ImageBitmap for backward compatibility
   biomes: ImageBitmap | PngBlob;
@@ -56,7 +56,7 @@ export interface LargeObject<T extends LargeObjectType> {
 }
 
 const MAP_PROPERTY_TYPES = ["maps", ...LARGE_OBJECT_TYPES] as const;
-type MapPropertyType = (typeof MAP_PROPERTY_TYPES)[number];
+type MapPropertyType = typeof MAP_PROPERTY_TYPES[number];
 type MapPropertyValue<T extends MapPropertyType> = T extends LargeObjectType ? LargeObject<T> : DbSchema["maps"]["value"];
 type MapPropertyRawValue<T extends MapPropertyType> = T extends LargeObjectType
   ? LargeObject<T>["data"]
