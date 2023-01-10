@@ -27,4 +27,5 @@ $ npm run lint
 ```
 
 ## Environment
+
 - Project created in original linux/ubuntu system, if receiving strange errors or no typescript build, make sure to develop/test project in a linux/ubuntu environment

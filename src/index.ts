@@ -114,7 +114,7 @@ function main() {
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     mapCanvasHandler.update({ prefabs });
-    // terrainViewer.updatePOIText(prefabs);
+    terrainViewer.updatePOIText(prefabs);
     prefabListRenderer.iterator = prefabs;
   });
 

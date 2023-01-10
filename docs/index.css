@@ -486,7 +486,6 @@ body[data-active-filter="block"] #blocks_filter {
   grid-area: distance;
 
   padding-left: 3%;
-  /* text-shadow: 0 1px 1px var(--dis-text-shadow-color); */
 }
 .prefabs-list .coord-holder {
   grid-area: coords;
