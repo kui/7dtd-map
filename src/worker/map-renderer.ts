@@ -31,21 +31,29 @@ export interface OutMessage {
 
 declare function postMessage(message: OutMessage): void;
 
-const FONT_FACE = new FontFace("Heebo", "url(../NotoEmoji-Regular.ttf)");
+const FONT_FACE = new FontFace("Noto Emoji", "url(../NotoEmoji-Regular.ttf)");
+const TOOLTIP_FONT_FACE = new FontFace("Heebo Medium", "url(../Heebo-Medium.ttf)");
 
 let map: MapRenderer | null = null;
 
-FONT_FACE.load().then(() => {
-  fonts.add(FONT_FACE);
-  map?.update();
-});
+FONT_FACE.load()
+  .then(() => {
+    fonts.add(FONT_FACE);
+  })
+  .then(() => {
+    TOOLTIP_FONT_FACE.load();
+  })
+  .then(() => {
+    fonts.add(TOOLTIP_FONT_FACE);
+    map?.update();
+  });
 
 onmessage = async (event: MessageEvent<InMessage>) => {
   const message = event.data;
   console.debug(message);
   if (!map) {
     if (message.canvas) {
-      map = new MapRenderer(message.canvas, FONT_FACE);
+      map = new MapRenderer(message.canvas, FONT_FACE, TOOLTIP_FONT_FACE);
     } else {
       throw Error("Unexpected state");
     }

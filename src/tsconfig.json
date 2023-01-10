@@ -1,3 +1,16 @@
+// {
+//   "compilerOptions": {
+//     "target": "es2021",
+//     "module": "commonjs",
+//     "lib": ["esnext", "dom", "webworker"],
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "sourceMap": true,
+//     "noEmit": true
+//   }
+// }
 {
   "compilerOptions": {
     "target": "es2021",
@@ -8,6 +21,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "noEmit": true
+    "noEmit": false
   }
 }
