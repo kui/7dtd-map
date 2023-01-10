@@ -114,7 +114,8 @@ function main() {
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     mapCanvasHandler.update({ prefabs });
-    terrainViewer.updatePOIText(prefabs);
+    // Removing 3D Text at the moment until I stop the duplicate spawns on filter input click
+    // terrainViewer.updatePOIText(prefabs);
     prefabListRenderer.iterator = prefabs;
   });
 
