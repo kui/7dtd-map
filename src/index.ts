@@ -195,13 +195,6 @@ function prefabLi(prefab: HighlightedPrefab) {
   return li;
 }
 
-export function clearPrefabLi() {
-  const prefabsList = document.getElementById("prefabs_list");
-  while (prefabsList?.firstChild) {
-    prefabsList?.removeChild(prefabsList?.firstChild);
-  }
-}
-
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", main);
 } else {

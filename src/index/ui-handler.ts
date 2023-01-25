@@ -1,5 +1,3 @@
-import * as IndexMain from "../index";
-
 export function UIHandler() {
   const toggle: HTMLInputElement = document.getElementById("theme-toggle") as HTMLInputElement;
 
@@ -24,17 +22,24 @@ export function UIHandler() {
     };
   }
 
+  function clearPrefabLi() {
+    const prefabsList = document.getElementById("prefabs_list");
+    while (prefabsList?.firstChild) {
+      prefabsList?.removeChild(prefabsList?.firstChild);
+    }
+  }
+
   // CONTROLLER WRAPPER
   const con = document.getElementById("controller");
   const conTop = document.querySelector(".con-top");
   conTop?.addEventListener("click", () => {
     con?.classList.toggle("controller-lowered");
 
-    // To improve performance and reduce lag
+    // To improve performance and reduce lag while pagination of POI List is not yet implemented
     if (con?.classList.contains(".controller-lowered")) {
       //TODO: ADD LAZY LOADING
     } else {
-      IndexMain.clearPrefabLi();
+      clearPrefabLi();
     }
   });
 
