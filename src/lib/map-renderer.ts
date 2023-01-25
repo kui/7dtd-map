@@ -2,16 +2,32 @@ import { ImageBitmapHolder } from "./image-bitmap-holder";
 import { throttledInvoker } from "./throttled-invoker";
 import { gameMapSize } from "./utils";
 
-const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩️";
+
+export interface POIInfo {
+  prefabName: string;
+  x: number;
+  y: number;
+  z: number;
+}
+export interface SignChar {
+  text: string;
+  ctx: {
+    fillStyle: string;
+    strokeStyle: string;
+  };
+}
 
 export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
   showPrefabs = true;
+  showToolTips = false;
   prefabs: HighlightedPrefab[] = [];
   signSize = 200;
+  markerSize = 100;
+  toolTipSize = 300;
   signAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
@@ -31,10 +47,12 @@ export default class MapRenderer {
   private _splat4Img: ImageBitmapHolder | null = null;
   private _radImg: ImageBitmapHolder | null = null;
   private fontFace: FontFace;
+  private toolTipFontFace: FontFace;
 
-  constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
+  constructor(canvas: OffscreenCanvas, fontFace: FontFace, toolTipFontFace: FontFace) {
     this.canvas = canvas;
     this.fontFace = fontFace;
+    this.toolTipFontFace = toolTipFontFace;
   }
 
   set biomesImg(img: ImageBitmap | PngBlob | null) {
@@ -109,46 +127,100 @@ export default class MapRenderer {
     }
   }
 
-  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  private customizeSignByPrefabCategory(prefab: HighlightedPrefab) {
+    const pfName = prefab.name.toLocaleLowerCase();
+    let prefabInfo: SignChar = { text: "❌", ctx: { fillStyle: "white", strokeStyle: "#000" } };
 
+    if (pfName.includes("filler")) {
+      prefabInfo = { text: "🔶", ctx: { fillStyle: "gray", strokeStyle: "#1C2F51" } };
+      return prefabInfo;
+    } else if (pfName.includes("part") && !pfName.includes("apartment")) {
+      prefabInfo = { text: "", ctx: { fillStyle: "#576D98", strokeStyle: "#374869" } };
+      return prefabInfo;
+    } else if (pfName.includes("gas")) {
+      prefabInfo = { text: "⛽", ctx: { fillStyle: "red", strokeStyle: "#5E1616" } };
+      return prefabInfo;
+    } else if (pfName.includes("trader") && !pfName.includes("filler")) {
+      prefabInfo = { text: "💰", ctx: { fillStyle: "yellow", strokeStyle: "#A47D00" } };
+      return prefabInfo;
+    } else if (pfName.includes("sham")) {
+      prefabInfo = { text: "🥫", ctx: { fillStyle: "yellow", strokeStyle: "white" } };
+      return prefabInfo;
+    } else if (pfName.includes("farm") || pfName.includes("barn")) {
+      prefabInfo = { text: "🚜", ctx: { fillStyle: "orange", strokeStyle: "#704D17" } };
+      return prefabInfo;
+    } else if (pfName.includes("survivor")) {
+      prefabInfo = { text: "👤", ctx: { fillStyle: "purple", strokeStyle: "#17072C" } };
+      return prefabInfo;
+    } else if (pfName.includes("skyscraper") && !pfName.includes("filler")) {
+      prefabInfo = { text: "🏢", ctx: { fillStyle: "#8FA5CF", strokeStyle: "#1C2F51" } };
+      return prefabInfo;
+    } else if (pfName.includes("hospital") || pfName.includes("clinic") || pfName.includes("pharmacy")) {
+      prefabInfo = { text: "💊", ctx: { fillStyle: "#2671FF", strokeStyle: "white" } };
+      return prefabInfo;
+    } else if (pfName.includes("book")) {
+      prefabInfo = { text: "📖", ctx: { fillStyle: "#44F3FF", strokeStyle: "#147178" } };
+      return prefabInfo;
+    } else {
+      return prefabInfo;
+    }
+  }
+
+  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     const offsetX = width / 2;
     const offsetY = height / 2;
 
     const charOffsetX = Math.round(this.signSize * 0.01);
     const charOffsetY = Math.round(this.signSize * 0.05);
+    const toolOffsetX = Math.round(this.signSize * 0.05);
+    const toolOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (let i = this.prefabs.length - 1; i >= 0; i -= 1) {
       const prefab = this.prefabs[i];
       const x = offsetX + prefab.x + charOffsetX;
+      const xT = offsetX + prefab.x + toolOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      const zT = offsetY - prefab.z + toolOffsetY - 80;
+
+      const prefabInfo = this.customizeSignByPrefabCategory(prefab);
+
+      ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+      ctx.fillStyle = prefabInfo.ctx.fillStyle;
+      ctx.strokeStyle = prefabInfo.ctx.strokeStyle;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      putText(ctx, { text: prefabInfo.text, x, z, size: this.signSize });
+      if (this.showToolTips) {
+        ctx.font = `${this.signSize}px ${this.toolTipFontFace?.family ?? ""}`;
+        putToolTipText(ctx, { text: prefab.name, xT, zT, sizeT: this.toolTipSize });
+      }
     }
   }
 
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.markerSize}px ${this.fontFace?.family ?? ""}`;
     ctx.fillStyle = "red";
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = -2;
+    ctx.shadowBlur = 5;
+    ctx.strokeStyle = "#830000";
+    ctx.shadowColor = "rgba(75,75,75,0.75)";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.signSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.signSize * 0.1);
+    const charOffsetX = -1 * Math.round(this.markerSize * 0.32);
+    const charOffsetY = -1 * Math.round(this.markerSize * 0.1);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
-    ctx.strokeText(MARK_CHAR, x, z);
+    putText(ctx, { text: MARK_CHAR, x, z, size: this.markerSize });
     ctx.fillText(MARK_CHAR, x, z);
   }
 }
@@ -160,14 +232,28 @@ interface MapSign {
   size: number;
 }
 
+interface ToolTipSign {
+  text: string;
+  xT: number;
+  zT: number;
+  sizeT: number;
+}
+
 function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: MapSign) {
   ctx.lineWidth = Math.round(size * 0.2);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
   ctx.strokeText(text, x, z);
 
   ctx.lineWidth = Math.round(size * 0.1);
-  ctx.strokeStyle = "white";
   ctx.strokeText(text, x, z);
 
   ctx.fillText(text, x, z);
+}
+
+function putToolTipText(ctx: OffscreenCanvasRenderingContext2D, { text, xT, zT, sizeT }: ToolTipSign) {
+  ctx.lineWidth = Math.round(sizeT * 0.2);
+
+  ctx.lineWidth = Math.round(sizeT * 0.05);
+  ctx.strokeText(text, xT, zT);
+
+  ctx.fillText(text, xT, zT);
 }

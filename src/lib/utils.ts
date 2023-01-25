@@ -36,21 +36,21 @@ interface EventOffsets {
   offsetY: number;
 }
 
-export function formatCoords(
+export function sendCoords(
   map: GameMapSize,
   canvas: HTMLCanvasElement,
   elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
   event: EventOffsets | null
-): string {
-  if (!event) return "E/W: -, N/S: -, Elev: -";
+): { x: number | string; z: number | string; y: number | string } {
+  if (!event) return { x: "-", z: "-", y: "-" };
 
   const gameCoords = canvasEventToGameCoords(event, map, canvas);
   if (gameCoords === null) {
-    return "E/W: -, N/S: -, Elev: -";
+    return { x: "-", z: "-", y: "-" };
   }
 
   const y = elevation(gameCoords, map) ?? "-";
-  return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
+  return { x: gameCoords.x, z: gameCoords.z, y };
 }
 
 export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
@@ -63,7 +63,11 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
 export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
   const canvas = new OffscreenCanvas(img.height, img.width);
   const context = requireNonnull(canvas.getContext("2d"));
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   context.drawImage(img, 0, 0);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
 }
 

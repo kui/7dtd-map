@@ -28,6 +28,12 @@ interface ThreePlaneSize {
   height: number;
 }
 
+type MapCoord = {
+  x: number;
+  z: number;
+  y: number;
+};
+
 type GameCoords =
   | {
       type: "game";

@@ -34,7 +34,7 @@ main() {
 
     set -x
 
-    rm -frv "$dest/"*
+    rm -frv "$dest/*"
 
     (
         cd "$src"

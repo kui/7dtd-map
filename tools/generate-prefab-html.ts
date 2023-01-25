@@ -7,6 +7,8 @@ import { handleMain, projectRoot, vanillaDir } from "./lib/utils";
 
 const BASE_DEST = projectRoot("docs", "prefabs");
 
+// If in windows environment the '/' must be switched on any path.joins : add -> .replace(/\\/g, '/');
+
 async function main() {
   await remove();
   const labels = await loadLabels();
@@ -15,7 +17,7 @@ async function main() {
 }
 
 async function remove() {
-  const globPath = path.join(BASE_DEST, "*.{jpg,html}");
+  const globPath = path.join(BASE_DEST, "*.{jpg,html}").replace(/\\/g, "/");
   await Promise.all((await glob(globPath)).map(fs.unlink));
   console.log("Remove %s", globPath);
 }
@@ -29,7 +31,7 @@ async function loadLabels() {
 
 async function buildHtmls(labels: Map<string, string>) {
   const prefabsDir = await vanillaDir("Data", "Prefabs");
-  const xmlGlob = path.join(prefabsDir, "*", "*.xml");
+  const xmlGlob = path.join(prefabsDir, "*", "*.xml").replace(/\\/g, "/");
   const xmlFiles = await glob(xmlGlob);
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);
@@ -53,20 +55,20 @@ async function buildHtmls(labels: Map<string, string>) {
 }
 
 async function generateHtml(xmlFileName: string, labels: Map<string, string>) {
-  const prefabName = path.basename(xmlFileName, ".xml");
-  const prefabDir = path.dirname(xmlFileName);
-  const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`);
-  const ttsFileName = path.join(prefabDir, `${prefabName}.tts`);
+  const prefabName = path.basename(xmlFileName, ".xml").replace(/\\/g, "/");
+  const prefabDir = path.dirname(xmlFileName).replace(/\\/g, "/");
+  const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`).replace(/\\/g, "/");
+  const ttsFileName = path.join(prefabDir, `${prefabName}.tts`).replace(/\\/g, "/");
   const html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
-  const dist = path.join(BASE_DEST, `${prefabName}.html`);
+  const dist = path.join(BASE_DEST, `${prefabName}.html`).replace(/\\/g, "/");
   await fs.writeFile(dist, html);
 }
 
 async function copyJpg(xmlFileName: string) {
-  const prefabName = path.basename(xmlFileName, ".xml");
-  const prefabDir = path.dirname(xmlFileName);
-  const jpgFileName = path.join(prefabDir, `${prefabName}.jpg`);
-  const dist = path.join(BASE_DEST, path.basename(jpgFileName));
+  const prefabName = path.basename(xmlFileName, ".xml").replace(/\\/g, "/");
+  const prefabDir = path.dirname(xmlFileName).replace(/\\/g, "/");
+  const jpgFileName = path.join(prefabDir, `${prefabName}.jpg`).replace(/\\/g, "/");
+  const dist = path.join(BASE_DEST, path.basename(jpgFileName)).replace(/\\/g, "/");
   await fs.copyFile(jpgFileName, dist);
 }
 

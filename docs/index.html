@@ -6,31 +6,121 @@
     <title>7 Days to Die Map Renderer Alpha 20</title>
     <script src="index.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+    </style>
   </head>
   <body data-active-filter="prefab">
-    <h1>7 Days to Die Map Renderer Alpha 20</h1>
-
-    <p>Only supported in latest Google Chrome.</p>
-    <p>
-      Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
-      <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.
-    </p>
-
-    <nav>
-      <ul>
-        <li><a href="prefabs.html">Prefab List</a></li>
-        <li><a href="a19">Alpha 19</a></li>
-        <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+    <nav class="nav-parent">
+      <label class="theme-label">
+        <input type="checkbox" id="theme-toggle" />
+        <div class="round slider"></div>
+      </label>
+      <ul class="nav-bar">
+        <li class="nav-item"><a href="prefabs.html">Prefab List</a></li>
+        <li class="nav-item"><a href="a19">Alpha 19</a></li>
+        <li class="nav-item"><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
       </ul>
     </nav>
 
-    <div id="controller">
+    <div id="terrarian_viewer_hud" style="display: none">
+      <label style="user-select: none">
+        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
+        Show/Hide Help
+      </label>
+      <dl id="op_desc">
+        <dt><code>WASD</code> key / Grab with Mouse Right Button</dt>
+        <dd>Move horizontal</dd>
+        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
+        <dd>Tilt</dd>
+        <dt>Rotate Mouse Wheel</dt>
+        <dd>Move forward</dd>
+        <dt><code>Esc</code> key</dt>
+        <dd>Close</dd>
+      </dl>
+    </div>
+    <div class="terrain-area">
+      <button id="terrain_viewer_close" style="display: none">❌</button>
+      <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+      <p id="loading_indicator">Loaded</p>
+      <canvas id="map" width="0" height="0"></canvas>
+    </div>
+
+    <section class="instruction-area">
+      <h2>How to Use</h2>
+      <p>Drag and drop world files on to this web page.</p>
+      <h3>Generated Worlds (Windows)</h3>
       <p>
-        <button id="download">Download</button>
-        <input id="files" type="file" />
+        <button id="sample_load" data-sample-dir="sample_world">Load Sample World (PREGEN6k)</button>
       </p>
+      <ol>
+        <li>
+          Select folders:
+          <code
+            ><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code
+          >
+          <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
+            📋️
+          </button>
+        </li>
+        <li>Drag and drop all files in the world folder on to this webpage</li>
+      </ol>
+      <h3>Bundled Worlds</h3>
+      <ol>
+        <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
+        <li>
+          Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
+          <ul>
+            <li>
+              e.g.
+              <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
+              <button
+                title="Copy this path"
+                data-copy-for="bundled_world_path_windows"
+                data-success-message="✅ Press Win+R then paste this"
+              >
+                📋️
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li>Drag and drop all files in the world folder on to this webpage</li>
+      </ol>
+    </section>
+
+    <div id="overlay">
+      <div>
+        <p>Drop world files:</p>
+        <ul>
+          <li>GenerationInfo.txt</li>
+          <li>biomes.png</li>
+          <li>splat3.png</li>
+          <li>splat4_processed.png</li>
+          <li>radiation.png</li>
+          <li>prefabs.xml</li>
+          <li>dtm.raw</li>
+        </ul>
+        <p>The rest of files are ignored.</p>
+      </div>
+    </div>
+
+    <!-- <div class="small-info">
+      <p>Only supported in latest Google Chrome.</p>
+      <p>
+        Note: <code>splat3/splat4</code> rendering need time. It could be more than 20 seconds. See
+        <a href="https://github.com/kui/7dtd-map/issues/15">issue#15</a>.
+      </p>
+    </div> -->
+
+    <div id="controller" class="controller-wrapped">
+      <div class="con-top">
+        <p class="lower-text">Lower Options <span>➜</span></p>
+      </div>
+      <div class="input-map-img">
+        <button id="download">Download Current Map</button>
+        <button for="files" id="files-btn">Upload World Files<input id="files" type="file" style="display: none" /></button>
+      </div>
       <table>
         <tr>
           <th>Select Map</th>
@@ -58,17 +148,6 @@
         <tr>
           <td id="generation_info_output_wrapper" colspan="2" style="display: none">
             <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
-          </td>
-        </tr>
-        <tr>
-          <th>Cursor</th>
-          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
-        </tr>
-        <tr>
-          <th>Flag</th>
-          <td>
-            <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
-            <button id="reset_mark" title="Reset">X</button>
           </td>
         </tr>
         <tr>
@@ -116,16 +195,16 @@
           <th><label for="scale">Scale</label></th>
           <td>
             <label>
-              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
-              <output data-sync-for="scale">0.1</output>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.25" />
+              <output data-sync-for="scale">0.25</output>
             </label>
           </td>
         </tr>
         <tr>
           <th><label for="sign_size">Sign Size</label></th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
-            <output data-sync-for="sign_size">200</output>px
+            <input id="sign_size" type="range" max="500" min="20" step="10" value="70" />
+            <output data-sync-for="sign_size">70</output>px
           </td>
         </tr>
         <tr>
@@ -135,13 +214,35 @@
             <output data-sync-for="brightness">60</output>%
           </td>
         </tr>
+
         <tr>
-          <th><label for="prefabs_filter">Prefabs Filter</label></th>
+          <th>Blocks Preset</th>
           <td>
-            <input id="prefabs_filter" placeholder="Input prefab name" />
-            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
+            <button data-input-for="blocks_filter">Super Corn</button>
+            <button
+              data-input-for="blocks_filter"
+              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
+            >
+              Steel with Wrench
+            </button>
+            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
+            <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+            <button data-input-for="blocks_filter" data-input-text="^(cntBarrelGas|cntGasPump|cntShippingCrateCar)">Gas Containers</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntShippingCrate">Sealed Loot Crates</button>
+            <button data-input-for="blocks_filter" data-input-text="^(cntGunSafe|cntAmmo|cntdisplayCaseAmmo|cntShippingCrateShotgun)">
+              Ammo & Guns
+            </button>
           </td>
         </tr>
+        <tr>
+          <th><label for="blocks_filter">Blocks Filter</label></th>
+          <td>
+            <input id="blocks_filter" placeholder="Input block name" />
+            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+
         <tr>
           <th>Prefabs Preset</th>
           <td>
@@ -166,104 +267,37 @@
           </td>
         </tr>
         <tr>
-          <th><label for="blocks_filter">Blocks Filter</label></th>
-          <td>
-            <input id="blocks_filter" placeholder="Input block name" />
-            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
-          </td>
-        </tr>
-        <tr>
-          <th>Blocks Preset</th>
-          <td>
-            <button data-input-for="blocks_filter">Super Corn</button>
-            <button
-              data-input-for="blocks_filter"
-              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
-            >
-              Steel with Wrench
-            </button>
-            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
-            <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+          <th class="prefabs-th"><label for="prefabs_filter">Filter Prefabs:</label></th>
+          <td class="prefabs-td">
+            <input id="prefabs_filter" placeholder="Input prefab name" autocomplete="off" />
+            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
           </td>
         </tr>
       </table>
-      <p id="prefabs_num"></p>
-      <ul id="prefabs_list"></ul>
+      <p id="prefabs_num" class="prefabs-list-header"></p>
+      <ul id="prefabs_list" class="prefabs-list"></ul>
     </div>
-    <div id="terrarian_viewer_hud" style="display: none">
-      <label style="user-select: none">
-        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
-        Show/Hide Help
-      </label>
-      <dl id="op_desc">
-        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
-        <dd>Move horizontal</dd>
-        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
-        <dd>Tilt</dd>
-        <dt>Rotate Mouse Wheel</dt>
-        <dd>Move forward</dd>
-        <dt><code>Esc</code> key</dt>
-        <dd>Close</dd>
-      </dl>
-    </div>
-    <button id="terrain_viewer_close" style="display: none">❌</button>
-    <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
-    <p id="loading_indicator"></p>
-    <canvas id="map" width="0" height="0"></canvas>
-    <p>
-      <button id="sample_load" data-sample-dir="sample_world">Load Sample World (PREGEN6k)</button>
-    </p>
 
-    <h2>How to Use</h2>
-
-    <p>Drag and drop world files.</p>
-
-    <h3>Generated Worlds (Windows)</h3>
-
-    <ol>
-      <li>
-        Select folders:
-        <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
-        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-          📋️
-        </button>
-      </li>
-      <li>Drag and drop all files in the world folder</li>
-    </ol>
-
-    <h3>Bundled Worlds</h3>
-
-    <ol>
-      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
-      <li>
-        Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
-        <ul>
-          <li>
-            e.g.
-            <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
-            <button title="Copy this path" data-copy-for="bundled_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-              📋️
-            </button>
-          </li>
-        </ul>
-      </li>
-      <li>Drag and drop all files in the world folder</li>
-    </ol>
-
-    <div id="overlay">
-      <div>
-        <p>Drop world files:</p>
-        <ul>
-          <li>GenerationInfo.txt</li>
-          <li>biomes.png</li>
-          <li>splat3.png</li>
-          <li>splat4_processed.png</li>
-          <li>radiation.png</li>
-          <li>prefabs.xml</li>
-          <li>dtm.raw</li>
-        </ul>
-        <p>The rest of files are ignored.</p>
+    <div class="bottom-bar-container">
+      <h1>7 Days to Die Map Renderer Alpha 20</h1>
+      <div class="cursor-coords-parent">
+        <p class="coord-cat">Cursor:</p>
+        <p class="coord-ew">E/W:</p>
+        <p id="e-w">-</p>
+        <p class="coord-ns">N/S:</p>
+        <p id="n-s">-</p>
+        <p>Elev:</p>
+        <p id="elev">-</p>
+      </div>
+      <div class="flag-coords-parent">
+        <p class="coord-cat">Flag:</p>
+        <p class="coord-ew">E/W:</p>
+        <p id="mark-x">-</p>
+        <p class="coord-ns">N/S:</p>
+        <p id="mark-z">-</p>
+        <p>Elev:</p>
+        <p id="mark-y">-</p>
+        <button id="reset_mark" title="Reset">X</button>
       </div>
     </div>
   </body>

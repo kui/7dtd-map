@@ -1,21 +1,416 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+/*! VARIABLES SECTION */
+html[data-theme="light"] {
+  --main-background-color: rgb(209, 209, 209);
+  --main-text-color: rgb(70, 50, 50);
+  --main-link-color: rgb(70, 70, 100);
+  /* NAV LIGHT*/
+  --nav-parent-bg-color: rgb(169, 169, 169);
+  --nav-a-bg-color: rgb(194, 194, 194);
+  --nav-a-bg-color-hover: rgb(229, 229, 229);
+  --nav-text-color: rgb(70, 50, 50);
+  --nav-border-color: rgb(132, 132, 132);
+  /* MAIN LIGHT */
+  --title-text-color: rgb(50, 50, 50);
+  --loading-bg-color: rgba(150, 150, 150, 0.5);
+  /* CONTROLLER LIGHT*/
+  --controller-bg-color: rgba(184, 184, 184, 0.9);
+  --lowerText-color: rgb(20, 20, 20);
+  --con-arrowRight-color: rgb(100, 100, 100);
+  --con-arrowDown-color: black;
+  --con-opacity: 0.75;
+  --con-border-color: rgba(123, 123, 123, 0.9);
+  --files-bg-color: rgb(200, 200, 200);
+  --con-text-color: rgb(25, 25, 25);
+  --con-poi-text-color: black;
+  --con-box-shadow-color: rgba(50, 50, 50, 0.5);
+  --con-btm-border-color: rgba(101, 101, 101, 0.556);
+  /* PREFABS FILTER LIGHT */
+  --prefabs-header-color: black;
+  --prefabs-ul-color: rgb(25, 25, 25);
+  --dis-text-color: rgb(144, 21, 21);
+  /* BOTTOM LIGHT*/
+  --bottom-bg-color: rgba(169, 169, 169, 0.85);
+  --bar-border-color: rgba(255, 255, 255, 0.75);
+  --coord-cat-text-color: rgba(255, 0, 0, 1);
+  --coords-ew-color: #956719;
+  --coords-ns-color: #14248a;
+  --cursor-coords-text-color: rgb(0, 0, 0);
+  --flag-coords-text-color: rgb(0, 0, 0);
+  --cat-text-shadow-color: rgba(0, 0, 0, 1);
+}
+
+html[data-theme="dark"] {
+  --main-background-color: rgb(80, 80, 80);
+  --main-text-color: rgb(226, 226, 226);
+  --main-link-color: rgb(100, 100, 200);
+  --title-text-color: rgb(255, 170, 170);
+  /* NAV DARK*/
+  --nav-parent-bg-color: rgb(56, 56, 56);
+  --nav-a-bg-color: rgb(115, 115, 115);
+  --nav-a-bg-color-hover: transparent;
+  --nav-text-color: rgb(230, 230, 230);
+  --nav-border-color: rgb(132, 132, 132);
+  /* MAIN DARK */
+  --title-text-color: rgb(203, 203, 203);
+  --loading-bg-color: rgba(50, 50, 50, 0.5);
+  /* CONTROLLER DARK */
+  --controller-bg-color: rgba(47, 47, 47, 0.9);
+  --lowerText-color: rgb(200, 200, 200);
+  --con-arrowRight-color: rgb(150, 150, 150);
+  --con-arrowDown-color: white;
+  --con-opacity: 0.8;
+  --con-border-color: rgba(123, 123, 123, 0.9);
+  --files-bg-color: rgb(223, 223, 223);
+  --con-text-color: rgb(220, 220, 220);
+  --con-box-shadow-color: rgba(245, 245, 245, 0.25);
+  --con-btm-border-color: rgba(101, 101, 101, 0.556);
+  /* PREFABS FILTER DARK */
+  --prefabs-header-color: white;
+  --prefabs-ul-color: rgb(220, 220, 220);
+  --dis-text-color: rgb(230, 50, 50);
+  /* BOTTOM DARK */
+  --bottom-bg-color: rgba(56, 56, 56, 0.85);
+  --bar-border-color: rgba(150, 150, 150, 0.75);
+  --coord-cat-text-color: rgba(255, 0, 0, 1);
+  --coords-ew-color: rgb(224, 189, 128);
+  --coords-ns-color: rgb(136, 148, 228);
+  --cursor-coords-text-color: rgb(190, 190, 190);
+  --flag-coords-text-color: rgb(190, 190, 190);
+  --cat-text-shadow-color: rgba(0, 0, 0, 0.75);
+}
+
+/*! COLORS SECTION */
+body {
+  background-color: var(--main-background-color);
+}
+
+/* NAVIGATION BAR COLOR AREA */
+.nav-parent {
+  background-color: var(--nav-parent-bg-color);
+}
+
+.slider:before {
+  background-color: #fff;
+}
+
+.slider {
+  background-color: #808080;
+}
+
+#theme-toggle:checked + .slider {
+  background-color: #555555;
+}
+
+.nav-item a {
+  color: var(--nav-text-color);
+  background-color: var(--nav-a-bg-color);
+  border-color: var(--nav-border-color);
+}
+.nav-item a:hover {
+  color: var(--nav-text-color);
+  background-color: var(--nav-a-bg-color-hover);
+  border-color: var(--nav-border-color);
+
+  box-shadow: 0 5px 5px rgba(50, 50, 50, 0.5);
+}
+
+/* TITLE COLOR AREA */
+h1 {
+  color: var(--title-text-color);
+}
+#loading_indicator {
+  color: var(--title-text-color);
+  background-color: var(--loading-bg-color);
+}
+
+/* CONTROLLER COLOR AREA */
+.controller-wrapped {
+  background-color: var(--nav-parent-bg-color);
+  border-left-color: var(--bar-border-color);
+}
+.controller-wrapped:hover {
+  border-left-color: rgb(89, 89, 89);
+  background-color: var(--controller-bg-color);
+}
+.controller-wrapped:hover .input-map-img {
+  box-shadow: inset 0 5px 5px rgba(90, 90, 90, 0.7);
+}
+.controller-lowered:not(:hover) {
+  opacity: var(--con-opacity);
+}
+.lower-text {
+  color: var(--lowerText-color);
+}
+.lower-text span {
+  color: var(--con-arrowRight-color);
+}
+.controller-lowered .lower-text span {
+  color: var(--con-arrowDown-color);
+}
+
+.files-label {
+  background-color: var(--files-bg-color);
+}
+
+td,
+th {
+  border-bottom-color: var(--con-btm-border-color);
+  color: var(--con-text-color);
+}
+
+/* FILTER PREFABS AREA */
+.prefabs-list-header {
+  color: var(--prefabs-header-color);
+}
+.prefabs-list li {
+  color: var(--prefabs-ul-color);
+  border-color: var(--prefabs-ul-color);
+}
+
+.prefabs-list li a {
+  color: var(--con-poi-text-color);
+}
+.prefabs-list li .poi-distance {
+  color: var(--dis-text-color);
+}
+.prefabs-list .coord-holder .e-w {
+  color: var(--coords-ew-color);
+}
+.prefabs-list .coord-holder .n-s {
+  color: var(--coords-ns-color);
+}
+
+/* BOTTOM BAR COLOR AREA  */
+.bottom-bar-container {
+  background-color: var(--bottom-bg-color);
+}
+.bottom-bar-container .coord-cat {
+  color: var(--coord-cat-text-color);
+}
+.cursor-coords-parent {
+  border-left-color: var(--bar-border-color);
+}
+.cursor-coords-parent .coord-ew {
+  color: var(--coords-ew-color);
+}
+.cursor-coords-parent .coord-ns {
+  color: var(--coords-ns-color);
+}
+#e-w {
+  color: var(--coords-ew-color);
+}
+#n-s {
+  color: var(--coords-ns-color);
+}
+.cursor-coords-parent > p {
+  color: var(--cursor-coords-text-color);
+}
+.flag-coords-parent {
+  border-left-color: var(--bar-border-color);
+}
+.flag-coords-parent .coord-ew {
+  color: var(--coords-ew-color);
+}
+.flag-coords-parent .coord-ns {
+  color: var(--coords-ns-color);
+}
+#mark-x {
+  color: var(--coords-ew-color);
+}
+#mark-z {
+  color: var(--coords-ns-color);
+}
+.flag-coords-parent p {
+  color: var(--flag-coords-text-color);
+}
+
+/*! LAYOUT SECTION */
+
+/*? SITE WIDE LAYOUT */
+:root,
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+
+  transition: all 0.25s ease-out;
+}
+
+body {
+  display: grid;
+  position: fixed;
+  grid-template-rows: minmax(70px, 5%) minmax(200px, 90%) minmax(70px, 5%);
+  grid-template-columns: 35vw 35vw 30vw;
+  grid-template-areas:
+    "header header-mid sidebar-top"
+    "main-info main-info-mid sidebar"
+    "bar-left bar-mid sidebar-bottom";
+}
+
+/*? NAVIGATION BAR LAYOUT */
+.nav-parent {
+  display: flex;
+  width: 100%;
+  grid-column: 1 / 3;
+}
+
+.theme-label {
+  margin: auto 0 auto 1%;
+}
+
+.theme-label {
+  display: inline-block;
+}
+
+.slider:before {
+  content: "";
+  height: 26px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+.slider {
+  /* background-color: #ccc; */
+  cursor: pointer;
+  width: 50px;
+  height: 26px;
+  transition: 0.4s;
+}
+
+.theme-label input {
+  display: none;
+}
+
+#theme-toggle:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.nav-bar {
+  display: flex;
+  justify-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.nav-item {
+  list-style-type: none;
+  margin: auto 0;
+}
+
+.nav-item a {
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+/*? TITLE LAYOUT */
+
+h1 {
+  position: absolute;
+  grid-area: left-bar;
+  font-size: 1.8vw;
+  justify-self: center;
+  align-self: center;
+  margin: 0;
+}
+#loading_indicator {
+  position: absolute;
+  font-size: 1.5vw;
+  display: flex;
+  justify-self: center;
+  margin-left: 1vw;
+}
+
+/*? INSTRUCTIONS LAYOUT */
+.instruction-area {
+  grid-area: main-info / main-info / main-info / main-info-mid;
+  margin-left: 3vw;
+  font-size: 1.5vw;
+}
+
+/*? CANVAS LAYOUT */
 #map {
-  margin-right: 500px;
   cursor: crosshair;
 }
 
-#controller {
-  position: fixed;
-  margin: 10px;
-  padding: 5px;
-  border: solid lightgray 1px;
-  width: 30%;
-  max-width: 500px;
-  max-height: calc(100% - 40px);
-  right: 0;
+.terrain-area {
+  margin: 0;
+  grid-area: main-info / main-info / main-info / main-info-mid;
+  position: absolute;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  overflow: auto;
+  left: 0;
+  overflow: hidden;
 }
+
+.lower-text {
+  text-align: center;
+}
+
+/*? CONTROLLER LAYOUT */
+#controller {
+  grid-area: sidebar-top / sidebar-top / sidebar / sidebar;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  margin: 0;
+  will-change: contents;
+}
+
+.lower-text span {
+  display: block;
+  transform: rotate(0deg);
+}
+.controller-lowered .lower-text span {
+  transform: rotate(90deg);
+}
+
+.files-label {
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px 10px;
+}
+
+.controller-wrapped {
+  min-height: 70px;
+  height: 5%;
+  border-left-style: solid;
+  border-left-width: 1px;
+  overflow: hidden;
+}
+.controller-lowered {
+  height: 100%;
+  overflow-y: scroll;
+  box-shadow: -7px 0 7px var(--con-box-shadow-color);
+}
+
+.input-map-img {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 3%;
+}
+
+table {
+  margin: 0;
+}
+
+/*? PREFABS LIST AREA */
 
 label[for="prefabs_filter"],
 #prefabs_filter,
@@ -35,6 +430,74 @@ body[data-active-filter="block"] #blocks_filter {
   text-decoration: unset;
 }
 
+.prefabs-list {
+  margin: 1em 0 0 3%;
+  padding: 0;
+}
+.prefabs-list > li {
+  list-style: none;
+  display: grid;
+  width: 100%;
+  height: fit-content;
+  min-height: 60px;
+  max-height: max-content;
+  grid-template-columns: 8% 42% 50%;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "filter-btn poi-title poi-title poi-title"
+    "extra-info extra-info extra-info extra-info"
+    "coords coords distance distance";
+  flex-wrap: wrap;
+  padding-bottom: 1%;
+
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.poi-filter-btn {
+  grid-area: filter-btn;
+  height: 25px;
+  width: 25px;
+  padding: 0;
+  margin: auto 0;
+}
+.prefabs-list li a {
+  grid-area: poi-title;
+  font-weight: 600;
+  padding-left: 1%;
+  margin: auto 0;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+}
+.highlighted-block-info-ul {
+  grid-area: extra-info;
+}
+.highlighted-block-info-ul li {
+  list-style: none;
+}
+.small-filter-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+.prefabs-list .poi-distance {
+  display: inline;
+  font-weight: 600;
+  margin: auto 0 auto 1%;
+  grid-area: distance;
+
+  padding-left: 3%;
+}
+.prefabs-list .coord-holder {
+  grid-area: coords;
+  height: 100%;
+  border-right-width: 1px;
+  border-right-style: dashed;
+  padding-bottom: 0 0 1% 1%;
+}
+.prefabs-list .coord-holder p {
+  display: inline;
+}
+
 #overlay {
   display: none;
   background-color: rgba(0, 0, 0, 0.8);
@@ -46,6 +509,23 @@ body[data-active-filter="block"] #blocks_filter {
   z-index: 1;
   color: white;
   font-size: 55px;
+}
+
+th,
+td {
+  border-bottom-style: groove;
+  border-bottom-width: 1px;
+  padding: 1% 0;
+  margin: 0;
+}
+
+.prefabs-td,
+.prefabs-th {
+  border: none;
+}
+
+#prefabs_num {
+  text-align: center;
 }
 
 .dragovered #overlay {
@@ -60,10 +540,59 @@ body[data-active-filter="block"] #blocks_filter {
   content: attr(data-message);
 }
 
+.small-info {
+  grid-area: bar-mid;
+}
+
 #generation_info_output_wrapper {
   width: 100%;
 }
 #generation_info_output {
   width: 100%;
   resize: vertical;
+}
+
+/*? BOTTOM BAR LAYOUT */
+.bottom-bar-container {
+  display: grid;
+  grid-template-columns: 35vw 35vw 35vw;
+  grid-template-areas:
+    "left-bar mid-bar right-top-bar"
+    "left-bar mid-bar right-bottom-bar";
+  grid-area: bar-left / span 3;
+  width: 100%;
+  height: 100%;
+  margin: auto 0;
+  position: absolute;
+  z-index: 1;
+}
+.bottom-bar-container .coord-cat {
+  font-weight: bold;
+  text-shadow: 0 1px var(--cat-text-shadow-color);
+}
+
+.cursor-coords-parent {
+  display: flex;
+  grid-area: 1 / 3;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+.cursor-coords-parent > p {
+  margin: auto 1%;
+}
+.flag-coords-parent {
+  display: flex;
+  grid-area: 2 / 3;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+.flag-coords-parent > p {
+  margin: auto 1%;
+}
+.flag-coords-parent > div p button {
+  margin: auto 1%;
+}
+.flag-coords-parent > button {
+  height: 25px;
+  margin: auto 0;
 }

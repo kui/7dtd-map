@@ -12,7 +12,7 @@ interface Doms {
 }
 
 const ANIMATION_FRAMES = ["｜", "／", "―", "＼"];
-const ANIMATION_INTERVAL_MSEC = 1000;
+const ANIMATION_INTERVAL_MSEC = 300;
 
 // Loading progression maanger
 export class LoadingHandler {
