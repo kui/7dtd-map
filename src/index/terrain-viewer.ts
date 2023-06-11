@@ -40,7 +40,7 @@ export class TerrainViewer {
     const light = new three.DirectionalLight(0xffffff, 1.2);
     light.position.set(1, 1, 1).normalize();
     this.scene.add(light);
-    this.scene.add(new three.AmbientLight(0xffffff, 0.2));
+    this.scene.add(new three.AmbientLight(0xffffff, 0.02));
 
     this.cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
