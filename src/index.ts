@@ -4,7 +4,6 @@ import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
 import { component, downloadCanvasPng, humanreadableDistance } from "./lib/utils";
-import { GenerationInfoHandler } from "./index/generation-info-handler";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -60,14 +59,6 @@ function main() {
     new Worker("worker/map-renderer.js"),
     mapStorage,
     loadingHandler
-  );
-
-  const generationInfoHandler = new GenerationInfoHandler(
-    {
-      mapName: component("map_name", HTMLInputElement),
-      output: component("generation_info_output", HTMLTextAreaElement),
-    },
-    mapStorage
   );
 
   const terrainViewer = new TerrainViewer({
@@ -148,7 +139,6 @@ function main() {
     ["radiation.png", async (file) => mapCanvasHandler.update({ radImg: await imageLoader.loadRad(file) })],
     ["prefabs.xml", async (file) => await prefabsHandler.handle(file)],
     [/dtm\.(raw|png)/, async (file) => await dtmHandler.handle(file)],
-    ["GenerationInfo.txt", async (file) => await generationInfoHandler.handle(file)],
   ]);
 
   const dndHandler = new DndHandler(document);

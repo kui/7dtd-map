@@ -1,14 +1,6 @@
 import { requireNonnull } from "../lib/utils";
 
-const SAMPLE_WORLD_FILES = [
-  "biomes.png",
-  "splat3_processed.png",
-  "splat4_processed.png",
-  "radiation.png",
-  "prefabs.xml",
-  "dtm.png",
-  "GenerationInfo.txt",
-];
+const SAMPLE_WORLD_FILES = ["biomes.png", "splat3_processed.png", "splat4_processed.png", "radiation.png", "prefabs.xml", "dtm.png"];
 
 export class SampleWorldLoader {
   private listeners: ((file: File) => Promise<unknown> | unknown)[] = [];
