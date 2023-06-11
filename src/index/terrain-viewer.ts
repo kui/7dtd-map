@@ -32,6 +32,7 @@ export class TerrainViewer {
   constructor(doms: Doms) {
     this.doms = doms;
     this.texture = new three.CanvasTexture(doms.texture);
+    this.texture.colorSpace = three.SRGBColorSpace;
     this.renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.scene = new three.Scene();
