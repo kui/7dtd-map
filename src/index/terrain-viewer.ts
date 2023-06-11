@@ -32,6 +32,7 @@ export class TerrainViewer {
   constructor(doms: Doms) {
     this.doms = doms;
     this.texture = new three.CanvasTexture(doms.texture);
+    this.texture.colorSpace = three.SRGBColorSpace;
     this.renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.scene = new three.Scene();
@@ -39,7 +40,7 @@ export class TerrainViewer {
     const light = new three.DirectionalLight(0xffffff, 1.2);
     light.position.set(1, 1, 1).normalize();
     this.scene.add(light);
-    this.scene.add(new three.AmbientLight(0xffffff, 0.2));
+    this.scene.add(new three.AmbientLight(0xffffff, 0.02));
 
     this.cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
@@ -113,6 +114,7 @@ export class TerrainViewer {
     geo.addGroup(0, Infinity, 1);
     const materials = [
       new three.MeshLambertMaterial({ map: this.texture, transparent: true }),
+      // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
       new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ];
     const pos = geo.attributes.position;
