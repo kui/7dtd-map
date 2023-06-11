@@ -41,7 +41,11 @@ async function buildHtmls(labels: Map<string, string>) {
       try {
         await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
       } catch (e) {
-        console.warn("build HTML failure: %o", e);
+        if (isErrnoException(e) && e.code === "ENOENT") {
+          console.warn("Abort a prefab HTML: ", e.message);
+          return;
+        }
+        console.warn("Abort a prefab HTML: ", e);
         return;
       }
       if (++successCount % 50 === 0) {
@@ -67,7 +71,19 @@ async function copyJpg(xmlFileName: string) {
   const prefabDir = path.dirname(xmlFileName);
   const jpgFileName = path.join(prefabDir, `${prefabName}.jpg`);
   const dist = path.join(BASE_DEST, path.basename(jpgFileName));
-  await fs.copyFile(jpgFileName, dist);
+  try {
+    await fs.copyFile(jpgFileName, dist);
+  } catch (e) {
+    if (isErrnoException(e) && e.code === "ENOENT") {
+      // No jpg
+      return;
+    }
+    throw e;
+  }
+}
+
+function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
+  return typeof (e as NodeJS.ErrnoException)?.code === "string";
 }
 
 handleMain(main());
