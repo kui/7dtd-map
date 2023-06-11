@@ -102,7 +102,7 @@ export class TerrainViewer {
 
     console.log("terrainSize=", this.terrain, "mapSize=", this.mapSize);
     console.time("updateElevations");
-    const geo = new three.PlaneBufferGeometry(
+    const geo = new three.PlaneGeometry(
       this.terrainSize.width,
       this.terrainSize.height,
       this.terrainSize.width - 1,
