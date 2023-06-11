@@ -113,6 +113,7 @@ export class TerrainViewer {
     geo.addGroup(0, Infinity, 1);
     const materials = [
       new three.MeshLambertMaterial({ map: this.texture, transparent: true }),
+      // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
       new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ];
     const pos = geo.attributes.position;
