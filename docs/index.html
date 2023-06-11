@@ -44,23 +44,6 @@
           </td>
         </tr>
         <tr>
-          <th><label for="show_generation_info">GenerationInfo.txt</label></th>
-          <td>
-            <input
-              id="show_generation_info"
-              type="checkbox"
-              oninput="
-                generation_info_output_wrapper.style.display = checked ? '' : 'none';
-                generation_info_output.dispatchEvent(new Event('input'))"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td id="generation_info_output_wrapper" colspan="2" style="display: none">
-            <textarea readonly id="generation_info_output" oninput="style.height = scrollHeight + 'px'"></textarea>
-          </td>
-        </tr>
-        <tr>
           <th>Cursor</th>
           <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
         </tr>
@@ -255,7 +238,6 @@
       <div>
         <p>Drop world files:</p>
         <ul>
-          <li>GenerationInfo.txt</li>
           <li>biomes.png</li>
           <li>splat3.png</li>
           <li>splat4_processed.png</li>
