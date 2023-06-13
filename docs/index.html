@@ -162,13 +162,13 @@
             <button data-input-for="blocks_filter">Super Corn</button>
             <button
               data-input-for="blocks_filter"
-              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
+              data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
             >
               Steel with Wrench
             </button>
             <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
             <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&amp;!RandomLootHelper|Broken|Trader|Empty)$">
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
               Working Vending-Machine
             </button>
           </td>
