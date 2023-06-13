@@ -3,7 +3,7 @@ import { ByteReader } from "./byte-reader";
 import { BlockId } from "./nim-parser";
 
 // TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
-const KNOWN_VERSIONS = [13, 15, 16];
+const KNOWN_VERSIONS = [13, 15, 16, 17];
 const BLOCK_ID_BIT_MASK = 0b0111111111111111;
 
 export async function parseTts(ttsFileName: string): Promise<Tts> {
