@@ -22,7 +22,7 @@ async function main() {
 async function loadLabels() {
   const fileName = await vanillaDir("Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
-  console.log("Load %s labels", Object.keys(labels).length);
+  console.log("Load %s labels", labels.size);
   return labels;
 }
 
