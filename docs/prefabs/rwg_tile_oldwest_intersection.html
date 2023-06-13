@@ -27,22 +27,22 @@
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
-<tr><th>POIMarkerGroup</th><td>2,3,4,1,6,7,8,9,10,5,11</td></tr>
-<tr><th>POIMarkerPartRotations</th><td>3,2,3,3,0,1,1,0,1,1,2</td></tr>
-<tr><th>POIMarkerPartSpawnChance</th><td>1,1,1,1,1,1,1,1,1,1,1</td></tr>
-<tr><th>POIMarkerPartToSpawn</th><td>,,,,,,,,,,</td></tr>
-<tr><th>POIMarkerSize</th><td>25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 50#25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 25</td></tr>
-<tr><th>POIMarkerStart</th><td>46, 1, 0#20, 1, 83#46, 1, 83#46, 1, 25#20, 1, 50#79, 1, 0#79, 1, 25#104, 1, 50#79, 1, 83#79, 1, 108#104, 1, 83</td></tr>
-<tr><th>POIMarkerTags</th><td>##########</td></tr>
-<tr><th>POIMarkerType</th><td>POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn</td></tr>
+<tr><th>POIMarkerGroup</th><td>2,3,4,1,6,7,8,9,10,5,11,new,new2,new3,new4</td></tr>
+<tr><th>POIMarkerPartRotations</th><td>3,2,3,3,0,1,1,0,1,1,2,2,1,0,3</td></tr>
+<tr><th>POIMarkerPartSpawnChance</th><td>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</td></tr>
+<tr><th>POIMarkerPartToSpawn</th><td>,,,,,,,,,,,,,,</td></tr>
+<tr><th>POIMarkerSize</th><td>25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 50#25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 25#8, 0, 8#8, 0, 8#8, 0, 8#8, 0, 8</td></tr>
+<tr><th>POIMarkerStart</th><td>46, 1, 0#20, 1, 83#46, 1, 83#46, 1, 25#20, 1, 50#79, 1, 0#79, 1, 25#104, 1, 50#79, 1, 83#79, 1, 108#104, 1, 83#71, 1, -4#-4, 1, 71#71, 1, 146#146, 1, 71</td></tr>
+<tr><th>POIMarkerTags</th><td>##############</td></tr>
+<tr><th>POIMarkerType</th><td>POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,RoadExit,RoadExit,POISpawn,POISpawn</td></tr>
 <tr><th>PrefabSize</th><td>150, 16, 150</td></tr>
-<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>RotationToFaceNorth</th><td>0</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
-<tr><th>Tags</th><td>rwgonly,streettile</td></tr>
+<tr><th>Tags</th><td>streettile,rwgonly</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>none</td></tr></table>
@@ -59,9 +59,12 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>334883</td></tr>
+      <tr><td>air</td><td>Air</td><td>334887</td></tr>
 <tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
 <tr><td>cntTrashPile05</td><td>Rotting Trash</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:pipeFlange</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:pipeJoint</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:pipeStraight</td><td>-</td><td>5</td></tr>
 <tr><td>corrugatedMetalShapes:ramp</td><td>-</td><td>8</td></tr>
 <tr><td>corrugatedMetalShapes:rampCorner</td><td>-</td><td>12</td></tr>
 <tr><td>corrugatedMetalShapes:rampCornerFiller</td><td>-</td><td>4</td></tr>
@@ -70,16 +73,12 @@
 <tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>2</td></tr>
 <tr><td>hayBaleSquare</td><td>Hay Bale</td><td>9</td></tr>
 <tr><td>ladderMetal</td><td>Iron Ladder</td><td>9</td></tr>
-<tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>2</td></tr>
-<tr><td>metalPipeJoint</td><td>Metal Pipe Joint</td><td>1</td></tr>
-<tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>5</td></tr>
 <tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>1</td></tr>
 <tr><td>palletEmpty</td><td>Empty Pallet</td><td>2</td></tr>
-<tr><td>pipeSmallValve</td><td>Pipe Small Valve</td><td>1</td></tr>
+<tr><td>pipeSmallValve</td><td>Pipe Small Valve Black</td><td>1</td></tr>
 <tr><td>steelShapes:pyramid</td><td>-</td><td>1</td></tr>
 <tr><td>terrDirt</td><td>Dirt</td><td>185</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>2275</td></tr>
-<tr><td>terrWaterPOI</td><td>Water Block (POI)</td><td>0</td></tr>
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>22271</td></tr>
 <tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>8</td></tr>
 <tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>4</td></tr>
@@ -87,7 +86,7 @@
 <tr><td>utilityInsulator</td><td>Insulator</td><td>6</td></tr>
 <tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>9</td></tr>
 <tr><td>wineBarrelSet</td><td>Wine Barrel Set</td><td>1</td></tr>
-<tr><td>woodChair1</td><td>Wooden Chair</td><td>2</td></tr>
+<tr><td>woodChair1</td><td>Wooden Chair</td><td>1</td></tr>
 <tr><td>woodPillar375</td><td>Utility Pole Small</td><td>24</td></tr>
 <tr><td>woodPillar375UtilityTop</td><td>Utility Pole Small Top</td><td>3</td></tr>
 <tr><td>woodPoleUtilitySupport</td><td>Utility Pole Support</td><td>6</td></tr>

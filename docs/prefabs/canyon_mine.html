@@ -27,11 +27,13 @@
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>navezgane only</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>InfoVolumeSize</th><td>64, 69, 44</td></tr>
+<tr><th>InfoVolumeStart</th><td>0, 1, 0</td></tr>
 <tr><th>PrefabSize</th><td>64, 69, 44</td></tr>
 <tr><th>RotationToFaceNorth</th><td>0</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
@@ -44,6 +46,7 @@
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>64, 18, 44#64, 23, 44#64, 26, 44#9, 4, 8</td></tr>
 <tr><th>SleeperVolumeStart</th><td>0, 0, 0#0, 18, 0#0, 41, 0#0, 14, 11</td></tr>
+<tr><th>SleeperVolumeTriggeredBy</th><td> # # # </td></tr>
 <tr><th>Tags</th><td>navonly</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-55</td></tr>
@@ -61,7 +64,7 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>53885</td></tr>
+      <tr><td>air</td><td>Air</td><td>54882</td></tr>
 <tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>20</td></tr>
 <tr><td>brickShapes:cube</td><td>-</td><td>69</td></tr>
 <tr><td>burntWoodBlock2</td><td>Burnt Wood Block 2</td><td>4</td></tr>
@@ -78,21 +81,20 @@
 <tr><td>chainlinkFenceTopPlainRail</td><td>Chain Link Top Plain Rail</td><td>8</td></tr>
 <tr><td>cntBackpack01</td><td>Weathered Backpack</td><td>1</td></tr>
 <tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
-<tr><td>cntBin</td><td>Small Trash Bin</td><td>1</td></tr>
+<tr><td>cntBinTrashMetalWhiteRandomLootHelper</td><td>= Metal Trash Bin = Random Helper</td><td>1</td></tr>
 <tr><td>cntBirdnest</td><td>Bird Nest</td><td>7</td></tr>
 <tr><td>cntBookcaseGoodRandomLootHelper</td><td>= Bookcase Good = Random Helper</td><td>2</td></tr>
 <tr><td>cntCabinetOldBottomLootHelper</td><td>= Cabinet Old = Random Helper</td><td>2</td></tr>
 <tr><td>cntCardboardBox</td><td>Cardboard Box</td><td>3</td></tr>
+<tr><td>cntDeskMetalGreyRandomLootHelper</td><td>= Grey Metal Desk = Random Helper</td><td>2</td></tr>
 <tr><td>cntDuffle01</td><td>Duffle Bag</td><td>1</td></tr>
 <tr><td>cntGunSafe</td><td>Gun Safe</td><td>1</td></tr>
 <tr><td>cntLootCrateWorkingStiffs</td><td>Working Stiff Box</td><td>1</td></tr>
-<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>2</td></tr>
-<tr><td>cntMountainManStorageChest</td><td>Mountain Man Chest</td><td>2</td></tr>
 <tr><td>cntMunitionsBoxArmy</td><td>Army Munitions Box</td><td>2</td></tr>
 <tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>5</td></tr>
 <tr><td>cntShippingCrateWorkingStiffs</td><td>Working Stiff Sealed Shipping Crate</td><td>3</td></tr>
-<tr><td>cntSportsBag01</td><td>Rotting Sports Bag</td><td>1</td></tr>
-<tr><td>cntSportsBag02</td><td>Weathered Sports Bag</td><td>1</td></tr>
+<tr><td>cntSportsBag01RandomLootHelper</td><td>= Rotting Sports Bag = Random Helper</td><td>1</td></tr>
+<tr><td>cntSportsBag02RandomLootHelper</td><td>= Weathered Sports Bag = Random Helper</td><td>1</td></tr>
 <tr><td>cntTrashPile01</td><td>Trash Pile</td><td>4</td></tr>
 <tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>8</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>5</td></tr>
@@ -102,8 +104,9 @@
 <tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>3</td></tr>
 <tr><td>cntTrashPile08</td><td>Foul Trash</td><td>12</td></tr>
 <tr><td>cntTrashPile09</td><td>Old Trash</td><td>9</td></tr>
+<tr><td>cntWoodenChestRottenClosed</td><td>Rotten Chest</td><td>2</td></tr>
 <tr><td>cntWorkbenchBustedRandomLootHelper</td><td>= Destroyed Workbench = Random Helper</td><td>1</td></tr>
-<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>2</td></tr>
+<tr><td>commercialDoorV2Grey</td><td>Grey Commercial Door V2</td><td>2</td></tr>
 <tr><td>concreteShapes:cube</td><td>-</td><td>395</td></tr>
 <tr><td>conduit01</td><td>Conduit Triple Straight</td><td>38</td></tr>
 <tr><td>conduit01Corner</td><td>Conduit Triple Corner</td><td>9</td></tr>
@@ -123,15 +126,15 @@
 <tr><td>corrugatedMetalShapes:pillar50</td><td>-</td><td>3</td></tr>
 <tr><td>corrugatedMetalShapes:ramp</td><td>-</td><td>176</td></tr>
 <tr><td>corrugatedMetalShapes:trussing</td><td>-</td><td>236</td></tr>
-<tr><td>doorFrameWhiteBoarded1</td><td>Door Frame White 1 Boarded</td><td>2</td></tr>
-<tr><td>doorFrameWhiteBoarded2</td><td>Door Frame White 2 Boarded</td><td>2</td></tr>
-<tr><td>driftwood</td><td>Driftwood</td><td>5</td></tr>
-<tr><td>driftwood2</td><td>Driftwood 2</td><td>2</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage decor1</td><td>6</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage decor2</td><td>7</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage decor3</td><td>11</td></tr>
-<tr><td>glassCTRSheet</td><td>Glass Pane</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:window04Broken01</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:window04Full</td><td>-</td><td>2</td></tr>
+<tr><td>driftwood</td><td>Driftwood 01</td><td>5</td></tr>
+<tr><td>driftwood2</td><td>Driftwood 02</td><td>2</td></tr>
+<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>6</td></tr>
+<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>7</td></tr>
+<tr><td>garbage_decor3</td><td>Garbage Decor3</td><td>11</td></tr>
 <tr><td>industrialLight01</td><td>Industrial Light 01 (POI)</td><td>6</td></tr>
+<tr><td>ironDoorBrown</td><td>Brown Iron Door</td><td>1</td></tr>
 <tr><td>metalCatwalk</td><td>Metal Catwalk</td><td>72</td></tr>
 <tr><td>metalCatwalkRailingCNR</td><td>Metal Catwalk Corner</td><td>5</td></tr>
 <tr><td>metalPipeCorner</td><td>Metal Pipe Corner</td><td>11</td></tr>
@@ -140,7 +143,6 @@
 <tr><td>metalPipeStraight</td><td>Metal Pipe Straight</td><td>59</td></tr>
 <tr><td>metalPipeValve</td><td>Metal Pipe Valve</td><td>1</td></tr>
 <tr><td>metalRailing</td><td>Thin Metal Railing</td><td>37</td></tr>
-<tr><td>metalReinforcedDoorWooden</td><td>Metal Reinforced Door</td><td>1</td></tr>
 <tr><td>metalStairsBoardRailing</td><td>Metal Stairs With Railing</td><td>4</td></tr>
 <tr><td>mushroom01</td><td>Mushrooms 01 (POI)</td><td>1</td></tr>
 <tr><td>officeChair01</td><td>Office Chair Grey</td><td>2</td></tr>
@@ -154,30 +156,17 @@
 <tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>7</td></tr>
 <tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>29</td></tr>
 <tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>7</td></tr>
-<tr><td>solidWoodFrameRamp</td><td>S Wood Frame Ramp</td><td>3</td></tr>
-<tr><td>stalactite02</td><td>Stalactite 02</td><td>1</td></tr>
-<tr><td>stalactite04</td><td>Stalactite 04</td><td>9</td></tr>
-<tr><td>stalagmite02</td><td>Stalagmite 02</td><td>1</td></tr>
-<tr><td>stalagmite04</td><td>Stalagmite 04</td><td>7</td></tr>
 <tr><td>terrDesertGround</td><td>Desert Ground</td><td>2557</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>1300</td></tr>
-<tr><td>terrOreDiamond</td><td>-</td><td>1</td></tr>
-<tr><td>terrOreGold</td><td>-</td><td>10</td></tr>
+<tr><td>terrGravel</td><td>Gravel</td><td>1318</td></tr>
 <tr><td>terrOreIron</td><td>Iron Ore</td><td>44</td></tr>
 <tr><td>terrOreLead</td><td>Lead Ore</td><td>26</td></tr>
 <tr><td>terrOreOilDeposit</td><td>Oil Shale Ore Deposit</td><td>1465</td></tr>
-<tr><td>terrOreSilver</td><td>-</td><td>7</td></tr>
 <tr><td>terrSandStone</td><td>Sandstone</td><td>129042</td></tr>
 <tr><td>terrStone</td><td>Stone</td><td>2</td></tr>
-<tr><td>terrWaterPOI</td><td>Water Block (POI)</td><td>0</td></tr>
 <tr><td>treeCactus01</td><td>Cactus 01</td><td>1</td></tr>
 <tr><td>treeCactus02</td><td>Cactus 02</td><td>1</td></tr>
 <tr><td>treeCactus03</td><td>Cactus 03</td><td>2</td></tr>
 <tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>18</td></tr>
-<tr><td>window03Wood</td><td>Wood Window</td><td>3</td></tr>
-<tr><td>window03WoodBroke1</td><td>Window 3 Wood Broke 1</td><td>1</td></tr>
-<tr><td>window03WoodBroke2</td><td>Window 3 Wood Broke 2</td><td>2</td></tr>
-<tr><td>window03WoodBroke3</td><td>Window 3 Wood Broke 3</td><td>3</td></tr>
 <tr><td>windowPlug02CTRPlate</td><td>Window Plug 02</td><td>1</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>5</td></tr>
 <tr><td>woodShapes:catwalkV1</td><td>-</td><td>181</td></tr>
@@ -201,6 +190,7 @@
 <tr><td>woodShapes:ramp</td><td>-</td><td>190</td></tr>
 <tr><td>woodShapes:rampCorner</td><td>-</td><td>12</td></tr>
 <tr><td>woodShapes:rampCornerFiller</td><td>-</td><td>4</td></tr>
+<tr><td>woodShapes:rampFrame</td><td>-</td><td>3</td></tr>
 <tr><td>woodShapes:rampInclineFillerHalfLeft</td><td>-</td><td>12</td></tr>
 <tr><td>woodShapes:rampInclineFillerHalfRight</td><td>-</td><td>12</td></tr>
 <tr><td>woodShapes:rampInclineHalfLeft</td><td>-</td><td>14</td></tr>
@@ -208,6 +198,10 @@
 <tr><td>woodShapes:stairsRailing</td><td>-</td><td>18</td></tr>
 <tr><td>woodShapes:wedge60</td><td>-</td><td>24</td></tr>
 <tr><td>woodShapes:wedge60Tip</td><td>-</td><td>30</td></tr>
+<tr><td>woodShapes:window01</td><td>-</td><td>3</td></tr>
+<tr><td>woodShapes:window01Broken02</td><td>-</td><td>1</td></tr>
+<tr><td>woodShapes:window01Broken03</td><td>-</td><td>2</td></tr>
+<tr><td>woodShapes:window01Broken04</td><td>-</td><td>3</td></tr>
 <tr><td>woodShapes:windowBoarded</td><td>-</td><td>10</td></tr>
     </table>
   </section>

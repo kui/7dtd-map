@@ -27,11 +27,13 @@
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>navezgane only</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
+<tr><th>InfoVolumeSize</th><td>40, 20, 74</td></tr>
+<tr><th>InfoVolumeStart</th><td>7, 3, 1</td></tr>
 <tr><th>PrefabSize</th><td>48, 34, 77</td></tr>
 <tr><th>RotationToFaceNorth</th><td>0</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
@@ -44,6 +46,7 @@
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>17, 17, 61#16, 8, 20#21, 13, 26</td></tr>
 <tr><th>SleeperVolumeStart</th><td>9, 4, 10#26, 13, 26#27, 8, 0</td></tr>
+<tr><th>SleeperVolumeTriggeredBy</th><td> # # </td></tr>
 <tr><th>Tags</th><td>navonly</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>Zoning</th><td>NavOnly</td></tr></table>
@@ -60,30 +63,28 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>41214</td></tr>
+      <tr><td>air</td><td>Air</td><td>41215</td></tr>
 <tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>138</td></tr>
 <tr><td>brickShapes:brickDestroyed02</td><td>-</td><td>36</td></tr>
 <tr><td>brickShapes:brickDestroyed03</td><td>-</td><td>4</td></tr>
 <tr><td>brickShapes:cube</td><td>-</td><td>2832</td></tr>
 <tr><td>brickShapes:ramp</td><td>-</td><td>20</td></tr>
-<tr><td>campfire</td><td>Campfire</td><td>1</td></tr>
-<tr><td>cntApacheArtifactChest</td><td>Apache Artifact Chest</td><td>1</td></tr>
-<tr><td>cntCasketModernRandomHelper</td><td>= Casket = Random Helper</td><td>3</td></tr>
+<tr><td>cntCoffinWildWestClosed</td><td>Wild West Coffin Closed</td><td>3</td></tr>
+<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
 <tr><td>cntMedicLootPileB</td><td>Medical Supplies</td><td>1</td></tr>
-<tr><td>cntMountainManStorageChest</td><td>Mountain Man Chest</td><td>1</td></tr>
 <tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>1</td></tr>
 <tr><td>cntShippingCrateHero</td><td>Sealed Shipping Crate</td><td>1</td></tr>
 <tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>2</td></tr>
 <tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
 <tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
+<tr><td>cntWoodenChestRottenClosed</td><td>Rotten Chest</td><td>2</td></tr>
 <tr><td>cntWorkbenchBustedRandomLootHelper</td><td>= Destroyed Workbench = Random Helper</td><td>1</td></tr>
 <tr><td>decoCookingPot</td><td>Cooking Pot (POI)</td><td>4</td></tr>
 <tr><td>emberPileDeco1</td><td>Ember Pile 1 Deco</td><td>1</td></tr>
 <tr><td>emberPileDeco2</td><td>Ember Pile 2 Deco</td><td>1</td></tr>
 <tr><td>graveStone07</td><td>Grave Stone 07</td><td>1</td></tr>
 <tr><td>ladderWood</td><td>Wooden Ladder</td><td>36</td></tr>
-<tr><td>metalReinforcedDoorWooden</td><td>Metal Reinforced Door</td><td>1</td></tr>
-<tr><td>secureDoorWooden</td><td>Secure Wood Door</td><td>7</td></tr>
+<tr><td>oldWoodDoor</td><td>Wood Door</td><td>8</td></tr>
 <tr><td>signNationalPark</td><td>Navezgane National Park</td><td>1</td></tr>
 <tr><td>sleeperBack</td><td>Sleeper Back</td><td>6</td></tr>
 <tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>6</td></tr>
@@ -91,10 +92,10 @@
 <tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>4</td></tr>
 <tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>25</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>70</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>79983</td></tr>
+<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>79982</td></tr>
 <tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>7</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>3</td></tr>
-<tr><td>woodHatch1_v1</td><td>Wooden Hatch</td><td>3</td></tr>
+<tr><td>woodHatch</td><td>Wood Hatch</td><td>3</td></tr>
 <tr><td>woodShapes:catwalkV1</td><td>-</td><td>354</td></tr>
 <tr><td>woodShapes:catwalkV1Corner</td><td>-</td><td>5</td></tr>
 <tr><td>woodShapes:catwalkV1RailOnly</td><td>-</td><td>80</td></tr>

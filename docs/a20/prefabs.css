@@ -1,0 +1,7 @@
+#filters {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border: 1px solid lightgray;
+  padding: 10px;
+}

@@ -31,16 +31,16 @@
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
-<tr><th>POIMarkerGroup</th><td>1,2,4,6,7,3,5,8</td></tr>
-<tr><th>POIMarkerPartRotations</th><td>3,2,2,3,1,2,1,0</td></tr>
-<tr><th>POIMarkerPartSpawnChance</th><td>1,1,1,1,1,1,1,1</td></tr>
-<tr><th>POIMarkerPartToSpawn</th><td>,,,,,,,</td></tr>
-<tr><th>POIMarkerSize</th><td>25, 0, 50#42, 0, 42#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 25</td></tr>
-<tr><th>POIMarkerStart</th><td>46, 2, 25#62, 2, 83#37, 2, 83#46, 2, 0#79, 2, 0#104, 2, 83#79, 2, 25#104, 2, 50</td></tr>
-<tr><th>POIMarkerTags</th><td>#######</td></tr>
-<tr><th>POIMarkerType</th><td>POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn</td></tr>
+<tr><th>POIMarkerGroup</th><td>1,2,4,6,7,3,5,8,new2,new</td></tr>
+<tr><th>POIMarkerPartRotations</th><td>3,2,2,3,1,2,1,0,2,3</td></tr>
+<tr><th>POIMarkerPartSpawnChance</th><td>1,1,1,1,1,1,1,1,1,1</td></tr>
+<tr><th>POIMarkerPartToSpawn</th><td>,,,,,,,,,</td></tr>
+<tr><th>POIMarkerSize</th><td>25, 0, 50#42, 0, 42#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 25#25, 0, 50#25, 0, 25#8, 0, 8#8, 0, 8</td></tr>
+<tr><th>POIMarkerStart</th><td>46, 2, 25#62, 2, 83#37, 2, 83#46, 2, 0#79, 2, 0#104, 2, 83#79, 2, 25#104, 2, 50#71, 2, -4#146, 2, 71</td></tr>
+<tr><th>POIMarkerTags</th><td>#########</td></tr>
+<tr><th>POIMarkerType</th><td>POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,POISpawn,RoadExit,RoadExit</td></tr>
 <tr><th>PrefabSize</th><td>150, 11, 150</td></tr>
-<tr><th>RotationToFaceNorth</th><td>2</td></tr>
+<tr><th>RotationToFaceNorth</th><td>0</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False</td></tr>
@@ -49,7 +49,8 @@
 <tr><th>SleeperVolumeGroupId</th><td>0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>25, 3, 25</td></tr>
 <tr><th>SleeperVolumeStart</th><td>110, 2, 2</td></tr>
-<tr><th>Tags</th><td>rwgonly,streettile</td></tr>
+<tr><th>SleeperVolumeTriggeredBy</th><td> </td></tr>
+<tr><th>Tags</th><td>streettile,rwgonly</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-2</td></tr>
 <tr><th>Zoning</th><td>none</td></tr></table>
@@ -66,13 +67,12 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>200214</td></tr>
+      <tr><td>air</td><td>Air</td><td>200295</td></tr>
 <tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
 <tr><td>decoCowSkull</td><td>Cow Skull</td><td>2</td></tr>
 <tr><td>decoWildWestWagon</td><td>Wild West Wagon</td><td>1</td></tr>
 <tr><td>decoWildWestWagonWheelBack</td><td>Wild West Wagon Wheel Back</td><td>2</td></tr>
 <tr><td>decoWildWestWagonWheelFront</td><td>Wild West Wagon Wheel Front</td><td>2</td></tr>
-<tr><td>garageDoorMetal_v2</td><td>Iron Garage Door v2</td><td>1</td></tr>
 <tr><td>goreBlockAnimal</td><td>Decaying Animal Corpse</td><td>9</td></tr>
 <tr><td>goreBlockHumanCorpse3</td><td>Decaying Human Corpse 3</td><td>1</td></tr>
 <tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>9</td></tr>
@@ -82,7 +82,6 @@
 <tr><td>sleeperSnakeAnimal</td><td>Sleeper Snake (alive)</td><td>6</td></tr>
 <tr><td>terrDirt</td><td>Dirt</td><td>289</td></tr>
 <tr><td>terrGravel</td><td>Gravel</td><td>1723</td></tr>
-<tr><td>terrWaterPOI</td><td>Water Block (POI)</td><td>0</td></tr>
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>44821</td></tr>
 <tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>9</td></tr>
 <tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>4</td></tr>

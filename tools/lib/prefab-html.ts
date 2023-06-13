@@ -75,12 +75,6 @@ function html(model: HtmlModel): string {
 `;
 }
 
-// Known block name list that is defined in .blocks.nim but not used in .tts
-const KNOWN_NO_PLACABLE_BLOCK_NAMES = ["water", "terrWaterPOI"];
-
-// Known block ID list that is used in .tts but not defined in .blocks.nim
-const KNOWN_UNDEFINED_BLOCK_IDS = [16128, 16129];
-
 export async function prefabHtml(xml: string, nim: string, tts: string, labels: Map<string, string>): Promise<string> {
   const name = path.basename(xml, ".xml");
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
@@ -97,7 +91,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
 
   // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));
-  const undefinedBlockIds = [...blockNums.keys()].filter((i) => !blockIdSet.has(i) && !KNOWN_UNDEFINED_BLOCK_IDS.includes(i));
+  const undefinedBlockIds = [...blockNums.keys()].filter((i) => !blockIdSet.has(i));
   if (undefinedBlockIds.length > 0) {
     console.warn(
       "Unexpected state: unknown block ID used: file=%s, idCount=%o",
@@ -107,7 +101,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
   }
 
   // List of blocks defined in .blocks.nim but not placed in .tts
-  const noPlacedBlocks = blocks.filter((b) => b.count === 0 && !KNOWN_NO_PLACABLE_BLOCK_NAMES.includes(b.name));
+  const noPlacedBlocks = blocks.filter((b) => b.count === 0);
   if (noPlacedBlocks.length > 0) {
     console.warn("Unexpected state: unused block was asigned a ID: file=%s, blocks=%o", xml, noPlacedBlocks);
   }

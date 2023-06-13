@@ -2,15 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="description" content="Map renderer for 7 Day to Die Alpha 20" />
-    <title>7 Days to Die Map Renderer Alpha 20</title>
+    <meta name="description" content="Map renderer for 7 Day to Die Alpha 21" />
+    <title>7 Days to Die Map Renderer Alpha 21</title>
     <script src="index.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body data-active-filter="prefab">
-    <h1>7 Days to Die Map Renderer Alpha 20</h1>
+    <h1>7 Days to Die Map Renderer Alpha 21</h1>
 
     <p>Only supported in latest Google Chrome.</p>
     <p>
@@ -22,6 +22,7 @@
       <ul>
         <li><a href="prefabs.html">Prefab List</a></li>
         <li><a href="a19">Alpha 19</a></li>
+        <li><a href="a20">Alpha 20</a></li>
         <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
       </ul>
     </nav>
@@ -135,14 +136,14 @@
             <!-- grep --files-with-matches 'name="DifficultyTier".*value="4"' "$(jq -r '.vanillaDir' local.json)/Data/Prefabs/POIs/"*.xml | sed -nre 's!^.*/([^/]+)\.xml$!\1!p' | tr '\n' '|' -->
             <button
               data-input-for="prefabs_filter"
-              data-input-text="^(apartments_01|church_01|city_center_01|countrytown_business_05|downtown_building_02|downtown_building_03|downtown_strip_02|downtown_strip_03|downtown_strip_05|downtown_strip_07|downtown_strip_11|hotel_01|house_burnt_06|house_modern_18|house_modern_23|house_old_mansard_02|house_old_tudor_01|house_old_victorian_03|housing_development_01|installation_red_mesa|parking_garage_02|restaurant_01|rural_drive_in_01|school_01|skyscraper_04|store_clothing_02|store_grocery_02|store_gun_02|store_hardware_03|utility_waterworks_01|warehouse_01|warehouse_03)$"
+              data-input-text="^(apartments_01|army_camp_01|army_camp_02|army_camp_03|army_camp_05|bowling_alley_01|church_01|city_center_01|countrytown_business_05|courthouse_med_01|downtown_building_02|downtown_building_03|downtown_strip_01|downtown_strip_02|downtown_strip_03|downtown_strip_04|downtown_strip_05|downtown_strip_07|downtown_strip_11|downtown_strip_12|farm_16|gas_station_05|hotel_01|house_burnt_06|house_modern_18|house_modern_24|house_old_mansard_02|house_old_mansard_06|house_old_mansard_07|house_old_victorian_03|housing_development_01|junkyard_01|parking_garage_02|restaurant_01|roadside_checkpoint_01|roadside_checkpoint_03|roadside_checkpoint_04|roadside_checkpoint_05|rural_drive_in_01|school_01|skyscraper_04|store_grocery_02|store_gun_01|store_gun_02|store_hardware_03|utility_electric_co_02|utility_waterworks_01|warehouse_01|warehouse_03)$"
             >
               Tier 4
             </button>
             <!-- grep --files-with-matches 'name="DifficultyTier".*value="5"' "$(jq -r '.vanillaDir' local.json)/Data/Prefabs/POIs/"*.xml | sed -nre 's!^.*/([^/]+)\.xml$!\1!p' | tr '\n' '|' -->
             <button
               data-input-for="prefabs_filter"
-              data-input-text="^(apartment_brick_6_flr|factory_03|factory_lg_01|factory_lg_02|hospital_01|skyscraper_01|skyscraper_02|skyscraper_03)$"
+              data-input-text="^(apartments_02|apartments_06|factory_01|factory_02|factory_03|hospital_01|house_modern_23|installation_red_mesa|nursing_home_01|prison_01|prison_02|skyscraper_01|skyscraper_02|skyscraper_03)$"
             >
               Tier 5
             </button>
@@ -161,13 +162,16 @@
             <button data-input-for="blocks_filter">Super Corn</button>
             <button
               data-input-for="blocks_filter"
-              data-input-text="^(cntVendingMachine2Broken|cntATMInsecure|utilityTransformer|utilityTransformerHanging|cntMunitionsBox|chandelierLight|streetLight01|cntmunitionsBoxArmy)$"
+              data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
             >
               Steel with Wrench
             </button>
-            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
+            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
             <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
+              Working Vending-Machine
+            </button>
+            <button>Hidden Stash</button>
           </td>
         </tr>
       </table>

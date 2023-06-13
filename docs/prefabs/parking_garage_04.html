@@ -27,7 +27,7 @@
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
-<tr><th>DifficultyTier</th><td>1</td></tr>
+<tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
 <tr><th>EditorGroups</th><td>downtown</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
@@ -51,13 +51,18 @@
     <h2>Blocks</h2>
     <table>
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>49254</td></tr>
+      <tr><td>air</td><td>Air</td><td>49253</td></tr>
+<tr><td>breakerBoxClosed</td><td>Breaker Box Closed</td><td>2</td></tr>
+<tr><td>bulletproofShapes:windowStoreCornerBulletproofFull</td><td>-</td><td>4</td></tr>
+<tr><td>bulletproofShapes:windowStoreFourSidedBulletproofFull</td><td>-</td><td>1</td></tr>
+<tr><td>bulletproofShapes:windowStoreThreeSidedBulletproofFull</td><td>-</td><td>2</td></tr>
 <tr><td>cashRegisterScanner</td><td>Cash Register Scanner</td><td>1</td></tr>
 <tr><td>cntATMSecure</td><td>ATM</td><td>1</td></tr>
 <tr><td>cntAmmoPileSmall</td><td>Ammo Pile, Small</td><td>1</td></tr>
 <tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>3</td></tr>
 <tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>2</td></tr>
 <tr><td>cntCoffeeMaker</td><td>Coffee Maker</td><td>1</td></tr>
+<tr><td>cntDeskMetalGreyRandomLootHelper</td><td>= Grey Metal Desk = Random Helper</td><td>1</td></tr>
 <tr><td>cntDomedTrashCanRandomLootHelper</td><td>= Domed Trash Can = Random Helper</td><td>2</td></tr>
 <tr><td>cntFancyGarbageCan</td><td>Fancy Garbage Can</td><td>1</td></tr>
 <tr><td>cntFileCabinetTallRandomLootHelper</td><td>= File Cabinet Tall = Random Helper</td><td>1</td></tr>
@@ -72,7 +77,6 @@
 <tr><td>cntJanitorCartFull</td><td>Janitor's Cart</td><td>1</td></tr>
 <tr><td>cntLockersTallRandomLootHelper</td><td>= Lockers Tall = Random Helper</td><td>1</td></tr>
 <tr><td>cntMedicineCabinetClosedRandomLootHelper</td><td>= Medicine Cabinet = Random Helper</td><td>2</td></tr>
-<tr><td>cntMetalDesk02RandomLootHelper</td><td>= Metal Desk = Random Helper</td><td>1</td></tr>
 <tr><td>cntNewsDispenseFreeGreen</td><td>Free Newspaper Dispenser</td><td>1</td></tr>
 <tr><td>cntRetroFridgeRandomLootHelper</td><td>= Retro Fridge = Random Helper</td><td>1</td></tr>
 <tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>1</td></tr>
@@ -80,17 +84,16 @@
 <tr><td>cntStoreShelfSingleBottomEmpty</td><td>Store Shelf Single Bottom Empty</td><td>3</td></tr>
 <tr><td>cntStoreShelfSingleBottomFood01</td><td>Shelf</td><td>1</td></tr>
 <tr><td>cntStoreShelfSingleBottomFood02</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleBottomTrash02</td><td>Store Shelf Single Bottom Trash 02</td><td>2</td></tr>
+<tr><td>cntStoreShelfSingleBottomTrash02</td><td>Shelf</td><td>2</td></tr>
 <tr><td>cntStoreShelfSingleTopEmpty</td><td>Store Shelf Single Top Empty</td><td>3</td></tr>
 <tr><td>cntStoreShelfSingleTopFood01</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleTopTrash01</td><td>Store Shelf Single Top Trash 01</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleTopTrash02</td><td>Store Shelf Single Top Trash 02</td><td>2</td></tr>
+<tr><td>cntStoreShelfSingleTopTrash01</td><td>Shelf</td><td>1</td></tr>
+<tr><td>cntStoreShelfSingleTopTrash02</td><td>Shelf</td><td>2</td></tr>
 <tr><td>cntToilet03</td><td>Commercial Toilet</td><td>2</td></tr>
-<tr><td>cntVendingMachine2RandomLootHelper</td><td>= Vending Machine = Random Helper</td><td>1</td></tr>
+<tr><td>cntVendingMachine2RandomLootHelper</td><td>= Drink Vending Machine = Random Helper</td><td>1</td></tr>
 <tr><td>cntWallSafe</td><td>Wall Safe</td><td>1</td></tr>
 <tr><td>cntWaterCoolerFull</td><td>Water Cooler</td><td>1</td></tr>
-<tr><td>commercialDoor2_v1</td><td>Commercial Door 2</td><td>3</td></tr>
-<tr><td>commercialDoor4_v1</td><td>Commercial Door 4</td><td>2</td></tr>
+<tr><td>commercialDoorV2Grey</td><td>Grey Commercial Door V2</td><td>5</td></tr>
 <tr><td>concreteShapes:cube</td><td>-</td><td>4021</td></tr>
 <tr><td>concreteShapes:cubeEighth</td><td>-</td><td>17</td></tr>
 <tr><td>concreteShapes:cubeHalf</td><td>-</td><td>7108</td></tr>
@@ -154,7 +157,8 @@
 <tr><td>concreteShapes:wedge60TrimQuarterRight</td><td>-</td><td>60</td></tr>
 <tr><td>corrugatedMetalShapes:cornerRound</td><td>-</td><td>2</td></tr>
 <tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>197</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>24</td></tr>
+<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>14</td></tr>
+<tr><td>corrugatedMetalShapes:cubeHalfCorner</td><td>-</td><td>10</td></tr>
 <tr><td>corrugatedMetalShapes:cubeTrimHalfSplit</td><td>-</td><td>7</td></tr>
 <tr><td>corrugatedMetalShapes:cubeTrimSplitWedge60Right</td><td>-</td><td>7</td></tr>
 <tr><td>corrugatedMetalShapes:doorTrim1m</td><td>-</td><td>640</td></tr>
@@ -173,34 +177,37 @@
 <tr><td>corrugatedMetalShapes:poleSquareTipRight</td><td>-</td><td>5</td></tr>
 <tr><td>corrugatedMetalShapes:ramp</td><td>-</td><td>2</td></tr>
 <tr><td>corrugatedMetalShapes:rampInclineFiller</td><td>-</td><td>4</td></tr>
-<tr><td>decoComputerMonitorKeyboardMouse</td><td>Monitor / Keyboard / Mouse</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_a</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_b</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_e</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_g</td><td>-</td><td>3</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_i</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_k</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_m</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_n</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_o</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_p</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_r</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_s</td><td>-</td><td>5</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_t</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_u</td><td>-</td><td>1</td></tr>
+<tr><td>corrugatedMetalShapes:signLetter_y</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signNumber_1</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:signNumber_2</td><td>-</td><td>4</td></tr>
+<tr><td>corrugatedMetalShapes:signNumber_3</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signNumber_4</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:signNumber_5</td><td>-</td><td>2</td></tr>
+<tr><td>corrugatedMetalShapes:windowStoreCornerEmpty</td><td>-</td><td>14</td></tr>
+<tr><td>corrugatedMetalShapes:windowStoreOneSidedEmpty</td><td>-</td><td>13</td></tr>
+<tr><td>corrugatedMetalShapes:windowStoreThreeSidedEmpty</td><td>-</td><td>6</td></tr>
+<tr><td>corrugatedMetalShapes:windowStoreThreeSidedFull</td><td>-</td><td>6</td></tr>
+<tr><td>decoComputerMonitorKeyboardMouse</td><td>Monitor / Keyboard / Mouse 01</td><td>1</td></tr>
 <tr><td>decoMetalBollard</td><td>Metal Bollard</td><td>4</td></tr>
-<tr><td>fluorescentLight</td><td>Flourescent Light (POI)</td><td>1</td></tr>
-<tr><td>fusebox</td><td>Fusebox</td><td>2</td></tr>
+<tr><td>fluorescentLight</td><td>Fluorescent Light (POI)</td><td>1</td></tr>
 <tr><td>industrialLight01</td><td>Industrial Light 01 (POI)</td><td>3</td></tr>
 <tr><td>ladderMetal</td><td>Iron Ladder</td><td>35</td></tr>
 <tr><td>metalPipeFlange</td><td>Metal Pipe Flange</td><td>10</td></tr>
 <tr><td>metalRailing</td><td>Thin Metal Railing</td><td>36</td></tr>
-<tr><td>metalSignLetter_1</td><td>Metal Sign 1</td><td>4</td></tr>
-<tr><td>metalSignLetter_2</td><td>Metal Sign 2</td><td>4</td></tr>
-<tr><td>metalSignLetter_3</td><td>Metal Sign 3</td><td>2</td></tr>
-<tr><td>metalSignLetter_4</td><td>Metal Sign 4</td><td>2</td></tr>
-<tr><td>metalSignLetter_5</td><td>Metal Sign 5</td><td>2</td></tr>
-<tr><td>metalSignLetter_a</td><td>Metal Sign A</td><td>2</td></tr>
-<tr><td>metalSignLetter_b</td><td>Metal Sign B</td><td>1</td></tr>
-<tr><td>metalSignLetter_e</td><td>Metal Sign E</td><td>1</td></tr>
-<tr><td>metalSignLetter_g</td><td>Metal Sign G</td><td>3</td></tr>
-<tr><td>metalSignLetter_i</td><td>Metal Sign I</td><td>2</td></tr>
-<tr><td>metalSignLetter_k</td><td>Metal Sign K</td><td>1</td></tr>
-<tr><td>metalSignLetter_m</td><td>Metal Sign M</td><td>2</td></tr>
-<tr><td>metalSignLetter_n</td><td>Metal Sign N</td><td>2</td></tr>
-<tr><td>metalSignLetter_o</td><td>Metal Sign O</td><td>2</td></tr>
-<tr><td>metalSignLetter_p</td><td>Metal Sign P</td><td>2</td></tr>
-<tr><td>metalSignLetter_r</td><td>Metal Sign R</td><td>1</td></tr>
-<tr><td>metalSignLetter_s</td><td>Metal Sign S</td><td>5</td></tr>
-<tr><td>metalSignLetter_t</td><td>Metal Sign T</td><td>1</td></tr>
-<tr><td>metalSignLetter_u</td><td>Metal Sign U</td><td>1</td></tr>
-<tr><td>metalSignLetter_y</td><td>Metal Sign Y</td><td>2</td></tr>
 <tr><td>metalStairsBoardRailing</td><td>Metal Stairs With Railing</td><td>35</td></tr>
 <tr><td>metalTrussingSCTR</td><td>Metal Trussing SCTR</td><td>6</td></tr>
 <tr><td>officeChair01</td><td>Office Chair Grey</td><td>1</td></tr>
@@ -209,11 +216,12 @@
 <tr><td>palletBrownBoxesTile</td><td>Pallet, Brown Boxes, Tile</td><td>3</td></tr>
 <tr><td>palletBrownBoxesTop</td><td>Pallet, Brown Boxes, Top</td><td>2</td></tr>
 <tr><td>pedestalSink</td><td>Pedestal Sink</td><td>2</td></tr>
-<tr><td>pipeSmallWall1x3</td><td>Pipe Small Wall 1x3</td><td>2</td></tr>
-<tr><td>pipeSmallWallCorner</td><td>Pipe Small Wall Corner</td><td>1</td></tr>
+<tr><td>pipeSmallWall1x3</td><td>Pipe Small Wall 1x3 Black</td><td>2</td></tr>
+<tr><td>pipeSmallWallCorner</td><td>Pipe Small Wall Corner Black</td><td>1</td></tr>
 <tr><td>rustyIronTable</td><td>Rusty Iron Table</td><td>1</td></tr>
 <tr><td>signCigaretteAd</td><td>Sign: Cigarette Ad</td><td>3</td></tr>
-<tr><td>signExitLight</td><td>Exit Sign</td><td>2</td></tr>
+<tr><td>signExitFrameMount2mCentered</td><td>Exit Sign Frame Mount 2m Centered</td><td>1</td></tr>
+<tr><td>signExitFrameMountHigh</td><td>Exit Sign Frame Mount High</td><td>2</td></tr>
 <tr><td>signMegaCrushAd</td><td>Sign: Mega Crush Ad</td><td>2</td></tr>
 <tr><td>signRoadStop</td><td>Sign Road Stop</td><td>1</td></tr>
 <tr><td>signTowAway</td><td>Sign No Parking Tow</td><td>3</td></tr>
@@ -224,13 +232,6 @@
 <tr><td>streetLightBroken</td><td>Street Light Broken (POI)</td><td>1</td></tr>
 <tr><td>terrAsphalt</td><td>Asphalt</td><td>56</td></tr>
 <tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>5937</td></tr>
-<tr><td>windowStoreCornerBulletproof</td><td>Window Store Corner Bulletproof</td><td>4</td></tr>
-<tr><td>windowStoreFourSidedBulletproof</td><td>Window Store Four Sided Bulletproof</td><td>1</td></tr>
-<tr><td>windowStoreOneSidedEmpty</td><td>Window Store One Sided Empty</td><td>13</td></tr>
-<tr><td>windowStoreThreeSidedBulletproof</td><td>Window Store Three Sided Bulletproof</td><td>2</td></tr>
-<tr><td>windowStoreThreeSidedEmpty</td><td>Window Store Three Sided Empty</td><td>6</td></tr>
-<tr><td>windowStoreThreeSidedFull</td><td>Window Store Three Sided Full</td><td>6</td></tr>
-<tr><td>windowStoreTwoSidedCornerEmpty</td><td>Window Store Two Sided Corner Empty</td><td>14</td></tr>
 <tr><td>woodChair1</td><td>Wooden Chair</td><td>1</td></tr>
 <tr><td>woodShapes:windowTrim</td><td>-</td><td>16</td></tr>
 <tr><td>woodShapes:windowTrimSides</td><td>-</td><td>12</td></tr>
