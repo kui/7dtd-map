@@ -166,9 +166,11 @@
             >
               Steel with Wrench
             </button>
-            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile)(?!.*Empty$)">Book Containers</button>
+            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
             <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine2$">Working Vending-Machine</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&amp;!RandomLootHelper|Broken|Trader|Empty)$">
+              Working Vending-Machine
+            </button>
           </td>
         </tr>
       </table>
