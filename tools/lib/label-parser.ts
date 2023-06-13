@@ -6,7 +6,8 @@ const EN_INDEX = 5;
 type LabelId = string;
 
 export async function parseLabel(localizationFileName: string): Promise<Map<LabelId, string>> {
-  return (await parseCsv(localizationFileName)).reduce<Map<LabelId, string>>((r, l) => {
+  const rows = await parseCsv(localizationFileName);
+  return rows.reduce<Map<LabelId, string>>((r, l) => {
     r.set(l[0], l[EN_INDEX]);
     return r;
   }, new Map());
