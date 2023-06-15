@@ -6,7 +6,9 @@ import * as prefabsFilter from "./worker/prefabs-filter";
 
 interface HighlightedPrefab {
   name: string;
+  label?: string;
   highlightedName?: string;
+  highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
 }
 
@@ -30,7 +32,13 @@ function main() {
 
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
-  li.innerHTML = `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`;
+  li.innerHTML = [
+    `<a href="prefabs/${prefab.name}.html" target="_blank">`,
+    prefab.highlightedLabel || prefab.label || "-",
+    "/",
+    `<small>${prefab.highlightedName || prefab.name}</small>`,
+    "</a>",
+  ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
     prefab.matchedBlocks.forEach((block) => {

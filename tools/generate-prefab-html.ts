@@ -2,7 +2,7 @@ import * as path from "path";
 import { promises as fs } from "fs";
 import glob from "glob-promise";
 import { prefabHtml } from "./lib/prefab-html";
-import { parseLabel } from "./lib/label-parser";
+import { LabelId, parseLabel } from "./lib/label-parser";
 import { handleMain, projectRoot, vanillaDir } from "./lib/utils";
 
 const BASE_DEST = projectRoot("docs", "prefabs");
@@ -27,7 +27,7 @@ async function loadLabels() {
   return labels;
 }
 
-async function buildHtmls(labels: Map<string, string>) {
+async function buildHtmls(labels: Map<LabelId, Label>) {
   const prefabsDir = await vanillaDir("Data", "Prefabs");
   const xmlGlob = path.join(prefabsDir, "*", "*.xml");
   const xmlFiles = await glob(xmlGlob);
@@ -56,7 +56,7 @@ async function buildHtmls(labels: Map<string, string>) {
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 }
 
-async function generateHtml(xmlFileName: string, labels: Map<string, string>) {
+async function generateHtml(xmlFileName: string, labels: Map<LabelId, Label>) {
   const prefabName = path.basename(xmlFileName, ".xml");
   const prefabDir = path.dirname(xmlFileName);
   const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`);
