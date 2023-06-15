@@ -36,7 +36,7 @@ async function main() {
 }
 
 async function writeJsonFile(file: string, json: unknown) {
-  await fs.writeFile(file, JSON.stringify(json));
+  await fs.writeFile(file, JSON.stringify(json, null, "\t"));
   console.log("Write %s", file);
 }
 
