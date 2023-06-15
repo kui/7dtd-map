@@ -53,6 +53,8 @@ export default class Prefabs {
   }
 
   private applyFilter() {
+    this.initPrefabLabels();
+
     if (this.filter) {
       const result = this.filter.match(this.all);
       this.status = result.status;
@@ -62,8 +64,16 @@ export default class Prefabs {
       this.filtered = [];
     } else {
       this.status = "All prefabs";
-      console.log(this.prefabLabels);
-      this.filtered = this.all.map((p) => ({ ...p, highlightedLabel: this.prefabLabels[p.name] }));
+      this.filtered = this.all;
+    }
+  }
+
+  private initPrefabLabels() {
+    if (this.all.length === 0) return;
+    if ("label" in this.all[0]) return;
+    if (Object.keys(this.prefabLabels).length === 0) return;
+    for (const prefab of this.all) {
+      prefab.label = this.prefabLabels[prefab.name];
     }
   }
 
@@ -131,13 +141,12 @@ class PrefabNameMatcher implements PrefabMatcher {
   match(prefabs: Prefab[]) {
     const results = prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const highlightedName = matchAndHighlight(prefab.name, this.regexp);
-      const label = this.labels[prefab.name];
-      const highlightedLabel = label && matchAndHighlight(label, this.regexp);
+      const highlightedLabel = prefab.label && matchAndHighlight(prefab.label, this.regexp);
       if (highlightedName || highlightedLabel) {
         return {
           ...prefab,
           highlightedName: highlightedName || prefab.name,
-          highlightedLabel: highlightedLabel || label,
+          highlightedLabel: highlightedLabel || prefab.label,
         };
       }
       return [];

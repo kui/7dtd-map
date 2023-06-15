@@ -5,10 +5,10 @@ export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "b
 const prefabs = new Prefabs();
 
 Promise.all([
-  (async () => prefabs.prefabLabels = await fetchJson("../prefab-labels.json"))(),
-  (async () => prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json"))(),
-  (async () => prefabs.blockLabels = await fetchJson("../block-labels.json"))(),
-]).then(() => prefabs.update())
+  (async () => (prefabs.prefabLabels = await fetchJson("../prefab-labels.json")))(),
+  (async () => (prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json")))(),
+  (async () => (prefabs.blockLabels = await fetchJson("../block-labels.json")))(),
+]).then(() => prefabs.update());
 
 onmessage = ({ data }: MessageEvent<InMessage>) => {
   Object.assign(prefabs, data).update();

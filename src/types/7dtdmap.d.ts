@@ -1,5 +1,6 @@
 interface Prefab {
   name: string;
+  label?: string;
   x: number;
   z: number;
 }
