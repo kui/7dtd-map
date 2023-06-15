@@ -6,6 +6,7 @@ import { LabelId } from "./label-parser";
 
 interface HtmlModel {
   name: string;
+  label: string;
   xml: PrefabProperty[];
   dimensions: Dimensions;
   blocks: BlockCount[];
@@ -31,16 +32,16 @@ function html(model: HtmlModel): string {
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="">
+  <meta name="description" content="7 Days to Die prefab information and block statistics for ${model.label} / ${model.name}">
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>${model.name}</title>
+  <title>${model.label} / ${model.name}</title>
 </head>
 <body>
-  <h1>${model.name}</h1>
+  <h1>${model.label} / <small>${model.name}</small></h1>
 
   <nav>
     <ul>
@@ -78,6 +79,7 @@ function html(model: HtmlModel): string {
 
 export async function prefabHtml(xml: string, nim: string, tts: string, labels: Map<LabelId, Label>): Promise<string> {
   const name = path.basename(xml, ".xml");
+  const label = labels.get(name)?.english ?? "-";
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim).then((bs) =>
     Array.from(bs).map(([id, name]) => ({
@@ -112,6 +114,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
 
   return html({
     name,
+    label,
     xml: properties,
     blocks,
     dimensions: { x: maxx, y: maxy, z: maxz },
