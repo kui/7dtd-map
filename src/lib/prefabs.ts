@@ -11,7 +11,8 @@ interface PrefabHighlightedBlocks {
 
 export default class Prefabs {
   all: Prefab[] = [];
-  blockLabels: BlockLabels = {};
+  prefabLabels: Labels = {};
+  blockLabels: Labels = {};
   blockPrefabIndex: BlockPrefabIndex = {};
   filter: PrefabMatcher | null = null;
   filtered: HighlightedPrefab[] = [];
@@ -36,7 +37,7 @@ export default class Prefabs {
     if (s.length === 0) {
       this.filter = null;
     } else {
-      this.filter = new PrefabNameMatcher(new RegExp(s, "i"));
+      this.filter = new PrefabNameMatcher(new RegExp(s, "i"), this.prefabLabels);
     }
   }
   set blocksFilterString(filter: string) {
@@ -61,7 +62,8 @@ export default class Prefabs {
       this.filtered = [];
     } else {
       this.status = "All prefabs";
-      this.filtered = this.all;
+      console.log(this.prefabLabels);
+      this.filtered = this.all.map((p) => ({ ...p, highlightedLabel: this.prefabLabels[p.name] }));
     }
   }
 
@@ -119,17 +121,24 @@ interface PrefabMatcherResult {
 
 class PrefabNameMatcher implements PrefabMatcher {
   regexp: RegExp;
+  labels: Labels;
 
-  constructor(regexp: RegExp) {
+  constructor(regexp: RegExp, labels: Labels) {
     this.regexp = regexp;
+    this.labels = labels;
   }
 
   match(prefabs: Prefab[]) {
     const results = prefabs.flatMap<HighlightedPrefab>((prefab) => {
-      const m = matchAndHighlight(prefab.name, this.regexp);
-      if (m) {
-        // Clone and add a new field;
-        return { ...prefab, highlightedName: m };
+      const highlightedName = matchAndHighlight(prefab.name, this.regexp);
+      const label = this.labels[prefab.name];
+      const highlightedLabel = label && matchAndHighlight(label, this.regexp);
+      if (highlightedName || highlightedLabel) {
+        return {
+          ...prefab,
+          highlightedName: highlightedName || prefab.name,
+          highlightedLabel: highlightedLabel || label,
+        };
       }
       return [];
     });
@@ -140,15 +149,15 @@ class PrefabNameMatcher implements PrefabMatcher {
   }
 }
 
-class BlockNameMatcher implements PrefabNameMatcher {
+class BlockNameMatcher implements PrefabMatcher {
   regexp: RegExp;
   blockPrefabIndex: BlockPrefabIndex;
-  blockLabels: BlockLabels;
+  labels: Labels;
 
-  constructor(regexp: RegExp, blockPrefabIndex: BlockPrefabIndex, blockLabels: BlockLabels) {
+  constructor(regexp: RegExp, blockPrefabIndex: BlockPrefabIndex, labels: Labels) {
     this.regexp = regexp;
     this.blockPrefabIndex = blockPrefabIndex;
-    this.blockLabels = blockLabels;
+    this.labels = labels;
   }
 
   match(prefabs: Prefab[]) {
@@ -179,7 +188,7 @@ class BlockNameMatcher implements PrefabNameMatcher {
   private matchBlocks() {
     return Object.entries(this.blockPrefabIndex).reduce<HighlightedBlock[]>((arr, [blockName, prefabs]) => {
       const highlightedName = matchAndHighlight(blockName, this.regexp);
-      const blockLabel = this.blockLabels[blockName];
+      const blockLabel = this.labels[blockName];
       const highlightedLabel = blockLabel && matchAndHighlight(blockLabel, this.regexp);
       if (highlightedName || highlightedLabel) {
         return arr.concat({

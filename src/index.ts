@@ -158,7 +158,10 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
     prefab.dist ? `${humanreadableDistance(prefab.dist)},` : "",
-    `<a href="prefabs/${prefab.name}.html" target="_blank">${prefab.highlightedName || prefab.name}</a>`,
+    `<a href="prefabs/${prefab.name}.html" target="_blank">`,
+    prefab.highlightedLabel || "-",
+    `<small>${prefab.highlightedName || prefab.name}</small>`,
+    "</a>",
     `(${prefab.x}, ${prefab.z})`,
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
