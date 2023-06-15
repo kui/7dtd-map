@@ -33,13 +33,14 @@ async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
   const labels = new Map<string, Label>();
   for await (const line of parser) {
     if (isLocalizationLine(line)) {
+      if (labels.has(line.Key)) console.warn("Unexpected line: duplicated label key: ", line.Key);
       labels.set(line.Key, {
         key: line.Key,
         file: line.File,
         ...LANGUAGES.reduce((acc, lang) => ({ ...acc, [lang]: line[lang] }), {} as LabelCore),
       });
     } else {
-      throw Error("Unexpected line in Localization file");
+      throw Error("Unexpected line: empty label key");
     }
   }
   return labels;

@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
 import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
-import { parseLabel } from "./lib/label-parser";
+import { LabelId, parseLabel } from "./lib/label-parser";
 import { parseTts } from "./lib/tts-parser";
 import * as utils from "./lib/utils";
 
@@ -27,10 +27,17 @@ async function main() {
   console.log("Load %d blocks", Object.keys(blockPrefabIndex).length);
   await writeJsonFile(blockPrefabIndexFile, blockPrefabIndex);
 
+  const labels = await parseLabel(path.join(vanillaDir, "Data", "Config", "Localization.txt"));
+
   const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
-  const labels = await readLabels(vanillaDir, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
-  console.log("Load %d block labels", Object.keys(labels).length);
-  await writeJsonFile(blockLabelsFile, labels);
+  const blockLabels = await extractLabels(labels, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
+  console.log("Load %d block labels", Object.keys(blockLabels).length);
+  await writeJsonFile(blockLabelsFile, blockLabels);
+
+  const prefabLabelsFile = path.join(DOCS_DIR, "prefab-labels.json");
+  const prefabLabels = await extractLabels(labels, ["POI"], Object.keys(prefabBlockIndex));
+  console.log("Load %d prefab labels", Object.keys(prefabLabels).length);
+  await writeJsonFile(prefabLabelsFile, prefabLabels);
 
   return 0;
 }
@@ -44,9 +51,7 @@ interface Labels {
   [labelKey: string]: string;
 }
 
-async function readLabels(vanillaDir: string, labelFiles: string[], labelNames: string[]): Promise<Labels> {
-  const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
-  const labels = await parseLabel(fileName);
+async function extractLabels(labels: Map<LabelId, Label>, labelFiles: string[], labelNames: string[]): Promise<Labels> {
   return labelNames.reduce<Labels>((result, block) => {
     const label = labels.get(block);
     if (!label) return result;
