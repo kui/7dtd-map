@@ -35,6 +35,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel || prefab.label || "-",
+    "/",
     `<small>${prefab.highlightedName || prefab.name}</small>`,
     "</a>",
   ].join(" ");
