@@ -39,7 +39,7 @@ async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
         ...LANGUAGES.reduce((acc, lang) => ({ ...acc, [lang]: line[lang] }), {} as LabelCore),
       });
     } else {
-      throw Error("Unexpected line in Localization file")
+      throw Error("Unexpected line in Localization file");
     }
   }
   return labels;
