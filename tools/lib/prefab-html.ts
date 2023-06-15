@@ -2,6 +2,7 @@ import * as path from "path";
 import { parseNim } from "./nim-parser";
 import { parseTts } from "./tts-parser";
 import { parseXml } from "./xml-parser";
+import { LabelId } from "./label-parser";
 
 interface HtmlModel {
   name: string;
@@ -75,14 +76,14 @@ function html(model: HtmlModel): string {
 `;
 }
 
-export async function prefabHtml(xml: string, nim: string, tts: string, labels: Map<string, string>): Promise<string> {
+export async function prefabHtml(xml: string, nim: string, tts: string, labels: Map<LabelId, Label>): Promise<string> {
   const name = path.basename(xml, ".xml");
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim).then((bs) =>
     Array.from(bs).map(([id, name]) => ({
       id,
       name,
-      localizedName: labels.get(name) ?? "-",
+      localizedName: labels.get(name)?.english ?? "-",
       count: blockNums.get(id) ?? 0,
     }))
   );

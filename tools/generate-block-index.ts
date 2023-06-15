@@ -28,7 +28,7 @@ async function main() {
   await writeJsonFile(blockPrefabIndexFile, blockPrefabIndex);
 
   const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
-  const labels = await readLabels(vanillaDir, Object.keys(blockPrefabIndex));
+  const labels = await readLabels(vanillaDir, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
   console.log("Load %d block labels", Object.keys(labels).length);
   await writeJsonFile(blockLabelsFile, labels);
 
@@ -44,16 +44,18 @@ interface Labels {
   [labelKey: string]: string;
 }
 
-async function readLabels(vanillaDir: string, blocks: string[]) {
+async function readLabels(vanillaDir: string, labelFiles: string[], labelNames: string[]): Promise<Labels> {
   const fileName = path.join(vanillaDir, "Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
-  return blocks.reduce<Labels>((result, block) => {
+  return labelNames.reduce<Labels>((result, block) => {
     const label = labels.get(block);
-    if (label) {
-      const labelEntry: Labels = { [block]: label };
-      return Object.assign(result, labelEntry);
+    if (!label) return result;
+    if (!labelFiles.includes(label.file)) {
+      console.warn("Unexpected label.file: ", label);
+      return result;
     }
-    return result;
+    const labelEntry: Labels = { [block]: label.english };
+    return Object.assign(result, labelEntry);
   }, {});
 }
 
