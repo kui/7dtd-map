@@ -35,6 +35,11 @@ body[data-active-filter="block"] #blocks_filter {
   text-decoration: unset;
 }
 
+ul#prefabs_list, #prefabs_list ul {
+  list-style-type: none;
+  padding-inline-start: 16px;
+}
+
 #overlay {
   display: none;
   background-color: rgba(0, 0, 0, 0.8);
