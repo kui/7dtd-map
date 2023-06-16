@@ -35,7 +35,8 @@ body[data-active-filter="block"] #blocks_filter {
   text-decoration: unset;
 }
 
-ul#prefabs_list, #prefabs_list ul {
+ul#prefabs_list,
+#prefabs_list ul {
   list-style-type: none;
   padding-inline-start: 16px;
 }
