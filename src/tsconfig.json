@@ -5,7 +5,6 @@
     "lib": ["esnext", "dom", "webworker"],
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "noEmit": true

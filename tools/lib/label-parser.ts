@@ -1,8 +1,6 @@
 import fs from "fs";
 import { Parser, parse as csvParse } from "csv-parse";
 
-export type LabelId = string;
-
 const LANGUAGES: Languages = [
   "english",
   "german",

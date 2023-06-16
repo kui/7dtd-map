@@ -1,6 +1,7 @@
 // Workaround for weird semver of typescript :(
 // See https://github.com/microsoft/TypeScript/issues/45745
 // Copy from https://github.com/microsoft/TypeScript/blob/v4.3.5/lib/lib.webworker.d.ts
+// @ts-nocheck
 class OffscreenCanvas extends EventTarget {
   constructor(width: number, height: number);
   /**
