@@ -1,4 +1,4 @@
-const LANGUAGES = [
+type Languages = [
   "english",
   "german",
   "spanish",
@@ -11,10 +11,10 @@ const LANGUAGES = [
   "russian",
   "turkish",
   "schinese",
-  "tchinese",
-] as const;
+  "tchinese"
+];
 
-type Languages = typeof LANGUAGES;
+type LabelId = string;
 
 type LabelCore = {
   [lang in Languages[number]]: string;

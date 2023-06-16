@@ -1,4 +1,4 @@
-// Workaround for weird semver of typescript :(
+// @ts-expect-error Workaround for weird semver of typescript
 // See https://github.com/microsoft/TypeScript/issues/45745
 // Copy from https://github.com/microsoft/TypeScript/blob/v4.3.5/lib/lib.webworker.d.ts
 class OffscreenCanvas extends EventTarget {

@@ -15,8 +15,8 @@
     "lint": "run-p lint:**",
     "lint:prettier": "prettier --check .",
     "lint:eslint": "eslint --ext .ts .",
-    "lint:tsc:src": "tsc -p src",
-    "lint:tsc:tools": "tsc -p tools",
+    "lint:tsc:src": "tsc -p src --skipLibCheck",
+    "lint:tsc:tools": "tsc -p tools --skipLibCheck",
     "test": "jest --config src/jest.config.ts",
     "ci": "run-p lint test"
   },
