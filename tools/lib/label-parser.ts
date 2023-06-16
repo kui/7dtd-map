@@ -1,23 +1,49 @@
-import { promises as fs } from "fs";
-import { parse as csvParse } from "csv-parse";
+import fs from "fs";
+import { Parser, parse as csvParse } from "csv-parse";
 
-const EN_INDEX = 5;
+const LANGUAGES: Languages = [
+  "english",
+  "german",
+  "spanish",
+  "french",
+  "italian",
+  "japanese",
+  "koreana",
+  "polish",
+  "brazilian",
+  "russian",
+  "turkish",
+  "schinese",
+  "tchinese",
+];
 
-type LabelId = string;
+type LocalizationLine = {
+  Key: LabelId;
+  File: string;
+} & LabelCore;
 
-export async function parseLabel(localizationFileName: string): Promise<Map<LabelId, string>> {
-  const rows = await parseCsv(localizationFileName);
-  return rows.reduce<Map<LabelId, string>>((r, l) => {
-    r.set(l[0], l[EN_INDEX]);
-    return r;
-  }, new Map());
+export async function parseLabel(localizationFileName: string): Promise<Map<LabelId, Label>> {
+  const parser = fs.createReadStream(localizationFileName).pipe(csvParse({ columns: true }));
+  return reduceToLabelMap(parser);
 }
-async function parseCsv(localizationFileName: string): Promise<string[][]> {
-  const localization = await fs.readFile(localizationFileName);
-  return new Promise((resolve, reject) => {
-    csvParse(localization, (err, out) => {
-      if (err) reject(err);
-      else resolve(out);
-    });
-  });
+
+async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
+  const labels = new Map<string, Label>();
+  for await (const line of parser) {
+    if (isLocalizationLine(line)) {
+      if (labels.has(line.Key)) console.warn("Unexpected line: duplicated label key: ", line.Key);
+      labels.set(line.Key, {
+        key: line.Key,
+        file: line.File,
+        ...LANGUAGES.reduce((acc, lang) => ({ ...acc, [lang]: line[lang] }), {} as LabelCore),
+      });
+    } else {
+      throw Error("Unexpected line: empty label key");
+    }
+  }
+  return labels;
+}
+
+function isLocalizationLine(line: unknown): line is LocalizationLine {
+  return ((line as LocalizationLine).Key?.length ?? 0) > 0;
 }

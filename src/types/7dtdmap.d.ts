@@ -1,10 +1,12 @@
 interface Prefab {
   name: string;
+  label?: string;
   x: number;
   z: number;
 }
 interface HighlightedPrefab extends Prefab {
   highlightedName?: string;
+  highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
   dist?: number | null;
 }
@@ -48,6 +50,6 @@ interface BlockPrefabIndex {
   [block: string]: { name: string; count: number }[];
 }
 
-interface BlockLabels {
+interface Labels {
   [block: string]: string;
 }

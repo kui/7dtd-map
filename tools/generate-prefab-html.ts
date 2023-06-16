@@ -27,7 +27,7 @@ async function loadLabels() {
   return labels;
 }
 
-async function buildHtmls(labels: Map<string, string>) {
+async function buildHtmls(labels: Map<LabelId, Label>) {
   const prefabsDir = await vanillaDir("Data", "Prefabs");
   const xmlGlob = path.join(prefabsDir, "*", "*.xml");
   const xmlFiles = await glob(xmlGlob);
@@ -56,7 +56,7 @@ async function buildHtmls(labels: Map<string, string>) {
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 }
 
-async function generateHtml(xmlFileName: string, labels: Map<string, string>) {
+async function generateHtml(xmlFileName: string, labels: Map<LabelId, Label>) {
   const prefabName = path.basename(xmlFileName, ".xml");
   const prefabDir = path.dirname(xmlFileName);
   const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`);
