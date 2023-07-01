@@ -17,6 +17,10 @@
   overflow: auto;
 }
 
+.prefab_difficulty_icon {
+  font-size: small;
+}
+
 label[for="prefabs_filter"],
 #prefabs_filter,
 label[for="blocks_filter"],

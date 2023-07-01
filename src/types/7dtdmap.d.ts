@@ -3,6 +3,7 @@ interface Prefab {
   label?: string;
   x: number;
   z: number;
+  difficulty?: number;
 }
 interface HighlightedPrefab extends Prefab {
   highlightedName?: string;
@@ -17,6 +18,10 @@ interface HighlightedBlock {
   count?: number;
   prefabs?: { name: string; count: number }[];
 }
+
+type PrefabDifficulties = {
+  [prefabName: string]: number;
+};
 
 interface GameMapSize {
   type: "game";
