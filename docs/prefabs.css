@@ -5,3 +5,7 @@
   border: 1px solid lightgray;
   padding: 10px;
 }
+
+.prefab_difficulty_icon {
+  font-size: small;
+}
