@@ -1,7 +1,7 @@
 import * as path from "path";
 import { parseNim } from "./nim-parser";
 import { parseTts } from "./tts-parser";
-import { parseXml } from "./xml-parser";
+import { parsePrefabXml } from "./prefab-xml-parser";
 
 interface HtmlModel {
   name: string;
@@ -117,33 +117,6 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
     xml: properties,
     blocks,
     dimensions: { x: maxx, y: maxy, z: maxz },
-  });
-}
-
-interface PrefabXml {
-  prefab: {
-    property: PrefabXmlProperty[];
-  };
-}
-
-type PrefabXmlProperty = PrefabXmlPropertyValue | PrefabXmlClassProperty;
-
-interface PrefabXmlPropertyValue {
-  $: PrefabProperty;
-}
-
-interface PrefabXmlClassProperty {
-  $: {
-    class: string;
-  };
-  property: PrefabProperty[];
-}
-
-async function parsePrefabXml(xmlFileName: string) {
-  const xml = await parseXml<PrefabXml>(xmlFileName);
-  return xml.prefab.property.flatMap((p) => {
-    if ("name" in p.$) return p.$;
-    else return [];
   });
 }
 
