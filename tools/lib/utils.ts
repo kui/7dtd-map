@@ -33,3 +33,8 @@ export function handleMain(main: Promise<number>): void {
       process.on("exit", () => process.exit(exitCode));
     });
 }
+
+export async function writeJsonFile(file: string, json: unknown) {
+  await fs.promises.writeFile(file, JSON.stringify(json, null, "\t"));
+  console.log("Write %s", file);
+}
