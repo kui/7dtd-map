@@ -16,12 +16,14 @@ export class PrefabsHandler {
   doms: Doms;
   worker: PrefabsFilterWorker;
   storage: MapStorage;
+  difficultyPromise: Promise<PrefabDifficulties>;
   listeners: ((prefabs: HighlightedPrefab[]) => Promise<void>)[] = [];
 
-  constructor(doms: Doms, worker: PrefabsFilterWorker, storage: MapStorage) {
+  constructor(doms: Doms, worker: PrefabsFilterWorker, storage: MapStorage, difficulty: Promise<PrefabDifficulties>) {
     this.doms = doms;
     this.worker = worker;
     this.storage = storage;
+    this.difficultyPromise = difficulty;
 
     MapStorage.addListener(async () => {
       const o = await storage.getCurrent("prefabs");
@@ -45,7 +47,7 @@ export class PrefabsHandler {
   }
 
   async handle(blob: { text(): Promise<string> }): Promise<void> {
-    const prefabs = parse(await blob.text());
+    const prefabs = parse(await blob.text(), await this.difficultyPromise);
     await this.storage.put("prefabs", prefabs);
     this.worker.postMessage({ all: prefabs });
   }
@@ -55,7 +57,7 @@ export class PrefabsHandler {
   }
 }
 
-function parse(xml: string): Prefab[] {
+function parse(xml: string, difficulties: PrefabDifficulties): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const position = e.getAttribute("position")?.split(",");
@@ -66,6 +68,7 @@ function parse(xml: string): Prefab[] {
       name,
       x: parseInt(position[0]),
       z: parseInt(position[2]),
+      difficulty: difficulties[name] ?? 0,
     };
   });
 }

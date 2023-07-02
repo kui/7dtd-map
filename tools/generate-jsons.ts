@@ -11,10 +11,10 @@ const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
 
 async function main() {
   const vanillaDir = await utils.vanillaDir();
-  const fileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim");
-  const nimFiles = await glob(fileGlob);
+  const nimFileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim");
+  const nimFiles = await glob(nimFileGlob);
   if (nimFiles.length === 0) {
-    throw Error(`No nim file: ${fileGlob}`);
+    throw Error(`No nim file: ${nimFileGlob}`);
   }
 
   const prefabBlockIndexFile = path.join(DOCS_DIR, "prefab-block-index.json");
@@ -30,12 +30,12 @@ async function main() {
   const labels = await parseLabel(path.join(vanillaDir, "Data", "Config", "Localization.txt"));
 
   const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
-  const blockLabels = await extractLabels(labels, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
+  const blockLabels = extractLabels(labels, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
   console.log("Load %d block labels", Object.keys(blockLabels).length);
   await writeJsonFile(blockLabelsFile, blockLabels);
 
   const prefabLabelsFile = path.join(DOCS_DIR, "prefab-labels.json");
-  const prefabLabels = await extractLabels(labels, ["POI"], Object.keys(prefabBlockIndex));
+  const prefabLabels = extractLabels(labels, ["POI"], Object.keys(prefabBlockIndex));
   console.log("Load %d prefab labels", Object.keys(prefabLabels).length);
   await writeJsonFile(prefabLabelsFile, prefabLabels);
 
@@ -51,7 +51,7 @@ interface Labels {
   [labelKey: string]: string;
 }
 
-async function extractLabels(labels: Map<LabelId, Label>, labelFiles: string[], labelNames: string[]): Promise<Labels> {
+function extractLabels(labels: Map<LabelId, Label>, labelFiles: string[], labelNames: string[]): Labels {
   return labelNames.reduce<Labels>((result, block) => {
     const label = labels.get(block);
     if (!label) return result;
@@ -86,7 +86,7 @@ async function readIndex(nimFiles: string[]) {
     }
 
     if (++completed % 50 === 0) {
-      console.log("Read prefabs: %d / %d", completed, readIndices.length);
+      console.log("Read prefabs: %d / %d", completed, nimFiles.length);
     }
 
     return {

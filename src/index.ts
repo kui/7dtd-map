@@ -92,7 +92,8 @@ function main() {
       blockFilter: component("blocks_filter", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
-    mapStorage
+    mapStorage,
+    fetch("prefab-difficulties.json").then((r) => r.json())
   );
   prefabsHandler.listeners.push(async (prefabs) => {
     mapCanvasHandler.update({ prefabs });
@@ -158,6 +159,9 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
     prefab.dist ? `${humanreadableDistance(prefab.dist)},` : "",
+    prefab.difficulty && prefab.difficulty > 0
+      ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
+      : "",
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel || prefab.label || "-",
     "/",

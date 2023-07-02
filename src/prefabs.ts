@@ -6,6 +6,7 @@ import * as prefabsFilter from "./worker/prefabs-filter";
 
 interface HighlightedPrefab {
   name: string;
+  difficulty?: number;
   label?: string;
   highlightedName?: string;
   highlightedLabel?: string;
@@ -20,10 +21,15 @@ function main() {
     "input",
     (e) => (prefabsHandler.blockFilter = (e.target as HTMLInputElement).value)
   );
-  fetch("prefab-block-index.json").then(async (response) => {
-    const prefabs = Object.keys(await response.json()).map((n) => ({ name: n, x: 0, z: 0 }));
+  (async () => {
+    const [index, difficulties] = await Promise.all([
+      fetch("prefab-block-index.json").then((r) => r.json()),
+      fetch("prefab-difficulties.json").then((r) => r.json() as Promise<PrefabDifficulties>),
+    ]);
+    const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] }));
     prefabsHandler.prefabs = prefabs;
-  });
+  })();
+
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.body, component("prefabs_list"), (p) => prefabLi(p));
   prefabsHandler.listeners.push(async (update) => {
     prefabListRenderer.iterator = update.prefabs;
@@ -33,6 +39,9 @@ function main() {
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
+    prefab.difficulty && prefab.difficulty > 0
+      ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
+      : "",
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel || prefab.label || "-",
     "/",
