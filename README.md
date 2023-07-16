@@ -25,3 +25,9 @@ $ npm run build
 ```
 $ npm run lint
 ```
+
+## Run in local
+
+```
+$ npm run dev-server
+```
