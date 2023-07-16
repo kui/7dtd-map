@@ -1,6 +1,5 @@
 interface Prefab {
   name: string;
-  label?: string;
   x: number;
   z: number;
   difficulty?: number;
@@ -53,8 +52,4 @@ interface PrefabBlockIndex {
 // value: prefab name and # of block
 interface BlockPrefabIndex {
   [block: string]: { name: string; count: number }[];
-}
-
-interface Labels {
-  [block: string]: string;
 }

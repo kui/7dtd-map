@@ -1,16 +1,15 @@
 import Prefabs from "../lib/prefabs";
 
-export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "blocksFilterString" | "markCoords">>;
+export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "blocksFilterString" | "markCoords" | "language">>;
 
-const prefabs = new Prefabs();
-
-Promise.all([
-  (async () => (prefabs.prefabLabels = await fetchJson("../prefab-labels.json")))(),
-  (async () => (prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json")))(),
-  (async () => (prefabs.blockLabels = await fetchJson("../block-labels.json")))(),
-]).then(() => prefabs.update());
+const prefabs = new Prefabs("../labels", "english");
+(async () => {
+  prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json");
+  prefabs.update();
+})();
 
 onmessage = ({ data }: MessageEvent<InMessage>) => {
+  console.log("Prefab-filter received message: ", data);
   Object.assign(prefabs, data).update();
 };
 

@@ -155,7 +155,7 @@
         <tr>
           <th>Blocks Preset</th>
           <td>
-            <button data-input-for="blocks_filter">Super Corn</button>
+            <button data-input-for="blocks_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
             <button
               data-input-for="blocks_filter"
               data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
@@ -167,7 +167,15 @@
             <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
               Working Vending-Machine
             </button>
-            <button data-input-for="blocks_filter">Hidden Stash</button>
+            <button data-input-for="blocks_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="label_lang">Label Language</label></th>
+          <td>
+            <select id="label_lang">
+              <option selected>english</option>
+            </select>
           </td>
         </tr>
       </table>

@@ -16,6 +16,7 @@ import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import * as syncOutput from "./lib/sync-output";
+import { LabelHandler } from "./lib/label-handler";
 
 function main() {
   presetButton.init();
@@ -131,6 +132,11 @@ function main() {
     mapCanvasHandler.update({ markerCoords: coords });
   });
 
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) });
+  labelHandler.addListener(async (lang) => {
+    prefabsHandler.language = lang;
+  });
+
   const imageLoader = new ImageBitmapLoader(() => new Worker("worker/pngjs.js"));
   const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
@@ -163,7 +169,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
       : "",
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
-    prefab.highlightedLabel || prefab.label || "-",
+    prefab.highlightedLabel || "-",
     "/",
     `<small>${prefab.highlightedName || prefab.name}</small>`,
     "</a>",
