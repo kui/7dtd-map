@@ -40,6 +40,7 @@ async function extract(labels: Map<string, Label>, files: string[], lang: Langua
     (function* () {
       for (const [id, label] of labels.entries()) {
         if (!files.includes(label.file)) continue;
+        if (!label[lang]) continue;
         yield [id, label[lang]];
       }
     })()
