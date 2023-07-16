@@ -14,7 +14,7 @@ interface Doms {
 const ANIMATION_FRAMES = ["｜", "／", "―", "＼"];
 const ANIMATION_INTERVAL_MSEC = 1000;
 
-// Loading progression maanger
+// Loading progression manager
 export class LoadingHandler {
   private doms: Doms;
   private _loadingList: string[] = [];
