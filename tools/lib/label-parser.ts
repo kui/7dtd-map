@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Parser, parse as csvParse } from "csv-parse";
 
-const LANGUAGES: Languages = [
+export const LANGUAGES = [
   "english",
   "german",
   "spanish",
@@ -15,7 +15,20 @@ const LANGUAGES: Languages = [
   "turkish",
   "schinese",
   "tchinese",
-];
+] as const;
+
+export type Language = (typeof LANGUAGES)[number];
+
+type LabelId = string;
+
+type LabelCore = {
+  [lang in Language]: string;
+};
+
+export type Label = {
+  key: LabelId;
+  file: string;
+} & LabelCore;
 
 type LocalizationLine = {
   Key: LabelId;

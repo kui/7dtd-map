@@ -1,25 +1,9 @@
 import * as utils from "./lib/utils";
-import { parseLabel } from "./lib/label-parser";
+import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser";
 import * as path from "path";
 import { promises as fs } from "fs";
 
 const DEST_DIR = utils.projectRoot("docs", "labels");
-const LANGUAGES = [
-  "english",
-  "german",
-  "spanish",
-  "french",
-  "italian",
-  "japanese",
-  "koreana",
-  "polish",
-  "brazilian",
-  "russian",
-  "turkish",
-  "schinese",
-  "tchinese",
-] as const;
-type Language = (typeof LANGUAGES)[number];
 
 async function main() {
   const vanillaDir = await utils.vanillaDir();
