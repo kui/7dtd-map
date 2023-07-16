@@ -17,7 +17,9 @@ async function main() {
   }
 
   const difficulties: PrefabDifficulties = await readJsonFile(DIFFICULTY_JSON_FILE);
-  const prefabNames = Object.entries(difficulties).filter(([, difficulty]) => difficulty === tier).map(([name]) => name);
+  const prefabNames = Object.entries(difficulties)
+    .filter(([, difficulty]) => difficulty === tier)
+    .map(([name]) => name);
   console.error("Found %d prefabs in tier %d", prefabNames.length, tier);
   console.log(`^(%s)$`, prefabNames.join("|"));
   return 0;
