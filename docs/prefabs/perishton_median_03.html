@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Perishton / perishton_median_03">
+  <title>Perishton / perishton_median_03</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Perishton / perishton_median_03</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Perishton / <small>perishton_median_03</small></h1>
+  <h1><span class="prefab_label">Perishton</span> / <small class="prefab_name">perishton_median_03</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,30 +56,30 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>27942</td></tr>
-<tr><td>concreteShapes:billboard</td><td>-</td><td>20</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>20</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterCornerOutside</td><td>-</td><td>6</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdge</td><td>-</td><td>43</td></tr>
-<tr><td>concreteShapes:plate</td><td>-</td><td>181</td></tr>
-<tr><td>concreteShapes:plateHalfTriangle</td><td>-</td><td>6</td></tr>
-<tr><td>concreteShapes:plateRound</td><td>-</td><td>2</td></tr>
-<tr><td>concreteShapes:roadPaintArrowLeft</td><td>-</td><td>2</td></tr>
-<tr><td>concreteShapes:roadPaintDash</td><td>-</td><td>203</td></tr>
-<tr><td>concreteShapes:roadPaintDashCNTR</td><td>-</td><td>52</td></tr>
-<tr><td>concreteShapes:roadPaintDashDiagonalFiller</td><td>-</td><td>8</td></tr>
-<tr><td>concreteShapes:roadPaintDiagonal</td><td>-</td><td>4</td></tr>
-<tr><td>streetLightClassic</td><td>Street Light Classic (POI)</td><td>2</td></tr>
-<tr><td>terrAsphalt</td><td>Asphalt</td><td>1883</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>183</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>233</td></tr>
-<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>1</td></tr>
-<tr><td>treePlainsTree2</td><td>Tree Plains Tree 2</td><td>2</td></tr>
-<tr><td>treeSnowyDeadBush</td><td>Tree Snowy Dead Bush</td><td>2</td></tr>
-<tr><td>treeWinterEverGreen</td><td>Tree Winter Evergreen</td><td>1</td></tr>
-<tr><td>treeWinterPine13m</td><td>Tree Winter Pine 13m</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">27942</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:billboard</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterCornerOutside</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdge</td><td class="block_label">-</td><td class="block_count">43</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:plate</td><td class="block_label">-</td><td class="block_count">181</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:plateHalfTriangle</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:plateRound</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintArrowLeft</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDash</td><td class="block_label">-</td><td class="block_count">203</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDashCNTR</td><td class="block_label">-</td><td class="block_count">52</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDashDiagonalFiller</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDiagonal</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">streetLightClassic</td><td class="block_label">Street Light Classic (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">1883</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">183</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">233</td></tr>
+<tr class="block"><td class="block_name">treeDeadTree02</td><td class="block_label">Tree Dead Tree 02</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treePlainsTree2</td><td class="block_label">Tree Plains Tree 2</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">treeSnowyDeadBush</td><td class="block_label">Tree Snowy Dead Bush</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">treeWinterEverGreen</td><td class="block_label">Tree Winter Evergreen</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeWinterPine13m</td><td class="block_label">Tree Winter Pine 13m</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

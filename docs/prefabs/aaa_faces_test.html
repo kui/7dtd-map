@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_faces_test">
+  <title>- / aaa_faces_test</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_faces_test</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_faces_test</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_faces_test</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,16 +56,16 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>TestCubeA</td><td>Test Cube A (Block Faces)</td><td>26</td></tr>
-<tr><td>TestCubeC</td><td>Test Cube C (Block Faces)</td><td>25</td></tr>
-<tr><td>TestCubeO</td><td>Test Cube O (Block Faces)</td><td>27</td></tr>
-<tr><td>TestCubeP</td><td>Test Cube P (Block Faces)</td><td>24</td></tr>
-<tr><td>TestCubeY</td><td>Test Cube Y (Block Faces)</td><td>22</td></tr>
-<tr><td>air</td><td>Air</td><td>4642</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>798</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>22</td></tr>
+      <tr class="block"><td class="block_name">TestCubeA</td><td class="block_label">Test Cube A (Block Faces)</td><td class="block_count">26</td></tr>
+<tr class="block"><td class="block_name">TestCubeC</td><td class="block_label">Test Cube C (Block Faces)</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">TestCubeO</td><td class="block_label">Test Cube O (Block Faces)</td><td class="block_count">27</td></tr>
+<tr class="block"><td class="block_name">TestCubeP</td><td class="block_label">Test Cube P (Block Faces)</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">TestCubeY</td><td class="block_label">Test Cube Y (Block Faces)</td><td class="block_count">22</td></tr>
+<tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">4642</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">798</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">22</td></tr>
     </table>
   </section>
 </body>

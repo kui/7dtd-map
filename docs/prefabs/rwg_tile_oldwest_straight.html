@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Old West Town / rwg_tile_oldwest_straight">
+  <title>Old West Town / rwg_tile_oldwest_straight</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Old West Town / rwg_tile_oldwest_straight</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Old West Town / <small>rwg_tile_oldwest_straight</small></h1>
+  <h1><span class="prefab_label">Old West Town</span> / <small class="prefab_name">rwg_tile_oldwest_straight</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -65,44 +72,44 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>198660</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>decoCowSkull</td><td>Cow Skull</td><td>2</td></tr>
-<tr><td>decoWildWestWagon</td><td>Wild West Wagon</td><td>2</td></tr>
-<tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>5</td></tr>
-<tr><td>hayBaleSquare</td><td>Hay Bale</td><td>6</td></tr>
-<tr><td>modularRopeNoose</td><td>Rope Noose</td><td>1</td></tr>
-<tr><td>modularRopeTiled</td><td>Rope Tiled</td><td>1</td></tr>
-<tr><td>modularRopeTopTied</td><td>Rope Top Tied</td><td>1</td></tr>
-<tr><td>palletEmpty</td><td>Empty Pallet</td><td>4</td></tr>
-<tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>1</td></tr>
-<tr><td>plantedGoldenrod3Harvest</td><td>Goldenrod Flower 3 (POI)</td><td>1</td></tr>
-<tr><td>sleeperSnakeAnimal</td><td>Sleeper Snake (alive)</td><td>8</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>144</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>1573</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>24338</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>9</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>7</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>8</td></tr>
-<tr><td>treeStumpPOI</td><td>Tree Stump POI</td><td>1</td></tr>
-<tr><td>utilityInsulator</td><td>Insulator</td><td>6</td></tr>
-<tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>7</td></tr>
-<tr><td>woodHatch</td><td>Wood Hatch</td><td>1</td></tr>
-<tr><td>woodPillar375</td><td>Utility Pole Small</td><td>24</td></tr>
-<tr><td>woodPillar375UtilityTop</td><td>Utility Pole Small Top</td><td>3</td></tr>
-<tr><td>woodPoleUtilitySupport</td><td>Utility Pole Support</td><td>6</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>70</td></tr>
-<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>6</td></tr>
-<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:plate</td><td>-</td><td>15</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>47</td></tr>
-<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>18</td></tr>
-<tr><td>woodShapes:railing</td><td>-</td><td>9</td></tr>
-<tr><td>woodShapes:railingBroke01</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:sawhorse</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:stairsRailing</td><td>-</td><td>4</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">198660</td></tr>
+<tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">decoCowSkull</td><td class="block_label">Cow Skull</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">decoWildWestWagon</td><td class="block_label">Wild West Wagon</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">hayBaleRound</td><td class="block_label">Hay Bale, Round</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">hayBaleSquare</td><td class="block_label">Hay Bale</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">modularRopeNoose</td><td class="block_label">Rope Noose</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">modularRopeTiled</td><td class="block_label">Rope Tiled</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">modularRopeTopTied</td><td class="block_label">Rope Top Tied</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletEmpty</td><td class="block_label">Empty Pallet</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">palletEmptyStack</td><td class="block_label">Empty Pallets, Full Stack</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">plantedGoldenrod3Harvest</td><td class="block_label">Goldenrod Flower 3 (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSnakeAnimal</td><td class="block_label">Sleeper Snake (alive)</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">144</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">1573</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">24338</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">treeStumpPOI</td><td class="block_label">Tree Stump POI</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">utilityInsulator</td><td class="block_label">Insulator</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">wineBarrelPlain</td><td class="block_label">Wine Barrel, Plain</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">woodHatch</td><td class="block_label">Wood Hatch</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodPillar375</td><td class="block_label">Utility Pole Small</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">woodPillar375UtilityTop</td><td class="block_label">Utility Pole Small Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodPoleUtilitySupport</td><td class="block_label">Utility Pole Support</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">70</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken1</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken2</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">47</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">woodShapes:railing</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodShapes:railingBroke01</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:sawhorse</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsRailing</td><td class="block_label">-</td><td class="block_count">4</td></tr>
     </table>
   </section>
 </body>

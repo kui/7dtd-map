@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / deco_iron_vein">
+  <title>- / deco_iron_vein</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / deco_iron_vein</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>deco_iron_vein</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">deco_iron_vein</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -50,13 +57,13 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>1</td></tr>
-<tr><td>oreIronBoulder</td><td>Iron Ore Boulder</td><td>1</td></tr>
-<tr><td>terrOreIron</td><td>Iron Ore</td><td>16</td></tr>
-<tr><td>terrOreStoneIronRandom</td><td>= Iron Vein = Helper</td><td>24</td></tr>
-<tr><td>terrainFillerAdaptive</td><td>Adaptive Terrain Filler (POI)</td><td>6</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">oreIronBoulder</td><td class="block_label">Iron Ore Boulder</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrOreIron</td><td class="block_label">Iron Ore</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">terrOreStoneIronRandom</td><td class="block_label">= Iron Vein = Helper</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">terrainFillerAdaptive</td><td class="block_label">Adaptive Terrain Filler (POI)</td><td class="block_count">6</td></tr>
     </table>
   </section>
 </body>

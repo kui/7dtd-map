@@ -9,6 +9,7 @@
     "build:ts": "webpack --mode production",
     "build:json": "ts-node --files ./tools/generate-jsons.ts",
     "build:json:prefab-props": "ts-node --files ./tools/generate-prefab-properties-jsons.ts",
+    "build:json:labels": "ts-node --files ./tools/generate-labels-jsons.ts",
     "build:prefab-html": "ts-node --files ./tools/generate-prefab-html.ts",
     "fix": "run-s fix:**",
     "fix:prettier": "prettier --write .",

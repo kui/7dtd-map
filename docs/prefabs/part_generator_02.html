@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_generator_02">
+  <title>- / part_generator_02</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_generator_02</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_generator_02</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_generator_02</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,21 +56,21 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>69</td></tr>
-<tr><td>breakerBoxClosed</td><td>Breaker Box Closed</td><td>1</td></tr>
-<tr><td>commercialDistributionBox</td><td>Commercial Distribution Box</td><td>1</td></tr>
-<tr><td>conduit01</td><td>Conduit Triple Straight</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:billboardQuarter</td><td>-</td><td>9</td></tr>
-<tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubeTrimHalfSplit</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:cubeTrimHalfSplit4Sided</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:dynamicGrate</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:polePlate</td><td>-</td><td>9</td></tr>
-<tr><td>corrugatedMetalShapes:windowPanel</td><td>-</td><td>11</td></tr>
-<tr><td>ironGarageDoorArmyGreen</td><td>Army Green Iron Garage Door 3x2</td><td>1</td></tr>
-<tr><td>questGeneratorLarge</td><td>Large Quest Generator</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">69</td></tr>
+<tr class="block"><td class="block_name">breakerBoxClosed</td><td class="block_label">Breaker Box Closed</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">commercialDistributionBox</td><td class="block_label">Commercial Distribution Box</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">conduit01</td><td class="block_label">Conduit Triple Straight</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:billboardQuarter</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeTrimHalfSplit</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeTrimHalfSplit4Sided</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:dynamicGrate</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:polePlate</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowPanel</td><td class="block_label">-</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">ironGarageDoorArmyGreen</td><td class="block_label">Army Green Iron Garage Door 3x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">questGeneratorLarge</td><td class="block_label">Large Quest Generator</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_military_camp">
+  <title>- / part_military_camp</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_military_camp</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_military_camp</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_military_camp</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -58,57 +65,57 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>1362</td></tr>
-<tr><td>awningShapes:billboard</td><td>-</td><td>28</td></tr>
-<tr><td>awningShapes:pillar0.05</td><td>-</td><td>1</td></tr>
-<tr><td>awningShapes:rampGlassSheet</td><td>-</td><td>12</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap2</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:wedgeTipHalf</td><td>-</td><td>5</td></tr>
-<tr><td>barbedFence</td><td>Barbed Wire Fence</td><td>4</td></tr>
-<tr><td>barrierMilitary</td><td>Military Barrier</td><td>6</td></tr>
-<tr><td>bedrollArmyGreenPOI</td><td>Bedroll Army Green (POI)</td><td>4</td></tr>
-<tr><td>chairCampingGreen</td><td>Green Camping Chair</td><td>5</td></tr>
-<tr><td>cntArmyTruckRandomLootHelper</td><td>= Army Truck = Random Helper</td><td>1</td></tr>
-<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
-<tr><td>cntCollapsedGeneratorbank</td><td>Destroyed Generator Bank</td><td>1</td></tr>
-<tr><td>cntFoodPileSmall</td><td>Food Pile, Small</td><td>1</td></tr>
-<tr><td>cntFootlockerGreenRandomLootHelper</td><td>= Footlocker Green = Random Helper</td><td>1</td></tr>
-<tr><td>cntMunitionsBoxArmy</td><td>Army Munitions Box</td><td>1</td></tr>
-<tr><td>cntToolBoxRandomLootHelperRed</td><td>= Red Toolbox = Random Helper</td><td>1</td></tr>
-<tr><td>cntWaterCoolerBottleSideCentered</td><td>Water Cooler Bottle</td><td>1</td></tr>
-<tr><td>cntWoodenChestMilitaryRandomLootHelper</td><td>= Military Chest = Random Helper</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:pillar0.05Middle</td><td>-</td><td>3</td></tr>
-<tr><td>decoCarTireFlat02</td><td>Car Tire Flat 02</td><td>1</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>4</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>1</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage Decor3</td><td>2</td></tr>
-<tr><td>modularFireWoodStackB</td><td>Firewood Stack B</td><td>2</td></tr>
-<tr><td>modularFireWoodStackC</td><td>Firewood Stack C</td><td>1</td></tr>
-<tr><td>palletCartonMilitaryBase</td><td>Military Pallet Base</td><td>1</td></tr>
-<tr><td>palletCartonMilitaryTile</td><td>Military Pallet Tile</td><td>1</td></tr>
-<tr><td>palletCartonMilitaryTileCovered</td><td>Military Pallet Tile Covered</td><td>1</td></tr>
-<tr><td>sandbagCorner01Short</td><td>Sandbags Corner Short</td><td>1</td></tr>
-<tr><td>sandbagCorner02Long</td><td>Sandbags Corner Long</td><td>5</td></tr>
-<tr><td>sandbagEnd01</td><td>Sandbags End 2</td><td>1</td></tr>
-<tr><td>sandbagEnd02</td><td>Sandbags End 3</td><td>5</td></tr>
-<tr><td>sandbagPile01</td><td>Sandbags Pile 1</td><td>2</td></tr>
-<tr><td>sandbagPile02</td><td>Sandbags Pile 2</td><td>2</td></tr>
-<tr><td>sandbagSingle02</td><td>Sandbags Single 2</td><td>1</td></tr>
-<tr><td>sandbagSingle04</td><td>Sandbags Single 4</td><td>1</td></tr>
-<tr><td>sandbagStraight01</td><td>Sandbags Straight</td><td>19</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>2</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>1</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>6</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>1</td></tr>
-<tr><td>terrBurntForestGround</td><td>Burnt Forest Ground</td><td>2</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>125</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>251</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>1</td></tr>
-<tr><td>workLightPOI</td><td>Work Light (POI)</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">1362</td></tr>
+<tr class="block"><td class="block_name">awningShapes:billboard</td><td class="block_label">-</td><td class="block_count">28</td></tr>
+<tr class="block"><td class="block_name">awningShapes:pillar0.05</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheet</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap2</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:wedgeTipHalf</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">barbedFence</td><td class="block_label">Barbed Wire Fence</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">barrierMilitary</td><td class="block_label">Military Barrier</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">bedrollArmyGreenPOI</td><td class="block_label">Bedroll Army Green (POI)</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chairCampingGreen</td><td class="block_label">Green Camping Chair</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">cntArmyTruckRandomLootHelper</td><td class="block_label">= Army Truck = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedCampfire</td><td class="block_label">Destroyed Campfire</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedGeneratorbank</td><td class="block_label">Destroyed Generator Bank</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFoodPileSmall</td><td class="block_label">Food Pile, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFootlockerGreenRandomLootHelper</td><td class="block_label">= Footlocker Green = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntMunitionsBoxArmy</td><td class="block_label">Army Munitions Box</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntToolBoxRandomLootHelperRed</td><td class="block_label">= Red Toolbox = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWaterCoolerBottleSideCentered</td><td class="block_label">Water Cooler Bottle</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWoodenChestMilitaryRandomLootHelper</td><td class="block_label">= Military Chest = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.05Middle</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">decoCarTireFlat02</td><td class="block_label">Car Tire Flat 02</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor3</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackB</td><td class="block_label">Firewood Stack B</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackC</td><td class="block_label">Firewood Stack C</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletCartonMilitaryBase</td><td class="block_label">Military Pallet Base</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletCartonMilitaryTile</td><td class="block_label">Military Pallet Tile</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletCartonMilitaryTileCovered</td><td class="block_label">Military Pallet Tile Covered</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sandbagCorner01Short</td><td class="block_label">Sandbags Corner Short</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sandbagCorner02Long</td><td class="block_label">Sandbags Corner Long</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">sandbagEnd01</td><td class="block_label">Sandbags End 2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sandbagEnd02</td><td class="block_label">Sandbags End 3</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">sandbagPile01</td><td class="block_label">Sandbags Pile 1</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sandbagPile02</td><td class="block_label">Sandbags Pile 2</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sandbagSingle02</td><td class="block_label">Sandbags Single 2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sandbagSingle04</td><td class="block_label">Sandbags Single 4</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sandbagStraight01</td><td class="block_label">Sandbags Straight</td><td class="block_count">19</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrBurntForestGround</td><td class="block_label">Burnt Forest Ground</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">125</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">251</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">workLightPOI</td><td class="block_label">Work Light (POI)</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

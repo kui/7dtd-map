@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_farm_field_2">
+  <title>- / part_farm_field_2</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_farm_field_2</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_farm_field_2</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_farm_field_2</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -58,32 +65,32 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>9924</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubePoleCorner</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>28</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareDiagonal</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:poleTwoWayCorner</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:securityGatePlate</td><td>-</td><td>20</td></tr>
-<tr><td>goreBlockAnimal</td><td>Decaying Animal Corpse</td><td>3</td></tr>
-<tr><td>goreBlockHumanCorpse3</td><td>Decaying Human Corpse 3</td><td>1</td></tr>
-<tr><td>rockResource</td><td>Resource Boulder 1</td><td>2</td></tr>
-<tr><td>rockResource02</td><td>Resource Boulder 2</td><td>2</td></tr>
-<tr><td>sleeperBoarAnimal</td><td>Sleeper Boar (alive)</td><td>2</td></tr>
-<tr><td>sleeperCrawlerOnly</td><td>Sleeper Crawler Only</td><td>4</td></tr>
-<tr><td>sleeperSnakeAnimal</td><td>Sleeper Snake (alive)</td><td>3</td></tr>
-<tr><td>sleeperZombieDogAnimal</td><td>Sleeper Zombie Dog</td><td>2</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>102</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>10108</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>4</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>2</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>6</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>216</td></tr>
-<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>54</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">9924</td></tr>
+<tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubePoleCorner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">28</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDiagonal</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:securityGatePlate</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">goreBlockAnimal</td><td class="block_label">Decaying Animal Corpse</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse3</td><td class="block_label">Decaying Human Corpse 3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rockResource</td><td class="block_label">Resource Boulder 1</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">rockResource02</td><td class="block_label">Resource Boulder 2</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperBoarAnimal</td><td class="block_label">Sleeper Boar (alive)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperCrawlerOnly</td><td class="block_label">Sleeper Crawler Only</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">sleeperSnakeAnimal</td><td class="block_label">Sleeper Snake (alive)</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">sleeperZombieDogAnimal</td><td class="block_label">Sleeper Zombie Dog</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">102</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">10108</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">216</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken1</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken2</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">54</td></tr>
     </table>
   </section>
 </body>

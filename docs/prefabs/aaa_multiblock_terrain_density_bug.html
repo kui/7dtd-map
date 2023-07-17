@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_multiblock_terrain_density_bug">
+  <title>- / aaa_multiblock_terrain_density_bug</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_multiblock_terrain_density_bug</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_multiblock_terrain_density_bug</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_multiblock_terrain_density_bug</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -47,11 +54,11 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>119</td></tr>
-<tr><td>banditSupport3x3A</td><td>Bandit Support 3x3 A</td><td>1</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>120</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">119</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x3A</td><td class="block_label">Bandit Support 3x3 A</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">120</td></tr>
     </table>
   </section>
 </body>

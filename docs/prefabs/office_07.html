@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / office_07">
+  <title>- / office_07</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / office_07</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>office_07</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">office_07</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -48,50 +55,50 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>19778</td></tr>
-<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>6</td></tr>
-<tr><td>commercialDoorV1Brown</td><td>Brown Commercial Door V1</td><td>1</td></tr>
-<tr><td>commercialGlassDoor</td><td>Commercial Glass Door</td><td>2</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>698</td></tr>
-<tr><td>concreteShapes:cubeQuarterRoundOutside</td><td>-</td><td>3</td></tr>
-<tr><td>concreteShapes:cubeTrimCornerRound</td><td>-</td><td>2</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterCornerDiagonal</td><td>-</td><td>1</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterCornerInside</td><td>-</td><td>2</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterDiagonalFiller2</td><td>-</td><td>5</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdgeCornerDiagonalFiller2</td><td>-</td><td>1</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdgeDiagonalFiller2Left</td><td>-</td><td>10</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdgeDiagonalFiller2Right</td><td>-</td><td>1</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdgeTwoSided</td><td>-</td><td>72</td></tr>
-<tr><td>concreteShapes:roadPaintDashCNTR</td><td>-</td><td>54</td></tr>
-<tr><td>concreteShapes:roadPaintHandicapOffset</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:window01</td><td>-</td><td>44</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreFourSidedBroken</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreThreeSidedBroken</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreTwoSidedBroken</td><td>-</td><td>6</td></tr>
-<tr><td>parkingBlock</td><td>Parking Block Grey</td><td>7</td></tr>
-<tr><td>plantHedgeRandomHelper</td><td>= Hedge = Random Helper</td><td>8</td></tr>
-<tr><td>terrAsphalt</td><td>Asphalt</td><td>362</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>927</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>1</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>1</td></tr>
-<tr><td>treeSmallThinRandomHelper</td><td>= Tree Small Thin = Random Helper</td><td>4</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>630</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>50</td></tr>
-<tr><td>woodShapes:wedge60</td><td>-</td><td>111</td></tr>
-<tr><td>woodShapes:wedge60Incline</td><td>-</td><td>21</td></tr>
-<tr><td>woodShapes:wedge60Tip</td><td>-</td><td>202</td></tr>
-<tr><td>woodShapes:wedge60TipCornerBase</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:wedge60TipCornerTop</td><td>-</td><td>20</td></tr>
-<tr><td>woodShapes:wedgeInclineCornerTop</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:wedgeInsideCornerBase</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:windowTrim</td><td>-</td><td>18</td></tr>
-<tr><td>woodShapes:windowTrimBottom</td><td>-</td><td>34</td></tr>
-<tr><td>woodShapes:windowTrimSides</td><td>-</td><td>113</td></tr>
-<tr><td>woodShapes:windowTrimTopLeft</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:windowTrimTopMiddle</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:windowTrimTopRight</td><td>-</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">19778</td></tr>
+<tr class="block"><td class="block_name">carsRandomHelper</td><td class="block_label">= Cars = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">commercialDoorV1Brown</td><td class="block_label">Brown Commercial Door V1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">commercialGlassDoor</td><td class="block_label">Commercial Glass Door</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">698</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeQuarterRoundOutside</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimCornerRound</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterCornerDiagonal</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterCornerInside</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterDiagonalFiller2</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeCornerDiagonalFiller2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeDiagonalFiller2Left</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeDiagonalFiller2Right</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeTwoSided</td><td class="block_label">-</td><td class="block_count">72</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDashCNTR</td><td class="block_label">-</td><td class="block_count">54</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintHandicapOffset</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:window01</td><td class="block_label">-</td><td class="block_count">44</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreFourSidedBroken</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreThreeSidedBroken</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreTwoSidedBroken</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">parkingBlock</td><td class="block_label">Parking Block Grey</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">plantHedgeRandomHelper</td><td class="block_label">= Hedge = Random Helper</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">362</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">927</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeSmallThinRandomHelper</td><td class="block_label">= Tree Small Thin = Random Helper</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">630</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">50</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60</td><td class="block_label">-</td><td class="block_count">111</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60Incline</td><td class="block_label">-</td><td class="block_count">21</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60Tip</td><td class="block_label">-</td><td class="block_count">202</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60TipCornerBase</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60TipCornerTop</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedgeInclineCornerTop</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedgeInsideCornerBase</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimBottom</td><td class="block_label">-</td><td class="block_count">34</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimSides</td><td class="block_label">-</td><td class="block_count">113</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimTopLeft</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimTopMiddle</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimTopRight</td><td class="block_label">-</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
 import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
-import { parseLabel } from "./lib/label-parser";
+import { Label, LabelId, parseLabel } from "./lib/label-parser";
 import { parseTts } from "./lib/tts-parser";
 import * as utils from "./lib/utils";
 

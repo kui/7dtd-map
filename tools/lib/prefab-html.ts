@@ -2,6 +2,7 @@ import * as path from "path";
 import { parseNim } from "./nim-parser";
 import { parseTts } from "./tts-parser";
 import { parsePrefabXml } from "./prefab-xml-parser";
+import { Label, LabelId } from "./label-parser";
 
 interface HtmlModel {
   name: string;
@@ -32,21 +33,28 @@ function html(model: HtmlModel): string {
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for ${model.label} / ${model.name}">
+  <title>${model.label} / ${model.name}</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>${model.label} / ${model.name}</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>${model.label} / <small>${model.name}</small></h1>
+  <h1><span class="prefab_label">${model.label}</span> / <small class="prefab_name">${model.name}</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -66,9 +74,19 @@ function html(model: HtmlModel): string {
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      ${model.blocks.map((b) => `<tr><td>${b.name}</td><td>${escapeHtml(b.localizedName)}</td><td>${b.count}</td></tr>`).join("\n")}
+      ${model.blocks
+        .map((b) =>
+          [
+            `<tr class="block">`,
+            `<td class="block_name">${b.name}</td>`,
+            `<td class="block_label">${escapeHtml(b.localizedName)}</td>`,
+            `<td class="block_count">${b.count}</td>`,
+            "</tr>",
+          ].join("")
+        )
+        .join("\n")}
     </table>
   </section>
 </body>

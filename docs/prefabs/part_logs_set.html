@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_logs_set">
+  <title>- / part_logs_set</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_logs_set</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_logs_set</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_logs_set</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -47,15 +54,15 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>204</td></tr>
-<tr><td>woodShapes:logsHalf</td><td>-</td><td>9</td></tr>
-<tr><td>woodShapes:logsHalf2</td><td>-</td><td>9</td></tr>
-<tr><td>woodShapes:logsHalfCorner</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:logsHalfCornerTop</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:logsHalfCornerTop2</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:logsQuarter</td><td>-</td><td>9</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">204</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsHalf</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsHalf2</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsHalfCorner</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsHalfCornerTop</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsHalfCornerTop2</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:logsQuarter</td><td class="block_label">-</td><td class="block_count">9</td></tr>
     </table>
   </section>
 </body>

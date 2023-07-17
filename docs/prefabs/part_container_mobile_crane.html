@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_container_mobile_crane">
+  <title>- / part_container_mobile_crane</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_container_mobile_crane</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_container_mobile_crane</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_container_mobile_crane</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -48,50 +55,50 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>595</td></tr>
-<tr><td>controlPanelTop01Grey</td><td>Control Panel Top 01 Grey</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubeCornerBeveled</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubeEighth</td><td>-</td><td>5</td></tr>
-<tr><td>corrugatedMetalShapes:cubePoleCorner</td><td>-</td><td>18</td></tr>
-<tr><td>corrugatedMetalShapes:cubeQuarter</td><td>-</td><td>31</td></tr>
-<tr><td>corrugatedMetalShapes:cubeQuarterCornerSquareTop</td><td>-</td><td>16</td></tr>
-<tr><td>corrugatedMetalShapes:cubeQuarterPlateCorner</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim0.5m</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim1m</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimTop</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:pillar0.025</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:pillar50Corner</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:pillar50CornerSquareTop</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:plate</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:plateHalf</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:platePoleCorner2</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:plateThreeQuarter</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>65</td></tr>
-<tr><td>corrugatedMetalShapes:poleHalf</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:poleSideCentered</td><td>-</td><td>17</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareDouble</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareDoubleTop</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:poleSupport</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:poleSupport2</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:poleTwoWayCorner</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:quarterInsideCorner</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:slopePlateLeft03</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:slopePlateLeft04</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:slopePlateRight03</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:wedge60Tip</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:wedge60TipHalfLeft</td><td>-</td><td>5</td></tr>
-<tr><td>corrugatedMetalShapes:wedge60TipHalfRight</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:wedgeNarrowLow</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreFourSidedFull</td><td>-</td><td>1</td></tr>
-<tr><td>couchModernSection</td><td>Modern Couch Section</td><td>1</td></tr>
-<tr><td>decoCarWheelFlat</td><td>Car Wheel Flat</td><td>3</td></tr>
-<tr><td>industrialLight01</td><td>Industrial Light 01 (POI)</td><td>2</td></tr>
-<tr><td>lightIndustrial</td><td>Industrial Light (POI)</td><td>2</td></tr>
-<tr><td>shippingContainerCapGreen</td><td>Shipping Container Cap Green</td><td>5</td></tr>
-<tr><td>shippingContainerDoorsClosedGreen</td><td>Shipping Container Doors Closed Green</td><td>1</td></tr>
-<tr><td>shippingContainerSideTextGreen</td><td>Shipping Container Side Text Green</td><td>4</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">595</td></tr>
+<tr class="block"><td class="block_name">controlPanelTop01Grey</td><td class="block_label">Control Panel Top 01 Grey</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeCornerBeveled</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeEighth</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubePoleCorner</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarter</td><td class="block_label">-</td><td class="block_count">31</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarterCornerSquareTop</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarterPlateCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim0.5m</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimTop</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.025</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar50Corner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar50CornerSquareTop</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:platePoleCorner2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateThreeQuarter</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">65</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleHalf</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">17</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDouble</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDoubleTop</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSupport</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSupport2</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:quarterInsideCorner</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateLeft03</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateLeft04</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateRight03</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60Tip</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60TipHalfLeft</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60TipHalfRight</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:wedgeNarrowLow</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreFourSidedFull</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">couchModernSection</td><td class="block_label">Modern Couch Section</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">decoCarWheelFlat</td><td class="block_label">Car Wheel Flat</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">industrialLight01</td><td class="block_label">Industrial Light 01 (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">lightIndustrial</td><td class="block_label">Industrial Light (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">shippingContainerCapGreen</td><td class="block_label">Shipping Container Cap Green</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">shippingContainerDoorsClosedGreen</td><td class="block_label">Shipping Container Doors Closed Green</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">shippingContainerSideTextGreen</td><td class="block_label">Shipping Container Side Text Green</td><td class="block_count">4</td></tr>
     </table>
   </section>
 </body>

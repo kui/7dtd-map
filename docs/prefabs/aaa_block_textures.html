@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_block_textures">
+  <title>- / aaa_block_textures</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_block_textures</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_block_textures</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_block_textures</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,12 +56,12 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>458049</td></tr>
-<tr><td>woodFenceSheet</td><td>Wood Fence</td><td>3475</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>29539</td></tr>
-<tr><td>woodShapes:ramp</td><td>-</td><td>84</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">458049</td></tr>
+<tr class="block"><td class="block_name">woodFenceSheet</td><td class="block_label">Wood Fence</td><td class="block_count">3475</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">29539</td></tr>
+<tr class="block"><td class="block_name">woodShapes:ramp</td><td class="block_label">-</td><td class="block_count">84</td></tr>
     </table>
   </section>
 </body>

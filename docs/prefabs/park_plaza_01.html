@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Waterfall Plaza / park_plaza_01">
+  <title>Waterfall Plaza / park_plaza_01</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Waterfall Plaza / park_plaza_01</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Waterfall Plaza / <small>park_plaza_01</small></h1>
+  <h1><span class="prefab_label">Waterfall Plaza</span> / <small class="prefab_name">park_plaza_01</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -50,39 +57,39 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>7491</td></tr>
-<tr><td>birdBathPlanter</td><td>Bird Bath Planter</td><td>2</td></tr>
-<tr><td>cntFancyGarbageCan</td><td>Fancy Garbage Can</td><td>8</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>2542</td></tr>
-<tr><td>concreteShapes:cubeHalf</td><td>-</td><td>49</td></tr>
-<tr><td>concreteShapes:cubeTrimHalfSplitDiagonal</td><td>-</td><td>76</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterCornerInside</td><td>-</td><td>4</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterCornerInsideTriangle</td><td>-</td><td>64</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterEdgeTwoSided</td><td>-</td><td>100</td></tr>
-<tr><td>concreteShapes:cubeTrimQuarterRamp</td><td>-</td><td>52</td></tr>
-<tr><td>concreteShapes:cupboardCorner</td><td>-</td><td>7</td></tr>
-<tr><td>concreteShapes:halfRampStairs50Filler</td><td>-</td><td>8</td></tr>
-<tr><td>concreteShapes:plate</td><td>-</td><td>11</td></tr>
-<tr><td>concreteShapes:pyramid1m</td><td>-</td><td>2</td></tr>
-<tr><td>concreteShapes:ramp</td><td>-</td><td>20</td></tr>
-<tr><td>concreteShapes:stairsFilledVerticalUV</td><td>-</td><td>32</td></tr>
-<tr><td>concreteShapes:wedge60</td><td>-</td><td>6</td></tr>
-<tr><td>concreteShapes:wedge60Tip</td><td>-</td><td>4</td></tr>
-<tr><td>concreteShapes:wedge60TipCornerBase</td><td>-</td><td>4</td></tr>
-<tr><td>concreteShapes:wedge60TipCornerTop</td><td>-</td><td>4</td></tr>
-<tr><td>decoPicnicTable</td><td>Picnic Table</td><td>2</td></tr>
-<tr><td>farmPlotBlock</td><td>Farm Plot (POI)</td><td>46</td></tr>
-<tr><td>parkBenchA</td><td>Park Bench A</td><td>6</td></tr>
-<tr><td>plantedAloe3Harvest</td><td>Aloe Vera Plant 3 (POI)</td><td>6</td></tr>
-<tr><td>plantedChrysanthemum3Harvest</td><td>Chrysanthemum 3 (POI)</td><td>8</td></tr>
-<tr><td>plantedGoldenrod3Harvest</td><td>Goldenrod Flower 3 (POI)</td><td>12</td></tr>
-<tr><td>plantedYucca3Harvest</td><td>Yucca Plant 3 (POI)</td><td>6</td></tr>
-<tr><td>terrWaterPOI</td><td>Water Block (POI)</td><td>176</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>7671</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>1</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>4</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">7491</td></tr>
+<tr class="block"><td class="block_name">birdBathPlanter</td><td class="block_label">Bird Bath Planter</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntFancyGarbageCan</td><td class="block_label">Fancy Garbage Can</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">2542</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">49</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimHalfSplitDiagonal</td><td class="block_label">-</td><td class="block_count">76</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterCornerInside</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterCornerInsideTriangle</td><td class="block_label">-</td><td class="block_count">64</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeTwoSided</td><td class="block_label">-</td><td class="block_count">100</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterRamp</td><td class="block_label">-</td><td class="block_count">52</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cupboardCorner</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:halfRampStairs50Filler</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:plate</td><td class="block_label">-</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:pyramid1m</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:ramp</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:stairsFilledVerticalUV</td><td class="block_label">-</td><td class="block_count">32</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:wedge60</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:wedge60Tip</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:wedge60TipCornerBase</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:wedge60TipCornerTop</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">decoPicnicTable</td><td class="block_label">Picnic Table</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">farmPlotBlock</td><td class="block_label">Farm Plot (POI)</td><td class="block_count">46</td></tr>
+<tr class="block"><td class="block_name">parkBenchA</td><td class="block_label">Park Bench A</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">plantedAloe3Harvest</td><td class="block_label">Aloe Vera Plant 3 (POI)</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">plantedChrysanthemum3Harvest</td><td class="block_label">Chrysanthemum 3 (POI)</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">plantedGoldenrod3Harvest</td><td class="block_label">Goldenrod Flower 3 (POI)</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">plantedYucca3Harvest</td><td class="block_label">Yucca Plant 3 (POI)</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">terrWaterPOI</td><td class="block_label">Water Block (POI)</td><td class="block_count">176</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">7671</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">4</td></tr>
     </table>
   </section>
 </body>

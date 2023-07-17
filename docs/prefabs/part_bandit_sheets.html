@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_bandit_sheets">
+  <title>- / part_bandit_sheets</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_bandit_sheets</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_bandit_sheets</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_bandit_sheets</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,26 +56,26 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>459</td></tr>
-<tr><td>banditWallCorrugated1x2.5</td><td>Bandit Wall, Corrugated, 1x2.5</td><td>1</td></tr>
-<tr><td>banditWallCorrugated1x3</td><td>Bandit Wall, Corrugated, 1x3</td><td>1</td></tr>
-<tr><td>banditWallCorrugated1x4</td><td>Bandit Wall, Corrugated, 1x4</td><td>1</td></tr>
-<tr><td>banditWallCorrugated2x3</td><td>Bandit Wall, Corrugated, 2x3</td><td>1</td></tr>
-<tr><td>banditWallCorrugatedDiagonal1x1</td><td>Bandit Wall, Corrugated, Diagonal, 1x1</td><td>1</td></tr>
-<tr><td>banditWallCorrugatedDiagonal1x2</td><td>Bandit Wall, Corrugated, Diagonal, 1x2</td><td>1</td></tr>
-<tr><td>banditWallCorrugatedDiagonal1x3</td><td>Bandit Wall, Corrugated, Diagonal, 1x3</td><td>1</td></tr>
-<tr><td>banditWallCorrugatedDiagonal2x3</td><td>Bandit Wall, Corrugated, Diagonal, 2x3</td><td>1</td></tr>
-<tr><td>banditWallCorrugatedDiagonal3x1</td><td>Bandit Wall, Corrugated, Diagonal, 3x1</td><td>1</td></tr>
-<tr><td>banditWallRibbed2x1Red</td><td>Red Bandit Wall, Ribbed, 2x1</td><td>1</td></tr>
-<tr><td>banditWallRibbed3x2Red</td><td>Red Bandit Wall, Ribbed, 3x2</td><td>1</td></tr>
-<tr><td>banditWallRibbedDiagonal2x1Red</td><td>Red Bandit Wall, Ribbed, Diagonal, 2x1</td><td>1</td></tr>
-<tr><td>banditWallSiding1x4Red</td><td>Red Bandit Wall, Siding, 1x4</td><td>1</td></tr>
-<tr><td>banditWallSiding2x2Red</td><td>Red Bandit Wall, Siding, 2x2</td><td>1</td></tr>
-<tr><td>banditWallSiding3x3Red</td><td>Red Bandit Wall, Siding, 3x3</td><td>1</td></tr>
-<tr><td>banditWallSidingDiagonal2x2Red</td><td>Red Bandit Wall, Siding, Diagonal, 2x2</td><td>1</td></tr>
-<tr><td>banditWallStreetsign3x2</td><td>Bandit Wall, Street Sign, 3x2</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">459</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated1x2.5</td><td class="block_label">Bandit Wall, Corrugated, 1x2.5</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated1x3</td><td class="block_label">Bandit Wall, Corrugated, 1x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated1x4</td><td class="block_label">Bandit Wall, Corrugated, 1x4</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated2x3</td><td class="block_label">Bandit Wall, Corrugated, 2x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugatedDiagonal1x1</td><td class="block_label">Bandit Wall, Corrugated, Diagonal, 1x1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugatedDiagonal1x2</td><td class="block_label">Bandit Wall, Corrugated, Diagonal, 1x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugatedDiagonal1x3</td><td class="block_label">Bandit Wall, Corrugated, Diagonal, 1x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugatedDiagonal2x3</td><td class="block_label">Bandit Wall, Corrugated, Diagonal, 2x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugatedDiagonal3x1</td><td class="block_label">Bandit Wall, Corrugated, Diagonal, 3x1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallRibbed2x1Red</td><td class="block_label">Red Bandit Wall, Ribbed, 2x1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallRibbed3x2Red</td><td class="block_label">Red Bandit Wall, Ribbed, 3x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallRibbedDiagonal2x1Red</td><td class="block_label">Red Bandit Wall, Ribbed, Diagonal, 2x1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallSiding1x4Red</td><td class="block_label">Red Bandit Wall, Siding, 1x4</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallSiding2x2Red</td><td class="block_label">Red Bandit Wall, Siding, 2x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallSiding3x3Red</td><td class="block_label">Red Bandit Wall, Siding, 3x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallSidingDiagonal2x2Red</td><td class="block_label">Red Bandit Wall, Siding, Diagonal, 2x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallStreetsign3x2</td><td class="block_label">Bandit Wall, Street Sign, 3x2</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

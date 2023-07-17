@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_billboard_luigi">
+  <title>- / part_billboard_luigi</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_billboard_luigi</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_billboard_luigi</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_billboard_luigi</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,49 +56,49 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>807</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>conduitSingleCentered</td><td>Conduit Single Centered</td><td>6</td></tr>
-<tr><td>conduitSingleCenteredEnd</td><td>Conduit Single Centered End</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:catwalkV2RailOnlyEndLeft</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:catwalkV2RailOnlyEndRight</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubeQuarterPlateCorner</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim1m</td><td>-</td><td>23</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimCorner</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimTop</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:iBeamFoundation</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:iBeamFoundation2</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:plate</td><td>-</td><td>33</td></tr>
-<tr><td>corrugatedMetalShapes:plateHalf</td><td>-</td><td>9</td></tr>
-<tr><td>corrugatedMetalShapes:platePoleCorner2</td><td>-</td><td>25</td></tr>
-<tr><td>corrugatedMetalShapes:quarterInsideCorner</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:securityGatePlate</td><td>-</td><td>15</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_a</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_apostrophe</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_c</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_e</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_g</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_h</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_i</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_l</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_n</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_s</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_t</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_u</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreOneSidedEmpty</td><td>-</td><td>10</td></tr>
-<tr><td>iBeam</td><td>I-Beam</td><td>23</td></tr>
-<tr><td>iBeamSmall</td><td>I-Beam  Small</td><td>9</td></tr>
-<tr><td>industrialLight01</td><td>Industrial Light 01 (POI)</td><td>3</td></tr>
-<tr><td>metalRailing</td><td>Thin Metal Railing</td><td>15</td></tr>
-<tr><td>woodShapes:plate</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:plateHole</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:plateQuarterRoundOutside</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:slopePlateLeft01</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:slopePlateLeft02</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:slopePlateLeft03</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:slopePlateLeft04</td><td>-</td><td>3</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">807</td></tr>
+<tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">conduitSingleCentered</td><td class="block_label">Conduit Single Centered</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">conduitSingleCenteredEnd</td><td class="block_label">Conduit Single Centered End</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:catwalkV2RailOnlyEndLeft</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:catwalkV2RailOnlyEndRight</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarterPlateCorner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">23</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimTop</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:iBeamFoundation</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:iBeamFoundation2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">33</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:platePoleCorner2</td><td class="block_label">-</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:quarterInsideCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:securityGatePlate</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_apostrophe</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_c</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_e</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_g</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_h</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_n</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_s</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_t</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_u</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedEmpty</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">iBeam</td><td class="block_label">I-Beam</td><td class="block_count">23</td></tr>
+<tr class="block"><td class="block_name">iBeamSmall</td><td class="block_label">I-Beam  Small</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">industrialLight01</td><td class="block_label">Industrial Light 01 (POI)</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">metalRailing</td><td class="block_label">Thin Metal Railing</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateHole</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateQuarterRoundOutside</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:slopePlateLeft01</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:slopePlateLeft02</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:slopePlateLeft03</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:slopePlateLeft04</td><td class="block_label">-</td><td class="block_count">3</td></tr>
     </table>
   </section>
 </body>

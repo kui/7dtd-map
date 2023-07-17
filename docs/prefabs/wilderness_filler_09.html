@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Flesh Feast Falls / wilderness_filler_09">
+  <title>Flesh Feast Falls / wilderness_filler_09</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Flesh Feast Falls / wilderness_filler_09</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Flesh Feast Falls / <small>wilderness_filler_09</small></h1>
+  <h1><span class="prefab_label">Flesh Feast Falls</span> / <small class="prefab_name">wilderness_filler_09</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -61,38 +68,38 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>2993</td></tr>
-<tr><td>chainlinkFenceBottomPlainPOI</td><td>Chain Link Bottom Plain POI</td><td>1</td></tr>
-<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
-<tr><td>cntFoodPileSmall</td><td>Food Pile, Small</td><td>1</td></tr>
-<tr><td>cntSportsBag01RandomLootHelper</td><td>= Rotting Sports Bag = Random Helper</td><td>1</td></tr>
-<tr><td>goreBlockHumanBones</td><td>Decaying Human Bones</td><td>1</td></tr>
-<tr><td>goreBlockHumanCorpse</td><td>Decaying Human Corpse</td><td>1</td></tr>
-<tr><td>goreBlockHumanCorpse1</td><td>Decaying Human Corpse 1</td><td>1</td></tr>
-<tr><td>goreBlockHumanCorpse3</td><td>Decaying Human Corpse 3</td><td>1</td></tr>
-<tr><td>goreHumanSkull</td><td>Human Skull</td><td>1</td></tr>
-<tr><td>plantShrubRandomHelper</td><td>= Shrub = Random Helper</td><td>14</td></tr>
-<tr><td>rockResource</td><td>Resource Boulder 1</td><td>3</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>1</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>1</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>1</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>42</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>6</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>2491</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>2</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>1</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>2</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:doorTrim1mOffCenter</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:doorTrim1mOffCenterCorner</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:doorTrimCorner</td><td>-</td><td>6</td></tr>
-<tr><td>woodShapes:doorTrimDiagonal</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:pillar0.0125</td><td>-</td><td>14</td></tr>
-<tr><td>woodShapes:pillar0.05</td><td>-</td><td>16</td></tr>
-<tr><td>woodSpikesTrapBloodPOI</td><td>Wood Spikes Blood (POI)</td><td>10</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">2993</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPOI</td><td class="block_label">Chain Link Bottom Plain POI</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBackpack03</td><td class="block_label">Moldy Backpack</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFoodPileSmall</td><td class="block_label">Food Pile, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntSportsBag01RandomLootHelper</td><td class="block_label">= Rotting Sports Bag = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanBones</td><td class="block_label">Decaying Human Bones</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse</td><td class="block_label">Decaying Human Corpse</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse1</td><td class="block_label">Decaying Human Corpse 1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse3</td><td class="block_label">Decaying Human Corpse 3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreHumanSkull</td><td class="block_label">Human Skull</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">plantShrubRandomHelper</td><td class="block_label">= Shrub = Random Helper</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">rockResource</td><td class="block_label">Resource Boulder 1</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">42</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">2491</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1mOffCenter</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1mOffCenterCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrimCorner</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrimDiagonal</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar0.0125</td><td class="block_label">-</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar0.05</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">woodSpikesTrapBloodPOI</td><td class="block_label">Wood Spikes Blood (POI)</td><td class="block_count">10</td></tr>
     </table>
   </section>
 </body>

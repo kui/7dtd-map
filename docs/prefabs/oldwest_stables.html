@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for The Lazy H / oldwest_stables">
+  <title>The Lazy H / oldwest_stables</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>The Lazy H / oldwest_stables</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>The Lazy H / <small>oldwest_stables</small></h1>
+  <h1><span class="prefab_label">The Lazy H</span> / <small class="prefab_name">oldwest_stables</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -62,96 +69,96 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>5219</td></tr>
-<tr><td>burntWoodBlock2</td><td>Burnt Wood Block 2</td><td>22</td></tr>
-<tr><td>burntWoodBlock3</td><td>Burnt Wood Block 3</td><td>18</td></tr>
-<tr><td>burntWoodBlock6</td><td>Burnt Wood Block 6</td><td>11</td></tr>
-<tr><td>burntWoodRamp7</td><td>Burnt Wood Ramp 7</td><td>4</td></tr>
-<tr><td>burntWoodWedge7</td><td>Burnt Wood Wedge 7</td><td>1</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>cntBarrelGasOld</td><td>Rusty Barrel</td><td>1</td></tr>
-<tr><td>cntShippingCrateWorkingStiffs</td><td>Working Stiff Sealed Shipping Crate</td><td>1</td></tr>
-<tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>2</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_a</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_h</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_l</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_y</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_z</td><td>-</td><td>1</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>5</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>3</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage Decor3</td><td>4</td></tr>
-<tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>4</td></tr>
-<tr><td>hayBaleSquare</td><td>Hay Bale</td><td>9</td></tr>
-<tr><td>horseshoe_01</td><td>Horseshoe 01</td><td>1</td></tr>
-<tr><td>horseshoe_02</td><td>Horseshoe 02</td><td>2</td></tr>
-<tr><td>horseshoe_03</td><td>Horseshoe 03</td><td>3</td></tr>
-<tr><td>keyRackWood01</td><td>Wood Key Rack</td><td>1</td></tr>
-<tr><td>ladderWood</td><td>Wooden Ladder</td><td>4</td></tr>
-<tr><td>lanternDecorLightRandomHelper</td><td>= Lantern (POI) = Random Helper</td><td>1</td></tr>
-<tr><td>lightWallGooseneckBlack</td><td>Black Gooseneck Wall Light</td><td>2</td></tr>
-<tr><td>oldWoodDoor</td><td>Wood Door</td><td>1</td></tr>
-<tr><td>palletBricksPartial1</td><td>Grey Pallet, Bricks, Partial 1</td><td>1</td></tr>
-<tr><td>palletBricksPartial2</td><td>Grey Pallet, Bricks, Partial 2</td><td>1</td></tr>
-<tr><td>palletEmpty</td><td>Empty Pallet</td><td>3</td></tr>
-<tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>3</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>5</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>2</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>2</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>3</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>76</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>164</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>385</td></tr>
-<tr><td>woodShapes:arrowSlitQuarter</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>162</td></tr>
-<tr><td>woodShapes:cubeBaseboard4Sided</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>18</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>72</td></tr>
-<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:gableHalf</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:gableInvertedHalfHalfOffset</td><td>-</td><td>13</td></tr>
-<tr><td>woodShapes:pillar50</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:pillar50CenteredSquareTop</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:plate</td><td>-</td><td>24</td></tr>
-<tr><td>woodShapes:plateHalf</td><td>-</td><td>6</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>130</td></tr>
-<tr><td>woodShapes:poleSquareDouble</td><td>-</td><td>6</td></tr>
-<tr><td>woodShapes:poleThreeWayCorner</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:poleTwoWayCorner</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:ramp</td><td>-</td><td>30</td></tr>
-<tr><td>woodShapes:rampIncline</td><td>-</td><td>97</td></tr>
-<tr><td>woodShapes:rampInclineFiller</td><td>-</td><td>87</td></tr>
-<tr><td>woodShapes:rampInclineFillerHalfLeft</td><td>-</td><td>9</td></tr>
-<tr><td>woodShapes:rampInclineFillerHalfRight</td><td>-</td><td>9</td></tr>
-<tr><td>woodShapes:rampInclineFillerPoleSquareLeft</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:rampInclineFillerPoleSquareRight</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:rampInclineHalfLeft</td><td>-</td><td>10</td></tr>
-<tr><td>woodShapes:rampInclineHalfRight</td><td>-</td><td>10</td></tr>
-<tr><td>woodShapes:rampInclinePoleSquareLeft</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:rampInclinePoleSquareRight</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:wedge60</td><td>-</td><td>15</td></tr>
-<tr><td>woodShapes:wedge60Incline</td><td>-</td><td>14</td></tr>
-<tr><td>woodShapes:wedge60InclineHalfLeft</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:wedge60InclineHalfRight</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:wedge60Tip</td><td>-</td><td>45</td></tr>
-<tr><td>woodShapes:wedge60TipHalfLeft</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:wedge60TipHalfRight</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:wedgeTipHalf</td><td>-</td><td>15</td></tr>
-<tr><td>woodShapes:window01Broken02</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:window01Broken03</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:window01Broken04</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:windowBoarded</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:windowTrim</td><td>-</td><td>16</td></tr>
-<tr><td>woodShapes:windowTrimBottom</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:windowTrimTop</td><td>-</td><td>9</td></tr>
-<tr><td>woodenFenceDoorBrown</td><td>Brown Wooden Fence Door</td><td>5</td></tr>
-<tr><td>woodenGarageDoor3x3Brown</td><td>Brown Wooden Garage Door 3x3</td><td>2</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">5219</td></tr>
+<tr class="block"><td class="block_name">burntWoodBlock2</td><td class="block_label">Burnt Wood Block 2</td><td class="block_count">22</td></tr>
+<tr class="block"><td class="block_name">burntWoodBlock3</td><td class="block_label">Burnt Wood Block 3</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">burntWoodBlock6</td><td class="block_label">Burnt Wood Block 6</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">burntWoodRamp7</td><td class="block_label">Burnt Wood Ramp 7</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">burntWoodWedge7</td><td class="block_label">Burnt Wood Wedge 7</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBarrelGasOld</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShippingCrateWorkingStiffs</td><td class="block_label">Working Stiff Sealed Shipping Crate</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreCratesRandomLootHelper</td><td class="block_label">= Store Crate = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile03</td><td class="block_label">Mound of Garbage</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_h</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_y</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_z</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor3</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">hayBaleRound</td><td class="block_label">Hay Bale, Round</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">hayBaleSquare</td><td class="block_label">Hay Bale</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">horseshoe_01</td><td class="block_label">Horseshoe 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">horseshoe_02</td><td class="block_label">Horseshoe 02</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">horseshoe_03</td><td class="block_label">Horseshoe 03</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">keyRackWood01</td><td class="block_label">Wood Key Rack</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">ladderWood</td><td class="block_label">Wooden Ladder</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">lanternDecorLightRandomHelper</td><td class="block_label">= Lantern (POI) = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">lightWallGooseneckBlack</td><td class="block_label">Black Gooseneck Wall Light</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">oldWoodDoor</td><td class="block_label">Wood Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletBricksPartial1</td><td class="block_label">Grey Pallet, Bricks, Partial 1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletBricksPartial2</td><td class="block_label">Grey Pallet, Bricks, Partial 2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletEmpty</td><td class="block_label">Empty Pallet</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">palletEmptyStack</td><td class="block_label">Empty Pallets, Full Stack</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">76</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">164</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">385</td></tr>
+<tr class="block"><td class="block_name">woodShapes:arrowSlitQuarter</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">162</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cubeBaseboard4Sided</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">72</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken1</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken2</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:gableHalf</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:gableInvertedHalfHalfOffset</td><td class="block_label">-</td><td class="block_count">13</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar50</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar50CenteredSquareTop</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">130</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSquareDouble</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleThreeWayCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:ramp</td><td class="block_label">-</td><td class="block_count">30</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampIncline</td><td class="block_label">-</td><td class="block_count">97</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineFiller</td><td class="block_label">-</td><td class="block_count">87</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineFillerHalfLeft</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineFillerHalfRight</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineFillerPoleSquareLeft</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineFillerPoleSquareRight</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineHalfLeft</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclineHalfRight</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclinePoleSquareLeft</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:rampInclinePoleSquareRight</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60Incline</td><td class="block_label">-</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60InclineHalfLeft</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60InclineHalfRight</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60Tip</td><td class="block_label">-</td><td class="block_count">45</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60TipHalfLeft</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedge60TipHalfRight</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:wedgeTipHalf</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">woodShapes:window01Broken02</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:window01Broken03</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:window01Broken04</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowBoarded</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimBottom</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrimTop</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">woodenFenceDoorBrown</td><td class="block_label">Brown Wooden Fence Door</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodenGarageDoor3x3Brown</td><td class="block_label">Brown Wooden Garage Door 3x3</td><td class="block_count">2</td></tr>
     </table>
   </section>
 </body>

@@ -1,6 +1,7 @@
 import * as prefabsFilter from "../worker/prefabs-filter";
 import { MapStorage } from "../lib/map-storage";
 import { PrefabUpdate } from "../lib/prefabs";
+import { Language } from "../lib/labels";
 
 interface Doms {
   status: HTMLElement;
@@ -54,6 +55,10 @@ export class PrefabsHandler {
 
   set marker(markCoords: GameCoords | null) {
     this.worker.postMessage({ markCoords });
+  }
+
+  set language(language: Language) {
+    this.worker.postMessage({ language });
   }
 }
 

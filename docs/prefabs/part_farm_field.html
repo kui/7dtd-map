@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_farm_field">
+  <title>- / part_farm_field</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_farm_field</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_farm_field</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_farm_field</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -58,27 +65,27 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>16560</td></tr>
-<tr><td>corrugatedMetalShapes:cubePoleCorner</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>42</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareDiagonal</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:poleTwoWayCorner</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:securityGatePlate</td><td>-</td><td>30</td></tr>
-<tr><td>goreBlockAnimal</td><td>Decaying Animal Corpse</td><td>6</td></tr>
-<tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>9</td></tr>
-<tr><td>hayBaleSquare</td><td>Hay Bale</td><td>3</td></tr>
-<tr><td>sleeperBoarAnimal</td><td>Sleeper Boar (alive)</td><td>9</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>170</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>18079</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>6</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>6</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>10</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>327</td></tr>
-<tr><td>woodShapes:fenceBroken1</td><td>-</td><td>14</td></tr>
-<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>14</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>79</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">16560</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubePoleCorner</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">42</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDiagonal</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:securityGatePlate</td><td class="block_label">-</td><td class="block_count">30</td></tr>
+<tr class="block"><td class="block_name">goreBlockAnimal</td><td class="block_label">Decaying Animal Corpse</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">hayBaleRound</td><td class="block_label">Hay Bale, Round</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">hayBaleSquare</td><td class="block_label">Hay Bale</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">sleeperBoarAnimal</td><td class="block_label">Sleeper Boar (alive)</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">170</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">18079</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">327</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken1</td><td class="block_label">-</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken2</td><td class="block_label">-</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">79</td></tr>
     </table>
   </section>
 </body>
