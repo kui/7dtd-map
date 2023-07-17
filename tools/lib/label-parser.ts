@@ -19,7 +19,7 @@ export const LANGUAGES = [
 
 export type Language = (typeof LANGUAGES)[number];
 
-type LabelId = string;
+export type LabelId = string;
 
 type LabelCore = {
   [lang in Language]: string;

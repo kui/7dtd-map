@@ -2,6 +2,7 @@ import * as path from "path";
 import { parseNim } from "./nim-parser";
 import { parseTts } from "./tts-parser";
 import { parsePrefabXml } from "./prefab-xml-parser";
+import { Label, LabelId } from "./label-parser";
 
 interface HtmlModel {
   name: string;
