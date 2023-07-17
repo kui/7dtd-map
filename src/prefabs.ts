@@ -3,11 +3,12 @@ import * as presetButton from "./lib/preset-button";
 import { component } from "./lib/utils";
 import { PrefabUpdate } from "./lib/prefabs";
 import * as prefabsFilter from "./worker/prefabs-filter";
+import { Language } from "./lib/labels";
+import { LabelHandler } from "./lib/label-handler";
 
 interface HighlightedPrefab {
   name: string;
   difficulty?: number;
-  label?: string;
   highlightedName?: string;
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
@@ -30,6 +31,11 @@ function main() {
     prefabsHandler.prefabs = prefabs;
   })();
 
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) });
+  labelHandler.addListener(async (lang) => {
+    prefabsHandler.language = lang;
+  });
+
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.body, component("prefabs_list"), (p) => prefabLi(p));
   prefabsHandler.listeners.push(async (update) => {
     prefabListRenderer.iterator = update.prefabs;
@@ -43,7 +49,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
       : "",
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
-    prefab.highlightedLabel || prefab.label || "-",
+    prefab.highlightedLabel || "-",
     "/",
     `<small>${prefab.highlightedName || prefab.name}</small>`,
     "</a>",
@@ -86,6 +92,10 @@ class PrefabsHandler {
 
   set blockFilter(filter: string) {
     this.worker.postMessage({ blocksFilterString: filter });
+  }
+
+  set language(language: Language) {
+    this.worker.postMessage({ language});
   }
 }
 
