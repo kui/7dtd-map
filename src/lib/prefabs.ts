@@ -23,8 +23,8 @@ export default class Prefabs {
   private throttledUpdater = throttledInvoker(async () => await this.updateImmediately());
   private updateListeners: ((u: PrefabUpdate) => void)[] = [];
 
-  constructor(baseUrl: string, language: Language) {
-    this.#labelHolder = new LabelHolder(baseUrl, language);
+  constructor(baseUrl: string, navigatorLanguages: readonly string[]) {
+    this.#labelHolder = new LabelHolder(baseUrl, navigatorLanguages);
     this.filter = this.defaultMatcher();
   }
 

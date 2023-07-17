@@ -3,7 +3,7 @@ import { LabelHolder, Labels } from "../lib/labels";
 import { component } from "../lib/utils";
 
 function main() {
-  const labelHolder = new LabelHolder("../labels", "english");
+  const labelHolder = new LabelHolder("../labels", navigator.languages);
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) });
   labelHandler.addListener(async (lang) => {
     labelHolder.language = lang;

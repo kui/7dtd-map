@@ -2,7 +2,7 @@ import Prefabs from "../lib/prefabs";
 
 export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "blocksFilterString" | "markCoords" | "language">>;
 
-const prefabs = new Prefabs("../labels", "english");
+const prefabs = new Prefabs("../labels", navigator.languages);
 (async () => {
   prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json");
   prefabs.update();
