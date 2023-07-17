@@ -90,7 +90,7 @@ export class Labels {
   }
 }
 
-function resolveLanguage(languages: readonly string[]): Language {
+export function resolveLanguage(languages: readonly string[]): Language {
   for (const clientTag of languages) {
     for (const [tag, lang] of Object.entries(LANGUAGE_TAGS)) {
       if (clientTag.startsWith(tag)) return lang;

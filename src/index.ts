@@ -132,7 +132,7 @@ function main() {
     mapCanvasHandler.update({ markerCoords: coords });
   });
 
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) });
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
   labelHandler.addListener(async (lang) => {
     prefabsHandler.language = lang;
   });
