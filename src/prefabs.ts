@@ -108,8 +108,7 @@ class PrefabsHandler {
 }
 
 class PrefabFilterHandler {
-
-  displayDevPrefab: boolean = false;
+  displayDevPrefab = false;
   updateListener: (() => void)[] = [];
 
   constructor(doms: { devPrefabs: HTMLInputElement }) {
