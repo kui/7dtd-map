@@ -18,10 +18,9 @@ function main() {
   presetButton.init();
 
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
-  component("blocks_filter", HTMLInputElement).addEventListener(
-    "input",
-    (e) => (prefabsHandler.blockFilter = (e.target as HTMLInputElement).value)
-  );
+  component("blocks_filter", HTMLInputElement).addEventListener("input", (e) => {
+    prefabsHandler.blockFilter = (e.target as HTMLInputElement).value;
+  });
   (async () => {
     const [index, difficulties] = await Promise.all([
       fetch("prefab-block-index.json").then((r) => r.json()),
@@ -95,7 +94,7 @@ class PrefabsHandler {
   }
 
   set language(language: Language) {
-    this.worker.postMessage({ language});
+    this.worker.postMessage({ language });
   }
 }
 
