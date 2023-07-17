@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_chain_link_fences">
+  <title>- / part_chain_link_fences</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_chain_link_fences</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_chain_link_fences</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_chain_link_fences</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,46 +56,46 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>1285</td></tr>
-<tr><td>chainlinkFenceBottomPlainCorner</td><td>Chain Link Bottom Plain Corner</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomPlainPOI</td><td>Chain Link Bottom Plain POI</td><td>9</td></tr>
-<tr><td>chainlinkFenceBottomPlainPoleLeft</td><td>Chain Link Bottom Plain Pole Left</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomPlainPoleLeftPOI</td><td>Chain Link Bottom Plain Pole Left POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomPlainPoleRight</td><td>Chain Link Bottom Plain Pole Right</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomPlainPoleRightPOI</td><td>Chain Link Bottom Plain Pole Right POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomRail</td><td>Chain Link Bottom Rail</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomRailPOI</td><td>Chain Link Bottom Rail POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomRailPoleCorner</td><td>Chain Link Bottom Rail Pole Corner</td><td>2</td></tr>
-<tr><td>chainlinkFenceBottomRailPoleLeft</td><td>Chain Link Bottom Rail Pole Left</td><td>1</td></tr>
-<tr><td>chainlinkFenceBottomRailPoleLeftPOI</td><td>Chain Link Bottom Rail Pole Left POI</td><td>4</td></tr>
-<tr><td>chainlinkFenceBottomRailPoleRight</td><td>Chain Link Bottom Rail Pole Right</td><td>1</td></tr>
-<tr><td>chainlinkFenceBottomRailPoleRightPOI</td><td>Chain Link Bottom Rail Pole Right POI</td><td>4</td></tr>
-<tr><td>chainlinkFenceDoor</td><td>Chain Link Door</td><td>1</td></tr>
-<tr><td>chainlinkFenceDoorPOI</td><td>Chain Link Door POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceMiddleRail</td><td>Chain Link Middle Rail</td><td>2</td></tr>
-<tr><td>chainlinkFenceMiddleRailPOI</td><td>Chain Link Middle Rail POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceMiddleRailPoleCorner</td><td>Chain Link Middle Rail Pole Corner</td><td>2</td></tr>
-<tr><td>chainlinkFenceMiddleRailPoleLeft</td><td>Chain Link Middle Rail Pole Left</td><td>1</td></tr>
-<tr><td>chainlinkFenceMiddleRailPoleLeftPOI</td><td>Chain Link Middle Rail Pole Left POI</td><td>4</td></tr>
-<tr><td>chainlinkFenceMiddleRailPoleRight</td><td>Chain Link Middle Rail Pole Right</td><td>1</td></tr>
-<tr><td>chainlinkFenceMiddleRailPoleRightPOI</td><td>Chain Link Middle Rail Pole Right POI</td><td>4</td></tr>
-<tr><td>chainlinkFenceTopPlainCorner</td><td>Chain Link Top Plain Corner</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopPlainPoleLeft</td><td>Chain Link Top Plain Pole Left</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopPlainPoleLeftPOI</td><td>Chain Link Top Plain Pole Left POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopPlainPoleRight</td><td>Chain Link Top Plain Pole Right</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopPlainPoleRightPOI</td><td>Chain Link Top Plain Pole Right POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopRail</td><td>Chain Link Top Rail</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopRailBridge</td><td>Chain Link Top Rail Bridge</td><td>1</td></tr>
-<tr><td>chainlinkFenceTopRailBridgePOI</td><td>Chain Link Top Rail Bridge POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopRailCorner</td><td>Chain Link Top Rail Corner</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopRailPOI</td><td>Chain Link Top Rail POI</td><td>2</td></tr>
-<tr><td>chainlinkFenceTopRailPoleLeft</td><td>Chain Link Top Rail Pole Left</td><td>1</td></tr>
-<tr><td>chainlinkFenceTopRailPoleLeftPOI</td><td>Chain Link Top Rail Pole Left POI</td><td>4</td></tr>
-<tr><td>chainlinkFenceTopRailPoleRight</td><td>Chain Link Top Rail Pole Right</td><td>1</td></tr>
-<tr><td>chainlinkFenceTopRailPoleRightPOI</td><td>Chain Link Top Rail Pole Right POI</td><td>4</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>456</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">1285</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainCorner</td><td class="block_label">Chain Link Bottom Plain Corner</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPOI</td><td class="block_label">Chain Link Bottom Plain POI</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPoleLeft</td><td class="block_label">Chain Link Bottom Plain Pole Left</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPoleLeftPOI</td><td class="block_label">Chain Link Bottom Plain Pole Left POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPoleRight</td><td class="block_label">Chain Link Bottom Plain Pole Right</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomPlainPoleRightPOI</td><td class="block_label">Chain Link Bottom Plain Pole Right POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRail</td><td class="block_label">Chain Link Bottom Rail</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPOI</td><td class="block_label">Chain Link Bottom Rail POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPoleCorner</td><td class="block_label">Chain Link Bottom Rail Pole Corner</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPoleLeft</td><td class="block_label">Chain Link Bottom Rail Pole Left</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPoleLeftPOI</td><td class="block_label">Chain Link Bottom Rail Pole Left POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPoleRight</td><td class="block_label">Chain Link Bottom Rail Pole Right</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceBottomRailPoleRightPOI</td><td class="block_label">Chain Link Bottom Rail Pole Right POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceDoor</td><td class="block_label">Chain Link Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceDoorPOI</td><td class="block_label">Chain Link Door POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRail</td><td class="block_label">Chain Link Middle Rail</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPOI</td><td class="block_label">Chain Link Middle Rail POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPoleCorner</td><td class="block_label">Chain Link Middle Rail Pole Corner</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPoleLeft</td><td class="block_label">Chain Link Middle Rail Pole Left</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPoleLeftPOI</td><td class="block_label">Chain Link Middle Rail Pole Left POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPoleRight</td><td class="block_label">Chain Link Middle Rail Pole Right</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceMiddleRailPoleRightPOI</td><td class="block_label">Chain Link Middle Rail Pole Right POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopPlainCorner</td><td class="block_label">Chain Link Top Plain Corner</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopPlainPoleLeft</td><td class="block_label">Chain Link Top Plain Pole Left</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopPlainPoleLeftPOI</td><td class="block_label">Chain Link Top Plain Pole Left POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopPlainPoleRight</td><td class="block_label">Chain Link Top Plain Pole Right</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopPlainPoleRightPOI</td><td class="block_label">Chain Link Top Plain Pole Right POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRail</td><td class="block_label">Chain Link Top Rail</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailBridge</td><td class="block_label">Chain Link Top Rail Bridge</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailBridgePOI</td><td class="block_label">Chain Link Top Rail Bridge POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailCorner</td><td class="block_label">Chain Link Top Rail Corner</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailPOI</td><td class="block_label">Chain Link Top Rail POI</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailPoleLeft</td><td class="block_label">Chain Link Top Rail Pole Left</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailPoleLeftPOI</td><td class="block_label">Chain Link Top Rail Pole Left POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailPoleRight</td><td class="block_label">Chain Link Top Rail Pole Right</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chainlinkFenceTopRailPoleRightPOI</td><td class="block_label">Chain Link Top Rail Pole Right POI</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">456</td></tr>
     </table>
   </section>
 </body>

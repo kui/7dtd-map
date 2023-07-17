@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_city_kiosks">
+  <title>- / aaa_city_kiosks</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_city_kiosks</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_city_kiosks</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_city_kiosks</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,116 +56,116 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>5311</td></tr>
-<tr><td>brickShapes:cube</td><td>-</td><td>30</td></tr>
-<tr><td>cntBookShelfSingleCapBottomEmpty</td><td>Book Shelf Cap Bottom Empty</td><td>3</td></tr>
-<tr><td>cntBookShelfSingleCapBottomRandomLootHelper</td><td>= Book Shelf Cap Bottom = Random Helper</td><td>3</td></tr>
-<tr><td>cntCabinetBottom</td><td>Cabinet</td><td>2</td></tr>
-<tr><td>cntCabinetBottomFiller</td><td>Cabinet Filler (No Loot)</td><td>1</td></tr>
-<tr><td>cntCabinetBottomRandomLootHelper</td><td>= Cabinet = Random Helper</td><td>7</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>3</td></tr>
-<tr><td>cntCounterHollowCabinetTaupeRandomLootHelper</td><td>= Counter Hollow Cabinet Taupe = Random Helper</td><td>1</td></tr>
-<tr><td>cntCupboardCabinetRedTopLootHelper</td><td>= Cupboard Red = Random Helper</td><td>6</td></tr>
-<tr><td>cntDisplayCaseEmptyLeft</td><td>Display Case Empty Left</td><td>2</td></tr>
-<tr><td>cntDisplayCaseEmptyRight</td><td>Display Case Empty Right</td><td>2</td></tr>
-<tr><td>cntDomedTrashCanRandomLootHelper</td><td>= Domed Trash Can = Random Helper</td><td>1</td></tr>
-<tr><td>cntFoodPileSmall</td><td>Food Pile, Small</td><td>1</td></tr>
-<tr><td>cntFreezerBeveragesStandaloneRandomLootHelper</td><td>= Freezer Beverages Standalone = Random Helper</td><td>3</td></tr>
-<tr><td>cntFridgeStainlessSteelRandomLootHelper</td><td>= S Steel Fridge = Random Helper</td><td>1</td></tr>
-<tr><td>cntGunRackSmallEmpty02</td><td>Gun Rack Small Empty 02</td><td>6</td></tr>
-<tr><td>cntSodaFountain</td><td>Soda Fountain</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleBottomEmpty</td><td>Store Shelf Single Bottom Empty</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleBottomFood01</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleBottomTrash01</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleBottomTrash02</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleTopEmpty</td><td>Store Shelf Single Top Empty</td><td>1</td></tr>
-<tr><td>cntStoreShelfSingleTopTrash01</td><td>Shelf</td><td>1</td></tr>
-<tr><td>cntbinTrashRollingYellow</td><td>Rolling Trash Bin</td><td>1</td></tr>
-<tr><td>cntgasRangeGrey</td><td>Grey Gas Range</td><td>1</td></tr>
-<tr><td>cntwallOvenGreyRandomLootHelper</td><td>= Grey Wall Oven  = Random Helper</td><td>2</td></tr>
-<tr><td>commercialDoorV4Grey</td><td>Grey Commercial Door V4</td><td>2</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>161</td></tr>
-<tr><td>concreteShapes:doorTrim0.5m</td><td>-</td><td>4</td></tr>
-<tr><td>concreteShapes:plateHalf</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:bookcaseEmpty</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:bookcaseHalfEmpty</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:bookcaseOpenEnded</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:catwalkV2</td><td>-</td><td>23</td></tr>
-<tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>24</td></tr>
-<tr><td>corrugatedMetalShapes:cubeBaseboard4Sided</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>17</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalfLocalNorthFaceInside</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalfLocalNorthFaceOutside</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:cubeLocalNorthFace</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cubePoleCorner</td><td>-</td><td>78</td></tr>
-<tr><td>corrugatedMetalShapes:cubeTrimCornerRound</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:cubeTrimHalfSplit</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:cupboardCorner</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim0.5m</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim1m</td><td>-</td><td>25</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim1mOffCenter</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim2m</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimCorner</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimTop</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:farmPlot</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:halfTrimSplit</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:morticianDrawer</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:pillar0.05MiddleHalf</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:plate</td><td>-</td><td>70</td></tr>
-<tr><td>corrugatedMetalShapes:plateCorner</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:plateCornerHalfTop</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:plateCornerHalfTopHalf</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:plateCounter02</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:plateFenderSkirt</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:plateHalf</td><td>-</td><td>52</td></tr>
-<tr><td>corrugatedMetalShapes:plateLocalNorthSouthFace</td><td>-</td><td>18</td></tr>
-<tr><td>corrugatedMetalShapes:platePole</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:plateTrimSplitInside</td><td>-</td><td>43</td></tr>
-<tr><td>corrugatedMetalShapes:pole</td><td>-</td><td>112</td></tr>
-<tr><td>corrugatedMetalShapes:poleHalf</td><td>-</td><td>16</td></tr>
-<tr><td>corrugatedMetalShapes:polePlate</td><td>-</td><td>13</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareDoubleTop</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareSideCenteredTee</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:poleSquareSideCenteredTeeFourWay</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:sidewalkCurb</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:signLetter_i</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:storageCube</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:storageCubeHalf</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:verticalBlindsTopRailOnly</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:windowPlateRoundedSquare3SidedEmpty</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:windowPlateRoundedSquare4SidedHalfWidthFull</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreCornerFull</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreOneSidedFull</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:windowTrim</td><td>-</td><td>15</td></tr>
-<tr><td>decoCarWheelOffset01</td><td>Car Wheel</td><td>2</td></tr>
-<tr><td>decoCookingPot</td><td>Cooking Pot (POI)</td><td>1</td></tr>
-<tr><td>decoTableRound</td><td>Round Table</td><td>2</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>1</td></tr>
-<tr><td>glassBusinessSheet</td><td>Business Glass Pane</td><td>20</td></tr>
-<tr><td>glassIndustrialPlate</td><td>Glass Industrial 1 Plate</td><td>8</td></tr>
-<tr><td>lightCeiling07</td><td>Fluorescent Light (POI)</td><td>3</td></tr>
-<tr><td>recessedLight</td><td>Recessed Light (POI)</td><td>2</td></tr>
-<tr><td>schoolSeat01White</td><td>School Seat</td><td>4</td></tr>
-<tr><td>signBookSaleAd</td><td>Sign: Book Sale Ad</td><td>1</td></tr>
-<tr><td>signCigaretteAd</td><td>Sign: Cigarette Ad</td><td>6</td></tr>
-<tr><td>signDinersMenu</td><td>Sign: Diners Menu</td><td>3</td></tr>
-<tr><td>signLaborDaySaleAd</td><td>Sign: Labor Day Sale Ad</td><td>1</td></tr>
-<tr><td>signMegaCrushAd</td><td>Sign: Mega Crush Ad</td><td>3</td></tr>
-<tr><td>signPosterMovieTheater2159</td><td>Sign: Theater Poster 2159</td><td>2</td></tr>
-<tr><td>signPosterMovieTheaterLoneWolf</td><td>Sign: Theater Poster Lone Wolf</td><td>2</td></tr>
-<tr><td>signPosterMovieTheaterMammasJustice</td><td>Sign: Theater Poster Mammas Justice</td><td>2</td></tr>
-<tr><td>signPosterMovieTheaterSexualTension</td><td>Sign: Theater Poster Sexual Tension</td><td>2</td></tr>
-<tr><td>sinkKitchen</td><td>Kitchen Sink</td><td>1</td></tr>
-<tr><td>terrAsphalt</td><td>Asphalt</td><td>117</td></tr>
-<tr><td>trailerDoorBlack</td><td>Black Trailer Door</td><td>1</td></tr>
-<tr><td>umbrellaTableDownRed</td><td>Red Umbrella Down</td><td>1</td></tr>
-<tr><td>umbrellaTableUpRed</td><td>Red Umbrella Up</td><td>1</td></tr>
-<tr><td>woodShapes:counterBottomFiller</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:counterHollowCombo</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:counterHollowFront</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:windowTrim</td><td>-</td><td>6</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">5311</td></tr>
+<tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">30</td></tr>
+<tr class="block"><td class="block_name">cntBookShelfSingleCapBottomEmpty</td><td class="block_label">Book Shelf Cap Bottom Empty</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntBookShelfSingleCapBottomRandomLootHelper</td><td class="block_label">= Book Shelf Cap Bottom = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntCabinetBottom</td><td class="block_label">Cabinet</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCabinetBottomRandomLootHelper</td><td class="block_label">= Cabinet = Random Helper</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">cntCashRegisterRandomLootHelper</td><td class="block_label">= Cash Registers = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntCounterHollowCabinetTaupeRandomLootHelper</td><td class="block_label">= Counter Hollow Cabinet Taupe = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCupboardCabinetRedTopLootHelper</td><td class="block_label">= Cupboard Red = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntDisplayCaseEmptyLeft</td><td class="block_label">Display Case Empty Left</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntDisplayCaseEmptyRight</td><td class="block_label">Display Case Empty Right</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntDomedTrashCanRandomLootHelper</td><td class="block_label">= Domed Trash Can = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFoodPileSmall</td><td class="block_label">Food Pile, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFreezerBeveragesStandaloneRandomLootHelper</td><td class="block_label">= Freezer Beverages Standalone = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntFridgeStainlessSteelRandomLootHelper</td><td class="block_label">= S Steel Fridge = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntGunRackSmallEmpty02</td><td class="block_label">Gun Rack Small Empty 02</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntSodaFountain</td><td class="block_label">Soda Fountain</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomEmpty</td><td class="block_label">Store Shelf Single Bottom Empty</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomFood01</td><td class="block_label">Shelf</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomTrash01</td><td class="block_label">Shelf</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomTrash02</td><td class="block_label">Shelf</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleTopEmpty</td><td class="block_label">Store Shelf Single Top Empty</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleTopTrash01</td><td class="block_label">Shelf</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntbinTrashRollingYellow</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntgasRangeGrey</td><td class="block_label">Grey Gas Range</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntwallOvenGreyRandomLootHelper</td><td class="block_label">= Grey Wall Oven  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">commercialDoorV4Grey</td><td class="block_label">Grey Commercial Door V4</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">161</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:doorTrim0.5m</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:bookcaseEmpty</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:bookcaseHalfEmpty</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:bookcaseOpenEnded</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:catwalkV2</td><td class="block_label">-</td><td class="block_count">23</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeBaseboard4Sided</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">17</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalfLocalNorthFaceInside</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalfLocalNorthFaceOutside</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeLocalNorthFace</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubePoleCorner</td><td class="block_label">-</td><td class="block_count">78</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeTrimCornerRound</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeTrimHalfSplit</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cupboardCorner</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim0.5m</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1mOffCenter</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim2m</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimTop</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:farmPlot</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:halfTrimSplit</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:morticianDrawer</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.05MiddleHalf</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">70</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateCorner</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateCornerHalfTop</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateCornerHalfTopHalf</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateCounter02</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateFenderSkirt</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">52</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateLocalNorthSouthFace</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:platePole</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateTrimSplitInside</td><td class="block_label">-</td><td class="block_count">43</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">112</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleHalf</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:polePlate</td><td class="block_label">-</td><td class="block_count">13</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDoubleTop</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareSideCenteredTee</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareSideCenteredTeeFourWay</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:sidewalkCurb</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:storageCube</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:storageCubeHalf</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:verticalBlindsTopRailOnly</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowPlateRoundedSquare3SidedEmpty</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowPlateRoundedSquare4SidedHalfWidthFull</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreCornerFull</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedFull</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">decoCarWheelOffset01</td><td class="block_label">Car Wheel</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">decoCookingPot</td><td class="block_label">Cooking Pot (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">decoTableRound</td><td class="block_label">Round Table</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">glassBusinessSheet</td><td class="block_label">Business Glass Pane</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">glassIndustrialPlate</td><td class="block_label">Glass Industrial 1 Plate</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">lightCeiling07</td><td class="block_label">Fluorescent Light (POI)</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">recessedLight</td><td class="block_label">Recessed Light (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">schoolSeat01White</td><td class="block_label">School Seat</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">signBookSaleAd</td><td class="block_label">Sign: Book Sale Ad</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signCigaretteAd</td><td class="block_label">Sign: Cigarette Ad</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">signDinersMenu</td><td class="block_label">Sign: Diners Menu</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signLaborDaySaleAd</td><td class="block_label">Sign: Labor Day Sale Ad</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signMegaCrushAd</td><td class="block_label">Sign: Mega Crush Ad</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signPosterMovieTheater2159</td><td class="block_label">Sign: Theater Poster 2159</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signPosterMovieTheaterLoneWolf</td><td class="block_label">Sign: Theater Poster Lone Wolf</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signPosterMovieTheaterMammasJustice</td><td class="block_label">Sign: Theater Poster Mammas Justice</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signPosterMovieTheaterSexualTension</td><td class="block_label">Sign: Theater Poster Sexual Tension</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">117</td></tr>
+<tr class="block"><td class="block_name">trailerDoorBlack</td><td class="block_label">Black Trailer Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">umbrellaTableDownRed</td><td class="block_label">Red Umbrella Down</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">umbrellaTableUpRed</td><td class="block_label">Red Umbrella Up</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:counterBottomFiller</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:counterHollowCombo</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:counterHollowFront</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">6</td></tr>
     </table>
   </section>
 </body>

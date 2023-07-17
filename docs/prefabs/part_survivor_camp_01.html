@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_survivor_camp_01">
+  <title>- / part_survivor_camp_01</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_survivor_camp_01</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_survivor_camp_01</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_survivor_camp_01</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -58,34 +65,34 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>1052</td></tr>
-<tr><td>awningShapes:billboard</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheet</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap2</td><td>-</td><td>4</td></tr>
-<tr><td>bedrollPOI</td><td>Bedroll (POI)</td><td>1</td></tr>
-<tr><td>chairCampingGreen</td><td>Green Camping Chair</td><td>3</td></tr>
-<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
-<tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
-<tr><td>cntFoodPileSmallRandomHelper</td><td>= Small Food Pile = Random Helper</td><td>1</td></tr>
-<tr><td>cntSUV01RandomHelper</td><td>= SUV = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile09</td><td>Old Trash</td><td>1</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>1</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage Decor3</td><td>1</td></tr>
-<tr><td>modularFireWoodStackC</td><td>Firewood Stack C</td><td>2</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>1</td></tr>
-<tr><td>sleeperCrawlerOnly</td><td>Sleeper Crawler Only</td><td>2</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>2</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>1</td></tr>
-<tr><td>sleeperZombieDogAnimal</td><td>Sleeper Zombie Dog</td><td>1</td></tr>
-<tr><td>terrBurntForestGround</td><td>Burnt Forest Ground</td><td>1</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>21</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>134</td></tr>
-<tr><td>treeOakSml01</td><td>Tree Oak Small 01</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">1052</td></tr>
+<tr class="block"><td class="block_name">awningShapes:billboard</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheet</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap2</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">bedrollPOI</td><td class="block_label">Bedroll (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chairCampingGreen</td><td class="block_label">Green Camping Chair</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedCampfire</td><td class="block_label">Destroyed Campfire</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCoolerRandomLootHelper</td><td class="block_label">= Cooler = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFoodPileSmallRandomHelper</td><td class="block_label">= Small Food Pile = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntSUV01RandomHelper</td><td class="block_label">= SUV = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile09</td><td class="block_label">Old Trash</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackC</td><td class="block_label">Firewood Stack C</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperCrawlerOnly</td><td class="block_label">Sleeper Crawler Only</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperZombieDogAnimal</td><td class="block_label">Sleeper Zombie Dog</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrBurntForestGround</td><td class="block_label">Burnt Forest Ground</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">21</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">134</td></tr>
+<tr class="block"><td class="block_name">treeOakSml01</td><td class="block_label">Tree Oak Small 01</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

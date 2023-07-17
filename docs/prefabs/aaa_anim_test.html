@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_anim_test">
+  <title>- / aaa_anim_test</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_anim_test</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_anim_test</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_anim_test</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -59,25 +66,25 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>14089</td></tr>
-<tr><td>exteriorHouseDoorBrown</td><td>Brown Exterior House Door</td><td>1</td></tr>
-<tr><td>exteriorHouseDoorWhite</td><td>White Exterior House Door</td><td>1</td></tr>
-<tr><td>plantedCoffee1</td><td>Coffee (Seed)</td><td>2</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>1</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>1</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>1</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>1</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>1</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>60</td></tr>
-<tr><td>terrForestGround</td><td>Forest Ground</td><td>186</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>1634</td></tr>
-<tr><td>treeOakSml01</td><td>Tree Oak Small 01</td><td>1</td></tr>
-<tr><td>treeTallGrassDiagonal</td><td>Tree Tall Grass Diagonal</td><td>78</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>272</td></tr>
-<tr><td>woodShapes:stairsFilledVerticalUV</td><td>-</td><td>10</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">14089</td></tr>
+<tr class="block"><td class="block_name">exteriorHouseDoorBrown</td><td class="block_label">Brown Exterior House Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">exteriorHouseDoorWhite</td><td class="block_label">White Exterior House Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">plantedCoffee1</td><td class="block_label">Coffee (Seed)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">60</td></tr>
+<tr class="block"><td class="block_name">terrForestGround</td><td class="block_label">Forest Ground</td><td class="block_count">186</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1634</td></tr>
+<tr class="block"><td class="block_name">treeOakSml01</td><td class="block_label">Tree Oak Small 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeTallGrassDiagonal</td><td class="block_label">Tree Tall Grass Diagonal</td><td class="block_count">78</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">272</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsFilledVerticalUV</td><td class="block_label">-</td><td class="block_count">10</td></tr>
     </table>
   </section>
 </body>

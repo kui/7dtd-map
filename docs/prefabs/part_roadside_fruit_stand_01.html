@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_roadside_fruit_stand_01">
+  <title>- / part_roadside_fruit_stand_01</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_roadside_fruit_stand_01</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_roadside_fruit_stand_01</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_roadside_fruit_stand_01</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,44 +56,44 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>229</td></tr>
-<tr><td>chairFoldingMetalUnfoldedWhite</td><td>White Metal Folding Chair</td><td>1</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>1</td></tr>
-<tr><td>cntShoppingBasketRandomLootHelper</td><td>= Shopping Basket = Random Helper</td><td>1</td></tr>
-<tr><td>cntStoreProduceBasketEmpty1</td><td>Produce Basket Empty 1</td><td>4</td></tr>
-<tr><td>cntStoreProduceBasketRandomLootHelper</td><td>= Produce Basket = Random Helper</td><td>6</td></tr>
-<tr><td>cntStoreShelfSingleBottomEmpty</td><td>Store Shelf Single Bottom Empty</td><td>2</td></tr>
-<tr><td>cntStoreShelfSingleBottomFoodRandomLootHelper</td><td>= Store Shelf Single Bottom Food = Random Helper</td><td>2</td></tr>
-<tr><td>cntStoreShelfSingleTopEmpty</td><td>Store Shelf Single Top Empty</td><td>2</td></tr>
-<tr><td>cntStoreShelfSingleTopFoodRandomLootHelper</td><td>= Store Shelf Single Top Food = Random Helper</td><td>2</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:bracket</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrim1m</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:doorTrimTwoSided</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:gablePlate</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:gablePlatePillar0.025</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:plateWedge60Filler</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:plateWedge60Tip</td><td>-</td><td>8</td></tr>
-<tr><td>lightCeilingBulbMountWhite</td><td>White Light Bulb Flush Mount</td><td>4</td></tr>
-<tr><td>lightCeilingBulbSocketWhite</td><td>White Light Bulb Socket</td><td>1</td></tr>
-<tr><td>oldWoodDoor</td><td>Wood Door</td><td>1</td></tr>
-<tr><td>palletBagBlankBaseMedGreen</td><td>Green Bulk Goods Base Med</td><td>1</td></tr>
-<tr><td>palletEmpty</td><td>Empty Pallet</td><td>1</td></tr>
-<tr><td>plantAloePottedCornerGrey</td><td>Grey Potted Plant Corner 01</td><td>1</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>16</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>10</td></tr>
-<tr><td>woodShapes:mirror</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:pillar0.05Middle</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:plate</td><td>-</td><td>33</td></tr>
-<tr><td>woodShapes:plateCorner</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:plateCornerHalfTop</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:plateGable</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:plateWedge60LeftTip</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:plateWedge60RightTip</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:tableDynamic</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:windowBoarded</td><td>-</td><td>3</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">229</td></tr>
+<tr class="block"><td class="block_name">chairFoldingMetalUnfoldedWhite</td><td class="block_label">White Metal Folding Chair</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCashRegisterRandomLootHelper</td><td class="block_label">= Cash Registers = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShoppingBasketRandomLootHelper</td><td class="block_label">= Shopping Basket = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreProduceBasketEmpty1</td><td class="block_label">Produce Basket Empty 1</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">cntStoreProduceBasketRandomLootHelper</td><td class="block_label">= Produce Basket = Random Helper</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomEmpty</td><td class="block_label">Store Shelf Single Bottom Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleBottomFoodRandomLootHelper</td><td class="block_label">= Store Shelf Single Bottom Food = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleTopEmpty</td><td class="block_label">Store Shelf Single Top Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntStoreShelfSingleTopFoodRandomLootHelper</td><td class="block_label">= Store Shelf Single Top Food = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile02</td><td class="block_label">Pile of Garbage</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:bracket</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrimTwoSided</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:gablePlate</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:gablePlatePillar0.025</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateWedge60Filler</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateWedge60Tip</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">lightCeilingBulbMountWhite</td><td class="block_label">White Light Bulb Flush Mount</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">lightCeilingBulbSocketWhite</td><td class="block_label">White Light Bulb Socket</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">oldWoodDoor</td><td class="block_label">Wood Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletBagBlankBaseMedGreen</td><td class="block_label">Green Bulk Goods Base Med</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletEmpty</td><td class="block_label">Empty Pallet</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">plantAloePottedCornerGrey</td><td class="block_label">Grey Potted Plant Corner 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">woodShapes:mirror</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar0.05Middle</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">33</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateCorner</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateCornerHalfTop</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateGable</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateWedge60LeftTip</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateWedge60RightTip</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:tableDynamic</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowBoarded</td><td class="block_label">-</td><td class="block_count">3</td></tr>
     </table>
   </section>
 </body>

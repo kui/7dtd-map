@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Canyon Cliff Dwellings / canyon_cliff_dwellings">
+  <title>Canyon Cliff Dwellings / canyon_cliff_dwellings</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Canyon Cliff Dwellings / canyon_cliff_dwellings</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Canyon Cliff Dwellings / <small>canyon_cliff_dwellings</small></h1>
+  <h1><span class="prefab_label">Canyon Cliff Dwellings</span> / <small class="prefab_name">canyon_cliff_dwellings</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -61,56 +68,56 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>41215</td></tr>
-<tr><td>brickShapes:brickDestroyed01</td><td>-</td><td>138</td></tr>
-<tr><td>brickShapes:brickDestroyed02</td><td>-</td><td>36</td></tr>
-<tr><td>brickShapes:brickDestroyed03</td><td>-</td><td>4</td></tr>
-<tr><td>brickShapes:cube</td><td>-</td><td>2832</td></tr>
-<tr><td>brickShapes:ramp</td><td>-</td><td>20</td></tr>
-<tr><td>cntCoffinWildWestClosed</td><td>Wild West Coffin Closed</td><td>3</td></tr>
-<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
-<tr><td>cntMedicLootPileB</td><td>Medical Supplies</td><td>1</td></tr>
-<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>1</td></tr>
-<tr><td>cntShippingCrateHero</td><td>Sealed Shipping Crate</td><td>1</td></tr>
-<tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>2</td></tr>
-<tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
-<tr><td>cntWeaponsBagSmall</td><td>Weapons Bag</td><td>1</td></tr>
-<tr><td>cntWoodenChestRottenClosed</td><td>Rotten Chest</td><td>2</td></tr>
-<tr><td>cntWorkbenchBustedRandomLootHelper</td><td>= Destroyed Workbench = Random Helper</td><td>1</td></tr>
-<tr><td>decoCookingPot</td><td>Cooking Pot (POI)</td><td>4</td></tr>
-<tr><td>emberPileDeco1</td><td>Ember Pile 1 Deco</td><td>1</td></tr>
-<tr><td>emberPileDeco2</td><td>Ember Pile 2 Deco</td><td>1</td></tr>
-<tr><td>graveStone07</td><td>Grave Stone 07</td><td>1</td></tr>
-<tr><td>ladderWood</td><td>Wooden Ladder</td><td>36</td></tr>
-<tr><td>oldWoodDoor</td><td>Wood Door</td><td>8</td></tr>
-<tr><td>signNationalPark</td><td>Navezgane National Park</td><td>1</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>6</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>6</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>2</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>4</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>25</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>70</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>79982</td></tr>
-<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>7</td></tr>
-<tr><td>woodChair1</td><td>Wooden Chair</td><td>3</td></tr>
-<tr><td>woodHatch</td><td>Wood Hatch</td><td>3</td></tr>
-<tr><td>woodShapes:catwalkV1</td><td>-</td><td>354</td></tr>
-<tr><td>woodShapes:catwalkV1Corner</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:catwalkV1RailOnly</td><td>-</td><td>80</td></tr>
-<tr><td>woodShapes:catwalkV1Railing</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>30</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>54</td></tr>
-<tr><td>woodShapes:pillar100</td><td>-</td><td>431</td></tr>
-<tr><td>woodShapes:pillar50</td><td>-</td><td>10</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>129</td></tr>
-<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:poleSquareSideCenteredCornerBracket</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:poleSupport1m</td><td>-</td><td>109</td></tr>
-<tr><td>woodShapes:poleSupportCenter</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:stairsRailing</td><td>-</td><td>15</td></tr>
-<tr><td>woodShapes:table</td><td>-</td><td>10</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">41215</td></tr>
+<tr class="block"><td class="block_name">brickShapes:brickDestroyed01</td><td class="block_label">-</td><td class="block_count">138</td></tr>
+<tr class="block"><td class="block_name">brickShapes:brickDestroyed02</td><td class="block_label">-</td><td class="block_count">36</td></tr>
+<tr class="block"><td class="block_name">brickShapes:brickDestroyed03</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">2832</td></tr>
+<tr class="block"><td class="block_name">brickShapes:ramp</td><td class="block_label">-</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">cntCoffinWildWestClosed</td><td class="block_label">Wild West Coffin Closed</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedCampfire</td><td class="block_label">Destroyed Campfire</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntMedicLootPileB</td><td class="block_label">Medical Supplies</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShippingCrateConstructionSupplies</td><td class="block_label">= Construction Shipping Crate = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShippingCrateHero</td><td class="block_label">Sealed Shipping Crate</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreCratesRandomLootHelper</td><td class="block_label">= Store Crate = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile03</td><td class="block_label">Mound of Garbage</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWeaponsBagSmall</td><td class="block_label">Weapons Bag</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWoodenChestRottenClosed</td><td class="block_label">Rotten Chest</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntWorkbenchBustedRandomLootHelper</td><td class="block_label">= Destroyed Workbench = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">decoCookingPot</td><td class="block_label">Cooking Pot (POI)</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">emberPileDeco1</td><td class="block_label">Ember Pile 1 Deco</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">emberPileDeco2</td><td class="block_label">Ember Pile 2 Deco</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">graveStone07</td><td class="block_label">Grave Stone 07</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">ladderWood</td><td class="block_label">Wooden Ladder</td><td class="block_count">36</td></tr>
+<tr class="block"><td class="block_name">oldWoodDoor</td><td class="block_label">Wood Door</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">signNationalPark</td><td class="block_label">Navezgane National Park</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">70</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">79982</td></tr>
+<tr class="block"><td class="block_name">wallTorchLight</td><td class="block_label">Wall Torch (POI)</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">woodChair1</td><td class="block_label">Wooden Chair</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodHatch</td><td class="block_label">Wood Hatch</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:catwalkV1</td><td class="block_label">-</td><td class="block_count">354</td></tr>
+<tr class="block"><td class="block_name">woodShapes:catwalkV1Corner</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:catwalkV1RailOnly</td><td class="block_label">-</td><td class="block_count">80</td></tr>
+<tr class="block"><td class="block_name">woodShapes:catwalkV1Railing</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">30</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">54</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar100</td><td class="block_label">-</td><td class="block_count">431</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar50</td><td class="block_label">-</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">129</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSquareSideCenteredCornerBracket</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSupport1m</td><td class="block_label">-</td><td class="block_count">109</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSupportCenter</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsRailing</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">woodShapes:table</td><td class="block_label">-</td><td class="block_count">10</td></tr>
     </table>
   </section>
 </body>

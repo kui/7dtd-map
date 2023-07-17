@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_crown_test">
+  <title>- / aaa_crown_test</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_crown_test</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_crown_test</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_crown_test</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -48,40 +55,40 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>2197</td></tr>
-<tr><td>woodShapes:crown</td><td>-</td><td>24</td></tr>
-<tr><td>woodShapes:crownEnd</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:crownHalfLeft</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:crownHalfRight</td><td>-</td><td>5</td></tr>
-<tr><td>woodShapes:crownInsideCorner</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:crownInsideCornerHalfLeft</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:crownInsideCornerHalfRight</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:crownStraight</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:crownThreeSided</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:crownThreeSidedLeft</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:crownThreeSidedLeftHalf</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:crownThreeSidedRight</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:crownThreeSidedRightHalf</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>1072</td></tr>
-<tr><td>woodShapes:cubeHalf</td><td>-</td><td>54</td></tr>
-<tr><td>woodShapes:halfCrown</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:halfCrown1Left</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:halfCrown1Right</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:halfCrown2</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:halfCrownCorner1</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:halfCrownCorner2</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:halfCrownCorner3</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:halfCrownCorner4</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:halfCrownCorner5</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:halfCrownCorner6</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:halfCrownCorner7</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:halfCrownCorner8</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:halfCrownCorner9</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:stairsFilledQuarterCrown</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:stairsFilledQuarterCrown2</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:stairsFilledQuarterVerticalUV</td><td>-</td><td>3</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">2197</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crown</td><td class="block_label">-</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownEnd</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownHalfLeft</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownHalfRight</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownInsideCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownInsideCornerHalfLeft</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownInsideCornerHalfRight</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownStraight</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownThreeSided</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownThreeSidedLeft</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownThreeSidedLeftHalf</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownThreeSidedRight</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:crownThreeSidedRightHalf</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">1072</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">54</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrown</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrown1Left</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrown1Right</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrown2</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner1</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner3</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner4</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner5</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner6</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner7</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner8</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:halfCrownCorner9</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsFilledQuarterCrown</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsFilledQuarterCrown2</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsFilledQuarterVerticalUV</td><td class="block_label">-</td><td class="block_count">3</td></tr>
     </table>
   </section>
 </body>

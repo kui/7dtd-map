@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_bandit_platforms_test">
+  <title>- / aaa_bandit_platforms_test</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_bandit_platforms_test</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_bandit_platforms_test</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_bandit_platforms_test</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -48,40 +55,40 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>48011</td></tr>
-<tr><td>banditPlatform3x2A</td><td>Bandit Platform 3x2 A</td><td>5</td></tr>
-<tr><td>banditPlatform3x3A</td><td>Bandit Platform 3x3 A</td><td>9</td></tr>
-<tr><td>banditPlatform3x3B</td><td>Bandit Platform 3x3 B</td><td>16</td></tr>
-<tr><td>banditRamp3x3A</td><td>Bandit Ramp 3x3 A</td><td>1</td></tr>
-<tr><td>banditRampSheet3x3A</td><td>Bandit Ramp Sheet 3x3 A</td><td>1</td></tr>
-<tr><td>banditSupport1m</td><td>Bandit Support 1m</td><td>17</td></tr>
-<tr><td>banditSupport2m</td><td>Bandit Support 2m</td><td>4</td></tr>
-<tr><td>banditSupport3x1A</td><td>Bandit Support 3x1 A</td><td>6</td></tr>
-<tr><td>banditSupport3x1B</td><td>Bandit Support 3x1 B</td><td>3</td></tr>
-<tr><td>banditSupport3x3A</td><td>Bandit Support 3x3 A</td><td>14</td></tr>
-<tr><td>banditWallCorrugated1x2.5</td><td>Bandit Wall, Corrugated, 1x2.5</td><td>1</td></tr>
-<tr><td>banditWallCorrugated1x3</td><td>Bandit Wall, Corrugated, 1x3</td><td>1</td></tr>
-<tr><td>banditWallRibbed2x1Red</td><td>Red Bandit Wall, Ribbed, 2x1</td><td>2</td></tr>
-<tr><td>banditWallSiding2x2Red</td><td>Red Bandit Wall, Siding, 2x2</td><td>1</td></tr>
-<tr><td>cntBarrelPlasticSingle45</td><td>Water Barrel</td><td>1</td></tr>
-<tr><td>palletCompressedCardboard</td><td>Pallet, Compressed Cardboard</td><td>1</td></tr>
-<tr><td>palletEmptyStack</td><td>Empty Pallets, Full Stack</td><td>2</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>25</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>1179</td></tr>
-<tr><td>treeMountainPine27m</td><td>Tree Mountain Pine 27m</td><td>1</td></tr>
-<tr><td>treeOakLrg01</td><td>Tree Oak Large 01</td><td>1</td></tr>
-<tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>1</td></tr>
-<tr><td>wineBarrelSet</td><td>Wine Barrel Set</td><td>1</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>24</td></tr>
-<tr><td>woodShapes:poleThreeWayCorner</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:poleTwoWayCorner</td><td>-</td><td>2</td></tr>
-<tr><td>woodShapes:railing</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:railingBroke01</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:stairsRailing</td><td>-</td><td>21</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">48011</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x2A</td><td class="block_label">Bandit Platform 3x2 A</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3A</td><td class="block_label">Bandit Platform 3x3 A</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3B</td><td class="block_label">Bandit Platform 3x3 B</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">banditRamp3x3A</td><td class="block_label">Bandit Ramp 3x3 A</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditRampSheet3x3A</td><td class="block_label">Bandit Ramp Sheet 3x3 A</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditSupport1m</td><td class="block_label">Bandit Support 1m</td><td class="block_count">17</td></tr>
+<tr class="block"><td class="block_name">banditSupport2m</td><td class="block_label">Bandit Support 2m</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x1A</td><td class="block_label">Bandit Support 3x1 A</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x1B</td><td class="block_label">Bandit Support 3x1 B</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x3A</td><td class="block_label">Bandit Support 3x3 A</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated1x2.5</td><td class="block_label">Bandit Wall, Corrugated, 1x2.5</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallCorrugated1x3</td><td class="block_label">Bandit Wall, Corrugated, 1x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditWallRibbed2x1Red</td><td class="block_label">Red Bandit Wall, Ribbed, 2x1</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditWallSiding2x2Red</td><td class="block_label">Red Bandit Wall, Siding, 2x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBarrelPlasticSingle45</td><td class="block_label">Water Barrel</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletCompressedCardboard</td><td class="block_label">Pallet, Compressed Cardboard</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">palletEmptyStack</td><td class="block_label">Empty Pallets, Full Stack</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1179</td></tr>
+<tr class="block"><td class="block_name">treeMountainPine27m</td><td class="block_label">Tree Mountain Pine 27m</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeOakLrg01</td><td class="block_label">Tree Oak Large 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">wineBarrelPlain</td><td class="block_label">Wine Barrel, Plain</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">wineBarrelSet</td><td class="block_label">Wine Barrel Set</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleThreeWayCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:railing</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:railingBroke01</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:stairsRailing</td><td class="block_label">-</td><td class="block_count">21</td></tr>
     </table>
   </section>
 </body>

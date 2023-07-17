@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / downtown_filler_05">
+  <title>- / downtown_filler_05</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / downtown_filler_05</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>downtown_filler_05</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">downtown_filler_05</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,42 +56,42 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>13408</td></tr>
-<tr><td>commercialDoorV1Grey</td><td>Grey Commercial Door V1</td><td>1</td></tr>
-<tr><td>commercialGlassDoor</td><td>Commercial Glass Door</td><td>2</td></tr>
-<tr><td>concreteShapes:cornerstone</td><td>-</td><td>108</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>2740</td></tr>
-<tr><td>concreteShapes:cubeHalf</td><td>-</td><td>201</td></tr>
-<tr><td>concreteShapes:farmPlot</td><td>-</td><td>32</td></tr>
-<tr><td>concreteShapes:farmPlotCornerRound</td><td>-</td><td>16</td></tr>
-<tr><td>concreteShapes:rampInclineFiller</td><td>-</td><td>3</td></tr>
-<tr><td>concreteShapes:stairsHollowRailingMetalFillerLeft</td><td>-</td><td>16</td></tr>
-<tr><td>concreteShapes:stairsHollowRailingMetalFillerRight</td><td>-</td><td>13</td></tr>
-<tr><td>concreteShapes:stairsHollowRailingMetalLeft</td><td>-</td><td>18</td></tr>
-<tr><td>concreteShapes:stairsHollowRailingMetalRight</td><td>-</td><td>18</td></tr>
-<tr><td>corrugatedMetalShapes:billboard</td><td>-</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:catwalkV2RailOnly</td><td>-</td><td>23</td></tr>
-<tr><td>corrugatedMetalShapes:cornerRound</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:cube</td><td>-</td><td>15</td></tr>
-<tr><td>corrugatedMetalShapes:cube3mCenter</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:cube3mCorner</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:cubeEighth</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>7</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf3mCenter</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf3mCorner</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:cubeQuarter</td><td>-</td><td>12</td></tr>
-<tr><td>corrugatedMetalShapes:trussingCentered</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreFourSidedBroken</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreFourSidedFull</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreThreeSidedBroken</td><td>-</td><td>152</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreThreeSidedFull</td><td>-</td><td>8</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreTwoSidedFull</td><td>-</td><td>4</td></tr>
-<tr><td>recessedLight</td><td>Recessed Light (POI)</td><td>1</td></tr>
-<tr><td>treePlainsTree2</td><td>Tree Plains Tree 2</td><td>4</td></tr>
-<tr><td>woodShapes:3mTubeCenter</td><td>-</td><td>12</td></tr>
-<tr><td>woodShapes:3mTubeCorner</td><td>-</td><td>12</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">13408</td></tr>
+<tr class="block"><td class="block_name">commercialDoorV1Grey</td><td class="block_label">Grey Commercial Door V1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">commercialGlassDoor</td><td class="block_label">Commercial Glass Door</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cornerstone</td><td class="block_label">-</td><td class="block_count">108</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">2740</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">201</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:farmPlot</td><td class="block_label">-</td><td class="block_count">32</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:farmPlotCornerRound</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:rampInclineFiller</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:stairsHollowRailingMetalFillerLeft</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:stairsHollowRailingMetalFillerRight</td><td class="block_label">-</td><td class="block_count">13</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:stairsHollowRailingMetalLeft</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:stairsHollowRailingMetalRight</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:billboard</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:catwalkV2RailOnly</td><td class="block_label">-</td><td class="block_count">23</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cornerRound</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">15</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube3mCenter</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube3mCorner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeEighth</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf3mCenter</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf3mCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarter</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:trussingCentered</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreFourSidedBroken</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreFourSidedFull</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreThreeSidedBroken</td><td class="block_label">-</td><td class="block_count">152</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreThreeSidedFull</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreTwoSidedFull</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">recessedLight</td><td class="block_label">Recessed Light (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treePlainsTree2</td><td class="block_label">Tree Plains Tree 2</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:3mTubeCenter</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">woodShapes:3mTubeCorner</td><td class="block_label">-</td><td class="block_count">12</td></tr>
     </table>
   </section>
 </body>

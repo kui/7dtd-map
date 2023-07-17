@@ -24,13 +24,13 @@ export class LabelHolder {
   #blocks: Promise<Labels>;
   #prefabs: Promise<Labels>;
 
-  constructor(baseUrl: string, language: Language) {
+  constructor(baseUrl: string, defaultLanguage: Language) {
     this.baseUrl = baseUrl;
-    this.#language = language;
-    this.defaultBlocks = this.fetchLabelMap(language, "blocks.json");
-    this.defaultPrefabs = this.fetchLabelMap(language, "prefabs.json");
-    this.#blocks = this.buildLabels(this.defaultBlocks, language, "blocks.json");
-    this.#prefabs = this.buildLabels(this.defaultPrefabs, language, "prefabs.json");
+    this.#language = defaultLanguage;
+    this.defaultBlocks = this.fetchLabelMap(defaultLanguage, "blocks.json");
+    this.defaultPrefabs = this.fetchLabelMap(defaultLanguage, "prefabs.json");
+    this.#blocks = this.buildLabels(this.defaultBlocks, defaultLanguage, "blocks.json");
+    this.#prefabs = this.buildLabels(this.defaultPrefabs, defaultLanguage, "prefabs.json");
   }
 
   get blocks(): Promise<Labels> {
@@ -42,8 +42,8 @@ export class LabelHolder {
   }
 
   set language(lang: Language) {
-    console.log("LabelHolder set language: %s -> %s", this.#language, lang);
     if (lang === this.#language) return;
+    console.log("LabelHolder set language: %s -> %s", this.#language, lang);
     this.#language = lang;
     this.#blocks = this.buildLabels(this.defaultBlocks, this.#language, "blocks.json");
     this.#prefabs = this.buildLabels(this.defaultPrefabs, this.#language, "prefabs.json");

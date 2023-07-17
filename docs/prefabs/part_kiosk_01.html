@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_kiosk_01">
+  <title>- / part_kiosk_01</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_kiosk_01</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_kiosk_01</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_kiosk_01</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,34 +56,34 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>20</td></tr>
-<tr><td>cntBookShelfSingleCapBottomEmpty</td><td>Book Shelf Cap Bottom Empty</td><td>2</td></tr>
-<tr><td>cntBookShelfSingleCapBottomRandomLootHelper</td><td>= Book Shelf Cap Bottom = Random Helper</td><td>1</td></tr>
-<tr><td>cntCabinetBottom</td><td>Cabinet</td><td>1</td></tr>
-<tr><td>cntCabinetBottomRandomLootHelper</td><td>= Cabinet = Random Helper</td><td>2</td></tr>
-<tr><td>cntCashRegisterRandomLootHelper</td><td>= Cash Registers = Random Helper</td><td>1</td></tr>
-<tr><td>cntCupboardCabinetRedTopLootHelper</td><td>= Cupboard Red = Random Helper</td><td>4</td></tr>
-<tr><td>cntDisplayCaseEmptyLeft</td><td>Display Case Empty Left</td><td>1</td></tr>
-<tr><td>cntDisplayCaseEmptyRight</td><td>Display Case Empty Right</td><td>1</td></tr>
-<tr><td>cntFreezerBeveragesStandaloneRandomLootHelper</td><td>= Freezer Beverages Standalone = Random Helper</td><td>1</td></tr>
-<tr><td>cntGunRackSmallEmpty02</td><td>Gun Rack Small Empty 02</td><td>2</td></tr>
-<tr><td>commercialDoorV4Grey</td><td>Grey Commercial Door V4</td><td>1</td></tr>
-<tr><td>corrugatedMetalShapes:bookcaseEmpty</td><td>-</td><td>6</td></tr>
-<tr><td>corrugatedMetalShapes:cubeHalf</td><td>-</td><td>9</td></tr>
-<tr><td>corrugatedMetalShapes:halfTrimSplit</td><td>-</td><td>5</td></tr>
-<tr><td>corrugatedMetalShapes:plate</td><td>-</td><td>18</td></tr>
-<tr><td>corrugatedMetalShapes:plateCorner</td><td>-</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:plateHalf</td><td>-</td><td>22</td></tr>
-<tr><td>corrugatedMetalShapes:plateTrimSplitInside</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:storageCubeHalf</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreCornerFull</td><td>-</td><td>4</td></tr>
-<tr><td>corrugatedMetalShapes:windowStoreOneSidedFull</td><td>-</td><td>2</td></tr>
-<tr><td>lightCeiling07</td><td>Fluorescent Light (POI)</td><td>1</td></tr>
-<tr><td>signCigaretteAd</td><td>Sign: Cigarette Ad</td><td>3</td></tr>
-<tr><td>signMegaCrushAd</td><td>Sign: Mega Crush Ad</td><td>1</td></tr>
-<tr><td>woodShapes:windowTrim</td><td>-</td><td>3</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">20</td></tr>
+<tr class="block"><td class="block_name">cntBookShelfSingleCapBottomEmpty</td><td class="block_label">Book Shelf Cap Bottom Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntBookShelfSingleCapBottomRandomLootHelper</td><td class="block_label">= Book Shelf Cap Bottom = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCabinetBottom</td><td class="block_label">Cabinet</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCabinetBottomRandomLootHelper</td><td class="block_label">= Cabinet = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntCashRegisterRandomLootHelper</td><td class="block_label">= Cash Registers = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCupboardCabinetRedTopLootHelper</td><td class="block_label">= Cupboard Red = Random Helper</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">cntDisplayCaseEmptyLeft</td><td class="block_label">Display Case Empty Left</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntDisplayCaseEmptyRight</td><td class="block_label">Display Case Empty Right</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFreezerBeveragesStandaloneRandomLootHelper</td><td class="block_label">= Freezer Beverages Standalone = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntGunRackSmallEmpty02</td><td class="block_label">Gun Rack Small Empty 02</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">commercialDoorV4Grey</td><td class="block_label">Grey Commercial Door V4</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:bookcaseEmpty</td><td class="block_label">-</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:halfTrimSplit</td><td class="block_label">-</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateCorner</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">22</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateTrimSplitInside</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:storageCubeHalf</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreCornerFull</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedFull</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">lightCeiling07</td><td class="block_label">Fluorescent Light (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signCigaretteAd</td><td class="block_label">Sign: Cigarette Ad</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signMegaCrushAd</td><td class="block_label">Sign: Mega Crush Ad</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">3</td></tr>
     </table>
   </section>
 </body>

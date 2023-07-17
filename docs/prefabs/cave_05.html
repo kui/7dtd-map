@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Nav Mt. Cave / cave_05">
+  <title>Nav Mt. Cave / cave_05</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Nav Mt. Cave / cave_05</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Nav Mt. Cave / <small>cave_05</small></h1>
+  <h1><span class="prefab_label">Nav Mt. Cave</span> / <small class="prefab_name">cave_05</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -59,54 +66,54 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>10627</td></tr>
-<tr><td>awningShapes:rampGlassSheet</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap</td><td>-</td><td>4</td></tr>
-<tr><td>awningShapes:rampGlassSheetCap2</td><td>-</td><td>4</td></tr>
-<tr><td>bedrollPOI</td><td>Bedroll (POI)</td><td>1</td></tr>
-<tr><td>burningBarrel</td><td>Burning Barrel (POI)</td><td>1</td></tr>
-<tr><td>chairCampingGreen</td><td>Green Camping Chair</td><td>4</td></tr>
-<tr><td>chairCampingYellow</td><td>Yellow Camping Chair</td><td>3</td></tr>
-<tr><td>cntAmmoPileSmall</td><td>Ammo Pile, Small</td><td>1</td></tr>
-<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
-<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
-<tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
-<tr><td>cntLootChestHeroInsecureT1</td><td>Wood Crate</td><td>1</td></tr>
-<tr><td>cntMedicLootPileA</td><td>Medical Supplies</td><td>1</td></tr>
-<tr><td>cntQuestInfestedT1LootHelper</td><td>= Infested T1 = Random Helper</td><td>1</td></tr>
-<tr><td>cntStoreCratesRandomLootHelper</td><td>= Store Crate = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
-<tr><td>cntTrashPile03</td><td>Mound of Garbage</td><td>1</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
-<tr><td>commercialBlindsBottom</td><td>Commercial Blinds Bottom</td><td>3</td></tr>
-<tr><td>corrugatedMetalShapes:pillar0.025</td><td>-</td><td>3</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>6</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>5</td></tr>
-<tr><td>lanternOld_01</td><td>Old Lantern 01</td><td>2</td></tr>
-<tr><td>modularFireWoodStackA</td><td>Firewood Stack A</td><td>1</td></tr>
-<tr><td>modularFireWoodStackB</td><td>Firewood Stack B</td><td>1</td></tr>
-<tr><td>modularFireWoodStackC</td><td>Firewood Stack C</td><td>1</td></tr>
-<tr><td>questRallyMarker</td><td>Rally Marker</td><td>1</td></tr>
-<tr><td>rustyIronTable</td><td>Rusty Iron Table</td><td>1</td></tr>
-<tr><td>sleeperBack</td><td>Sleeper Back</td><td>2</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>4</td></tr>
-<tr><td>sleeperSideLeft</td><td>Sleeper Left Side</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>1</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>2</td></tr>
-<tr><td>sleeperStomach</td><td>Sleeper Stomach</td><td>2</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>724</td></tr>
-<tr><td>terrOreLead</td><td>Lead Ore</td><td>35</td></tr>
-<tr><td>terrOrePotassiumNitrate</td><td>Potassium Nitrate</td><td>2</td></tr>
-<tr><td>terrStone</td><td>Stone</td><td>17706</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>955</td></tr>
-<tr><td>treeOakSml01</td><td>Tree Oak Small 01</td><td>1</td></tr>
-<tr><td>wallTorchLight</td><td>Wall Torch (POI)</td><td>1</td></tr>
-<tr><td>wineBarrelPlain</td><td>Wine Barrel, Plain</td><td>2</td></tr>
-<tr><td>woodShapes:fence</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:fenceBroken2</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>9</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">10627</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheet</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">awningShapes:rampGlassSheetCap2</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">bedrollPOI</td><td class="block_label">Bedroll (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">burningBarrel</td><td class="block_label">Burning Barrel (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chairCampingGreen</td><td class="block_label">Green Camping Chair</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">chairCampingYellow</td><td class="block_label">Yellow Camping Chair</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntAmmoPileSmall</td><td class="block_label">Ammo Pile, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBackpack03</td><td class="block_label">Moldy Backpack</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedCampfire</td><td class="block_label">Destroyed Campfire</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCoolerRandomLootHelper</td><td class="block_label">= Cooler = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntLootChestHeroInsecureT1</td><td class="block_label">Wood Crate</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntMedicLootPileA</td><td class="block_label">Medical Supplies</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntQuestInfestedT1LootHelper</td><td class="block_label">= Infested T1 = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntStoreCratesRandomLootHelper</td><td class="block_label">= Store Crate = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile02</td><td class="block_label">Pile of Garbage</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile03</td><td class="block_label">Mound of Garbage</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">commercialBlindsBottom</td><td class="block_label">Commercial Blinds Bottom</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.025</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">lanternOld_01</td><td class="block_label">Old Lantern 01</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackA</td><td class="block_label">Firewood Stack A</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackB</td><td class="block_label">Firewood Stack B</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">modularFireWoodStackC</td><td class="block_label">Firewood Stack C</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">questRallyMarker</td><td class="block_label">Rally Marker</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rustyIronTable</td><td class="block_label">Rusty Iron Table</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">724</td></tr>
+<tr class="block"><td class="block_name">terrOreLead</td><td class="block_label">Lead Ore</td><td class="block_count">35</td></tr>
+<tr class="block"><td class="block_name">terrOrePotassiumNitrate</td><td class="block_label">Potassium Nitrate</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrStone</td><td class="block_label">Stone</td><td class="block_count">17706</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">955</td></tr>
+<tr class="block"><td class="block_name">treeOakSml01</td><td class="block_label">Tree Oak Small 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">wallTorchLight</td><td class="block_label">Wall Torch (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">wineBarrelPlain</td><td class="block_label">Wine Barrel, Plain</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fence</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:fenceBroken2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">9</td></tr>
     </table>
   </section>
 </body>

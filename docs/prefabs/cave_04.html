@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Hobo Cave / cave_04">
+  <title>Hobo Cave / cave_04</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Hobo Cave / cave_04</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Hobo Cave / <small>cave_04</small></h1>
+  <h1><span class="prefab_label">Hobo Cave</span> / <small class="prefab_name">cave_04</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -61,43 +68,43 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>7509</td></tr>
-<tr><td>bedrollPOI</td><td>Bedroll (POI)</td><td>1</td></tr>
-<tr><td>candleWallLight</td><td>Candle Wall (POI)</td><td>2</td></tr>
-<tr><td>cinderBlocks03</td><td>Cinder Blocks 3</td><td>1</td></tr>
-<tr><td>cntCollapsedCampfire</td><td>Destroyed Campfire</td><td>1</td></tr>
-<tr><td>cntLootChestHeroInsecureT1</td><td>Wood Crate</td><td>1</td></tr>
-<tr><td>cntQuestInfestedT1LootHelper</td><td>= Infested T1 = Random Helper</td><td>1</td></tr>
-<tr><td>cntShippingCrateConstructionSupplies</td><td>= Construction Shipping Crate = Random Helper</td><td>1</td></tr>
-<tr><td>cntShippingCrateShotgunMessiah</td><td>Shotgun Messiah Sealed Shipping Crate</td><td>2</td></tr>
-<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
-<tr><td>cntTrashPile09</td><td>Old Trash</td><td>1</td></tr>
-<tr><td>cobweb</td><td>Cobweb</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:shantywall01</td><td>-</td><td>7</td></tr>
-<tr><td>corrugatedMetalShapes:shantywall03</td><td>-</td><td>2</td></tr>
-<tr><td>corrugatedMetalShapes:shantywall04</td><td>-</td><td>4</td></tr>
-<tr><td>hangingMoss</td><td>Hanging Moss</td><td>7</td></tr>
-<tr><td>mushroom01</td><td>Mushrooms 01 (POI)</td><td>4</td></tr>
-<tr><td>mushroom02</td><td>Mushrooms 02 (POI)</td><td>4</td></tr>
-<tr><td>oldWoodDoor</td><td>Wood Door</td><td>1</td></tr>
-<tr><td>questRallyMarker</td><td>Rally Marker</td><td>1</td></tr>
-<tr><td>rockResource</td><td>Resource Boulder 1</td><td>4</td></tr>
-<tr><td>sleeperIdle</td><td>Sleeper Idle</td><td>2</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>1</td></tr>
-<tr><td>sleeperSit</td><td>Sleeper Sitting</td><td>8</td></tr>
-<tr><td>terrStone</td><td>Stone</td><td>365</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>16955</td></tr>
-<tr><td>treeDeadTree02</td><td>Tree Dead Tree 02</td><td>6</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>1</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>2</td></tr>
-<tr><td>woodChair1</td><td>Wooden Chair</td><td>1</td></tr>
-<tr><td>woodLogPillar100</td><td>Wood Log</td><td>4</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>36</td></tr>
-<tr><td>woodShapes:poleSupport</td><td>-</td><td>3</td></tr>
-<tr><td>woodShapes:poleSupport2</td><td>-</td><td>3</td></tr>
-<tr><td>woodSpikesTrapBloodPOI</td><td>Wood Spikes Blood (POI)</td><td>4</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">7509</td></tr>
+<tr class="block"><td class="block_name">bedrollPOI</td><td class="block_label">Bedroll (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">candleWallLight</td><td class="block_label">Candle Wall (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cinderBlocks03</td><td class="block_label">Cinder Blocks 3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCollapsedCampfire</td><td class="block_label">Destroyed Campfire</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntLootChestHeroInsecureT1</td><td class="block_label">Wood Crate</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntQuestInfestedT1LootHelper</td><td class="block_label">= Infested T1 = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShippingCrateConstructionSupplies</td><td class="block_label">= Construction Shipping Crate = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntShippingCrateShotgunMessiah</td><td class="block_label">Shotgun Messiah Sealed Shipping Crate</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile04</td><td class="block_label">Abandoned Rubbish</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile09</td><td class="block_label">Old Trash</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cobweb</td><td class="block_label">Cobweb</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:shantywall01</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:shantywall03</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:shantywall04</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">hangingMoss</td><td class="block_label">Hanging Moss</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">mushroom01</td><td class="block_label">Mushrooms 01 (POI)</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">mushroom02</td><td class="block_label">Mushrooms 02 (POI)</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">oldWoodDoor</td><td class="block_label">Wood Door</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">questRallyMarker</td><td class="block_label">Rally Marker</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rockResource</td><td class="block_label">Resource Boulder 1</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">terrStone</td><td class="block_label">Stone</td><td class="block_count">365</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">16955</td></tr>
+<tr class="block"><td class="block_name">treeDeadTree02</td><td class="block_label">Tree Dead Tree 02</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodChair1</td><td class="block_label">Wooden Chair</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodLogPillar100</td><td class="block_label">Wood Log</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">36</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSupport</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSupport2</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodSpikesTrapBloodPOI</td><td class="block_label">Wood Spikes Blood (POI)</td><td class="block_count">4</td></tr>
     </table>
   </section>
 </body>

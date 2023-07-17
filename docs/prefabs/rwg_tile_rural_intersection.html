@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Rural / rwg_tile_rural_intersection">
+  <title>Rural / rwg_tile_rural_intersection</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Rural / rwg_tile_rural_intersection</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Rural / <small>rwg_tile_rural_intersection</small></h1>
+  <h1><span class="prefab_label">Rural</span> / <small class="prefab_name">rwg_tile_rural_intersection</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -57,47 +64,47 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>247126</td></tr>
-<tr><td>cntPoliceCar01AirRandomHelper</td><td>= Police Car/Air = Random Helper</td><td>1</td></tr>
-<tr><td>cntSUV01AirRandomHelper</td><td>= SUV/Air = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile02</td><td>Pile of Garbage</td><td>1</td></tr>
-<tr><td>cntTrashPile07</td><td>Garbage Pile</td><td>1</td></tr>
-<tr><td>concreteShapes:billboard</td><td>-</td><td>16</td></tr>
-<tr><td>concreteShapes:pillar100Open</td><td>-</td><td>21</td></tr>
-<tr><td>concreteShapes:roadPaintDash</td><td>-</td><td>616</td></tr>
-<tr><td>concreteShapes:roadPaintDashDiagonalFiller</td><td>-</td><td>12</td></tr>
-<tr><td>concreteShapes:roadPaintDiagonal</td><td>-</td><td>8</td></tr>
-<tr><td>decoCarTireSmallFlat</td><td>Car Tire Small Flat</td><td>2</td></tr>
-<tr><td>garbage_decor1</td><td>Garbage Decor1</td><td>1</td></tr>
-<tr><td>garbage_decor2</td><td>Garbage Decor2</td><td>1</td></tr>
-<tr><td>garbage_decor3</td><td>Garbage Decor3</td><td>1</td></tr>
-<tr><td>guardRailBarrier</td><td>Guardrail End Right</td><td>6</td></tr>
-<tr><td>guardRailBarrierFlipped</td><td>Guardrail End Left</td><td>6</td></tr>
-<tr><td>guardRailPole</td><td>Guardrail Straight Pole</td><td>24</td></tr>
-<tr><td>guardRailStraight</td><td>Guardrail Straight</td><td>36</td></tr>
-<tr><td>hayBaleRound</td><td>Hay Bale, Round</td><td>3</td></tr>
-<tr><td>hayBaleSquare</td><td>Hay Bale</td><td>8</td></tr>
-<tr><td>signRoadCourtlandHuenink</td><td>Sign Road Courtland Huenink</td><td>2</td></tr>
-<tr><td>signRoadSpeed45</td><td>Sign Road Speed 45</td><td>2</td></tr>
-<tr><td>signRoadStop4way</td><td>Sign Road Stop 4-Way</td><td>4</td></tr>
-<tr><td>streetLight01</td><td>Street Light (POI)</td><td>1</td></tr>
-<tr><td>terrAsphalt</td><td>Asphalt</td><td>3297</td></tr>
-<tr><td>terrDirt</td><td>Dirt</td><td>258</td></tr>
-<tr><td>terrGravel</td><td>Gravel</td><td>644</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>85199</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>5</td></tr>
-<tr><td>treeMediumRandomHelper</td><td>= Tree Medium = Random Helper</td><td>4</td></tr>
-<tr><td>treeSmallRandomHelper</td><td>= Tree Small = Random Helper</td><td>12</td></tr>
-<tr><td>utilityInsulator</td><td>Insulator</td><td>36</td></tr>
-<tr><td>utilityTransformerHanging</td><td>Transformer Hanging</td><td>2</td></tr>
-<tr><td>woodPillar375</td><td>Utility Pole Small</td><td>48</td></tr>
-<tr><td>woodPillar375UtilityTop</td><td>Utility Pole Small Top</td><td>6</td></tr>
-<tr><td>woodPillar50UtilityTop</td><td>Utility Pole Top</td><td>8</td></tr>
-<tr><td>woodPoleUtilitySupport</td><td>Utility Pole Support</td><td>28</td></tr>
-<tr><td>woodShapes:pillar50</td><td>-</td><td>45</td></tr>
-<tr><td>woodShapes:poleSideCentered</td><td>-</td><td>8</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">247126</td></tr>
+<tr class="block"><td class="block_name">cntPoliceCar01AirRandomHelper</td><td class="block_label">= Police Car/Air = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntSUV01AirRandomHelper</td><td class="block_label">= SUV/Air = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile02</td><td class="block_label">Pile of Garbage</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:billboard</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:pillar100Open</td><td class="block_label">-</td><td class="block_count">21</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDash</td><td class="block_label">-</td><td class="block_count">616</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDashDiagonalFiller</td><td class="block_label">-</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:roadPaintDiagonal</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">decoCarTireSmallFlat</td><td class="block_label">Car Tire Small Flat</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">guardRailBarrier</td><td class="block_label">Guardrail End Right</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">guardRailBarrierFlipped</td><td class="block_label">Guardrail End Left</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">guardRailPole</td><td class="block_label">Guardrail Straight Pole</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">guardRailStraight</td><td class="block_label">Guardrail Straight</td><td class="block_count">36</td></tr>
+<tr class="block"><td class="block_name">hayBaleRound</td><td class="block_label">Hay Bale, Round</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">hayBaleSquare</td><td class="block_label">Hay Bale</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">signRoadCourtlandHuenink</td><td class="block_label">Sign Road Courtland Huenink</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signRoadSpeed45</td><td class="block_label">Sign Road Speed 45</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signRoadStop4way</td><td class="block_label">Sign Road Stop 4-Way</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">streetLight01</td><td class="block_label">Street Light (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">3297</td></tr>
+<tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">258</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">644</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">85199</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">utilityInsulator</td><td class="block_label">Insulator</td><td class="block_count">36</td></tr>
+<tr class="block"><td class="block_name">utilityTransformerHanging</td><td class="block_label">Transformer Hanging</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodPillar375</td><td class="block_label">Utility Pole Small</td><td class="block_count">48</td></tr>
+<tr class="block"><td class="block_name">woodPillar375UtilityTop</td><td class="block_label">Utility Pole Small Top</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">woodPillar50UtilityTop</td><td class="block_label">Utility Pole Top</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodPoleUtilitySupport</td><td class="block_label">Utility Pole Support</td><td class="block_count">28</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pillar50</td><td class="block_label">-</td><td class="block_count">45</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">8</td></tr>
     </table>
   </section>
 </body>

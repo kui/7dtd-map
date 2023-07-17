@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / aaa_bandits">
+  <title>- / aaa_bandits</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / aaa_bandits</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>aaa_bandits</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">aaa_bandits</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -47,38 +54,38 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>25580</td></tr>
-<tr><td>banditPlatform2x2A</td><td>Bandit Platform 2x2 A</td><td>2</td></tr>
-<tr><td>banditPlatform3x2A</td><td>Bandit Platform 3x2 A</td><td>2</td></tr>
-<tr><td>banditPlatform3x3A</td><td>Bandit Platform 3x3 A</td><td>2</td></tr>
-<tr><td>banditPlatform3x3B</td><td>Bandit Platform 3x3 B</td><td>2</td></tr>
-<tr><td>banditPlatform3x3BrokenA</td><td>Bandit Platform 3x3 Broken A</td><td>2</td></tr>
-<tr><td>banditPlatform3x3BrokenB</td><td>Bandit Platform 3x3 Broken B</td><td>2</td></tr>
-<tr><td>banditPlatform3x3BrokenC</td><td>Bandit Platform 3x3 Broken C</td><td>2</td></tr>
-<tr><td>banditPlatformSheet3x2A</td><td>Bandit Platform Sheet 3x2 A</td><td>2</td></tr>
-<tr><td>banditPlatformSheet3x3A</td><td>Bandit Platform Sheet 3x3 A</td><td>2</td></tr>
-<tr><td>banditPlatformSheet3x3B</td><td>Bandit Platform Sheet 3x3 B</td><td>2</td></tr>
-<tr><td>banditRamp2x2A</td><td>Bandit Ramp 2x2 A</td><td>2</td></tr>
-<tr><td>banditRamp3x2A</td><td>Bandit Ramp 3x2 A</td><td>2</td></tr>
-<tr><td>banditRamp3x3A</td><td>Bandit Ramp 3x3 A</td><td>2</td></tr>
-<tr><td>banditRampSheet2x2A</td><td>Bandit Ramp Sheet 2x2 A</td><td>2</td></tr>
-<tr><td>banditRampSheet3x2A</td><td>Bandit Ramp Sheet 3x2 A</td><td>2</td></tr>
-<tr><td>banditRampSheet3x3A</td><td>Bandit Ramp Sheet 3x3 A</td><td>2</td></tr>
-<tr><td>banditSupport1m</td><td>Bandit Support 1m</td><td>2</td></tr>
-<tr><td>banditSupport2m</td><td>Bandit Support 2m</td><td>2</td></tr>
-<tr><td>banditSupport2x2A</td><td>Bandit Support 2x2 A</td><td>2</td></tr>
-<tr><td>banditSupport3m</td><td>Bandit Support 3m</td><td>2</td></tr>
-<tr><td>banditSupport3x1A</td><td>Bandit Support 3x1 A</td><td>2</td></tr>
-<tr><td>banditSupport3x1B</td><td>Bandit Support 3x1 B</td><td>2</td></tr>
-<tr><td>banditSupport3x2A</td><td>Bandit Support 3x2 A</td><td>2</td></tr>
-<tr><td>banditSupportBroken1m</td><td>Bandit Support Broken 1m</td><td>1</td></tr>
-<tr><td>banditSupportBroken2m</td><td>Bandit Support Broken 2m</td><td>1</td></tr>
-<tr><td>banditSupportBroken3m</td><td>Bandit Support Broken 3m</td><td>1</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>130</td></tr>
-<tr><td>concreteShapes:ramp</td><td>-</td><td>1</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>3680</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">25580</td></tr>
+<tr class="block"><td class="block_name">banditPlatform2x2A</td><td class="block_label">Bandit Platform 2x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x2A</td><td class="block_label">Bandit Platform 3x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3A</td><td class="block_label">Bandit Platform 3x3 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3B</td><td class="block_label">Bandit Platform 3x3 B</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3BrokenA</td><td class="block_label">Bandit Platform 3x3 Broken A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3BrokenB</td><td class="block_label">Bandit Platform 3x3 Broken B</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatform3x3BrokenC</td><td class="block_label">Bandit Platform 3x3 Broken C</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatformSheet3x2A</td><td class="block_label">Bandit Platform Sheet 3x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatformSheet3x3A</td><td class="block_label">Bandit Platform Sheet 3x3 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditPlatformSheet3x3B</td><td class="block_label">Bandit Platform Sheet 3x3 B</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRamp2x2A</td><td class="block_label">Bandit Ramp 2x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRamp3x2A</td><td class="block_label">Bandit Ramp 3x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRamp3x3A</td><td class="block_label">Bandit Ramp 3x3 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRampSheet2x2A</td><td class="block_label">Bandit Ramp Sheet 2x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRampSheet3x2A</td><td class="block_label">Bandit Ramp Sheet 3x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditRampSheet3x3A</td><td class="block_label">Bandit Ramp Sheet 3x3 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport1m</td><td class="block_label">Bandit Support 1m</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport2m</td><td class="block_label">Bandit Support 2m</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport2x2A</td><td class="block_label">Bandit Support 2x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport3m</td><td class="block_label">Bandit Support 3m</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x1A</td><td class="block_label">Bandit Support 3x1 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x1B</td><td class="block_label">Bandit Support 3x1 B</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupport3x2A</td><td class="block_label">Bandit Support 3x2 A</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">banditSupportBroken1m</td><td class="block_label">Bandit Support Broken 1m</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditSupportBroken2m</td><td class="block_label">Bandit Support Broken 2m</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">banditSupportBroken3m</td><td class="block_label">Bandit Support Broken 3m</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">130</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:ramp</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">3680</td></tr>
     </table>
   </section>
 </body>

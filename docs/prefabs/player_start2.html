@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / player_start2">
+  <title>- / player_start2</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / player_start2</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>player_start2</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">player_start2</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -49,14 +56,14 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>19</td></tr>
-<tr><td>carsRandomHelper</td><td>= Cars = Random Helper</td><td>1</td></tr>
-<tr><td>cntBackpack03</td><td>Moldy Backpack</td><td>1</td></tr>
-<tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile04</td><td>Abandoned Rubbish</td><td>1</td></tr>
-<tr><td>cntTrashPile08</td><td>Foul Trash</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">19</td></tr>
+<tr class="block"><td class="block_name">carsRandomHelper</td><td class="block_label">= Cars = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBackpack03</td><td class="block_label">Moldy Backpack</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCoolerRandomLootHelper</td><td class="block_label">= Cooler = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile04</td><td class="block_label">Abandoned Rubbish</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile08</td><td class="block_label">Foul Trash</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

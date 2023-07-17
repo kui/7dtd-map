@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for Hunter's Retreat / wilderness_filler_04">
+  <title>Hunter's Retreat / wilderness_filler_04</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>Hunter's Retreat / wilderness_filler_04</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>Hunter's Retreat / <small>wilderness_filler_04</small></h1>
+  <h1><span class="prefab_label">Hunter's Retreat</span> / <small class="prefab_name">wilderness_filler_04</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -60,35 +67,35 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>7748</td></tr>
-<tr><td>bedrollPOI</td><td>Bedroll (POI)</td><td>1</td></tr>
-<tr><td>cntBagsRandomLootHelper</td><td>= Bag / Backpack = Random Helper</td><td>1</td></tr>
-<tr><td>cntBookPile05</td><td>Book</td><td>1</td></tr>
-<tr><td>cntCoolerRandomLootHelper</td><td>= Cooler = Random Helper</td><td>1</td></tr>
-<tr><td>cntTrashPile06</td><td>Spoiled Trash</td><td>1</td></tr>
-<tr><td>emberPileDeco1</td><td>Ember Pile 1 Deco</td><td>1</td></tr>
-<tr><td>goreBlockHumanCorpse</td><td>Decaying Human Corpse</td><td>1</td></tr>
-<tr><td>goreBlockHumanCorpse1</td><td>Decaying Human Corpse 1</td><td>1</td></tr>
-<tr><td>laundryLoose</td><td>Loose Laundry</td><td>1</td></tr>
-<tr><td>rockResource02</td><td>Resource Boulder 2</td><td>1</td></tr>
-<tr><td>sleeperSideRight</td><td>Sleeper Right Side</td><td>2</td></tr>
-<tr><td>terrainFiller</td><td>Topsoil Terrain Filler (POI)</td><td>774</td></tr>
-<tr><td>treeLargeRandomHelper</td><td>= Tree Large = Random Helper</td><td>3</td></tr>
-<tr><td>treeStumpPOI</td><td>Tree Stump POI</td><td>1</td></tr>
-<tr><td>woodShapes:cube</td><td>-</td><td>25</td></tr>
-<tr><td>woodShapes:doorTrim1m</td><td>-</td><td>24</td></tr>
-<tr><td>woodShapes:doorTrim2m</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:doorTrimCorner</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:ladderSquare</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:plate</td><td>-</td><td>80</td></tr>
-<tr><td>woodShapes:plateDestroyed02</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:plateDestroyed03</td><td>-</td><td>1</td></tr>
-<tr><td>woodShapes:pole</td><td>-</td><td>52</td></tr>
-<tr><td>woodShapes:poleSquareBracketCorner</td><td>-</td><td>8</td></tr>
-<tr><td>woodShapes:poleSquareBracketDouble</td><td>-</td><td>4</td></tr>
-<tr><td>woodShapes:woodDebris02</td><td>-</td><td>1</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">7748</td></tr>
+<tr class="block"><td class="block_name">bedrollPOI</td><td class="block_label">Bedroll (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBookPile05</td><td class="block_label">Book</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntCoolerRandomLootHelper</td><td class="block_label">= Cooler = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashPile06</td><td class="block_label">Spoiled Trash</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">emberPileDeco1</td><td class="block_label">Ember Pile 1 Deco</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse</td><td class="block_label">Decaying Human Corpse</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">goreBlockHumanCorpse1</td><td class="block_label">Decaying Human Corpse 1</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">laundryLoose</td><td class="block_label">Loose Laundry</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rockResource02</td><td class="block_label">Resource Boulder 2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">sleeperSideRight</td><td class="block_label">Sleeper Right Side</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">774</td></tr>
+<tr class="block"><td class="block_name">treeLargeRandomHelper</td><td class="block_label">= Tree Large = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">treeStumpPOI</td><td class="block_label">Tree Stump POI</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">25</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">24</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrim2m</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:doorTrimCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:ladderSquare</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">80</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateDestroyed02</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:plateDestroyed03</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodShapes:pole</td><td class="block_label">-</td><td class="block_count">52</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSquareBracketCorner</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:poleSquareBracketDouble</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:woodDebris02</td><td class="block_label">-</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>

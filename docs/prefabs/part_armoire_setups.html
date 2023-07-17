@@ -3,21 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for - / part_armoire_setups">
+  <title>- / part_armoire_setups</title>
   <style>
   tr:nth-child(odd) {
     background-color: lightcyan;
   }
   </style>
-  <title>- / part_armoire_setups</title>
+  <script src="main.js" async></script>
 </head>
 <body>
-  <h1>- / <small>part_armoire_setups</small></h1>
+  <h1><span class="prefab_label">-</span> / <small class="prefab_name">part_armoire_setups</small></h1>
 
   <nav>
     <ul>
       <li><a href="../prefabs.html">Prefab List</a></li>
       <li><a href="..">7dtd-map</a></li>
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+      <li>
+        Prefab/Block Language:
+        <select id="label_lang">
+          <option selected>english</option>
+        </select>
+      </li>
     </ul>
   </nav>
 
@@ -50,87 +57,87 @@
 
   <section>
     <h2>Blocks</h2>
-    <table>
+    <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr><td>air</td><td>Air</td><td>1452</td></tr>
-<tr><td>cntArmoireDoorsBlack</td><td>Black Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsBlue</td><td>Blue Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsBrown</td><td>Brown Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsGreen</td><td>Green Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsGrey</td><td>Grey Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsOrange</td><td>Orange Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsPink</td><td>Pink Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsPurple</td><td>Purple Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsRed</td><td>Red Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsWhite</td><td>White Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDoorsYellow</td><td>Yellow Armoire Doors</td><td>6</td></tr>
-<tr><td>cntArmoireDrawerBlackRandomLootHelper</td><td>= Black Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerBlueRandomLootHelper</td><td>= Blue Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerBrownRandomLootHelper</td><td>= Brown Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyBlack</td><td>Black Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyBlue</td><td>Blue Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyBrown</td><td>Brown Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyGreen</td><td>Green Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyGrey</td><td>Grey Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyOrange</td><td>Orange Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyPink</td><td>Pink Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyPurple</td><td>Purple Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyRed</td><td>Red Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyWhite</td><td>White Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerEmptyYellow</td><td>Yellow Armoire Drawer Empty</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullBlack</td><td>Black Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullBlue</td><td>Blue Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullBrown</td><td>Brown Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullGreen</td><td>Green Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullGrey</td><td>Grey Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullOrange</td><td>Orange Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullPink</td><td>Pink Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullPurple</td><td>Purple Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullRed</td><td>Red Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullWhite</td><td>White Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerFullYellow</td><td>Yellow Armoire Drawer</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerGreenRandomLootHelper</td><td>= Green Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerGreyRandomLootHelper</td><td>= Grey Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerOrangeRandomLootHelper</td><td>= Orange Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerPinkRandomLootHelper</td><td>= Pink Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerPurpleRandomLootHelper</td><td>= Purple Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerRedRandomLootHelper</td><td>= Red Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerWhiteRandomLootHelper</td><td>= White Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireDrawerYellowRandomLootHelper</td><td>= Yellow Armoire Drawer  = Random Helper</td><td>2</td></tr>
-<tr><td>cntArmoireSideBlack</td><td>Black Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideBlue</td><td>Blue Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideBrown</td><td>Brown Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideGreen</td><td>Green Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideGrey</td><td>Grey Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideOrange</td><td>Orange Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSidePink</td><td>Pink Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSidePurple</td><td>Purple Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideRed</td><td>Red Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideWhite</td><td>White Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireSideYellow</td><td>Yellow Armoire Side</td><td>12</td></tr>
-<tr><td>cntArmoireTopBackBlack</td><td>Black Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackBlue</td><td>Blue Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackBrown</td><td>Brown Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackGreen</td><td>Green Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackGrey</td><td>Grey Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackOrange</td><td>Orange Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackPink</td><td>Pink Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackPurple</td><td>Purple Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackRed</td><td>Red Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackWhite</td><td>White Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBackYellow</td><td>Yellow Armoire Top Back</td><td>3</td></tr>
-<tr><td>cntArmoireTopBlack</td><td>Black Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopBlue</td><td>Blue Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopBrown</td><td>Brown Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopGreen</td><td>Green Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopGrey</td><td>Grey Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopOrange</td><td>Orange Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopPink</td><td>Pink Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopPurple</td><td>Purple Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopRed</td><td>Red Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopWhite</td><td>White Armoire Top</td><td>3</td></tr>
-<tr><td>cntArmoireTopYellow</td><td>Yellow Armoire Top</td><td>3</td></tr>
-<tr><td>concreteShapes:cube</td><td>-</td><td>594</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">1452</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsBlack</td><td class="block_label">Black Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsBlue</td><td class="block_label">Blue Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsBrown</td><td class="block_label">Brown Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsGreen</td><td class="block_label">Green Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsGrey</td><td class="block_label">Grey Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsOrange</td><td class="block_label">Orange Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsPink</td><td class="block_label">Pink Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsPurple</td><td class="block_label">Purple Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsRed</td><td class="block_label">Red Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsWhite</td><td class="block_label">White Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDoorsYellow</td><td class="block_label">Yellow Armoire Doors</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerBlackRandomLootHelper</td><td class="block_label">= Black Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerBlueRandomLootHelper</td><td class="block_label">= Blue Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerBrownRandomLootHelper</td><td class="block_label">= Brown Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyBlack</td><td class="block_label">Black Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyBlue</td><td class="block_label">Blue Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyBrown</td><td class="block_label">Brown Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyGreen</td><td class="block_label">Green Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyGrey</td><td class="block_label">Grey Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyOrange</td><td class="block_label">Orange Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyPink</td><td class="block_label">Pink Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyPurple</td><td class="block_label">Purple Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyRed</td><td class="block_label">Red Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyWhite</td><td class="block_label">White Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerEmptyYellow</td><td class="block_label">Yellow Armoire Drawer Empty</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullBlack</td><td class="block_label">Black Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullBlue</td><td class="block_label">Blue Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullBrown</td><td class="block_label">Brown Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullGreen</td><td class="block_label">Green Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullGrey</td><td class="block_label">Grey Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullOrange</td><td class="block_label">Orange Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullPink</td><td class="block_label">Pink Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullPurple</td><td class="block_label">Purple Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullRed</td><td class="block_label">Red Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullWhite</td><td class="block_label">White Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerFullYellow</td><td class="block_label">Yellow Armoire Drawer</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerGreenRandomLootHelper</td><td class="block_label">= Green Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerGreyRandomLootHelper</td><td class="block_label">= Grey Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerOrangeRandomLootHelper</td><td class="block_label">= Orange Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerPinkRandomLootHelper</td><td class="block_label">= Pink Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerPurpleRandomLootHelper</td><td class="block_label">= Purple Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerRedRandomLootHelper</td><td class="block_label">= Red Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerWhiteRandomLootHelper</td><td class="block_label">= White Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireDrawerYellowRandomLootHelper</td><td class="block_label">= Yellow Armoire Drawer  = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideBlack</td><td class="block_label">Black Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideBlue</td><td class="block_label">Blue Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideBrown</td><td class="block_label">Brown Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideGreen</td><td class="block_label">Green Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideGrey</td><td class="block_label">Grey Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideOrange</td><td class="block_label">Orange Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSidePink</td><td class="block_label">Pink Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSidePurple</td><td class="block_label">Purple Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideRed</td><td class="block_label">Red Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideWhite</td><td class="block_label">White Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireSideYellow</td><td class="block_label">Yellow Armoire Side</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackBlack</td><td class="block_label">Black Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackBlue</td><td class="block_label">Blue Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackBrown</td><td class="block_label">Brown Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackGreen</td><td class="block_label">Green Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackGrey</td><td class="block_label">Grey Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackOrange</td><td class="block_label">Orange Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackPink</td><td class="block_label">Pink Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackPurple</td><td class="block_label">Purple Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackRed</td><td class="block_label">Red Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackWhite</td><td class="block_label">White Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBackYellow</td><td class="block_label">Yellow Armoire Top Back</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBlack</td><td class="block_label">Black Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBlue</td><td class="block_label">Blue Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopBrown</td><td class="block_label">Brown Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopGreen</td><td class="block_label">Green Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopGrey</td><td class="block_label">Grey Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopOrange</td><td class="block_label">Orange Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopPink</td><td class="block_label">Pink Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopPurple</td><td class="block_label">Purple Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopRed</td><td class="block_label">Red Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopWhite</td><td class="block_label">White Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntArmoireTopYellow</td><td class="block_label">Yellow Armoire Top</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">594</td></tr>
     </table>
   </section>
 </body>
