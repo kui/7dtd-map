@@ -26,7 +26,12 @@ export class LabelHandler {
       option.textContent = lang;
       this.doms.language.appendChild(option);
     }
-    this.doms.language.value = resolveLanguage(navigatorLanguages);
+
+    const browserLang = resolveLanguage(navigatorLanguages);
+    if (this.doms.language.value !== browserLang) {
+      this.doms.language.value = resolveLanguage(navigatorLanguages);
+      requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change")));
+    }
   }
 
   addListener(fn: (lang: Language) => void) {
