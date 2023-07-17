@@ -35,9 +35,14 @@ function main() {
     prefabsHandler.language = lang;
   });
 
+  const prefabFilterHandler = new PrefabFilterHandler({ devPrefabs: component("dev_prefabs", HTMLInputElement) });
+  prefabFilterHandler.addUpdateListener(() => {
+    prefabsHandler.refresh();
+  });
+
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.body, component("prefabs_list"), (p) => prefabLi(p));
   prefabsHandler.listeners.push(async (update) => {
-    prefabListRenderer.iterator = update.prefabs;
+    prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
   });
 }
 
@@ -95,6 +100,36 @@ class PrefabsHandler {
 
   set language(language: Language) {
     this.worker.postMessage({ language });
+  }
+
+  refresh() {
+    this.worker.postMessage({});
+  }
+}
+
+class PrefabFilterHandler {
+
+  displayDevPrefab: boolean = false;
+  updateListener: (() => void)[] = [];
+
+  constructor(doms: { devPrefabs: HTMLInputElement }) {
+    doms.devPrefabs.addEventListener("input", () => {
+      this.displayDevPrefab = doms.devPrefabs.checked;
+      this.updateListener.forEach((fn) => fn());
+    });
+  }
+
+  filter(): (prefab: HighlightedPrefab) => boolean {
+    return (prefab) => {
+      if (!this.displayDevPrefab) {
+        return !/^aaa_/i.test(prefab.name);
+      }
+      return true;
+    };
+  }
+
+  addUpdateListener(fn: () => void) {
+    this.updateListener.push(fn);
   }
 }
 
