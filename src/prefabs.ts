@@ -5,6 +5,7 @@ import { PrefabUpdate } from "./lib/prefabs";
 import * as prefabsFilter from "./worker/prefabs-filter";
 import { Language } from "./lib/labels";
 import { LabelHandler } from "./lib/label-handler";
+import { UrlState } from "./lib/url-state";
 
 interface HighlightedPrefab {
   name: string;
@@ -16,6 +17,9 @@ interface HighlightedPrefab {
 
 function main() {
   presetButton.init();
+
+  const urlState = UrlState.create(location, document.querySelectorAll("input"));
+  urlState.addUpdateListener((url) => window.history.replaceState(null, "", url.toString()));
 
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
   component("blocks_filter", HTMLInputElement).addEventListener("input", (e) => {
