@@ -116,6 +116,7 @@ class PrefabFilterHandler {
   updateListener: (() => void)[] = [];
 
   constructor(doms: { devPrefabs: HTMLInputElement }) {
+    this.displayDevPrefab = doms.devPrefabs.checked;
     doms.devPrefabs.addEventListener("input", () => {
       this.displayDevPrefab = doms.devPrefabs.checked;
       this.updateListener.forEach((fn) => fn());
