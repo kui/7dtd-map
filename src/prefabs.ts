@@ -5,6 +5,7 @@ import { PrefabUpdate } from "./lib/prefabs";
 import * as prefabsFilter from "./worker/prefabs-filter";
 import { Language } from "./lib/labels";
 import { LabelHandler } from "./lib/label-handler";
+import { UrlState } from "./lib/url-state";
 
 interface HighlightedPrefab {
   name: string;
@@ -17,10 +18,10 @@ interface HighlightedPrefab {
 function main() {
   presetButton.init();
 
+  const urlState = UrlState.create(location, document.querySelectorAll("input"));
+  urlState.addUpdateListener((url) => window.history.replaceState(null, "", url.toString()));
+
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
-  component("blocks_filter", HTMLInputElement).addEventListener("input", (e) => {
-    prefabsHandler.blockFilter = (e.target as HTMLInputElement).value;
-  });
   (async () => {
     const [index, difficulties] = await Promise.all([
       fetch("prefab-block-index.json").then((r) => r.json()),
@@ -29,6 +30,12 @@ function main() {
     const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] }));
     prefabsHandler.prefabs = prefabs;
   })();
+
+  const blocksFilter = component("blocks_filter", HTMLInputElement);
+  prefabsHandler.blockFilter = blocksFilter.value;
+  blocksFilter.addEventListener("input", () => {
+    prefabsHandler.blockFilter = blocksFilter.value;
+  });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
   labelHandler.addListener(async (lang) => {
@@ -112,6 +119,7 @@ class PrefabFilterHandler {
   updateListener: (() => void)[] = [];
 
   constructor(doms: { devPrefabs: HTMLInputElement }) {
+    this.displayDevPrefab = doms.devPrefabs.checked;
     doms.devPrefabs.addEventListener("input", () => {
       this.displayDevPrefab = doms.devPrefabs.checked;
       this.updateListener.forEach((fn) => fn());

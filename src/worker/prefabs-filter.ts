@@ -13,7 +13,10 @@ onmessage = ({ data }: MessageEvent<InMessage>) => {
   Object.assign(prefabs, data).update();
 };
 
-prefabs.addUpdateListener((u) => postMessage(u));
+prefabs.addUpdateListener((u) => {
+  console.log("Prefab-filter send message: ", u);
+  postMessage(u);
+});
 
 async function fetchJson<T>(path: string): Promise<T> {
   return (await fetch(path)).json();
