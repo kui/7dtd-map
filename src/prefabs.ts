@@ -22,9 +22,6 @@ function main() {
   urlState.addUpdateListener((url) => window.history.replaceState(null, "", url.toString()));
 
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
-  component("blocks_filter", HTMLInputElement).addEventListener("input", (e) => {
-    prefabsHandler.blockFilter = (e.target as HTMLInputElement).value;
-  });
   (async () => {
     const [index, difficulties] = await Promise.all([
       fetch("prefab-block-index.json").then((r) => r.json()),
@@ -33,6 +30,12 @@ function main() {
     const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] }));
     prefabsHandler.prefabs = prefabs;
   })();
+
+  const blocksFilter = component("blocks_filter", HTMLInputElement);
+  prefabsHandler.blockFilter = blocksFilter.value;
+  blocksFilter.addEventListener("input", () => {
+    prefabsHandler.blockFilter = blocksFilter.value;
+  });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
   labelHandler.addListener(async (lang) => {

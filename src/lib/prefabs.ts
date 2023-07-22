@@ -12,11 +12,11 @@ interface PrefabHighlightedBlocks {
 
 export default class Prefabs {
   all: Prefab[] = [];
-  blockPrefabIndex: BlockPrefabIndex = {};
   filtered: HighlightedPrefab[] = [];
   markCoords: GameCoords | null = null;
   status = "";
 
+  #blockPrefabIndex: BlockPrefabIndex = {};
   #labelHolder: LabelHolder;
   filter: PrefabMatcher;
 
@@ -45,7 +45,14 @@ export default class Prefabs {
     if (s.length === 0) {
       this.filter = this.defaultMatcher();
     } else {
-      this.filter = new BlockNameMatcher(new RegExp(s, "i"), this.blockPrefabIndex, this.#labelHolder);
+      this.filter = new BlockNameMatcher(new RegExp(s, "i"), this.#blockPrefabIndex, this.#labelHolder);
+    }
+  }
+
+  set blockPrefabIndex(index: BlockPrefabIndex) {
+    this.#blockPrefabIndex = index;
+    if (this.filter instanceof BlockNameMatcher) {
+      this.filter = new BlockNameMatcher(this.filter.regexp, index, this.#labelHolder);
     }
   }
 
