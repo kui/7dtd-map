@@ -40,14 +40,14 @@
 <tr><th>EditorGroups</th><td>house old</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
-<tr><th>POIMarkerGroup</th><td>driveway</td></tr>
-<tr><th>POIMarkerPartRotations</th><td>2</td></tr>
-<tr><th>POIMarkerPartSpawnChance</th><td>1</td></tr>
-<tr><th>POIMarkerPartToSpawn</th><td>part_driveway_rural_02</td></tr>
-<tr><th>POIMarkerSize</th><td>5, 13, 3</td></tr>
-<tr><th>POIMarkerStart</th><td>6, 0, -3</td></tr>
-<tr><th>POIMarkerTags</th><td>rural</td></tr>
-<tr><th>POIMarkerType</th><td>PartSpawn</td></tr>
+<tr><th>POIMarkerGroup</th><td>driveway,driveway2</td></tr>
+<tr><th>POIMarkerPartRotations</th><td>2,2</td></tr>
+<tr><th>POIMarkerPartSpawnChance</th><td>1,1</td></tr>
+<tr><th>POIMarkerPartToSpawn</th><td>part_driveway_rural_02,part_driveway_rural_08</td></tr>
+<tr><th>POIMarkerSize</th><td>5, 13, 3#7, 13, 3</td></tr>
+<tr><th>POIMarkerStart</th><td>6, 0, -3#35, 0, -3</td></tr>
+<tr><th>POIMarkerTags</th><td>rural#rural</td></tr>
+<tr><th>POIMarkerType</th><td>PartSpawn,PartSpawn</td></tr>
 <tr><th>PrefabSize</th><td>60, 17, 60</td></tr>
 <tr><th>QuestTags</th><td>clear, fetch, hidden_cache</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
@@ -78,12 +78,11 @@
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">51755</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">51751</td></tr>
 <tr class="block"><td class="block_name">airConditioner</td><td class="block_label">Air Conditioner</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bed02</td><td class="block_label">King Size Bed</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">breakerBoxClosed</td><td class="block_label">Breaker Box Closed</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bunkBedFrame</td><td class="block_label">Bunk Bed, Frame</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">burntWoodBlock3</td><td class="block_label">Burnt Wood Block 3</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">carsRandomHelper</td><td class="block_label">= Cars = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">ceilingFanLight</td><td class="block_label">Ceiling Fan Light (POI)</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">chainlinkFenceTopPlainCorner</td><td class="block_label">Chain Link Top Plain Corner</td><td class="block_count">4</td></tr>
@@ -168,7 +167,6 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pole</td><td class="block_label">-</td><td class="block_count">38</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:railing</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:shantywall03</td><td class="block_label">-</td><td class="block_count">7</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedEmpty</td><td class="block_label">-</td><td class="block_count">31</td></tr>
 <tr class="block"><td class="block_name">couchModernCornerBlue</td><td class="block_label">Couch Modern Corner Blue</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">couchModernSectionBlue</td><td class="block_label">Couch Modern Section Blue</td><td class="block_count">1</td></tr>
@@ -196,6 +194,7 @@
 <tr class="block"><td class="block_name">exteriorHouseDoorWhite</td><td class="block_label">White Exterior House Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">farmPlotBlock</td><td class="block_label">Farm Plot (POI)</td><td class="block_count">13</td></tr>
 <tr class="block"><td class="block_name">faucet04</td><td class="block_label">Household Faucet</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">flashlightCornerDecorRandomHelper</td><td class="block_label">= Flashlight Corner (POI) = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor3</td><td class="block_count">1</td></tr>
@@ -204,10 +203,16 @@
 <tr class="block"><td class="block_name">hoodRangeWhite</td><td class="block_label">White Range Hood</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">interiorHouseDoorBrown</td><td class="block_label">Brown Interior House Door</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">interiorHouseDoorOak</td><td class="block_label">Oak Interior House Door</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">keyRackWood01</td><td class="block_label">Wood Key Rack</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">lightCeilingBulbMountWhite</td><td class="block_label">White Light Bulb Flush Mount</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">lightIndustrialMountedWall</td><td class="block_label">Industrial Mounted Wall Light (POI)</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">lightSconce</td><td class="block_label">Sconce Light (POI)</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">lightSconce_2x1</td><td class="block_label">Sconce Light 2x1 (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">lightWallGooseneckBlack</td><td class="block_label">Black Gooseneck Wall Light</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">miniblindBottomSheet</td><td class="block_label">Mini Blind Bottom Sheet</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">miniblindTopSheet</td><td class="block_label">Mini Blind Top Sheet</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">modularRopeTiledSideCentered</td><td class="block_label">Rope, Climbable</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">modularRopeTopTiedSideCentered</td><td class="block_label">Rope Top Tied, Climbable</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">oldChair1BrokenBrown</td><td class="block_label">Old Chair Brown, Broken</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">paintingPictureRandomHelper</td><td class="block_label">= Painting = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">palletBrownBoxesLoose</td><td class="block_label">Pallet, Brown Boxes, Loose</td><td class="block_count">2</td></tr>
@@ -216,7 +221,7 @@
 <tr class="block"><td class="block_name">palletBrownBoxesTopSmall</td><td class="block_label">Pallet, Brown Boxes, Top Small</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">pictureLargeRandomHelper</td><td class="block_label">= Large Picture = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">pictureMediumRandomHelper</td><td class="block_label">= Medium Picture = Random Helper</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">pictureSmallRandomHelper</td><td class="block_label">= Small Picture = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">pictureSmallRandomHelper</td><td class="block_label">= Small Picture = Random Helper</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">pipeFireHazardBlack3m</td><td class="block_label">Pipe Fire Hazard Black 3m</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">pipeFireHazardWallBlack2m</td><td class="block_label">Pipe Fire Hazard Wall Black 2m</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">pipeSmall1x1</td><td class="block_label">Pipe Small 1x1 Black</td><td class="block_count">11</td></tr>
@@ -260,10 +265,14 @@
 <tr class="block"><td class="block_name">windowPlug03CTRPlate</td><td class="block_label">Window Plug 03</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">woodChair1</td><td class="block_label">Wooden Chair</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodDestroyed06</td><td class="block_label">Wood Destroyed Block 06</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">woodHalfDestroyed06</td><td class="block_label">Wood 1/2 Destroyed 06</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">woodHalfDestroyed08</td><td class="block_label">Wood 1/2 Destroyed Block 08</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodHalfDestroyed05Left</td><td class="block_label">Wood 1/2 Destroyed 05 Left</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodHalfDestroyed05Right</td><td class="block_label">Wood 1/2 Destroyed 05 Right</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">woodHalfDestroyed06</td><td class="block_label">Wood 1/2 Destroyed 06</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodHalfDestroyed08</td><td class="block_label">Wood 1/2 Destroyed Block 08</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">woodHalfDestroyed09</td><td class="block_label">Wood 1/2 Destroyed Block 09</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:arch2</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">woodShapes:billboard</td><td class="block_label">-</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">woodShapes:billboard</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">woodShapes:bookcaseEmpty</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">woodShapes:bookcaseHalfEmpty</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodShapes:concreteDestroyed05</td><td class="block_label">-</td><td class="block_count">16</td></tr>
 <tr class="block"><td class="block_name">woodShapes:concreteDestroyed06</td><td class="block_label">-</td><td class="block_count">4</td></tr>
@@ -288,9 +297,7 @@
 <tr class="block"><td class="block_name">woodShapes:halfChairRail</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">61</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plateCladding01</td><td class="block_label">-</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">woodShapes:plateCornerHalfTop</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plateCounterHole</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">woodShapes:plateDiagonalDestroyed05</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:platePole</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plateWedge60InclineDestroyed</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -302,6 +309,7 @@
 <tr class="block"><td class="block_name">woodShapes:ramp</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">woodShapes:sawhorse</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodShapes:shantywall02</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodShapes:sidingBurnt03</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">woodShapes:stairsRailing</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">woodShapes:table</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:tableDynamic</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -315,13 +323,13 @@
 <tr class="block"><td class="block_name">woodShapes:wedge60TipHalfRight</td><td class="block_label">-</td><td class="block_count">22</td></tr>
 <tr class="block"><td class="block_name">woodShapes:wedgeTipQuarter</td><td class="block_label">-</td><td class="block_count">30</td></tr>
 <tr class="block"><td class="block_name">woodShapes:window01</td><td class="block_label">-</td><td class="block_count">10</td></tr>
-<tr class="block"><td class="block_name">woodShapes:window01Broken</td><td class="block_label">-</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">woodShapes:windowCentered</td><td class="block_label">-</td><td class="block_count">42</td></tr>
+<tr class="block"><td class="block_name">woodShapes:windowCentered</td><td class="block_label">-</td><td class="block_count">36</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowTrim</td><td class="block_label">-</td><td class="block_count">41</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowTrimBottom</td><td class="block_label">-</td><td class="block_count">28</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowTrimTop</td><td class="block_label">-</td><td class="block_count">21</td></tr>
 <tr class="block"><td class="block_name">woodShapes:woodDebris01</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodShapes:woodDebris02</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodenGarageDoor3x3White</td><td class="block_label">White Wooden Garage Door 3x3</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">workLightPOI</td><td class="block_label">Work Light (POI)</td><td class="block_count">1</td></tr>
     </table>
   </section>

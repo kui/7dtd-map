@@ -7,7 +7,7 @@
 	"abandoned_house_06": "Sal's Safehouse",
 	"abandoned_house_07": "The Clement Residence",
 	"abandoned_house_08": "The Rupert Residence",
-	"abandoned_house_09": "Dickens Retreat",
+	"abandoned_house_09": "The Dickens Retreat",
 	"apartments_01": "Good Life Apartments",
 	"apartments_02": "Vanity Tower",
 	"apartments_03": "The Bend Apartments",
@@ -243,6 +243,7 @@
 	"house_modern_26": "The Last Party House",
 	"house_modern_27": "Almeida Residence",
 	"house_modern_28": "Pantelli Residence",
+	"house_modern_29": "The Parkins-Jordaan Residence",
 	"house_old_bungalow_01": "The Vaecon Residence",
 	"house_old_bungalow_02": "T. Thornbury Residence",
 	"house_old_bungalow_03": "Home of Jack Canada",
@@ -315,6 +316,7 @@
 	"installation_red_mesa": "Red Mesa Compound",
 	"junkyard_01": "Ecotrash Recycling Center",
 	"large_park_01": "Shady Pointe Park",
+	"large_park_02": "Federal Plaza",
 	"lodge_01": "Journey's End",
 	"lot_country_01": "Black Bus Mechanical",
 	"lot_country_02": "Shade Tree Auto",
@@ -457,6 +459,7 @@
 	"remnant_downtown_filler_01": "Army Takeover",
 	"remnant_downtown_filler_02": "Arkco Rusco",
 	"remnant_downtown_filler_03": "Fallen Rock Apartments",
+	"remnant_downtown_filler_06": "Shabby St. Outlet",
 	"remnant_downtown_filler_07": "Abandoned Downtown Deli",
 	"remnant_downtown_filler_08": "The View Offices",
 	"remnant_downtown_filler_09": "Racy's",
@@ -683,5 +686,6 @@
 	"wilderness_filler_08": "Lost Soldiers",
 	"wilderness_filler_09": "Flesh Feast Falls",
 	"wilderness_filler_10": "The Mush Pit",
-	"wilderness_filler_11": "Pump Substation"
+	"wilderness_filler_11": "Pump Substation",
+	"wilderness_filler_14": "Alpha Den"
 }
