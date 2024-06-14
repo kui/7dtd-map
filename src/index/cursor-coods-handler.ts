@@ -19,7 +19,7 @@ export class CursorCoodsHandler {
       (e) => {
         updateCursor(this, e);
       },
-      { passive: true }
+      { passive: true },
     );
     doms.canvas.addEventListener("mouseout", () => {
       updateCursor(this);

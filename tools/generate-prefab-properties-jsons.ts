@@ -21,7 +21,7 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
       const difficulty = parseInt(props.find((p) => p.name === "DifficultyTier")?.value ?? "0");
       if (difficulty > 0) return [[prefabName, difficulty]];
       else return [];
-    })
+    }),
   );
 }
 

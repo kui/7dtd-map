@@ -51,7 +51,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
       if (++successCount % 50 === 0) {
         console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
       }
-    })
+    }),
   );
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 }

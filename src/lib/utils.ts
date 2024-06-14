@@ -44,7 +44,7 @@ export function formatCoords(
   map: GameMapSize,
   canvas: HTMLCanvasElement,
   elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
-  event: EventOffsets | null
+  event: EventOffsets | null,
 ): string {
   if (!event) return "E/W: -, N/S: -, Elev: -";
 

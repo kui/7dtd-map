@@ -45,7 +45,7 @@ export class Blocks {
         const downgradedBlock = blocks.get(downgradedBlockName);
         if (!downgradedBlock) return [];
         return [[downgradedBlock, b]];
-      })
+      }),
     );
   }
 

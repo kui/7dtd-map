@@ -55,8 +55,8 @@ export class Tts {
     if (x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z) {
       throw Error(
         `Out of index range: x=${String(x)}, y=${String(y)}, z=${String(z)}, maxValues=${String(this.maxx)},${String(this.maxy)},${String(
-          this.maxz
-        )}`
+          this.maxz,
+        )}`,
       );
     }
     return this.blockIds[x + this.maxx * y + this.maxx * this.maxy * z];

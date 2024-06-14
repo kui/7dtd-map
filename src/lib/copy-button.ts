@@ -18,7 +18,7 @@ export function init(): void {
       () => {
         selectNode(target);
       },
-      { passive: true }
+      { passive: true },
     );
     button.addEventListener("mouseout", () => {
       clearSelection();

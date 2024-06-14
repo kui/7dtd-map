@@ -79,7 +79,7 @@ function html(model: HtmlModel): string {
             `<td class="block_label">${escapeHtml(b.localizedName)}</td>`,
             `<td class="block_count">${b.count.toString()}</td>`,
             "</tr>",
-          ].join("")
+          ].join(""),
         )
         .join("\n")}
     </table>
@@ -99,7 +99,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
       name,
       localizedName: labels.get(name)?.english ?? "-",
       count: blockNums.get(id) ?? 0,
-    }))
+    })),
   );
   const propertiesPromise = parsePrefabXml(xml);
   const [blocks, properties] = await Promise.all([blocksPromise, propertiesPromise]);
@@ -111,7 +111,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
     console.warn(
       "Unexpected state: unknown block ID used: file=%s, idCount=%o",
       xml,
-      undefinedBlockIds.map((i) => [i, blockNums.get(i)])
+      undefinedBlockIds.map((i) => [i, blockNums.get(i)]),
     );
   }
 

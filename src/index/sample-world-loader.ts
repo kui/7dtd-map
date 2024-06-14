@@ -26,7 +26,7 @@ export class SampleWorldLoader {
       SAMPLE_WORLD_FILES.flatMap(async (name) => {
         const file = await fetchAsFile(`${dir}/${name}`);
         return this.listeners.map((fn) => fn(file));
-      })
+      }),
     );
     button.disabled = false;
   }

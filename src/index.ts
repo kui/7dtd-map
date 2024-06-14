@@ -42,7 +42,7 @@ function main() {
       delete: component("delete_map", HTMLButtonElement),
       mapName: component("map_name", HTMLInputElement),
     },
-    mapStorage
+    mapStorage,
   );
 
   const mapCanvasHandler = new MapCanvasHandler(
@@ -59,7 +59,7 @@ function main() {
     },
     new Worker("worker/map-renderer.js"),
     mapStorage,
-    loadingHandler
+    loadingHandler,
   );
 
   const terrainViewer = new TerrainViewer({
@@ -94,7 +94,7 @@ function main() {
     },
     new Worker("worker/prefabs-filter.js"),
     mapStorage,
-    fetchJson("prefab-difficulties.json")
+    fetchJson("prefab-difficulties.json"),
   );
   prefabsHandler.listeners.push((prefabs) => {
     mapCanvasHandler.update({ prefabs });
@@ -103,7 +103,7 @@ function main() {
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
     component("controller", HTMLElement),
     component("prefabs_list", HTMLElement),
-    (p) => prefabLi(p)
+    (p) => prefabLi(p),
   );
   prefabsHandler.listeners.push((prefabs) => {
     prefabListRenderer.iterator = prefabs;
@@ -114,7 +114,7 @@ function main() {
       canvas: component("map", HTMLCanvasElement),
       output: component("cursor_coods", HTMLElement),
     },
-    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null,
   );
   mapCanvasHandler.addMapSizeListener((size) => (cursorCoodsHandler.mapSize = size));
 
@@ -124,7 +124,7 @@ function main() {
       output: component("mark_coods", HTMLElement),
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
-    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null,
   );
   mapCanvasHandler.addMapSizeListener((size) => (markerHandler.mapSize = size));
   markerHandler.listeners.push((coords) => {

@@ -27,7 +27,7 @@ async function extract(labels: Map<string, Label>, files: string[], lang: Langua
         if (!label[lang]) continue;
         yield [id, label[lang]];
       }
-    })()
+    })(),
   );
   console.log("Load %d labels for %s", Object.keys(extracted).length, path.basename(outputFile));
   await writeJsonFile(outputFile, extracted);

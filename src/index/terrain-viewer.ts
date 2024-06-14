@@ -115,7 +115,7 @@ export class TerrainViewer {
       this.terrainSize.width,
       this.terrainSize.height,
       this.terrainSize.width - 1,
-      this.terrainSize.height - 1
+      this.terrainSize.height - 1,
     );
     geo.clearGroups();
     geo.addGroup(0, Infinity, 0);
@@ -137,7 +137,7 @@ export class TerrainViewer {
       const elev =
         requireNonnull(
           this.dtm.data[ingameX + ingameZ * this.mapSize.width],
-          () => `Unexpected coords: ${ingameX.toString()}, ${ingameZ.toString()}`
+          () => `Unexpected coords: ${ingameX.toString()}, ${ingameZ.toString()}`,
         ) / scaleFactor;
       pos.setZ(i, elev);
     }
