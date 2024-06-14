@@ -1,5 +1,5 @@
-import * as utils from "./lib/utils";
-import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser";
+import * as utils from "./lib/utils.js";
+import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser.js";
 import * as path from "path";
 import { promises as fs } from "fs";
 

@@ -42,12 +42,12 @@ main() {
     )
 
     map_width="$(identify -format '%[width]' "$src/splat3_processed.png")"
-    if [[ -z "${map_width}" ]]; then 
+    if [[ -z "${map_width}" ]]; then
         echo "Empty map width"
         exit 1
     fi
     echo "MapWidth: ${map_width}"
-    npx ts-node ./tools/generate-dtm-png.ts "$src/dtm.raw" "${map_width}" "$dest/dtm.png"
+    npx tsx ./tools/generate-dtm-png.ts "$src/dtm.raw" "${map_width}" "$dest/dtm.png"
 }
 
 main "$@"

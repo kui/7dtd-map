@@ -1,8 +1,9 @@
 import * as path from "path";
 import * as fs from "fs";
+import { fileURLToPath } from "url";
 
 export function projectRoot(...pathList: string[]): string {
-  return path.join(__dirname, "..", "..", ...pathList);
+  return path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", ...pathList);
 }
 
 export interface LocalJson {

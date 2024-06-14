@@ -1,7 +1,7 @@
 import * as path from "path";
-import { loadBlocks } from "./lib/blocks-xml";
-import { Loot, LootTable } from "./lib/loot";
-import { handleMain, program, vanillaDir } from "./lib/utils";
+import { loadBlocks } from "./lib/blocks-xml.js";
+import { Loot, LootTable } from "./lib/loot.js";
+import { handleMain, program, vanillaDir } from "./lib/utils.js";
 
 const CMD = program();
 const USAGE = `Usage: ${CMD} <item name regexp>

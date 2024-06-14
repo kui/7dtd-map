@@ -1,4 +1,4 @@
-import { handleMain, program, requireNonnull } from "./lib/utils";
+import { handleMain, program, requireNonnull } from "./lib/utils.js";
 import * as fs from "fs";
 import { PNG } from "pngjs";
 

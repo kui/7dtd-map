@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import glob from "glob-promise";
-import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
-import { Label, LabelId, parseLabel } from "./lib/label-parser";
-import { parseTts } from "./lib/tts-parser";
-import * as utils from "./lib/utils";
+import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser.js";
+import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
+import { parseTts } from "./lib/tts-parser.js";
+import * as utils from "./lib/utils.js";
 
 const DOCS_DIR = utils.projectRoot("docs");
 const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);

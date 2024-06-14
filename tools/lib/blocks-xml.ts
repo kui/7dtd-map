@@ -1,5 +1,5 @@
-import { buildArrayMapByEntries, requireNonnull } from "./utils";
-import { parseXml } from "./xml-parser";
+import { buildArrayMapByEntries, requireNonnull } from "./utils.js";
+import { parseXml } from "./xml-parser.js";
 
 export type BlockName = string;
 

@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import { handleMain, program, projectRoot } from "./lib/utils";
+import { handleMain, program, projectRoot } from "./lib/utils.js";
 
 const USAGE = `Usage: ${program()} <tier>
   tier: 1-5
