@@ -8,18 +8,13 @@ interface HtmlModel {
   name: string;
   label: string;
   xml: PrefabProperty[];
-  dimensions: Dimensions;
+  dimensions: { x: number; y: number; z: number };
   blocks: BlockCount[];
 }
 
 interface PrefabProperty {
   name: string;
   value: string;
-}
-interface Dimensions {
-  x: number;
-  y: number;
-  z: number;
 }
 interface BlockCount {
   name: string;
@@ -67,8 +62,8 @@ function html(model: HtmlModel): string {
 
   <section>
     <h2>Dimensions</h2>
-    <table>${Object.entries(model.dimensions)
-      .map(([axis, value]) => `<tr><th>${axis}</th><td>${value}</td></tr>`)
+    <table>${Object.entries<number>(model.dimensions)
+      .map(([axis, value]) => `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`)
       .join("\n")}</table>
   </section>
 
@@ -82,7 +77,7 @@ function html(model: HtmlModel): string {
             `<tr class="block">`,
             `<td class="block_name">${b.name}</td>`,
             `<td class="block_label">${escapeHtml(b.localizedName)}</td>`,
-            `<td class="block_count">${b.count}</td>`,
+            `<td class="block_count">${b.count.toString()}</td>`,
             "</tr>",
           ].join("")
         )

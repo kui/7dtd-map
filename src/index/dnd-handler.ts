@@ -1,14 +1,16 @@
+import { invokeAll, printError } from "../lib/utils";
+
 export class DndHandler {
-  private dropFilesListeners: ((files: File[]) => Promise<unknown> | unknown)[] = [];
+  private dropFilesListeners: ((files: File[]) => unknown)[] = [];
 
   constructor(doc: Document) {
-    doc.addEventListener("drop", async (event) => {
+    doc.addEventListener("drop", (event) => {
       if (!event.dataTransfer?.types.includes("Files")) {
         return;
       }
       event.preventDefault();
       const files = Array.from(event.dataTransfer.files);
-      this.dropFilesListeners.forEach((fn) => fn(files));
+      invokeAll(this.dropFilesListeners, files).catch(printError);
     });
 
     doc.addEventListener("dragenter", (event) => {
@@ -36,7 +38,7 @@ export class DndHandler {
       event.preventDefault();
       doc.body.classList.remove("dragovered");
     });
-    doc.addEventListener("drop", async (event) => {
+    doc.addEventListener("drop", (event) => {
       if (!event.dataTransfer?.types.includes("Files")) {
         return;
       }
@@ -45,7 +47,7 @@ export class DndHandler {
     });
   }
 
-  addDropFilesListener(ln: (files: File[]) => Promise<unknown> | unknown): void {
+  addDropFilesListener(ln: (files: File[]) => unknown): void {
     this.dropFilesListeners.push(ln);
   }
 }

@@ -1,4 +1,4 @@
-import { waitAnimationFrame } from "../lib/utils";
+import { printError, waitAnimationFrame } from "../lib/utils";
 
 interface Doms {
   indicator: HTMLElement;
@@ -25,7 +25,7 @@ export class LoadingHandler {
 
   add(list: string[] | string): void {
     this._loadingList = this._loadingList.concat(list);
-    this.startAnimation();
+    this.startAnimation().catch(printError);
   }
 
   delete(loading: string): void {
@@ -47,6 +47,7 @@ export class LoadingHandler {
   }
 
   private bar() {
-    return ANIMATION_FRAMES[Math.floor(Date.now() / ANIMATION_INTERVAL_MSEC) % ANIMATION_FRAMES.length];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return ANIMATION_FRAMES[Math.floor(Date.now() / ANIMATION_INTERVAL_MSEC) % ANIMATION_FRAMES.length]!;
   }
 }

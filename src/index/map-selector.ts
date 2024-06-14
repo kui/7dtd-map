@@ -1,12 +1,12 @@
 import { MapObject, MapStorage } from "../lib/map-storage";
-import { removeAllChildren, requireNonnull } from "../lib/utils";
+import { printError, removeAllChildren, requireNonnull, strictParseInt } from "../lib/utils";
 
-type Doms = {
+interface Doms {
   select: HTMLSelectElement;
   create: HTMLButtonElement;
   delete: HTMLButtonElement;
   mapName: HTMLInputElement;
-};
+}
 
 export class MapSelector {
   private storage: MapStorage;
@@ -20,11 +20,11 @@ export class MapSelector {
   }
 
   private get selectedOption() {
-    return requireNonnull(this.doms.select.selectedOptions)[0];
+    return requireNonnull(this.doms.select.selectedOptions[0]);
   }
 
   private get selectedOptionMapId() {
-    return parseInt(this.selectedOption.dataset.mapId as string);
+    return strictParseInt(this.selectedOption.dataset.mapId);
   }
 
   private async init(): Promise<void> {
@@ -34,12 +34,12 @@ export class MapSelector {
     this.doms.mapName.addEventListener("input", () => {
       const mapId = this.selectedOptionMapId;
       const name = this.doms.mapName.value;
-      this.doms.select.selectedOptions[0].textContent = `${mapId}. ${name}`;
-      this.storage.put("maps", name);
+      this.selectedOption.textContent = `${mapId.toString()}. ${name}`;
+      this.storage.put("maps", name).catch(printError);
     });
-    this.doms.select.addEventListener("input", () => this.changeMap(this.selectedOptionMapId));
-    this.doms.create.addEventListener("click", () => this.create());
-    this.doms.delete.addEventListener("click", () => this.deleteMap());
+    this.doms.select.addEventListener("input", () => void this.changeMap(this.selectedOptionMapId).catch(printError));
+    this.doms.create.addEventListener("click", () => void this.create().catch(printError));
+    this.doms.delete.addEventListener("click", () => void this.deleteMap().catch(printError));
   }
 
   private async buildOptions(mapId: number) {
@@ -87,11 +87,7 @@ export class MapSelector {
   }
 
   private selectOptionByMapId(mapId: number) {
-    this.doms.select.selectedIndex = Array.from(this.doms.select.options).findIndex((o) => parseInt(o.dataset.mapId as string) === mapId);
-  }
-
-  private disableDoms(isDisabled: boolean) {
-    Object.values(this.doms).forEach((d) => (d.disabled = isDisabled));
+    for (const option of this.doms.select.options) option.selected = parseInt(option.dataset.mapId ?? "") === mapId;
   }
 }
 

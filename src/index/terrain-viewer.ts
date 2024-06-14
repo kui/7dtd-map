@@ -1,7 +1,7 @@
 import * as three from "three";
 import { Dtm } from "./dtm-handler";
 import { throttledInvoker } from "../lib/throttled-invoker";
-import { threePlaneSize } from "../lib/utils";
+import { requireNonnull, threePlaneSize } from "../lib/utils";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
 
 interface Doms {
@@ -27,7 +27,9 @@ export class TerrainViewer {
   private _dtm: Dtm | null = null;
   private _mapSize: GameMapSize | null = null;
 
-  updateElevations = throttledInvoker(() => this.updateElevationsImmediatly());
+  updateElevations = throttledInvoker(() => {
+    this.updateElevationsImmediatly();
+  });
 
   constructor(doms: Doms) {
     this.doms = doms;
@@ -44,8 +46,12 @@ export class TerrainViewer {
 
     this.cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
-    doms.show.addEventListener("click", () => this.show());
-    doms.close.addEventListener("click", () => this.close());
+    doms.show.addEventListener("click", () => {
+      this.show();
+    });
+    doms.close.addEventListener("click", () => {
+      this.close();
+    });
     doms.output.addEventListener("keydown", (event) => {
       if (event.code === "Escape") this.close();
     });
@@ -87,7 +93,9 @@ export class TerrainViewer {
         this.animationRequestId = null;
         return;
       }
-      this.animationRequestId = requestAnimationFrame((t) => r(currentTime, t));
+      this.animationRequestId = requestAnimationFrame((t) => {
+        r(currentTime, t);
+      });
       this.cameraController.update(currentTime - prevTime);
       this.renderer.render(this.scene, this.cameraController.camera);
     };
@@ -117,7 +125,7 @@ export class TerrainViewer {
       // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
       new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ];
-    const pos = geo.attributes.position;
+    const pos = requireNonnull(geo.attributes.position);
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
     for (let i = 0; i < pos.count; i++) {
       // game axis -> webgl axis
@@ -126,7 +134,11 @@ export class TerrainViewer {
       // z -> y
       const ingameX = Math.round((pos.getX(i) + this.terrainSize.width / 2) * scaleFactor);
       const ingameZ = Math.round((pos.getY(i) + this.terrainSize.height / 2) * scaleFactor);
-      const elev = this.dtm.data[ingameX + ingameZ * this.mapSize.width] / scaleFactor;
+      const elev =
+        requireNonnull(
+          this.dtm.data[ingameX + ingameZ * this.mapSize.width],
+          () => `Unexpected coords: ${ingameX.toString()}, ${ingameZ.toString()}`
+        ) / scaleFactor;
       pos.setZ(i, elev);
     }
     geo.computeBoundingSphere();

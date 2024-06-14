@@ -83,7 +83,7 @@ async function copyJpg(xmlFileName: string) {
 }
 
 function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
-  return typeof (e as NodeJS.ErrnoException)?.code === "string";
+  return typeof (e as NodeJS.ErrnoException).code === "string";
 }
 
 handleMain(main());

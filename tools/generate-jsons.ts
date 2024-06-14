@@ -104,15 +104,12 @@ async function readIndex(nimFiles: string[]) {
 }
 
 function invertIndex(prefabs: PrefabBlockIndex) {
-  return Object.entries(prefabs)
-    .flatMap<BlockPrefabIndex>(([prefabName, blocks]) => {
-      return blocks.map((b) => ({ [b.name]: [{ name: prefabName, count: b.count }] }));
-    })
-    .reduce<BlockPrefabIndex>((a, c) => {
-      const [blockName, prefabs] = Object.entries(c)[0];
-      a[blockName] = (a[blockName] ?? []).concat(prefabs);
-      return a;
-    }, {});
+  return Object.entries(prefabs).reduce<BlockPrefabIndex>((a, [prefabName, blocks]) => {
+    for (const { name: blockName, count } of blocks) {
+      a[blockName] = (a[blockName] ?? []).concat({ name: prefabName, count: count });
+    }
+    return a;
+  }, {});
 }
 
 utils.handleMain(main());

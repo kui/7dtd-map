@@ -1,4 +1,4 @@
-import { requireNonnull, waitAnimationFrame } from "./utils";
+import { printError, waitAnimationFrame } from "./utils";
 
 export class DelayedRenderer<T> {
   _iterator: Iterator<T[]> = ([] as T[][])[Symbol.iterator]();
@@ -6,7 +6,7 @@ export class DelayedRenderer<T> {
   scrollableWrapper: HTMLElement;
   itemRenderer: (item: T) => Node;
   scrollCallback = (): void => {
-    this.renderAll();
+    this.renderAll().catch(printError);
   };
 
   constructor(scrollableWrapper: HTMLElement, appendee: HTMLElement, itemRenderer: (item: T) => Node) {
@@ -30,7 +30,7 @@ export class DelayedRenderer<T> {
     requestAnimationFrame(() => {
       this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback);
       this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: true });
-      renderUntil(this, () => isFill(this.scrollableWrapper));
+      renderUntil(this, () => isFill(this.scrollableWrapper)).catch(printError);
     });
   }
 
@@ -75,16 +75,15 @@ function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, c
     },
   };
   if ("throw" in origin) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chunkIter.throw = (e?: any) => {
-      const r = requireNonnull(origin.throw)(e);
+    chunkIter.throw = (e?: unknown) => {
+      const r = (origin.throw as (e?: unknown) => IteratorResult<T, TReturn>)(e);
       if (isReturn(r)) return r;
       else return { done: r.done, value: [r.value] };
     };
   }
   if ("return" in origin) {
     chunkIter.return = (treturn?: TReturn) => {
-      const r = requireNonnull(origin.return)(treturn);
+      const r = (origin.return as (treturn?: TReturn | undefined) => IteratorResult<T, TReturn>)(treturn);
       if (isReturn(r)) return r;
       else return { done: r.done, value: [r.value] };
     };

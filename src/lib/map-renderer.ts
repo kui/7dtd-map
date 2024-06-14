@@ -110,7 +110,7 @@ export default class MapRenderer {
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -122,8 +122,9 @@ export default class MapRenderer {
     const charOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
-    for (let i = this.prefabs.length - 1; i >= 0; i -= 1) {
-      const prefab = this.prefabs[i];
+    // This typescript-eslint warning seems to be a false positive
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    for (const prefab of this.prefabs.toReversed() as HighlightedPrefab[]) {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
@@ -134,7 +135,7 @@ export default class MapRenderer {
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";

@@ -100,5 +100,5 @@ export function resolveLanguage(languages: readonly string[]): Language {
 }
 
 async function fetchJson<T>(path: string): Promise<T> {
-  return (await fetch(path)).json();
+  return (await fetch(path)).json() as T;
 }

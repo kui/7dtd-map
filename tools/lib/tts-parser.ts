@@ -31,7 +31,7 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
   stream.close();
 
   if (fileFormat !== "tts\x00") throw Error(`Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`);
-  if (!KNOWN_VERSIONS.includes(version)) throw Error(`Unknown version: filename=${ttsFileName} version=${version}`);
+  if (!KNOWN_VERSIONS.includes(version)) throw Error(`Unknown version: filename=${ttsFileName} version=${String(version)}`);
   return new Tts(version, dim, blockIds);
 }
 
@@ -51,9 +51,13 @@ export class Tts {
     this.blockIds = blockIds;
     this.blockNums = countBlocks(blockIds);
   }
-  getBlockId(x: number, y: number, z: number): BlockId {
+  getBlockId(x: number, y: number, z: number): BlockId | undefined {
     if (x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z) {
-      throw Error(`Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`);
+      throw Error(
+        `Out of index range: x=${String(x)}, y=${String(y)}, z=${String(z)}, maxValues=${String(this.maxx)},${String(this.maxy)},${String(
+          this.maxz
+        )}`
+      );
     }
     return this.blockIds[x + this.maxx * y + this.maxx * this.maxy * z];
   }

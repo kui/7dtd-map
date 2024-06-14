@@ -1,15 +1,15 @@
-import * as path from "path";
 import { parseTts } from "./lib/tts-parser";
-import { handleMain } from "./lib/utils";
+import { handleMain, program } from "./lib/utils";
 
-const usage = `${path.basename(process.argv[1])} <tts file>`;
+const usage = `${program()} <tts file>`;
 
 async function main() {
-  if (process.argv.length <= 2) {
+  const ttsFile = process.argv[2];
+  if (ttsFile === undefined) {
     console.error(usage);
     return 1;
   }
-  const tts = await parseTts(process.argv[2]);
+  const tts = await parseTts(ttsFile);
   console.log("Prefab dimension:");
   console.log({ x: tts.maxx, y: tts.maxy, z: tts.maxz });
 
@@ -22,7 +22,9 @@ async function main() {
     for (let z = 0; z < tts.maxz; z += 1) {
       const row = [];
       for (let x = 0; x < tts.maxx; x += 1) {
-        row.push(tts.getBlockId(x, y, z).toString().padStart(5, "0"));
+        const blockId = tts.getBlockId(x, y, z);
+        if (blockId === undefined) throw Error(`Block ID not found: ${String({ x, y, z })}`);
+        row.push(blockId.toString().padStart(5, "0"));
       }
       console.log(row.toString());
     }

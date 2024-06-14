@@ -2,13 +2,27 @@ export function init(): void {
   for (const button of Array.from(document.querySelectorAll("[data-copy-for]"))) {
     if (!(button instanceof HTMLButtonElement)) continue;
 
-    const target = document.getElementById(button.dataset.copyFor as string);
+    const targetId = button.dataset.copyFor;
+    if (!targetId) continue;
+    const target = document.getElementById(targetId);
     if (!target) continue;
 
-    button.addEventListener("click", () => copy(target, button));
-    button.addEventListener("mouseover", () => selectNode(target));
-    button.addEventListener("mousemove", () => selectNode(target), { passive: true });
-    button.addEventListener("mouseout", () => clearSelection());
+    button.addEventListener("click", () => {
+      copy(target, button);
+    });
+    button.addEventListener("mouseover", () => {
+      selectNode(target);
+    });
+    button.addEventListener(
+      "mousemove",
+      () => {
+        selectNode(target);
+      },
+      { passive: true }
+    );
+    button.addEventListener("mouseout", () => {
+      clearSelection();
+    });
   }
 }
 
@@ -18,6 +32,7 @@ const DEFAULT_FAILURE_MESSAGE = "⚠Failure";
 function copy(target: HTMLElement, button: HTMLButtonElement) {
   selectNode(target);
 
+  // TODO Use Clipboard API
   const commandResult = document.execCommand("copy");
   if (commandResult) {
     console.log("Copy Success", target);

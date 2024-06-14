@@ -1,3 +1,4 @@
+import { buildArrayMapByEntries, requireNonnull } from "./utils";
 import { parseXml } from "./xml-parser";
 
 export type BlockName = string;
@@ -7,9 +8,7 @@ export interface Block {
   properties: BlockProperties;
 }
 
-export interface BlockProperties {
-  [name: string]: BlockPropertyValue;
-}
+export type BlockProperties = Record<string, BlockPropertyValue | undefined>;
 
 export interface BlockPropertyValue {
   value: string;
@@ -33,17 +32,21 @@ export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
 
 export class Blocks {
   private blocks: Map<BlockName, Block>;
+  // The downgrading of the value block results in the key blocks
+  // e.g. key=cntGunSafeInsecure, value=[cntGunCafe] if cntGunSafe can be downgraded to cntGunSafeInsecure
   private downgradeRelations: Map<Block, Block[]>;
 
   constructor(blocks: Map<BlockName, Block>) {
     this.blocks = blocks;
-    this.downgradeRelations = Array.from(this.blocks.values()).reduce<Map<Block, Block[]>>((map, block: Block) => {
-      const downgradedBlock = blocks.get(block.properties["DowngradeBlock"]?.value?.trim());
-      if (downgradedBlock) {
-        map.set(downgradedBlock, (map.get(downgradedBlock) ?? []).concat(block));
-      }
-      return map;
-    }, new Map());
+    this.downgradeRelations = buildArrayMapByEntries(
+      Array.from(this.blocks.values()).flatMap((b: Block) => {
+        const downgradedBlockName = b.properties.DowngradeBlock?.value.trim();
+        if (!downgradedBlockName) return [];
+        const downgradedBlock = blocks.get(downgradedBlockName);
+        if (!downgradedBlock) return [];
+        return [[downgradedBlock, b]];
+      })
+    );
   }
 
   find(predicate: (block: Block) => boolean): Block[] {
@@ -66,7 +69,7 @@ export class Blocks {
   }
 
   findByDowngradeBlocks(graphs: DowngradeGraph): DowngradeGraph[] {
-    const upgradBlocks = this.downgradeRelations.get(graphs[0]);
+    const upgradBlocks = this.downgradeRelations.get(requireNonnull(graphs[0], "DowngradeGraph must not be empty"));
     if (upgradBlocks) {
       return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
     } else {
@@ -78,7 +81,7 @@ export class Blocks {
     const p = block.properties[propertyName];
     if (p) return p;
 
-    const extendsProp = block.properties["Extends"];
+    const extendsProp = block.properties.Extends;
     if (!extendsProp) return null;
 
     const excludedPropNames = extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];

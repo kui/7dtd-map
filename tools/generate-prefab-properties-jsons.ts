@@ -25,9 +25,9 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
   );
 }
 
-type PrefabXmls = {
+interface PrefabXmls {
   [prefabName: string]: PrefabProperty[];
-};
+}
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;

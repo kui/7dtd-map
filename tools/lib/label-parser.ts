@@ -48,7 +48,7 @@ async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
       labels.set(line.Key, {
         key: line.Key,
         file: line.File,
-        ...LANGUAGES.reduce((acc, lang) => ({ ...acc, [lang]: line[lang] }), {} as LabelCore),
+        ...line,
       });
     } else {
       throw Error("Unexpected line: empty label key");
@@ -58,5 +58,6 @@ async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
 }
 
 function isLocalizationLine(line: unknown): line is LocalizationLine {
-  return ((line as LocalizationLine).Key?.length ?? 0) > 0;
+  const n = (line as Partial<LocalizationLine>).Key?.length;
+  return n !== undefined && n > 0;
 }

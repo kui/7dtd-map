@@ -1,6 +1,6 @@
 import { DelayedRenderer } from "./lib/delayed-renderer";
 import * as presetButton from "./lib/preset-button";
-import { component } from "./lib/utils";
+import { component, fetchJson, printError } from "./lib/utils";
 import { PrefabUpdate } from "./lib/prefabs";
 import * as prefabsFilter from "./worker/prefabs-filter";
 import { Language } from "./lib/labels";
@@ -19,17 +19,19 @@ function main() {
   presetButton.init();
 
   const urlState = UrlState.create(location, document.querySelectorAll("input"));
-  urlState.addUpdateListener((url) => window.history.replaceState(null, "", url.toString()));
+  urlState.addUpdateListener((url) => {
+    window.history.replaceState(null, "", url.toString());
+  });
 
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
   (async () => {
     const [index, difficulties] = await Promise.all([
-      fetch("prefab-block-index.json").then((r) => r.json()),
-      fetch("prefab-difficulties.json").then((r) => r.json() as Promise<PrefabDifficulties>),
+      fetchJson<PrefabBlockIndex>("prefab-block-index.json"),
+      fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
     ]);
     const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] }));
     prefabsHandler.prefabs = prefabs;
-  })();
+  })().catch(printError);
 
   const blocksFilter = component("blocks_filter", HTMLInputElement);
   prefabsHandler.blockFilter = blocksFilter.value;
@@ -38,7 +40,7 @@ function main() {
   });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener(async (lang) => {
+  labelHandler.addListener((lang) => {
     prefabsHandler.language = lang;
   });
 
@@ -48,7 +50,7 @@ function main() {
   });
 
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.body, component("prefabs_list"), (p) => prefabLi(p));
-  prefabsHandler.listeners.push(async (update) => {
+  prefabsHandler.listeners.push((update) => {
     prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
   });
 }
@@ -56,22 +58,27 @@ function main() {
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
-    prefab.difficulty && prefab.difficulty > 0
-      ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
-      : "",
+    ...(prefab.difficulty
+      ? [
+          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+          `  <span class="prefab_difficulty_icon">💀</span>${prefab.difficulty.toString()}`,
+          `</span>`,
+        ]
+      : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
-    prefab.highlightedLabel || "-",
+    prefab.highlightedLabel ?? "-",
     "/",
-    `<small>${prefab.highlightedName || prefab.name}</small>`,
+    `<small>${prefab.highlightedName ?? prefab.name}</small>`,
     "</a>",
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
     prefab.matchedBlocks.forEach((block) => {
+      if (block.count === undefined) return;
       const blockLi = document.createElement("li");
       blockLi.innerHTML = [
         `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
-        `${block.count}x`,
+        `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
       ].join(" ");
@@ -88,12 +95,14 @@ declare class PrefabsFilterWorker extends Worker {
 
 class PrefabsHandler {
   worker: PrefabsFilterWorker;
-  listeners: ((prefabs: PrefabUpdate) => Promise<void>)[] = [];
+  listeners: ((prefabs: PrefabUpdate) => void | Promise<void>)[] = [];
 
   constructor(worker: PrefabsFilterWorker) {
     this.worker = worker;
     this.worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
-      this.listeners.map((fn) => fn(event.data));
+      for (const fn of this.listeners) {
+        fn(event.data)?.catch(printError);
+      }
     });
   }
 
@@ -122,7 +131,9 @@ class PrefabFilterHandler {
     this.displayDevPrefab = doms.devPrefabs.checked;
     doms.devPrefabs.addEventListener("input", () => {
       this.displayDevPrefab = doms.devPrefabs.checked;
-      this.updateListener.forEach((fn) => fn());
+      this.updateListener.forEach((fn) => {
+        fn();
+      });
     });
   }
 

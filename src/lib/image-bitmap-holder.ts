@@ -41,7 +41,9 @@ export class ImageBitmapHolder {
 
   private setImg(img: ImageBitmap) {
     this.img = img;
-    setTimeout(() => this.expireImage(), this.imgAge);
+    setTimeout(() => {
+      this.expireImage();
+    }, this.imgAge);
   }
 
   private expireImage() {
@@ -50,7 +52,9 @@ export class ImageBitmapHolder {
       requireNonnull(this.img).close();
       this.img = null;
     } else {
-      setTimeout(() => this.expireImage(), this.imgAge);
+      setTimeout(() => {
+        this.expireImage();
+      }, this.imgAge);
     }
   }
 }

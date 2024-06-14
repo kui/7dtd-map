@@ -6,23 +6,23 @@ interface Doms {
   input: HTMLInputElement;
 }
 
-type Listener = (file: File) => Promise<unknown> | unknown;
+type Listener = (file: File) => unknown;
 
 export class FileHandler {
   private doms: Doms;
-  private listeners: Map<RegExp | string, Listener[]> = new Map();
+  private listeners = new Map<RegExp | string, Listener[]>();
   loadingHandler: LoadingHandler;
 
   constructor(doms: Doms, loadingHandler: LoadingHandler) {
     this.doms = doms;
     this.loadingHandler = loadingHandler;
 
-    const throttledProcess = throttledInvoker(() => this.processFiles());
+    const throttledProcess: () => unknown = throttledInvoker(() => this.processFiles());
     doms.input.addEventListener("input", throttledProcess);
   }
 
   addListeners(arr: [RegExp | string, Listener | Listener[]][]): void {
-    arr.forEach(([n, ln]) => this.addListener(n, ln));
+    for (const [name, listener] of arr) this.addListener(name, listener);
   }
 
   addListener(fileName: RegExp | string, listener: Listener | Listener[]): void {
@@ -47,7 +47,8 @@ export class FileHandler {
         console.log("Skip: ", file);
       } else {
         console.time(`Processed: ${file.name}`);
-        await Promise.all(listeners.map(async (fn) => fn(file as File)));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await Promise.all(listeners.map((fn) => fn(file!)));
         console.timeEnd(`Processed: ${file.name}`);
       }
       this.loadingHandler.delete(file.name);
@@ -64,8 +65,8 @@ export class FileHandler {
     });
   }
 
-  private popFile(): File | null {
-    if (!this.doms.input.files?.length) return null;
+  private popFile(): File | undefined {
+    if (!this.doms.input.files?.length) return undefined;
     const files = Array.from(this.doms.input.files);
     this.updateFiles(files.slice(1));
     return files[0];

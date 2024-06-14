@@ -1,5 +1,5 @@
 import { MapStorage } from "../lib/map-storage";
-import { imageBitmapToPngBlob } from "../lib/utils";
+import { imageBitmapToPngBlob, printError } from "../lib/utils";
 import * as mapRenderer from "../worker/map-renderer";
 import { LoadingHandler } from "./loading-handler";
 
@@ -26,7 +26,7 @@ export class MapCanvasHandler {
   private doms: Doms;
   private worker: Worker;
   private storage: MapStorage;
-  private mapSizeListeners: ((mapSize: GameMapSize) => Promise<unknown> | unknown)[] = [];
+  private mapSizeListeners: ((mapSize: GameMapSize) => unknown)[] = [];
 
   constructor(doms: Doms, worker: Worker, storage: MapStorage, loadingHandler: LoadingHandler) {
     this.doms = doms;
@@ -47,37 +47,62 @@ export class MapCanvasHandler {
 
     MapStorage.addListener(async () => {
       console.log("Change map: ", await storage.currentId());
-      this.update({ biomesImg: null, splat3Img: null, splat4Img: null, radImg: null }, false);
+      await this.updateAsync({ biomesImg: null, splat3Img: null, splat4Img: null, radImg: null }, false);
       loadingHandler.add(["bioms", "splat3", "splat4", "radiation"]);
-      this.update({ biomesImg: (await storage.getCurrent("biomes"))?.data }, false);
+      await this.updateAsync({ biomesImg: (await storage.getCurrent("biomes"))?.data }, false);
       loadingHandler.delete("bioms");
-      this.update({ splat3Img: (await storage.getCurrent("splat3"))?.data }, false);
+      await this.updateAsync({ splat3Img: (await storage.getCurrent("splat3"))?.data }, false);
       loadingHandler.delete("splat3");
-      this.update({ splat4Img: (await storage.getCurrent("splat4"))?.data }, false);
+      await this.updateAsync({ splat4Img: (await storage.getCurrent("splat4"))?.data }, false);
       loadingHandler.delete("splat4");
-      this.update({ radImg: (await storage.getCurrent("rad"))?.data }, false);
+      await this.updateAsync({ radImg: (await storage.getCurrent("rad"))?.data }, false);
       loadingHandler.delete("radiation");
     });
 
     worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
       const { mapSize } = e.data;
-      this.mapSizeListeners.map((fn) => fn(mapSize));
+      this.mapSizeListeners.forEach((fn) => fn(mapSize));
     });
-    doms.biomesAlpha.addEventListener("input", () => this.update(this.biomesAlpha()));
-    doms.splat3Alpha.addEventListener("input", () => this.update(this.splat3Alpha()));
-    doms.splat4Alpha.addEventListener("input", () => this.update(this.splat4Alpha()));
-    doms.radAlpha.addEventListener("input", () => this.update(this.radAlpha()));
-    doms.signSize.addEventListener("input", () => this.update(this.signSize()));
-    doms.signAlpha.addEventListener("input", () => this.update(this.signAlpha()));
-    doms.brightness.addEventListener("input", () => this.update(this.brightness()));
-    doms.scale.addEventListener("input", () => this.update(this.scale()));
+    doms.biomesAlpha.addEventListener("input", () => {
+      this.update(this.biomesAlpha());
+    });
+    doms.splat3Alpha.addEventListener("input", () => {
+      this.update(this.splat3Alpha());
+    });
+    doms.splat4Alpha.addEventListener("input", () => {
+      this.update(this.splat4Alpha());
+    });
+    doms.radAlpha.addEventListener("input", () => {
+      this.update(this.radAlpha());
+    });
+    doms.signSize.addEventListener("input", () => {
+      this.update(this.signSize());
+    });
+    doms.signAlpha.addEventListener("input", () => {
+      this.update(this.signAlpha());
+    });
+    doms.brightness.addEventListener("input", () => {
+      this.update(this.brightness());
+    });
+    doms.scale.addEventListener("input", () => {
+      this.update(this.scale());
+    });
   }
 
-  async update(msg: mapRenderer.InMessage, shouldStore = true): Promise<void> {
+  /**
+   * Method to update the map canvas.
+   *
+   * This is a utility method that you don't need the return value of  {@link updateAsync} or write in short.
+   */
+  update(msg: mapRenderer.InMessage, shouldStore = true): void {
+    this.updateAsync(msg, shouldStore).catch(printError);
+  }
+
+  async updateAsync(msg: mapRenderer.InMessage, shouldStore = true): Promise<void> {
     if (shouldStore) {
       for (const entry of Object.entries(msg)) {
         if (isStoreTarget(entry)) {
-          this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], await imageBitmapToPngBlob(entry[1]));
+          this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], await imageBitmapToPngBlob(entry[1])).catch(printError);
         }
       }
     }
@@ -85,7 +110,7 @@ export class MapCanvasHandler {
     this.worker.postMessage(msg, transferables);
   }
 
-  addMapSizeListener(ln: (mapSize: GameMapSize) => Promise<unknown> | unknown): void {
+  addMapSizeListener(ln: (mapSize: GameMapSize) => unknown): void {
     this.mapSizeListeners.push(ln);
   }
 
@@ -108,7 +133,7 @@ export class MapCanvasHandler {
     return { signAlpha: this.doms.signAlpha.valueAsNumber };
   }
   private brightness() {
-    return { brightness: `${this.doms.brightness.valueAsNumber}%` };
+    return { brightness: `${this.doms.brightness.valueAsNumber.toString()}%` };
   }
   private scale() {
     return { scale: this.doms.scale.valueAsNumber };

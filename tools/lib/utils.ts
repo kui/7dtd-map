@@ -24,8 +24,8 @@ export function requireNonnull<T>(a: T | null | undefined, message = "Unexpected
 }
 
 export function handleMain(main: Promise<number>): void {
-  main
-    .catch((e) => {
+  void main
+    .catch((e: unknown) => {
       console.error(e);
       return 1;
     })
@@ -37,4 +37,28 @@ export function handleMain(main: Promise<number>): void {
 export async function writeJsonFile(file: string, json: unknown) {
   await fs.promises.writeFile(file, JSON.stringify(json, null, "\t"));
   console.log("Write %s", file);
+}
+
+export function program() {
+  return path.basename(requireNonnull(process.argv[1]), `Unexpected process.argv: ${process.argv.join(" ")}`);
+}
+
+export function buildSetMapByEntries<K, V>(entries: Iterable<[K, V]>): Map<K, Set<V>> {
+  const map = new Map<K, Set<V>>();
+  for (const [k, v] of entries) {
+    const set = map.get(k) ?? new Set<V>();
+    set.add(v);
+    map.set(k, set);
+  }
+  return map;
+}
+
+export function buildArrayMapByEntries<K, V>(entries: Iterable<[K, V]>): Map<K, V[]> {
+  const map = new Map<K, V[]>();
+  for (const [k, v] of entries) {
+    const array = map.get(k) ?? [];
+    array.push(v);
+    map.set(k, array);
+  }
+  return map;
 }

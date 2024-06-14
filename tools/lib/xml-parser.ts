@@ -4,7 +4,7 @@ import { parseString as parseXmlString } from "xml2js";
 export async function parseXml<T>(xmlFileName: string): Promise<T> {
   const xml = await fs.readFile(xmlFileName);
   return new Promise((resolve, reject) => {
-    parseXmlString(xml, (err, result) => {
+    parseXmlString(xml, (err, result: T) => {
       if (err) reject(err);
       if (result) resolve(result);
       reject(Error("Unexpected state"));

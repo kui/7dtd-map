@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "esnext",
     "module": "commonjs",
     "lib": ["esnext", "dom", "webworker"],
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
     "sourceMap": true,
     "noEmit": true
   }

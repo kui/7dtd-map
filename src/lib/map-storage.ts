@@ -62,8 +62,10 @@ function dbUpgrade(db: Db, oldVersion: number, newVersion: number) {
   }
 }
 
-const CHANGE_LISTENERS: ((mapId: number, instance: MapStorage) => Promise<unknown> | unknown)[] = [
-  (mapId) => console.log("MapStorage change current map", mapId),
+const CHANGE_LISTENERS: ((mapId: number, instance: MapStorage) => unknown)[] = [
+  (mapId) => {
+    console.log("MapStorage change current map", mapId);
+  },
 ];
 
 export class MapStorage {
@@ -87,7 +89,7 @@ export class MapStorage {
     if (isLargeObjectType(type)) {
       return (await db.get("largeObjects", [mapId, type])) as MapPropertyValue<Type> | undefined;
     } else if (type === "maps") {
-      return requireNonnull(await db.get("maps", mapId), () => `Unexpected state: ${mapId}`) as MapPropertyValue<Type> | undefined;
+      return requireNonnull(await db.get("maps", mapId), () => `Map not found: ${mapId.toString()}`) as MapPropertyValue<Type>;
     } else {
       throw Error(`Unreachable code: ${type}`);
     }
