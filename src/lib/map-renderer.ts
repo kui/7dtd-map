@@ -122,9 +122,7 @@ export default class MapRenderer {
     const charOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
-    // This typescript-eslint warning seems to be a false positive
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    for (const prefab of this.prefabs.toReversed() as HighlightedPrefab[]) {
+    for (const prefab of this.prefabs.toReversed()) {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
