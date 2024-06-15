@@ -1,13 +1,8 @@
 {
+  "extends": ["@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
-    "lib": ["esnext", "dom", "webworker"],
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true,
-    "sourceMap": true,
-    "noEmit": true
+    "module": "preserve",
+    "lib": ["esnext", "dom", "webworker"]
   }
 }

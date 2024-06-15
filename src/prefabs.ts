@@ -29,7 +29,7 @@ function main() {
       fetchJson<PrefabBlockIndex>("prefab-block-index.json"),
       fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
     ]);
-    const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] }));
+    const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] ?? 0 }));
     prefabsHandler.prefabs = prefabs;
   })().catch(printError);
 

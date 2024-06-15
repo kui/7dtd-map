@@ -17,8 +17,8 @@
     "lint": "run-p lint:**",
     "lint:prettier": "prettier --check .",
     "lint:eslint": "eslint .",
-    "lint:tsc:src": "tsc -p src --skipLibCheck",
-    "lint:tsc:tools": "tsc -p tools --skipLibCheck",
+    "lint:tsc:src": "tsc -p src --noEmit",
+    "lint:tsc:tools": "tsc -p tools --noEmit",
     "test": "jest --config src/jest.config.ts",
     "ci": "run-p lint test"
   },
@@ -27,6 +27,8 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.4.0",
+    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/strictest": "^2.0.5",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/css-font-loading-module": "0.0.13",

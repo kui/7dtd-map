@@ -38,11 +38,11 @@ export class PrefabsHandler {
     ["input", "focus"].forEach((eventName) => {
       doms.prefabFilter.addEventListener(eventName, () => {
         worker.postMessage({ prefabsFilterString: doms.prefabFilter.value });
-        document.body.dataset.activeFilter = "prefab";
+        document.body.dataset["activeFilter"] = "prefab";
       });
       doms.blockFilter.addEventListener(eventName, () => {
         worker.postMessage({ blocksFilterString: doms.blockFilter.value });
-        document.body.dataset.activeFilter = "block";
+        document.body.dataset["activeFilter"] = "block";
       });
     });
   }

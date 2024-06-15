@@ -37,16 +37,16 @@ export default class MapRenderer {
     this.fontFace = fontFace;
   }
 
-  set biomesImg(img: ImageBitmap | PngBlob | null) {
+  set biomesImg(img: ImageBitmap | PngBlob | null | undefined) {
     this._biomesImg = img ? new ImageBitmapHolder("biomes", img) : null;
   }
-  set splat3Img(img: ImageBitmap | PngBlob | null) {
+  set splat3Img(img: ImageBitmap | PngBlob | null | undefined) {
     this._splat3Img = img ? new ImageBitmapHolder("splat3", img) : null;
   }
-  set splat4Img(img: ImageBitmap | PngBlob | null) {
+  set splat4Img(img: ImageBitmap | PngBlob | null | undefined) {
     this._splat4Img = img ? new ImageBitmapHolder("splat4", img) : null;
   }
-  set radImg(img: ImageBitmap | PngBlob | null) {
+  set radImg(img: ImageBitmap | PngBlob | null | undefined) {
     this._radImg = img ? new ImageBitmapHolder("rad", img) : null;
   }
 

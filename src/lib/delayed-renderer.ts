@@ -75,17 +75,17 @@ function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, c
     },
   };
   if ("throw" in origin) {
-    chunkIter.throw = (e?: unknown) => {
+    chunkIter.throw = (e?: unknown): IteratorResult<T[], TReturn> => {
       const r = (origin.throw as (e?: unknown) => IteratorResult<T, TReturn>)(e);
       if (isReturn(r)) return r;
-      else return { done: r.done, value: [r.value] };
+      else return { done: r.done ?? false, value: [r.value] };
     };
   }
   if ("return" in origin) {
-    chunkIter.return = (treturn?: TReturn) => {
+    chunkIter.return = (treturn?: TReturn): IteratorResult<T[], TReturn> => {
       const r = (origin.return as (treturn?: TReturn | undefined) => IteratorResult<T, TReturn>)(treturn);
       if (isReturn(r)) return r;
-      else return { done: r.done, value: [r.value] };
+      else return { done: r.done ?? false, value: [r.value] };
     };
   }
   return chunkIter;

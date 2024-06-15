@@ -2,7 +2,7 @@ export function init(): void {
   for (const button of Array.from(document.querySelectorAll("[data-copy-for]"))) {
     if (!(button instanceof HTMLButtonElement)) continue;
 
-    const targetId = button.dataset.copyFor;
+    const targetId = button.dataset["copyFor"];
     if (!targetId) continue;
     const target = document.getElementById(targetId);
     if (!target) continue;
@@ -36,10 +36,10 @@ function copy(target: HTMLElement, button: HTMLButtonElement) {
   const commandResult = document.execCommand("copy");
   if (commandResult) {
     console.log("Copy Success", target);
-    button.dataset.message = button.dataset.successMessage ?? DEFAULT_SUCCESS_MESSAGE;
+    button.dataset["message"] = button.dataset["successMessage"] ?? DEFAULT_SUCCESS_MESSAGE;
   } else {
     console.log("Copy Failure", target);
-    button.dataset.message = button.dataset.failureMessage ?? DEFAULT_FAILURE_MESSAGE;
+    button.dataset["message"] = button.dataset["failureMessage"] ?? DEFAULT_FAILURE_MESSAGE;
   }
 
   console.log(commandResult);

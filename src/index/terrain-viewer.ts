@@ -125,7 +125,7 @@ export class TerrainViewer {
       // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
       new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ];
-    const pos = requireNonnull(geo.attributes.position);
+    const pos = requireNonnull(geo.attributes["position"]);
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
     for (let i = 0; i < pos.count; i++) {
       // game axis -> webgl axis

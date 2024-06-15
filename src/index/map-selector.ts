@@ -24,7 +24,7 @@ export class MapSelector {
   }
 
   private get selectedOptionMapId() {
-    return strictParseInt(this.selectedOption.dataset.mapId);
+    return strictParseInt(this.selectedOption.dataset["mapId"]);
   }
 
   private async init(): Promise<void> {
@@ -87,13 +87,13 @@ export class MapSelector {
   }
 
   private selectOptionByMapId(mapId: number) {
-    for (const option of this.doms.select.options) option.selected = parseInt(option.dataset.mapId ?? "") === mapId;
+    for (const option of this.doms.select.options) option.selected = parseInt(option.dataset["mapId"] ?? "") === mapId;
   }
 }
 
 function buildOptionElement(map: MapObject) {
   const e = document.createElement("option");
-  e.dataset.mapId = requireNonnull(map.id).toString();
+  e.dataset["mapId"] = requireNonnull(map.id).toString();
   e.textContent = map.name;
   return e;
 }

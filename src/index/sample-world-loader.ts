@@ -21,7 +21,7 @@ export class SampleWorldLoader {
 
   private async loadSampleWorld(button: HTMLButtonElement) {
     button.disabled = true;
-    const dir = requireNonnull(button.dataset.sampleDir);
+    const dir = requireNonnull(button.dataset["sampleDir"]);
     await Promise.all(
       SAMPLE_WORLD_FILES.flatMap(async (name) => {
         const file = await fetchAsFile(`${dir}/${name}`);

@@ -40,7 +40,7 @@ export class Blocks {
     this.blocks = blocks;
     this.downgradeRelations = buildArrayMapByEntries(
       Array.from(this.blocks.values()).flatMap((b: Block) => {
-        const downgradedBlockName = b.properties.DowngradeBlock?.value.trim();
+        const downgradedBlockName = b.properties["DowngradeBlock"]?.value.trim();
         if (!downgradedBlockName) return [];
         const downgradedBlock = blocks.get(downgradedBlockName);
         if (!downgradedBlock) return [];
@@ -81,7 +81,7 @@ export class Blocks {
     const p = block.properties[propertyName];
     if (p) return p;
 
-    const extendsProp = block.properties.Extends;
+    const extendsProp = block.properties["Extends"];
     if (!extendsProp) return null;
 
     const excludedPropNames = extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
