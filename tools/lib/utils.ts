@@ -19,9 +19,9 @@ export async function vanillaDir(...pathList: string[]): Promise<string> {
   return path.join((await localJson()).vanillaDir, ...pathList);
 }
 
-export function requireNonnull<T>(a: T | null | undefined, message = "Unexpected error"): T {
-  if (a) return a;
-  else throw Error(message);
+export function requireNonnull<T>(a: T | null | undefined, message = () => "Unexpected error"): T {
+  if (a == null) throw Error(message())
+  return a;
 }
 
 export function handleMain(main: Promise<number>): void {

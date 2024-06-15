@@ -69,7 +69,7 @@ export class Blocks {
   }
 
   findByDowngradeBlocks(graphs: DowngradeGraph): DowngradeGraph[] {
-    const upgradBlocks = this.downgradeRelations.get(requireNonnull(graphs[0], "DowngradeGraph must not be empty"));
+    const upgradBlocks = this.downgradeRelations.get(requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"));
     if (upgradBlocks) {
       return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
     } else {

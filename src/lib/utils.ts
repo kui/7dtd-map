@@ -1,6 +1,6 @@
 export function requireNonnull<T>(t: T | undefined | null, errorMessage = () => `Unexpected state: ${String(t)}`): T {
-  if (t != null) return t;
-  else throw Error(errorMessage());
+  if (t == null) throw Error(errorMessage());
+  return t;
 }
 
 export function strictParseInt(s: string | undefined | null, errorMessage = () => `Unexpected argument: ${String(s)}`): number {
