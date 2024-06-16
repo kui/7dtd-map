@@ -1,3 +1,3 @@
-import { localJson } from "./lib/utils.js";
+import { vanillaDir } from "./lib/utils.js";
 
-console.log((await localJson()).vanillaDir);
+console.log((await vanillaDir()));

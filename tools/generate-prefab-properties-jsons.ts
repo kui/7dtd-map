@@ -7,8 +7,7 @@ const DOCS_DIR = utils.projectRoot("docs");
 const FILE = "prefab-difficulties.json";
 
 async function main() {
-  const vanillaDir = await utils.vanillaDir();
-  const prefabXmlFiles = await glob(path.join(vanillaDir, "Data", "Prefabs", "*", "*.xml"));
+  const prefabXmlFiles = await glob(await utils.vanillaDir("Data", "Prefabs", "*", "*.xml"));
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   await utils.writeJsonFile(path.join(DOCS_DIR, FILE), extractDifficulties(prefabXmls));
