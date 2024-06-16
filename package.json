@@ -27,6 +27,8 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.5.0",
+    "@swc/core": "^1.6.1",
+    "@swc/jest": "^0.2.36",
     "@tsconfig/node22": "^22.0.0",
     "@tsconfig/strictest": "^2.0.5",
     "@types/css-font-loading-module": "0.0.13",
@@ -38,7 +40,6 @@
     "@types/xml2js": "^0.4.14",
     "csv-parse": "^5.5.6",
     "esbuild": "0.21.5",
-    "esbuild-jest": "^0.5.0",
     "eslint": "^9.5.0",
     "glob": "^10.4.1",
     "idb": "^8.0.0",
