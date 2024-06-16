@@ -19,7 +19,7 @@
     "lint:eslint": "eslint .",
     "lint:tsc:src": "tsc -p src --noEmit",
     "lint:tsc:tools": "tsc -p tools --noEmit",
-    "test": "jest --config src/jest.config.js",
+    "test": "jest --config src/jest.config.ts",
     "ci": "run-p lint test"
   },
   "author": "Keiichiro UI",
