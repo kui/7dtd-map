@@ -32,8 +32,8 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+    <table><tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
@@ -150,8 +150,10 @@
 <tr class="block"><td class="block_name">cntArmyTruckOpen</td><td class="block_label">Army Truck, Open Back</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelOilSingle00</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelPlasticSingle45</td><td class="block_label">Water Barrel</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntbasketLaundryWhiteRandomLootHelper</td><td class="block_label">= White Laundry Basket  = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashPlasticWhiteRandomLootHelper</td><td class="block_label">= White Plastic Trash Bin = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">cntBookPile02</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">2</td></tr>
@@ -178,6 +180,7 @@
 <tr class="block"><td class="block_name">cntPillCaseClosed</td><td class="block_label">Medical Cabinet</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntPurse01</td><td class="block_label">Purse</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntRetroFridgeVer1Closed</td><td class="block_label">Retro Refrigerator</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntshelfSupplyOfficeFullWhite</td><td class="block_label">Office Shelf</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntShoesPileRandomLootHelper</td><td class="block_label">= Shoes Pile = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntShoesPileSandals</td><td class="block_label">Shoes Pile: Sandals</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntShoesPileSneakers</td><td class="block_label">Shoes</td><td class="block_count">1</td></tr>
@@ -200,9 +203,6 @@
 <tr class="block"><td class="block_name">cntWeaponsBagSmall</td><td class="block_label">Weapons Bag</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWoodBurningStove</td><td class="block_label">Wood Burning Stove</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWoodenChestMilitaryRandomLootHelper</td><td class="block_label">= Military Chest = Random Helper</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">cntbasketLaundryWhiteRandomLootHelper</td><td class="block_label">= White Laundry Basket  = Random Helper</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">cntshelfSupplyOfficeFullWhite</td><td class="block_label">Office Shelf</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:arch</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:balusterCorner01</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">561</td></tr>
@@ -376,15 +376,15 @@
 <tr class="block"><td class="block_name">pictureFrame_01v</td><td class="block_label">Picture V</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">pictureFrame_01w</td><td class="block_label">Picture W</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">plantAloePottedWhite</td><td class="block_label">White Potted Plant 01</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">plantedChrysanthemum3Harvest</td><td class="block_label">Chrysanthemum 3 (POI)</td><td class="block_count">26</td></tr>
+<tr class="block"><td class="block_name">plantedGoldenrod3Harvest</td><td class="block_label">Goldenrod Flower 3 (POI)</td><td class="block_count">22</td></tr>
+<tr class="block"><td class="block_name">planter</td><td class="block_label">Planter</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">plantHedgeRandomHelper</td><td class="block_label">= Hedge = Random Helper</td><td class="block_count">23</td></tr>
 <tr class="block"><td class="block_name">plantHousePottedBrown</td><td class="block_label">Brown Potted Plant 02</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">plantHouseTallPottedBlue</td><td class="block_label">Blue Potted Plant Tall 01</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">plantHydroponicAloe</td><td class="block_label">Hydroponic Horizontal</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">plantHydroponicVertical</td><td class="block_label">Hydroponic Vertical</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">plantShrubRandomHelper</td><td class="block_label">= Shrub = Random Helper</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">plantedChrysanthemum3Harvest</td><td class="block_label">Chrysanthemum 3 (POI)</td><td class="block_count">26</td></tr>
-<tr class="block"><td class="block_name">plantedGoldenrod3Harvest</td><td class="block_label">Goldenrod Flower 3 (POI)</td><td class="block_count">22</td></tr>
-<tr class="block"><td class="block_name">planter</td><td class="block_label">Planter</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">portaPottyBlue</td><td class="block_label">Porta Potty</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">powerSwitch01</td><td class="block_label">Switch</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">projectorCeilingTrader</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -423,10 +423,10 @@
 <tr class="block"><td class="block_name">tentBiohazardWallWindowYellow</td><td class="block_label">Yellow Biohazard Tent Wall Window</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">tentBiohazardWallYellow</td><td class="block_label">Yellow Biohazard Tent Wall</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">tentBiohazardWire01</td><td class="block_label">Biohazard Tent Wire</td><td class="block_count">10</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">5373</td></tr>
 <tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">1022</td></tr>
 <tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">378</td></tr>
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">274</td></tr>
-<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">5373</td></tr>
 <tr class="block"><td class="block_name">treeJuniper4m</td><td class="block_label">Tree Juniper 4m</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">treePlainsTree2</td><td class="block_label">Tree Plains Tree 2</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">treePlant02</td><td class="block_label">Potted Plant</td><td class="block_count">2</td></tr>

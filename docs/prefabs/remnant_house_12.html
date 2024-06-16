@@ -32,8 +32,8 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+    <table><tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>0</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
@@ -107,8 +107,10 @@
 <tr class="block"><td class="block_name">closetDoorDoubleWhite</td><td class="block_label">White Closet Double Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">closetDoorWhite</td><td class="block_label">White Closet Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntbasketLaundryWhiteRandomLootHelper</td><td class="block_label">= White Laundry Basket  = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBathTubsRandomLootHelper</td><td class="block_label">= Bathtubs = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookcaseGoodRandomLootHelper</td><td class="block_label">= Bookcase Good = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntBruteStyleTrashCanRandomLootHelper</td><td class="block_label">= Trash Can = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">2</td></tr>
@@ -126,6 +128,7 @@
 <tr class="block"><td class="block_name">cntFoodPileSmallRandomHelper</td><td class="block_label">= Small Food Pile = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntFridgeStainlessSteelRandomLootHelper</td><td class="block_label">= S Steel Fridge = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntGasGrillRandomLootHelper</td><td class="block_label">= Gas Grill = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntgasRangeGrey</td><td class="block_label">Grey Gas Range</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntLuggageMediumRandomLootHelper</td><td class="block_label">= Luggage Medium = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntLuggagePileBRandomLootHelper</td><td class="block_label">= Luggage Pile B = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntMailBox01White</td><td class="block_label">White Mailbox</td><td class="block_count">1</td></tr>
@@ -141,12 +144,9 @@
 <tr class="block"><td class="block_name">cntToolBoxRandomLootHelperRed</td><td class="block_label">= Red Toolbox = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntTrashPile01</td><td class="block_label">Trash Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntTrashPile08</td><td class="block_label">Foul Trash</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntwallOvenGreyRandomLootHelper</td><td class="block_label">= Grey Wall Oven  = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWasherRandomLootHelper</td><td class="block_label">= Washing Machine = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWeaponsBagSmall</td><td class="block_label">Weapons Bag</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbasketLaundryWhiteRandomLootHelper</td><td class="block_label">= White Laundry Basket  = Random Helper</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntgasRangeGrey</td><td class="block_label">Grey Gas Range</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntwallOvenGreyRandomLootHelper</td><td class="block_label">= Grey Wall Oven  = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cobblestoneShapes:cube</td><td class="block_label">-</td><td class="block_count">46</td></tr>
 <tr class="block"><td class="block_name">commercialSingleMeterDisconnect</td><td class="block_label">Commercial Single Meter Disconnect</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">103</td></tr>
@@ -211,9 +211,9 @@
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1416</td></tr>
 <tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">46</td></tr>
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">789</td></tr>
-<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1416</td></tr>
 <tr class="block"><td class="block_name">treeDeadTree02</td><td class="block_label">Tree Dead Tree 02</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">1</td></tr>
@@ -223,6 +223,7 @@
 <tr class="block"><td class="block_name">woodChair1</td><td class="block_label">Wooden Chair</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">woodDestroyed05</td><td class="block_label">Wood Destroyed Block 05</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">woodDestroyed06</td><td class="block_label">Wood Destroyed Block 06</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">woodenGarageDoor4x3White</td><td class="block_label">White Wooden Garage Door 4x3</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodFenceSheet</td><td class="block_label">Wood Fence</td><td class="block_count">13</td></tr>
 <tr class="block"><td class="block_name">woodShapes:arrowSlitHalf</td><td class="block_label">-</td><td class="block_count">15</td></tr>
 <tr class="block"><td class="block_name">woodShapes:arrowSlitQuarter</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -289,7 +290,6 @@
 <tr class="block"><td class="block_name">woodShapes:woodDebris01</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">woodShapes:woodDebris02</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">woodShapes:woodDebris03</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">woodenGarageDoor4x3White</td><td class="block_label">White Wooden Garage Door 4x3</td><td class="block_count">1</td></tr>
     </table>
   </section>
 </body>
