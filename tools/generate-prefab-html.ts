@@ -1,6 +1,6 @@
 import * as path from "path";
 import { promises as fs } from "fs";
-import glob from "glob-promise";
+import { glob } from "glob";
 import { prefabHtml } from "./lib/prefab-html.js";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
 import { handleMain, projectRoot, vanillaDir } from "./lib/utils.js";

@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import * as path from "path";
-import glob from "glob-promise";
+import { glob } from "glob";
 import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser.js";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
 import { parseTts } from "./lib/tts-parser.js";

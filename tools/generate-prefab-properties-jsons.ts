@@ -1,6 +1,6 @@
 import * as utils from "./lib/utils.js";
 import * as path from "path";
-import glob from "glob-promise";
+import { glob } from "glob";
 import { PrefabProperty, parsePrefabXml } from "./lib/prefab-xml-parser.js";
 
 const DOCS_DIR = utils.projectRoot("docs");
