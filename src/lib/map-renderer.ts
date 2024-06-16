@@ -147,8 +147,6 @@ export default class MapRenderer {
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
     putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
-    ctx.strokeText(MARK_CHAR, x, z);
-    ctx.fillText(MARK_CHAR, x, z);
   }
 }
 
