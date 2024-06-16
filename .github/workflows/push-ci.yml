@@ -5,10 +5,10 @@ jobs:
   npm-run-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@692973e
+      - uses: actions/setup-node@60edb5d
         with:
-          node-version: "14"
+          node-version-file: package.json
       - run: npm install
       - run: echo '{}' > local.json
       - run: npm run ci
