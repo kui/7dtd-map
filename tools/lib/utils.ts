@@ -20,7 +20,7 @@ export async function vanillaDir(...pathList: string[]): Promise<string> {
 }
 
 export function requireNonnull<T>(a: T | null | undefined, message = () => "Unexpected error"): T {
-  if (a == null) throw Error(message())
+  if (a == null) throw Error(message());
   return a;
 }
 
