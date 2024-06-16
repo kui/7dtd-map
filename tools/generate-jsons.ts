@@ -4,17 +4,15 @@ import { glob } from "glob";
 import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser.js";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
 import { parseTts } from "./lib/tts-parser.js";
-import * as utils from "./lib/utils.js";
+import { projectRoot, vanillaDir, handleMain } from "./lib/utils.js";
 
-const DOCS_DIR = utils.projectRoot("docs");
+const DOCS_DIR = projectRoot("docs");
 const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
 
 async function main() {
-  const vanillaDir = await utils.vanillaDir();
-  const nimFileGlob = path.join(vanillaDir, "Data", "Prefabs", "*", "*.blocks.nim");
-  const nimFiles = await glob(nimFileGlob);
+  const nimFiles = await glob(await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"));
   if (nimFiles.length === 0) {
-    throw Error(`No nim file: ${nimFileGlob}`);
+    throw Error(`No nim file found`);
   }
 
   const prefabBlockIndexFile = path.join(DOCS_DIR, "prefab-block-index.json");
@@ -27,7 +25,7 @@ async function main() {
   console.log("Load %d blocks", Object.keys(blockPrefabIndex).length);
   await writeJsonFile(blockPrefabIndexFile, blockPrefabIndex);
 
-  const labels = await parseLabel(path.join(vanillaDir, "Data", "Config", "Localization.txt"));
+  const labels = await parseLabel(await vanillaDir("Data", "Config", "Localization.txt"));
 
   const blockLabelsFile = path.join(DOCS_DIR, "block-labels.json");
   const blockLabels = extractLabels(labels, ["blocks", "shapes"], Object.keys(blockPrefabIndex));
@@ -112,4 +110,4 @@ function invertIndex(prefabs: PrefabBlockIndex) {
   }, {});
 }
 
-utils.handleMain(main());
+handleMain(main());

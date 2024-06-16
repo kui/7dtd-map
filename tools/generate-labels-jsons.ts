@@ -1,13 +1,12 @@
-import * as utils from "./lib/utils.js";
+import { projectRoot, vanillaDir, handleMain } from "./lib/utils.js";
 import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser.js";
 import * as path from "path";
 import { promises as fs } from "fs";
 
-const DEST_DIR = utils.projectRoot("docs", "labels");
+const DEST_DIR = projectRoot("docs", "labels");
 
 async function main() {
-  const vanillaDir = await utils.vanillaDir();
-  const labels = await parseLabel(path.join(vanillaDir, "Data", "Config", "Localization.txt"));
+  const labels = await parseLabel(await vanillaDir("Data", "Config", "Localization.txt"));
 
   for (const lang of LANGUAGES) {
     const dir = path.join(DEST_DIR, lang);
@@ -38,4 +37,4 @@ async function writeJsonFile(file: string, json: unknown) {
   console.log("Write %s", file);
 }
 
-utils.handleMain(main());
+handleMain(main());
