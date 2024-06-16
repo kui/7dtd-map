@@ -39,10 +39,10 @@ export class TerrainViewer {
     this.renderer.setPixelRatio(devicePixelRatio);
     this.scene = new three.Scene();
 
-    const light = new three.DirectionalLight(0xffffff, 1.2);
+    const light = new three.DirectionalLight(0xffffff, 5);
     light.position.set(1, 1, 1).normalize();
     this.scene.add(light);
-    this.scene.add(new three.AmbientLight(0xffffff, 0.02));
+    this.scene.add(new three.AmbientLight(0xffffff, 0.09));
 
     this.cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
