@@ -5,7 +5,7 @@ export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "b
 
 const prefabs = new Prefabs("../labels", navigator.languages);
 (async () => {
-  prefabs.blockPrefabIndex = await fetchJson("../block-prefab-index.json");
+  prefabs.blockPrefabCounts = invertCounts(await fetchJson("../prefab-block-counts.json"));
   prefabs.update();
 })().catch(printError);
 
@@ -18,3 +18,11 @@ prefabs.addUpdateListener((u) => {
   console.log("Prefab-filter send message: ", u);
   postMessage(u);
 });
+
+function invertCounts(counts: PrefabBlockCounts): BlockPrefabCounts {
+  const blockPrefabCounts: BlockPrefabCounts = {};
+  for (const [prefabName, blockCounts] of Object.entries(counts))
+    for (const [blockName, count] of Object.entries(blockCounts))
+      blockPrefabCounts[blockName] = Object.assign(blockPrefabCounts[blockName] ?? {}, { [prefabName]: count });
+  return blockPrefabCounts;
+}

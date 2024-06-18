@@ -7,8 +7,8 @@ function main() {
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
   labelHandler.addListener(async (lang) => {
     labelHolder.language = lang;
-    updatePrefabLabels(await labelHolder.prefabs);
-    udpateBlockLabels(await labelHolder.blocks);
+    updatePrefabLabels(await labelHolder.get("prefabs"));
+    udpateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
   });
 }
 
@@ -20,13 +20,13 @@ function updatePrefabLabels(labels: Labels) {
   labelEl.textContent = labels.get(name) ?? "-";
 }
 
-function udpateBlockLabels(labels: Labels) {
+function udpateBlockLabels(blockLabels: Labels, shapeLabels: Labels) {
   for (const blockEl of component("blocks", HTMLElement).querySelectorAll(".block")) {
     const name = blockEl.querySelector(".block_name")?.textContent?.trim();
     if (!name) continue;
     const labelEl = blockEl.querySelector(".block_label");
     if (!labelEl) continue;
-    labelEl.textContent = labels.get(name) ?? "-";
+    labelEl.textContent = blockLabels.get(name) ?? shapeLabels.get(name) ?? "-";
   }
 }
 

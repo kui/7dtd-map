@@ -17,7 +17,7 @@ export default class Prefabs {
   markCoords: GameCoords | null = null;
   status = "";
 
-  #blockPrefabIndex: BlockPrefabIndex = {};
+  #blockPrefabCounts: BlockPrefabCounts = {};
   #labelHolder: LabelHolder;
   filter: PrefabMatcher;
 
@@ -46,14 +46,14 @@ export default class Prefabs {
     if (s.length === 0) {
       this.filter = this.defaultMatcher();
     } else {
-      this.filter = new BlockNameMatcher(new RegExp(s, "i"), this.#blockPrefabIndex, this.#labelHolder);
+      this.filter = new BlockNameMatcher(new RegExp(s, "i"), this.#blockPrefabCounts, this.#labelHolder);
     }
   }
 
-  set blockPrefabIndex(index: BlockPrefabIndex) {
-    this.#blockPrefabIndex = index;
+  set blockPrefabCounts(counts: BlockPrefabCounts) {
+    this.#blockPrefabCounts = counts;
     if (this.filter instanceof BlockNameMatcher) {
-      this.filter = new BlockNameMatcher(this.filter.regexp, index, this.#labelHolder);
+      this.filter = new BlockNameMatcher(this.filter.regexp, counts, this.#labelHolder);
     }
   }
 
@@ -194,12 +194,12 @@ class PrefabNameMatcher implements PrefabMatcher {
 
 class BlockNameMatcher implements PrefabMatcher {
   regexp: RegExp;
-  blockPrefabIndex: BlockPrefabIndex;
+  #blockPrefabCounts: BlockPrefabCounts;
   labels: LabelHolder;
 
-  constructor(regexp: RegExp, blockPrefabIndex: BlockPrefabIndex, labels: LabelHolder) {
+  constructor(regexp: RegExp, counts: BlockPrefabCounts, labels: LabelHolder) {
     this.regexp = regexp;
-    this.blockPrefabIndex = blockPrefabIndex;
+    this.#blockPrefabCounts = counts;
     this.labels = labels;
   }
 
@@ -236,35 +236,29 @@ class BlockNameMatcher implements PrefabMatcher {
   private async matchBlocks() {
     const blockLabels = await this.labels.get("blocks");
     const shapeLabels = await this.labels.get("shapes");
-    return Object.entries(this.blockPrefabIndex).reduce<HighlightedBlock[]>((arr, [blockName, prefabs]) => {
+    return Object.entries(this.#blockPrefabCounts).flatMap<HighlightedBlock>(([blockName, prefabs]) => {
       const highlightedName = matchAndHighlight(blockName, this.regexp);
       const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, this.regexp);
       if (highlightedName ?? highlightedLabel) {
-        return arr.concat({
+        return {
           name: blockName,
           highlightedName: highlightedName ?? blockName,
           highlightedLabel: highlightedLabel ?? label,
           prefabs,
-        });
+        };
       }
-      return arr;
-    }, []);
+      return [];
+    });
   }
 
   private matchPrefabTypes(matchedBlocks: HighlightedBlock[]): PrefabHighlightedBlocks {
-    return matchedBlocks.reduce<PrefabHighlightedBlocks>((idx, block) => {
-      const { name, highlightedName, highlightedLabel } = block;
-      block.prefabs?.forEach((p) => {
-        const b = {
-          name,
-          highlightedName,
-          highlightedLabel,
-          count: p.count,
-        };
-        idx[p.name] = (idx[p.name] ?? []).concat(b);
-      });
-      return idx;
+    return matchedBlocks.reduce<PrefabHighlightedBlocks>((acc, block) => {
+      if (!block.prefabs) return acc;
+      for (const [prefabName, count] of Object.entries(block.prefabs)) {
+        acc[prefabName] = (acc[prefabName] ?? []).concat({ ...block, count });
+      }
+      return acc;
     }, {});
   }
 }
