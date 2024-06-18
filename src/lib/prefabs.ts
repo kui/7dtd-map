@@ -146,7 +146,7 @@ class AllMatcher implements PrefabMatcher {
   }
 
   async match(prefabs: Prefab[]) {
-    const labels = await this.labels.prefabs;
+    const labels = await this.labels.get("prefabs");
     return {
       status: prefabs.length === 0 ? "No prefabs" : "All prefabs",
       matched: prefabs.map((p) => {
@@ -171,7 +171,7 @@ class PrefabNameMatcher implements PrefabMatcher {
   }
 
   async match(prefabs: Prefab[]) {
-    const labels = await this.labels.prefabs;
+    const labels = await this.labels.get("prefabs");
     const results = prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const highlightedName = matchAndHighlight(prefab.name, this.regexp);
       const label = labels.get(prefab.name) ?? "-";
@@ -214,7 +214,7 @@ class BlockNameMatcher implements PrefabMatcher {
       return { status: `No prefabs, but ${matchedBlocks.length.toString()} matched blocks`, matched: [] };
     }
 
-    const labels = await this.labels.prefabs;
+    const labels = await this.labels.get("prefabs");
     const results = prefabs.flatMap((prefab: Prefab) => {
       const blocks = matchedPrefabBlocks[prefab.name];
       if (!blocks) {
@@ -234,10 +234,11 @@ class BlockNameMatcher implements PrefabMatcher {
   }
 
   private async matchBlocks() {
-    const labels = await this.labels.blocks;
+    const blockLabels = await this.labels.get("blocks");
+    const shapeLabels = await this.labels.get("shapes");
     return Object.entries(this.blockPrefabIndex).reduce<HighlightedBlock[]>((arr, [blockName, prefabs]) => {
       const highlightedName = matchAndHighlight(blockName, this.regexp);
-      const label = labels.get(blockName) ?? "-";
+      const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, this.regexp);
       if (highlightedName ?? highlightedLabel) {
         return arr.concat({
