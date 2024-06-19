@@ -3,7 +3,7 @@ import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, humanreadableDistance } from "./lib/utils";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -42,7 +42,7 @@ function main() {
       delete: component("delete_map", HTMLButtonElement),
       mapName: component("map_name", HTMLInputElement),
     },
-    mapStorage
+    mapStorage,
   );
 
   const mapCanvasHandler = new MapCanvasHandler(
@@ -59,7 +59,7 @@ function main() {
     },
     new Worker("worker/map-renderer.js"),
     mapStorage,
-    loadingHandler
+    loadingHandler,
   );
 
   const terrainViewer = new TerrainViewer({
@@ -76,14 +76,14 @@ function main() {
       return;
     }
     terrainViewer.mapSize = size;
-    terrainViewer.updateElevations();
+    terrainViewer.updateElevations().catch(printError);
   });
 
   const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
   dtmHandler.addListener((dtm) => {
     if (terrainViewer.dtm === dtm) return;
     terrainViewer.dtm = dtm;
-    terrainViewer.updateElevations();
+    terrainViewer.updateElevations().catch(printError);
   });
 
   const prefabsHandler = new PrefabsHandler(
@@ -94,18 +94,18 @@ function main() {
     },
     new Worker("worker/prefabs-filter.js"),
     mapStorage,
-    fetch("prefab-difficulties.json").then((r) => r.json())
+    fetchJson("prefab-difficulties.json"),
   );
-  prefabsHandler.listeners.push(async (prefabs) => {
+  prefabsHandler.listeners.push((prefabs) => {
     mapCanvasHandler.update({ prefabs });
   });
 
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
     component("controller", HTMLElement),
     component("prefabs_list", HTMLElement),
-    (p) => prefabLi(p)
+    (p) => prefabLi(p),
   );
-  prefabsHandler.listeners.push(async (prefabs) => {
+  prefabsHandler.listeners.push((prefabs) => {
     prefabListRenderer.iterator = prefabs;
   });
 
@@ -114,7 +114,7 @@ function main() {
       canvas: component("map", HTMLCanvasElement),
       output: component("cursor_coods", HTMLElement),
     },
-    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null,
   );
   mapCanvasHandler.addMapSizeListener((size) => (cursorCoodsHandler.mapSize = size));
 
@@ -124,38 +124,52 @@ function main() {
       output: component("mark_coods", HTMLElement),
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
-    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null
+    (coords, size) => dtmHandler.dtm?.getElevation(coords, size) ?? null,
   );
   mapCanvasHandler.addMapSizeListener((size) => (markerHandler.mapSize = size));
-  markerHandler.listeners.push(async (coords) => {
+  markerHandler.listeners.push((coords) => {
     prefabsHandler.marker = coords;
     mapCanvasHandler.update({ markerCoords: coords });
   });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener(async (lang) => {
+  labelHandler.addListener((lang) => {
     prefabsHandler.language = lang;
   });
 
   const imageLoader = new ImageBitmapLoader(() => new Worker("worker/pngjs.js"));
   const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
-    ["biomes.png", async (file) => mapCanvasHandler.update({ biomesImg: await createImageBitmap(file) })],
-    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.update({ splat3Img: await imageLoader.loadSplat3(file) })],
-    ["splat4_processed.png", async (file) => mapCanvasHandler.update({ splat4Img: await imageLoader.loadSplat4(file) })],
-    ["radiation.png", async (file) => mapCanvasHandler.update({ radImg: await imageLoader.loadRad(file) })],
-    ["prefabs.xml", async (file) => await prefabsHandler.handle(file)],
-    [/dtm\.(raw|png)/, async (file) => await dtmHandler.handle(file)],
+    ["biomes.png", async (file) => mapCanvasHandler.updateAsync({ biomesImg: await createImageBitmap(file) })],
+    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.updateAsync({ splat3Img: await imageLoader.loadSplat3(file) })],
+    ["splat4_processed.png", async (file) => mapCanvasHandler.updateAsync({ splat4Img: await imageLoader.loadSplat4(file) })],
+    ["radiation.png", async (file) => mapCanvasHandler.updateAsync({ radImg: await imageLoader.loadRad(file) })],
+    [
+      "prefabs.xml",
+      async (file) => {
+        await prefabsHandler.handle(file);
+      },
+    ],
+    [
+      /dtm\.(raw|png)/,
+      async (file) => {
+        await dtmHandler.handle(file);
+      },
+    ],
   ]);
 
   const dndHandler = new DndHandler(document);
-  dndHandler.addDropFilesListener((files) => fileHandler.pushFiles(files));
+  dndHandler.addDropFilesListener((files) => {
+    fileHandler.pushFiles(files);
+  });
 
   const sampleWorldLoader = new SampleWorldLoader();
-  sampleWorldLoader.addListenr((f) => fileHandler.pushFiles([f]));
+  sampleWorldLoader.addListenr((f) => {
+    fileHandler.pushFiles([f]);
+  });
 
   component("download").addEventListener("click", () => {
-    const mapName = component("map_name", HTMLInputElement).value ?? "7dtd-map";
+    const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
     downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
   });
 }
@@ -164,24 +178,29 @@ function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
     `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
-    prefab.dist ? `${humanreadableDistance(prefab.dist)},` : "",
-    prefab.difficulty && prefab.difficulty > 0
-      ? `<span title="Difficulty Tier ${prefab.difficulty}" class="prefab_difficulty_${prefab.difficulty}"><span class="prefab_difficulty_icon">💀</span>${prefab.difficulty}</span>`
-      : "",
+    ...(prefab.dist ? [`${humanreadableDistance(prefab.dist)},`] : []),
+    ...(prefab.difficulty
+      ? [
+          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+          `  <span class="prefab_difficulty_icon">💀</span>${prefab.difficulty.toString()}`,
+          `</span>`,
+        ]
+      : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
-    prefab.highlightedLabel || "-",
+    prefab.highlightedLabel ?? "-",
     "/",
-    `<small>${prefab.highlightedName || prefab.name}</small>`,
+    `<small>${prefab.highlightedName ?? prefab.name}</small>`,
     "</a>",
-    `(${prefab.x}, ${prefab.z})`,
+    `(${prefab.x.toString()}, ${prefab.z.toString()})`,
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
     prefab.matchedBlocks.forEach((block) => {
+      if (block.count === undefined) return;
       const blockLi = document.createElement("li");
       blockLi.innerHTML = [
         `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
-        `${block.count}x`,
+        `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
       ].join(" ");

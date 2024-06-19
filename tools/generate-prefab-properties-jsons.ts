@@ -1,7 +1,7 @@
-import * as utils from "./lib/utils";
+import * as utils from "./lib/utils.js";
 import * as path from "path";
-import glob from "glob-promise";
-import { PrefabProperty, parsePrefabXml } from "./lib/prefab-xml-parser";
+import { glob } from "glob";
+import { PrefabProperty, parsePrefabXml } from "./lib/prefab-xml-parser.js";
 
 const DOCS_DIR = utils.projectRoot("docs");
 
@@ -21,13 +21,13 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
       const difficulty = parseInt(props.find((p) => p.name === "DifficultyTier")?.value ?? "0");
       if (difficulty > 0) return [[prefabName, difficulty]];
       else return [];
-    })
+    }),
   );
 }
 
-type PrefabXmls = {
+interface PrefabXmls {
   [prefabName: string]: PrefabProperty[];
-};
+}
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;

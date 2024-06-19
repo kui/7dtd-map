@@ -1,18 +1,22 @@
-export function requireNonnull<T>(t: T | undefined | null, message = () => `Unexpected state: ${t}`): T {
-  if (t != null) return t;
-  else throw Error(message());
+export function requireNonnull<T>(t: T | undefined | null, errorMessage = () => `Unexpected state: ${String(t)}`): T {
+  if (t == null) throw Error(errorMessage());
+  return t;
 }
 
-export function requireType<T>(o: unknown, t: { new (...a: unknown[]): T }, message = () => `Unexpected type: ${o}`): T {
+export function strictParseInt(s: string | undefined | null, errorMessage = () => `Unexpected argument: ${String(s)}`): number {
+  const n = parseInt(s ?? "");
+  if (isNaN(n)) throw Error(errorMessage());
+  return n;
+}
+
+export function requireType<T>(o: unknown, t: new (...a: unknown[]) => T, errorMessage = () => `Unexpected type: ${String(o)}`): T {
   if (o instanceof t) return o;
-  throw Error(message());
+  throw Error(errorMessage());
 }
 
-export function component<T extends HTMLElement = HTMLElement>(id: string | null | undefined, t?: { new (...a: unknown[]): T }): T {
-  const e = requireNonnull(
-    document.getElementById(requireNonnull(id, () => `Element ID must not null: ${id}`)),
-    () => `Element not found: #${id}`
-  );
+export function component<T extends HTMLElement = HTMLElement>(id: string | undefined | null, t?: new (...a: unknown[]) => T): T {
+  const i = requireNonnull(id, () => "Unexpected argument: id is null");
+  const e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
   return t ? requireType(e, t) : (e as T);
 }
 
@@ -22,7 +26,7 @@ export function removeAllChildren(e: HTMLElement): void {
 
 export function humanreadableDistance(d: number): string {
   if (d < 1000) {
-    return `${d}m`;
+    return `${d.toString()}m`;
   }
   return `${(d / 1000).toFixed(2)}km`;
 }
@@ -40,7 +44,7 @@ export function formatCoords(
   map: GameMapSize,
   canvas: HTMLCanvasElement,
   elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
-  event: EventOffsets | null
+  event: EventOffsets | null,
 ): string {
   if (!event) return "E/W: -, N/S: -, Elev: -";
 
@@ -50,7 +54,7 @@ export function formatCoords(
   }
 
   const y = elevation(gameCoords, map) ?? "-";
-  return `E/W: ${gameCoords.x}, N/S: ${gameCoords.z}, Elev: ${y}`;
+  return `E/W: ${gameCoords.x.toString()}, N/S: ${gameCoords.z.toString()}, Elev: ${y.toString()}`;
 }
 
 export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
@@ -96,4 +100,16 @@ export function canvasEventToGameCoords(event: EventOffsets, mapSize: GameMapSiz
 
 export function threePlaneSize(width: number, height: number): ThreePlaneSize {
   return { type: "threePlane", width, height };
+}
+
+export function printError(e: unknown): void {
+  console.error(e);
+}
+
+export async function fetchJson<T>(url: string): Promise<T> {
+  return (await (await fetch(url)).json()) as T;
+}
+
+export async function invokeAll<T>(fns: ((t: T) => unknown)[], t: T): Promise<void> {
+  await Promise.all(fns.map((fn) => fn(t)));
 }

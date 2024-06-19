@@ -37,16 +37,16 @@ export default class MapRenderer {
     this.fontFace = fontFace;
   }
 
-  set biomesImg(img: ImageBitmap | PngBlob | null) {
+  set biomesImg(img: ImageBitmap | PngBlob | null | undefined) {
     this._biomesImg = img ? new ImageBitmapHolder("biomes", img) : null;
   }
-  set splat3Img(img: ImageBitmap | PngBlob | null) {
+  set splat3Img(img: ImageBitmap | PngBlob | null | undefined) {
     this._splat3Img = img ? new ImageBitmapHolder("splat3", img) : null;
   }
-  set splat4Img(img: ImageBitmap | PngBlob | null) {
+  set splat4Img(img: ImageBitmap | PngBlob | null | undefined) {
     this._splat4Img = img ? new ImageBitmapHolder("splat4", img) : null;
   }
-  set radImg(img: ImageBitmap | PngBlob | null) {
+  set radImg(img: ImageBitmap | PngBlob | null | undefined) {
     this._radImg = img ? new ImageBitmapHolder("rad", img) : null;
   }
 
@@ -110,7 +110,7 @@ export default class MapRenderer {
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -122,8 +122,7 @@ export default class MapRenderer {
     const charOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
-    for (let i = this.prefabs.length - 1; i >= 0; i -= 1) {
-      const prefab = this.prefabs[i];
+    for (const prefab of this.prefabs.toReversed()) {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
@@ -134,7 +133,7 @@ export default class MapRenderer {
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize}px ${this.fontFace?.family ?? ""}`;
+    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
@@ -148,8 +147,6 @@ export default class MapRenderer {
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
     putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
-    ctx.strokeText(MARK_CHAR, x, z);
-    ctx.fillText(MARK_CHAR, x, z);
   }
 }
 

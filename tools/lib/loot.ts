@@ -1,4 +1,4 @@
-import { parseXml } from "./xml-parser";
+import { parseXml } from "./xml-parser.js";
 
 export interface LootTable {
   items: string[];

@@ -10,7 +10,7 @@ export class MarkerHandler {
   mapSize: GameMapSize = gameMapSize({ width: 0, height: 0 });
   elevationFunction: (coods: GameCoords, size: GameMapSize) => number | null;
   doms: Doms;
-  listeners: ((c: GameCoords | null) => Promise<void>)[] = [];
+  listeners: ((c: GameCoords | null) => unknown)[] = [];
 
   constructor(doms: Doms, elevationFunction: (coords: GameCoords, width: GameMapSize) => number | null) {
     this.elevationFunction = elevationFunction;
@@ -18,7 +18,8 @@ export class MarkerHandler {
 
     doms.canvas.addEventListener("click", (e) => {
       updateMarker(this, e);
-      this.listeners.forEach((fn) => fn(canvasEventToGameCoords(e, this.mapSize, doms.canvas)));
+      const coods = canvasEventToGameCoords(e, this.mapSize, doms.canvas);
+      this.listeners.forEach((fn) => fn(coods));
     });
     doms.resetMarker.addEventListener("click", () => {
       updateMarker(this);

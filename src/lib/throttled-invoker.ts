@@ -5,30 +5,29 @@ export function throttledInvoker(asyncFunc: () => Promise<void> | void): () => P
   return () => {
     switch (workerPromises.length) {
       case 0: {
-        workerPromises.push(
-          (async () => {
-            await asyncFunc();
-            workerPromises.shift();
-          })()
-        );
-        return workerPromises[0];
+        const p = (async () => {
+          await asyncFunc();
+          void workerPromises.shift();
+        })();
+        workerPromises.push(p);
+        return p;
       }
       case 1: {
         const prev = workerPromises[0];
-        workerPromises.push(
-          (async () => {
-            await prev;
-            await waitAnimationFrame();
-            await asyncFunc();
-            workerPromises.shift();
-          })()
-        );
-        return workerPromises[1];
+        const p = (async () => {
+          await prev;
+          await waitAnimationFrame();
+          await asyncFunc();
+          void workerPromises.shift();
+        })();
+        workerPromises.push(p);
+        return p;
       }
       case 2:
-        return workerPromises[1];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return workerPromises[1]!;
       default:
-        throw Error(`Unexpected state: promiceses=${workerPromises.length}`);
+        throw Error(`Unexpected state: promiceses=${workerPromises.length.toString()}`);
     }
   };
 }

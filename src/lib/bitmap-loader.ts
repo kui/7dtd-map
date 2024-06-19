@@ -1,9 +1,5 @@
 import { Png, PngParser } from "./png-parser";
 
-// Workaround for weird semver of typescript :(
-// See https://github.com/microsoft/TypeScript/issues/45745
-declare function createImageBitmap(image: OffscreenCanvas, options?: ImageBitmapOptions): Promise<ImageBitmap>;
-
 export class ImageBitmapLoader {
   private pngParser: PngParser;
 
@@ -30,9 +26,9 @@ export class ImageBitmapLoader {
 function renderSplat3(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
-      out[i] = indata[i];
-      out[i + 1] = indata[i + 1];
-      out[i + 2] = indata[i + 2];
+      out[i] = indata[i]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      out[i + 1] = indata[i + 1]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      out[i + 2] = indata[i + 2]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       if (indata[i] === 0 && indata[i + 1] === 0 && indata[i + 2] === 0) {
         out[i + 3] = 0;
       } else {
@@ -45,13 +41,13 @@ function renderSplat3(pngjs: Png) {
 // splat4.png should convert the pixels which:
 //   * black to 100% transparent
 //   * other to non-transparent
-//   * swap green and blue
+//   * swap green and blue TODO: why?
 function renderSplat4(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
-      out[i] = indata[i];
-      out[i + 1] = indata[i + 2];
-      out[i + 2] = indata[i + 1];
+      out[i] = indata[i]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      out[i + 1] = indata[i + 2]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      out[i + 2] = indata[i + 1]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       if (indata[i] === 0 && indata[i + 1] === 0 && indata[i + 2] === 0) {
         out[i + 3] = 0;
       } else {
@@ -67,7 +63,7 @@ function renderSplat4(pngjs: Png) {
 function renderRad(pngjs: Png) {
   return render(pngjs, (indata, out) => {
     for (let i = 0; i < indata.length; i += 4) {
-      out[i] = indata[i];
+      out[i] = indata[i]!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       out[i + 1] = 0;
       out[i + 2] = 0;
       if (indata[i] !== 0) {

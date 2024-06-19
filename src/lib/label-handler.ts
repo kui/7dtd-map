@@ -1,4 +1,5 @@
 import { LANGUAGES, Language, resolveLanguage } from "./labels";
+import { printError } from "./utils";
 
 interface Doms {
   language: HTMLSelectElement;
@@ -6,13 +7,15 @@ interface Doms {
 
 export class LabelHandler {
   private doms: Doms;
-  private listener: ((lang: Language) => void)[] = [];
+  private listener: ((lang: Language) => void | Promise<void>)[] = [];
 
   constructor(doms: Doms, navigatorLanguages: readonly string[]) {
     this.doms = doms;
     this.buildSelectOptions(navigatorLanguages);
     this.doms.language.addEventListener("change", () => {
-      this.listener.map((fn) => fn(this.doms.language.value as Language));
+      this.listener.forEach((fn) => {
+        fn(this.doms.language.value as Language)?.catch(printError);
+      });
     });
   }
 
@@ -34,7 +37,7 @@ export class LabelHandler {
     }
   }
 
-  addListener(fn: (lang: Language) => void) {
+  addListener(fn: (lang: Language) => void | Promise<void>) {
     this.listener.push(fn);
   }
 }

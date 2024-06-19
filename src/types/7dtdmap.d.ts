@@ -18,9 +18,9 @@ interface HighlightedBlock {
   prefabs?: { name: string; count: number }[];
 }
 
-type PrefabDifficulties = {
+interface PrefabDifficulties {
   [prefabName: string]: number;
-};
+}
 
 interface GameMapSize {
   type: "game";

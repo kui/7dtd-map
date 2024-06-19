@@ -1,12 +1,8 @@
 {
+  "extends": ["@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
-    "target": "es2021",
-    "module": "commonjs",
-    "lib": ["esnext", "dom", "webworker"],
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "sourceMap": true,
-    "noEmit": true
+    "target": "esnext",
+    "module": "preserve",
+    "lib": ["esnext", "dom", "webworker"]
   }
 }

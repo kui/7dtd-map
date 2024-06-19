@@ -4,8 +4,8 @@ jest.useFakeTimers();
 
 test("ImageBitmapHolder.get() should do fallback", async () => {
   const mockImageBitmap = { close: jest.fn() } as unknown as ImageBitmap;
-  const mockCreateImageBitmap = jest.fn(async () => {
-    return mockImageBitmap;
+  const mockCreateImageBitmap = jest.fn(() => {
+    return Promise.resolve(mockImageBitmap);
   });
   global.createImageBitmap = mockCreateImageBitmap as (i: ImageBitmapSource) => Promise<ImageBitmap>;
 

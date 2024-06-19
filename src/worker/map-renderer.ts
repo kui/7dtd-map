@@ -1,5 +1,6 @@
 import { FontFaceSet } from "css-font-loading-module";
 import MapRenderer from "../lib/map-renderer";
+import { printError } from "../lib/utils";
 
 declare const fonts: FontFaceSet;
 
@@ -35,10 +36,12 @@ const FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)");
 
 let map: MapRenderer | null = null;
 
-FONT_FACE.load().then(() => {
-  fonts.add(FONT_FACE);
-  map?.update();
-});
+FONT_FACE.load()
+  .then(() => {
+    fonts.add(FONT_FACE);
+    return map?.update();
+  })
+  .catch(printError);
 
 onmessage = async (event: MessageEvent<InMessage>) => {
   const message = event.data;

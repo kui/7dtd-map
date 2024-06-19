@@ -18,7 +18,7 @@ export class PrefabsHandler {
   worker: PrefabsFilterWorker;
   storage: MapStorage;
   difficultyPromise: Promise<PrefabDifficulties>;
-  listeners: ((prefabs: HighlightedPrefab[]) => Promise<void>)[] = [];
+  listeners: ((prefabs: HighlightedPrefab[]) => unknown)[] = [];
 
   constructor(doms: Doms, worker: PrefabsFilterWorker, storage: MapStorage, difficulty: Promise<PrefabDifficulties>) {
     this.doms = doms;
@@ -32,17 +32,17 @@ export class PrefabsHandler {
     });
     worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
       const { prefabs, status } = event.data;
-      this.listeners.map((fn) => fn(prefabs));
+      this.listeners.forEach((fn) => fn(prefabs));
       doms.status.textContent = status;
     });
     ["input", "focus"].forEach((eventName) => {
-      doms.prefabFilter.addEventListener(eventName, async () => {
+      doms.prefabFilter.addEventListener(eventName, () => {
         worker.postMessage({ prefabsFilterString: doms.prefabFilter.value });
-        document.body.dataset.activeFilter = "prefab";
+        document.body.dataset["activeFilter"] = "prefab";
       });
-      doms.blockFilter.addEventListener(eventName, async () => {
+      doms.blockFilter.addEventListener(eventName, () => {
         worker.postMessage({ blocksFilterString: doms.blockFilter.value });
-        document.body.dataset.activeFilter = "block";
+        document.body.dataset["activeFilter"] = "block";
       });
     });
   }
@@ -67,12 +67,14 @@ function parse(xml: string, difficulties: PrefabDifficulties): Prefab[] {
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const position = e.getAttribute("position")?.split(",");
     if (!position || position.length !== 3) return [];
+    const [x, , z] = position;
+    if (!x || !z) return [];
     const name = e.getAttribute("name");
     if (!name) return [];
     return {
       name,
-      x: parseInt(position[0]),
-      z: parseInt(position[2]),
+      x: parseInt(x),
+      z: parseInt(z),
       difficulty: difficulties[name] ?? 0,
     };
   });

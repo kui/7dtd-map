@@ -7,7 +7,7 @@ interface StateElement {
 export class UrlState {
   private url: URL;
   private inputs: Map<HTMLInputElement, StateElement>;
-  private udpateListeners: Array<(url: URL) => void> = [];
+  private udpateListeners: ((url: URL) => void)[] = [];
 
   private constructor(browserUrl: URL, elements: ArrayLike<StateElement>) {
     this.url = browserUrl;
@@ -24,7 +24,9 @@ export class UrlState {
 
       input.addEventListener("input", () => {
         this.updateUrl(input, defaultValue);
-        this.udpateListeners.forEach((fn) => fn(this.url));
+        this.udpateListeners.forEach((fn) => {
+          fn(this.url);
+        });
       });
     }
   }
@@ -32,7 +34,7 @@ export class UrlState {
   static create(location: Location, elements: ArrayLike<HTMLInputElement>): UrlState {
     return new UrlState(
       new URL(location.href),
-      Array.from(elements).map((e) => ({ defaultValue: getValue(e), element: e }))
+      Array.from(elements).map((e) => ({ defaultValue: getValue(e), element: e })),
     );
   }
 

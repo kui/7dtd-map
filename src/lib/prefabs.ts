@@ -1,5 +1,6 @@
 import { throttledInvoker } from "./throttled-invoker";
 import { LabelHolder, Language } from "./labels";
+import { printError } from "./utils";
 
 export interface PrefabUpdate {
   status: string;
@@ -20,7 +21,7 @@ export default class Prefabs {
   #labelHolder: LabelHolder;
   filter: PrefabMatcher;
 
-  private throttledUpdater = throttledInvoker(async () => await this.updateImmediately());
+  private throttledUpdater = throttledInvoker(() => this.updateImmediately());
   private updateListeners: ((u: PrefabUpdate) => void)[] = [];
 
   constructor(baseUrl: string, navigatorLanguages: readonly string[]) {
@@ -57,14 +58,16 @@ export default class Prefabs {
   }
 
   update(): void {
-    this.throttledUpdater();
+    this.throttledUpdater().catch(printError);
   }
   async updateImmediately(): Promise<void> {
     await this.applyFilter();
     this.updateDist();
     this.sort();
     const update: PrefabUpdate = { status: this.status, prefabs: this.filtered };
-    this.updateListeners.forEach((f) => f(update));
+    this.updateListeners.forEach((f) => {
+      f(update);
+    });
   }
 
   addUpdateListener(func: (update: PrefabUpdate) => void): void {
@@ -123,6 +126,7 @@ function matchAndHighlight(str: string, regex: RegExp) {
     isMatched = m.length > 0;
     return `<mark>${m}</mark>`;
   });
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return isMatched ? highlighted : null;
 }
 
@@ -172,17 +176,17 @@ class PrefabNameMatcher implements PrefabMatcher {
       const highlightedName = matchAndHighlight(prefab.name, this.regexp);
       const label = labels.get(prefab.name) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, this.regexp);
-      if (highlightedName || highlightedLabel) {
+      if (highlightedName ?? highlightedLabel) {
         return {
           ...prefab,
-          highlightedName: highlightedName || prefab.name,
-          highlightedLabel: highlightedLabel || label,
+          highlightedName: highlightedName ?? prefab.name,
+          highlightedLabel: highlightedLabel ?? label,
         };
       }
       return [];
     });
     return {
-      status: `${results.length} matched prefabs`,
+      status: `${results.length.toString()} matched prefabs`,
       matched: results,
     };
   }
@@ -207,7 +211,7 @@ class BlockNameMatcher implements PrefabMatcher {
 
     const matchedPrefabBlocks = this.matchPrefabTypes(matchedBlocks);
     if (Object.keys(matchedPrefabBlocks).length === 0) {
-      return { status: `No prefabs, but ${matchedBlocks.length} matched blocks`, matched: [] };
+      return { status: `No prefabs, but ${matchedBlocks.length.toString()} matched blocks`, matched: [] };
     }
 
     const labels = await this.labels.prefabs;
@@ -224,7 +228,7 @@ class BlockNameMatcher implements PrefabMatcher {
       };
     });
     return {
-      status: `${results.length} prefabs, ${matchedBlocks.length} matched blocks`,
+      status: `${results.length.toString()} prefabs, ${matchedBlocks.length.toString()} matched blocks`,
       matched: results,
     };
   }
@@ -235,11 +239,11 @@ class BlockNameMatcher implements PrefabMatcher {
       const highlightedName = matchAndHighlight(blockName, this.regexp);
       const label = labels.get(blockName) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, this.regexp);
-      if (highlightedName || highlightedLabel) {
+      if (highlightedName ?? highlightedLabel) {
         return arr.concat({
           name: blockName,
-          highlightedName: highlightedName || blockName,
-          highlightedLabel: highlightedLabel || label,
+          highlightedName: highlightedName ?? blockName,
+          highlightedLabel: highlightedLabel ?? label,
           prefabs,
         });
       }
@@ -257,7 +261,7 @@ class BlockNameMatcher implements PrefabMatcher {
           highlightedLabel,
           count: p.count,
         };
-        idx[p.name] = (idx[p.name] || []).concat(b);
+        idx[p.name] = (idx[p.name] ?? []).concat(b);
       });
       return idx;
     }, {});

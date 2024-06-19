@@ -1,17 +1,17 @@
-import * as path from "path";
-import { parseNim } from "./lib/nim-parser";
-import { handleMain } from "./lib/utils";
+import { parseNim } from "./lib/nim-parser.js";
+import { handleMain, program } from "./lib/utils.js";
 
-const usage = `${path.basename(process.argv[1])} <nim file>`;
+const usage = `${program()} <nim file>`;
 
 async function main() {
-  if (process.argv.length <= 2) {
+  const nimFile = process.argv[2];
+  if (nimFile === undefined) {
     console.error(usage);
     return 1;
   }
-  Array.from(await parseNim(process.argv[2])).forEach(([id, name]) => {
+  for (const [id, name] of await parseNim(nimFile)) {
     console.log("%d: %s", id, name);
-  });
+  }
   return 0;
 }
 

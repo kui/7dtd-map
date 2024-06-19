@@ -3,24 +3,20 @@ export async function loadPrefabsXmlByUrl(url: string): Promise<Prefab[]> {
   const response = await fetch(url);
   return parse(await response.text());
 }
-export async function loadPrefabsXmlByFile(file: File): Promise<Prefab[]> {
-  if (!file) return [];
-  return parse(await file.text());
-}
 
-function parse(xml: string) {
+function parse(xml: string): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
-  return Array.from(dom.getElementsByTagName("decoration"))
-    .map((e) => {
-      const position = e.getAttribute("position")?.split(",");
-      if (!position) return null;
-      const name = e.getAttribute("name");
-      if (!name) return null;
-      return {
-        name,
-        x: parseInt(position[0]),
-        z: parseInt(position[2]),
-      };
-    })
-    .filter((p): p is Prefab => p !== null);
+  return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
+    const position = e.getAttribute("position")?.split(",");
+    if (!position) return [];
+    const name = e.getAttribute("name");
+    if (!name) return [];
+    const [x, , z] = position;
+    if (x === undefined || z === undefined) return [];
+    return {
+      name,
+      x: parseInt(x),
+      z: parseInt(z),
+    };
+  });
 }

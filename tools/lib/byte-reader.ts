@@ -1,12 +1,11 @@
-import * as fs from "fs";
-
 export class ByteReader {
   iter: AsyncIterator<number>;
 
-  constructor(stream: fs.ReadStream) {
+  constructor(stream: AsyncIterable<Buffer>) {
+    // TODO Use filehandle.read(buffer) instead of async iterator for better performance.
     this.iter = (async function* () {
       for await (const c of stream) {
-        for (const b of c as Buffer) {
+        for (const b of c) {
           yield b;
         }
       }
@@ -17,7 +16,7 @@ export class ByteReader {
     const b = Buffer.alloc(bytesNum);
     for (let i = 0; i < bytesNum; i++) {
       const r = await this.iter.next();
-      if (r.done) throw Error(`Unexpeted byte length: ${bytesNum}`);
+      if (r.done) throw Error(`Unexpeted byte length: ${bytesNum.toString()}`);
       b[i] = r.value;
     }
     return b;

@@ -14,8 +14,16 @@ export class CursorCoodsHandler {
     this.elevationFunction = elevationFunction;
     this.doms = doms;
 
-    doms.canvas.addEventListener("mousemove", (e) => updateCursor(this, e), { passive: true });
-    doms.canvas.addEventListener("mouseout", () => updateCursor(this));
+    doms.canvas.addEventListener(
+      "mousemove",
+      (e) => {
+        updateCursor(this, e);
+      },
+      { passive: true },
+    );
+    doms.canvas.addEventListener("mouseout", () => {
+      updateCursor(this);
+    });
   }
 }
 

@@ -15,14 +15,18 @@ export class Dtm {
     // In-game coords with left-top offset
     const x = Math.floor(size.width / 2) + coords.x;
     const z = Math.floor(size.height / 2) - coords.z;
-    return this.data[x + z * size.width];
+    const elev = this.data[x + z * size.width];
+    if (elev === undefined) {
+      throw Error(`Invalid coords: coords=${JSON.stringify(coords)}, size=${JSON.stringify(size)}`);
+    }
+    return elev;
   }
 }
 
 export class DtmHandler {
   private storage: MapStorage;
   private pngParser: PngParser;
-  private listeners: ((dtm: Dtm | null) => void)[] = [];
+  private listeners: ((dtm: Dtm | null) => unknown)[] = [];
 
   dtm: Dtm | null = null;
 
@@ -36,7 +40,9 @@ export class DtmHandler {
       } else {
         this.dtm = null;
       }
-      this.listeners.forEach((ln) => ln(this.dtm));
+      this.listeners.forEach((ln) => {
+        ln(this.dtm);
+      });
     });
   }
 
@@ -50,8 +56,8 @@ export class DtmHandler {
     } else {
       throw Error(`Unknown data type: name=${blobOrUrl.name}, type=${blobOrUrl.type}`);
     }
-    this.storage.put("elevations", this.dtm.data);
-    this.listeners.forEach((ln) => ln(this.dtm));
+    await this.storage.put("elevations", this.dtm.data);
+    await Promise.all(this.listeners.map((ln) => ln(this.dtm)));
   }
 
   private async loadDtmByPngUrl(url: string): Promise<Dtm> {
@@ -72,7 +78,8 @@ function convertPng(png: Png) {
   const pngData = new Uint8Array(png.data);
   const data = new Uint8Array(pngData.length / 4);
   for (let i = 0; i < data.length; i++) {
-    data[i] = pngData[i * 4];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    data[i] = pngData[i * 4]!;
   }
   return new Dtm(data);
 }
@@ -83,7 +90,8 @@ async function loadDtmByRaw(blob: Blob): Promise<Dtm> {
   for (let i = 0; i < data.length; i++) {
     // Higher 8 bits are a sub height in a block
     // Lower 8 bits are a height
-    data[i] = src[i * 2 + 1];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    data[i] = src[i * 2 + 1]!;
   }
   return new Dtm(data);
 }

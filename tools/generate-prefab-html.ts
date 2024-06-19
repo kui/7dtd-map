@@ -1,9 +1,9 @@
 import * as path from "path";
 import { promises as fs } from "fs";
-import glob from "glob-promise";
-import { prefabHtml } from "./lib/prefab-html";
-import { Label, LabelId, parseLabel } from "./lib/label-parser";
-import { handleMain, projectRoot, vanillaDir } from "./lib/utils";
+import { glob } from "glob";
+import { prefabHtml } from "./lib/prefab-html.js";
+import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
+import { handleMain, projectRoot, vanillaDir } from "./lib/utils.js";
 
 const BASE_DEST = projectRoot("docs", "prefabs");
 
@@ -51,7 +51,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
       if (++successCount % 50 === 0) {
         console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
       }
-    })
+    }),
   );
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 }
@@ -83,7 +83,7 @@ async function copyJpg(xmlFileName: string) {
 }
 
 function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
-  return typeof (e as NodeJS.ErrnoException)?.code === "string";
+  return typeof (e as NodeJS.ErrnoException).code === "string";
 }
 
 handleMain(main());

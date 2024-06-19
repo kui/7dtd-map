@@ -1,17 +1,17 @@
 import * as path from "path";
-import { prefabHtml } from "./lib/prefab-html";
-import { parseLabel } from "./lib/label-parser";
-import { handleMain, vanillaDir } from "./lib/utils";
+import { prefabHtml } from "./lib/prefab-html.js";
+import { parseLabel } from "./lib/label-parser.js";
+import { handleMain, program, vanillaDir } from "./lib/utils.js";
 
-const usage = `${path.basename(process.argv[1])} <Prefab XML>`;
+const usage = `${program()} <Prefab XML>`;
 
 async function main() {
-  if (process.argv.length <= 2) {
+  const xml = process.argv[2];
+  if (xml === undefined) {
     console.error(usage);
     return 1;
   }
   const labels = await loadLabels();
-  const xml = process.argv[2];
   const pathBasename = path.join(path.dirname(xml), path.basename(xml, ".xml"));
   const nim = `${pathBasename}.blocks.nim`;
   const tts = `${pathBasename}.tts`;

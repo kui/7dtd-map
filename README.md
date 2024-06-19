@@ -17,17 +17,17 @@ Map renderer for 7 Day to Die.
 2. Execute in your teminal:
 
 ```
-$ npm run build
+npm run build
 ```
 
 ## Code lint
 
 ```
-$ npm run lint
+npm run lint
 ```
 
-## Run in local
+## Serve pages for development
 
 ```
-$ npm run dev-server
+npm run serve
 ```

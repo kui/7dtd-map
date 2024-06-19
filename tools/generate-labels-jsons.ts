@@ -1,5 +1,5 @@
-import * as utils from "./lib/utils";
-import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser";
+import * as utils from "./lib/utils.js";
+import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser.js";
 import * as path from "path";
 import { promises as fs } from "fs";
 
@@ -27,7 +27,7 @@ async function extract(labels: Map<string, Label>, files: string[], lang: Langua
         if (!label[lang]) continue;
         yield [id, label[lang]];
       }
-    })()
+    })(),
   );
   console.log("Load %d labels for %s", Object.keys(extracted).length, path.basename(outputFile));
   await writeJsonFile(outputFile, extracted);

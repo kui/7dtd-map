@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import * as path from "path";
-import glob from "glob-promise";
-import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser";
-import { Label, LabelId, parseLabel } from "./lib/label-parser";
-import { parseTts } from "./lib/tts-parser";
-import * as utils from "./lib/utils";
+import { glob } from "glob";
+import { BlockId, BlockIdNames, parseNim } from "./lib/nim-parser.js";
+import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
+import { parseTts } from "./lib/tts-parser.js";
+import * as utils from "./lib/utils.js";
 
 const DOCS_DIR = utils.projectRoot("docs");
 const EXCLUD_BLOCKS = new Set(["air", "terrainFiller"]);
@@ -104,15 +104,12 @@ async function readIndex(nimFiles: string[]) {
 }
 
 function invertIndex(prefabs: PrefabBlockIndex) {
-  return Object.entries(prefabs)
-    .flatMap<BlockPrefabIndex>(([prefabName, blocks]) => {
-      return blocks.map((b) => ({ [b.name]: [{ name: prefabName, count: b.count }] }));
-    })
-    .reduce<BlockPrefabIndex>((a, c) => {
-      const [blockName, prefabs] = Object.entries(c)[0];
-      a[blockName] = (a[blockName] ?? []).concat(prefabs);
-      return a;
-    }, {});
+  return Object.entries(prefabs).reduce<BlockPrefabIndex>((a, [prefabName, blocks]) => {
+    for (const { name: blockName, count } of blocks) {
+      a[blockName] = (a[blockName] ?? []).concat({ name: prefabName, count: count });
+    }
+    return a;
+  }, {});
 }
 
 utils.handleMain(main());

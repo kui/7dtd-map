@@ -1,5 +1,5 @@
 import { throttledInvoker } from "../lib/throttled-invoker";
-import { sleep } from "../lib/utils";
+import { printError, sleep } from "../lib/utils";
 
 test("throttledInvker should call original function only two in a short time", async () => {
   const mockFn = jest.fn();
@@ -8,9 +8,9 @@ test("throttledInvker should call original function only two in a short time", a
     await sleep(100);
   });
 
-  fn();
+  fn().catch(printError);
   await sleep(1);
-  fn();
+  fn().catch(printError);
   await sleep(1);
   await fn();
   expect(mockFn.mock.calls.length).toBe(2);
