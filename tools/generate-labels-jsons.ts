@@ -21,11 +21,13 @@ async function main() {
 
 async function extract(labels: Map<string, Label>, file: string, lang: Language, outputFile: string) {
   const extracted = Object.fromEntries(
-    Array.from(labels).flatMap<[string, string]>(([id, label]) => {
-      if (file !== label.file) return [];
-      if (!label[lang]) return [];
-      return [[id, label[lang]]];
-    }).toSorted((a, b) => a[0].localeCompare(b[0]))
+    Array.from(labels)
+      .flatMap<[string, string]>(([id, label]) => {
+        if (file !== label.file) return [];
+        if (!label[lang]) return [];
+        return [[id, label[lang]]];
+      })
+      .toSorted((a, b) => a[0].localeCompare(b[0])),
   );
   console.log("Load %d labels for %s", Object.keys(extracted).length, path.basename(outputFile));
   await writeJsonFile(outputFile, extracted);

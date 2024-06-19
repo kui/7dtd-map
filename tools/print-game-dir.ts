@@ -1,3 +1,3 @@
 import { vanillaDir } from "./lib/utils.js";
 
-console.log((await vanillaDir()));
+console.log(await vanillaDir());
