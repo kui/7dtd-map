@@ -57,12 +57,12 @@
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,2,0,0,0,2,2</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2,S_-_Group_Ghost_Town,1,1,zombieFemaleFat,1,1,S_Zom_Janitor_Only,1,1,S_-Group_Generic_Zombie,2,2</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,2,2,GroupGhostTown,1,1,zombieFemaleFat,1,1,ZomJanitorOnly,1,1,GroupGenericZombie,2,2</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>1,1,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>21, 3, 4#21, 3, 3#8, 4, 10#4, 3, 6#3, 3, 3#14, 3, 11#13, 3, 8</td></tr>
 <tr><th>SleeperVolumeStart</th><td>10, 1, 16#10, 6, 16#10, 1, 21#23, 1, 26#19, 1, 28#13, 9, 18#14, 6, 21</td></tr>
 <tr><th>SleeperVolumeTriggeredBy</th><td> # # # # # # </td></tr>
-<tr><th>Tags</th><td>commercial,countrytown,nodiagonal</td></tr>
+<tr><th>Tags</th><td>commercial, countrytown, nodiagonal</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
 <tr><th>YOffset</th><td>-1</td></tr>
 <tr><th>Zoning</th><td>Commercial, downtown</td></tr></table>
@@ -79,7 +79,7 @@
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">24643</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">24620</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">9</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFanDouble</td><td class="block_label">Vent Fan, Double</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">barStoolGrey</td><td class="block_label">Bar Stool Grey</td><td class="block_count">1</td></tr>
@@ -90,6 +90,7 @@
 <tr class="block"><td class="block_name">breakerBoxWallClosed</td><td class="block_label">Breaker Box Wall Closed</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">24</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeBaseboard</td><td class="block_label">-</td><td class="block_count">63</td></tr>
+<tr class="block"><td class="block_name">brickShapes:cubeBaseboard2Sided</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeBaseboard4Sided</td><td class="block_label">-</td><td class="block_count">18</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeHalfCentered</td><td class="block_label">-</td><td class="block_count">148</td></tr>
 <tr class="block"><td class="block_name">carsRandomHelper</td><td class="block_label">= Cars = Random Helper</td><td class="block_count">1</td></tr>
@@ -105,7 +106,6 @@
 <tr class="block"><td class="block_name">cntDeskMetalFullBrown</td><td class="block_label">Metal Desk</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntDomedTrashCanCornerRandomLootHelper</td><td class="block_label">= Domed Trash Can Corner = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntDumpsterFlies</td><td class="block_label">Dumpster</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntFancyGarbageCan</td><td class="block_label">Fancy Garbage Can</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntFileCabinetTallBlackRandomLootHelper</td><td class="block_label">= File Cabinet Tall = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntFoodPileSmallRandomHelper</td><td class="block_label">= Small Food Pile = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntFridgeStainlessSteelRandomLootHelper</td><td class="block_label">= S Steel Fridge = Random Helper</td><td class="block_count">1</td></tr>
@@ -124,6 +124,7 @@
 <tr class="block"><td class="block_name">cntStoveRandomLootHelper</td><td class="block_label">= Stove = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntToilet03</td><td class="block_label">Commercial Toilet</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntToolBoxOffsetRandomLootHelperRed</td><td class="block_label">= Red Toolbox Offset = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntTrashBinCommercialGrey</td><td class="block_label">Trash</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntUtilityCartRandomLootHelper</td><td class="block_label">= Utility Cart = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialBulletproofGlassDoor</td><td class="block_label">Commercial Bulletproof Glass Door</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">commercialDoorV2Brown</td><td class="block_label">Brown Commercial Door V2</td><td class="block_count">2</td></tr>
@@ -133,7 +134,7 @@
 <tr class="block"><td class="block_name">concreteShapes:catwalkPlate</td><td class="block_label">-</td><td class="block_count">83</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:concreteDestroyed06</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:concreteDestroyed08</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">1475</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">1472</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeBaseboard</td><td class="block_label">-</td><td class="block_count">132</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeBaseboard4Sided</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeBaseboardChairRail</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -145,11 +146,11 @@
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimCircle</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimCircleDoubleSided</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimCornerRound</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">concreteShapes:cubeTrimDestroyed01</td><td class="block_label">-</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cubeTrimDestroyed01</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimDestroyed03</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimHalfSplit</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeTrimQuarterEdgeTwoSided</td><td class="block_label">-</td><td class="block_count">91</td></tr>
-<tr class="block"><td class="block_name">concreteShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">198</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">206</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:pillar100</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:pillar100Cap</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:plate</td><td class="block_label">-</td><td class="block_count">121</td></tr>
@@ -223,7 +224,8 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedBroken</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreOneSidedFull</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreThreeSidedFull</td><td class="block_label">-</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">decoCookingPot</td><td class="block_label">Cooking Pot (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">couchUglySmallBlack</td><td class="block_label">Black Ugly Couch, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">decoCookingPotRandomLootHelper</td><td class="block_label">= Cooking Pot = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">decoCowSkull</td><td class="block_label">Cow Skull</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">decoLaptop</td><td class="block_label">Laptop Open</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">decoMetalBollard</td><td class="block_label">Metal Bollard</td><td class="block_count">2</td></tr>
@@ -236,11 +238,14 @@
 <tr class="block"><td class="block_name">ductStraightCentered</td><td class="block_label">Duct Straight</td><td class="block_count">20</td></tr>
 <tr class="block"><td class="block_name">electricalBox01</td><td class="block_label">Electrical Box 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">electricalBox02</td><td class="block_label">Electrical Box 02</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">endTableLamp</td><td class="block_label">End Table Lamp</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">fakeCabinetDoorTrap1x2Sheet</td><td class="block_label">Fake Cabinet Door 1x2</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">farmPlotBlock</td><td class="block_label">Farm Plot (POI)</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">fluorescentLightBayBroken</td><td class="block_label">Light Bay Broken Cover</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">fluorescentLightBayIntact</td><td class="block_label">Light Bay</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor 02</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">glassBroken_01</td><td class="block_label">Broken Glass 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">glassBrokenCapLeft</td><td class="block_label">Broken Glass Cap Left</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">goreBlockHumanCorpse1</td><td class="block_label">Decaying Human Corpse 1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">industrialLight01</td><td class="block_label">Industrial Light 01 (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">ironHatchBlack</td><td class="block_label">Black Iron Hatch</td><td class="block_count">1</td></tr>
@@ -248,15 +253,20 @@
 <tr class="block"><td class="block_name">lightCeilingBulbMountWhite</td><td class="block_label">White Light Bulb Flush Mount</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">motionsensorLeftPOI</td><td class="block_label">Security Camera Left (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">officeChair01Black</td><td class="block_label">Office Chair Black</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">oldChair1</td><td class="block_label">Old Chair Grey</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">oldChair1</td><td class="block_label">Old Chair Grey</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">oldChair1Brown</td><td class="block_label">Old Chair Brown</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">paintingPictureRandomHelper</td><td class="block_label">= Painting = Random Helper</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">paintingPictureRandomHelper</td><td class="block_label">= Painting = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">palletBrownBoxesLoose</td><td class="block_label">Pallet, Brown Boxes, Loose</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">palletBrownBoxesTop</td><td class="block_label">Pallet, Brown Boxes, Top</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">parkBenchA</td><td class="block_label">Park Bench A</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">parkingBlockCrooked1Yellow</td><td class="block_label">Parking Block Crooked1 Yellow</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">parkingBlockCrooked2Yellow</td><td class="block_label">Parking Block Crooked2 Yellow</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">parkingBlockYellow</td><td class="block_label">Parking Block Yellow</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">pictureCanvas_01b</td><td class="block_label">Canvas B</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">pictureCanvas_01c</td><td class="block_label">Canvas C</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">pictureCanvas_01d</td><td class="block_label">Canvas D</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">pictureFrame_01e</td><td class="block_label">Picture E</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">pictureFrame_01l</td><td class="block_label">Picture L</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">pipeFireHazardWallBlack2m</td><td class="block_label">Pipe Fire Hazard Wall Black 2m</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">pipeSmallWall1x1</td><td class="block_label">Pipe Small Wall 1x1 Black</td><td class="block_count">17</td></tr>
 <tr class="block"><td class="block_name">pipeSmallWall1x3</td><td class="block_label">Pipe Small Wall 1x3 Black</td><td class="block_count">3</td></tr>
@@ -272,11 +282,13 @@
 <tr class="block"><td class="block_name">signBathroomSignWomenWallMount</td><td class="block_label">Bathroom Sign Women Wall</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signDinersMenu2mCentered</td><td class="block_label">Diner Menu Board Centered</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signExitFrameMount</td><td class="block_label">Exit Sign Frame Mount</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">signGas21</td><td class="block_label">Sign: No Smoking</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signNotice01</td><td class="block_label">Sign: Notice 01</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">signPosterMovie2159</td><td class="block_label">Sign: Movie Poster 2159</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signOpenWallMountChain</td><td class="block_label">Sign: Open, Wall Mount Chain</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signOpenWallMountFrame</td><td class="block_label">Sign: Open, Wall Mount Frame</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterMovieLoneWolf</td><td class="block_label">Sign: Movie Poster Lone Wolf</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">signPosterMovieSexualTension</td><td class="block_label">Sign: Movie Poster Sexual Tension</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">signShopOpen</td><td class="block_label">Shop Sign: Open</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signSnackPosterNachosRanch</td><td class="block_label">Sign: Nachios Ranch Poster</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signStaffOnly</td><td class="block_label">Sign: Staff Only</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">9</td></tr>
@@ -287,8 +299,11 @@
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">214</td></tr>
 <tr class="block"><td class="block_name">treeDeadTree01</td><td class="block_label">Tree Dead Tree 01</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">treeGreenBrownGrassDiagonal</td><td class="block_label">Tree Green Brown Grass Diagonal</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">treePlant02</td><td class="block_label">Potted Plant</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">treePlant02</td><td class="block_label">Potted Plant</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">urinalCommercialMounted</td><td class="block_label">Urinal</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">utilitySink</td><td class="block_label">Utility Sink</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottom2White</td><td class="block_label">White Vertical Blinds Bottom Right</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTop2White</td><td class="block_label">White Vertical Blinds Top Right</td><td class="block_count">22</td></tr>
 <tr class="block"><td class="block_name">wallClock</td><td class="block_label">Wall Clock</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">wallMountSinkCommercial</td><td class="block_label">Commercial Sink</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">waterHeaterWhite</td><td class="block_label">White Water Heater</td><td class="block_count">1</td></tr>
@@ -299,9 +314,8 @@
 <tr class="block"><td class="block_name">woodShapes:crownStraight</td><td class="block_label">-</td><td class="block_count">40</td></tr>
 <tr class="block"><td class="block_name">woodShapes:cube</td><td class="block_label">-</td><td class="block_count">128</td></tr>
 <tr class="block"><td class="block_name">woodShapes:cubeBaseboardChairRail</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">woodShapes:cubeQuarterCenteredSquareTop</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">woodShapes:cubeQuarterCenteredSquareTop</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodShapes:doorTrimTop</td><td class="block_label">-</td><td class="block_count">36</td></tr>
-<tr class="block"><td class="block_name">woodShapes:dynamicGrate</td><td class="block_label">-</td><td class="block_count">28</td></tr>
 <tr class="block"><td class="block_name">woodShapes:pillar50CenteredSquareTop</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plate</td><td class="block_label">-</td><td class="block_count">102</td></tr>
 <tr class="block"><td class="block_name">woodShapes:plateDestroyed03</td><td class="block_label">-</td><td class="block_count">3</td></tr>

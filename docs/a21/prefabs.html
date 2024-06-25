@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Prefab List Alpha 21</title>
+    <script src="prefabs.js" async></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <link rel="stylesheet" type="text/css" href="prefabs.css" />
+  </head>
+  <body>
+    <h1>Prefab List Alpha 21</h1>
+    <p>Only supported in latest Google Chrome.</p>
+    <nav>
+      <ul>
+        <li><a href=".">Map Renderer</a></li>
+        <li><a href="../prefabs.html">Latest Version</a></li>
+        <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+        <li>
+          Block/Prefab Language:
+          <select id="label_lang">
+            <option selected>english</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="filters">
+      <h2>Blocks Filter</h2>
+      <input id="blocks_filter" placeholder="Input block name" />
+      <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
+      <div>
+        <h3>Blocks Preset</h3>
+        <button data-input-for="blocks_filter">Forge</button>
+        <button data-input-for="blocks_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
+        <button data-input-for="blocks_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+        <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
+      </div>
+    </div>
+
+    <h2>Prefabs</h2>
+
+    <p>
+      <label><input type="checkbox" id="dev_prefabs" />Dev prefabs</label>
+    </p>
+
+    <ul id="prefabs_list"></ul>
+  </body>
+</html>

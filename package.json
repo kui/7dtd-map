@@ -9,6 +9,7 @@
     "build:ts": "./tools/build.bash",
     "build:json:prefab-props": "tsx ./tools/generate-prefab-properties-jsons.ts",
     "build:json:labels": "tsx ./tools/generate-labels-jsons.ts",
+    "build:json:block-counts": "tsx ./tools/generate-prefab-block-counts.ts",
     "build:prefab-html": "tsx ./tools/generate-prefab-html.ts",
     "fix": "run-s fix:**",
     "fix:prettier": "prettier --write .",

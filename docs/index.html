@@ -2,22 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="description" content="Map renderer for 7 Day to Die Alpha 21" />
-    <title>7 Days to Die Map Renderer Alpha 21</title>
+    <meta name="description" content="Map renderer for 7 Day to Die 1.0" />
+    <title>7 Days to Die Map Renderer 1.0</title>
     <script src="index.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body data-active-filter="prefab">
-    <h1>7 Days to Die Map Renderer Alpha 21</h1>
+    <h1>7 Days to Die Map Renderer 1.0</h1>
 
     <p>Only supported in latest Google Chrome.</p>
-    <p>Note: 🗑 Delete all A20 worlds using "Select Map" in the right column.</p>
+    <p>Note: 🗑 Delete all older worlds using "Select Map" in the right column.</p>
 
     <nav>
       <ul>
         <li><a href="prefabs.html">Prefab List</a></li>
+        <li><a href="a21">Alpha 21</a></li>
         <li><a href="a20">Alpha 20</a></li>
         <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
         <li>
@@ -138,14 +139,14 @@
             <!-- npx tsx --files tools/generate-tier-regex.ts 4 -->
             <button
               data-input-for="prefabs_filter"
-              data-input-text="^(apartments_01|army_camp_01|army_camp_02|army_camp_03|army_camp_05|bowling_alley_01|church_01|city_center_01|countrytown_business_05|courthouse_med_01|downtown_building_02|downtown_building_03|downtown_strip_01|downtown_strip_02|downtown_strip_03|downtown_strip_04|downtown_strip_05|downtown_strip_07|downtown_strip_11|downtown_strip_12|farm_16|gas_station_05|hotel_01|house_burnt_06|house_modern_18|house_modern_24|house_old_mansard_02|house_old_mansard_06|house_old_mansard_07|house_old_victorian_03|housing_development_01|junkyard_01|parking_garage_02|restaurant_01|roadside_checkpoint_01|roadside_checkpoint_03|roadside_checkpoint_04|roadside_checkpoint_05|rural_drive_in_01|school_01|skyscraper_04|store_grocery_02|store_gun_01|store_gun_02|store_hardware_03|utility_electric_co_02|utility_waterworks_01|warehouse_01|warehouse_03)$"
+              data-input-text="^(apartments_01|army_camp_01|army_camp_02|army_camp_03|army_camp_05|army_camp_06|army_camp_07|bowling_alley_01|cave_09|church_01|city_center_01|countrytown_business_05|courthouse_med_01|downtown_building_02|downtown_building_03|downtown_filler_07|downtown_strip_01|downtown_strip_02|downtown_strip_03|downtown_strip_04|downtown_strip_05|downtown_strip_07|downtown_strip_11|downtown_strip_12|farm_16|gas_station_05|hotel_01|hotel_04|house_burnt_06|house_modern_18|house_modern_24|house_old_mansard_02|house_old_mansard_06|house_old_mansard_07|house_old_victorian_03|housing_development_01|junkyard_01|parking_garage_02|restaurant_01|roadside_checkpoint_01|roadside_checkpoint_03|roadside_checkpoint_04|roadside_checkpoint_05|rural_drive_in_01|school_01|school_02|skyscraper_04|store_grocery_02|store_gun_01|store_gun_02|store_hardware_03|utility_electric_co_02|utility_refinery_02|utility_waterworks_01|warehouse_01|warehouse_03)$"
             >
               Tier 4
             </button>
             <!-- npx tsx tools/generate-tier-regex.ts 5 -->
             <button
               data-input-for="prefabs_filter"
-              data-input-text="^(apartments_02|apartments_06|factory_01|factory_02|factory_03|hospital_01|house_modern_23|installation_red_mesa|nursing_home_01|prison_01|prison_02|skyscraper_01|skyscraper_02|skyscraper_03)$"
+              data-input-text="^(apartments_02|apartments_06|base_military_01|factory_01|factory_02|factory_03|football_stadium|hospital_01|hotel_02|hotel_03|hotel_ostrich|house_modern_23|installation_red_mesa|nursing_home_01|prison_01|prison_02|school_03|skyscraper_01|skyscraper_02|skyscraper_03|theater_stage_01)$"
             >
               Tier 5
             </button>
