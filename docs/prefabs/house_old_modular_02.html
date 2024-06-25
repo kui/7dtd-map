@@ -32,8 +32,8 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+    <table><tr><th>AllowedTownships</th><td>city,town,rural,wilderness</td></tr>
+<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>3</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
@@ -136,8 +136,10 @@
 <tr class="block"><td class="block_name">closetDoorDoubleWhite</td><td class="block_label">White Closet Double Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">closetDoorWhite</td><td class="block_label">White Closet Door</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntAmmoPileSmall</td><td class="block_label">Ammo Pile, Small</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntbasketLaundryEmptyWhite</td><td class="block_label">White Laundry Basket Empty</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBathTubsRandomLootHelper</td><td class="block_label">= Bathtubs = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBruteStyleTrashCanRandomLootHelper</td><td class="block_label">= Trash Can = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBusShuttle</td><td class="block_label">Shuttle Bus</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomBrokenDoor</td><td class="block_label">Cabinet Door</td><td class="block_count">1</td></tr>
@@ -167,6 +169,7 @@
 <tr class="block"><td class="block_name">cntRetroFridgeRandomLootHelper</td><td class="block_label">= Retro Fridge = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntRetroFridgeVer2Open</td><td class="block_label">Retro Refrigerator, Open</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntRollingToolBoxRandomLootHelperRed</td><td class="block_label">= Red Rolling Toolbox = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntshelfSupplyOfficeWhiteRandomLootHelper</td><td class="block_label">= White Office Shelf = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntShelvesMetalRandomLootHelper</td><td class="block_label">= Metal Shelves = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntStoveOldVer2Open</td><td class="block_label">Old Stove, Open</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntStoveRandomLootHelper</td><td class="block_label">= Stove = Random Helper</td><td class="block_count">1</td></tr>
@@ -178,9 +181,6 @@
 <tr class="block"><td class="block_name">cntUtilityStoreCratesRandomLootHelper</td><td class="block_label">= Utility Store Crate = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntWasherRandomLootHelper</td><td class="block_label">= Washing Machine = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWorkbenchBustedRandomLootHelper</td><td class="block_label">= Destroyed Workbench = Random Helper</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbasketLaundryEmptyWhite</td><td class="block_label">White Laundry Basket Empty</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntshelfSupplyOfficeWhiteRandomLootHelper</td><td class="block_label">= White Office Shelf = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialDoorV1Blue</td><td class="block_label">Blue Commercial Door V1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">102</td></tr>
 <tr class="block"><td class="block_name">conduitSingleCentered</td><td class="block_label">Conduit Single Centered</td><td class="block_count">2</td></tr>
@@ -293,10 +293,10 @@
 <tr class="block"><td class="block_name">tableLampLight01TippedOverWhite</td><td class="block_label">White Table Lamp Tipped Over 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">tableLampLight01White</td><td class="block_label">White Table Lamp 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">tankPropaneWhite</td><td class="block_label">White Propane Tank</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">994</td></tr>
 <tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">140</td></tr>
 <tr class="block"><td class="block_name">terrDirt</td><td class="block_label">Dirt</td><td class="block_count">69</td></tr>
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">453</td></tr>
-<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">994</td></tr>
 <tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">tvSmallStand1x1</td><td class="block_label">Small TV</td><td class="block_count">1</td></tr>

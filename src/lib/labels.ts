@@ -1,3 +1,5 @@
+import { fetchJson } from "./utils";
+
 export const LANGUAGES = [
   "english",
   "german",
@@ -31,62 +33,63 @@ const LANGUAGE_TAGS: { [tag: string]: Language } = {
   "zh-TW": "tchinese",
 };
 
+const FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"] as const;
+type FileBaseName = (typeof FILE_BASE_NAMES)[number];
+
 export class LabelHolder {
   static DEFAULT_LANGUAGE: Language = "english";
 
-  private baseUrl: string;
-  private defaultBlocks: Promise<Map<string, string>>;
-  private defaultPrefabs: Promise<Map<string, string>>;
-
+  #baseUrl: string;
   #language: Language;
-  #blocks: Promise<Labels>;
-  #prefabs: Promise<Labels>;
+  #fallbacks: Map<FileBaseName, Promise<Map<string, string>>>;
+  #labels: Map<FileBaseName, Promise<Labels>>;
 
   constructor(baseUrl: string, navigatorLanguages: readonly string[]) {
-    this.baseUrl = baseUrl;
+    this.#baseUrl = baseUrl;
     this.#language = resolveLanguage(navigatorLanguages);
-    this.defaultBlocks = this.fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, "blocks.json");
-    this.defaultPrefabs = this.fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, "prefabs.json");
-    this.#blocks = this.buildLabels(this.defaultBlocks, "blocks.json");
-    this.#prefabs = this.buildLabels(this.defaultPrefabs, "prefabs.json");
+    this.#fallbacks = new Map(FILE_BASE_NAMES.map((n) => [n, this.#fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, n)] as const));
+    this.#labels = this.#buildAllLabels();
   }
 
-  get blocks(): Promise<Labels> {
-    return this.#blocks;
-  }
-
-  get prefabs(): Promise<Labels> {
-    return this.#prefabs;
+  get(fileId: FileBaseName): Promise<Labels> {
+    const labels = this.#labels.get(fileId);
+    if (!labels) throw new Error(`No labels for ${this.#language}/${fileId}`);
+    return labels;
   }
 
   set language(lang: Language) {
     if (lang === this.#language) return;
     console.log("LabelHolder set language: %s -> %s", this.#language, lang);
     this.#language = lang;
-    this.#blocks = this.buildLabels(this.defaultBlocks, "blocks.json");
-    this.#prefabs = this.buildLabels(this.defaultPrefabs, "prefabs.json");
+    this.#labels = this.#buildAllLabels();
   }
 
-  async buildLabels(defaultLabels: Promise<Map<string, string>>, fileName: string): Promise<Labels> {
-    return new Labels(await this.fetchLabelMap(this.#language, fileName), await defaultLabels);
+  #buildAllLabels(): Map<FileBaseName, Promise<Labels>> {
+    return new Map(FILE_BASE_NAMES.map((n) => [n, this.#buildLabels(n)]));
   }
 
-  async fetchLabelMap(language: Language, fileName: string): Promise<Map<string, string>> {
-    return new Map(Object.entries(await fetchJson<Labels>(`${this.baseUrl}/${language}/${fileName}`)));
+  async #buildLabels(fileBaseName: FileBaseName): Promise<Labels> {
+    const fallback = this.#fallbacks.get(fileBaseName);
+    if (!fallback) throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
+    return new Labels(await this.#fetchLabelMap(this.#language, fileBaseName), await fallback);
+  }
+
+  async #fetchLabelMap(language: Language, fileId: FileBaseName): Promise<Map<string, string>> {
+    return new Map(Object.entries(await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`)));
   }
 }
 
 export class Labels {
-  labels: Map<string, string>;
-  defaultLabels: Map<string, string>;
+  #labels: Map<string, string>;
+  #fallback: Map<string, string>;
 
   constructor(labels: Map<string, string>, defaultLabels: Map<string, string>) {
-    this.labels = labels;
-    this.defaultLabels = defaultLabels;
+    this.#labels = labels;
+    this.#fallback = defaultLabels;
   }
 
   get(key: string): string | undefined {
-    return this.labels.get(key) ?? this.defaultLabels.get(key);
+    return this.#labels.get(key) ?? this.#fallback.get(key);
   }
 }
 
@@ -97,8 +100,4 @@ export function resolveLanguage(languages: readonly string[]): Language {
     }
   }
   return LabelHolder.DEFAULT_LANGUAGE;
-}
-
-async function fetchJson<T>(path: string): Promise<T> {
-  return (await fetch(path)).json() as T;
 }

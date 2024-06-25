@@ -28,8 +28,7 @@ async function loadLabels() {
 }
 
 async function buildHtmls(labels: Map<LabelId, Label>) {
-  const prefabsDir = await vanillaDir("Data", "Prefabs");
-  const xmlGlob = path.join(prefabsDir, "*", "*.xml");
+  const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
   const xmlFiles = await glob(xmlGlob);
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);

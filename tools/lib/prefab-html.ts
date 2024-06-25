@@ -94,14 +94,16 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
   const label = labels.get(name)?.english ?? "-";
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
   const blocksPromise = parseNim(nim).then((bs) =>
-    Array.from(bs).map(([id, name]) => ({
-      id,
-      name,
-      localizedName: labels.get(name)?.english ?? "-",
-      count: blockNums.get(id) ?? 0,
-    })),
+    Array.from(bs)
+      .map(([id, name]) => ({
+        id,
+        name,
+        localizedName: labels.get(name)?.english ?? "-",
+        count: blockNums.get(id) ?? 0,
+      }))
+      .toSorted((a, b) => a.name.localeCompare(b.name)),
   );
-  const propertiesPromise = parsePrefabXml(xml);
+  const propertiesPromise = parsePrefabXml(xml).then((ps) => ps.toSorted((a, b) => a.name.localeCompare(b.name)));
   const [blocks, properties] = await Promise.all([blocksPromise, propertiesPromise]);
 
   // List of blocks used in .tts but not defined in .blocks.nim
@@ -121,23 +123,12 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
     console.warn("Unexpected state: unused block was asigned a ID: file=%s, blocks=%o", xml, noPlacedBlocks);
   }
 
-  sortByProperty(properties, "name");
-  sortByProperty(blocks, "name");
-
   return html({
     name,
     label,
     xml: properties,
     blocks,
     dimensions: { x: maxx, y: maxy, z: maxz },
-  });
-}
-
-function sortByProperty<T>(arr: T[], propName: keyof T) {
-  arr.sort((a, b) => {
-    if (a[propName] > b[propName]) return 1;
-    if (a[propName] < b[propName]) return -1;
-    return 0;
   });
 }
 

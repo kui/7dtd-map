@@ -15,7 +15,7 @@ interface HighlightedBlock {
   highlightedName: string;
   highlightedLabel: string;
   count?: number;
-  prefabs?: { name: string; count: number }[];
+  prefabs?: { [prefabName: string]: number };
 }
 
 interface PrefabDifficulties {
@@ -42,14 +42,13 @@ type GameCoords =
     }
   | Prefab;
 
-// key: prefab name
-// value: block name and # of block
-interface PrefabBlockIndex {
-  [prefab: string]: { name: string; count: number }[];
+interface PrefabBlockCounts {
+  [prefabName: string]: {
+    [blockName: string]: number;
+  };
 }
-
-// key: block name
-// value: prefab name and # of block
-interface BlockPrefabIndex {
-  [block: string]: { name: string; count: number }[];
+interface BlockPrefabCounts {
+  [blockName: string]: {
+    [prefabName: string]: number;
+  };
 }

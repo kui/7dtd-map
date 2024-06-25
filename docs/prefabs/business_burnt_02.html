@@ -32,8 +32,8 @@
 
   <section>
     <h2>XML</h2>
-    <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
-<tr><th>AllowedTownships</th><td>city,town,rural</td></tr>
+    <table><tr><th>AllowedTownships</th><td>city,town,rural</td></tr>
+<tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>2</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
@@ -131,6 +131,7 @@
 <tr class="block"><td class="block_name">cntBarrelPlasticSingle45</td><td class="block_label">Water Barrel</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelWhiteSingle45</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">cntbinTrashRollingYellow</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">14</td></tr>
 <tr class="block"><td class="block_name">cntCabinetOldBottomLootHelper</td><td class="block_label">= Cabinet Old = Random Helper</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">cntChemPileLarge</td><td class="block_label">Large Chemistry Set</td><td class="block_count">2</td></tr>
@@ -159,6 +160,8 @@
 <tr class="block"><td class="block_name">cntQuestInfestedT2LootHelper</td><td class="block_label">= Infested T2 = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntQuestRandomLootHelper</td><td class="block_label">= Quest Loot = Random Helper</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">cntSemiTruck01RandomHelper</td><td class="block_label">= Semi Truck = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntshelfSupplyOfficeBlueRandomLootHelper</td><td class="block_label">= Blue Office Shelf = Random Helper</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntshelfSupplyOfficeGreenRandomLootHelper</td><td class="block_label">= Green Office Shelf = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntSportsBag01RandomLootHelper</td><td class="block_label">= Rotting Sports Bag = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntSportsBag02RandomLootHelper</td><td class="block_label">= Weathered Sports Bag = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntStoreCratesRandomLootHelper</td><td class="block_label">= Store Crate = Random Helper</td><td class="block_count">2</td></tr>
@@ -170,9 +173,6 @@
 <tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntTrashPile09</td><td class="block_label">Old Trash</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntWaterCoolerFull</td><td class="block_label">Water Cooler</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntbinTrashRollingYellow</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntshelfSupplyOfficeBlueRandomLootHelper</td><td class="block_label">= Blue Office Shelf = Random Helper</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">cntshelfSupplyOfficeGreenRandomLootHelper</td><td class="block_label">= Green Office Shelf = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cobblestoneShapes:arch3m</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">cobblestoneShapes:arch3mMiddle</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">cobblestoneShapes:arch3mTip</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -299,10 +299,10 @@
 <tr class="block"><td class="block_name">forkliftYellow</td><td class="block_label">Yellow Forklift 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor1</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor2</td><td class="block_count">9</td></tr>
-<tr class="block"><td class="block_name">glassBrokenCapLeft</td><td class="block_label">Broken Glass Cap Left</td><td class="block_count">11</td></tr>
-<tr class="block"><td class="block_name">glassBrokenCapRight</td><td class="block_label">Broken Glass Cap Right</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">glassBroken_02</td><td class="block_label">Broken Glass 02</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">glassBroken_03</td><td class="block_label">Broken Glass 03</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">glassBrokenCapLeft</td><td class="block_label">Broken Glass Cap Left</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">glassBrokenCapRight</td><td class="block_label">Broken Glass Cap Right</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">glassBulletproofPlate</td><td class="block_label">Bulletproof Glass Plate</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">glassIndustrialCTRPlate</td><td class="block_label">Glass Industrial 1 Ctr Plate</td><td class="block_count">8</td></tr>
 <tr class="block"><td class="block_name">goreBlockHumanCorpse2</td><td class="block_label">Decaying Human Corpse 2</td><td class="block_count">2</td></tr>
@@ -409,10 +409,10 @@
 <tr class="block"><td class="block_name">steelShapes:securityGateCentered</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">steelShapes:securityGatePlate</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">streetLight01</td><td class="block_label">Street Light (POI)</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1583</td></tr>
 <tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">666</td></tr>
 <tr class="block"><td class="block_name">terrDestroyedWoodDebris</td><td class="block_label">Wood Debris (Terrain)</td><td class="block_count">164</td></tr>
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">130</td></tr>
-<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1583</td></tr>
 <tr class="block"><td class="block_name">urinalCommercialMounted</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">utilityInsulator</td><td class="block_label">Insulator</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">utilityTransformerHanging</td><td class="block_label">Transformer Hanging</td><td class="block_count">1</td></tr>

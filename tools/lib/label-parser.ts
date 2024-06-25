@@ -43,16 +43,9 @@ export async function parseLabel(localizationFileName: string): Promise<Map<Labe
 async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
   const labels = new Map<string, Label>();
   for await (const line of parser) {
-    if (isLocalizationLine(line)) {
-      if (labels.has(line.Key)) console.warn("Unexpected line: duplicated label key: ", line.Key);
-      labels.set(line.Key, {
-        key: line.Key,
-        file: line.File,
-        ...line,
-      });
-    } else {
-      throw Error("Unexpected line: empty label key");
-    }
+    if (!isLocalizationLine(line)) throw Error("Unexpected line: empty label key");
+    if (labels.has(line.Key)) console.warn("Unexpected line: duplicated label key: ", line.Key);
+    labels.set(line.Key, { key: line.Key, file: line.File, ...line });
   }
   return labels;
 }

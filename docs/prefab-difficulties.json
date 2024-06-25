@@ -1,4 +1,6 @@
 {
+	"aaa_restore_power": 1,
+	"aaa_sleeper_examples": 2,
 	"apartments_01": 4,
 	"apartments_02": 5,
 	"apartments_03": 3,
@@ -421,7 +423,5 @@
 	"warehouse_06": 3,
 	"warehouse_07": 3,
 	"warehouse_08": 3,
-	"weigh_station_01": 3,
-	"aaa_restore_power": 1,
-	"aaa_sleeper_examples": 2
+	"weigh_station_01": 3
 }

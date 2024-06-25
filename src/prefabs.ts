@@ -25,11 +25,11 @@ function main() {
 
   const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
   (async () => {
-    const [index, difficulties] = await Promise.all([
-      fetchJson<PrefabBlockIndex>("prefab-block-index.json"),
+    const [prefabBlockCounts, difficulties] = await Promise.all([
+      fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
       fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
     ]);
-    const prefabs = Object.keys(index).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] ?? 0 }));
+    const prefabs = Object.keys(prefabBlockCounts).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] ?? 0 }));
     prefabsHandler.prefabs = prefabs;
   })().catch(printError);
 
