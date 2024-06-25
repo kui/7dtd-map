@@ -7,7 +7,6 @@
     "serve": "./tools/build.bash serve",
     "build": "run-p build:**",
     "build:ts": "./tools/build.bash",
-    "build:json": "tsx ./tools/generate-jsons.ts",
     "build:json:prefab-props": "tsx ./tools/generate-prefab-properties-jsons.ts",
     "build:json:labels": "tsx ./tools/generate-labels-jsons.ts",
     "build:prefab-html": "tsx ./tools/generate-prefab-html.ts",
