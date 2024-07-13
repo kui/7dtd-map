@@ -499,6 +499,7 @@
 	"remnant_downtown_filler_20": "LUX Restaurant",
 	"remnant_downtown_filler_21": "Pete’s Grill",
 	"remnant_downtown_filler_22": "Ship-n-sip Station",
+	"remnant_downtown_filler_23": "Booze Vault",
 	"remnant_downtown_strip_01": "The AZ Sport Business Pavilion",
 	"remnant_downtown_strip_02": "Route 66 Restaurant Row",
 	"remnant_downtown_strip_03": "Willtronics Corner",
@@ -552,6 +553,7 @@
 	"remnant_oldwest_07": "Matchstick Hotel",
 	"remnant_oldwest_08": "The Clutter Chest",
 	"remnant_oldwest_09": "Ruined Barn",
+	"remnant_quicklube_01": "Quick Lube",
 	"remnant_school_01": "Montgomery Public School",
 	"remnant_selfstorage_01": "A1 Self Storage",
 	"remnant_selfstorage_02": "Top Storage",
@@ -671,6 +673,7 @@
 	"store_bakery_01": "Ma Baker & Sons Bakery",
 	"store_book_01": "Crack-A-Book",
 	"store_book_02": "Crack-A-Cafe",
+	"store_book_04": "The Book Barn",
 	"store_clothing_01": "Super Savage Country",
 	"store_clothing_02": "Savage Country",
 	"store_discount_01": "Three Dollar Store",
@@ -762,10 +765,12 @@
 	"wilderness_filler_10": "The Mush Pit",
 	"wilderness_filler_11": "Pump Substation",
 	"wilderness_filler_12": "TV Relay Station",
+	"wilderness_filler_13": "Marshall's Hunting Lodge",
 	"wilderness_filler_14": "Alpha Den",
 	"wilderness_filler_15": "Camp Creepfest",
 	"wilderness_filler_16": "Mourning Woods",
 	"wilderness_filler_17": "Hidden Hollow",
 	"wilderness_filler_18": "Deserted Creek Campsite",
-	"wilderness_filler_19": "Body Bag Pit"
+	"wilderness_filler_19": "Body Bag Pit",
+	"wilderness_filler_20": "Bandit's Revenge"
 }

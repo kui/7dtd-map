@@ -54,7 +54,7 @@
 <tr><th>SleeperIsLootVolume</th><td>True,True,True,True,True,True,True,True,True,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,2,2,0,2,2,0,2,2,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>zombieFemaleFat,1,1,S_Zom_HazMat_Only,3,3,zombieMoe,1,1,S_Zom_Utility_Worker,2,2,S_Zom_Utility_Worker,2,3,zombieNurse,2,2,S_Zom_HazMat_Only,2,2,S_Zom_HazMat_Only,1,1,S_Zom_HazMat_Only,0,0,S_-Group_Generic_Zombie,0,0</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>zombieFemaleFat,1,1,ZomHazMatOnly,3,3,zombieMoe,1,1,ZomUtilityWorker,2,2,ZomUtilityWorker,2,3,zombieNurse,2,2,ZomHazMatOnly,2,2,ZomHazMatOnly,1,1,ZomHazMatOnly,0,0,GroupGenericZombie,0,0</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,9,0,0,0,0,0,3,3,9</td></tr>
 <tr><th>SleeperVolumeSize</th><td>4, 6, 3#4, 3, 6#7, 2, 3#11, 4, 8#22, 3, 9#9, 3, 8#8, 3, 8#6, 3, 3#2, 6, 1#3, 2, 4</td></tr>
 <tr><th>SleeperVolumeStart</th><td>17, 3, 22#9, 8, 8#9, 8, 21#22, 3, 18#7, 3, 27#8, 3, 18#8, 3, 9#8, 7, 17#8, 3, 14#12, 8, 9</td></tr>
@@ -79,10 +79,14 @@
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">33055</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">32993</td></tr>
 <tr class="block"><td class="block_name">awningShapes:pillar50Corner</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">barStoolBrown</td><td class="block_label">Bar Stool Brown</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">bed02</td><td class="block_label">King Size Bed</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">bloodDecor01</td><td class="block_label">Blood Decor01</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">bloodDecor02</td><td class="block_label">Blood Decor02</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">bloodDecor05</td><td class="block_label">Blood Decor05</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">bloodDecor06</td><td class="block_label">Blood Decor06</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">breakerBoxWallClosed</td><td class="block_label">Breaker Box Wall Closed</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">80</td></tr>
 <tr class="block"><td class="block_name">bunkBedFrame</td><td class="block_label">Bunk Bed, Frame</td><td class="block_count">2</td></tr>
@@ -137,6 +141,7 @@
 <tr class="block"><td class="block_name">cntFileCabinetShortBlackRandomLootHelper</td><td class="block_label">= File Cabinet Short = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntFileCabinetTallGreyRandomLootHelper</td><td class="block_label">= File Cabinet Tall = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntFileCabinetTallOpen</td><td class="block_label">File Cabinet Tall (Open)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntFootlockerArmyGreenRandomLootHelper</td><td class="block_label">= Footlocker Army Green = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntFrontCrumpledSedan01RandomHelper</td><td class="block_label">= Front Crumpled Sedan = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntGasGrillRandomLootHelper</td><td class="block_label">= Gas Grill = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntGunSafe</td><td class="block_label">Gun Safe</td><td class="block_count">1</td></tr>
@@ -178,10 +183,11 @@
 <tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntUtilityCartEmpty</td><td class="block_label">Utility Cart</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntVendingMachine2Broken</td><td class="block_label">Vending Machine, Soda Broken</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntVendingMachineSnacksEmptyBroken</td><td class="block_label">Vending Machine, Food Empty Broken</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntVendingMachineWaterBroken</td><td class="block_label">Vending Machine, Water Broken</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWasherOpen</td><td class="block_label">Washing Machine, Open</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWasherRandomLootHelper</td><td class="block_label">= Washing Machine = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWaterCoolerBottle</td><td class="block_label">Water Cooler Bottle</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWeaponsBagSmall</td><td class="block_label">Weapons Bag</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cobweb</td><td class="block_label">Cobweb</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">commercialDistributionBox</td><td class="block_label">Commercial Distribution Box</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">156</td></tr>
@@ -251,12 +257,10 @@
 <tr class="block"><td class="block_name">exteriorHouseDoorOldWhite</td><td class="block_label">White Exterior House Door Old</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">exteriorHouseDoorSideLightBrown</td><td class="block_label">Brown Exterior House Side Light Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">flashlightDecorRed</td><td class="block_label">Red Flashlight (POI)</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor 01</td><td class="block_count">13</td></tr>
-<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor 02</td><td class="block_count">15</td></tr>
-<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor 03</td><td class="block_count">14</td></tr>
-<tr class="block"><td class="block_name">glassBroken_01</td><td class="block_label">Broken Glass 01</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">glassBrokenCapLeft</td><td class="block_label">Broken Glass Cap Left</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">glassBrokenCapRight</td><td class="block_label">Broken Glass Cap Right</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">garbage_decor1</td><td class="block_label">Garbage Decor 01</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">garbage_decor2</td><td class="block_label">Garbage Decor 02</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">garbage_decor3</td><td class="block_label">Garbage Decor 03</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">glassBrokenCapRight</td><td class="block_label">Broken Glass Cap Right</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">hoodRangeYellowOffset</td><td class="block_label">Yellow Range Hood Offset</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">houseSlidingDoorBlack</td><td class="block_label">Black House Sliding Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">hubcapNoMine</td><td class="block_label">Hubcap (No Mine)</td><td class="block_count">1</td></tr>
@@ -278,6 +282,10 @@
 <tr class="block"><td class="block_name">looseBoardsTrapBlock1x1Ceiling</td><td class="block_label">Loose Boards Block 1x1 Ceiling</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">mattressCurled</td><td class="block_label">Mattress Curled</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">mattressFlatThin</td><td class="block_label">Mattress Flat</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor01</td><td class="block_label">Newspaper Decor 01</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor02</td><td class="block_label">Newspaper Decor 02</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor03</td><td class="block_label">Newspaper Decor 03</td><td class="block_count">11</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor04</td><td class="block_label">Newspaper Decor 04</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">oldChair1</td><td class="block_label">Old Chair Grey</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">oldChair1Broken</td><td class="block_label">Old Chair Grey, Broken</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">oldWoodDoor</td><td class="block_label">Wood Door</td><td class="block_count">2</td></tr>
@@ -344,6 +352,16 @@
 <tr class="block"><td class="block_name">questRallyMarker</td><td class="block_label">Rally Marker</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">recessedLight</td><td class="block_label">Recessed Light (POI)</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">residentialSingleMeterDisconnect</td><td class="block_label">Residential Single Meter Disconnect</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor01</td><td class="block_label">Rubbish Decor 01</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor02</td><td class="block_label">Rubbish Decor 02</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor03</td><td class="block_label">Rubbish Decor 03</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor04</td><td class="block_label">Rubbish Decor 04</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor05</td><td class="block_label">Rubbish Decor 05</td><td class="block_count">21</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor09</td><td class="block_label">Rubbish Decor 09</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor10</td><td class="block_label">Rubbish Decor 10</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor11</td><td class="block_label">Rubbish Decor 11</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor12</td><td class="block_label">Rubbish Decor 12</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor13</td><td class="block_label">Rubbish Decor 13</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">rubblePileWoodLarge</td><td class="block_label">Large Wood Rubble Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">rubblePileWoodSmall</td><td class="block_label">Small Wood Rubble Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sectionalPlaidChair</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -365,8 +383,8 @@
 <tr class="block"><td class="block_name">signPosterMovieSexualTension</td><td class="block_label">Sign: Movie Poster Sexual Tension</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterMovieTheaterLoneWolf</td><td class="block_label">Sign: Theater Poster Lone Wolf</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterWantedMissing01</td><td class="block_label">Poster Wanted Missing 01</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">signPosterWantedMissing02</td><td class="block_label">Poster Wanted Missing 02</td><td class="block_count">9</td></tr>
-<tr class="block"><td class="block_name">signPosterWantedMissing03</td><td class="block_label">Poster Wanted Missing 03</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signPosterWantedMissing02</td><td class="block_label">Poster Wanted Missing 02</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">signPosterWantedMissing03</td><td class="block_label">Poster Wanted Missing 03</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">signYardSign01</td><td class="block_label">Yard Sign: Condemned</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">14</td></tr>
