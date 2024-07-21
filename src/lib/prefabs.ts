@@ -33,10 +33,21 @@ export default class Prefabs {
     this.#labelHolder.language = lang;
   }
 
+  /**
+   * Filter by prefab names.
+   *
+   * filter string is used as a regular expression or some special strings:
+   *
+   * - `💀1`, `💀2`, ... , `💀5`: filter by it's difficulty tiers
+   *
+   * @param filter - A string to filter prefabs.
+   */
   set prefabsFilterString(filter: string) {
     const s = filter.trim();
     if (s.length === 0) {
       this.filter = this.defaultMatcher();
+    } else if (/^💀\d+$/.test(s)) {
+      this.filter = new DifficultyMatcher(parseInt(s.slice(2), 10), this.#labelHolder);
     } else {
       this.filter = new PrefabNameMatcher(new RegExp(s, "i"), this.#labelHolder);
     }
@@ -272,5 +283,31 @@ class BlockNameMatcher implements PrefabMatcher {
       }
       return acc;
     }, {});
+  }
+}
+
+class DifficultyMatcher implements PrefabMatcher {
+  constructor(private difficulty: number, private labels: LabelHolder) {
+    this.difficulty = difficulty;
+  }
+
+  async match(prefabs: Prefab[]) {
+    if (isNaN(this.difficulty) || this.difficulty < 1 || this.difficulty > 5) {
+      return Promise.resolve({ status: `Invalid difficulty tier: ${this.difficulty.toString()}`, matched: [] });
+    }
+    const labels = await this.labels.get("prefabs");
+    const matched = prefabs.flatMap<HighlightedPrefab>((prefab) => {
+      if (prefab.difficulty !== this.difficulty) return [];
+      const label = labels.get(prefab.name) ?? "-";
+      return {
+        ...prefab,
+        highlightedName: prefab.name,
+        highlightedLabel: label,
+      };
+    });
+    return {
+      status: `${matched.length.toString()} prefabs with difficulty tier ${this.difficulty.toString()}`,
+      matched,
+    };
   }
 }
