@@ -68,8 +68,10 @@ function prefabLi(prefab: HighlightedPrefab) {
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",
-    `<small>${prefab.highlightedName ?? prefab.name}</small>`,
-    "</a>",
+    `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
+    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
+      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
+      : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
@@ -87,6 +89,10 @@ function prefabLi(prefab: HighlightedPrefab) {
     li.appendChild(blocksUl);
   }
   return li;
+}
+
+function countHighlightedBlocks(blocks: HighlightedBlock[]): number {
+  return blocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
 }
 
 declare class PrefabsFilterWorker extends Worker {
