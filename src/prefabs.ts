@@ -61,7 +61,7 @@ function prefabLi(prefab: HighlightedPrefab) {
     ...(prefab.difficulty
       ? [
           `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
-          `  <span class="prefab_difficulty_icon">💀</span>${prefab.difficulty.toString()}`,
+          `  💀${prefab.difficulty.toString()}`,
           `</span>`,
         ]
       : []),
