@@ -20,6 +20,12 @@ Map renderer for 7 Day to Die.
 npm run build
 ```
 
+3. Copy some bundle world files for sample data:
+
+```
+./tools/cp_sample_worlds.bash "$(npx tsx tools/print-game-dir.ts)/Data/Worlds/Pregen06k1"
+```
+
 ## Code lint
 
 ```
