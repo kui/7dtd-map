@@ -69,9 +69,7 @@ function prefabLi(prefab: HighlightedPrefab) {
     prefab.highlightedLabel ?? "-",
     "/",
     `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
-    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
-      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
-      : []),
+    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0 ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"] : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");

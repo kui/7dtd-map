@@ -287,7 +287,10 @@ class BlockNameMatcher implements PrefabMatcher {
 }
 
 class DifficultyMatcher implements PrefabMatcher {
-  constructor(private difficulty: number, private labels: LabelHolder) {
+  constructor(
+    private difficulty: number,
+    private labels: LabelHolder,
+  ) {
     this.difficulty = difficulty;
   }
 
