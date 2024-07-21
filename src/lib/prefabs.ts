@@ -97,6 +97,9 @@ export default class Prefabs {
     if (this.markCoords) {
       this.status = `${this.status}, order by distances from the flag`;
       this.filtered.sort(distSorter);
+    } else if (this.filter instanceof BlockNameMatcher) {
+      this.status = `${this.status}, order by counts of matched blocks`;
+      this.filtered.sort(blockCountSorter);
     } else {
       this.filtered.sort(nameSorter);
     }
@@ -107,6 +110,15 @@ function nameSorter(a: { name: string }, b: { name: string }) {
   if (a.name > b.name) return 1;
   if (a.name < b.name) return -1;
   return 0;
+}
+
+function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
+  if (!a.matchedBlocks || !b.matchedBlocks) return nameSorter(a, b);
+  const aCount = a.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
+  const bCount = b.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
+  if (aCount < bCount) return 1;
+  if (aCount > bCount) return -1;
+  return nameSorter(a, b);
 }
 
 function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
