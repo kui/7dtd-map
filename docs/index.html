@@ -138,6 +138,16 @@
             <button data-input-for="prefabs_filter" data-input-text="^downtown_">downtown</button>
             <button data-input-for="prefabs_filter" data-input-text="💀4">Tier 4</button>
             <button data-input-for="prefabs_filter" data-input-text="💀5">Tier 5</button>
+            <!--
+              See https://kui.github.io/7dtd-map/prefabs.html?blocks_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
+              TODO: This should be excluded large prefabs like skyscraper
+            -->
+            <button
+              data-input-for="prefabs_filter"
+              data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_01$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$)"
+            >
+              Many Books except High Tiers
+            </button>
           </td>
         </tr>
         <tr>
