@@ -26,7 +26,9 @@ async function statPixels(pngFile: string): Promise<Map<string, number>> {
       .pipe(new PNG())
       .on("parsed", function () {
         for (let i = 0; i < this.data.length; i += 4) {
-          const pixels = Array.from(this.data.subarray(i, i + 4)).map(n => n.toString().padStart(3)).join(",");
+          const pixels = Array.from(this.data.subarray(i, i + 4))
+            .map((n) => n.toString().padStart(3))
+            .join(",");
           const pixelCount = pixelStat.get(pixels) ?? 0;
           pixelStat.set(pixels, pixelCount + 1);
         }
