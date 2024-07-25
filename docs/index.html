@@ -123,14 +123,28 @@
           </td>
         </tr>
         <tr>
-          <th rowspan="2">Prefab Tier</th>
+          <th>Prefab Tier</th>
           <td>
-            <label>Min: <input id="min_tier" type="range" min="0" max="5" value="0" />💀<output data-sync-for="min_tier">0</output></label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Max: <input id="max_tier" type="range" min="0" max="5" value="5" />💀<output data-sync-for="max_tier">5</output></label>
+            <table class="inner-table">
+              <tr>
+                <th><label for="min_tier">Min:</label></th>
+                <td><label for="min_tier">💀<output data-sync-for="min_tier">0</output></label></td>
+                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" /></td>
+              </tr>
+              <tr>
+                <th><label for="max_tier">Max:</label></th>
+                <td><label for="max_tier">💀<output data-sync-for="max_tier">5</output></label></td>
+                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" /></td>
+              </tr>
+            </table>
+            <datalist id="tiers">
+              <option value="0"></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+              <option value="4"></option>
+              <option value="5"></option>
+            </datalist>
           </td>
         </tr>
         <tr>

@@ -6,3 +6,12 @@ th,
 td {
   border-bottom: 1px lightgray solid;
 }
+
+.inner-table {
+  & tr:first-child > * {
+    border-top: none;
+  }
+  & tr:last-child > * {
+    border-bottom: none;
+  }
+}
