@@ -15,3 +15,13 @@ td {
     border-bottom: none;
   }
 }
+
+.logo {
+  font-weight: bold;
+  -webkit-text-fill-color: red;
+  /*
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: white;
+  */
+  text-shadow: 0px 0px 2px;
+}

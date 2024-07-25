@@ -37,7 +37,7 @@
       </p>
       <table>
         <tr>
-          <th>Select Map</th>
+          <th>🗺️ Select Map</th>
           <td>
             <select id="map_list">
               <option data-map-id="1">1. New-World</option>
@@ -48,51 +48,60 @@
           </td>
         </tr>
         <tr>
-          <th>Cursor</th>
+          <th>🖱️ Cursor</th>
           <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
         </tr>
         <tr>
-          <th>Flag</th>
+          <th>🚩 Flag <button id="reset_mark" title="Reset">X</button></th>
           <td>
             <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
-            <button id="reset_mark" title="Reset">X</button>
           </td>
         </tr>
         <tr>
           <th><label for="biomes_alpha">biomes.png</label></th>
           <td>
-            <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
-            <output data-sync-for="biomes_alpha">1</output>
+            <label>
+              <output data-sync-for="biomes_alpha">1</output>
+              <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
+            </label>
           </td>
         </tr>
         <tr>
           <th>
-            <label for="splat3_alpha">splat3.png or splat3_processed.png</label>
+            <label for="splat3_alpha">splat3_processed.png</label>
           </th>
           <td>
-            <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
-            <output data-sync-for="splat3_alpha">1</output>
+            <label>
+              <output data-sync-for="splat3_alpha">1</output>
+              <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
+            </label>
           </td>
         </tr>
         <tr>
           <th><label for="splat4_alpha">splat4_processed.png</label></th>
           <td>
-            <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
-            <output data-sync-for="splat4_alpha">0.7</output>
+            <label>
+              <output data-sync-for="splat4_alpha">0.7</output>
+              <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
+            </label>
           </td>
         </tr>
         <tr>
           <th><label for="rad_alpha">radiation.png</label></th>
           <td>
-            <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
-            <output data-sync-for="rad_alpha">0.5</output>
+            <label>
+              <output data-sync-for="rad_alpha">0.5</output>
+              <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
+            </label>
           </td>
         </tr>
         <tr>
           <th><label for="sign_alpha">prefabs.xml</label></th>
           <td>
-            <input id="sign_alpha" type="range" title="Alpha signs for prefab or other markers" value="1" step="0.1" min="0" max="1" />
-            <output data-sync-for="sign_alpha">1</output>
+            <label>
+              <output data-sync-for="sign_alpha">1</output>
+              <input id="sign_alpha" type="range" title="Alpha signs for prefab or other markers" value="1" step="0.1" min="0" max="1" />
+            </label>
           </td>
         </tr>
         <tr>
@@ -100,40 +109,50 @@
           <td><button id="terrain_viewer_show" disabled>Show terrain</button></td>
         </tr>
         <tr>
-          <th><label for="scale">Scale</label></th>
+          <th><label for="scale">🔍️ Scale</label></th>
           <td>
             <label>
-              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
               <output data-sync-for="scale">0.1</output>
+              <input id="scale" type="range" max="1" min="0.05" step="0.01" value="0.1" />
             </label>
           </td>
         </tr>
         <tr>
-          <th><label for="sign_size">Sign Size</label></th>
+          <th>
+            <label for="sign_size"><span class="logo">✘</span> Sign Size</label>
+          </th>
           <td>
-            <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
-            <output data-sync-for="sign_size">200</output>px
+            <label>
+              <output data-sync-for="sign_size">200</output>px
+              <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+            </label>
           </td>
         </tr>
         <tr>
-          <th><label for="brightness">Brightness</label></th>
+          <th><label for="brightness">🔆 Brightness</label></th>
           <td>
-            <input id="brightness" type="range" max="100" min="0" step="1" value="60" />
-            <output data-sync-for="brightness">60</output>%
+            <label>
+              <output data-sync-for="brightness">60</output>%
+              <input id="brightness" type="range" max="100" min="0" step="1" value="60" />
+            </label>
           </td>
         </tr>
         <tr>
-          <th>Prefab Tier</th>
+          <th>💀Prefab Tier</th>
           <td>
             <table class="inner-table">
               <tr>
                 <th><label for="min_tier">Min:</label></th>
-                <td><label for="min_tier">💀<output data-sync-for="min_tier">0</output></label></td>
+                <td>
+                  <label for="min_tier"><output data-sync-for="min_tier">0</output></label>
+                </td>
                 <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" /></td>
               </tr>
               <tr>
                 <th><label for="max_tier">Max:</label></th>
-                <td><label for="max_tier">💀<output data-sync-for="max_tier">5</output></label></td>
+                <td>
+                  <label for="max_tier"><output data-sync-for="max_tier">5</output></label>
+                </td>
                 <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" /></td>
               </tr>
             </table>
@@ -148,7 +167,7 @@
           </td>
         </tr>
         <tr>
-          <th><label for="prefab_filter">Prefab Filter</label></th>
+          <th><label for="prefab_filter">🏠️Prefab Filter</label></th>
           <td>
             <input id="prefab_filter" placeholder="Input prefab name" />
             <button title="Clear" data-input-for="prefab_filter" data-input-text="">X</button>
@@ -173,7 +192,7 @@
           </td>
         </tr>
         <tr>
-          <th><label for="block_filter">Block Filter</label></th>
+          <th><label for="block_filter">📦Block Filter</label></th>
           <td>
             <input id="block_filter" placeholder="Input block name" />
             <button title="Clear" data-input-for="block_filter" data-input-text="">X</button>

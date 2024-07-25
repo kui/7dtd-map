@@ -17,6 +17,13 @@
   overflow: auto;
 }
 
+#controller table td output {
+  display: inline-block;
+  font-size: 1em;
+  width: 2em;
+  text-align: right;
+}
+
 ul#prefabs_list,
 #prefabs_list ul {
   list-style-type: none;
