@@ -5,6 +5,8 @@ import { Language } from "../lib/labels";
 
 interface Doms {
   status: HTMLElement;
+  minTier: HTMLInputElement;
+  maxTier: HTMLInputElement;
   prefabFilter: HTMLInputElement;
   blockFilter: HTMLInputElement;
 }
@@ -19,12 +21,14 @@ export class PrefabsHandler {
   storage: MapStorage;
   difficultyPromise: Promise<PrefabDifficulties>;
   listeners: ((prefabs: HighlightedPrefab[]) => unknown)[] = [];
+  tierRange: NumberRange;
 
   constructor(doms: Doms, worker: PrefabsFilterWorker, storage: MapStorage, difficulty: Promise<PrefabDifficulties>) {
     this.doms = doms;
     this.worker = worker;
     this.storage = storage;
     this.difficultyPromise = difficulty;
+    this.tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
 
     MapStorage.addListener(async () => {
       const o = await storage.getCurrent("prefabs");
@@ -35,15 +39,33 @@ export class PrefabsHandler {
       this.listeners.forEach((fn) => fn(prefabs));
       doms.status.textContent = status;
     });
-    ["input", "focus"].forEach((eventName) => {
-      doms.prefabFilter.addEventListener(eventName, () => {
-        worker.postMessage({ prefabsFilterString: doms.prefabFilter.value });
-        document.body.dataset["activeFilter"] = "prefab";
-      });
-      doms.blockFilter.addEventListener(eventName, () => {
-        worker.postMessage({ blocksFilterString: doms.blockFilter.value });
-        document.body.dataset["activeFilter"] = "block";
-      });
+    doms.minTier.addEventListener("input", () => {
+      const newMinTier = doms.minTier.valueAsNumber;
+      if (newMinTier === this.tierRange.start) return;
+      this.tierRange.start = newMinTier;
+      if (newMinTier > doms.maxTier.valueAsNumber) {
+        doms.maxTier.value = doms.minTier.value;
+        this.tierRange.end = newMinTier;
+        doms.maxTier.dispatchEvent(new Event("input"));
+      }
+      worker.postMessage({ difficulty: this.tierRange });
+    });
+    doms.maxTier.addEventListener("input", () => {
+      const newMaxTier = doms.maxTier.valueAsNumber;
+      if (newMaxTier === this.tierRange.end) return;
+      this.tierRange.end = newMaxTier;
+      if (newMaxTier < doms.minTier.valueAsNumber) {
+        doms.minTier.value = doms.maxTier.value;
+        this.tierRange.start = newMaxTier;
+        doms.minTier.dispatchEvent(new Event("input"));
+      }
+      worker.postMessage({ difficulty: this.tierRange });
+    });
+    doms.prefabFilter.addEventListener("input", () => {
+      worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
+    });
+    doms.blockFilter.addEventListener("input", () => {
+      worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
   }
 

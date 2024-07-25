@@ -6,6 +6,7 @@ import * as prefabsFilter from "./worker/prefabs-filter";
 import { Language } from "./lib/labels";
 import { LabelHandler } from "./lib/label-handler";
 import { UrlState } from "./lib/url-state";
+import * as syncOutput from "./lib/sync-output";
 
 interface HighlightedPrefab {
   name: string;
@@ -17,6 +18,7 @@ interface HighlightedPrefab {
 
 function main() {
   presetButton.init();
+  syncOutput.init();
 
   const urlState = UrlState.create(location, document.querySelectorAll("input"));
   urlState.addUpdateListener((url) => {
@@ -33,10 +35,50 @@ function main() {
     prefabsHandler.prefabs = prefabs;
   })().catch(printError);
 
-  const blocksFilter = component("blocks_filter", HTMLInputElement);
-  prefabsHandler.blockFilter = blocksFilter.value;
-  blocksFilter.addEventListener("input", () => {
-    prefabsHandler.blockFilter = blocksFilter.value;
+  const minTier = component("min_tier", HTMLInputElement);
+  const maxTier = component("max_tier", HTMLInputElement);
+  const tierRange = { start: minTier.valueAsNumber, end: maxTier.valueAsNumber };
+  prefabsHandler.tierRange = tierRange;
+  minTier.addEventListener("input", () => {
+    const newMinTier = minTier.valueAsNumber;
+    if (newMinTier === tierRange.start) return;
+    tierRange.start = newMinTier;
+    if (newMinTier > maxTier.valueAsNumber) {
+      maxTier.value = minTier.value;
+      tierRange.end = newMinTier;
+      maxTier.dispatchEvent(new Event("input"));
+    }
+    prefabsHandler.tierRange = tierRange;
+  });
+  maxTier.addEventListener("input", () => {
+    const newMaxTier = maxTier.valueAsNumber;
+    if (newMaxTier === tierRange.end) return;
+    tierRange.end = newMaxTier;
+    if (newMaxTier < minTier.valueAsNumber) {
+      minTier.value = maxTier.value;
+      tierRange.start = newMaxTier;
+      minTier.dispatchEvent(new Event("input"));
+    }
+    prefabsHandler.tierRange = tierRange;
+  });
+  const tierClear = component("tier_clear", HTMLButtonElement);
+  tierClear.addEventListener("click", () => {
+    minTier.value = minTier.defaultValue;
+    maxTier.value = maxTier.defaultValue;
+    minTier.dispatchEvent(new Event("input"));
+    maxTier.dispatchEvent(new Event("input"));
+  });
+
+  const prefabFilter = component("prefab_filter", HTMLInputElement);
+  prefabsHandler.prefabFilter = prefabFilter.value;
+  prefabFilter.addEventListener("input", () => {
+    prefabsHandler.prefabFilter = prefabFilter.value;
+  });
+
+  const blockFilter = component("block_filter", HTMLInputElement);
+  prefabsHandler.blockFilter = blockFilter.value;
+  blockFilter.addEventListener("input", () => {
+    prefabsHandler.blockFilter = blockFilter.value;
   });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
@@ -49,9 +91,16 @@ function main() {
     prefabsHandler.refresh();
   });
 
-  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.body, component("prefabs_list"), (p) => prefabLi(p));
+  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.documentElement, component("prefabs_list"), (p) =>
+    prefabLi(p),
+  );
   prefabsHandler.listeners.push((update) => {
     prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
+  });
+
+  // Workaround that document.documentElement never fires "scroll" event
+  document.addEventListener("scroll", () => {
+    document.documentElement.dispatchEvent(new Event("scroll"));
   });
 }
 
@@ -114,8 +163,16 @@ class PrefabsHandler {
     this.worker.postMessage({ all: p });
   }
 
+  set tierRange(range: NumberRange) {
+    this.worker.postMessage({ difficulty: range });
+  }
+
+  set prefabFilter(filter: string) {
+    this.worker.postMessage({ prefabFilterRegexp: filter });
+  }
+
   set blockFilter(filter: string) {
-    this.worker.postMessage({ blocksFilterString: filter });
+    this.worker.postMessage({ blockFilterRegexp: filter });
   }
 
   set language(language: Language) {

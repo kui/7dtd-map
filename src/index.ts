@@ -89,8 +89,10 @@ function main() {
   const prefabsHandler = new PrefabsHandler(
     {
       status: component("prefabs_num", HTMLElement),
-      prefabFilter: component("prefabs_filter", HTMLInputElement),
-      blockFilter: component("blocks_filter", HTMLInputElement),
+      minTier: component("min_tier", HTMLInputElement),
+      maxTier: component("max_tier", HTMLInputElement),
+      prefabFilter: component("prefab_filter", HTMLInputElement),
+      blockFilter: component("block_filter", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
     mapStorage,

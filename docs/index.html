@@ -123,27 +123,35 @@
           </td>
         </tr>
         <tr>
-          <th><label for="prefabs_filter">Prefabs Filter</label></th>
+          <th rowspan="2">Prefab Tier</th>
           <td>
-            <input id="prefabs_filter" placeholder="Input prefab name" />
-            <button title="Clear" data-input-for="prefabs_filter" data-input-text="">X</button>
+            <label>Min: <input id="min_tier" type="range" min="0" max="5" value="0" />💀<output data-sync-for="min_tier">0</output></label>
           </td>
         </tr>
         <tr>
-          <th>Prefabs Preset</th>
           <td>
-            <button data-input-for="prefabs_filter" data-input-text="^trader">trader</button>
-            <button data-input-for="prefabs_filter">store</button>
-            <button data-input-for="prefabs_filter">skyscraper</button>
-            <button data-input-for="prefabs_filter" data-input-text="^downtown_">downtown</button>
-            <button data-input-for="prefabs_filter" data-input-text="💀4">Tier 4</button>
-            <button data-input-for="prefabs_filter" data-input-text="💀5">Tier 5</button>
+            <label>Max: <input id="max_tier" type="range" min="0" max="5" value="5" />💀<output data-sync-for="max_tier">5</output></label>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefab_filter">Prefab Filter</label></th>
+          <td>
+            <input id="prefab_filter" placeholder="Input prefab name" />
+            <button title="Clear" data-input-for="prefab_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+        <tr>
+          <th>Prefab Filter Preset</th>
+          <td>
+            <button data-input-for="prefab_filter" data-input-text="^trader">trader</button>
+            <button data-input-for="prefab_filter">skyscraper</button>
+            <button data-input-for="prefab_filter" data-input-text="^downtown_">downtown</button>
             <!--
-              See https://kui.github.io/7dtd-map/prefabs.html?blocks_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
+              See https://kui.github.io/7dtd-map/prefabs.html?block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
               TODO: This should be excluded large prefabs like skyscraper
             -->
             <button
-              data-input-for="prefabs_filter"
+              data-input-for="prefab_filter"
               data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_01$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$)"
             >
               Many Books except High Tiers
@@ -151,28 +159,28 @@
           </td>
         </tr>
         <tr>
-          <th><label for="blocks_filter">Blocks Filter</label></th>
+          <th><label for="block_filter">Block Filter</label></th>
           <td>
-            <input id="blocks_filter" placeholder="Input block name" />
-            <button title="Clear" data-input-for="blocks_filter" data-input-text="">X</button>
+            <input id="block_filter" placeholder="Input block name" />
+            <button title="Clear" data-input-for="block_filter" data-input-text="">X</button>
           </td>
         </tr>
         <tr>
-          <th>Blocks Preset</th>
+          <th>Block Filter Preset</th>
           <td>
-            <button data-input-for="blocks_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
+            <button data-input-for="block_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
             <button
-              data-input-for="blocks_filter"
+              data-input-for="block_filter"
               data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
             >
               Steel with Wrench
             </button>
-            <button data-input-for="blocks_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
-            <button data-input-for="blocks_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="blocks_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
+            <button data-input-for="block_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
+            <button data-input-for="block_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
+            <button data-input-for="block_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
               Working Vending-Machine
             </button>
-            <button data-input-for="blocks_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+            <button data-input-for="block_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
           </td>
         </tr>
       </table>

@@ -1,7 +1,9 @@
 import Prefabs from "../lib/prefabs";
 import { printError, fetchJson } from "../lib/utils";
 
-export type InMessage = Partial<Pick<Prefabs, "all" | "prefabsFilterString" | "blocksFilterString" | "markCoords" | "language">>;
+export type InMessage = Partial<
+  Pick<Prefabs, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language">
+>;
 
 const prefabs = new Prefabs("../labels", navigator.languages);
 (async () => {

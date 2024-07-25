@@ -30,6 +30,7 @@ export class DelayedRenderer<T> {
     requestAnimationFrame(() => {
       this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback);
       this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: true });
+      // TODO Prevent double rendering iterations
       renderUntil(this, () => isFill(this.scrollableWrapper)).catch(printError);
     });
   }
@@ -40,18 +41,18 @@ export class DelayedRenderer<T> {
 }
 
 async function renderUntil<T>(self: DelayedRenderer<T>, stopPredicate: () => boolean) {
-  while (!stopPredicate()) {
+  do {
     const result = self._iterator.next();
     if (isReturn(result)) break;
     const df = new DocumentFragment();
     result.value.forEach((i) => df.appendChild(self.itemRenderer(i)));
     self.appendee.appendChild(df);
     await waitAnimationFrame();
-  }
+  } while (!stopPredicate());
 }
 
 function isFill(wrapper: HTMLElement) {
-  return wrapper.offsetHeight + 100 < wrapper.scrollHeight;
+  return wrapper.clientHeight + 100 < wrapper.scrollHeight;
 }
 
 function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, chunkSize = 10) {

@@ -15,7 +15,6 @@ interface HighlightedBlock {
   highlightedName: string;
   highlightedLabel: string;
   count?: number;
-  prefabs?: { [prefabName: string]: number };
 }
 
 interface PrefabDifficulties {
