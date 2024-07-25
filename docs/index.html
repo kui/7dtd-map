@@ -180,12 +180,12 @@
             <button data-input-for="prefab_filter">skyscraper</button>
             <button data-input-for="prefab_filter" data-input-text="^downtown_">downtown</button>
             <!--
-              See https://kui.github.io/7dtd-map/prefabs.html?block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
-              TODO: This should be excluded large prefabs like skyscraper
+              Go https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
+                 or https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%7C.*RandomLootHelper%29
             -->
             <button
               data-input-for="prefab_filter"
-              data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_01$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$)"
+              data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_(01|07|09|12)$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$|house_modern_(26|28)$|apartments_03$|downtown_filler_(12|31)$|farm_17$|rural_church_01$)"
             >
               Many Books except High Tiers
             </button>
