@@ -29,7 +29,7 @@ export class TerrainViewer {
 
   updateElevations = throttledInvoker(() => {
     this.updateElevationsImmediatly();
-  });
+  }, 1000);
 
   constructor(doms: Doms) {
     this.doms = doms;
