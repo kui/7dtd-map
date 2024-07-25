@@ -32,9 +32,9 @@ export class MapSelector {
     await this.changeMap(await this.storage.currentId(), true);
 
     this.doms.mapName.addEventListener("input", () => {
-      const mapId = this.selectedOptionMapId;
+      const id = this.selectedOptionMapId;
       const name = this.doms.mapName.value;
-      this.selectedOption.textContent = `${mapId.toString()}. ${name}`;
+      this.selectedOption.textContent = optionTextContent({ id, name });
       this.storage.put("maps", name).catch(printError);
     });
     this.doms.select.addEventListener("input", () => void this.changeMap(this.selectedOptionMapId).catch(printError));
@@ -94,6 +94,10 @@ export class MapSelector {
 function buildOptionElement(map: MapObject) {
   const e = document.createElement("option");
   e.dataset["mapId"] = requireNonnull(map.id).toString();
-  e.textContent = map.name;
+  e.textContent = optionTextContent(map);
   return e;
+}
+
+function optionTextContent(map: { id: number; name: string }) {
+  return `${map.id.toString()}. ${map.name}`;
 }
