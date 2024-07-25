@@ -179,7 +179,7 @@ function main() {
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
-    `<button data-input-for="prefabs_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
+    `<button data-input-for="prefab_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
     ...(prefab.dist ? [`${humanreadableDistance(prefab.dist)},`] : []),
     ...(prefab.difficulty
       ? [
@@ -201,7 +201,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       if (block.count === undefined) return;
       const blockLi = document.createElement("li");
       blockLi.innerHTML = [
-        `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="block_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
