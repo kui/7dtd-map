@@ -3,7 +3,7 @@ import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance } from "./lib/utils";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -71,19 +71,16 @@ function main() {
   });
 
   mapCanvasHandler.addMapSizeListener((size) => {
-    terrainViewer.markCanvasUpdate();
     if (terrainViewer.mapSize?.width === size.width && terrainViewer.mapSize.height === size.height) {
       return;
     }
     terrainViewer.mapSize = size;
-    terrainViewer.updateElevations().catch(printError);
   });
 
   const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
   dtmHandler.addListener((dtm) => {
     if (terrainViewer.dtm === dtm) return;
     terrainViewer.dtm = dtm;
-    terrainViewer.updateElevations().catch(printError);
   });
 
   const prefabsHandler = new PrefabsHandler(

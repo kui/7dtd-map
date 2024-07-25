@@ -1,6 +1,5 @@
 import * as three from "three";
 import { Dtm } from "./dtm-handler";
-import { throttledInvoker } from "../lib/throttled-invoker";
 import { requireNonnull, threePlaneSize } from "../lib/utils";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
 
@@ -21,20 +20,13 @@ export class TerrainViewer {
   private scene: three.Scene;
   private terrain: three.Mesh | null = null;
   private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
-  private texture: three.Texture;
   private animationRequestId: number | null = null;
 
   private _dtm: Dtm | null = null;
   private _mapSize: GameMapSize | null = null;
 
-  updateElevations = throttledInvoker(() => {
-    this.updateElevationsImmediatly();
-  }, 1000);
-
   constructor(doms: Doms) {
     this.doms = doms;
-    this.texture = new three.CanvasTexture(doms.texture);
-    this.texture.colorSpace = three.SRGBColorSpace;
     this.renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.scene = new three.Scene();
@@ -81,13 +73,8 @@ export class TerrainViewer {
     this.doms.show.disabled = !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0 || !this.dtm;
   }
 
-  markCanvasUpdate(): void {
-    this.texture.needsUpdate = true;
-  }
-
   startRender(): void {
     if (this.animationRequestId) return;
-    this.markCanvasUpdate();
     const r = (prevTime: number, currentTime: number) => {
       if (this.doms.output.style.display === "none") {
         this.animationRequestId = null;
@@ -102,7 +89,7 @@ export class TerrainViewer {
     r(0, 0);
   }
 
-  updateElevationsImmediatly(): void {
+  private updateElevations(): void {
     if (this.terrain) this.scene.remove(this.terrain);
     if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
 
@@ -120,11 +107,6 @@ export class TerrainViewer {
     geo.clearGroups();
     geo.addGroup(0, Infinity, 0);
     geo.addGroup(0, Infinity, 1);
-    const materials = [
-      new three.MeshLambertMaterial({ map: this.texture, transparent: true }),
-      // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
-      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
-    ];
     const pos = requireNonnull(geo.attributes["position"]);
     const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
     for (let i = 0; i < pos.count; i++) {
@@ -143,13 +125,20 @@ export class TerrainViewer {
     }
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
-    this.terrain = new three.Mesh(geo, materials);
+    const map = new three.CanvasTexture(this.doms.texture);
+    map.colorSpace = three.SRGBColorSpace;
+    this.terrain = new three.Mesh(geo, [
+      new three.MeshLambertMaterial({ map, transparent: true }),
+      // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
+      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
+    ]);
     this.scene.add(this.terrain);
     this.cameraController.onUpdateTerrain(this.mapSize.width, this.terrainSize);
     console.timeEnd("updateElevations");
   }
 
   private show() {
+    this.updateElevations();
     const { clientWidth, clientHeight } = document.documentElement;
     this.renderer.setSize(clientWidth, clientHeight);
     this.applyVisibleCss();
