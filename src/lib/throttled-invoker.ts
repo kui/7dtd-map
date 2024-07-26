@@ -6,8 +6,11 @@ export function throttledInvoker(asyncFunc: () => Promise<void> | void, interval
     switch (workerPromises.length) {
       case 0: {
         const p = (async () => {
-          await asyncFunc();
-          void workerPromises.shift();
+          try {
+            await asyncFunc();
+          } finally {
+            void workerPromises.shift();
+          }
         })();
         workerPromises.push(p);
         return p;
@@ -17,8 +20,11 @@ export function throttledInvoker(asyncFunc: () => Promise<void> | void, interval
         const p = (async () => {
           await prev;
           await sleep(intervalMs);
-          await asyncFunc();
-          void workerPromises.shift();
+          try {
+            await asyncFunc();
+          } finally {
+            void workerPromises.shift();
+          }
         })();
         workerPromises.push(p);
         return p;
