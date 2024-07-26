@@ -184,6 +184,8 @@ class PrefabsHandler {
   }
 }
 
+const DEV_PREFAB_REGEXP = /^(aaa_|AAA_|spacercise_|terrain_smoothing_bug)/;
+
 class PrefabFilterHandler {
   displayDevPrefab = false;
   updateListener: (() => void)[] = [];
@@ -201,7 +203,7 @@ class PrefabFilterHandler {
   filter(): (prefab: HighlightedPrefab) => boolean {
     return (prefab) => {
       if (!this.displayDevPrefab) {
-        return !/^aaa_/i.test(prefab.name);
+        return !DEV_PREFAB_REGEXP.test(prefab.name);
       }
       return true;
     };
