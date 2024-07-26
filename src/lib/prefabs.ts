@@ -80,6 +80,7 @@ export default class Prefabs {
 
   async #matchByPrefabName(prefabs: Prefab[]): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
+    const pattern = new RegExp(this.prefabFilterRegexp, "i");
     return prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const label = labels.get(prefab.name);
       if (this.prefabFilterRegexp.length === 0) {
@@ -90,8 +91,8 @@ export default class Prefabs {
         };
       }
 
-      const highlightedName = matchAndHighlight(prefab.name, new RegExp(this.prefabFilterRegexp, "i"));
-      const highlightedLabel = label && matchAndHighlight(label, new RegExp(this.prefabFilterRegexp, "i"));
+      const highlightedName = matchAndHighlight(prefab.name, pattern);
+      const highlightedLabel = label && matchAndHighlight(label, pattern);
       if (highlightedName != null || highlightedLabel != null) {
         return {
           ...prefab,
@@ -120,10 +121,11 @@ export default class Prefabs {
     const shapeLabels = await this.#labelHolder.get("shapes");
     const prefabNames = new Set(prefabs.map((p) => p.name));
     const matchedPrefabNames: { [prefabName: string]: HighlightedBlock[] } = {};
+    const pattern = new RegExp(this.blockFilterRegexp, "i");
     for (const [blockName, prefabs] of Object.entries(this.blockPrefabCounts)) {
-      const highlightedName = matchAndHighlight(blockName, new RegExp(this.blockFilterRegexp, "i"));
+      const highlightedName = matchAndHighlight(blockName, pattern);
       const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
-      const highlightedLabel = label && matchAndHighlight(label, new RegExp(this.blockFilterRegexp, "i"));
+      const highlightedLabel = label && matchAndHighlight(label, pattern);
       if (highlightedName == null && highlightedLabel == null) continue;
       for (const [prefabName, count] of Object.entries(prefabs)) {
         if (!prefabNames.has(prefabName)) continue;
