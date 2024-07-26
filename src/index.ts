@@ -171,6 +171,9 @@ function main() {
     const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
     downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
   });
+
+  updateMapRightMargin();
+  window.addEventListener("resize", updateMapRightMargin);
 }
 
 function prefabLi(prefab: HighlightedPrefab) {
@@ -208,6 +211,11 @@ function prefabLi(prefab: HighlightedPrefab) {
     li.appendChild(blocksUl);
   }
   return li;
+}
+
+function updateMapRightMargin() {
+  const margin = component("controller", HTMLElement).clientWidth + 48;
+  component("map", HTMLCanvasElement).style.marginRight = `${margin.toString()}px`;
 }
 
 if (document.readyState === "loading") {

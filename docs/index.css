@@ -1,5 +1,9 @@
+:root {
+  --controller-width: 550px;
+}
+
 #map {
-  margin-right: 500px;
+  margin-right: var(--controller-width);
   cursor: crosshair;
 }
 
@@ -9,7 +13,7 @@
   padding: 5px;
   border: solid lightgray 1px;
   width: 30%;
-  max-width: 600px;
+  max-width: var(--controller-width);
   max-height: calc(100% - 40px);
   right: 0;
   top: 0;
