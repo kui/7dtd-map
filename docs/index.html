@@ -243,9 +243,6 @@
     <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
-    <p>
-      <button id="sample_load" data-sample-dir="sample_world">Load Sample World (Pregen06k1)</button>
-    </p>
 
     <h2>How to Use</h2>
 
@@ -266,22 +263,7 @@
 
     <h3>Bundled Worlds</h3>
 
-    <ol>
-      <li>Browse 7DtD local files (<a href="https://www.google.com/search?q=steam+browse+local+files">google</a>)</li>
-      <li>
-        Select folders: <code>Data/Worlds/&lt;<strong>World Name</strong>&gt;</code>
-        <ul>
-          <li>
-            e.g.
-            <code id="bundled_world_path_windows">C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\Data\Worlds</code>
-            <button title="Copy this path" data-copy-for="bundled_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-              📋️
-            </button>
-          </li>
-        </ul>
-      </li>
-      <li>Drag and drop all files in the world folder</li>
-    </ol>
+    <ul id="world_list"></ul>
 
     <div id="overlay">
       <div>
