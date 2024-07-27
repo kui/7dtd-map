@@ -1,15 +1,24 @@
-import { handleMain, program, requireNonnull } from "./lib/utils.js";
-import * as fs from "fs";
+import { handleMain, program } from "./lib/utils.js";
+import * as fs from "node:fs";
+import * as stream from "node:stream/promises";
+import * as zlib from "node:zlib";
 import { PNG } from "pngjs";
 
-const USAGE = `${program()} <input dtm raw> <width> <output dtn png>`;
+const USAGE = `${program()} <0 or 6> dtm.raw <width> dtm.png
+Convert raw data to PNG.
+
+The first argument is the raw data format:
+  * 0: grayscale. only block height data.
+  * 6: grayscale & alpha. the color is block height data and the alpha is sub-block height data.
+`;
 
 async function main() {
-  const src = process.argv[2];
-  const width = parseInt(process.argv[3] ?? "");
-  const dst = process.argv[4];
+  const colorType = parseInt(process.argv[2] ?? "");
+  const src = process.argv[3];
+  const width = parseInt(process.argv[4] ?? "");
+  const dst = process.argv[5];
 
-  if (src === undefined || isNaN(width) || width < 1 || dst === undefined) {
+  if ((colorType !== 0 && colorType !== 6) || src === undefined || isNaN(width) || width < 1 || dst === undefined) {
     console.error(USAGE);
     return 1;
   }
@@ -23,28 +32,25 @@ async function main() {
 
   console.log({ width, height });
 
-  const png = new PNG({
-    width,
-    height,
-    colorType: 4, // grayscale & alpha
-  });
+  const deflateLevel = zlib.constants.Z_BEST_COMPRESSION;
+  const deflateStrategy = zlib.constants.Z_DEFAULT_STRATEGY;
+  console.log({ deflateLevel, deflateStrategy });
+  const png = new PNG({ width, height, colorType, deflateLevel, deflateStrategy });
   for (let i = 0; i < raw.length; i += 2) {
     // raw[i] Sub height
     // raw[i + 1] Height
-    png.data[i * 2] = requireNonnull(raw[i + 1]);
-    png.data[i * 2 + 1] = requireNonnull(raw[i + 1]);
-    png.data[i * 2 + 2] = requireNonnull(raw[i + 1]);
-    png.data[i * 2 + 3] = requireNonnull(raw[i]);
+    png.data[i * 2] = raw[i + 1] as unknown as number;
+    png.data[i * 2 + 1] = raw[i + 1] as unknown as number;
+    png.data[i * 2 + 2] = raw[i + 1] as unknown as number;
+    png.data[i * 2 + 3] = colorType === 6 ? (raw[i] as unknown as number) : 255;
   }
 
-  await new Promise((rs, rj) => {
-    png.pack().pipe(fs.createWriteStream(dst)).on("finish", rs).on("error", rj);
-  });
+  await stream.pipeline(png.pack(), fs.createWriteStream(dst));
 
   const srcSize = (await fs.promises.stat(src)).size;
   const dstSize = (await fs.promises.stat(dst)).size;
 
-  console.log("Compress: %d (%d / %d)", (dstSize / srcSize) * 100, dstSize, srcSize);
+  console.log("Compress: %d% (%d / %d)", ((dstSize / srcSize) * 100).toPrecision(4), dstSize, srcSize);
 
   return 0;
 }

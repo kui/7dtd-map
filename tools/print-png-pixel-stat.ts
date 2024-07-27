@@ -13,7 +13,7 @@ async function main() {
   }
   const stat = await statPixels(pngFile);
   console.log("  red,gre,blu,alp: count");
-  for (const [pixels, count] of stat) {
+  for (const [pixels, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])) {
     console.log(`  ${pixels}: ${count.toString()}`);
   }
   return 0;
