@@ -42,7 +42,7 @@ rm -frv "${dest:?}/"*
   cp -v "${copy_files[@]}" "$dest"
 )
 
-map_width="$(npx tsx ./tools/print-png-width.ts "$src/splat3_processed.png")"
+map_width="$(npx tsx ./tools/print-map-width.ts "$src/map_info.xml")"
 if [[ -z "${map_width}" ]]; then
   echo "Empty map width"
   exit 1

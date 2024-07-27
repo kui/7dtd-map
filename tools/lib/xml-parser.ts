@@ -12,6 +12,17 @@ export async function parseXml<T>(xmlFileName: string): Promise<T> {
   });
 }
 
+export interface MapInfoXml {
+  MapInfo: {
+    property: {
+      $: {
+        name: string;
+        value: string;
+      };
+    }[];
+  };
+}
+
 export interface BlockXml {
   blocks: {
     block: {
