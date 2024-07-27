@@ -34,7 +34,7 @@ function main() {
         component("terrain_viewer_show", HTMLButtonElement),
         ...document.querySelectorAll<HTMLButtonElement>("button[data-world-dir]"),
       ];
-    }
+    },
   });
 
   const mapStorage = new MapStorage();

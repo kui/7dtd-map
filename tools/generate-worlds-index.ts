@@ -1,5 +1,5 @@
 import path from "node:path";
-import { handleMain, projectRoot, writeJsonFile,  } from "./lib/utils.js";
+import { handleMain, projectRoot, writeJsonFile } from "./lib/utils.js";
 import * as fs from "node:fs";
 
 const DEST_DIR = projectRoot("docs", "worlds");
