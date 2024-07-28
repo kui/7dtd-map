@@ -48,4 +48,4 @@ if [[ -z "${map_width}" ]]; then
   exit 1
 fi
 echo "MapWidth: ${map_width}"
-npx tsx ./tools/generate-dtm-png.ts "$src/dtm.raw" "${map_width}" "$dest/dtm.png"
+npx tsx ./tools/generate-dtm-png.ts 6 "$src/dtm.raw" "${map_width}" "$dest/dtm.png"

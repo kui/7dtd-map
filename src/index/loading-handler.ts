@@ -1,14 +1,10 @@
 import { printError, waitAnimationFrame } from "../lib/utils";
 
+type DisablableElement = HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
+
 interface Doms {
   indicator: HTMLElement;
-  disablings: {
-    files: HTMLInputElement;
-    select: HTMLSelectElement;
-    create: HTMLButtonElement;
-    delete: HTMLButtonElement;
-    mapName: HTMLInputElement;
-  };
+  disableTargets: () => DisablableElement[];
 }
 
 const ANIMATION_FRAMES = ["｜", "／", "―", "＼"];
@@ -16,34 +12,50 @@ const ANIMATION_INTERVAL_MSEC = 1000;
 
 // Loading progression manager
 export class LoadingHandler {
-  private doms: Doms;
-  private _loadingList: string[] = [];
+  #doms: Doms;
+  #loadingList: string[] = [];
+  #disabledElements = new Set<DisablableElement>();
 
   constructor(doms: Doms) {
-    this.doms = doms;
+    this.#doms = doms;
   }
 
   add(list: string[] | string): void {
-    this._loadingList = this._loadingList.concat(list);
+    this.#loadingList = this.#loadingList.concat(list);
     this.startAnimation().catch(printError);
   }
 
   delete(loading: string): void {
-    this._loadingList = this._loadingList.filter((s) => s !== loading);
+    this.#loadingList = this.#loadingList.filter((s) => s !== loading);
   }
 
-  private disableAll(isDisable: boolean) {
-    Object.values(this.doms.disablings).forEach((e) => (e.disabled = isDisable));
+  isLoading(): boolean {
+    return this.#loadingList.length !== 0;
+  }
+
+  #disable() {
+    const elements = this.#doms.disableTargets();
+    for (const e of elements) {
+      e.disabled = true;
+      this.#disabledElements.add(e);
+    }
+  }
+
+  #enable() {
+    for (const e of this.#disabledElements) {
+      e.disabled = false;
+      this.#disabledElements.delete(e);
+    }
   }
 
   private async startAnimation() {
-    this.disableAll(true);
-    while (this._loadingList.length !== 0) {
-      this.doms.indicator.textContent = `${this.bar()} Loading: ${this._loadingList.join(", ")}`;
+    this.#disable();
+    while (this.#loadingList.length !== 0) {
+      this.#doms.indicator.textContent = `${this.bar()} Loading: ${this.#loadingList.join(", ")}`;
       await waitAnimationFrame();
     }
-    this.doms.indicator.textContent = "";
-    this.disableAll(false);
+    this.#doms.indicator.textContent = "";
+    this.#enable();
   }
 
   private bar() {

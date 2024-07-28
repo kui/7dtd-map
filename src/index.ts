@@ -3,7 +3,7 @@ import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
 import { MapSelector } from "./index/map-selector";
 import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance } from "./lib/utils";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -12,7 +12,6 @@ import { MarkerHandler } from "./index/marker-handler";
 import { FileHandler } from "./index/file-handler";
 import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
-import { SampleWorldLoader } from "./index/sample-world-loader";
 import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import * as syncOutput from "./lib/sync-output";
@@ -25,12 +24,16 @@ function main() {
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
-    disablings: {
-      files: component("files", HTMLInputElement),
-      select: component("map_list", HTMLSelectElement),
-      create: component("create_map", HTMLButtonElement),
-      delete: component("delete_map", HTMLButtonElement),
-      mapName: component("map_name", HTMLInputElement),
+    disableTargets() {
+      return [
+        component("files", HTMLInputElement),
+        component("map_list", HTMLSelectElement),
+        component("create_map", HTMLButtonElement),
+        component("delete_map", HTMLButtonElement),
+        component("map_name", HTMLInputElement),
+        component("terrain_viewer_show", HTMLButtonElement),
+        ...document.querySelectorAll<HTMLButtonElement>("button[data-world-dir]"),
+      ];
     },
   });
 
@@ -141,7 +144,7 @@ function main() {
   fileHandler.addListeners([
     ["biomes.png", async (file) => mapCanvasHandler.updateAsync({ biomesImg: await createImageBitmap(file) })],
     [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.updateAsync({ splat3Img: await imageLoader.loadSplat3(file) })],
-    ["splat4_processed.png", async (file) => mapCanvasHandler.updateAsync({ splat4Img: await imageLoader.loadSplat4(file) })],
+    [/splat4(_processed)?\.png/, async (file) => mapCanvasHandler.updateAsync({ splat4Img: await imageLoader.loadSplat4(file) })],
     ["radiation.png", async (file) => mapCanvasHandler.updateAsync({ radImg: await imageLoader.loadRad(file) })],
     [
       "prefabs.xml",
@@ -162,11 +165,6 @@ function main() {
     fileHandler.pushFiles(files);
   });
 
-  const sampleWorldLoader = new SampleWorldLoader();
-  sampleWorldLoader.addListenr((f) => {
-    fileHandler.pushFiles([f]);
-  });
-
   component("download").addEventListener("click", () => {
     const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
     downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
@@ -174,6 +172,18 @@ function main() {
 
   updateMapRightMargin();
   window.addEventListener("resize", updateMapRightMargin);
+
+  renderWorldList().catch(printError);
+
+  // Handle world load buttons
+  window.addEventListener("click", ({ target }) => {
+    if (!(target instanceof HTMLElement)) return;
+    const dir = target.dataset["worldDir"];
+    if (dir === undefined) return;
+    fileHandler.pushUrls(
+      ["biomes.png", "splat3_processed.png", "splat4_processed.png", "radiation.png", "prefabs.xml", "dtm.png"].map((n) => `${dir}/${n}`),
+    );
+  });
 }
 
 function prefabLi(prefab: HighlightedPrefab) {
@@ -213,8 +223,21 @@ function prefabLi(prefab: HighlightedPrefab) {
   return li;
 }
 
+async function renderWorldList() {
+  const container = component("world_list");
+  const worldNames = await fetchJson<string[]>("worlds/index.json");
+  for (const name of worldNames) {
+    const button = document.createElement("button");
+    button.textContent = name;
+    button.title = `Load ${name}`;
+    button.dataset["worldDir"] = `worlds/${name}`;
+    const li = document.createElement("li");
+    container.appendChild(li).appendChild(button);
+  }
+}
+
 function updateMapRightMargin() {
-  const margin = component("controller", HTMLElement).clientWidth + 48;
+  const margin = component("controller").clientWidth + 48;
   component("map", HTMLCanvasElement).style.marginRight = `${margin.toString()}px`;
 }
 
