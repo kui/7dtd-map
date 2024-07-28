@@ -5,9 +5,9 @@ interface Doms {
   input: HTMLInputElement;
 }
 
-type Listener = (file: File) => unknown;
+type Listener = (file: File, preprocessed: boolean) => unknown;
 
-type ResourceLike = File | { name: string; url: string };
+type ResourceLike = { name: string; file: File; preprocessed: boolean } | { name: string; url: string; preprocessed: boolean };
 
 export class FileHandler {
   #listeners = new Map<RegExp | string, Listener[]>();
@@ -29,12 +29,12 @@ export class FileHandler {
     this.#listeners.set(fileName, old.concat(listener));
   }
 
-  pushFiles(files: File[]): void {
-    this.#process(files).catch(printError);
+  pushFiles(files: File[], preprocessed = false): void {
+    this.#process(files.map((file) => ({ name: file.name, file, preprocessed }))).catch(printError);
   }
 
-  pushUrls(urls: string[]): void {
-    this.#process(urls.map((url) => ({ name: basename(url), url }))).catch(printError);
+  pushUrls(urls: string[], preprocessed = false): void {
+    this.#process(urls.map((url) => ({ name: basename(url), url, preprocessed }))).catch(printError);
   }
 
   async #process(resourceList: ResourceLike[]) {
@@ -51,8 +51,8 @@ export class FileHandler {
         console.log("Skip: ", resource.name);
       } else {
         console.time(`Processe: ${resource.name}`);
-        const f = await resolveResource(resource);
-        await Promise.all(listeners.map((fn) => fn(f)));
+        const file = await resolve(resource);
+        await Promise.all(listeners.map((fn) => fn(file, resource.preprocessed)));
         console.timeEnd(`Processe: ${resource.name}`);
       }
       this.#loadingHandler.delete(resource.name);
@@ -69,8 +69,8 @@ export class FileHandler {
   }
 }
 
-async function resolveResource(resource: ResourceLike): Promise<File> {
-  if (resource instanceof File) return resource;
+async function resolve(resource: ResourceLike): Promise<File> {
+  if ("file" in resource) return resource.file;
   const blob = await fetch(resource.url).then((res) => res.blob());
   return new File([blob], resource.name, { type: blob.type });
 }

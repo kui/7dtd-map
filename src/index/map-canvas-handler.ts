@@ -102,7 +102,16 @@ export class MapCanvasHandler {
     if (shouldStore) {
       for (const entry of Object.entries(msg)) {
         if (isStoreTarget(entry)) {
-          this.storage.put(FIELDNAME_STORAGENAME_MAP[entry[0]], await imageBitmapToPngBlob(entry[1])).catch(printError);
+          const [type, data] = entry;
+          if (data instanceof ImageBitmap) {
+            await this.storage.put(FIELDNAME_STORAGENAME_MAP[type], await imageBitmapToPngBlob(data)).catch(printError);
+          } else if (data instanceof Blob) {
+            await this.storage.put(FIELDNAME_STORAGENAME_MAP[type], data).catch(printError);
+          } else if (data == null) {
+            // no-op
+          } else {
+            throw new Error("Unexpected data type");
+          }
         }
       }
     }
@@ -144,6 +153,8 @@ function isTransferable(v: unknown): v is ImageBitmap | OffscreenCanvas {
   return v instanceof ImageBitmap || v instanceof OffscreenCanvas;
 }
 
-function isStoreTarget(e: [string, unknown]): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, ImageBitmap] {
+type StoreTargetType = mapRenderer.InMessage[keyof typeof FIELDNAME_STORAGENAME_MAP];
+
+function isStoreTarget(e: [string, unknown]): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, StoreTargetType] {
   return e[0] in FIELDNAME_STORAGENAME_MAP;
 }

@@ -142,10 +142,22 @@ function main() {
   const imageLoader = new ImageBitmapLoader(() => new Worker("worker/pngjs.js"));
   const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
-    ["biomes.png", async (file) => mapCanvasHandler.updateAsync({ biomesImg: await createImageBitmap(file) })],
-    [/splat3(_processed)?\.png/, async (file) => mapCanvasHandler.updateAsync({ splat3Img: await imageLoader.loadSplat3(file) })],
-    [/splat4(_processed)?\.png/, async (file) => mapCanvasHandler.updateAsync({ splat4Img: await imageLoader.loadSplat4(file) })],
-    ["radiation.png", async (file) => mapCanvasHandler.updateAsync({ radImg: await imageLoader.loadRad(file) })],
+    ["biomes.png", async (file) => mapCanvasHandler.updateAsync({ biomesImg: await loadImage(file) })],
+    [
+      /splat3(_processed)?\.png/,
+      async (file, preprocessed) =>
+        mapCanvasHandler.updateAsync({ splat3Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat3(file) }),
+    ],
+    [
+      /splat4(_processed)?\.png/,
+      async (file, preprocessed) =>
+        mapCanvasHandler.updateAsync({ splat4Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat4(file) }),
+    ],
+    [
+      "radiation.png",
+      async (file, preprocessed) =>
+        mapCanvasHandler.updateAsync({ radImg: preprocessed ? await loadImage(file) : await imageLoader.loadRad(file) }),
+    ],
     [
       "prefabs.xml",
       async (file) => {
@@ -182,6 +194,8 @@ function main() {
     if (dir === undefined) return;
     fileHandler.pushUrls(
       ["biomes.png", "splat3_processed.png", "splat4_processed.png", "radiation.png", "prefabs.xml", "dtm.png"].map((n) => `${dir}/${n}`),
+      // Bundled world files are preprocessed. See tools/copy_worlds.bash
+      true,
     );
   });
 }
@@ -239,6 +253,13 @@ async function renderWorldList() {
 function updateMapRightMargin() {
   const margin = component("controller").clientWidth + 48;
   component("map", HTMLCanvasElement).style.marginRight = `${margin.toString()}px`;
+}
+
+async function loadImage(file: File) {
+  if (file.type === "image/png") {
+    return new Blob([file], { type: "image/png" }) as PngBlob;
+  }
+  return createImageBitmap(file);
 }
 
 if (document.readyState === "loading") {
