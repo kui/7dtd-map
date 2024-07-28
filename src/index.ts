@@ -4,7 +4,7 @@ import * as presetButton from "./lib/preset-button";
 import * as dialogButtons from "./lib/dialog-buttons";
 // import { MapSelector } from "./index/map-selector";
 // import { MapStorage } from "./lib/map-storage";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError, basename } from "./lib/utils";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -176,7 +176,7 @@ function main() {
         let splat3Img: mapRenderer.InMessage["splat3Img"];
         if (file == null) {
           splat3Img = null;
-        } else if(preprocessed) {
+        } else if (preprocessed) {
           splat3Img = await loadImage(file);
         } else {
           splat3Img = await imageLoader.loadSplat3(file);
@@ -190,7 +190,7 @@ function main() {
         let splat4Img: mapRenderer.InMessage["splat4Img"];
         if (file == null) {
           splat4Img = null;
-        } else if(preprocessed) {
+        } else if (preprocessed) {
           splat4Img = await loadImage(file);
         } else {
           splat4Img = await imageLoader.loadSplat4(file);
@@ -204,7 +204,7 @@ function main() {
         let radImg: mapRenderer.InMessage["radImg"];
         if (file == null) {
           radImg = null;
-        } else if(preprocessed) {
+        } else if (preprocessed) {
           radImg = await loadImage(file);
         } else {
           radImg = await imageLoader.loadRad(file);
@@ -226,7 +226,6 @@ function main() {
     ],
   ]);
 
-
   ////////////////////////////////////////////////////
   // Setup components that put files or urls
   ////////////////////////////////////////////////////
@@ -244,6 +243,10 @@ function main() {
     if (!(target instanceof HTMLElement)) return;
     const dir = target.dataset["worldDir"];
     if (dir === undefined) return;
+    const worldName = basename(dir);
+    const mapName = component("map_name", HTMLInputElement)
+    mapName.value = worldName;
+    mapName.dispatchEvent(new Event("input"));
     fileHandler.pushUrls(
       ["biomes.png", "splat3_processed.png", "splat4_processed.png", "radiation.png", "prefabs.xml", "dtm.png"].map((n) => `${dir}/${n}`),
       // Bundled world files are preprocessed. See tools/copy_worlds.bash

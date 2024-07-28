@@ -123,3 +123,7 @@ export async function fetchJson<T>(url: string): Promise<T> {
 export async function invokeAll<T>(fns: ((t: T) => unknown)[], t: T): Promise<void> {
   await Promise.all(fns.map((fn) => fn(t)));
 }
+
+export function basename(path: string) {
+  return path.substring(path.lastIndexOf("/") + 1);
+}

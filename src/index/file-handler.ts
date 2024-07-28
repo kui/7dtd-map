@@ -1,4 +1,4 @@
-import { printError, waitAnimationFrame } from "../lib/utils";
+import { basename, printError, waitAnimationFrame } from "../lib/utils";
 import { LoadingHandler } from "./loading-handler";
 
 interface Doms {
@@ -79,10 +79,6 @@ async function resolve(resource: ResourceLike): Promise<File | null> {
   if ("file" in resource) return resource.file;
   const blob = await fetch(resource.url).then((res) => res.blob());
   return new File([blob], resource.name, { type: blob.type });
-}
-
-function basename(path: string) {
-  return path.substring(path.lastIndexOf("/") + 1);
 }
 
 function shouldSkip(resources: ResourceLike[], targetName: string): boolean {
