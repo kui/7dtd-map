@@ -17,12 +17,37 @@ import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import * as syncOutput from "./lib/sync-output";
 import { LabelHandler } from "./lib/label-handler";
+import type * as mapRenderer from "./worker/map-renderer";
 
 function main() {
+  ////////////////////////////////////////////////////////////////////
+  // Setup view components with simple logic
+  ////////////////////////////////////////////////////////////////////
+
   presetButton.init();
   copyButton.init();
   syncOutput.init();
   dialogButtons.init();
+  initSaveDialog();
+  initLoadDialog();
+
+  component("download").addEventListener("click", () => {
+    const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
+    downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
+  });
+
+  updateMapRightMargin();
+  window.addEventListener("resize", updateMapRightMargin);
+
+  renderBundledWorldList().catch(printError);
+
+  const loadMapName = component("load_map_name", HTMLSelectElement);
+  loadMapName.addEventListener("change", () => {
+    if (loadMapName.value === "") return;
+    const dialog = loadMapName.closest("dialog");
+    if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected state`);
+    dialog.close(loadMapName.value);
+  });
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
@@ -38,13 +63,9 @@ function main() {
     },
   });
 
-  const loadMapName = component("load_map_name", HTMLSelectElement);
-  loadMapName.addEventListener("change", () => {
-    if (loadMapName.value === "") return;
-    const dialog = loadMapName.closest("dialog");
-    if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected state`);
-    dialog.close(loadMapName.value);
-  });
+  ////////////////////////////////////////////////////
+  // Setup view components for map rendering
+  ////////////////////////////////////////////////////
 
   const mapCanvasHandler = new MapCanvasHandler(
     {
@@ -91,7 +112,6 @@ function main() {
       blockFilter: component("block_filter", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
-    //mapStorage,
     fetchJson("prefab-difficulties.json"),
   );
   prefabsHandler.listeners.push((prefabs) => {
@@ -141,25 +161,55 @@ function main() {
     [
       "biomes.png",
       async (file) => {
-        mapCanvasHandler.update({ biomesImg: await loadImage(file) });
+        let biomesImg: mapRenderer.InMessage["biomesImg"];
+        if (file == null) {
+          biomesImg = null;
+        } else {
+          biomesImg = await loadImage(file);
+        }
+        mapCanvasHandler.update({ biomesImg });
       },
     ],
     [
       /splat3(_processed)?\.png/,
       async (file, preprocessed) => {
-        mapCanvasHandler.update({ splat3Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat3(file) });
+        let splat3Img: mapRenderer.InMessage["splat3Img"];
+        if (file == null) {
+          splat3Img = null;
+        } else if(preprocessed) {
+          splat3Img = await loadImage(file);
+        } else {
+          splat3Img = await imageLoader.loadSplat3(file);
+        }
+        mapCanvasHandler.update({ splat3Img });
       },
     ],
     [
       /splat4(_processed)?\.png/,
       async (file, preprocessed) => {
-        mapCanvasHandler.update({ splat4Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat4(file) });
+        let splat4Img: mapRenderer.InMessage["splat4Img"];
+        if (file == null) {
+          splat4Img = null;
+        } else if(preprocessed) {
+          splat4Img = await loadImage(file);
+        } else {
+          splat4Img = await imageLoader.loadSplat4(file);
+        }
+        mapCanvasHandler.update({ splat4Img });
       },
     ],
     [
       "radiation.png",
       async (file, preprocessed) => {
-        mapCanvasHandler.update({ radImg: preprocessed ? await loadImage(file) : await imageLoader.loadRad(file) });
+        let radImg: mapRenderer.InMessage["radImg"];
+        if (file == null) {
+          radImg = null;
+        } else if(preprocessed) {
+          radImg = await loadImage(file);
+        } else {
+          radImg = await imageLoader.loadRad(file);
+        }
+        mapCanvasHandler.update({ radImg });
       },
     ],
     [
@@ -176,22 +226,20 @@ function main() {
     ],
   ]);
 
+
+  ////////////////////////////////////////////////////
+  // Setup components that put files or urls
+  ////////////////////////////////////////////////////
+
   const dndHandler = new DndHandler(document);
   dndHandler.addDropFilesListener((files) => {
     fileHandler.pushFiles(files);
   });
 
-  component("download").addEventListener("click", () => {
-    const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
-    downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
+  component("clear_map").addEventListener("click", () => {
+    fileHandler.clear();
   });
 
-  updateMapRightMargin();
-  window.addEventListener("resize", updateMapRightMargin);
-
-  renderWorldList().catch(printError);
-
-  // Handle world load buttons
   window.addEventListener("click", ({ target }) => {
     if (!(target instanceof HTMLElement)) return;
     const dir = target.dataset["worldDir"];
@@ -201,6 +249,39 @@ function main() {
       // Bundled world files are preprocessed. See tools/copy_worlds.bash
       true,
     );
+  });
+}
+
+function initSaveDialog() {
+  const mapName = component("map_name", HTMLInputElement);
+  const saveMapName = component("save_map_name", HTMLInputElement);
+  const saveMap = component("save_map", HTMLButtonElement);
+  const saveDialog = component("save_prompt", HTMLDialogElement);
+
+  // Bind map name
+  mapName.addEventListener("input", () => {
+    saveMapName.value = mapName.value;
+    saveMap.value = mapName.value;
+  });
+  saveMapName.addEventListener("input", () => {
+    mapName.value = saveMapName.value;
+    saveMap.value = saveMapName.value;
+  });
+
+  saveDialog.addEventListener("close", () => {
+    console.debug("Save dialog closed", saveDialog.returnValue);
+  });
+}
+
+function initLoadDialog() {
+  const loadMapName = component("load_map_name", HTMLSelectElement);
+  const loadDialog = component("load_prompt", HTMLDialogElement);
+  loadMapName.addEventListener("change", () => {
+    loadDialog.close(loadMapName.value);
+  });
+  loadDialog.addEventListener("close", () => {
+    loadMapName.value = "";
+    console.debug("Load dialog closed", loadDialog.returnValue);
   });
 }
 
@@ -241,7 +322,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   return li;
 }
 
-async function renderWorldList() {
+async function renderBundledWorldList() {
   const container = component("world_list");
   const worldNames = await fetchJson<string[]>("worlds/index.json");
   for (const name of worldNames) {

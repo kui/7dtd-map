@@ -31,16 +31,17 @@
     </nav>
 
     <div id="controller">
+      <p><input id="files" type="file" /></p>
       <p>
-        <button id="download">Download</button>
-        <input id="files" type="file" />
         <button data-show-dialog-for="save_prompt">Save</button>
         <button data-show-dialog-for="load_prompt">Load</button>
+        <button id="clear_map">Clear</button>
+        <button id="download">Download</button>
       </p>
       <table>
         <tr>
           <th><label for="map_name">🗺️ Map Name</label></th>
-          <td><input id="map_name" title="Map Name" type="text" value="" /></td>
+          <td><input id="map_name" type="text" value="" /></td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
@@ -276,15 +277,20 @@
     </div>
 
     <dialog id="save_prompt">
+      <h2>Save Map</h2>
       <form method="dialog">
         <p>
-          <label>Map name: <input type="text" onchange="save.value = this.value" minlength="1" /></label>
+          <label>Map name: <input id="save_map_name" type="text" minlength="1" /></label>
         </p>
-        <div><button type="submit" name="save" value="">Save</button> <button type="submit" value="">Cancel</button></div>
+        <div>
+          <button id="save_map" type="submit" name="save" value="">Save</button>
+          <button type="submit" value="">Cancel</button>
+        </div>
       </form>
     </dialog>
 
     <dialog id="load_prompt">
+      <h2>Load Map</h2>
       <form method="dialog">
         <p>
           Choose a map:

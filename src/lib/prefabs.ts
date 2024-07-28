@@ -150,7 +150,9 @@ export default class Prefabs {
   }
 
   #sort() {
-    if (this.#filtered.length === 0) {
+    if (this.all.length === 0) {
+      this.#status = "No prefabs loaded";
+    } else if (this.#filtered.length === 0) {
       this.#status += ". Please relax the filter conditions";
     } else if (this.markCoords) {
       this.#status += ", order by distances from the flag";

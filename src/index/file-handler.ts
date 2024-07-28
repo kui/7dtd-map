@@ -5,9 +5,11 @@ interface Doms {
   input: HTMLInputElement;
 }
 
-type Listener = (file: File, preprocessed: boolean) => unknown;
+type Listener = (file: File | null, preprocessed: boolean) => unknown;
 
-type ResourceLike = { name: string; file: File; preprocessed: boolean } | { name: string; url: string; preprocessed: boolean };
+type ResourceLike = { name: string; file: File | null; preprocessed: boolean } | { name: string; url: string; preprocessed: boolean };
+
+const CLEAR_TARGETS = ["biomes.png", "splat3.png", "splat4.png", "radiation.png", "prefabs.xml", "dtm.raw"];
 
 export class FileHandler {
   #listeners = new Map<RegExp | string, Listener[]>();
@@ -35,6 +37,10 @@ export class FileHandler {
 
   pushUrls(urls: string[], preprocessed = false): void {
     this.#process(urls.map((url) => ({ name: basename(url), url, preprocessed }))).catch(printError);
+  }
+
+  clear(): void {
+    this.#process(CLEAR_TARGETS.map((name) => ({ name, file: null, preprocessed: false }))).catch(printError);
   }
 
   async #process(resourceList: ResourceLike[]) {
@@ -69,7 +75,7 @@ export class FileHandler {
   }
 }
 
-async function resolve(resource: ResourceLike): Promise<File> {
+async function resolve(resource: ResourceLike): Promise<File | null> {
   if ("file" in resource) return resource.file;
   const blob = await fetch(resource.url).then((res) => res.blob());
   return new File([blob], resource.name, { type: blob.type });
@@ -82,6 +88,9 @@ function basename(path: string) {
 function shouldSkip(resources: ResourceLike[], targetName: string): boolean {
   if (targetName === "splat3.png") {
     return resources.some(({ name }) => name === "splat3_processed.png");
+  }
+  if (targetName === "splat4.png") {
+    return resources.some(({ name }) => name === "splat4_processed.png");
   }
   return false;
 }

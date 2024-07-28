@@ -32,8 +32,10 @@ export class DtmHandler {
     this.pngParser = new PngParser(workerFactory);
   }
 
-  async handle(blob: File): Promise<void> {
-    if (blob.name.endsWith(".png")) {
+  async handle(blob: File|null): Promise<void> {
+    if (blob === null) {
+      this.dtm = null;
+    } else if (blob.name.endsWith(".png")) {
       this.dtm = await this.loadByPngBlob(blob);
     } else if (blob.name.endsWith(".raw")) {
       this.dtm = await loadDtmByRaw(blob);

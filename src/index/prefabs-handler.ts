@@ -62,8 +62,8 @@ export class PrefabsHandler {
     });
   }
 
-  async handle(blob: { text(): Promise<string> }): Promise<void> {
-    const prefabs = parse(await blob.text(), await this.difficultyPromise);
+  async handle(blob: { text(): Promise<string> } | null): Promise<void> {
+    const prefabs = blob == null ? [] : parse(await blob.text(), await this.difficultyPromise);
     this.worker.postMessage({ all: prefabs });
   }
 
