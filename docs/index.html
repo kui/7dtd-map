@@ -34,18 +34,13 @@
       <p>
         <button id="download">Download</button>
         <input id="files" type="file" />
+        <button data-show-dialog-for="save_prompt">Save</button>
+        <button data-show-dialog-for="load_prompt">Load</button>
       </p>
       <table>
         <tr>
-          <th>🗺️ Select Map</th>
-          <td>
-            <select id="map_list">
-              <option data-map-id="1">1. New-World</option>
-            </select>
-            <button id="create_map" title="Create new map">➕</button>
-            <button id="delete_map" title="Delete current map">🗑️</button>
-            <input id="map_name" title="Map Name" type="text" value="New-World" />
-          </td>
+          <th><label for="map_name">🗺️ Map Name</label></th>
+          <td><input id="map_name" title="Map Name" type="text" value="" /></td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
@@ -279,5 +274,27 @@
         <p>The rest of files are ignored.</p>
       </div>
     </div>
+
+    <dialog id="save_prompt">
+      <form method="dialog">
+        <p>
+          <label>Map name: <input type="text" onchange="save.value = this.value" minlength="1" /></label>
+        </p>
+        <div><button type="submit" name="save" value="">Save</button> <button type="submit" value="">Cancel</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="load_prompt">
+      <form method="dialog">
+        <p>
+          Choose a map:
+          <select id="load_map_name">
+            <option value="" selected>Choose</option>
+            <option value="aaa">aaa</option>
+          </select>
+        </p>
+        <div><button type="submit" value="">Cancel</button></div>
+      </form>
+    </dialog>
   </body>
 </html>

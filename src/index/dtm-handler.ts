@@ -1,4 +1,3 @@
-import { MapStorage } from "../lib/map-storage";
 import { Png, PngParser } from "../lib/png-parser";
 
 export class Dtm {
@@ -24,52 +23,31 @@ export class Dtm {
 }
 
 export class DtmHandler {
-  private storage: MapStorage;
   private pngParser: PngParser;
   private listeners: ((dtm: Dtm | null) => unknown)[] = [];
 
   dtm: Dtm | null = null;
 
-  constructor(storage: MapStorage, workerFactory: () => Worker) {
-    this.storage = storage;
+  constructor(workerFactory: () => Worker) {
     this.pngParser = new PngParser(workerFactory);
-    MapStorage.addListener(async () => {
-      const h = await storage.getCurrent("elevations");
-      if (h) {
-        this.dtm = new Dtm(h.data);
-      } else {
-        this.dtm = null;
-      }
-      this.listeners.forEach((ln) => {
-        ln(this.dtm);
-      });
-    });
   }
 
-  async handle(blobOrUrl: File | string): Promise<void> {
-    if (typeof blobOrUrl === "string") {
-      this.dtm = await this.loadDtmByPngUrl(blobOrUrl);
-    } else if (blobOrUrl.name.endsWith(".png")) {
-      this.dtm = await this.loadByPngBlob(blobOrUrl);
-    } else if (blobOrUrl.name.endsWith(".raw")) {
-      this.dtm = await loadDtmByRaw(blobOrUrl);
+  async handle(blob: File): Promise<void> {
+    if (blob.name.endsWith(".png")) {
+      this.dtm = await this.loadByPngBlob(blob);
+    } else if (blob.name.endsWith(".raw")) {
+      this.dtm = await loadDtmByRaw(blob);
     } else {
-      throw Error(`Unknown data type: name=${blobOrUrl.name}, type=${blobOrUrl.type}`);
+      throw Error(`Unknown data type: name=${blob.name}, type=${blob.type}`);
     }
-    await this.storage.put("elevations", this.dtm.data);
     await Promise.all(this.listeners.map((ln) => ln(this.dtm)));
-  }
-
-  private async loadDtmByPngUrl(url: string): Promise<Dtm> {
-    const res = await fetch(url);
-    return this.loadByPngBlob(await res.blob());
   }
 
   private async loadByPngBlob(blob: Blob): Promise<Dtm> {
     return convertPng(await this.pngParser.parse(blob));
   }
 
-  addListener(ln: (dtm: Dtm | null) => void): void {
+  addListener(ln: (dtm: Dtm | null) => unknown): void {
     this.listeners.push(ln);
   }
 }
@@ -78,6 +56,8 @@ function convertPng(png: Png) {
   const pngData = new Uint8Array(png.data);
   const data = new Uint8Array(pngData.length / 4);
   for (let i = 0; i < data.length; i++) {
+    // dtm.png has only one channel.
+    // The color indicates the block height.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     data[i] = pngData[i * 4]!;
   }
@@ -88,8 +68,8 @@ async function loadDtmByRaw(blob: Blob): Promise<Dtm> {
   const src = new Uint8Array(await blob.arrayBuffer());
   const data = new Uint8Array(src.length / 2);
   for (let i = 0; i < data.length; i++) {
-    // Higher 8 bits are a sub height in a block
-    // Lower 8 bits are a height
+    // Higher 8 bits are sub-block height
+    // Lower 8 bits are block height
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     data[i] = src[i * 2 + 1]!;
   }

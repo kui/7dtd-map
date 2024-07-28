@@ -1,7 +1,6 @@
-import * as prefabsFilter from "../worker/prefabs-filter";
-import { MapStorage } from "../lib/map-storage";
-import { PrefabUpdate } from "../lib/prefabs";
-import { Language } from "../lib/labels";
+import type * as prefabsFilter from "../worker/prefabs-filter";
+import type { PrefabUpdate } from "../lib/prefabs";
+import type { Language } from "../lib/labels";
 
 interface Doms {
   status: HTMLElement;
@@ -18,22 +17,16 @@ declare class PrefabsFilterWorker extends Worker {
 export class PrefabsHandler {
   doms: Doms;
   worker: PrefabsFilterWorker;
-  storage: MapStorage;
   difficultyPromise: Promise<PrefabDifficulties>;
   listeners: ((prefabs: HighlightedPrefab[]) => unknown)[] = [];
   tierRange: NumberRange;
 
-  constructor(doms: Doms, worker: PrefabsFilterWorker, storage: MapStorage, difficulty: Promise<PrefabDifficulties>) {
+  constructor(doms: Doms, worker: PrefabsFilterWorker, difficulty: Promise<PrefabDifficulties>) {
     this.doms = doms;
     this.worker = worker;
-    this.storage = storage;
     this.difficultyPromise = difficulty;
     this.tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
 
-    MapStorage.addListener(async () => {
-      const o = await storage.getCurrent("prefabs");
-      worker.postMessage({ all: o?.data ?? [] });
-    });
     worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
       const { prefabs, status } = event.data;
       this.listeners.forEach((fn) => fn(prefabs));
@@ -71,7 +64,6 @@ export class PrefabsHandler {
 
   async handle(blob: { text(): Promise<string> }): Promise<void> {
     const prefabs = parse(await blob.text(), await this.difficultyPromise);
-    await this.storage.put("prefabs", prefabs);
     this.worker.postMessage({ all: prefabs });
   }
 

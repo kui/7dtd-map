@@ -1,14 +1,4 @@
-import { MapStorage } from "../lib/map-storage";
-import { imageBitmapToPngBlob, printError } from "../lib/utils";
-import * as mapRenderer from "../worker/map-renderer";
-import { LoadingHandler } from "./loading-handler";
-
-const FIELDNAME_STORAGENAME_MAP = {
-  biomesImg: "biomes",
-  splat3Img: "splat3",
-  splat4Img: "splat4",
-  radImg: "rad",
-} as const;
+import type * as mapRenderer from "../worker/map-renderer";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -25,16 +15,15 @@ interface Doms {
 export class MapCanvasHandler {
   private doms: Doms;
   private worker: Worker;
-  private storage: MapStorage;
-  private mapSizeListeners: ((mapSize: GameMapSize) => unknown)[] = [];
+  private updateListeners: ((mapSize: GameMapSize) => unknown)[] = [];
 
-  constructor(doms: Doms, worker: Worker, storage: MapStorage, loadingHandler: LoadingHandler) {
+  constructor(doms: Doms, worker: Worker) {
     this.doms = doms;
     this.worker = worker;
-    this.storage = storage;
 
-    this.update({
-      canvas: doms.canvas.transferControlToOffscreen(),
+    const canvas =doms.canvas.transferControlToOffscreen()
+    worker.postMessage({
+      canvas,
       ...this.biomesAlpha(),
       ...this.splat3Alpha(),
       ...this.splat4Alpha(),
@@ -43,25 +32,11 @@ export class MapCanvasHandler {
       ...this.signSize(),
       ...this.signAlpha(),
       ...this.scale(),
-    });
-
-    MapStorage.addListener(async () => {
-      console.log("Change map: ", await storage.currentId());
-      await this.updateAsync({ biomesImg: null, splat3Img: null, splat4Img: null, radImg: null }, false);
-      loadingHandler.add(["bioms", "splat3", "splat4", "radiation"]);
-      await this.updateAsync({ biomesImg: (await storage.getCurrent("biomes"))?.data }, false);
-      loadingHandler.delete("bioms");
-      await this.updateAsync({ splat3Img: (await storage.getCurrent("splat3"))?.data }, false);
-      loadingHandler.delete("splat3");
-      await this.updateAsync({ splat4Img: (await storage.getCurrent("splat4"))?.data }, false);
-      loadingHandler.delete("splat4");
-      await this.updateAsync({ radImg: (await storage.getCurrent("rad"))?.data }, false);
-      loadingHandler.delete("radiation");
-    });
+    }, [canvas]);
 
     worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
       const { mapSize } = e.data;
-      this.mapSizeListeners.forEach((fn) => fn(mapSize));
+      this.updateListeners.forEach((fn) => fn(mapSize));
     });
     doms.biomesAlpha.addEventListener("input", () => {
       this.update(this.biomesAlpha());
@@ -89,38 +64,13 @@ export class MapCanvasHandler {
     });
   }
 
-  /**
-   * Method to update the map canvas.
-   *
-   * This is a utility method that you don't need the return value of  {@link updateAsync} or write in short.
-   */
-  update(msg: mapRenderer.InMessage, shouldStore = true): void {
-    this.updateAsync(msg, shouldStore).catch(printError);
-  }
-
-  async updateAsync(msg: mapRenderer.InMessage, shouldStore = true): Promise<void> {
-    if (shouldStore) {
-      for (const entry of Object.entries(msg)) {
-        if (isStoreTarget(entry)) {
-          const [type, data] = entry;
-          if (data instanceof ImageBitmap) {
-            await this.storage.put(FIELDNAME_STORAGENAME_MAP[type], await imageBitmapToPngBlob(data)).catch(printError);
-          } else if (data instanceof Blob) {
-            await this.storage.put(FIELDNAME_STORAGENAME_MAP[type], data).catch(printError);
-          } else if (data == null) {
-            // no-op
-          } else {
-            throw new Error("Unexpected data type");
-          }
-        }
-      }
-    }
+  update(msg: mapRenderer.InMessage) {
     const transferables = Object.values(msg).filter(isTransferable);
     this.worker.postMessage(msg, transferables);
   }
 
-  addMapSizeListener(ln: (mapSize: GameMapSize) => unknown): void {
-    this.mapSizeListeners.push(ln);
+  addMapSizeListener(ln: (mapSize: GameMapSize) => unknown) {
+    this.updateListeners.push(ln);
   }
 
   private biomesAlpha() {
@@ -149,12 +99,8 @@ export class MapCanvasHandler {
   }
 }
 
-function isTransferable(v: unknown): v is ImageBitmap | OffscreenCanvas {
-  return v instanceof ImageBitmap || v instanceof OffscreenCanvas;
-}
+type InMessageValue = mapRenderer.InMessage[keyof mapRenderer.InMessage];
 
-type StoreTargetType = mapRenderer.InMessage[keyof typeof FIELDNAME_STORAGENAME_MAP];
-
-function isStoreTarget(e: [string, unknown]): e is [keyof typeof FIELDNAME_STORAGENAME_MAP, StoreTargetType] {
-  return e[0] in FIELDNAME_STORAGENAME_MAP;
+function isTransferable(v: InMessageValue): v is ImageBitmap | OffscreenCanvas  {
+  return v instanceof ImageBitmap || v instanceof OffscreenCanvas ;
 }

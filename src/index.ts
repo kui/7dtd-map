@@ -1,8 +1,9 @@
 import { ImageBitmapLoader } from "./lib/bitmap-loader";
 import * as copyButton from "./lib/copy-button";
 import * as presetButton from "./lib/preset-button";
-import { MapSelector } from "./index/map-selector";
-import { MapStorage } from "./lib/map-storage";
+import * as dialogButtons from "./lib/dialog-buttons";
+// import { MapSelector } from "./index/map-selector";
+// import { MapStorage } from "./lib/map-storage";
 import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -21,15 +22,15 @@ function main() {
   presetButton.init();
   copyButton.init();
   syncOutput.init();
+  dialogButtons.init();
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
     disableTargets() {
       return [
         component("files", HTMLInputElement),
-        component("map_list", HTMLSelectElement),
-        component("create_map", HTMLButtonElement),
-        component("delete_map", HTMLButtonElement),
+        component("show_save_prompt", HTMLButtonElement),
+        component("show_load_prompt", HTMLButtonElement),
         component("map_name", HTMLInputElement),
         component("terrain_viewer_show", HTMLButtonElement),
         ...document.querySelectorAll<HTMLButtonElement>("button[data-world-dir]"),
@@ -37,16 +38,13 @@ function main() {
     },
   });
 
-  const mapStorage = new MapStorage();
-  new MapSelector(
-    {
-      select: component("map_list", HTMLSelectElement),
-      create: component("create_map", HTMLButtonElement),
-      delete: component("delete_map", HTMLButtonElement),
-      mapName: component("map_name", HTMLInputElement),
-    },
-    mapStorage,
-  );
+  const loadMapName = component("load_map_name", HTMLSelectElement);
+  loadMapName.addEventListener("change", () => {
+    if (loadMapName.value === "") return;
+    const dialog = loadMapName.closest("dialog");
+    if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected state`);
+    dialog.close(loadMapName.value);
+  });
 
   const mapCanvasHandler = new MapCanvasHandler(
     {
@@ -61,8 +59,6 @@ function main() {
       scale: component("scale", HTMLInputElement),
     },
     new Worker("worker/map-renderer.js"),
-    mapStorage,
-    loadingHandler,
   );
 
   const terrainViewer = new TerrainViewer({
@@ -80,7 +76,7 @@ function main() {
     terrainViewer.mapSize = size;
   });
 
-  const dtmHandler = new DtmHandler(mapStorage, () => new Worker("worker/pngjs.js"));
+  const dtmHandler = new DtmHandler(() => new Worker("worker/pngjs.js"));
   dtmHandler.addListener((dtm) => {
     if (terrainViewer.dtm === dtm) return;
     terrainViewer.dtm = dtm;
@@ -95,7 +91,7 @@ function main() {
       blockFilter: component("block_filter", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
-    mapStorage,
+    //mapStorage,
     fetchJson("prefab-difficulties.json"),
   );
   prefabsHandler.listeners.push((prefabs) => {
@@ -142,21 +138,29 @@ function main() {
   const imageLoader = new ImageBitmapLoader(() => new Worker("worker/pngjs.js"));
   const fileHandler = new FileHandler({ input: component("files", HTMLInputElement) }, loadingHandler);
   fileHandler.addListeners([
-    ["biomes.png", async (file) => mapCanvasHandler.updateAsync({ biomesImg: await loadImage(file) })],
+    [
+      "biomes.png",
+      async (file) => {
+        mapCanvasHandler.update({ biomesImg: await loadImage(file) });
+      },
+    ],
     [
       /splat3(_processed)?\.png/,
-      async (file, preprocessed) =>
-        mapCanvasHandler.updateAsync({ splat3Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat3(file) }),
+      async (file, preprocessed) => {
+        mapCanvasHandler.update({ splat3Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat3(file) });
+      },
     ],
     [
       /splat4(_processed)?\.png/,
-      async (file, preprocessed) =>
-        mapCanvasHandler.updateAsync({ splat4Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat4(file) }),
+      async (file, preprocessed) => {
+        mapCanvasHandler.update({ splat4Img: preprocessed ? await loadImage(file) : await imageLoader.loadSplat4(file) });
+      },
     ],
     [
       "radiation.png",
-      async (file, preprocessed) =>
-        mapCanvasHandler.updateAsync({ radImg: preprocessed ? await loadImage(file) : await imageLoader.loadRad(file) }),
+      async (file, preprocessed) => {
+        mapCanvasHandler.update({ radImg: preprocessed ? await loadImage(file) : await imageLoader.loadRad(file) });
+      },
     ],
     [
       "prefabs.xml",
