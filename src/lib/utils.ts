@@ -64,11 +64,17 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
   a.click();
 }
 
+let imageBitmapToPngBlobCount = 0;
 export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
+  const count = imageBitmapToPngBlobCount++;
+  console.time(`imageBitmapToPngBlob ${count.toString()}`);
   const canvas = new OffscreenCanvas(img.height, img.width);
   const context = requireNonnull(canvas.getContext("2d"));
   context.drawImage(img, 0, 0);
-  return (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
+  const b = (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
+  console.timeEnd(`imageBitmapToPngBlob ${count.toString()}`);
+  console.debug("imageBitmapToPngBlob png %d KB", b.size / 1000);
+  return b;
 }
 
 export async function sleep(msec: number): Promise<void> {
