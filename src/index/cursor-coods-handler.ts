@@ -17,16 +17,16 @@ export class CursorCoodsHandler {
     doms.canvas.addEventListener(
       "mousemove",
       (e) => {
-        updateCursor(this, e);
+        this.#updateCursor(e);
       },
       { passive: true },
     );
     doms.canvas.addEventListener("mouseout", () => {
-      updateCursor(this);
+      this.#updateCursor(null);
     });
   }
-}
 
-function updateCursor(self: CursorCoodsHandler, event: MouseEvent | null = null) {
-  self.doms.output.textContent = formatCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event);
+  #updateCursor(event: MouseEvent | null) {
+    this.doms.output.textContent = formatCoords(this.mapSize, this.doms.canvas, this.elevationFunction, event);
+  }
 }
