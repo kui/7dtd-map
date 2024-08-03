@@ -1,4 +1,6 @@
-import { formatCoords, gameMapSize } from "../lib/utils";
+import { throttledInvoker } from "../lib/throttled-invoker";
+import { formatCoords, printError } from "../lib/utils";
+import { DtmHandler } from "./dtm-handler";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -6,27 +8,35 @@ interface Doms {
 }
 
 export class CursorCoodsHandler {
-  mapSize: GameMapSize = gameMapSize({ width: 0, height: 0 });
-  elevationFunction: (coods: GameCoords, mapSize: GameMapSize) => number | null;
-  doms: Doms;
+  #doms: Doms;
+  #dtmHandler: DtmHandler;
+  #lastEvent: MouseEvent | null = null;
 
-  constructor(doms: Doms, elevationFunction: (coords: GameCoords, mapSize: GameMapSize) => number | null) {
-    this.elevationFunction = elevationFunction;
-    this.doms = doms;
+  constructor(doms: Doms, dtmHandler: DtmHandler) {
+    this.#doms = doms;
+    this.#dtmHandler = dtmHandler;
 
     doms.canvas.addEventListener(
       "mousemove",
       (e) => {
-        this.#updateCursor(e);
+        this.#lastEvent = e;
+        this.#update().catch(printError);
       },
       { passive: true },
     );
     doms.canvas.addEventListener("mouseout", () => {
-      this.#updateCursor(null);
+      this.#lastEvent = null;
+      this.#update().catch(printError);
     });
   }
 
-  #updateCursor(event: MouseEvent | null) {
-    this.doms.output.textContent = formatCoords(this.mapSize, this.doms.canvas, this.elevationFunction, event);
+  #update = throttledInvoker(() => this.#updateImediately(this.#lastEvent).catch(printError), 300);
+  async #updateImediately(event: MouseEvent | null) {
+    this.#doms.output.textContent = await formatCoords(
+      await this.#dtmHandler.size(),
+      this.#doms.canvas,
+      (c) => this.#dtmHandler.getElevation(c),
+      event,
+    );
   }
 }

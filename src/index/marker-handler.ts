@@ -1,4 +1,5 @@
-import { canvasEventToGameCoords, formatCoords, gameMapSize } from "../lib/utils";
+import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils";
+import { DtmHandler } from "./dtm-handler";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -7,27 +8,30 @@ interface Doms {
 }
 
 export class MarkerHandler {
-  mapSize: GameMapSize = gameMapSize({ width: 0, height: 0 });
-  elevationFunction: (coods: GameCoords, size: GameMapSize) => number | null;
-  doms: Doms;
-  listeners: ((c: GameCoords | null) => unknown)[] = [];
+  #doms: Doms;
+  #dtmHandler: DtmHandler;
+  #listeners: ((c: GameCoords | null) => unknown)[] = [];
 
-  constructor(doms: Doms, elevationFunction: (coords: GameCoords, width: GameMapSize) => number | null) {
-    this.elevationFunction = elevationFunction;
-    this.doms = doms;
+  constructor(doms: Doms, dtmHandler: DtmHandler) {
+    this.#doms = doms;
+    this.#dtmHandler = dtmHandler;
 
     doms.canvas.addEventListener("click", (e) => {
-      updateMarker(this, e);
-      const coods = canvasEventToGameCoords(e, this.mapSize, doms.canvas);
-      this.listeners.forEach((fn) => fn(coods));
+      this.#update(e).catch(printError);
     });
     doms.resetMarker.addEventListener("click", () => {
-      updateMarker(this);
-      this.listeners.forEach((fn) => fn(null));
+      this.#update(null).catch(printError);
     });
   }
-}
 
-function updateMarker(self: MarkerHandler, event: MouseEvent | null = null) {
-  self.doms.output.textContent = formatCoords(self.mapSize, self.doms.canvas, self.elevationFunction, event);
+  async #update(event: MouseEvent | null) {
+    const size = await this.#dtmHandler.size();
+    this.#doms.output.textContent = await formatCoords(size, this.#doms.canvas, (c) => this.#dtmHandler.getElevation(c), event);
+    const coords = event && size ? canvasEventToGameCoords(event, size, this.#doms.canvas) : null;
+    await Promise.allSettled(this.#listeners.map((fn) => fn(coords))).catch(printError);
+  }
+
+  addListener(fn: (c: GameCoords | null) => unknown) {
+    this.#listeners.push(fn);
+  }
 }

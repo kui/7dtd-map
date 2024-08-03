@@ -1,4 +1,8 @@
 import type * as mapRenderer from "../worker/map-renderer";
+import type { PrefabsHandler } from "./prefabs-handler";
+import type { MarkerHandler } from "./marker-handler";
+import type { FileHandler } from "./file-handler";
+import { printError } from "../lib/utils";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -12,95 +16,84 @@ interface Doms {
   scale: HTMLInputElement;
 }
 
+interface MapRendererWorker extends Worker {
+  postMessage(message: mapRenderer.InMessage, transfer: Transferable[]): void;
+  postMessage(message: mapRenderer.InMessage, options?: StructuredSerializeOptions): void;
+}
+
+const DEPENDENT_FILES = ["biomes.png", "splat3.png", "splat4.png", "radiation.png"] as const;
+type DependentFile = (typeof DEPENDENT_FILES)[number];
+
 export class MapCanvasHandler {
-  private doms: Doms;
-  private worker: Worker;
-  private updateListeners: ((mapSize: GameMapSize) => unknown)[] = [];
+  #updateListeners: ((mapSize: GameMapSize) => unknown)[] = [];
 
-  constructor(doms: Doms, worker: Worker) {
-    this.doms = doms;
-    this.worker = worker;
-
-    const canvas =doms.canvas.transferControlToOffscreen()
-    worker.postMessage({
-      canvas,
-      ...this.biomesAlpha(),
-      ...this.splat3Alpha(),
-      ...this.splat4Alpha(),
-      ...this.radAlpha(),
-      ...this.brightness(),
-      ...this.signSize(),
-      ...this.signAlpha(),
-      ...this.scale(),
-    }, [canvas]);
+  constructor(
+    doms: Doms,
+    worker: MapRendererWorker,
+    prefabsHandler: PrefabsHandler,
+    markerHandler: MarkerHandler,
+    fileHandler: FileHandler,
+  ) {
+    const canvas = doms.canvas.transferControlToOffscreen();
+    worker.postMessage(
+      {
+        canvas,
+        biomesAlpha: doms.biomesAlpha.valueAsNumber,
+        splat3Alpha: doms.splat3Alpha.valueAsNumber,
+        splat4Alpha: doms.splat4Alpha.valueAsNumber,
+        radAlpha: doms.radAlpha.valueAsNumber,
+        brightness: `${doms.brightness.valueAsNumber.toString()}%`,
+        signSize: doms.signSize.valueAsNumber,
+        signAlpha: doms.signAlpha.valueAsNumber,
+        scale: doms.scale.valueAsNumber,
+      },
+      [canvas],
+    );
 
     worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
       const { mapSize } = e.data;
-      this.updateListeners.forEach((fn) => fn(mapSize));
+      Promise.allSettled(this.#updateListeners.map((fn) => fn(mapSize))).catch(printError);
     });
     doms.biomesAlpha.addEventListener("input", () => {
-      this.update(this.biomesAlpha());
+      worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
     });
     doms.splat3Alpha.addEventListener("input", () => {
-      this.update(this.splat3Alpha());
+      worker.postMessage({ splat3Alpha: doms.splat3Alpha.valueAsNumber });
     });
     doms.splat4Alpha.addEventListener("input", () => {
-      this.update(this.splat4Alpha());
+      worker.postMessage({ splat4Alpha: doms.splat4Alpha.valueAsNumber });
     });
     doms.radAlpha.addEventListener("input", () => {
-      this.update(this.radAlpha());
+      worker.postMessage({ radAlpha: doms.radAlpha.valueAsNumber });
     });
     doms.signSize.addEventListener("input", () => {
-      this.update(this.signSize());
+      worker.postMessage({ signSize: doms.signSize.valueAsNumber });
     });
     doms.signAlpha.addEventListener("input", () => {
-      this.update(this.signAlpha());
+      worker.postMessage({ signAlpha: doms.signAlpha.valueAsNumber });
     });
     doms.brightness.addEventListener("input", () => {
-      this.update(this.brightness());
+      worker.postMessage({ brightness: `${doms.brightness.valueAsNumber.toString()}%` });
     });
     doms.scale.addEventListener("input", () => {
-      this.update(this.scale());
+      worker.postMessage({ scale: doms.scale.valueAsNumber });
+    });
+    prefabsHandler.addListener((prefabs) => {
+      worker.postMessage({ prefabs });
+    });
+    markerHandler.addListener((markerCoords) => {
+      worker.postMessage({ markerCoords });
+    });
+    fileHandler.addListener((fileNames) => {
+      const invalidate: DependentFile[] = [];
+      for (const n of fileNames) {
+        if (DEPENDENT_FILES.includes(n as DependentFile)) invalidate.push(n as DependentFile);
+      }
+      worker.postMessage({ invalidate });
     });
   }
 
-  update(msg: mapRenderer.InMessage) {
-    const transferables = Object.values(msg).filter(isTransferable);
-    this.worker.postMessage(msg, transferables);
+  addUpdateListener(ln: (mapSize: GameMapSize) => unknown) {
+    this.#updateListeners.push(ln);
   }
-
-  addMapSizeListener(ln: (mapSize: GameMapSize) => unknown) {
-    this.updateListeners.push(ln);
-  }
-
-  private biomesAlpha() {
-    return { biomesAlpha: this.doms.biomesAlpha.valueAsNumber };
-  }
-  private splat3Alpha() {
-    return { splat3Alpha: this.doms.splat3Alpha.valueAsNumber };
-  }
-  private splat4Alpha() {
-    return { splat4Alpha: this.doms.splat4Alpha.valueAsNumber };
-  }
-  private radAlpha() {
-    return { radAlpha: this.doms.radAlpha.valueAsNumber };
-  }
-  private signSize() {
-    return { signSize: this.doms.signSize.valueAsNumber };
-  }
-  private signAlpha() {
-    return { signAlpha: this.doms.signAlpha.valueAsNumber };
-  }
-  private brightness() {
-    return { brightness: `${this.doms.brightness.valueAsNumber.toString()}%` };
-  }
-  private scale() {
-    return { scale: this.doms.scale.valueAsNumber };
-  }
-}
-
-type InMessageValue = mapRenderer.InMessage[keyof mapRenderer.InMessage];
-
-function isTransferable(v: InMessageValue): v is ImageBitmap | OffscreenCanvas  {
-  return v instanceof ImageBitmap || v instanceof OffscreenCanvas ;
 }

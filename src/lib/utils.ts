@@ -44,20 +44,18 @@ interface EventOffsets {
   offsetY: number;
 }
 
-export function formatCoords(
-  map: GameMapSize,
+export async function formatCoords(
+  map: GameMapSize | null,
   canvas: HTMLCanvasElement,
-  elevation: (coods: GameCoords, mapSize: GameMapSize) => number | null,
+  elevation: (coods: GameCoords) => Promise<number | null>,
   event: EventOffsets | null,
-): string {
-  if (!event) return "E/W: -, N/S: -, Elev: -";
+): Promise<string> {
+  if (!event || !map) return "E/W: -, N/S: -, Elev: -";
 
   const gameCoords = canvasEventToGameCoords(event, map, canvas);
-  if (gameCoords === null) {
-    return "E/W: -, N/S: -, Elev: -";
-  }
+  if (gameCoords === null) return "E/W: -, N/S: -, Elev: -";
 
-  const y = elevation(gameCoords, map) ?? "-";
+  const y = (await elevation(gameCoords)) ?? "-";
   return `E/W: ${gameCoords.x.toString()}, N/S: ${gameCoords.z.toString()}, Elev: ${y.toString()}`;
 }
 
@@ -66,19 +64,6 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
   a.download = fileName;
   a.href = canvas.toDataURL("image/png");
   a.click();
-}
-
-let imageBitmapToPngBlobCount = 0;
-export async function imageBitmapToPngBlob(img: ImageBitmap): Promise<PngBlob> {
-  const count = imageBitmapToPngBlobCount++;
-  console.time(`imageBitmapToPngBlob ${count.toString()}`);
-  const canvas = new OffscreenCanvas(img.height, img.width);
-  const context = requireNonnull(canvas.getContext("2d"));
-  context.drawImage(img, 0, 0);
-  const b = (await canvas.convertToBlob({ type: "image/png" })) as PngBlob;
-  console.timeEnd(`imageBitmapToPngBlob ${count.toString()}`);
-  console.debug("imageBitmapToPngBlob png %d KB", b.size / 1000);
-  return b;
 }
 
 export async function sleep(msec: number): Promise<void> {
@@ -120,10 +105,10 @@ export async function fetchJson<T>(url: string): Promise<T> {
   return (await (await fetch(url)).json()) as T;
 }
 
-export async function invokeAll<T>(fns: ((t: T) => unknown)[], t: T): Promise<void> {
-  await Promise.all(fns.map((fn) => fn(t)));
-}
-
 export function basename(path: string) {
   return path.substring(path.lastIndexOf("/") + 1);
+}
+
+export async function readWholeStream(stream: ReadableStream<Uint8Array>): Promise<Uint8Array> {
+  return new Uint8Array(await new Response(stream).arrayBuffer());
 }

@@ -1,46 +1,49 @@
 import { throttledInvoker } from "./throttled-invoker";
 import { LabelHolder, Language } from "./labels";
-import { printError } from "./utils";
+import { CacheHolder } from "./cache-holder";
 
 export interface PrefabUpdate {
   status: string;
   prefabs: HighlightedPrefab[];
 }
 
-export default class Prefabs {
+export class PrefabFilter {
   #labelHolder: LabelHolder;
+  #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
 
   #filtered: HighlightedPrefab[] = [];
   #status = "";
+  #updateListeners: ((u: PrefabUpdate) => void)[] = [];
 
   all: Prefab[] = [];
   markCoords: GameCoords | null = null;
   difficulty: NumberRange = { start: 0, end: 5 };
   prefabFilterRegexp = "";
   blockFilterRegexp = "";
-  blockPrefabCounts: BlockPrefabCounts = {};
 
-  private throttledUpdater = throttledInvoker(() => this.updateImmediately());
-  private updateListeners: ((u: PrefabUpdate) => void)[] = [];
-
-  constructor(labelsBaseUrl: string, navigatorLanguages: readonly string[]) {
+  constructor(
+    labelsBaseUrl: string,
+    navigatorLanguages: readonly string[],
+    fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
+  ) {
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
+    this.#blockPrefabCountsHolder = new CacheHolder(fetchPrefabBlockCounts, () => {
+      /* do nothing */
+    });
   }
 
   set language(lang: Language) {
     this.#labelHolder.language = lang;
   }
 
-  update(): void {
-    this.throttledUpdater().catch(printError);
-  }
+  update = throttledInvoker(() => this.updateImmediately());
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
     this.#updateStatus();
     this.#updateDist();
     this.#sort();
     const update: PrefabUpdate = { status: this.#status, prefabs: this.#filtered };
-    this.updateListeners.forEach((f) => {
+    this.#updateListeners.forEach((f) => {
       f(update);
     });
   }
@@ -52,7 +55,7 @@ export default class Prefabs {
       this.difficulty.start === 0 &&
       this.difficulty.end === 5
     ) {
-      this.#status = "All prefabs";
+      this.#status = `All ${this.all.length.toString()} prefabs`;
     } else if (this.#filtered.length === 0) {
       this.#status = "No prefabs matched";
     } else {
@@ -61,7 +64,7 @@ export default class Prefabs {
   }
 
   addUpdateListener(func: (update: PrefabUpdate) => void): void {
-    this.updateListeners.push(func);
+    this.#updateListeners.push(func);
   }
 
   async #applyFilter() {
@@ -122,7 +125,7 @@ export default class Prefabs {
     const prefabNames = new Set(prefabs.map((p) => p.name));
     const matchedPrefabNames: { [prefabName: string]: HighlightedBlock[] } = {};
     const pattern = new RegExp(this.blockFilterRegexp, "i");
-    for (const [blockName, prefabs] of Object.entries(this.blockPrefabCounts)) {
+    for (const [blockName, prefabs] of Object.entries(await this.#blockPrefabCountsHolder.get())) {
       const highlightedName = matchAndHighlight(blockName, pattern);
       const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, pattern);

@@ -23,7 +23,7 @@ npm run build
 3. Copy some bundle world files for sample data:
 
 ```
-./tools/cp_sample_worlds.bash "$(npx tsx tools/print-game-dir.ts)/Data/Worlds/Pregen06k1"
+npx tsx ./tools/copy-map-files.ts
 ```
 
 ## Code lint
@@ -37,3 +37,7 @@ npm run lint
 ```
 npm run serve
 ```
+
+Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][]".
+
+[Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts)

@@ -3,6 +3,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "preserve",
-    "lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "DOM", "DOM.Iterable", "DOM.AsyncIterable", "webworker"]
+    "lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "DOM", "DOM.Iterable", "DOM.AsyncIterable", "WebWorker"]
   }
 }

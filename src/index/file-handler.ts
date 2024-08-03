@@ -1,92 +1,222 @@
-import { basename, printError, waitAnimationFrame } from "../lib/utils";
-import { LoadingHandler } from "./loading-handler";
+import type { LoadingHandler } from "./loading-handler";
+import type { DndHandler } from "./dnd-handler";
 
-interface Doms {
-  input: HTMLInputElement;
+import { basename, printError } from "../lib/utils";
+import * as storage from "../lib/storage";
+import * as fileProcessor from "../worker/file-processor";
+import { getPreferWorldFileName, hasPreferWorldFileNameIn, isMapFileName, MAP_FILE_NAMES, MapFileName } from "../../lib/map-files";
+
+type Listener = (updatedFileNames: MapFileName[]) => unknown;
+
+/**
+ * File names that cannot be decide whether or not be already processed by its name.
+ * In other words, this names are intersected with `storage.MapFileName` and `fileProcessor.AcceptableFileName`.
+ */
+type StateRequiredMapFileName = Extract<MapFileName, fileProcessor.AcceptableFileName>;
+
+/** map file names that are not required to be processed */
+type NeverProcessRequiredMapFileName = Exclude<MapFileName, fileProcessor.AcceptableFileName>;
+
+/** File names that are required to be processed and not included in world file names */
+type AlwaysProcessRequiredFileName = Exclude<fileProcessor.AcceptableFileName, MapFileName>;
+
+type ResourceLike =
+  | { name: MapFileName; remove: true }
+  | { name: StateRequiredMapFileName; blob: Blob; alreadyProcessed: boolean }
+  | { name: StateRequiredMapFileName; url: string; alreadyProcessed: boolean }
+  | { name: NeverProcessRequiredMapFileName; blob: Blob }
+  | { name: NeverProcessRequiredMapFileName; url: string }
+  | { name: AlwaysProcessRequiredFileName; blob: Blob }
+  | { name: AlwaysProcessRequiredFileName; url: string };
+
+export interface ImageProcessorWorker extends Worker {
+  postMessage(message: fileProcessor.InMessage): void;
+  onmessage: (event: MessageEvent<fileProcessor.OutMessage>) => unknown;
 }
 
-type Listener = (file: File | null, preprocessed: boolean) => unknown;
-
-type ResourceLike = { name: string; file: File | null; preprocessed: boolean } | { name: string; url: string; preprocessed: boolean };
-
-const CLEAR_TARGETS = ["biomes.png", "splat3.png", "splat4.png", "radiation.png", "prefabs.xml", "dtm.raw"];
+interface Doms {
+  files: HTMLInputElement;
+  clearMap: HTMLButtonElement;
+  mapName: HTMLInputElement;
+}
 
 export class FileHandler {
-  #listeners = new Map<RegExp | string, Listener[]>();
+  #listeners: Listener[] = [];
   #loadingHandler: LoadingHandler;
+  #processorFactory: () => ImageProcessorWorker;
+  #workspace = storage.workspaceDir();
 
-  constructor(doms: Doms, loadingHandler: LoadingHandler) {
+  constructor(doms: Doms, loadingHandler: LoadingHandler, processorFactory: () => ImageProcessorWorker, dndHandler: DndHandler) {
     this.#loadingHandler = loadingHandler;
-    doms.input.addEventListener("input", () => {
-      if (doms.input.files) this.pushFiles(Array.from(doms.input.files));
+    this.#processorFactory = processorFactory;
+
+    doms.files.addEventListener("change", () => {
+      if (doms.files.files) this.#pushFiles(Array.from(doms.files.files)).catch(printError);
+    });
+    doms.clearMap.addEventListener("click", () => {
+      this.#clear().catch(printError);
+    });
+    dndHandler.addDropFilesListener((files) => this.#pushFiles(files));
+    // TODO: Factor out mapdir buttons
+    window.addEventListener("click", ({ target }) => {
+      if (!(target instanceof HTMLElement)) return;
+      const dir = target.dataset["mapDir"];
+      if (dir === undefined) return;
+      const worldName = basename(dir);
+      doms.mapName.value = worldName;
+      doms.mapName.dispatchEvent(new Event("input"));
+      this.#pushUrls(
+        Array.from(MAP_FILE_NAMES).map((name) => `${dir}/${name}`),
+        // Bundled world files are preprocessed. See tools/copy-map-files.ts
+        true,
+      ).catch(printError);
     });
   }
 
-  addListeners(arr: [RegExp | string, Listener | Listener[]][]): void {
-    for (const [name, listener] of arr) this.addListener(name, listener);
+  async initialize() {
+    await this.#invokeListeners(Array.from(MAP_FILE_NAMES));
   }
 
-  addListener(fileName: RegExp | string, listener: Listener | Listener[]): void {
-    const old = this.#listeners.get(fileName) ?? [];
-    this.#listeners.set(fileName, old.concat(listener));
+  addListener(listener: Listener): void {
+    this.#listeners.push(listener);
   }
 
-  pushFiles(files: File[], preprocessed = false): void {
-    this.#process(files.map((file) => ({ name: file.name, file, preprocessed }))).catch(printError);
+  async #pushFiles(files: File[], alreadyProcessed = false) {
+    await this.#process(
+      files.flatMap((file) => {
+        const name = file.name;
+        if (isStateRequiredMapFile(name)) {
+          return { name, blob: file, alreadyProcessed };
+        } else if (isNeverProcessRequiredMapFile(name)) {
+          return { name, blob: file };
+        } else if (isAlwaysProcessRequiredFile(name)) {
+          if (alreadyProcessed) throw new Error(`This file must be processed in advance: ${name}`);
+          return { name, blob: file };
+        } else {
+          console.warn("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
+          return [];
+        }
+      }),
+    );
   }
 
-  pushUrls(urls: string[], preprocessed = false): void {
-    this.#process(urls.map((url) => ({ name: basename(url), url, preprocessed }))).catch(printError);
+  async #pushUrls(urls: string[], alreadyProcessed = false) {
+    await this.#process(
+      urls.flatMap((url) => {
+        const name = basename(url);
+        if (isStateRequiredMapFile(name)) {
+          return { name, url, alreadyProcessed };
+        } else if (isNeverProcessRequiredMapFile(name)) {
+          return { name, url };
+        } else if (isAlwaysProcessRequiredFile(name)) {
+          if (alreadyProcessed) throw new Error(`This file must be processed in advance: ${name}`);
+          return { name, url };
+        } else {
+          console.warn("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
+          return [];
+        }
+      }),
+    );
   }
 
-  clear(): void {
-    this.#process(CLEAR_TARGETS.map((name) => ({ name, file: null, preprocessed: false }))).catch(printError);
+  async #clear() {
+    await this.#process(Array.from(MAP_FILE_NAMES).map((name) => ({ name, remove: true })));
   }
 
   async #process(resourceList: ResourceLike[]) {
     if (this.#loadingHandler.isLoading()) {
       throw new Error("Loading is in progress");
     }
+    this.#loadingHandler.add(resourceList.map(({ name }) => name));
 
-    this.#loadingHandler.add(resourceList.map((f) => f.name));
+    const workspace = await this.#workspace;
+    const resourceNames = resourceList.map(({ name }) => name);
+    const processedNames: MapFileName[] = [];
+
+    // TODO parallelize
     for (const resource of resourceList) {
-      const listeners = this.#getListeners(resource.name);
-      if (listeners.length === 0) {
-        console.log("No hundler: ", resource.name);
-      } else if (shouldSkip(resourceList, resource.name)) {
-        console.log("Skip: ", resource.name);
+      if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
+        console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
+        continue;
+      }
+
+      if ("remove" in resource) {
+        processedNames.push(resource.name);
+        await workspace.remove(resource.name);
+      } else if (isNeverProcessRequiredResource(resource) || (isStateRequiredResource(resource) && resource.alreadyProcessed)) {
+        processedNames.push(resource.name);
+        if ("blob" in resource) {
+          await workspace.put(resource.name, resource.blob);
+        } else {
+          const response = await fetch(resource.url);
+          if (!response.ok) throw new Error(`Failed to fetch ${resource.url}: ${response.statusText}`);
+          await workspace.put(resource.name, await response.blob());
+        }
+      } else if (isAlwaysProcessRequiredResource(resource) || (isStateRequiredResource(resource) && !resource.alreadyProcessed)) {
+        const result = await this.#processInWorker(resource);
+        processedNames.push(result.name);
       } else {
-        console.time(`Processe: ${resource.name}`);
-        const file = await resolve(resource);
-        await Promise.all(listeners.map((fn) => fn(file, resource.preprocessed)));
-        console.timeEnd(`Processe: ${resource.name}`);
+        throw new Error(`Unexpected resource: ${resource.name}`);
       }
       this.#loadingHandler.delete(resource.name);
-      await waitAnimationFrame();
     }
+
+    if (processedNames.length > 0)
+      await this.#invokeListeners(processedNames);
   }
 
-  #getListeners(fileName: string) {
-    return Array.from(this.#listeners.entries()).flatMap(([pattern, listeners]) => {
-      if (pattern instanceof RegExp && pattern.test(fileName)) return listeners;
-      if (typeof pattern === "string" && pattern === fileName) return listeners;
-      return [];
+  async #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {
+    const worker = this.#processorFactory();
+    return new Promise((resolve, reject) => {
+      worker.onmessage = ({ data }) => {
+        worker.terminate();
+        if ("error" in data) {
+          reject(new Error(data.error));
+        } else {
+          resolve(data);
+        }
+      };
+      worker.postMessage(message);
     });
   }
+
+  async #invokeListeners(updatedFileNames: MapFileName[]) {
+    await Promise.allSettled(this.#listeners.map((fn) => fn(updatedFileNames)));
+  }
 }
 
-async function resolve(resource: ResourceLike): Promise<File | null> {
-  if ("file" in resource) return resource.file;
-  const blob = await fetch(resource.url).then((res) => res.blob());
-  return new File([blob], resource.name, { type: blob.type });
+function isProcessRequired(name: string): name is fileProcessor.AcceptableFileName {
+  return fileProcessor.ACCEPTABLE_FILE_NAMES.includes(name as fileProcessor.AcceptableFileName);
 }
 
-function shouldSkip(resources: ResourceLike[], targetName: string): boolean {
-  if (targetName === "splat3.png") {
-    return resources.some(({ name }) => name === "splat3_processed.png");
-  }
-  if (targetName === "splat4.png") {
-    return resources.some(({ name }) => name === "splat4_processed.png");
-  }
-  return false;
+function isStateRequiredMapFile(name: string): name is StateRequiredMapFileName {
+  return isMapFileName(name) && isProcessRequired(name);
+}
+
+function isNeverProcessRequiredMapFile(name: string): name is NeverProcessRequiredMapFileName {
+  return isMapFileName(name) && !isProcessRequired(name);
+}
+
+function isAlwaysProcessRequiredFile(name: string): name is AlwaysProcessRequiredFileName {
+  return !isMapFileName(name) && isProcessRequired(name);
+}
+
+function isStateRequiredResource(
+  resource: ResourceLike,
+): resource is
+  | { name: StateRequiredMapFileName; blob: Blob; alreadyProcessed: boolean }
+  | { name: StateRequiredMapFileName; url: string; alreadyProcessed: boolean } {
+  return isStateRequiredMapFile(resource.name);
+}
+
+function isNeverProcessRequiredResource(
+  resource: ResourceLike,
+): resource is { name: NeverProcessRequiredMapFileName; blob: Blob } | { name: NeverProcessRequiredMapFileName; url: string } {
+  return isNeverProcessRequiredMapFile(resource.name);
+}
+
+function isAlwaysProcessRequiredResource(
+  resource: ResourceLike,
+): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | { name: AlwaysProcessRequiredFileName; url: string } {
+  return isAlwaysProcessRequiredFile(resource.name);
 }

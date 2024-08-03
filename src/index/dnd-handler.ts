@@ -1,4 +1,4 @@
-import { invokeAll, printError } from "../lib/utils";
+import { printError } from "../lib/utils";
 
 export class DndHandler {
   private dropFilesListeners: ((files: File[]) => unknown)[] = [];
@@ -10,7 +10,7 @@ export class DndHandler {
       }
       event.preventDefault();
       const files = Array.from(event.dataTransfer.files);
-      invokeAll(this.dropFilesListeners, files).catch(printError);
+      Promise.allSettled(this.dropFilesListeners.map((ln) => ln(files))).catch(printError);
     });
 
     doc.addEventListener("dragenter", (event) => {

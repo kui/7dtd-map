@@ -31,8 +31,12 @@ function main() {
       fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
       fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
     ]);
-    const prefabs = Object.keys(prefabBlockCounts).map((n) => ({ name: n, x: 0, z: 0, difficulty: difficulties[n] ?? 0 }));
-    prefabsHandler.prefabs = prefabs;
+    prefabsHandler.prefabs = Object.keys(prefabBlockCounts).map((n) => ({
+      name: n,
+      x: 0,
+      z: 0,
+      difficulty: difficulties[n] ?? 0,
+    }));
   })().catch(printError);
 
   const minTier = component("min_tier", HTMLInputElement);
