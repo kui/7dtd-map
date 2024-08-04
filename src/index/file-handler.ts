@@ -1,25 +1,36 @@
+import type * as fileProcessor from "../worker/file-processor";
 import type { LoadingHandler } from "./loading-handler";
 import type { DndHandler } from "./dnd-handler";
-import { BundledMapHandler } from "./bundled-map-hander";
+import type { BundledMapHandler } from "./bundled-map-hander";
 
 import { basename, printError } from "../lib/utils";
 import * as storage from "../lib/storage";
-import * as fileProcessor from "../worker/file-processor";
 import { getPreferWorldFileName, hasPreferWorldFileNameIn, isMapFileName, MAP_FILE_NAMES, MapFileName } from "../../lib/map-files";
 
 type Listener = (updatedFileNames: MapFileName[]) => unknown;
+
+const PROCESS_REQUIRED_NAMES = [
+  "biomes.png",
+  "splat3.png",
+  "splat3_processed.png",
+  "splat4.png",
+  "splat4_processed.png",
+  "radiation.png",
+  "dtm.raw",
+] as const;
+export type ProcessRequiredFileName = (typeof PROCESS_REQUIRED_NAMES)[number];
 
 /**
  * File names that cannot be decide whether or not be already processed by its name.
  * In other words, this names are intersected with `storage.MapFileName` and `fileProcessor.AcceptableFileName`.
  */
-type StateRequiredMapFileName = Extract<MapFileName, fileProcessor.AcceptableFileName>;
+type StateRequiredMapFileName = Extract<MapFileName, ProcessRequiredFileName>;
 
 /** map file names that are not required to be processed */
-type NeverProcessRequiredMapFileName = Exclude<MapFileName, fileProcessor.AcceptableFileName>;
+type NeverProcessRequiredMapFileName = Exclude<MapFileName, ProcessRequiredFileName>;
 
 /** File names that are required to be processed and not included in world file names */
-type AlwaysProcessRequiredFileName = Exclude<fileProcessor.AcceptableFileName, MapFileName>;
+type AlwaysProcessRequiredFileName = Exclude<ProcessRequiredFileName, MapFileName>;
 
 type ResourceLike =
   | { name: MapFileName; remove: true }
@@ -42,6 +53,7 @@ interface Doms {
 }
 
 export class FileHandler {
+  #doms: Doms;
   #listeners: Listener[] = [];
   #loadingHandler: LoadingHandler;
   #processorFactory: () => ImageProcessorWorker;
@@ -54,6 +66,7 @@ export class FileHandler {
     dndHandler: DndHandler,
     bundledMapHandler: BundledMapHandler,
   ) {
+    this.#doms = doms;
     this.#loadingHandler = loadingHandler;
     this.#processorFactory = processorFactory;
 
@@ -61,12 +74,12 @@ export class FileHandler {
       if (doms.files.files) this.#pushFiles(Array.from(doms.files.files)).catch(printError);
     });
     doms.clearMap.addEventListener("click", () => {
+      this.#setMapName("");
       this.#clear().catch(printError);
     });
-    dndHandler.addListener(({ files }) => this.#pushFiles(files));
+    dndHandler.addListener(({ files }) => this.#pushEntries(files));
     bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
-      doms.mapName.value = mapName;
-      doms.mapName.dispatchEvent(new Event("input", { bubbles: true }));
+      this.#setMapName(mapName);
       await this.#pushUrls(
         Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
         // Bundled world files are preprocessed. See tools/copy-map-files.ts
@@ -83,23 +96,35 @@ export class FileHandler {
     this.#listeners.push(listener);
   }
 
-  async #pushFiles(files: File[], alreadyProcessed = false) {
+  async #pushFiles(files: File[]) {
     await this.#process(
       files.flatMap((file) => {
         const name = file.name;
         if (isStateRequiredMapFile(name)) {
-          return { name, blob: file, alreadyProcessed };
+          return { name, blob: file, alreadyProcessed: false };
         } else if (isNeverProcessRequiredMapFile(name)) {
           return { name, blob: file };
         } else if (isAlwaysProcessRequiredFile(name)) {
-          if (alreadyProcessed) throw new Error(`This file must be processed in advance: ${name}`);
           return { name, blob: file };
         } else {
-          console.warn("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
+          console.warn("Ignore file: name=", name);
           return [];
         }
       }),
     );
+  }
+
+  async #pushEntries(entries: FileSystemEntry[]) {
+    const [entry] = entries;
+    if (!entry) return;
+    if (entries.length === 1 && isDirectory(entry)) {
+      this.#setMapName(entry.name);
+      const files = await Promise.all((await listEntries(entry)).flatMap((e) => (isFile(e) ? [toFile(e)] : [])));
+      await this.#pushFiles(files);
+      return;
+    }
+    const files = await Promise.all(entries.flatMap((e) => (isFile(e) ? [toFile(e)] : [])));
+    await this.#pushFiles(files);
   }
 
   async #pushUrls(urls: string[], alreadyProcessed = false) {
@@ -191,10 +216,15 @@ export class FileHandler {
   async #invokeListeners(updatedFileNames: MapFileName[]) {
     await Promise.allSettled(this.#listeners.map((fn) => fn(updatedFileNames)));
   }
+
+  #setMapName(name: string) {
+    this.#doms.mapName.value = name;
+    this.#doms.mapName.dispatchEvent(new Event("input", { bubbles: true }));
+  }
 }
 
-function isProcessRequired(name: string): name is fileProcessor.AcceptableFileName {
-  return fileProcessor.ACCEPTABLE_FILE_NAMES.includes(name as fileProcessor.AcceptableFileName);
+function isProcessRequired(name: string): name is ProcessRequiredFileName {
+  return PROCESS_REQUIRED_NAMES.includes(name as ProcessRequiredFileName);
 }
 
 function isStateRequiredMapFile(name: string): name is StateRequiredMapFileName {
@@ -227,4 +257,25 @@ function isAlwaysProcessRequiredResource(
   resource: ResourceLike,
 ): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | { name: AlwaysProcessRequiredFileName; url: string } {
   return isAlwaysProcessRequiredFile(resource.name);
+}
+
+function isFile(entry: FileSystemEntry): entry is FileSystemFileEntry {
+  return entry.isFile;
+}
+
+function isDirectory(entry: FileSystemEntry): entry is FileSystemDirectoryEntry {
+  return entry.isDirectory;
+}
+
+function toFile(entry: FileSystemFileEntry): Promise<File> {
+  return new Promise((resolve, reject) => {
+    entry.file(resolve, reject);
+  });
+}
+
+function listEntries(entry: FileSystemDirectoryEntry): Promise<FileSystemEntry[]> {
+  return new Promise((resolve, reject) => {
+    const reader = entry.createReader();
+    reader.readEntries(resolve, reject);
+  });
 }

@@ -1,5 +1,6 @@
+import type { DtmHandler } from "./dtm-handler";
+
 import * as three from "three";
-import { DtmHandler } from "./dtm-handler";
 import { printError, threePlaneSize } from "../lib/utils";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
 

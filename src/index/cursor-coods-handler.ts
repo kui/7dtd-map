@@ -1,6 +1,7 @@
+import type { DtmHandler } from "./dtm-handler";
+
 import { throttledInvoker } from "../lib/throttled-invoker";
 import { formatCoords, printError } from "../lib/utils";
-import { DtmHandler } from "./dtm-handler";
 
 interface Doms {
   canvas: HTMLCanvasElement;

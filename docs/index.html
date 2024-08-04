@@ -31,7 +31,7 @@
     </nav>
 
     <div id="controller">
-      <p><input id="files" type="file" /></p>
+      <p><input id="files" type="file" multiple webkitdirectory /></p>
       <p>
         <button data-show-dialog-for="save_prompt">Save</button>
         <button data-show-dialog-for="load_prompt">Load</button>
@@ -41,7 +41,7 @@
       <table>
         <tr>
           <th><label for="map_name">🗺️ Map Name</label></th>
-          <td><input id="map_name" type="text" value="" data-remember="mapName" /></td>
+          <td><input id="map_name" type="text" value="" data-remember="mapName" readonly /></td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>

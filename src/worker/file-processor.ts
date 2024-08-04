@@ -1,5 +1,5 @@
 import * as storage from "../lib/storage";
-import { setPNG, MapFileProcessor, MAP_FILE_NAME_MAP } from "../../lib/map-files.js";
+import { setPNG, MapFileProcessor, MAP_FILE_NAME_MAP } from "../../lib/map-files";
 import * as pngjs from "pngjs/browser";
 
 //
@@ -8,7 +8,7 @@ import * as pngjs from "pngjs/browser";
 
 setPNG(pngjs.PNG);
 
-export const ACCEPTABLE_FILE_NAMES = [
+const ACCEPTABLE_FILE_NAMES = [
   "biomes.png",
   "splat3.png",
   "splat3_processed.png",
@@ -17,12 +17,8 @@ export const ACCEPTABLE_FILE_NAMES = [
   "radiation.png",
   "dtm.raw",
 ] as const;
-export type AcceptableFileName = (typeof ACCEPTABLE_FILE_NAMES)[number];
-export const PROCESSED_FILE_NAMES = ACCEPTABLE_FILE_NAMES.map((name) => {
-  if (name in MAP_FILE_NAME_MAP) return MAP_FILE_NAME_MAP[name as keyof typeof MAP_FILE_NAME_MAP];
-  return name as Exclude<AcceptableFileName, keyof typeof MAP_FILE_NAME_MAP>;
-}) as (typeof MAP_FILE_NAME_MAP)[AcceptableFileName][];
-export type ProcessedFileName = (typeof PROCESSED_FILE_NAMES)[number];
+type AcceptableFileName = (typeof ACCEPTABLE_FILE_NAMES)[number];
+type ProcessedFileName = (typeof MAP_FILE_NAME_MAP)[AcceptableFileName];
 export type InMessage = { name: AcceptableFileName; blob: Blob } | { name: AcceptableFileName; url: string };
 export interface SuccessOutMessage {
   name: ProcessedFileName;
@@ -34,10 +30,7 @@ export interface ErrorOutMessage {
 export type OutMessage = SuccessOutMessage | ErrorOutMessage;
 
 onmessage = async (event: MessageEvent<InMessage>) => {
-  const out = await main(event.data).catch((e: unknown) => {
-    if ("object" === typeof e && e !== null && "message" in e) return { error: e.message };
-    else return { error: String(e) };
-  });
+  const out = await main(event.data).catch((e: unknown) => ({ error: String(e) }));
   postMessage(out);
 };
 
@@ -45,10 +38,12 @@ async function main(inMessage: InMessage): Promise<OutMessage> {
   let blob;
   if ("blob" in inMessage) {
     blob = inMessage.blob;
-  } else {
+  } else if ("url" in inMessage) {
     const response = await fetch(inMessage.url);
     if (!response.ok) throw Error(`Failed to fetch ${inMessage.url}: ${response.statusText}`);
     blob = await response.blob();
+  } else {
+    throw Error(`Unexpected message: ${JSON.stringify(inMessage)}`);
   }
 
   const processor = new MapFileProcessor(inMessage.name);

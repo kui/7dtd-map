@@ -1,5 +1,6 @@
+import type { DtmHandler } from "./dtm-handler";
+
 import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils";
-import { DtmHandler } from "./dtm-handler";
 
 interface Doms {
   canvas: HTMLCanvasElement;

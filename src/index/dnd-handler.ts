@@ -2,7 +2,7 @@ import * as events from "../lib/events";
 
 export interface EventMessage {
   type: "drop";
-  files: File[];
+  files: FileSystemEntry[];
 }
 
 interface Doms {
@@ -38,7 +38,10 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
       event.preventDefault();
       dom.overlay.hidePopover();
       if (!event.dataTransfer?.types.includes("Files")) return;
-      this.emitNoAwait({ type: "drop", files: Array.from(event.dataTransfer.files) });
+      this.emitNoAwait({
+        type: "drop",
+        files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? []),
+      });
     });
   }
 }
