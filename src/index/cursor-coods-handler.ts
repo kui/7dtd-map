@@ -30,13 +30,13 @@ export class CursorCoodsHandler {
     });
   }
 
-  #update = throttledInvoker(() => this.#updateImediately(this.#lastEvent).catch(printError), 300);
-  async #updateImediately(event: MouseEvent | null) {
+  #update = throttledInvoker(() => this.#updateImediately().catch(printError), 100);
+  async #updateImediately() {
     this.#doms.output.textContent = await formatCoords(
       await this.#dtmHandler.size(),
       this.#doms.canvas,
       (c) => this.#dtmHandler.getElevation(c),
-      event,
+      this.#lastEvent,
     );
   }
 }

@@ -83,7 +83,7 @@ class Dtm {
 
     // In-game coords with left-top offset
     const x = Math.floor(width / 2) + coords.x;
-    const z = Math.floor(height / 2) - coords.z;
+    const z = Math.floor(height / 2) + coords.z;
     const elev = this.#data[x + z * width];
     return elev ?? null;
   }
