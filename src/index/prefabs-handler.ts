@@ -76,9 +76,7 @@ export class PrefabsHandler {
 async function loadPrefabsXml(difficulties: Promise<PrefabDifficulties>): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml
-    ? parseXml(...(await Promise.all([prefabsXml.text(), difficulties])))
-    : [];
+  return prefabsXml ? parseXml(...(await Promise.all([prefabsXml.text(), difficulties]))) : [];
 }
 
 function parseXml(xml: string, difficulties: PrefabDifficulties): Prefab[] {
