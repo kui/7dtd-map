@@ -19,6 +19,8 @@ import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import { BundledMapHandler } from "./index/bundled-map-hander";
 
+import "./lib/map-storage";
+
 function main() {
   presetButton.init();
   copyButton.init();
