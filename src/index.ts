@@ -148,11 +148,17 @@ function initSaveDialog() {
 
   // Bind map name
   mapName.addEventListener("input", () => {
-    saveMapName.value = mapName.value;
+    if (saveMapName.value !== mapName.value) {
+      saveMapName.value = mapName.value;
+      saveMapName.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     saveMap.value = mapName.value;
   });
   saveMapName.addEventListener("input", () => {
-    mapName.value = saveMapName.value;
+    if (mapName.value !== saveMapName.value) {
+      mapName.value = saveMapName.value;
+      mapName.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     saveMap.value = saveMapName.value;
   });
 

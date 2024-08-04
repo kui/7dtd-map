@@ -21,11 +21,7 @@ export class PrefabFilter {
   prefabFilterRegexp = "";
   blockFilterRegexp = "";
 
-  constructor(
-    labelsBaseUrl: string,
-    navigatorLanguages: readonly string[],
-    fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
-  ) {
+  constructor(labelsBaseUrl: string, navigatorLanguages: readonly string[], fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>) {
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
     this.#blockPrefabCountsHolder = new CacheHolder(fetchPrefabBlockCounts, () => {
       /* do nothing */

@@ -64,7 +64,7 @@ export class FileHandler {
       if (dir === undefined) return;
       const worldName = basename(dir);
       doms.mapName.value = worldName;
-      doms.mapName.dispatchEvent(new Event("input"));
+      doms.mapName.dispatchEvent(new Event("input", { bubbles: true }));
       this.#pushUrls(
         Array.from(MAP_FILE_NAMES).map((name) => `${dir}/${name}`),
         // Bundled world files are preprocessed. See tools/copy-map-files.ts
@@ -167,8 +167,7 @@ export class FileHandler {
       this.#loadingHandler.delete(resource.name);
     }
 
-    if (processedNames.length > 0)
-      await this.#invokeListeners(processedNames);
+    if (processedNames.length > 0) await this.#invokeListeners(processedNames);
   }
 
   async #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {
