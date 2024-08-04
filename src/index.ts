@@ -5,7 +5,7 @@ import * as syncOutput from "./lib/ui/sync-output";
 import * as rememberValue from "./lib/ui/remember-value";
 import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import { LabelHandler } from "./lib/label-handler";
-import { component, downloadCanvasPng, humanreadableDistance, printError } from "./lib/utils";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -87,6 +87,7 @@ function main() {
     markerHandler,
     labelHandler,
     fileHandler,
+    () => fetchJson("prefab-difficulties.json"),
   );
   new MapCanvasHandler(
     {

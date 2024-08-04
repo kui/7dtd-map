@@ -478,35 +478,35 @@
   var $i = class {
     #e = [];
     #t;
-    constructor(e, t, n, s, r) {
-      this.#t = { start: e.minTier.valueAsNumber, end: e.maxTier.valueAsNumber }, t.addEventListener("message", (a) => {
-        let { prefabs: o, status: l } = a.data;
-        e.status.textContent = l, Promise.allSettled(this.#e.map((c) => c(o))).catch(ze);
+    constructor(e, t, n, s, r, a) {
+      this.#t = { start: e.minTier.valueAsNumber, end: e.maxTier.valueAsNumber }, t.addEventListener("message", (o) => {
+        let { prefabs: l, status: c } = o.data;
+        e.status.textContent = c, Promise.allSettled(this.#e.map((h) => h(l))).catch(ze);
       }), e.minTier.addEventListener("input", () => {
-        let a = e.minTier.valueAsNumber;
-        a !== this.#t.start && (this.#t.start = a, t.postMessage({ difficulty: this.#t }));
+        let o = e.minTier.valueAsNumber;
+        o !== this.#t.start && (this.#t.start = o, t.postMessage({ difficulty: this.#t }));
       }), e.maxTier.addEventListener("input", () => {
-        let a = e.maxTier.valueAsNumber;
-        a !== this.#t.end && (this.#t.end = a, t.postMessage({ difficulty: this.#t }));
+        let o = e.maxTier.valueAsNumber;
+        o !== this.#t.end && (this.#t.end = o, t.postMessage({ difficulty: this.#t }));
       }), e.prefabFilter.addEventListener("input", () => {
         t.postMessage({ prefabFilterRegexp: e.prefabFilter.value });
       }), e.blockFilter.addEventListener("input", () => {
         t.postMessage({ blockFilterRegexp: e.blockFilter.value });
-      }), n.addListener((a) => {
-        t.postMessage({ markCoords: a });
-      }), s.addListener((a) => {
-        t.postMessage({ language: a });
-      }), r.addListener(async (a) => {
-        a.includes("prefabs.xml") && t.postMessage({ all: await lh() });
+      }), n.addListener((o) => {
+        t.postMessage({ markCoords: o });
+      }), s.addListener((o) => {
+        t.postMessage({ language: o });
+      }), r.addListener(async (o) => {
+        o.includes("prefabs.xml") && t.postMessage({ all: await lh(a()) });
       });
     }
     addListener(e) {
       this.#e.push(e);
     }
   };
-  async function lh() {
-    let e = await (await zn()).get("prefabs.xml");
-    return e ? ch(...await Promise.all([e.text(), Bn("../prefab-difficulties.json")])) : [];
+  async function lh(i) {
+    let t = await (await zn()).get("prefabs.xml");
+    return t ? ch(...await Promise.all([t.text(), i])) : [];
   }
   function ch(i, e) {
     let t = new DOMParser().parseFromString(i, "text/xml");
@@ -15835,7 +15835,8 @@ void main() {
       new Worker("worker/prefabs-filter.js"),
       a,
       s,
-      n
+      n,
+      () => Bn("prefab-difficulties.json")
     );
     new ns(
       {

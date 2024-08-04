@@ -4,7 +4,7 @@ import type { MarkerHandler } from "./marker-handler";
 import type { LabelHandler } from "../lib/label-handler";
 import type { FileHandler } from "./file-handler";
 
-import { fetchJson, printError } from "../lib/utils";
+import { printError } from "../lib/utils";
 import * as storage from "../lib/storage";
 
 interface Doms {
@@ -23,7 +23,14 @@ export class PrefabsHandler {
   #listeners: ((prefabs: HighlightedPrefab[]) => unknown)[] = [];
   #tierRange: NumberRange;
 
-  constructor(doms: Doms, worker: PrefabsFilterWorker, markerHandler: MarkerHandler, labelHandler: LabelHandler, fileHandler: FileHandler) {
+  constructor(
+    doms: Doms,
+    worker: PrefabsFilterWorker,
+    markerHandler: MarkerHandler,
+    labelHandler: LabelHandler,
+    fileHandler: FileHandler,
+    fetchDifficulties: () => Promise<PrefabDifficulties>,
+  ) {
     this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
 
     worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
@@ -56,7 +63,7 @@ export class PrefabsHandler {
       worker.postMessage({ language });
     });
     fileHandler.addListener(async (fileNames) => {
-      if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml() });
+      if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties()) });
     });
   }
 
@@ -66,11 +73,11 @@ export class PrefabsHandler {
 }
 
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available.
-async function loadPrefabsXml(): Promise<Prefab[]> {
+async function loadPrefabsXml(difficulties: Promise<PrefabDifficulties>): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
   return prefabsXml
-    ? parseXml(...(await Promise.all([prefabsXml.text(), fetchJson<PrefabDifficulties>("../prefab-difficulties.json")])))
+    ? parseXml(...(await Promise.all([prefabsXml.text(), difficulties])))
     : [];
 }
 
