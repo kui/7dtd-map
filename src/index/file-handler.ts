@@ -1,5 +1,6 @@
 import type { LoadingHandler } from "./loading-handler";
 import type { DndHandler } from "./dnd-handler";
+import { BundledMapHandler } from "./bundled-map-hander";
 
 import { basename, printError } from "../lib/utils";
 import * as storage from "../lib/storage";
@@ -46,7 +47,13 @@ export class FileHandler {
   #processorFactory: () => ImageProcessorWorker;
   #workspace = storage.workspaceDir();
 
-  constructor(doms: Doms, loadingHandler: LoadingHandler, processorFactory: () => ImageProcessorWorker, dndHandler: DndHandler) {
+  constructor(
+    doms: Doms,
+    loadingHandler: LoadingHandler,
+    processorFactory: () => ImageProcessorWorker,
+    dndHandler: DndHandler,
+    bundledMapHandler: BundledMapHandler,
+  ) {
     this.#loadingHandler = loadingHandler;
     this.#processorFactory = processorFactory;
 
@@ -57,19 +64,14 @@ export class FileHandler {
       this.#clear().catch(printError);
     });
     dndHandler.addDropFilesListener((files) => this.#pushFiles(files));
-    // TODO: Factor out mapdir buttons
-    window.addEventListener("click", ({ target }) => {
-      if (!(target instanceof HTMLElement)) return;
-      const dir = target.dataset["mapDir"];
-      if (dir === undefined) return;
-      const worldName = basename(dir);
-      doms.mapName.value = worldName;
+    bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
+      doms.mapName.value = mapName;
       doms.mapName.dispatchEvent(new Event("input", { bubbles: true }));
-      this.#pushUrls(
-        Array.from(MAP_FILE_NAMES).map((name) => `${dir}/${name}`),
+      await this.#pushUrls(
+        Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
         // Bundled world files are preprocessed. See tools/copy-map-files.ts
         true,
-      ).catch(printError);
+      );
     });
   }
 

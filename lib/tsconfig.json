@@ -2,6 +2,6 @@
   "extends": ["@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["ESNext", "DOM.AsyncIterable"],
+    "lib": ["ESNext", "DOM.AsyncIterable"]
   }
 }

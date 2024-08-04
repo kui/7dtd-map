@@ -1,10 +1,10 @@
 import { printError } from "./utils";
 
-type MessageMap<N extends string> = {
-  [K in N]: { name: K };
-};
+interface Message<N extends string> {
+  type: N;
+}
 
-export class Generator<N extends string, M extends MessageMap<N>> {
+export class Generator<N extends string, M extends Message<N>> {
   #listeners: ((m: M) => unknown)[] = [];
 
   addListener(listener: (m: M) => unknown) {

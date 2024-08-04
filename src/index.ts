@@ -5,7 +5,7 @@ import * as syncOutput from "./lib/ui/sync-output";
 import * as rememberValue from "./lib/ui/remember-value";
 import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import { LabelHandler } from "./lib/label-handler";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
+import { component, downloadCanvasPng, humanreadableDistance, printError } from "./lib/utils";
 
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -17,6 +17,7 @@ import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
+import { BundledMapHandler } from "./index/bundled-map-hander";
 
 function main() {
   presetButton.init();
@@ -35,8 +36,6 @@ function main() {
 
   updateMapRightMargin();
   window.addEventListener("resize", updateMapRightMargin);
-
-  renderBundledWorldList().catch(printError);
 
   const loadMapName = component("load_map_name", HTMLSelectElement);
   loadMapName.addEventListener("change", () => {
@@ -59,6 +58,7 @@ function main() {
     },
   });
   const dndHandler = new DndHandler(document);
+  const bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) });
   const fileHandler = new FileHandler(
     {
       files: component("files", HTMLInputElement),
@@ -68,6 +68,7 @@ function main() {
     loadingHandler,
     () => new Worker("worker/file-processor.js") as ImageProcessorWorker,
     dndHandler,
+    bundledMapHandler,
   );
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
   const dtmHandler = new DtmHandler(() => new Worker("worker/dtm.js"), fileHandler);
@@ -214,19 +215,6 @@ function prefabLi(prefab: HighlightedPrefab) {
     li.appendChild(blocksUl);
   }
   return li;
-}
-
-async function renderBundledWorldList() {
-  const container = component("world_list");
-  const worldNames = await fetchJson<string[]>("maps/index.json");
-  for (const name of worldNames) {
-    const button = document.createElement("button");
-    button.textContent = name;
-    button.title = `Load ${name}`;
-    button.dataset["mapDir"] = `maps/${name}`;
-    const li = document.createElement("li");
-    container.appendChild(li).appendChild(button);
-  }
 }
 
 function updateMapRightMargin() {
