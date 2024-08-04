@@ -28,8 +28,6 @@ function main() {
   dialogButtons.init();
   rememberValue.init();
   minMaxInputs.init();
-  initSaveDialog();
-  initLoadDialog();
 
   component("download").addEventListener("click", () => {
     const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
@@ -38,14 +36,6 @@ function main() {
 
   updateMapRightMargin();
   window.addEventListener("resize", updateMapRightMargin);
-
-  const loadMapName = component("load_map_name", HTMLSelectElement);
-  loadMapName.addEventListener("change", () => {
-    if (loadMapName.value === "") return;
-    const dialog = loadMapName.closest("dialog");
-    if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected state`);
-    dialog.close(loadMapName.value);
-  });
 
   const loadingHandler = new LoadingHandler({
     indicator: component("loading_indicator"),
@@ -144,45 +134,6 @@ function main() {
   //
 
   fileHandler.initialize().catch(printError);
-}
-
-function initSaveDialog() {
-  const mapName = component("map_name", HTMLInputElement);
-  const saveMapName = component("save_map_name", HTMLInputElement);
-  const saveMap = component("save_map", HTMLButtonElement);
-  const saveDialog = component("save_prompt", HTMLDialogElement);
-
-  // Bind map name
-  mapName.addEventListener("input", () => {
-    if (saveMapName.value !== mapName.value) {
-      saveMapName.value = mapName.value;
-      saveMapName.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    saveMap.value = mapName.value;
-  });
-  saveMapName.addEventListener("input", () => {
-    if (mapName.value !== saveMapName.value) {
-      mapName.value = saveMapName.value;
-      mapName.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    saveMap.value = saveMapName.value;
-  });
-
-  saveDialog.addEventListener("close", () => {
-    console.debug("Save dialog closed", saveDialog.returnValue);
-  });
-}
-
-function initLoadDialog() {
-  const loadMapName = component("load_map_name", HTMLSelectElement);
-  const loadDialog = component("load_prompt", HTMLDialogElement);
-  loadMapName.addEventListener("change", () => {
-    loadDialog.close(loadMapName.value);
-  });
-  loadDialog.addEventListener("close", () => {
-    loadMapName.value = "";
-    console.debug("Load dialog closed", loadDialog.returnValue);
-  });
 }
 
 function prefabLi(prefab: HighlightedPrefab) {

@@ -32,8 +32,6 @@
     <div id="controller">
       <p><input id="files" type="file" multiple webkitdirectory /></p>
       <p>
-        <button data-show-dialog-for="save_prompt">Save</button>
-        <button data-show-dialog-for="load_prompt">Load</button>
         <button id="clear_map" title="Clear all world files">Clear</button>
         <button id="download">Download</button>
       </p>
@@ -279,32 +277,5 @@
         <p>The rest of files are ignored.</p>
       </div>
     </div>
-
-    <dialog id="save_prompt">
-      <h2>Save Map</h2>
-      <form method="dialog">
-        <p>
-          <label>Map name: <input id="save_map_name" type="text" minlength="1" /></label>
-        </p>
-        <div>
-          <button id="save_map" type="submit" name="save" value="">Save</button>
-          <button type="submit" value="">Cancel</button>
-        </div>
-      </form>
-    </dialog>
-
-    <dialog id="load_prompt">
-      <h2>Load Map</h2>
-      <form method="dialog">
-        <p>
-          Choose a map:
-          <select id="load_map_name">
-            <option value="" selected>Choose</option>
-            <option value="aaa">aaa</option>
-          </select>
-        </p>
-        <div><button type="submit" value="">Cancel</button></div>
-      </form>
-    </dialog>
   </body>
 </html>
