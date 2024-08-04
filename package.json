@@ -28,7 +28,7 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.8.0",
-    "@swc/core": "^1.7.2",
+    "@swc/core": "^1.7.6",
     "@swc/jest": "^0.2.36",
     "@tsconfig/node22": "^22.0.0",
     "@tsconfig/strictest": "^2.0.5",
@@ -48,7 +48,7 @@
     "pngjs": "^7.0.0",
     "prettier": "^3.3.3",
     "three": "~0.167.1",
-    "tsx": "^4.16.2",
+    "tsx": "^4.16.5",
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.0.0",
     "xml2js": "^0.6.2"
