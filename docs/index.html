@@ -41,7 +41,7 @@
       <table>
         <tr>
           <th><label for="map_name">🗺️ Map Name</label></th>
-          <td><input id="map_name" type="text" value="" /></td>
+          <td><input id="map_name" type="text" value="" data-remember="mapName" /></td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
@@ -142,14 +142,14 @@
                 <td>
                   <label for="min_tier"><output data-sync-for="min_tier">0</output></label>
                 </td>
-                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" /></td>
+                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" data-min="tierRange" /></td>
               </tr>
               <tr>
                 <th><label for="max_tier">Max:</label></th>
                 <td>
                   <label for="max_tier"><output data-sync-for="max_tier">5</output></label>
                 </td>
-                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" /></td>
+                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" data-max="tierRange" /></td>
               </tr>
             </table>
             <datalist id="tiers">

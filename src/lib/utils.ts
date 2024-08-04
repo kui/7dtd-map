@@ -102,7 +102,9 @@ export function printError(e: unknown): void {
 }
 
 export async function fetchJson<T>(url: string): Promise<T> {
-  return (await (await fetch(url)).json()) as T;
+  const r = await fetch(url);
+  if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
+  return (await r.json()) as T;
 }
 
 export function basename(path: string) {

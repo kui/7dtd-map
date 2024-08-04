@@ -32,26 +32,15 @@ export class PrefabsHandler {
       Promise.allSettled(this.#listeners.map((fn) => fn(prefabs))).catch(printError);
     });
     doms.minTier.addEventListener("input", () => {
-      // TODO factor out input sync logic
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === this.#tierRange.start) return;
       this.#tierRange.start = newMinTier;
-      if (newMinTier > doms.maxTier.valueAsNumber) {
-        doms.maxTier.value = doms.minTier.value;
-        this.#tierRange.end = newMinTier;
-        doms.maxTier.dispatchEvent(new Event("input"));
-      }
       worker.postMessage({ difficulty: this.#tierRange });
     });
     doms.maxTier.addEventListener("input", () => {
       const newMaxTier = doms.maxTier.valueAsNumber;
       if (newMaxTier === this.#tierRange.end) return;
       this.#tierRange.end = newMaxTier;
-      if (newMaxTier < doms.minTier.valueAsNumber) {
-        doms.minTier.value = doms.maxTier.value;
-        this.#tierRange.start = newMaxTier;
-        doms.minTier.dispatchEvent(new Event("input"));
-      }
       worker.postMessage({ difficulty: this.#tierRange });
     });
     doms.prefabFilter.addEventListener("input", () => {

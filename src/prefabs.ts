@@ -1,12 +1,13 @@
+import * as presetButton from "./lib/ui/preset-button";
+import * as syncOutput from "./lib/ui/sync-output";
+import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import { DelayedRenderer } from "./lib/delayed-renderer";
-import * as presetButton from "./lib/preset-button";
 import { component, fetchJson, printError } from "./lib/utils";
 import { PrefabUpdate } from "./lib/prefabs";
 import * as prefabsFilter from "./worker/prefabs-filter";
 import { Language } from "./lib/labels";
 import { LabelHandler } from "./lib/label-handler";
 import { UrlState } from "./lib/url-state";
-import * as syncOutput from "./lib/sync-output";
 
 interface HighlightedPrefab {
   name: string;
@@ -19,6 +20,7 @@ interface HighlightedPrefab {
 function main() {
   presetButton.init();
   syncOutput.init();
+  minMaxInputs.init();
 
   const urlState = UrlState.create(location, document.querySelectorAll("input"));
   urlState.addUpdateListener((url) => {

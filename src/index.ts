@@ -1,9 +1,11 @@
-import * as copyButton from "./lib/copy-button";
-import * as presetButton from "./lib/preset-button";
-import * as dialogButtons from "./lib/dialog-buttons";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
-import * as syncOutput from "./lib/sync-output";
+import * as copyButton from "./lib/ui/copy-button";
+import * as presetButton from "./lib/ui/preset-button";
+import * as dialogButtons from "./lib/ui/dialog-buttons";
+import * as syncOutput from "./lib/ui/sync-output";
+import * as rememberValue from "./lib/ui/remember-value";
+import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import { LabelHandler } from "./lib/label-handler";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
@@ -21,6 +23,8 @@ function main() {
   copyButton.init();
   syncOutput.init();
   dialogButtons.init();
+  rememberValue.init();
+  minMaxInputs.init();
   initSaveDialog();
   initLoadDialog();
 
