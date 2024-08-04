@@ -57,7 +57,10 @@ function main() {
       ];
     },
   });
-  const dndHandler = new DndHandler(document);
+  const dndHandler = new DndHandler({
+    dragovered: document.body,
+    overlay: component("dnd_overlay"),
+  });
   const bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) });
   const fileHandler = new FileHandler(
     {

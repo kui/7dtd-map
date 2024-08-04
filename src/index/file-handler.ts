@@ -63,7 +63,7 @@ export class FileHandler {
     doms.clearMap.addEventListener("click", () => {
       this.#clear().catch(printError);
     });
-    dndHandler.addDropFilesListener((files) => this.#pushFiles(files));
+    dndHandler.addListener(({ files }) => this.#pushFiles(files));
     bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
       doms.mapName.value = mapName;
       doms.mapName.dispatchEvent(new Event("input", { bubbles: true }));
