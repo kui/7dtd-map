@@ -1,27 +1,16 @@
-import * as storage from "../lib/storage";
-import { setPNG, MapFileProcessor, MAP_FILE_NAME_MAP } from "../../lib/map-files";
 import * as pngjs from "pngjs/browser";
+import * as mapFiles from "../../lib/map-files";
+import * as storage from "../lib/storage";
 
 //
 // Process world fiels into map files and store it in the workspace
 //
 
-setPNG(pngjs.PNG);
+mapFiles.setPNG(pngjs.PNG);
 
-const ACCEPTABLE_FILE_NAMES = [
-  "biomes.png",
-  "splat3.png",
-  "splat3_processed.png",
-  "splat4.png",
-  "splat4_processed.png",
-  "radiation.png",
-  "dtm.raw",
-] as const;
-type AcceptableFileName = (typeof ACCEPTABLE_FILE_NAMES)[number];
-type ProcessedFileName = (typeof MAP_FILE_NAME_MAP)[AcceptableFileName];
-export type InMessage = { name: AcceptableFileName; blob: Blob } | { name: AcceptableFileName; url: string };
+export type InMessage = { name: mapFiles.WorldFileName; blob: Blob } | { name: mapFiles.WorldFileName; url: string };
 export interface SuccessOutMessage {
-  name: ProcessedFileName;
+  name: mapFiles.MapFileName;
   size: number;
 }
 export interface ErrorOutMessage {
@@ -46,7 +35,7 @@ async function main(inMessage: InMessage): Promise<OutMessage> {
     throw Error(`Unexpected message: ${JSON.stringify(inMessage)}`);
   }
 
-  const processor = new MapFileProcessor(inMessage.name);
+  const processor = new mapFiles.Processor(inMessage.name);
   const outName = processor.mapFileName;
   const workspace = await storage.workspaceDir();
   await processor.process(blob.stream(), await workspace.createWritable(outName));

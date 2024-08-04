@@ -63,7 +63,7 @@ export const MAP_FILE_NAME_MAP = Object.fromEntries(Object.entries(FILE_PROCESS_
 };
 export type MapFileName = MapFileNameMap<WorldFileName>;
 
-export class MapFileProcessor<T extends keyof typeof FILE_PROCESS_RULES> {
+export class Processor<T extends keyof typeof FILE_PROCESS_RULES> {
   #worldFileName: T;
 
   constructor(worldFileName: T) {

@@ -1,18 +1,11 @@
-import { handleMain, projectRoot, vanillaDir, writeJsonFile } from "./lib/utils.js";
-import {
-  setPNG,
-  getPreferWorldFileName,
-  hasPreferWorldFileNameIn,
-  isMapFileName,
-  isWorldFileName,
-  MapFileProcessor,
-} from "../lib/map-files.js";
 import * as fs from "node:fs";
 import path from "node:path";
 import * as stream from "node:stream";
 import * as pngjs from "pngjs";
+import * as mapFiles from "../lib/map-files.js";
+import { handleMain, projectRoot, vanillaDir, writeJsonFile } from "./lib/utils.js";
 
-setPNG(pngjs.PNG);
+mapFiles.setPNG(pngjs.PNG);
 
 const WORLDS_DIR = await vanillaDir("Data", "Worlds");
 const DST_DIR = projectRoot("docs", "maps");
@@ -50,7 +43,7 @@ async function isValidWorldDir(dir: string) {
 
 async function pruneUnkownMapFiles(dir: string) {
   for (const file of await fs.promises.readdir(dir)) {
-    if (isMapFileName(file)) continue;
+    if (mapFiles.isMapFileName(file)) continue;
     const p = path.join(dir, file);
     console.log(`Remove ${p} because it is not a map file`);
     await fs.promises.unlink(p);
@@ -60,16 +53,16 @@ async function pruneUnkownMapFiles(dir: string) {
 async function processFiles(srcDir: string, dstDir: string) {
   const srcFiles = await fs.promises.readdir(srcDir);
   for (const srcFileName of srcFiles) {
-    if (!isWorldFileName(srcFileName)) {
+    if (!mapFiles.isWorldFileName(srcFileName)) {
       console.log("Ignore unknown file: ", srcFileName);
       continue;
     }
-    if (hasPreferWorldFileNameIn(srcFileName, srcFiles)) {
-      console.log("Skip ", srcFileName, " because ", getPreferWorldFileName(srcFileName), " is already in the list");
+    if (mapFiles.hasPreferWorldFileNameIn(srcFileName, srcFiles)) {
+      console.log("Skip ", srcFileName, " because ", mapFiles.getPreferWorldFileName(srcFileName), " is already in the list");
       continue;
     }
     const src = path.join(srcDir, srcFileName);
-    const processor = new MapFileProcessor(srcFileName);
+    const processor = new mapFiles.Processor(srcFileName);
     const dst = path.join(dstDir, processor.mapFileName);
     console.log(`Process ${src}`);
     console.time(`-> ${dst}`);

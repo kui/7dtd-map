@@ -29,7 +29,7 @@ export class CacheHolder<T> {
    */
   async get(): Promise<T> {
     try {
-      return this.#value === NO_VALUE ? this.#fetch() : this.#value;
+      return this.#value === NO_VALUE ? await this.#fetch() : this.#value;
     } finally {
       this.#resetTimer();
     }
