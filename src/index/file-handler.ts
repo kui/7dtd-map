@@ -160,6 +160,7 @@ export class FileHandler {
         console.time(`Process ${resource.name}`);
         const result = await this.#processInWorker(resource);
         console.timeEnd(`Process ${resource.name}`);
+        console.log("Processed", result.name, "size=", result.size);
         processedNames.push(result.name);
       } else {
         throw new Error(`Unexpected resource: ${resource.name}`);

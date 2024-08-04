@@ -44,7 +44,7 @@ const FILE_PROCESS_RULES = {
   },
   "radiation.png": {
     name: "radiation.png",
-    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) => i.pipeThrough(new RadiationPngTransformer()).pipeTo(o),
+    process: processRadiationPng,
   },
   "prefabs.xml": {
     name: "prefabs.xml",
@@ -145,6 +145,10 @@ function processSplat4Png(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8
   return i.pipeThrough(new Splat4PngTransformer()).pipeTo(o);
 }
 
+function processRadiationPng(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+  return i.pipeThrough(new RadiationPngTransformer()).pipeTo(o);
+}
+
 const DEFAULT_TRASNFORM_STRATEGY = { highWaterMark: 1024 * 1024 };
 const DEFAULT_TRASNFORM_STRATEGIES = [DEFAULT_TRASNFORM_STRATEGY, DEFAULT_TRASNFORM_STRATEGY] as const;
 
@@ -201,21 +205,18 @@ export class DtmBlockRawDecompressor extends DecompressionStream implements Tran
 }
 
 class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
-  constructor(edit: (png: pngjs.PNG) => void) {
+  constructor(copyAndEdit: (src: Uint8Array, dst: Uint8ClampedArray | Uint8Array) => void) {
     const png = new PNG({ deflateLevel: 9, deflateStrategy: 0 });
     const { promise: flushPromise, resolve, reject }: PromiseWithResolvers<void> = Promise.withResolvers();
     super(
       {
         start(controller) {
           png.on("parsed", () => {
-            edit(png);
-            png
-              .pack()
-              .on("data", (chunk) => {
-                controller.enqueue(chunk as Uint8Array);
-              })
-              .on("error", reject)
-              .on("end", resolve);
+            packPng(png, copyAndEdit, controller)
+              .then(resolve)
+              .catch((e: unknown) => {
+                reject(e);
+              });
           });
         },
         transform(chunk) {
@@ -230,6 +231,36 @@ class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
   }
 }
 
+async function packPng(
+  png: pngjs.PNG,
+  copyAndEdit: (src: Uint8Array, dst: Uint8Array | Uint8ClampedArray) => void,
+  controller: TransformStreamDefaultController<Uint8Array>,
+): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (globalThis.OffscreenCanvas) {
+    // Faster png packing using OffscreenCanvas
+    const canvas = new OffscreenCanvas(png.width, png.height);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const ctx = canvas.getContext("2d")!;
+    const imageData = ctx.createImageData(png.width, png.height);
+    copyAndEdit(png.data, imageData.data);
+    ctx.putImageData(imageData, 0, 0);
+    const blob = await canvas.convertToBlob({ type: "image/png" });
+    for await (const chunk of blob.stream()) controller.enqueue(chunk);
+  } else {
+    copyAndEdit(png.data, png.data);
+    return new Promise((resolve, reject) => {
+      png
+        .pack()
+        .on("data", (chunk: Uint8Array) => {
+          controller.enqueue(chunk);
+        })
+        .on("error", reject)
+        .on("end", resolve);
+    });
+  }
+}
+
 /**
  * splat3.png should convert the pixels which:
  *   - black to transparent
@@ -237,12 +268,20 @@ class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
  */
 class Splat3PngTransformer extends PngEditingTransfomer {
   constructor() {
-    super((png) => {
-      for (let i = 0; i < png.data.length; i += 4) {
-        if (png.data[i] === 0 && png.data[i + 1] === 0 && png.data[i + 2] === 0) {
-          png.data[i + 3] = 0;
+    super((src, dst) => {
+      for (let i = 0; i < dst.length; i += 4) {
+        if (src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0) {
+          dst[i] = 0;
+          dst[i + 1] = 0;
+          dst[i + 2] = 0;
+          dst[i + 3] = 0;
         } else {
-          png.data[i + 3] = 255;
+          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          dst[i] = src[i]!;
+          dst[i + 1] = src[i + 1]!;
+          dst[i + 2] = src[i + 2]!;
+          /* eslint-enable */
+          dst[i + 3] = 255;
         }
       }
     });
@@ -257,19 +296,26 @@ class Splat3PngTransformer extends PngEditingTransfomer {
  */
 class Splat4PngTransformer extends PngEditingTransfomer {
   constructor() {
-    super((png) => {
-      for (let i = 0; i < png.data.length; i += 4) {
-        if (png.data[i] === 0 && png.data[i + 1] === 0 && png.data[i + 2] === 0) {
-          png.data[i + 3] = 0;
-        } else if (png.data[i + 1] === 255) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const green = png.data[i + 1]!;
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          png.data[i + 1] = png.data[i + 2]!;
-          png.data[i + 2] = green;
-          png.data[i + 3] = 255;
+    super((src, dst) => {
+      for (let i = 0; i < src.length; i += 4) {
+        if (src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0) {
+          dst[i] = 0;
+          dst[i + 1] = 0;
+          dst[i + 2] = 0;
+          dst[i + 3] = 0;
+        } else if (src[i + 1] === 255) {
+          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          dst[i] = src[i]!;
+          const green = src[i + 1]!;
+          dst[i + 1] = src[i + 2]!;
+          dst[i + 2] = green;
+          dst[i + 3] = 255;
         } else {
-          png.data[i + 3] = 255;
+          dst[i] = src[i]!;
+          dst[i + 1] = src[i + 1]!;
+          dst[i + 2] = src[i + 2]!;
+          dst[i + 3] = 255;
+          /* eslint-enable */
         }
       }
     });
@@ -283,12 +329,20 @@ class Splat4PngTransformer extends PngEditingTransfomer {
  */
 class RadiationPngTransformer extends PngEditingTransfomer {
   constructor() {
-    super((png) => {
-      for (let i = 0; i < png.data.length; i += 4) {
-        if (png.data[i] === 0 && png.data[i + 1] === 0 && png.data[i + 2] === 0) {
-          png.data[i + 3] = 0;
+    super((src, dst) => {
+      for (let i = 0; i < src.length; i += 4) {
+        if (src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0) {
+          dst[i] = 0;
+          dst[i + 1] = 0;
+          dst[i + 2] = 0;
+          dst[i + 3] = 0;
         } else {
-          png.data[i + 3] = 255;
+          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          dst[i] = src[i]!;
+          dst[i + 1] = src[i + 1]!;
+          dst[i + 2] = src[i + 2]!;
+          /* eslint-enable */
+          dst[i + 3] = 255;
         }
       }
     });
@@ -300,8 +354,11 @@ class RadiationPngTransformer extends PngEditingTransfomer {
  */
 class RepackPngTransformer extends PngEditingTransfomer {
   constructor() {
-    super(() => {
-      // Do nothing
+    super((src, dst) => {
+      for (let i = 0; i < src.length; i++) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        dst[i] = src[i]!;
+      }
     });
   }
 }
