@@ -112,7 +112,7 @@ export class FileHandler {
           if (alreadyProcessed) throw new Error(`This file must be processed in advance: ${name}`);
           return { name, url };
         } else {
-          console.warn("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
+          console.log("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
           return [];
         }
       }),
@@ -137,13 +137,16 @@ export class FileHandler {
     for (const resource of resourceList) {
       if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
         console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
+        this.#loadingHandler.delete(resource.name);
         continue;
       }
 
       if ("remove" in resource) {
+        console.log("Remove", resource.name);
         processedNames.push(resource.name);
         await workspace.remove(resource.name);
       } else if (isNeverProcessRequiredResource(resource) || (isStateRequiredResource(resource) && resource.alreadyProcessed)) {
+        console.log("Copy", resource.name);
         processedNames.push(resource.name);
         if ("blob" in resource) {
           await workspace.put(resource.name, resource.blob);
@@ -153,7 +156,10 @@ export class FileHandler {
           await workspace.put(resource.name, await response.blob());
         }
       } else if (isAlwaysProcessRequiredResource(resource) || (isStateRequiredResource(resource) && !resource.alreadyProcessed)) {
+        console.log("Process", resource.name);
+        console.time(`Process ${resource.name}`);
         const result = await this.#processInWorker(resource);
+        console.timeEnd(`Process ${resource.name}`);
         processedNames.push(result.name);
       } else {
         throw new Error(`Unexpected resource: ${resource.name}`);
