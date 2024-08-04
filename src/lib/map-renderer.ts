@@ -1,6 +1,8 @@
-import { ImageBitmapHolder } from "./image-bitmap-holder";
 import { throttledInvoker } from "./throttled-invoker";
 import { gameMapSize } from "./utils";
+import * as storage from "./storage";
+import * as mapFiles from "../../lib/map-files";
+import { CacheHolder } from "./cache-holder";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩️";
@@ -19,57 +21,59 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
+  #mapSize = gameMapSize({ width: 0, height: 0 });
 
-  update = throttledInvoker(async () => {
-    console.time("MapUpdate");
-    await this.updateImmediately();
-    console.timeEnd("MapUpdate");
-  });
-
-  private _biomesImg: ImageBitmapHolder | null = null;
-  private _splat3Img: ImageBitmapHolder | null = null;
-  private _splat4Img: ImageBitmapHolder | null = null;
-  private _radImg: ImageBitmapHolder | null = null;
-  private fontFace: FontFace;
+  #biomesImage = new BitmapHolder("biomes.png");
+  #splat3Image = new BitmapHolder("splat3.png");
+  #splat4Image = new BitmapHolder("splat4.png");
+  #radImage = new BitmapHolder("radiation.png");
+  #imageFiles = [this.#biomesImage, this.#splat3Image, this.#splat4Image, this.#radImage] as const;
+  #fontFace: FontFace;
 
   constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
     this.canvas = canvas;
-    this.fontFace = fontFace;
+    this.#fontFace = fontFace;
   }
 
-  set biomesImg(img: ImageBitmap | PngBlob | null | undefined) {
-    this._biomesImg = img ? new ImageBitmapHolder("biomes", img) : null;
-  }
-  set splat3Img(img: ImageBitmap | PngBlob | null | undefined) {
-    this._splat3Img = img ? new ImageBitmapHolder("splat3", img) : null;
-  }
-  set splat4Img(img: ImageBitmap | PngBlob | null | undefined) {
-    this._splat4Img = img ? new ImageBitmapHolder("splat4", img) : null;
-  }
-  set radImg(img: ImageBitmap | PngBlob | null | undefined) {
-    this._radImg = img ? new ImageBitmapHolder("rad", img) : null;
-  }
-
-  async size(): Promise<GameMapSize> {
-    const rects = await Promise.all([this._biomesImg?.get(), this._splat3Img?.get(), this._splat4Img?.get()]);
-    return gameMapSize({
-      width: Math.max(...rects.map((r) => r?.width ?? 0)),
-      height: Math.max(...rects.map((r) => r?.height ?? 0)),
-    });
-  }
-
-  private isBlank(): boolean {
-    return !this._biomesImg && !this._splat3Img && !this._splat4Img;
+  set invalidate(fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[]) {
+    for (const fileName of fileNames) {
+      switch (fileName) {
+        case "biomes.png":
+          this.#biomesImage.invalidate();
+          break;
+        case "splat3.png":
+          this.#splat3Image.invalidate();
+          break;
+        case "splat4.png":
+          this.#splat4Image.invalidate();
+          break;
+        case "radiation.png":
+          this.#radImage.invalidate();
+          break;
+        default:
+          throw new Error(`Invalid file name: ${String(fileName)}`);
+      }
+    }
   }
 
-  async updateImmediately(): Promise<void> {
-    if (this.isBlank()) {
+  update = throttledInvoker(async () => {
+    console.log("MapUpdate");
+    console.time("MapUpdate");
+    await this.#updateImmediately();
+    console.timeEnd("MapUpdate");
+  });
+
+  async #updateImmediately(): Promise<void> {
+    const [biomes, splat3, splat4, rad] = await Promise.all(this.#imageFiles.map((i) => i.get()));
+
+    const { width, height } = mapSize(biomes, splat3, splat4, rad);
+    this.#mapSize.width = width;
+    this.#mapSize.height = height;
+    if (width === 0 || height === 0) {
       this.canvas.width = 1;
       this.canvas.height = 1;
       return;
     }
-
-    const { width, height } = await this.size();
 
     this.canvas.width = width * this.scale;
     this.canvas.height = height * this.scale;
@@ -79,24 +83,24 @@ export default class MapRenderer {
     context.scale(this.scale, this.scale);
     context.filter = `brightness(${this.brightness})`;
 
-    if (this._biomesImg && this.biomesAlpha !== 0) {
+    if (biomes && this.biomesAlpha !== 0) {
       context.globalAlpha = this.biomesAlpha;
-      context.drawImage(await this._biomesImg.get(), 0, 0, width, height);
+      context.drawImage(biomes, 0, 0, width, height);
     }
-    if (this._splat3Img && this.splat3Alpha !== 0) {
+    if (splat3 && this.splat3Alpha !== 0) {
       context.globalAlpha = this.splat3Alpha;
-      context.drawImage(await this._splat3Img.get(), 0, 0, width, height);
+      context.drawImage(splat3, 0, 0, width, height);
     }
-    if (this._splat4Img && this.splat4Alpha !== 0) {
+    if (splat4 && this.splat4Alpha !== 0) {
       context.globalAlpha = this.splat4Alpha;
-      context.drawImage(await this._splat4Img.get(), 0, 0, width, height);
+      context.drawImage(splat4, 0, 0, width, height);
     }
 
     context.filter = "none";
-    if (this._radImg && this.radAlpha !== 0) {
+    if (rad && this.radAlpha !== 0) {
       context.globalAlpha = this.radAlpha;
       context.imageSmoothingEnabled = false;
-      context.drawImage(await this._radImg.get(), 0, 0, width, height);
+      context.drawImage(rad, 0, 0, width, height);
       context.imageSmoothingEnabled = true;
     }
 
@@ -110,7 +114,7 @@ export default class MapRenderer {
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
+    ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -133,7 +137,7 @@ export default class MapRenderer {
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px ${this.fontFace.family}`;
+    ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
@@ -148,6 +152,17 @@ export default class MapRenderer {
 
     putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
   }
+
+  size(): GameMapSize {
+    return this.#mapSize;
+  }
+}
+
+function mapSize(...images: (ImageBitmap | null | undefined)[]): GameMapSize {
+  return gameMapSize({
+    width: Math.max(...images.map((i) => i?.width ?? 0)),
+    height: Math.max(...images.map((i) => i?.height ?? 0)),
+  });
 }
 
 interface MapSign {
@@ -167,4 +182,22 @@ function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: M
   ctx.strokeText(text, x, z);
 
   ctx.fillText(text, x, z);
+}
+
+class BitmapHolder extends CacheHolder<ImageBitmap | null> {
+  constructor(readonly fileName: mapFiles.MapFileName) {
+    super(
+      async () => {
+        console.log("Loading image", fileName);
+        const workspace = await storage.workspaceDir();
+        const file = await workspace.get(fileName);
+        try {
+          return file ? await createImageBitmap(file) : null;
+        } finally {
+          console.log("Loaded image", fileName);
+        }
+      },
+      (img) => img?.close(),
+    );
+  }
 }

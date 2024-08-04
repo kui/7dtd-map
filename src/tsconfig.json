@@ -1,8 +1,8 @@
 {
   "extends": ["@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "module": "preserve",
-    "lib": ["esnext", "dom", "webworker"]
+    "lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "DOM", "DOM.Iterable", "DOM.AsyncIterable", "WebWorker"]
   }
 }

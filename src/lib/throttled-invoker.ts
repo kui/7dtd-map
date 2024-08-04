@@ -2,10 +2,14 @@ import { sleep } from "./utils";
 
 export function throttledInvoker(asyncFunc: () => Promise<void> | void, intervalMs = 100): () => Promise<void> {
   const workerPromises: Promise<void>[] = [];
+  let lastInvokationAt = 0;
   return () => {
     switch (workerPromises.length) {
       case 0: {
         const p = (async () => {
+          const now = Date.now();
+          if (now < lastInvokationAt + intervalMs) await sleep(lastInvokationAt + intervalMs - now);
+          lastInvokationAt = Date.now();
           try {
             await asyncFunc();
           } finally {
@@ -20,6 +24,7 @@ export function throttledInvoker(asyncFunc: () => Promise<void> | void, interval
         const p = (async () => {
           await prev;
           await sleep(intervalMs);
+          lastInvokationAt = Date.now();
           try {
             await asyncFunc();
           } finally {

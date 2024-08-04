@@ -19,7 +19,9 @@ serve_opts=(
   "--servedir=${out}"
 )
 prod_opts=(
-  "--minify"
+  #"--minify"
+  "--minify-identifiers"
+  "--minify-syntax"
   "--sourcemap=external"
 )
 

@@ -38,8 +38,7 @@
   padding-inline-start: 16px;
 }
 
-#overlay {
-  display: none;
+#dnd_overlay {
   background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   width: 100%;
@@ -51,11 +50,7 @@
   font-size: 55px;
 }
 
-.dragovered #overlay {
-  display: flex;
-}
-
-#overlay > div {
+#dnd_overlay > div {
   margin: auto;
 }
 

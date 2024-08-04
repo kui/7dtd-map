@@ -13,7 +13,6 @@
     <h1>7 Days to Die Map Renderer 1.0</h1>
 
     <p>Only supported in latest Google Chrome.</p>
-    <p>Note: 🗑 Delete all older worlds using "Select Map" in the right column.</p>
 
     <nav>
       <ul>
@@ -31,21 +30,15 @@
     </nav>
 
     <div id="controller">
+      <p><input id="files" type="file" multiple webkitdirectory /></p>
       <p>
+        <button id="clear_map" title="Clear all world files">Clear</button>
         <button id="download">Download</button>
-        <input id="files" type="file" />
       </p>
       <table>
         <tr>
-          <th>🗺️ Select Map</th>
-          <td>
-            <select id="map_list">
-              <option data-map-id="1">1. New-World</option>
-            </select>
-            <button id="create_map" title="Create new map">➕</button>
-            <button id="delete_map" title="Delete current map">🗑️</button>
-            <input id="map_name" title="Map Name" type="text" value="New-World" />
-          </td>
+          <th><label for="map_name">🗺️ Map Name</label></th>
+          <td><input id="map_name" type="text" value="" data-remember="mapName" readonly /></td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
@@ -146,14 +139,14 @@
                 <td>
                   <label for="min_tier"><output data-sync-for="min_tier">0</output></label>
                 </td>
-                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" /></td>
+                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" data-min="tierRange" /></td>
               </tr>
               <tr>
                 <th><label for="max_tier">Max:</label></th>
                 <td>
                   <label for="max_tier"><output data-sync-for="max_tier">5</output></label>
                 </td>
-                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" /></td>
+                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" data-max="tierRange" /></td>
               </tr>
             </table>
             <datalist id="tiers">
@@ -246,28 +239,46 @@
 
     <h2>How to Use</h2>
 
-    <p>Drag and drop world files.</p>
+    <p>Upload a world folder:</p>
+
+    <ul>
+      <li>Drag and drop it here</li>
+      <li>Click "Choose Files" in the upper right corner of this page</li>
+    </ul>
 
     <h3>Generated Worlds (Windows)</h3>
 
     <ol>
       <li>
-        Select folders:
-        <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
-        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-          📋️
-        </button>
+        Open "GeneratedWorlds" folder:
+        <ul>
+          <li>
+            <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <button
+              title="Copy this path"
+              data-copy-for="generated_world_path_windows"
+              data-success-message="✅ Press Win+R then paste this"
+            >
+              📋️
+            </button>
+          </li>
+        </ul>
       </li>
-      <li>Drag and drop all files in the world folder</li>
+      <li>Drag and drop one folder with a world name</li>
     </ol>
 
     <h3>Bundled Worlds</h3>
 
-    <ul id="world_list"></ul>
+    <p>
+      Select:
+      <select id="bundled_map_select">
+        <option value="" selected>-- Choose a world --</option>
+      </select>
+    </p>
 
-    <div id="overlay">
+    <div popover id="dnd_overlay">
       <div>
-        <p>Drop world files:</p>
+        <p>Drop a world folder or files:</p>
         <ul>
           <li>biomes.png</li>
           <li>splat3_processed.png / splat3.png</li>

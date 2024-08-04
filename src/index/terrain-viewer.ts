@@ -1,6 +1,7 @@
+import type { DtmHandler } from "./dtm-handler";
+
 import * as three from "three";
-import { Dtm } from "./dtm-handler";
-import { requireNonnull, threePlaneSize } from "../lib/utils";
+import { printError, threePlaneSize } from "../lib/utils";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
 
 interface Doms {
@@ -14,148 +15,101 @@ interface Doms {
 const TERRAIN_WIDTH = 2048;
 
 export class TerrainViewer {
-  private doms: Doms;
-  private renderer: three.WebGLRenderer;
-  private cameraController: TerrainViewerCameraController;
-  private scene: three.Scene;
-  private terrain: three.Mesh | null = null;
-  private terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
-  private animationRequestId: number | null = null;
+  #doms: Doms;
+  #dtm: DtmHandler;
 
-  private _dtm: Dtm | null = null;
-  private _mapSize: GameMapSize | null = null;
+  #renderer: three.WebGLRenderer;
+  #cameraController: TerrainViewerCameraController;
+  #scene: three.Scene;
+  #terrain: three.Mesh | null = null;
+  #terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
+  #animationRequestId: number | null = null;
 
-  constructor(doms: Doms) {
-    this.doms = doms;
-    this.renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
-    this.renderer.setPixelRatio(devicePixelRatio);
-    this.scene = new three.Scene();
+  constructor(doms: Doms, dtm: DtmHandler) {
+    this.#doms = doms;
+    this.#dtm = dtm;
+
+    this.#renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
+    this.#renderer.setPixelRatio(devicePixelRatio);
+    this.#scene = new three.Scene();
 
     const light = new three.DirectionalLight(0xffffff, 5);
     light.position.set(1, 1, 1).normalize();
-    this.scene.add(light);
-    this.scene.add(new three.AmbientLight(0xffffff, 0.09));
+    this.#scene.add(light);
+    this.#scene.add(new three.AmbientLight(0xffffff, 0.09));
 
-    this.cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
+    this.#cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
     doms.show.addEventListener("click", () => {
-      this.show();
+      this.#show().catch(printError);
     });
     doms.close.addEventListener("click", () => {
-      this.close();
+      this.#close();
     });
-    doms.output.addEventListener("keydown", (event) => {
-      if (event.code === "Escape") this.close();
+    doms.output.addEventListener("blur", () => {
+      this.#close();
     });
 
-    this.updateShowButton();
+    this.updateShowButton().catch(printError);
   }
 
-  get dtm(): Dtm | null {
-    return this._dtm;
+  async updateShowButton() {
+    this.#doms.show.disabled = (await this.#dtm.size()) === null;
   }
 
-  set dtm(d: Dtm | null) {
-    this._dtm = d;
-    this.updateShowButton();
+  async #show() {
+    await this.#updateElevations();
+    const { clientWidth, clientHeight } = document.documentElement;
+    this.#renderer.setSize(clientWidth, clientHeight);
+    this.#applyVisibleCss();
+    this.#cameraController.onResizeCanvas(clientWidth / clientHeight);
+    this.#doms.output.focus();
+    this.#startRender();
   }
 
-  get mapSize(): GameMapSize | null {
-    return this._mapSize;
-  }
+  async #updateElevations() {
+    if (this.#terrain) this.#scene.remove(this.#terrain);
+    const mapSize = await this.#dtm.size();
+    if (mapSize === null) throw Error("Unexpected state");
 
-  set mapSize(s: GameMapSize | null) {
-    this._mapSize = s;
-    this.updateShowButton();
-  }
+    this.#terrainSize.width = TERRAIN_WIDTH;
+    this.#terrainSize.height = Math.floor((TERRAIN_WIDTH / mapSize.width) * mapSize.height);
 
-  updateShowButton(): void {
-    this.doms.show.disabled = !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0 || !this.dtm;
-  }
-
-  startRender(): void {
-    if (this.animationRequestId) return;
-    const r = (prevTime: number, currentTime: number) => {
-      if (this.doms.output.style.display === "none") {
-        this.animationRequestId = null;
-        return;
-      }
-      this.animationRequestId = requestAnimationFrame((t) => {
-        r(currentTime, t);
-      });
-      this.cameraController.update(currentTime - prevTime);
-      this.renderer.render(this.scene, this.cameraController.camera);
-    };
-    r(0, 0);
-  }
-
-  private updateElevations(): void {
-    if (this.terrain) this.scene.remove(this.terrain);
-    if (!this.dtm || !this.mapSize || this.mapSize.width === 0 || this.mapSize.height === 0) return;
-
-    this.terrainSize.width = TERRAIN_WIDTH;
-    this.terrainSize.height = Math.floor((TERRAIN_WIDTH / this.mapSize.width) * this.mapSize.height);
-
-    console.log("terrainSize=", this.terrain, "mapSize=", this.mapSize);
+    console.log("terrainSize=", this.#terrain, "mapSize=", mapSize);
     console.time("updateElevations");
     const geo = new three.PlaneGeometry(
-      this.terrainSize.width,
-      this.terrainSize.height,
-      this.terrainSize.width - 1,
-      this.terrainSize.height - 1,
+      this.#terrainSize.width,
+      this.#terrainSize.height,
+      this.#terrainSize.width - 1,
+      this.#terrainSize.height - 1,
     );
     geo.clearGroups();
     geo.addGroup(0, Infinity, 0);
     geo.addGroup(0, Infinity, 1);
-    const pos = requireNonnull(geo.attributes["position"]);
-    const scaleFactor = this.mapSize.width / (this.terrainSize.width + 1);
-    for (let i = 0; i < pos.count; i++) {
-      // game axis -> webgl axis
-      // x -> x
-      // y -> z
-      // z -> y
-      const ingameX = Math.round((pos.getX(i) + this.terrainSize.width / 2) * scaleFactor);
-      const ingameZ = Math.round((pos.getY(i) + this.terrainSize.height / 2) * scaleFactor);
-      const elev =
-        requireNonnull(
-          this.dtm.data[ingameX + ingameZ * this.mapSize.width],
-          () => `Unexpected coords: ${ingameX.toString()}, ${ingameZ.toString()}`,
-        ) / scaleFactor;
-      pos.setZ(i, elev);
-    }
+    await this.#dtm.writeZ(geo);
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
-    const map = new three.CanvasTexture(this.doms.texture);
+    const map = new three.CanvasTexture(this.#doms.texture);
     map.colorSpace = three.SRGBColorSpace;
-    this.terrain = new three.Mesh(geo, [
+    this.#terrain = new three.Mesh(geo, [
       new three.MeshLambertMaterial({ map, transparent: true }),
       // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
       new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ]);
-    this.scene.add(this.terrain);
-    this.cameraController.onUpdateTerrain(this.mapSize.width, this.terrainSize);
+    this.#scene.add(this.#terrain);
+    this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
     console.timeEnd("updateElevations");
   }
 
-  private show() {
-    this.updateElevations();
-    const { clientWidth, clientHeight } = document.documentElement;
-    this.renderer.setSize(clientWidth, clientHeight);
-    this.applyVisibleCss();
-    this.cameraController.onResizeCanvas(clientWidth / clientHeight);
-    this.doms.output.focus();
-    this.startRender();
-  }
-
-  private applyVisibleCss() {
-    Object.assign(this.doms.output.style, {
+  #applyVisibleCss() {
+    Object.assign(this.#doms.output.style, {
       display: "block",
       zIndex: "100",
       position: "fixed",
       top: "0",
       left: "0",
     });
-    Object.assign(this.doms.hud.style, {
+    Object.assign(this.#doms.hud.style, {
       display: "block",
       zIndex: "101",
       position: "fixed",
@@ -165,7 +119,7 @@ export class TerrainViewer {
       color: "#fff",
       padding: "0 16px",
     });
-    Object.assign(this.doms.close.style, {
+    Object.assign(this.#doms.close.style, {
       display: "block",
       zIndex: "101",
       position: "fixed",
@@ -174,10 +128,26 @@ export class TerrainViewer {
     });
   }
 
-  private close() {
-    this.doms.output.blur();
-    this.doms.output.style.display = "none";
-    this.doms.hud.style.display = "none";
-    this.doms.close.style.display = "none";
+  #startRender(): void {
+    if (this.#animationRequestId) return;
+    const r = (prevTime: number, currentTime: number) => {
+      if (this.#doms.output.style.display === "none") {
+        this.#animationRequestId = null;
+        return;
+      }
+      this.#animationRequestId = requestAnimationFrame((t) => {
+        r(currentTime, t);
+      });
+      this.#cameraController.update(currentTime - prevTime);
+      this.#renderer.render(this.#scene, this.#cameraController.camera);
+    };
+    r(0, 0);
+  }
+
+  #close() {
+    this.#doms.output.blur();
+    this.#doms.output.style.display = "none";
+    this.#doms.hud.style.display = "none";
+    this.#doms.close.style.display = "none";
   }
 }

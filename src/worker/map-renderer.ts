@@ -1,17 +1,10 @@
-import { FontFaceSet } from "css-font-loading-module";
 import MapRenderer from "../lib/map-renderer";
 import { printError } from "../lib/utils";
-
-declare const fonts: FontFaceSet;
 
 export type InMessage = Partial<
   Pick<
     MapRenderer,
     | "canvas"
-    | "biomesImg"
-    | "splat3Img"
-    | "splat4Img"
-    | "radImg"
     | "biomesAlpha"
     | "splat3Alpha"
     | "splat4Alpha"
@@ -23,6 +16,7 @@ export type InMessage = Partial<
     | "signAlpha"
     | "prefabs"
     | "markerCoords"
+    | "invalidate"
   >
 >;
 
@@ -45,7 +39,7 @@ FONT_FACE.load()
 
 onmessage = async (event: MessageEvent<InMessage>) => {
   const message = event.data;
-  console.debug(message);
+  console.log("map-renderer: recieved %o", message);
   if (!map) {
     if (message.canvas) {
       map = new MapRenderer(message.canvas, FONT_FACE);
@@ -54,5 +48,7 @@ onmessage = async (event: MessageEvent<InMessage>) => {
     }
   }
   await Object.assign(map, message).update();
-  postMessage({ mapSize: await map.size() });
+  const out = { mapSize: map.size() };
+  console.log("map-renderer: sending %o", out);
+  postMessage(out);
 };
