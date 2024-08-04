@@ -241,17 +241,30 @@
 
     <h2>How to Use</h2>
 
-    <p>Drag and drop a world folder</p>
+    <p>Upload a world folder:</p>
+
+    <ul>
+      <li>Drag and drop it here</li>
+      <li>Click "Choose Files" in the upper right corner of this page</li>
+    </ul>
 
     <h3>Generated Worlds (Windows)</h3>
 
     <ol>
       <li>
         Open "GeneratedWorlds" folder:
-        <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span>\&lt;<strong>World Name</strong>&gt;</code>
-        <button title="Copy this path" data-copy-for="generated_world_path_windows" data-success-message="✅ Press Win+R then paste this">
-          📋️
-        </button>
+        <ul>
+          <li>
+            <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <button
+              title="Copy this path"
+              data-copy-for="generated_world_path_windows"
+              data-success-message="✅ Press Win+R then paste this"
+            >
+              📋️
+            </button>
+          </li>
+        </ul>
       </li>
       <li>Drag and drop one folder with a world name</li>
     </ol>
@@ -261,13 +274,13 @@
     <p>
       Select:
       <select id="bundled_map_select">
-        <option value="" selected>-</option>
+        <option value="" selected>-- Choose a world --</option>
       </select>
     </p>
 
     <div popover id="dnd_overlay">
       <div>
-        <p>Drop world files:</p>
+        <p>Drop a world folder or files:</p>
         <ul>
           <li>biomes.png</li>
           <li>splat3_processed.png / splat3.png</li>

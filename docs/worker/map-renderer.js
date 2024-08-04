@@ -1,2 +1,260 @@
-"use strict";(()=>{function c(a,e=()=>`Unexpected state: ${String(a)}`){if(a==null)throw Error(e());return a}var x=0;async function f(a){let e=x++;console.time(`imageBitmapToPngBlob ${e.toString()}`);let t=new OffscreenCanvas(a.height,a.width);c(t.getContext("2d")).drawImage(a,0,0);let i=await t.convertToBlob({type:"image/png"});return console.timeEnd(`imageBitmapToPngBlob ${e.toString()}`),console.debug("imageBitmapToPngBlob png %d KB",i.size/1e3),i}async function d(a){return new Promise(e=>setTimeout(e,a))}function b(a){return{type:"game",...a}}function w(a){console.error(a)}var B=1e4,s=class{label;_png;img;fallbackPromise=null;lastAccessAt=0;imgAge;constructor(e,t,n=B){this.label=e,A(t)?this._png=t:(this._png=f(t),this.setImg(t)),this.imgAge=n}async get(){return this.lastAccessAt=Date.now(),this.img??this.fallbackPromise??this.getFallback()}async getFallback(){return this.fallbackPromise=this.getImageBitmap(),this.fallbackPromise}async getImageBitmap(){console.debug("Fallback",this.label);let e=await createImageBitmap(await this._png);return this.setImg(e),this.fallbackPromise=null,e}setImg(e){this.img=e,setTimeout(()=>{this.expireImage()},this.imgAge)}expireImage(){Date.now()-this.lastAccessAt>this.imgAge?(console.debug("Expire",this.label),c(this.img).close(),this.img=null):setTimeout(()=>{this.expireImage()},this.imgAge)}};function A(a){return a instanceof Blob}function I(a,e=100){let t=[];return()=>{switch(t.length){case 0:{let n=(async()=>{try{await a()}finally{t.shift()}})();return t.push(n),n}case 1:{let n=t[0],i=(async()=>{await n,await d(e);try{await a()}finally{t.shift()}})();return t.push(i),i}case 2:return t[1];default:throw Error(`Unexpected state: promiceses=${t.length.toString()}`)}}}var S="\u2718",M="\u{1F6A9}\uFE0F",r=class{brightness="100%";markerCoords=null;scale=.1;showPrefabs=!0;prefabs=[];signSize=200;signAlpha=1;biomesAlpha=1;splat3Alpha=1;splat4Alpha=1;radAlpha=1;canvas;update=I(async()=>{console.time("MapUpdate"),await this.updateImmediately(),console.timeEnd("MapUpdate")});_biomesImg=null;_splat3Img=null;_splat4Img=null;_radImg=null;fontFace;constructor(e,t){this.canvas=e,this.fontFace=t}set biomesImg(e){this._biomesImg=e?new s("biomes",e):null}set splat3Img(e){this._splat3Img=e?new s("splat3",e):null}set splat4Img(e){this._splat4Img=e?new s("splat4",e):null}set radImg(e){this._radImg=e?new s("rad",e):null}async size(){let e=await Promise.all([this._biomesImg?.get(),this._splat3Img?.get(),this._splat4Img?.get()]);return b({width:Math.max(...e.map(t=>t?.width??0)),height:Math.max(...e.map(t=>t?.height??0))})}isBlank(){return!this._biomesImg&&!this._splat3Img&&!this._splat4Img}async updateImmediately(){if(this.isBlank()){this.canvas.width=1,this.canvas.height=1;return}let{width:e,height:t}=await this.size();this.canvas.width=e*this.scale,this.canvas.height=t*this.scale;let n=this.canvas.getContext("2d");n&&(n.scale(this.scale,this.scale),n.filter=`brightness(${this.brightness})`,this._biomesImg&&this.biomesAlpha!==0&&(n.globalAlpha=this.biomesAlpha,n.drawImage(await this._biomesImg.get(),0,0,e,t)),this._splat3Img&&this.splat3Alpha!==0&&(n.globalAlpha=this.splat3Alpha,n.drawImage(await this._splat3Img.get(),0,0,e,t)),this._splat4Img&&this.splat4Alpha!==0&&(n.globalAlpha=this.splat4Alpha,n.drawImage(await this._splat4Img.get(),0,0,e,t)),n.filter="none",this._radImg&&this.radAlpha!==0&&(n.globalAlpha=this.radAlpha,n.imageSmoothingEnabled=!1,n.drawImage(await this._radImg.get(),0,0,e,t),n.imageSmoothingEnabled=!0),n.globalAlpha=this.signAlpha,this.showPrefabs&&this.drawPrefabs(n,e,t),this.markerCoords&&this.drawMark(n,e,t))}drawPrefabs(e,t,n){e.font=`${this.signSize.toString()}px ${this.fontFace.family}`,e.fillStyle="red",e.textAlign="center",e.textBaseline="middle";let i=t/2,m=n/2,g=Math.round(this.signSize*.01),h=Math.round(this.signSize*.05);for(let l of this.prefabs.toReversed()){let p=i+l.x+g,P=m-l.z+h;v(e,{text:S,x:p,z:P,size:this.signSize})}}drawMark(e,t,n){if(!this.markerCoords)return;e.font=`${this.signSize.toString()}px ${this.fontFace.family}`,e.fillStyle="red",e.textAlign="left",e.textBaseline="alphabetic";let i=t/2,m=n/2,g=-1*Math.round(this.signSize*.32),h=-1*Math.round(this.signSize*.1),l=i+this.markerCoords.x+g,p=m-this.markerCoords.z+h;v(e,{text:M,x:l,z:p,size:this.signSize})}};function v(a,{text:e,x:t,z:n,size:i}){a.lineWidth=Math.round(i*.2),a.strokeStyle="rgba(0, 0, 0, 0.8)",a.strokeText(e,t,n),a.lineWidth=Math.round(i*.1),a.strokeStyle="white",a.strokeText(e,t,n),a.fillText(e,t,n)}var u=new FontFace("Noto Sans","url(../NotoEmoji-Regular.ttf)"),o=null;u.load().then(()=>(fonts.add(u),o?.update())).catch(w);onmessage=async a=>{let e=a.data;if(console.debug(e),!o)if(e.canvas)o=new r(e.canvas,u);else throw Error("Unexpected state");await Object.assign(o,e).update(),postMessage({mapSize:await o.size()})};})();
+"use strict";
+(() => {
+  // src/lib/utils.ts
+  async function d(n) {
+    return new Promise((e) => setTimeout(e, n));
+  }
+  function g(n) {
+    return { type: "game", ...n };
+  }
+  function b(n) {
+    console.error(n);
+  }
+
+  // src/lib/throttled-invoker.ts
+  function v(n, e = 100) {
+    let t = [], a = 0;
+    return () => {
+      switch (t.length) {
+        case 0: {
+          let i = (async () => {
+            let s = Date.now();
+            s < a + e && await d(a + e - s), a = Date.now();
+            try {
+              await n();
+            } finally {
+              t.shift();
+            }
+          })();
+          return t.push(i), i;
+        }
+        case 1: {
+          let i = t[0], s = (async () => {
+            await i, await d(e), a = Date.now();
+            try {
+              await n();
+            } finally {
+              t.shift();
+            }
+          })();
+          return t.push(s), s;
+        }
+        case 2:
+          return t[1];
+        default:
+          throw Error(`Unexpected state: promiceses=${t.length.toString()}`);
+      }
+    };
+  }
+
+  // src/lib/storage.ts
+  var T = "workspace";
+  async function S() {
+    let n = await navigator.storage.getDirectory();
+    return new w(await n.getDirectoryHandle(T, { create: !0 }));
+  }
+  var w = class {
+    #e;
+    constructor(e) {
+      this.#e = e;
+    }
+    get name() {
+      return this.#e.name;
+    }
+    async put(e, t) {
+      console.debug("put", e);
+      let i = await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
+      t instanceof ArrayBuffer || t instanceof Blob ? await i.write(t) : await t.pipeTo(i), await i.close();
+    }
+    async createWritable(e) {
+      return await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
+    }
+    async get(e) {
+      console.debug("get", e);
+      try {
+        return await (await this.#e.getFileHandle(e)).getFile();
+      } catch (t) {
+        if (t instanceof DOMException && t.name === "NotFoundError")
+          return null;
+        throw t;
+      }
+    }
+    async size(e) {
+      return (await (await this.#e.getFileHandle(e)).getFile()).size;
+    }
+    async remove(e) {
+      await this.#e.removeEntry(e);
+    }
+  };
+
+  // src/lib/cache-holder.ts
+  var m = Symbol("NO_VALUE"), p = class {
+    #e;
+    #r;
+    #s;
+    #t = m;
+    #n = null;
+    #a = null;
+    #i = Date.now();
+    constructor(e, t, a = 1e4) {
+      this.#e = e, this.#r = t, this.#s = a;
+    }
+    /**
+     * Get the value from the cache.
+     *
+     * If the value is not in the cache, it is fetched and stored.
+     */
+    async get() {
+      try {
+        return this.#t === m ? this.#o() : this.#t;
+      } finally {
+        this.#c();
+      }
+    }
+    async #o() {
+      if (this.#n) return this.#n;
+      this.#n = this.#l();
+      try {
+        this.#t = await this.#n;
+      } finally {
+        this.#n = null;
+      }
+      return this.#t;
+    }
+    async #l() {
+      let e, t;
+      do
+        e = Date.now(), t = await this.#e();
+      while (e < this.#i);
+      return t;
+    }
+    /**
+     * Invalidate the cache.
+     */
+    invalidate() {
+      this.#t !== m && (this.#r(this.#t), this.#t = m), this.#a && clearTimeout(this.#a), this.#a = null, this.#i = Date.now();
+    }
+    #c() {
+      this.#a && clearTimeout(this.#a), this.#a = setTimeout(() => {
+        this.invalidate();
+      }, this.#s);
+    }
+  };
+
+  // src/lib/map-renderer.ts
+  var E = "\u2718", P = "\u{1F6A9}\uFE0F", h = class {
+    brightness = "100%";
+    markerCoords = null;
+    scale = 0.1;
+    showPrefabs = !0;
+    prefabs = [];
+    signSize = 200;
+    signAlpha = 1;
+    biomesAlpha = 1;
+    splat3Alpha = 1;
+    splat4Alpha = 1;
+    radAlpha = 1;
+    canvas;
+    #e = g({ width: 0, height: 0 });
+    #r = new c("biomes.png");
+    #s = new c("splat3.png");
+    #t = new c("splat4.png");
+    #n = new c("radiation.png");
+    #a = [this.#r, this.#s, this.#t, this.#n];
+    #i;
+    constructor(e, t) {
+      this.canvas = e, this.#i = t;
+    }
+    set invalidate(e) {
+      for (let t of e)
+        switch (t) {
+          case "biomes.png":
+            this.#r.invalidate();
+            break;
+          case "splat3.png":
+            this.#s.invalidate();
+            break;
+          case "splat4.png":
+            this.#t.invalidate();
+            break;
+          case "radiation.png":
+            this.#n.invalidate();
+            break;
+          default:
+            throw new Error(`Invalid file name: ${String(t)}`);
+        }
+    }
+    update = v(async () => {
+      console.log("MapUpdate"), console.time("MapUpdate"), await this.#o(), console.timeEnd("MapUpdate");
+    });
+    async #o() {
+      let [e, t, a, i] = await Promise.all(this.#a.map((l) => l.get())), { width: s, height: o } = k(e, t, a, i);
+      if (this.#e.width = s, this.#e.height = o, s === 0 || o === 0) {
+        this.canvas.width = 1, this.canvas.height = 1;
+        return;
+      }
+      this.canvas.width = s * this.scale, this.canvas.height = o * this.scale;
+      let r = this.canvas.getContext("2d");
+      r && (r.scale(this.scale, this.scale), r.filter = `brightness(${this.brightness})`, e && this.biomesAlpha !== 0 && (r.globalAlpha = this.biomesAlpha, r.drawImage(e, 0, 0, s, o)), t && this.splat3Alpha !== 0 && (r.globalAlpha = this.splat3Alpha, r.drawImage(t, 0, 0, s, o)), a && this.splat4Alpha !== 0 && (r.globalAlpha = this.splat4Alpha, r.drawImage(a, 0, 0, s, o)), r.filter = "none", i && this.radAlpha !== 0 && (r.globalAlpha = this.radAlpha, r.imageSmoothingEnabled = !1, r.drawImage(i, 0, 0, s, o), r.imageSmoothingEnabled = !0), r.globalAlpha = this.signAlpha, this.showPrefabs && this.drawPrefabs(r, s, o), this.markerCoords && this.drawMark(r, s, o));
+    }
+    drawPrefabs(e, t, a) {
+      e.font = `${this.signSize.toString()}px ${this.#i.family}`, e.fillStyle = "red", e.textAlign = "center", e.textBaseline = "middle";
+      let i = t / 2, s = a / 2, o = Math.round(this.signSize * 0.01), r = Math.round(this.signSize * 0.05);
+      for (let l of this.prefabs.toReversed()) {
+        let f = i + l.x + o, M = s - l.z + r;
+        x(e, { text: E, x: f, z: M, size: this.signSize });
+      }
+    }
+    drawMark(e, t, a) {
+      if (!this.markerCoords) return;
+      e.font = `${this.signSize.toString()}px ${this.#i.family}`, e.fillStyle = "red", e.textAlign = "left", e.textBaseline = "alphabetic";
+      let i = t / 2, s = a / 2, o = -1 * Math.round(this.signSize * 0.32), r = -1 * Math.round(this.signSize * 0.1), l = i + this.markerCoords.x + o, f = s - this.markerCoords.z + r;
+      x(e, { text: P, x: l, z: f, size: this.signSize });
+    }
+    size() {
+      return this.#e;
+    }
+  };
+  function k(...n) {
+    return g({
+      width: Math.max(...n.map((e) => e?.width ?? 0)),
+      height: Math.max(...n.map((e) => e?.height ?? 0))
+    });
+  }
+  function x(n, { text: e, x: t, z: a, size: i }) {
+    n.lineWidth = Math.round(i * 0.2), n.strokeStyle = "rgba(0, 0, 0, 0.8)", n.strokeText(e, t, a), n.lineWidth = Math.round(i * 0.1), n.strokeStyle = "white", n.strokeText(e, t, a), n.fillText(e, t, a);
+  }
+  var c = class extends p {
+    constructor(t) {
+      super(
+        async () => {
+          console.log("Loading image", t);
+          let i = await (await S()).get(t);
+          try {
+            return i ? await createImageBitmap(i) : null;
+          } finally {
+            console.log("Loaded image", t);
+          }
+        },
+        (a) => a?.close()
+      );
+      this.fileName = t;
+    }
+  };
+
+  // src/worker/map-renderer.ts
+  var y = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)"), u = null;
+  y.load().then(() => (fonts.add(y), u?.update())).catch(b);
+  onmessage = async (n) => {
+    let e = n.data;
+    if (console.log("map-renderer: recieved %o", e), !u)
+      if (e.canvas)
+        u = new h(e.canvas, y);
+      else
+        throw Error("Unexpected state");
+    await Object.assign(u, e).update();
+    let t = { mapSize: u.size() };
+    console.log("map-renderer: sending %o", t), postMessage(t);
+  };
+})();
 //# sourceMappingURL=map-renderer.js.map
