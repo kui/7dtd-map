@@ -289,10 +289,12 @@ class Splat3PngTransformer extends PngEditingTransfomer {
 }
 
 /**
- * splat4.png should convert the pixels which:
- *   - black to 100% transparent
- *   - other to non-transparent
- *   - green to blue because they are water
+ * splat4.png/splat4_processed.png should convert the pixels which:
+ *   - Black to 100% transparent
+ *   - Non-black to non-transparent
+ *   - Green to blue because they are water
+ *   - rgb(0, 0, 29) to blue for splat4.png not splat4_processed.png
+ *     See https://github.com/kui/7dtd-map/issues/103
  */
 class Splat4PngTransformer extends PngEditingTransfomer {
   constructor() {
@@ -303,12 +305,11 @@ class Splat4PngTransformer extends PngEditingTransfomer {
           dst[i + 1] = 0;
           dst[i + 2] = 0;
           dst[i + 3] = 0;
-        } else if (src[i + 1] === 255) {
+        } else if (src[i + 1] === 255 || src[i+2] === 29) {
           /* eslint-disable @typescript-eslint/no-non-null-assertion */
           dst[i] = src[i]!;
-          const green = src[i + 1]!;
           dst[i + 1] = src[i + 2]!;
-          dst[i + 2] = green;
+          dst[i + 2] = 255;
           dst[i + 3] = 255;
         } else {
           dst[i] = src[i]!;
