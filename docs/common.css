@@ -1,17 +1,18 @@
-tr:first-child > * {
-  border-top: 1px lightgray solid;
+table {
+  border-collapse: collapse;
 }
-
-th,
-td {
+tr {
   border-bottom: 1px lightgray solid;
+  &:first-child {
+    border-top: 1px lightgray solid;
+  }
 }
 
 .inner-table {
-  & tr:first-child > * {
+  & tr:first-child {
     border-top: none;
   }
-  & tr:last-child > * {
+  & tr:last-child {
     border-bottom: none;
   }
 }
@@ -28,4 +29,5 @@ td {
 
 dialog::backdrop {
   backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
 }

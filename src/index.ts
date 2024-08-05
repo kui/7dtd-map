@@ -51,7 +51,7 @@ function main() {
   });
   const dndHandler = new DndHandler({
     dragovered: document.body,
-    overlay: component("dnd_overlay"),
+    dialog: component("dnd-dialog", HTMLDialogElement),
   });
   const bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) });
   const fileHandler = new FileHandler(

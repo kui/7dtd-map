@@ -7,7 +7,7 @@ export interface EventMessage {
 
 interface Doms {
   dragovered: HTMLElement;
-  overlay: HTMLElement;
+  dialog: HTMLDialogElement;
 }
 
 export class DndHandler extends events.Generator<"drop", EventMessage> {
@@ -15,7 +15,7 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
     super();
     dom.dragovered.addEventListener("dragenter", (event) => {
       event.preventDefault();
-      dom.overlay.showPopover();
+      dom.dialog.showModal();
     });
     dom.dragovered.addEventListener("dragover", (event) => {
       event.preventDefault();
@@ -23,20 +23,14 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
       event.dataTransfer.dropEffect = "copy";
     });
     document.body.addEventListener("dragleave", (event) => {
-      if (
-        event.target !== dom.overlay &&
-        // Sometime "dragleave" event from the overlay is not fired when the mouse cursor is moved out quickly from the browser window frame.
-        // This condition is a workaround for that issue. Mouse cursor position are (0, 0) when it is out of the window frame.
-        event.clientX !== 0 &&
-        event.clientY !== 0
-      )
-        return;
+      // clientX and clientY are 0 when the mouse cursor is out of the window frame.
+      if (dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0)) return;
       event.preventDefault();
-      dom.overlay.hidePopover();
+      dom.dialog.close();
     });
     dom.dragovered.addEventListener("drop", (event) => {
       event.preventDefault();
-      dom.overlay.hidePopover();
+      dom.dialog.close();
       if (!event.dataTransfer?.types.includes("Files")) return;
       this.emitNoAwait({
         type: "drop",
