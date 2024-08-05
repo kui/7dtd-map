@@ -58,10 +58,12 @@
   content: attr(data-message);
 }
 
-#generation_info_output_wrapper {
-  width: 100%;
+/* Handle warn message to use depleted files */
+#warn-splat3-png,
+#warn-splat4-png {
+  display: none;
 }
-#generation_info_output {
-  width: 100%;
-  resize: vertical;
+body.use-splat3-png #warn-splat3-png,
+body.use-splat4-png #warn-splat4-png {
+  display: inline-block;
 }

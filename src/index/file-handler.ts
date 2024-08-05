@@ -5,7 +5,14 @@ import type { BundledMapHandler } from "./bundled-map-hander";
 
 import { basename, printError } from "../lib/utils";
 import * as storage from "../lib/storage";
-import { getPreferWorldFileName, hasPreferWorldFileNameIn, isMapFileName, MAP_FILE_NAMES, MapFileName } from "../../lib/map-files";
+import {
+  getPreferWorldFileName,
+  hasPreferWorldFileNameIn,
+  isMapFileName,
+  MAP_FILE_NAMES,
+  MapFileName,
+  PREFER_WORLD_FILE_NAMES,
+} from "../../lib/map-files";
 
 type Listener = (updatedFileNames: MapFileName[]) => unknown;
 
@@ -58,6 +65,7 @@ export class FileHandler {
   #loadingHandler: LoadingHandler;
   #processorFactory: () => ImageProcessorWorker;
   #workspace = storage.workspaceDir();
+  #depletedFileHandler = new DepletedFileHandler();
 
   constructor(
     doms: Doms,
@@ -166,6 +174,10 @@ export class FileHandler {
         console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
         this.#loadingHandler.delete(resource.name);
         continue;
+      }
+
+      if (this.#depletedFileHandler.isSupport(resource.name)) {
+        this.#depletedFileHandler.handle(resource.name, "remove" in resource, "alreadyProcessed" in resource && resource.alreadyProcessed);
       }
 
       if ("remove" in resource) {
@@ -278,4 +290,58 @@ function listEntries(entry: FileSystemDirectoryEntry): Promise<FileSystemEntry[]
     const reader = entry.createReader();
     reader.readEntries(resolve, reject);
   });
+}
+
+type DeplateOrPreferedFileName =
+  | keyof typeof PREFER_WORLD_FILE_NAMES
+  | (typeof PREFER_WORLD_FILE_NAMES)[keyof typeof PREFER_WORLD_FILE_NAMES];
+
+/**
+ * State whether or not to use the depleted version of the file.
+ */
+class DepletedFileHandler {
+  constructor() {
+    if (localStorage.getItem("useSplat3Png")) document.body.classList.add("use-splat3-png");
+    if (localStorage.getItem("useSplat4Png")) document.body.classList.add("use-splat4-png");
+  }
+
+  isSupport(worldFileName: string): worldFileName is DeplateOrPreferedFileName {
+    return Object.entries(PREFER_WORLD_FILE_NAMES).some((e) => e.includes(worldFileName));
+  }
+
+  handle(deplateOrPreferedFileName: DeplateOrPreferedFileName, removing: boolean, alreadyProcessed: boolean) {
+    switch (deplateOrPreferedFileName) {
+      case "splat3.png":
+        this.useSplat3Png = !removing && !alreadyProcessed;
+        break;
+      case "splat3_processed.png":
+        this.useSplat3Png = false;
+        break;
+      case "splat4.png":
+        this.useSplat4Png = !removing && !alreadyProcessed;
+        break;
+      case "splat4_processed.png":
+        this.useSplat4Png = false;
+        break;
+    }
+  }
+
+  set useSplat3Png(value: boolean) {
+    if (value) {
+      localStorage.setItem("useSplat3Png", "t");
+      document.body.classList.add("use-splat3-png");
+    } else {
+      localStorage.removeItem("useSplat3Png");
+      document.body.classList.remove("use-splat3-png");
+    }
+  }
+  set useSplat4Png(value: boolean) {
+    if (value) {
+      localStorage.setItem("useSplat4Png", "t");
+      document.body.classList.add("use-splat4-png");
+    } else {
+      localStorage.removeItem("useSplat4Png");
+      document.body.classList.remove("use-splat4-png");
+    }
+  }
 }

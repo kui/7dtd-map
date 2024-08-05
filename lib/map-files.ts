@@ -98,7 +98,7 @@ export function getMapFileName(name: WorldFileName): MapFileNameMap<WorldFileNam
 /**
  * The value file name is preferred to be used instead of the key file name.
  */
-const PREFER_WORLD_FILE_NAMES = {
+export const PREFER_WORLD_FILE_NAMES = {
   "splat3.png": "splat3_processed.png",
   "splat4.png": "splat4_processed.png",
 } as const;
@@ -119,14 +119,12 @@ export function filterWorldFileNames(names: string[]): WorldFileName[] {
  * @param files The file names
  * @returns true if the file `name` has the preferred file name in the `files`
  */
-export function hasPreferWorldFileNameIn(name: string, files: string[]): name is keyof typeof PREFER_WORLD_FILE_NAMES {
+export function hasPreferWorldFileNameIn(name: string, files: string[]): boolean {
   return name in PREFER_WORLD_FILE_NAMES && files.includes(PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES]);
 }
 
-export function getPreferWorldFileName(
-  name: keyof typeof PREFER_WORLD_FILE_NAMES,
-): (typeof PREFER_WORLD_FILE_NAMES)[keyof typeof PREFER_WORLD_FILE_NAMES] {
-  return PREFER_WORLD_FILE_NAMES[name];
+export function getPreferWorldFileName(name: string): string | undefined {
+  return (PREFER_WORLD_FILE_NAMES as Record<string, string>)[name];
 }
 
 function copy(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
@@ -305,7 +303,7 @@ class Splat4PngTransformer extends PngEditingTransfomer {
           dst[i + 1] = 0;
           dst[i + 2] = 0;
           dst[i + 3] = 0;
-        } else if (src[i + 1] === 255 || src[i+2] === 29) {
+        } else if (src[i + 1] === 255 || src[i + 2] === 29) {
           /* eslint-disable @typescript-eslint/no-non-null-assertion */
           dst[i] = src[i]!;
           dst[i + 1] = src[i + 2]!;
