@@ -20,7 +20,7 @@ Map renderer for 7 Day to Die.
 npm run build
 ```
 
-3. Copy some bundle world files for sample data:
+3. Copy all bundle worlds:
 
 ```
 npx tsx ./tools/copy-map-files.ts
@@ -40,4 +40,4 @@ npm run serve
 
 Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][]".
 
-[Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts)
+[Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
