@@ -1,29 +1,29 @@
 "use strict";
 (() => {
   // src/lib/utils.ts
-  function g(n, e = () => `Unexpected state: ${String(n)}`) {
-    if (n == null) throw Error(e());
-    return n;
+  function requireNonnull(t, errorMessage = () => `Unexpected state: ${String(t)}`) {
+    if (t == null) throw Error(errorMessage());
+    return t;
   }
-  function b(n, e, t = () => `Unexpected type: expected as ${String(e)}, but actual type ${String(n)}`) {
-    if (n instanceof e) return n;
-    throw Error(t());
+  function requireType(o, t, errorMessage = () => `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`) {
+    if (o instanceof t) return o;
+    throw Error(errorMessage());
   }
-  function l(n, e) {
-    let t = g(n, () => "Unexpected argument: id is null"), r = g(document.getElementById(t), () => `Element not found: #${t}`);
-    return e ? b(r, e) : r;
+  function component(id, t) {
+    let i = requireNonnull(id, () => "Unexpected argument: id is null"), e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
+    return t ? requireType(e, t) : e;
   }
-  function m(n) {
-    console.error(n);
+  function printError(e) {
+    console.error(e);
   }
-  async function f(n) {
-    let e = await fetch(n);
-    if (!e.ok) throw Error(`Failed to fetch ${n}: ${e.statusText}`);
-    return await e.json();
+  async function fetchJson(url) {
+    let r = await fetch(url);
+    if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
+    return await r.json();
   }
 
   // src/lib/labels.ts
-  var d = [
+  var LANGUAGES = [
     "english",
     "german",
     "spanish",
@@ -37,7 +37,7 @@
     "turkish",
     "schinese",
     "tchinese"
-  ], E = {
+  ], LANGUAGE_TAGS = {
     en: "english",
     de: "german",
     es: "spanish",
@@ -51,99 +51,99 @@
     tr: "turkish",
     "zh-CN": "schinese",
     "zh-TW": "tchinese"
-  }, h = ["blocks", "prefabs", "shapes"], o = class n {
+  }, FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"], LabelHolder = class _LabelHolder {
     static DEFAULT_LANGUAGE = "english";
-    #t;
-    #e;
-    #r;
-    #n;
-    constructor(e, t) {
-      this.#t = e, this.#e = s(t), this.#r = new Map(h.map((r) => [r, this.#o(n.DEFAULT_LANGUAGE, r)])), this.#n = this.#a();
+    #baseUrl;
+    #language;
+    #fallbacks;
+    #labels;
+    constructor(baseUrl, navigatorLanguages) {
+      this.#baseUrl = baseUrl, this.#language = resolveLanguage(navigatorLanguages), this.#fallbacks = new Map(FILE_BASE_NAMES.map((n) => [n, this.#fetchLabelMap(_LabelHolder.DEFAULT_LANGUAGE, n)])), this.#labels = this.#buildAllLabels();
     }
-    get(e) {
-      let t = this.#n.get(e);
-      if (!t) throw new Error(`No labels for ${this.#e}/${e}`);
-      return t;
+    get(fileId) {
+      let labels = this.#labels.get(fileId);
+      if (!labels) throw new Error(`No labels for ${this.#language}/${fileId}`);
+      return labels;
     }
-    set language(e) {
-      e !== this.#e && (console.log("LabelHolder set language: %s -> %s", this.#e, e), this.#e = e, this.#n = this.#a());
+    set language(lang) {
+      lang !== this.#language && (console.log("LabelHolder set language: %s -> %s", this.#language, lang), this.#language = lang, this.#labels = this.#buildAllLabels());
     }
-    #a() {
-      return new Map(h.map((e) => [e, this.#s(e)]));
+    #buildAllLabels() {
+      return new Map(FILE_BASE_NAMES.map((n) => [n, this.#buildLabels(n)]));
     }
-    async #s(e) {
-      let t = this.#r.get(e);
-      if (!t) throw new Error(`No fallback for ${this.#e}/${e}`);
-      return new u(await this.#o(this.#e, e), await t);
+    async #buildLabels(fileBaseName) {
+      let fallback = this.#fallbacks.get(fileBaseName);
+      if (!fallback) throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
+      return new Labels(await this.#fetchLabelMap(this.#language, fileBaseName), await fallback);
     }
-    async #o(e, t) {
-      return new Map(Object.entries(await f(`${this.#t}/${e}/${t}.json`)));
+    async #fetchLabelMap(language, fileId) {
+      return new Map(Object.entries(await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`)));
     }
-  }, u = class {
-    #t;
-    #e;
-    constructor(e, t) {
-      this.#t = e, this.#e = t;
+  }, Labels = class {
+    #labels;
+    #fallback;
+    constructor(labels, defaultLabels) {
+      this.#labels = labels, this.#fallback = defaultLabels;
     }
-    get(e) {
-      return this.#t.get(e) ?? this.#e.get(e);
+    get(key) {
+      return this.#labels.get(key) ?? this.#fallback.get(key);
     }
   };
-  function s(n) {
-    for (let e of n)
-      for (let [t, r] of Object.entries(E))
-        if (e.startsWith(t)) return r;
-    return o.DEFAULT_LANGUAGE;
+  function resolveLanguage(languages) {
+    for (let clientTag of languages)
+      for (let [tag, lang] of Object.entries(LANGUAGE_TAGS))
+        if (clientTag.startsWith(tag)) return lang;
+    return LabelHolder.DEFAULT_LANGUAGE;
   }
 
   // src/lib/label-handler.ts
-  var i = class {
+  var LabelHandler = class {
     doms;
     listener = [];
-    constructor(e, t) {
-      this.doms = e, this.buildSelectOptions(t), this.doms.language.addEventListener("change", () => {
-        this.listener.forEach((r) => {
-          r(this.doms.language.value)?.catch(m);
+    constructor(doms, navigatorLanguages) {
+      this.doms = doms, this.buildSelectOptions(navigatorLanguages), this.doms.language.addEventListener("change", () => {
+        this.listener.forEach((fn) => {
+          fn(this.doms.language.value)?.catch(printError);
         });
       });
     }
-    buildSelectOptions(e) {
-      let t = new Set(Array.from(this.doms.language.options).map((a) => a.value));
-      for (let a of d) {
-        if (t.has(a))
+    buildSelectOptions(navigatorLanguages) {
+      let existingLangs = new Set(Array.from(this.doms.language.options).map((o) => o.value));
+      for (let lang of LANGUAGES) {
+        if (existingLangs.has(lang))
           continue;
-        let c = document.createElement("option");
-        c.textContent = a, this.doms.language.appendChild(c);
+        let option = document.createElement("option");
+        option.textContent = lang, this.doms.language.appendChild(option);
       }
-      let r = s(e);
-      this.doms.language.value !== r && (this.doms.language.value = s(e), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
+      let browserLang = resolveLanguage(navigatorLanguages);
+      this.doms.language.value !== browserLang && (this.doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
     }
-    addListener(e) {
-      this.listener.push(e);
+    addListener(fn) {
+      this.listener.push(fn);
     }
   };
 
   // src/prefabs/main.ts
-  function p() {
-    let n = new o("../labels", navigator.languages);
-    new i({ language: l("label_lang", HTMLSelectElement) }, navigator.languages).addListener(async (t) => {
-      n.language = t, L(await n.get("prefabs")), w(await n.get("blocks"), await n.get("shapes"));
+  function main() {
+    let labelHolder = new LabelHolder("../labels", navigator.languages);
+    new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages).addListener(async (lang) => {
+      labelHolder.language = lang, updatePrefabLabels(await labelHolder.get("prefabs")), udpateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
     });
   }
-  function L(n) {
-    let e = document.querySelector(".prefab_name")?.textContent?.trim();
-    if (!e) return;
-    let t = document.querySelector(".prefab_label");
-    t && (t.textContent = n.get(e) ?? "-");
+  function updatePrefabLabels(labels) {
+    let name = document.querySelector(".prefab_name")?.textContent?.trim();
+    if (!name) return;
+    let labelEl = document.querySelector(".prefab_label");
+    labelEl && (labelEl.textContent = labels.get(name) ?? "-");
   }
-  function w(n, e) {
-    for (let t of l("blocks", HTMLElement).querySelectorAll(".block")) {
-      let r = t.querySelector(".block_name")?.textContent?.trim();
-      if (!r) continue;
-      let a = t.querySelector(".block_label");
-      a && (a.textContent = n.get(r) ?? e.get(r) ?? "-");
+  function udpateBlockLabels(blockLabels, shapeLabels) {
+    for (let blockEl of component("blocks", HTMLElement).querySelectorAll(".block")) {
+      let name = blockEl.querySelector(".block_name")?.textContent?.trim();
+      if (!name) continue;
+      let labelEl = blockEl.querySelector(".block_label");
+      labelEl && (labelEl.textContent = blockLabels.get(name) ?? shapeLabels.get(name) ?? "-");
     }
   }
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", p) : p();
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", main) : main();
 })();
 //# sourceMappingURL=main.js.map

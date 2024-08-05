@@ -1,103 +1,103 @@
 "use strict";
 (() => {
   // src/lib/utils.ts
-  async function d(n) {
-    return new Promise((e) => setTimeout(e, n));
+  async function sleep(msec) {
+    return new Promise((r) => setTimeout(r, msec));
   }
-  function g(n) {
-    return { type: "game", ...n };
+  function gameMapSize(s) {
+    return { type: "game", ...s };
   }
-  function b(n) {
-    console.error(n);
+  function printError(e) {
+    console.error(e);
   }
 
   // src/lib/throttled-invoker.ts
-  function v(n, e = 100) {
-    let t = [], a = 0;
+  function throttledInvoker(asyncFunc, intervalMs = 100) {
+    let workerPromises = [], lastInvokationAt = 0;
     return () => {
-      switch (t.length) {
+      switch (workerPromises.length) {
         case 0: {
-          let i = (async () => {
-            let s = Date.now();
-            s < a + e && await d(a + e - s), a = Date.now();
+          let p = (async () => {
+            let now = Date.now();
+            now < lastInvokationAt + intervalMs && await sleep(lastInvokationAt + intervalMs - now), lastInvokationAt = Date.now();
             try {
-              await n();
+              await asyncFunc();
             } finally {
-              t.shift();
+              workerPromises.shift();
             }
           })();
-          return t.push(i), i;
+          return workerPromises.push(p), p;
         }
         case 1: {
-          let i = t[0], s = (async () => {
-            await i, await d(e), a = Date.now();
+          let prev = workerPromises[0], p = (async () => {
+            await prev, await sleep(intervalMs), lastInvokationAt = Date.now();
             try {
-              await n();
+              await asyncFunc();
             } finally {
-              t.shift();
+              workerPromises.shift();
             }
           })();
-          return t.push(s), s;
+          return workerPromises.push(p), p;
         }
         case 2:
-          return t[1];
+          return workerPromises[1];
         default:
-          throw Error(`Unexpected state: promiceses=${t.length.toString()}`);
+          throw Error(`Unexpected state: promiceses=${workerPromises.length.toString()}`);
       }
     };
   }
 
   // src/lib/storage.ts
-  var T = "workspace";
-  async function S() {
-    let n = await navigator.storage.getDirectory();
-    return new w(await n.getDirectoryHandle(T, { create: !0 }));
+  var WORKSPACE_DIR = "workspace";
+  async function workspaceDir() {
+    let root = await navigator.storage.getDirectory();
+    return new MapDir(await root.getDirectoryHandle(WORKSPACE_DIR, { create: !0 }));
   }
-  var w = class {
-    #e;
-    constructor(e) {
-      this.#e = e;
+  var MapDir = class {
+    #dir;
+    constructor(dir) {
+      this.#dir = dir;
     }
     get name() {
-      return this.#e.name;
+      return this.#dir.name;
     }
-    async put(e, t) {
-      console.debug("put", e);
-      let i = await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
-      t instanceof ArrayBuffer || t instanceof Blob ? await i.write(t) : await t.pipeTo(i), await i.close();
+    async put(name, data) {
+      console.debug("put", name);
+      let writable = await (await this.#dir.getFileHandle(name, { create: !0 })).createWritable();
+      data instanceof ArrayBuffer || data instanceof Blob ? await writable.write(data) : await data.pipeTo(writable), await writable.close();
     }
-    async createWritable(e) {
-      return await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
+    async createWritable(name) {
+      return await (await this.#dir.getFileHandle(name, { create: !0 })).createWritable();
     }
-    async get(e) {
-      console.debug("get", e);
+    async get(name) {
+      console.debug("get", name);
       try {
-        return await (await this.#e.getFileHandle(e)).getFile();
-      } catch (t) {
-        if (t instanceof DOMException && t.name === "NotFoundError")
+        return await (await this.#dir.getFileHandle(name)).getFile();
+      } catch (e) {
+        if (e instanceof DOMException && e.name === "NotFoundError")
           return null;
-        throw t;
+        throw e;
       }
     }
-    async size(e) {
-      return (await (await this.#e.getFileHandle(e)).getFile()).size;
+    async size(name) {
+      return (await (await this.#dir.getFileHandle(name)).getFile()).size;
     }
-    async remove(e) {
-      await this.#e.removeEntry(e);
+    async remove(name) {
+      await this.#dir.removeEntry(name);
     }
   };
 
   // src/lib/cache-holder.ts
-  var m = Symbol("NO_VALUE"), p = class {
-    #e;
-    #r;
-    #s;
-    #t = m;
-    #n = null;
-    #a = null;
-    #i = Date.now();
-    constructor(e, t, a = 1e4) {
-      this.#e = e, this.#r = t, this.#s = a;
+  var NO_VALUE = Symbol("NO_VALUE"), CacheHolder = class {
+    #fetcher;
+    #deconstructor;
+    #age;
+    #value = NO_VALUE;
+    #fetchPromise = null;
+    #expirationTimeout = null;
+    #lastInvalidation = Date.now();
+    constructor(fetcher, deconstructor, age = 1e4) {
+      this.#fetcher = fetcher, this.#deconstructor = deconstructor, this.#age = age;
     }
     /**
      * Get the value from the cache.
@@ -106,43 +106,43 @@
      */
     async get() {
       try {
-        return this.#t === m ? this.#o() : this.#t;
+        return this.#value === NO_VALUE ? await this.#fetch() : this.#value;
       } finally {
-        this.#c();
+        this.#resetTimer();
       }
     }
-    async #o() {
-      if (this.#n) return this.#n;
-      this.#n = this.#l();
+    async #fetch() {
+      if (this.#fetchPromise) return this.#fetchPromise;
+      this.#fetchPromise = this.#fetchUntilNoInvalidation();
       try {
-        this.#t = await this.#n;
+        this.#value = await this.#fetchPromise;
       } finally {
-        this.#n = null;
+        this.#fetchPromise = null;
       }
-      return this.#t;
+      return this.#value;
     }
-    async #l() {
-      let e, t;
+    async #fetchUntilNoInvalidation() {
+      let now, value;
       do
-        e = Date.now(), t = await this.#e();
-      while (e < this.#i);
-      return t;
+        now = Date.now(), value = await this.#fetcher();
+      while (now < this.#lastInvalidation);
+      return value;
     }
     /**
      * Invalidate the cache.
      */
     invalidate() {
-      this.#t !== m && (this.#r(this.#t), this.#t = m), this.#a && clearTimeout(this.#a), this.#a = null, this.#i = Date.now();
+      this.#value !== NO_VALUE && (this.#deconstructor(this.#value), this.#value = NO_VALUE), this.#expirationTimeout && clearTimeout(this.#expirationTimeout), this.#expirationTimeout = null, this.#lastInvalidation = Date.now();
     }
-    #c() {
-      this.#a && clearTimeout(this.#a), this.#a = setTimeout(() => {
+    #resetTimer() {
+      this.#expirationTimeout && clearTimeout(this.#expirationTimeout), this.#expirationTimeout = setTimeout(() => {
         this.invalidate();
-      }, this.#s);
+      }, this.#age);
     }
   };
 
   // src/lib/map-renderer.ts
-  var E = "\u2718", P = "\u{1F6A9}\uFE0F", h = class {
+  var SIGN_CHAR = "\u2718", MARK_CHAR = "\u{1F6A9}\uFE0F", MapRenderer = class {
     brightness = "100%";
     markerCoords = null;
     scale = 0.1;
@@ -155,106 +155,106 @@
     splat4Alpha = 1;
     radAlpha = 1;
     canvas;
-    #e = g({ width: 0, height: 0 });
-    #r = new c("biomes.png");
-    #s = new c("splat3.png");
-    #t = new c("splat4.png");
-    #n = new c("radiation.png");
-    #a = [this.#r, this.#s, this.#t, this.#n];
-    #i;
-    constructor(e, t) {
-      this.canvas = e, this.#i = t;
+    #mapSize = gameMapSize({ width: 0, height: 0 });
+    #biomesImage = new BitmapHolder("biomes.png");
+    #splat3Image = new BitmapHolder("splat3.png");
+    #splat4Image = new BitmapHolder("splat4.png");
+    #radImage = new BitmapHolder("radiation.png");
+    #imageFiles = [this.#biomesImage, this.#splat3Image, this.#splat4Image, this.#radImage];
+    #fontFace;
+    constructor(canvas, fontFace) {
+      this.canvas = canvas, this.#fontFace = fontFace;
     }
-    set invalidate(e) {
-      for (let t of e)
-        switch (t) {
+    set invalidate(fileNames) {
+      for (let fileName of fileNames)
+        switch (fileName) {
           case "biomes.png":
-            this.#r.invalidate();
+            this.#biomesImage.invalidate();
             break;
           case "splat3.png":
-            this.#s.invalidate();
+            this.#splat3Image.invalidate();
             break;
           case "splat4.png":
-            this.#t.invalidate();
+            this.#splat4Image.invalidate();
             break;
           case "radiation.png":
-            this.#n.invalidate();
+            this.#radImage.invalidate();
             break;
           default:
-            throw new Error(`Invalid file name: ${String(t)}`);
+            throw new Error(`Invalid file name: ${String(fileName)}`);
         }
     }
-    update = v(async () => {
-      console.log("MapUpdate"), console.time("MapUpdate"), await this.#o(), console.timeEnd("MapUpdate");
+    update = throttledInvoker(async () => {
+      console.log("MapUpdate"), console.time("MapUpdate"), await this.#updateImmediately(), console.timeEnd("MapUpdate");
     });
-    async #o() {
-      let [e, t, a, i] = await Promise.all(this.#a.map((l) => l.get())), { width: s, height: o } = k(e, t, a, i);
-      if (this.#e.width = s, this.#e.height = o, s === 0 || o === 0) {
+    async #updateImmediately() {
+      let [biomes, splat3, splat4, rad] = await Promise.all(this.#imageFiles.map((i) => i.get())), { width, height } = mapSize(biomes, splat3, splat4, rad);
+      if (this.#mapSize.width = width, this.#mapSize.height = height, width === 0 || height === 0) {
         this.canvas.width = 1, this.canvas.height = 1;
         return;
       }
-      this.canvas.width = s * this.scale, this.canvas.height = o * this.scale;
-      let r = this.canvas.getContext("2d");
-      r && (r.scale(this.scale, this.scale), r.filter = `brightness(${this.brightness})`, e && this.biomesAlpha !== 0 && (r.globalAlpha = this.biomesAlpha, r.drawImage(e, 0, 0, s, o)), t && this.splat3Alpha !== 0 && (r.globalAlpha = this.splat3Alpha, r.drawImage(t, 0, 0, s, o)), a && this.splat4Alpha !== 0 && (r.globalAlpha = this.splat4Alpha, r.drawImage(a, 0, 0, s, o)), r.filter = "none", i && this.radAlpha !== 0 && (r.globalAlpha = this.radAlpha, r.imageSmoothingEnabled = !1, r.drawImage(i, 0, 0, s, o), r.imageSmoothingEnabled = !0), r.globalAlpha = this.signAlpha, this.showPrefabs && this.drawPrefabs(r, s, o), this.markerCoords && this.drawMark(r, s, o));
+      this.canvas.width = width * this.scale, this.canvas.height = height * this.scale;
+      let context = this.canvas.getContext("2d");
+      context && (context.scale(this.scale, this.scale), context.filter = `brightness(${this.brightness})`, biomes && this.biomesAlpha !== 0 && (context.globalAlpha = this.biomesAlpha, context.drawImage(biomes, 0, 0, width, height)), splat3 && this.splat3Alpha !== 0 && (context.globalAlpha = this.splat3Alpha, context.drawImage(splat3, 0, 0, width, height)), splat4 && this.splat4Alpha !== 0 && (context.globalAlpha = this.splat4Alpha, context.drawImage(splat4, 0, 0, width, height)), context.filter = "none", rad && this.radAlpha !== 0 && (context.globalAlpha = this.radAlpha, context.imageSmoothingEnabled = !1, context.drawImage(rad, 0, 0, width, height), context.imageSmoothingEnabled = !0), context.globalAlpha = this.signAlpha, this.showPrefabs && this.drawPrefabs(context, width, height), this.markerCoords && this.drawMark(context, width, height));
     }
-    drawPrefabs(e, t, a) {
-      e.font = `${this.signSize.toString()}px ${this.#i.family}`, e.fillStyle = "red", e.textAlign = "center", e.textBaseline = "middle";
-      let i = t / 2, s = a / 2, o = Math.round(this.signSize * 0.01), r = Math.round(this.signSize * 0.05);
-      for (let l of this.prefabs.toReversed()) {
-        let f = i + l.x + o, M = s - l.z + r;
-        x(e, { text: E, x: f, z: M, size: this.signSize });
+    drawPrefabs(ctx, width, height) {
+      ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`, ctx.fillStyle = "red", ctx.textAlign = "center", ctx.textBaseline = "middle";
+      let offsetX = width / 2, offsetY = height / 2, charOffsetX = Math.round(this.signSize * 0.01), charOffsetY = Math.round(this.signSize * 0.05);
+      for (let prefab of this.prefabs.toReversed()) {
+        let x = offsetX + prefab.x + charOffsetX, z = offsetY - prefab.z + charOffsetY;
+        putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
       }
     }
-    drawMark(e, t, a) {
+    drawMark(ctx, width, height) {
       if (!this.markerCoords) return;
-      e.font = `${this.signSize.toString()}px ${this.#i.family}`, e.fillStyle = "red", e.textAlign = "left", e.textBaseline = "alphabetic";
-      let i = t / 2, s = a / 2, o = -1 * Math.round(this.signSize * 0.32), r = -1 * Math.round(this.signSize * 0.1), l = i + this.markerCoords.x + o, f = s - this.markerCoords.z + r;
-      x(e, { text: P, x: l, z: f, size: this.signSize });
+      ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`, ctx.fillStyle = "red", ctx.textAlign = "left", ctx.textBaseline = "alphabetic";
+      let offsetX = width / 2, offsetY = height / 2, charOffsetX = -1 * Math.round(this.signSize * 0.32), charOffsetY = -1 * Math.round(this.signSize * 0.1), x = offsetX + this.markerCoords.x + charOffsetX, z = offsetY - this.markerCoords.z + charOffsetY;
+      putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
     }
     size() {
-      return this.#e;
+      return this.#mapSize;
     }
   };
-  function k(...n) {
-    return g({
-      width: Math.max(...n.map((e) => e?.width ?? 0)),
-      height: Math.max(...n.map((e) => e?.height ?? 0))
+  function mapSize(...images) {
+    return gameMapSize({
+      width: Math.max(...images.map((i) => i?.width ?? 0)),
+      height: Math.max(...images.map((i) => i?.height ?? 0))
     });
   }
-  function x(n, { text: e, x: t, z: a, size: i }) {
-    n.lineWidth = Math.round(i * 0.2), n.strokeStyle = "rgba(0, 0, 0, 0.8)", n.strokeText(e, t, a), n.lineWidth = Math.round(i * 0.1), n.strokeStyle = "white", n.strokeText(e, t, a), n.fillText(e, t, a);
+  function putText(ctx, { text, x, z, size }) {
+    ctx.lineWidth = Math.round(size * 0.2), ctx.strokeStyle = "rgba(0, 0, 0, 0.8)", ctx.strokeText(text, x, z), ctx.lineWidth = Math.round(size * 0.1), ctx.strokeStyle = "white", ctx.strokeText(text, x, z), ctx.fillText(text, x, z);
   }
-  var c = class extends p {
-    constructor(t) {
+  var BitmapHolder = class extends CacheHolder {
+    constructor(fileName) {
       super(
         async () => {
-          console.log("Loading image", t);
-          let i = await (await S()).get(t);
+          console.log("Loading image", fileName);
+          let file = await (await workspaceDir()).get(fileName);
           try {
-            return i ? await createImageBitmap(i) : null;
+            return file ? await createImageBitmap(file) : null;
           } finally {
-            console.log("Loaded image", t);
+            console.log("Loaded image", fileName);
           }
         },
-        (a) => a?.close()
+        (img) => img?.close()
       );
-      this.fileName = t;
+      this.fileName = fileName;
     }
   };
 
   // src/worker/map-renderer.ts
-  var y = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)"), u = null;
-  y.load().then(() => (fonts.add(y), u?.update())).catch(b);
-  onmessage = async (n) => {
-    let e = n.data;
-    if (console.log("map-renderer: recieved %o", e), !u)
-      if (e.canvas)
-        u = new h(e.canvas, y);
+  var FONT_FACE = new FontFace("Noto Sans", "url(../NotoEmoji-Regular.ttf)"), map = null;
+  FONT_FACE.load().then(() => (fonts.add(FONT_FACE), map?.update())).catch(printError);
+  onmessage = async (event) => {
+    let message = event.data;
+    if (console.log("map-renderer: recieved %o", message), !map)
+      if (message.canvas)
+        map = new MapRenderer(message.canvas, FONT_FACE);
       else
         throw Error("Unexpected state");
-    await Object.assign(u, e).update();
-    let t = { mapSize: u.size() };
-    console.log("map-renderer: sending %o", t), postMessage(t);
+    await Object.assign(map, message).update();
+    let out = { mapSize: map.size() };
+    console.log("map-renderer: sending %o", out), postMessage(out);
   };
 })();
 //# sourceMappingURL=map-renderer.js.map

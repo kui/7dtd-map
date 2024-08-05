@@ -20,7 +20,7 @@ serve_opts=(
 )
 prod_opts=(
   #"--minify"
-  "--minify-identifiers"
+  #"--minify-identifiers"
   "--minify-syntax"
   "--sourcemap=external"
 )

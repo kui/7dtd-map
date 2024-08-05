@@ -1,153 +1,153 @@
 "use strict";
 (() => {
   // src/lib/utils.ts
-  function m(t, e = () => `Unexpected state: ${String(t)}`) {
-    if (t == null) throw Error(e());
+  function requireNonnull(t, errorMessage = () => `Unexpected state: ${String(t)}`) {
+    if (t == null) throw Error(errorMessage());
     return t;
   }
-  function _(t, e, n = () => `Unexpected type: expected as ${String(e)}, but actual type ${String(t)}`) {
-    if (t instanceof e) return t;
-    throw Error(n());
+  function requireType(o, t, errorMessage = () => `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`) {
+    if (o instanceof t) return o;
+    throw Error(errorMessage());
   }
-  function o(t, e) {
-    let n = m(t, () => "Unexpected argument: id is null"), r = m(document.getElementById(n), () => `Element not found: #${n}`);
-    return e ? _(r, e) : r;
+  function component(id, t) {
+    let i = requireNonnull(id, () => "Unexpected argument: id is null"), e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
+    return t ? requireType(e, t) : e;
   }
-  function x() {
-    return new Promise((t) => requestAnimationFrame(t));
+  function waitAnimationFrame() {
+    return new Promise((r) => requestAnimationFrame(r));
   }
-  function l(t) {
-    console.error(t);
+  function printError(e) {
+    console.error(e);
   }
-  async function d(t) {
-    let e = await fetch(t);
-    if (!e.ok) throw Error(`Failed to fetch ${t}: ${e.statusText}`);
-    return await e.json();
+  async function fetchJson(url) {
+    let r = await fetch(url);
+    if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
+    return await r.json();
   }
 
   // src/lib/ui/preset-button.ts
-  function k() {
-    document.body.addEventListener("click", ({ target: t }) => {
-      if (t instanceof HTMLButtonElement && t.dataset.inputFor != null) {
-        let e = o(t.dataset.inputFor, HTMLInputElement);
-        e.value = m(t.dataset.inputText ?? t.textContent), e.dispatchEvent(new Event("input", { bubbles: !0 }));
+  function init() {
+    document.body.addEventListener("click", ({ target }) => {
+      if (target instanceof HTMLButtonElement && target.dataset.inputFor != null) {
+        let input = component(target.dataset.inputFor, HTMLInputElement);
+        input.value = requireNonnull(target.dataset.inputText ?? target.textContent), input.dispatchEvent(new Event("input", { bubbles: !0 }));
       }
     });
   }
 
   // src/lib/ui/sync-output.ts
-  function y() {
-    for (let t of ["input", "change"])
-      window.addEventListener(t, ({ target: e }) => {
-        if (!(e instanceof HTMLInputElement) || !(e instanceof HTMLTextAreaElement || !(e instanceof HTMLSelectElement)))
+  function init2() {
+    for (let eventName of ["input", "change"])
+      window.addEventListener(eventName, ({ target }) => {
+        if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement)))
           return;
-        let n = document.querySelectorAll(`output[data-sync-for="${e.id}"]`);
-        for (let r of n)
-          r.value = e.value;
+        let outputElements = document.querySelectorAll(`output[data-sync-for="${target.id}"]`);
+        for (let output of outputElements)
+          output.value = target.value;
       });
-    for (let t of document.querySelectorAll("output[data-sync-for]")) {
-      let e = o(t.dataset.syncFor, HTMLInputElement);
-      t.value = e.value;
+    for (let output of document.querySelectorAll("output[data-sync-for]")) {
+      let input = component(output.dataset.syncFor, HTMLInputElement);
+      output.value = input.value;
     }
   }
 
   // src/lib/ui/min-max-inputs.ts
-  function H() {
-    for (let t of ["input", "change"])
-      window.addEventListener(t, ({ target: e }) => {
-        e instanceof HTMLInputElement && A(e);
+  function init3() {
+    for (let eventName of ["input", "change"])
+      window.addEventListener(eventName, ({ target }) => {
+        target instanceof HTMLInputElement && updateMinMax(target);
       });
-    for (let t of [
+    for (let input of [
       ...document.querySelectorAll("input[data-max]"),
       ...document.querySelectorAll("input[data-min]")
     ])
-      A(t);
+      updateMinMax(input);
   }
-  function A(t) {
-    t.dataset.min && D(t, t.dataset.min), t.dataset.max && W(t, t.dataset.max);
+  function updateMinMax(target) {
+    target.dataset.min && updateMaxValues(target, target.dataset.min), target.dataset.max && updateMinValues(target, target.dataset.max);
   }
-  function D(t, e) {
-    let n = document.querySelectorAll(`input[data-max="${e}"]`);
-    for (let r of n)
-      if (r.valueAsNumber < t.valueAsNumber) {
-        let a = r.value;
-        r.value = t.value, a !== r.value && I(r);
+  function updateMaxValues(target, minMaxId) {
+    let maxInputs = document.querySelectorAll(`input[data-max="${minMaxId}"]`);
+    for (let maxInput of maxInputs)
+      if (maxInput.valueAsNumber < target.valueAsNumber) {
+        let oldValue = maxInput.value;
+        maxInput.value = target.value, oldValue !== maxInput.value && dispatchInputEvent(maxInput);
       }
   }
-  function W(t, e) {
-    let n = document.querySelectorAll(`input[data-min="${e}"]`);
-    for (let r of n)
-      if (r.valueAsNumber > t.valueAsNumber) {
-        let a = r.value;
-        r.value = t.value, a !== r.value && I(r);
+  function updateMinValues(target, minMaxId) {
+    let minInputs = document.querySelectorAll(`input[data-min="${minMaxId}"]`);
+    for (let minInput of minInputs)
+      if (minInput.valueAsNumber > target.valueAsNumber) {
+        let oldValue = minInput.value;
+        minInput.value = target.value, oldValue !== minInput.value && dispatchInputEvent(minInput);
       }
   }
-  function I(t) {
-    for (let e of ["input", "change"]) t.dispatchEvent(new Event(e, { bubbles: !0 }));
+  function dispatchInputEvent(input) {
+    for (let eventName of ["input", "change"]) input.dispatchEvent(new Event(eventName, { bubbles: !0 }));
   }
 
   // src/lib/delayed-renderer.ts
-  var f = class {
+  var DelayedRenderer = class {
     _iterator = [][Symbol.iterator]();
     appendee;
     scrollableWrapper;
     itemRenderer;
     scrollCallback = () => {
-      this.renderAll().catch(l);
+      this.renderAll().catch(printError);
     };
-    constructor(e, n, r) {
-      if (!e.contains(n)) throw Error("Wrapper element should contain appendee element");
-      n.innerHTML = "", this.appendee = n, this.scrollableWrapper = e, this.itemRenderer = r;
+    constructor(scrollableWrapper, appendee, itemRenderer) {
+      if (!scrollableWrapper.contains(appendee)) throw Error("Wrapper element should contain appendee element");
+      appendee.innerHTML = "", this.appendee = appendee, this.scrollableWrapper = scrollableWrapper, this.itemRenderer = itemRenderer;
     }
-    set iterator(e) {
-      "next" in e ? this._iterator = R(e) : this._iterator = R(e[Symbol.iterator]()), this.appendee.innerHTML = "", this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback), requestAnimationFrame(() => {
-        this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback), this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: !0 }), P(this, () => q(this.scrollableWrapper)).catch(l);
+    set iterator(iteratorOrIterable) {
+      "next" in iteratorOrIterable ? this._iterator = chunkIterator(iteratorOrIterable) : this._iterator = chunkIterator(iteratorOrIterable[Symbol.iterator]()), this.appendee.innerHTML = "", this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback), requestAnimationFrame(() => {
+        this.scrollableWrapper.removeEventListener("scroll", this.scrollCallback), this.scrollableWrapper.addEventListener("scroll", this.scrollCallback, { once: !0 }), renderUntil(this, () => isFill(this.scrollableWrapper)).catch(printError);
       });
     }
     async renderAll() {
-      await P(this, () => !1);
+      await renderUntil(this, () => !1);
     }
   };
-  async function P(t, e) {
+  async function renderUntil(self, stopPredicate) {
     do {
-      let n = t._iterator.next();
-      if (p(n)) break;
-      let r = new DocumentFragment();
-      n.value.forEach((a) => r.appendChild(t.itemRenderer(a))), t.appendee.appendChild(r), await x();
-    } while (!e());
+      let result = self._iterator.next();
+      if (isReturn(result)) break;
+      let df = new DocumentFragment();
+      result.value.forEach((i) => df.appendChild(self.itemRenderer(i))), self.appendee.appendChild(df), await waitAnimationFrame();
+    } while (!stopPredicate());
   }
-  function q(t) {
-    return t.clientHeight + 100 < t.scrollHeight;
+  function isFill(wrapper) {
+    return wrapper.clientHeight + 100 < wrapper.scrollHeight;
   }
-  function R(t, e = 10) {
-    let n = null, r = {
-      next(...a) {
-        if (n) return n;
-        let s = Array(e);
-        for (let u = 0; u < e; u++) {
-          let c = t.next(...a);
-          p(c) ? n = c : s[u] = c.value;
+  function chunkIterator(origin, chunkSize = 10) {
+    let returnResult = null, chunkIter = {
+      next(...args) {
+        if (returnResult) return returnResult;
+        let chunk = Array(chunkSize);
+        for (let i = 0; i < chunkSize; i++) {
+          let result = origin.next(...args);
+          isReturn(result) ? returnResult = result : chunk[i] = result.value;
         }
         return {
           done: !1,
-          value: s
+          value: chunk
         };
       }
     };
-    return "throw" in t && (r.throw = (a) => {
-      let s = t.throw(a);
-      return p(s) ? s : { done: s.done ?? !1, value: [s.value] };
-    }), "return" in t && (r.return = (a) => {
-      let s = t.return(a);
-      return p(s) ? s : { done: s.done ?? !1, value: [s.value] };
-    }), r;
+    return "throw" in origin && (chunkIter.throw = (e) => {
+      let r = origin.throw(e);
+      return isReturn(r) ? r : { done: r.done ?? !1, value: [r.value] };
+    }), "return" in origin && (chunkIter.return = (treturn) => {
+      let r = origin.return(treturn);
+      return isReturn(r) ? r : { done: r.done ?? !1, value: [r.value] };
+    }), chunkIter;
   }
-  function p(t) {
-    return !!t.done;
+  function isReturn(r) {
+    return !!r.done;
   }
 
   // src/lib/labels.ts
-  var N = [
+  var LANGUAGES = [
     "english",
     "german",
     "spanish",
@@ -161,7 +161,7 @@
     "turkish",
     "schinese",
     "tchinese"
-  ], O = {
+  ], LANGUAGE_TAGS = {
     en: "english",
     de: "german",
     es: "spanish",
@@ -175,254 +175,254 @@
     tr: "turkish",
     "zh-CN": "schinese",
     "zh-TW": "tchinese"
-  }, S = ["blocks", "prefabs", "shapes"], E = class t {
+  }, FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"], LabelHolder = class _LabelHolder {
     static DEFAULT_LANGUAGE = "english";
-    #t;
-    #e;
-    #r;
-    #n;
-    constructor(e, n) {
-      this.#t = e, this.#e = h(n), this.#r = new Map(S.map((r) => [r, this.#i(t.DEFAULT_LANGUAGE, r)])), this.#n = this.#a();
+    #baseUrl;
+    #language;
+    #fallbacks;
+    #labels;
+    constructor(baseUrl, navigatorLanguages) {
+      this.#baseUrl = baseUrl, this.#language = resolveLanguage(navigatorLanguages), this.#fallbacks = new Map(FILE_BASE_NAMES.map((n) => [n, this.#fetchLabelMap(_LabelHolder.DEFAULT_LANGUAGE, n)])), this.#labels = this.#buildAllLabels();
     }
-    get(e) {
-      let n = this.#n.get(e);
-      if (!n) throw new Error(`No labels for ${this.#e}/${e}`);
-      return n;
+    get(fileId) {
+      let labels = this.#labels.get(fileId);
+      if (!labels) throw new Error(`No labels for ${this.#language}/${fileId}`);
+      return labels;
     }
-    set language(e) {
-      e !== this.#e && (console.log("LabelHolder set language: %s -> %s", this.#e, e), this.#e = e, this.#n = this.#a());
+    set language(lang) {
+      lang !== this.#language && (console.log("LabelHolder set language: %s -> %s", this.#language, lang), this.#language = lang, this.#labels = this.#buildAllLabels());
     }
-    #a() {
-      return new Map(S.map((e) => [e, this.#s(e)]));
+    #buildAllLabels() {
+      return new Map(FILE_BASE_NAMES.map((n) => [n, this.#buildLabels(n)]));
     }
-    async #s(e) {
-      let n = this.#r.get(e);
-      if (!n) throw new Error(`No fallback for ${this.#e}/${e}`);
-      return new b(await this.#i(this.#e, e), await n);
+    async #buildLabels(fileBaseName) {
+      let fallback = this.#fallbacks.get(fileBaseName);
+      if (!fallback) throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
+      return new Labels(await this.#fetchLabelMap(this.#language, fileBaseName), await fallback);
     }
-    async #i(e, n) {
-      return new Map(Object.entries(await d(`${this.#t}/${e}/${n}.json`)));
+    async #fetchLabelMap(language, fileId) {
+      return new Map(Object.entries(await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`)));
     }
-  }, b = class {
-    #t;
-    #e;
-    constructor(e, n) {
-      this.#t = e, this.#e = n;
+  }, Labels = class {
+    #labels;
+    #fallback;
+    constructor(labels, defaultLabels) {
+      this.#labels = labels, this.#fallback = defaultLabels;
     }
-    get(e) {
-      return this.#t.get(e) ?? this.#e.get(e);
+    get(key) {
+      return this.#labels.get(key) ?? this.#fallback.get(key);
     }
   };
-  function h(t) {
-    for (let e of t)
-      for (let [n, r] of Object.entries(O))
-        if (e.startsWith(n)) return r;
-    return E.DEFAULT_LANGUAGE;
+  function resolveLanguage(languages) {
+    for (let clientTag of languages)
+      for (let [tag, lang] of Object.entries(LANGUAGE_TAGS))
+        if (clientTag.startsWith(tag)) return lang;
+    return LabelHolder.DEFAULT_LANGUAGE;
   }
 
   // src/lib/label-handler.ts
-  var g = class {
+  var LabelHandler = class {
     doms;
     listener = [];
-    constructor(e, n) {
-      this.doms = e, this.buildSelectOptions(n), this.doms.language.addEventListener("change", () => {
-        this.listener.forEach((r) => {
-          r(this.doms.language.value)?.catch(l);
+    constructor(doms, navigatorLanguages) {
+      this.doms = doms, this.buildSelectOptions(navigatorLanguages), this.doms.language.addEventListener("change", () => {
+        this.listener.forEach((fn) => {
+          fn(this.doms.language.value)?.catch(printError);
         });
       });
     }
-    buildSelectOptions(e) {
-      let n = new Set(Array.from(this.doms.language.options).map((a) => a.value));
-      for (let a of N) {
-        if (n.has(a))
+    buildSelectOptions(navigatorLanguages) {
+      let existingLangs = new Set(Array.from(this.doms.language.options).map((o) => o.value));
+      for (let lang of LANGUAGES) {
+        if (existingLangs.has(lang))
           continue;
-        let s = document.createElement("option");
-        s.textContent = a, this.doms.language.appendChild(s);
+        let option = document.createElement("option");
+        option.textContent = lang, this.doms.language.appendChild(option);
       }
-      let r = h(e);
-      this.doms.language.value !== r && (this.doms.language.value = h(e), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
+      let browserLang = resolveLanguage(navigatorLanguages);
+      this.doms.language.value !== browserLang && (this.doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
     }
-    addListener(e) {
-      this.listener.push(e);
+    addListener(fn) {
+      this.listener.push(fn);
     }
   };
 
   // src/lib/url-state.ts
-  var v = class t {
+  var UrlState = class _UrlState {
     url;
     inputs;
     udpateListeners = [];
-    constructor(e, n) {
-      this.url = e, this.inputs = new Map(Array.from(n).map((r) => [r.element, r])), this.init();
+    constructor(browserUrl, elements) {
+      this.url = browserUrl, this.inputs = new Map(Array.from(elements).map((e) => [e.element, e])), this.init();
     }
     init() {
-      for (let [e, { defaultValue: n }] of this.inputs.entries())
-        this.url.searchParams.has(e.id) && (V(e, this.url.searchParams.get(e.id) ?? n), e.dispatchEvent(new Event("input"))), e.addEventListener("input", () => {
-          this.updateUrl(e, n), this.udpateListeners.forEach((r) => {
-            r(this.url);
+      for (let [input, { defaultValue }] of this.inputs.entries())
+        this.url.searchParams.has(input.id) && (setValue(input, this.url.searchParams.get(input.id) ?? defaultValue), input.dispatchEvent(new Event("input"))), input.addEventListener("input", () => {
+          this.updateUrl(input, defaultValue), this.udpateListeners.forEach((fn) => {
+            fn(this.url);
           });
         });
     }
-    static create(e, n) {
-      return new t(
-        new URL(e.href),
-        Array.from(n).map((r) => ({ defaultValue: F(r), element: r }))
+    static create(location2, elements) {
+      return new _UrlState(
+        new URL(location2.href),
+        Array.from(elements).map((e) => ({ defaultValue: getValue(e), element: e }))
       );
     }
-    updateUrl(e, n) {
-      let r = F(e);
-      r === n ? this.url.searchParams.delete(e.id) : this.url.searchParams.set(e.id, r);
+    updateUrl(input, defaultValue) {
+      let value = getValue(input);
+      value === defaultValue ? this.url.searchParams.delete(input.id) : this.url.searchParams.set(input.id, value);
     }
-    addUpdateListener(e) {
-      this.udpateListeners.push(e);
+    addUpdateListener(listener) {
+      this.udpateListeners.push(listener);
     }
   };
-  function F(t) {
-    switch (t.type) {
+  function getValue(input) {
+    switch (input.type) {
       case "checkbox":
-        return t.checked ? "t" : "";
+        return input.checked ? "t" : "";
       default:
-        return t.value;
+        return input.value;
     }
   }
-  function V(t, e) {
-    switch (t.type) {
+  function setValue(input, value) {
+    switch (input.type) {
       case "checkbox":
-        t.checked = e === "t";
+        input.checked = value === "t";
         break;
       default:
-        t.value = e;
+        input.value = value;
     }
   }
 
   // src/prefabs.ts
-  function U() {
-    k(), y(), H(), v.create(location, document.querySelectorAll("input")).addUpdateListener((i) => {
-      window.history.replaceState(null, "", i.toString());
+  function main() {
+    init(), init2(), init3(), UrlState.create(location, document.querySelectorAll("input")).addUpdateListener((url) => {
+      window.history.replaceState(null, "", url.toString());
     });
-    let e = new L(new Worker("worker/prefabs-filter.js"));
+    let prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
     (async () => {
-      let [i, $] = await Promise.all([
-        d("prefab-block-counts.json"),
-        d("prefab-difficulties.json")
+      let [prefabBlockCounts, difficulties] = await Promise.all([
+        fetchJson("prefab-block-counts.json"),
+        fetchJson("prefab-difficulties.json")
       ]);
-      e.prefabs = Object.keys(i).map((w) => ({
-        name: w,
+      prefabsHandler.prefabs = Object.keys(prefabBlockCounts).map((n) => ({
+        name: n,
         x: 0,
         z: 0,
-        difficulty: $[w] ?? 0
+        difficulty: difficulties[n] ?? 0
       }));
-    })().catch(l);
-    let n = o("min_tier", HTMLInputElement), r = o("max_tier", HTMLInputElement), a = { start: n.valueAsNumber, end: r.valueAsNumber };
-    e.tierRange = a, n.addEventListener("input", () => {
-      let i = n.valueAsNumber;
-      i !== a.start && (a.start = i, i > r.valueAsNumber && (r.value = n.value, a.end = i, r.dispatchEvent(new Event("input"))), e.tierRange = a);
-    }), r.addEventListener("input", () => {
-      let i = r.valueAsNumber;
-      i !== a.end && (a.end = i, i < n.valueAsNumber && (n.value = r.value, a.start = i, n.dispatchEvent(new Event("input"))), e.tierRange = a);
-    }), o("tier_clear", HTMLButtonElement).addEventListener("click", () => {
-      n.value = n.defaultValue, r.value = r.defaultValue, n.dispatchEvent(new Event("input")), r.dispatchEvent(new Event("input"));
+    })().catch(printError);
+    let minTier = component("min_tier", HTMLInputElement), maxTier = component("max_tier", HTMLInputElement), tierRange = { start: minTier.valueAsNumber, end: maxTier.valueAsNumber };
+    prefabsHandler.tierRange = tierRange, minTier.addEventListener("input", () => {
+      let newMinTier = minTier.valueAsNumber;
+      newMinTier !== tierRange.start && (tierRange.start = newMinTier, newMinTier > maxTier.valueAsNumber && (maxTier.value = minTier.value, tierRange.end = newMinTier, maxTier.dispatchEvent(new Event("input"))), prefabsHandler.tierRange = tierRange);
+    }), maxTier.addEventListener("input", () => {
+      let newMaxTier = maxTier.valueAsNumber;
+      newMaxTier !== tierRange.end && (tierRange.end = newMaxTier, newMaxTier < minTier.valueAsNumber && (minTier.value = maxTier.value, tierRange.start = newMaxTier, minTier.dispatchEvent(new Event("input"))), prefabsHandler.tierRange = tierRange);
+    }), component("tier_clear", HTMLButtonElement).addEventListener("click", () => {
+      minTier.value = minTier.defaultValue, maxTier.value = maxTier.defaultValue, minTier.dispatchEvent(new Event("input")), maxTier.dispatchEvent(new Event("input"));
     });
-    let u = o("prefab_filter", HTMLInputElement);
-    e.prefabFilter = u.value, u.addEventListener("input", () => {
-      e.prefabFilter = u.value;
+    let prefabFilter = component("prefab_filter", HTMLInputElement);
+    prefabsHandler.prefabFilter = prefabFilter.value, prefabFilter.addEventListener("input", () => {
+      prefabsHandler.prefabFilter = prefabFilter.value;
     });
-    let c = o("block_filter", HTMLInputElement);
-    e.blockFilter = c.value, c.addEventListener("input", () => {
-      e.blockFilter = c.value;
-    }), new g({ language: o("label_lang", HTMLSelectElement) }, navigator.languages).addListener((i) => {
-      e.language = i;
+    let blockFilter = component("block_filter", HTMLInputElement);
+    prefabsHandler.blockFilter = blockFilter.value, blockFilter.addEventListener("input", () => {
+      prefabsHandler.blockFilter = blockFilter.value;
+    }), new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages).addListener((lang) => {
+      prefabsHandler.language = lang;
     });
-    let M = new T({ devPrefabs: o("dev_prefabs", HTMLInputElement) });
-    M.addUpdateListener(() => {
-      e.refresh();
+    let prefabFilterHandler = new PrefabFilterHandler({ devPrefabs: component("dev_prefabs", HTMLInputElement) });
+    prefabFilterHandler.addUpdateListener(() => {
+      prefabsHandler.refresh();
     });
-    let C = new f(
+    let prefabListRenderer = new DelayedRenderer(
       document.documentElement,
-      o("prefabs_list"),
-      (i) => z(i)
+      component("prefabs_list"),
+      (p) => prefabLi(p)
     );
-    e.listeners.push((i) => {
-      C.iterator = i.prefabs.filter(M.filter());
+    prefabsHandler.listeners.push((update) => {
+      prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
     }), document.addEventListener("scroll", () => {
       document.documentElement.dispatchEvent(new Event("scroll"));
     });
   }
-  function z(t) {
-    let e = document.createElement("li");
-    if (e.innerHTML = [
-      ...t.difficulty ? [
-        `<span title="Difficulty Tier ${t.difficulty.toString()}" class="prefab_difficulty_${t.difficulty.toString()}">`,
-        `  \u{1F480}${t.difficulty.toString()}`,
+  function prefabLi(prefab) {
+    let li = document.createElement("li");
+    if (li.innerHTML = [
+      ...prefab.difficulty ? [
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+        `  \u{1F480}${prefab.difficulty.toString()}`,
         "</span>"
       ] : [],
-      `<a href="prefabs/${t.name}.html" target="_blank">`,
-      t.highlightedLabel ?? "-",
+      `<a href="prefabs/${prefab.name}.html" target="_blank">`,
+      prefab.highlightedLabel ?? "-",
       "/",
-      `<small>${t.highlightedName ?? t.name}</small></a>`,
-      ...t.matchedBlocks && t.matchedBlocks.length > 0 ? ["has", J(t.matchedBlocks), "blocks"] : []
-    ].join(" "), t.matchedBlocks && t.matchedBlocks.length > 0) {
-      let n = document.createElement("ul");
-      t.matchedBlocks.forEach((r) => {
-        if (r.count === void 0) return;
-        let a = document.createElement("li");
-        a.innerHTML = [
-          `<button data-input-for="blocks_filter" data-input-text="${r.name}" title="Filter with this block name">\u25B2</button>`,
-          `${r.count.toString()}x`,
-          r.highlightedLabel,
-          `<small>${r.highlightedName}</small>`
-        ].join(" "), n.appendChild(a);
-      }), e.appendChild(n);
+      `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
+      ...prefab.matchedBlocks && prefab.matchedBlocks.length > 0 ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"] : []
+    ].join(" "), prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
+      let blocksUl = document.createElement("ul");
+      prefab.matchedBlocks.forEach((block) => {
+        if (block.count === void 0) return;
+        let blockLi = document.createElement("li");
+        blockLi.innerHTML = [
+          `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">\u25B2</button>`,
+          `${block.count.toString()}x`,
+          block.highlightedLabel,
+          `<small>${block.highlightedName}</small>`
+        ].join(" "), blocksUl.appendChild(blockLi);
+      }), li.appendChild(blocksUl);
     }
-    return e;
+    return li;
   }
-  function J(t) {
-    return t.reduce((e, n) => e + (n.count ?? 0), 0);
+  function countHighlightedBlocks(blocks) {
+    return blocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
   }
-  var L = class {
+  var PrefabsHandler = class {
     worker;
     listeners = [];
-    constructor(e) {
-      this.worker = e, this.worker.addEventListener("message", (n) => {
-        for (let r of this.listeners)
-          r(n.data)?.catch(l);
+    constructor(worker) {
+      this.worker = worker, this.worker.addEventListener("message", (event) => {
+        for (let fn of this.listeners)
+          fn(event.data)?.catch(printError);
       });
     }
-    set prefabs(e) {
-      this.worker.postMessage({ all: e });
+    set prefabs(p) {
+      this.worker.postMessage({ all: p });
     }
-    set tierRange(e) {
-      this.worker.postMessage({ difficulty: e });
+    set tierRange(range) {
+      this.worker.postMessage({ difficulty: range });
     }
-    set prefabFilter(e) {
-      this.worker.postMessage({ prefabFilterRegexp: e });
+    set prefabFilter(filter) {
+      this.worker.postMessage({ prefabFilterRegexp: filter });
     }
-    set blockFilter(e) {
-      this.worker.postMessage({ blockFilterRegexp: e });
+    set blockFilter(filter) {
+      this.worker.postMessage({ blockFilterRegexp: filter });
     }
-    set language(e) {
-      this.worker.postMessage({ language: e });
+    set language(language) {
+      this.worker.postMessage({ language });
     }
     refresh() {
       this.worker.postMessage({});
     }
-  }, X = /^(aaa_|AAA_|spacercise_|terrain_smoothing_bug)/, T = class {
+  }, DEV_PREFAB_REGEXP = /^(aaa_|AAA_|spacercise_|terrain_smoothing_bug)/, PrefabFilterHandler = class {
     displayDevPrefab = !1;
     updateListener = [];
-    constructor(e) {
-      this.displayDevPrefab = e.devPrefabs.checked, e.devPrefabs.addEventListener("input", () => {
-        this.displayDevPrefab = e.devPrefabs.checked, this.updateListener.forEach((n) => {
-          n();
+    constructor(doms) {
+      this.displayDevPrefab = doms.devPrefabs.checked, doms.devPrefabs.addEventListener("input", () => {
+        this.displayDevPrefab = doms.devPrefabs.checked, this.updateListener.forEach((fn) => {
+          fn();
         });
       });
     }
     filter() {
-      return (e) => this.displayDevPrefab ? !0 : !X.test(e.name);
+      return (prefab) => this.displayDevPrefab ? !0 : !DEV_PREFAB_REGEXP.test(prefab.name);
     }
-    addUpdateListener(e) {
-      this.updateListener.push(e);
+    addUpdateListener(fn) {
+      this.updateListener.push(fn);
     }
   };
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", U) : U();
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", main) : main();
 })();
 //# sourceMappingURL=prefabs.js.map

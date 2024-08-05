@@ -1,56 +1,56 @@
 "use strict";
 (() => {
   // src/lib/utils.ts
-  async function b(n) {
-    return new Promise((e) => setTimeout(e, n));
+  async function sleep(msec) {
+    return new Promise((r) => setTimeout(r, msec));
   }
-  function x(n) {
-    console.error(n);
+  function printError(e) {
+    console.error(e);
   }
-  async function c(n) {
-    let e = await fetch(n);
-    if (!e.ok) throw Error(`Failed to fetch ${n}: ${e.statusText}`);
-    return await e.json();
+  async function fetchJson(url) {
+    let r = await fetch(url);
+    if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
+    return await r.json();
   }
 
   // src/lib/throttled-invoker.ts
-  function k(n, e = 100) {
-    let t = [], r = 0;
+  function throttledInvoker(asyncFunc, intervalMs = 100) {
+    let workerPromises = [], lastInvokationAt = 0;
     return () => {
-      switch (t.length) {
+      switch (workerPromises.length) {
         case 0: {
-          let i = (async () => {
-            let s = Date.now();
-            s < r + e && await b(r + e - s), r = Date.now();
+          let p = (async () => {
+            let now = Date.now();
+            now < lastInvokationAt + intervalMs && await sleep(lastInvokationAt + intervalMs - now), lastInvokationAt = Date.now();
             try {
-              await n();
+              await asyncFunc();
             } finally {
-              t.shift();
+              workerPromises.shift();
             }
           })();
-          return t.push(i), i;
+          return workerPromises.push(p), p;
         }
         case 1: {
-          let i = t[0], s = (async () => {
-            await i, await b(e), r = Date.now();
+          let prev = workerPromises[0], p = (async () => {
+            await prev, await sleep(intervalMs), lastInvokationAt = Date.now();
             try {
-              await n();
+              await asyncFunc();
             } finally {
-              t.shift();
+              workerPromises.shift();
             }
           })();
-          return t.push(s), s;
+          return workerPromises.push(p), p;
         }
         case 2:
-          return t[1];
+          return workerPromises[1];
         default:
-          throw Error(`Unexpected state: promiceses=${t.length.toString()}`);
+          throw Error(`Unexpected state: promiceses=${workerPromises.length.toString()}`);
       }
     };
   }
 
   // src/lib/labels.ts
-  var v = {
+  var LANGUAGE_TAGS = {
     en: "english",
     de: "german",
     es: "spanish",
@@ -64,62 +64,62 @@
     tr: "turkish",
     "zh-CN": "schinese",
     "zh-TW": "tchinese"
-  }, E = ["blocks", "prefabs", "shapes"], l = class n {
+  }, FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"], LabelHolder = class _LabelHolder {
     static DEFAULT_LANGUAGE = "english";
-    #r;
-    #t;
-    #n;
-    #e;
-    constructor(e, t) {
-      this.#r = e, this.#t = M(t), this.#n = new Map(E.map((r) => [r, this.#a(n.DEFAULT_LANGUAGE, r)])), this.#e = this.#i();
+    #baseUrl;
+    #language;
+    #fallbacks;
+    #labels;
+    constructor(baseUrl, navigatorLanguages) {
+      this.#baseUrl = baseUrl, this.#language = resolveLanguage(navigatorLanguages), this.#fallbacks = new Map(FILE_BASE_NAMES.map((n) => [n, this.#fetchLabelMap(_LabelHolder.DEFAULT_LANGUAGE, n)])), this.#labels = this.#buildAllLabels();
     }
-    get(e) {
-      let t = this.#e.get(e);
-      if (!t) throw new Error(`No labels for ${this.#t}/${e}`);
-      return t;
+    get(fileId) {
+      let labels = this.#labels.get(fileId);
+      if (!labels) throw new Error(`No labels for ${this.#language}/${fileId}`);
+      return labels;
     }
-    set language(e) {
-      e !== this.#t && (console.log("LabelHolder set language: %s -> %s", this.#t, e), this.#t = e, this.#e = this.#i());
+    set language(lang) {
+      lang !== this.#language && (console.log("LabelHolder set language: %s -> %s", this.#language, lang), this.#language = lang, this.#labels = this.#buildAllLabels());
     }
-    #i() {
-      return new Map(E.map((e) => [e, this.#s(e)]));
+    #buildAllLabels() {
+      return new Map(FILE_BASE_NAMES.map((n) => [n, this.#buildLabels(n)]));
     }
-    async #s(e) {
-      let t = this.#n.get(e);
-      if (!t) throw new Error(`No fallback for ${this.#t}/${e}`);
-      return new w(await this.#a(this.#t, e), await t);
+    async #buildLabels(fileBaseName) {
+      let fallback = this.#fallbacks.get(fileBaseName);
+      if (!fallback) throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
+      return new Labels(await this.#fetchLabelMap(this.#language, fileBaseName), await fallback);
     }
-    async #a(e, t) {
-      return new Map(Object.entries(await c(`${this.#r}/${e}/${t}.json`)));
+    async #fetchLabelMap(language, fileId) {
+      return new Map(Object.entries(await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`)));
     }
-  }, w = class {
-    #r;
-    #t;
-    constructor(e, t) {
-      this.#r = e, this.#t = t;
+  }, Labels = class {
+    #labels;
+    #fallback;
+    constructor(labels, defaultLabels) {
+      this.#labels = labels, this.#fallback = defaultLabels;
     }
-    get(e) {
-      return this.#r.get(e) ?? this.#t.get(e);
+    get(key) {
+      return this.#labels.get(key) ?? this.#fallback.get(key);
     }
   };
-  function M(n) {
-    for (let e of n)
-      for (let [t, r] of Object.entries(v))
-        if (e.startsWith(t)) return r;
-    return l.DEFAULT_LANGUAGE;
+  function resolveLanguage(languages) {
+    for (let clientTag of languages)
+      for (let [tag, lang] of Object.entries(LANGUAGE_TAGS))
+        if (clientTag.startsWith(tag)) return lang;
+    return LabelHolder.DEFAULT_LANGUAGE;
   }
 
   // src/lib/cache-holder.ts
-  var u = Symbol("NO_VALUE"), f = class {
-    #r;
-    #t;
-    #n;
-    #e = u;
-    #i = null;
-    #s = null;
-    #a = Date.now();
-    constructor(e, t, r = 1e4) {
-      this.#r = e, this.#t = t, this.#n = r;
+  var NO_VALUE = Symbol("NO_VALUE"), CacheHolder = class {
+    #fetcher;
+    #deconstructor;
+    #age;
+    #value = NO_VALUE;
+    #fetchPromise = null;
+    #expirationTimeout = null;
+    #lastInvalidation = Date.now();
+    constructor(fetcher, deconstructor, age = 1e4) {
+      this.#fetcher = fetcher, this.#deconstructor = deconstructor, this.#age = age;
     }
     /**
      * Get the value from the cache.
@@ -128,174 +128,174 @@
      */
     async get() {
       try {
-        return this.#e === u ? this.#o() : this.#e;
+        return this.#value === NO_VALUE ? await this.#fetch() : this.#value;
       } finally {
-        this.#h();
+        this.#resetTimer();
       }
     }
-    async #o() {
-      if (this.#i) return this.#i;
-      this.#i = this.#l();
+    async #fetch() {
+      if (this.#fetchPromise) return this.#fetchPromise;
+      this.#fetchPromise = this.#fetchUntilNoInvalidation();
       try {
-        this.#e = await this.#i;
+        this.#value = await this.#fetchPromise;
       } finally {
-        this.#i = null;
+        this.#fetchPromise = null;
       }
-      return this.#e;
+      return this.#value;
     }
-    async #l() {
-      let e, t;
+    async #fetchUntilNoInvalidation() {
+      let now, value;
       do
-        e = Date.now(), t = await this.#r();
-      while (e < this.#a);
-      return t;
+        now = Date.now(), value = await this.#fetcher();
+      while (now < this.#lastInvalidation);
+      return value;
     }
     /**
      * Invalidate the cache.
      */
     invalidate() {
-      this.#e !== u && (this.#t(this.#e), this.#e = u), this.#s && clearTimeout(this.#s), this.#s = null, this.#a = Date.now();
+      this.#value !== NO_VALUE && (this.#deconstructor(this.#value), this.#value = NO_VALUE), this.#expirationTimeout && clearTimeout(this.#expirationTimeout), this.#expirationTimeout = null, this.#lastInvalidation = Date.now();
     }
-    #h() {
-      this.#s && clearTimeout(this.#s), this.#s = setTimeout(() => {
+    #resetTimer() {
+      this.#expirationTimeout && clearTimeout(this.#expirationTimeout), this.#expirationTimeout = setTimeout(() => {
         this.invalidate();
-      }, this.#n);
+      }, this.#age);
     }
   };
 
   // src/lib/prefabs.ts
-  var m = class {
-    #r;
-    #t;
-    #n = [];
-    #e = "";
-    #i = [];
+  var PrefabFilter = class {
+    #labelHolder;
+    #blockPrefabCountsHolder;
+    #filtered = [];
+    #status = "";
+    #updateListeners = [];
     all = [];
     markCoords = null;
     difficulty = { start: 0, end: 5 };
     prefabFilterRegexp = "";
     blockFilterRegexp = "";
-    constructor(e, t, r) {
-      this.#r = new l(e, t), this.#t = new f(r, () => {
+    constructor(labelsBaseUrl, navigatorLanguages, fetchPrefabBlockCounts) {
+      this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages), this.#blockPrefabCountsHolder = new CacheHolder(fetchPrefabBlockCounts, () => {
       });
     }
-    set language(e) {
-      this.#r.language = e;
+    set language(lang) {
+      this.#labelHolder.language = lang;
     }
-    update = k(() => this.updateImmediately());
+    update = throttledInvoker(() => this.updateImmediately());
     async updateImmediately() {
-      await this.#a(), this.#s(), this.#u(), this.#f();
-      let e = { status: this.#e, prefabs: this.#n };
-      this.#i.forEach((t) => {
-        t(e);
+      await this.#applyFilter(), this.#updateStatus(), this.#updateDist(), this.#sort();
+      let update = { status: this.#status, prefabs: this.#filtered };
+      this.#updateListeners.forEach((f) => {
+        f(update);
       });
     }
-    #s() {
-      this.prefabFilterRegexp.length === 0 && this.blockFilterRegexp.length === 0 && this.difficulty.start === 0 && this.difficulty.end === 5 ? this.#e = `All ${this.all.length.toString()} prefabs` : this.#n.length === 0 ? this.#e = "No prefabs matched" : this.#e = `${this.#n.length.toString()} prefabs matched`;
+    #updateStatus() {
+      this.prefabFilterRegexp.length === 0 && this.blockFilterRegexp.length === 0 && this.difficulty.start === 0 && this.difficulty.end === 5 ? this.#status = `All ${this.all.length.toString()} prefabs` : this.#filtered.length === 0 ? this.#status = "No prefabs matched" : this.#status = `${this.#filtered.length.toString()} prefabs matched`;
     }
-    addUpdateListener(e) {
-      this.#i.push(e);
+    addUpdateListener(func) {
+      this.#updateListeners.push(func);
     }
-    async #a() {
-      let e = this.#o(this.all);
-      e = await this.#l(e), e = await this.#h(e), this.#n = e;
+    async #applyFilter() {
+      let result = this.#matchByDifficulty(this.all);
+      result = await this.#matchByPrefabName(result), result = await this.#matchByBlockName(result), this.#filtered = result;
     }
-    #o(e) {
-      return e.filter((t) => {
-        let r = t.difficulty ?? 0;
-        return r >= this.difficulty.start && r <= this.difficulty.end;
+    #matchByDifficulty(prefabs2) {
+      return prefabs2.filter((p) => {
+        let d = p.difficulty ?? 0;
+        return d >= this.difficulty.start && d <= this.difficulty.end;
       });
     }
-    async #l(e) {
-      let t = await this.#r.get("prefabs"), r = new RegExp(this.prefabFilterRegexp, "i");
-      return e.flatMap((i) => {
-        let s = t.get(i.name);
+    async #matchByPrefabName(prefabs2) {
+      let labels = await this.#labelHolder.get("prefabs"), pattern = new RegExp(this.prefabFilterRegexp, "i");
+      return prefabs2.flatMap((prefab) => {
+        let label = labels.get(prefab.name);
         if (this.prefabFilterRegexp.length === 0)
           return {
-            ...i,
-            highlightedName: i.name,
-            highlightedLabel: s ?? "-"
+            ...prefab,
+            highlightedName: prefab.name,
+            highlightedLabel: label ?? "-"
           };
-        let o = g(i.name, r), a = s && g(s, r);
-        return o != null || a != null ? {
-          ...i,
-          highlightedName: o ?? i.name,
-          highlightedLabel: a ?? s ?? "-"
+        let highlightedName = matchAndHighlight(prefab.name, pattern), highlightedLabel = label && matchAndHighlight(label, pattern);
+        return highlightedName != null || highlightedLabel != null ? {
+          ...prefab,
+          highlightedName: highlightedName ?? prefab.name,
+          highlightedLabel: highlightedLabel ?? label ?? "-"
         } : [];
       });
     }
-    async #h(e) {
+    async #matchByBlockName(prefabs2) {
       if (this.blockFilterRegexp.length === 0)
-        return e;
-      let t = await this.#c(e);
-      return e.flatMap((r) => {
-        let i = t[r.name];
-        return i ? { ...r, matchedBlocks: i } : [];
+        return prefabs2;
+      let matchedPrefabNames = await this.#matchPrefabTypesByBlockName(prefabs2);
+      return prefabs2.flatMap((prefab) => {
+        let matchedBlocks = matchedPrefabNames[prefab.name];
+        return matchedBlocks ? { ...prefab, matchedBlocks } : [];
       });
     }
-    async #c(e) {
-      let t = await this.#r.get("blocks"), r = await this.#r.get("shapes"), i = new Set(e.map((a) => a.name)), s = {}, o = new RegExp(this.blockFilterRegexp, "i");
-      for (let [a, T] of Object.entries(await this.#t.get())) {
-        let P = g(a, o), d = t.get(a) ?? r.get(a) ?? "-", y = d && g(d, o);
-        if (!(P == null && y == null))
-          for (let [p, N] of Object.entries(T))
-            i.has(p) && (s[p] = (s[p] ?? []).concat({
-              name: a,
-              highlightedName: P ?? a,
-              highlightedLabel: y ?? d,
-              count: N
+    async #matchPrefabTypesByBlockName(prefabs2) {
+      let blockLabels = await this.#labelHolder.get("blocks"), shapeLabels = await this.#labelHolder.get("shapes"), prefabNames = new Set(prefabs2.map((p) => p.name)), matchedPrefabNames = {}, pattern = new RegExp(this.blockFilterRegexp, "i");
+      for (let [blockName, prefabs3] of Object.entries(await this.#blockPrefabCountsHolder.get())) {
+        let highlightedName = matchAndHighlight(blockName, pattern), label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-", highlightedLabel = label && matchAndHighlight(label, pattern);
+        if (!(highlightedName == null && highlightedLabel == null))
+          for (let [prefabName, count] of Object.entries(prefabs3))
+            prefabNames.has(prefabName) && (matchedPrefabNames[prefabName] = (matchedPrefabNames[prefabName] ?? []).concat({
+              name: blockName,
+              highlightedName: highlightedName ?? blockName,
+              highlightedLabel: highlightedLabel ?? label,
+              count
             }));
       }
-      return s;
+      return matchedPrefabNames;
     }
-    #u() {
+    #updateDist() {
       if (this.markCoords) {
-        let { markCoords: e } = this;
-        this.#n.forEach((t) => t.dist = S(t, e));
+        let { markCoords } = this;
+        this.#filtered.forEach((p) => p.dist = calcDist(p, markCoords));
       } else
-        this.#n.forEach((e) => e.dist = null);
+        this.#filtered.forEach((p) => p.dist = null);
     }
-    #f() {
-      this.all.length === 0 ? this.#e = "No prefabs loaded" : this.#n.length === 0 ? this.#e += ". Please relax the filter conditions" : this.markCoords ? (this.#e += ", order by distances from the flag", this.#n.sort(A)) : this.blockFilterRegexp.length > 0 ? (this.#e += ", order by counts of matched blocks", this.#n.sort(C)) : this.#n.sort(h);
+    #sort() {
+      this.all.length === 0 ? this.#status = "No prefabs loaded" : this.#filtered.length === 0 ? this.#status += ". Please relax the filter conditions" : this.markCoords ? (this.#status += ", order by distances from the flag", this.#filtered.sort(distSorter)) : this.blockFilterRegexp.length > 0 ? (this.#status += ", order by counts of matched blocks", this.#filtered.sort(blockCountSorter)) : this.#filtered.sort(nameSorter);
     }
   };
-  function h(n, e) {
-    return n.name > e.name ? 1 : n.name < e.name ? -1 : 0;
+  function nameSorter(a, b) {
+    return a.name > b.name ? 1 : a.name < b.name ? -1 : 0;
   }
-  function C(n, e) {
-    if (!n.matchedBlocks || !e.matchedBlocks) return h(n, e);
-    let t = n.matchedBlocks.reduce((i, s) => i + (s.count ?? 0), 0), r = e.matchedBlocks.reduce((i, s) => i + (s.count ?? 0), 0);
-    return t < r ? 1 : t > r ? -1 : h(n, e);
+  function blockCountSorter(a, b) {
+    if (!a.matchedBlocks || !b.matchedBlocks) return nameSorter(a, b);
+    let aCount = a.matchedBlocks.reduce((acc, b2) => acc + (b2.count ?? 0), 0), bCount = b.matchedBlocks.reduce((acc, b2) => acc + (b2.count ?? 0), 0);
+    return aCount < bCount ? 1 : aCount > bCount ? -1 : nameSorter(a, b);
   }
-  function A(n, e) {
-    return !n.dist || !e.dist ? h(n, e) : n.dist > e.dist ? 1 : n.dist < e.dist ? -1 : h(n, e);
+  function distSorter(a, b) {
+    return !a.dist || !b.dist ? nameSorter(a, b) : a.dist > b.dist ? 1 : a.dist < b.dist ? -1 : nameSorter(a, b);
   }
-  function S(n, e) {
-    return Math.round(Math.sqrt((n.x - e.x) ** 2 + (n.z - e.z) ** 2));
+  function calcDist(targetCoords, baseCoords) {
+    return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
   }
-  function g(n, e) {
-    let t = !1, r = n.replace(e, (i) => (t = i.length > 0, `<mark>${i}</mark>`));
-    return t ? r : null;
+  function matchAndHighlight(str, regex) {
+    let isMatched = !1, highlighted = str.replace(regex, (m) => (isMatched = m.length > 0, `<mark>${m}</mark>`));
+    return isMatched ? highlighted : null;
   }
 
   // src/worker/prefabs-filter.ts
-  var L = new m(
+  var prefabs = new PrefabFilter(
     "../labels",
     navigator.languages,
-    async () => U(await c("../prefab-block-counts.json"))
+    async () => invertCounts(await fetchJson("../prefab-block-counts.json"))
   );
-  onmessage = ({ data: n }) => {
-    console.log("Prefab-filter received message: ", n), Object.assign(L, n).update().catch(x);
+  onmessage = ({ data }) => {
+    console.log("Prefab-filter received message: ", data), Object.assign(prefabs, data).update().catch(printError);
   };
-  L.addUpdateListener((n) => {
-    console.log("Prefab-filter send message: ", n), postMessage(n);
+  prefabs.addUpdateListener((u) => {
+    console.log("Prefab-filter send message: ", u), postMessage(u);
   });
-  function U(n) {
-    let e = {};
-    for (let [t, r] of Object.entries(n))
-      for (let [i, s] of Object.entries(r))
-        e[i] = Object.assign(e[i] ?? {}, { [t]: s });
-    return e;
+  function invertCounts(counts) {
+    let blockPrefabCounts = {};
+    for (let [prefabName, blockCounts] of Object.entries(counts))
+      for (let [blockName, count] of Object.entries(blockCounts))
+        blockPrefabCounts[blockName] = Object.assign(blockPrefabCounts[blockName] ?? {}, { [prefabName]: count });
+    return blockPrefabCounts;
   }
 })();
 //# sourceMappingURL=prefabs-filter.js.map

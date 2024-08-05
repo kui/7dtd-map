@@ -1,229 +1,222 @@
 "use strict";
 (() => {
   // lib/map-files.ts
-  var U;
-  var E = {
+  var PNG;
+  var FILE_PROCESS_RULES = {
     "map_info.xml": {
       name: "map_info.xml",
-      process: h
+      process: copy
     },
     "biomes.png": {
       name: "biomes.png",
-      process: M
+      process: repackPng
     },
     "splat3.png": {
       name: "splat3.png",
-      process: F
+      process: processSplat3Png
     },
     "splat3_processed.png": {
       name: "splat3.png",
-      process: F
+      process: processSplat3Png
     },
     "splat4.png": {
       name: "splat4.png",
-      process: x
+      process: processSplat4Png
     },
     "splat4_processed.png": {
       name: "splat4.png",
-      process: x
+      process: processSplat4Png
     },
     "radiation.png": {
       name: "radiation.png",
-      process: P
+      process: processRadiationPng
     },
     "prefabs.xml": {
       name: "prefabs.xml",
-      process: h
+      process: copy
     },
     "dtm.raw": {
       name: "dtm_block.raw.gz",
-      process: (n, e) => n.pipeThrough(new u()).pipeTo(e)
+      process: (i, o) => i.pipeThrough(new DtmRawTransformer()).pipeTo(o)
     }
-  }, D = Object.fromEntries(Object.entries(E).map(([n, e]) => [n, e.name]));
-  var O = new Set(Object.keys(E));
-  var C = new Set(Object.values(E).map((n) => n.name));
-  function h(n, e) {
-    return n.pipeTo(e);
+  }, MAP_FILE_NAME_MAP = Object.fromEntries(Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name]));
+  var WORLD_FILE_NAMES = new Set(Object.keys(FILE_PROCESS_RULES));
+  var MAP_FILE_NAMES = new Set(Object.values(FILE_PROCESS_RULES).map((v) => v.name));
+  function copy(i, o) {
+    return i.pipeTo(o);
   }
-  function M(n, e) {
-    return n.pipeThrough(new d()).pipeTo(e);
+  function repackPng(i, o) {
+    return i.pipeThrough(new RepackPngTransformer()).pipeTo(o);
   }
-  function F(n, e) {
-    return n.pipeThrough(new f()).pipeTo(e);
+  function processSplat3Png(i, o) {
+    return i.pipeThrough(new Splat3PngTransformer()).pipeTo(o);
   }
-  function x(n, e) {
-    return n.pipeThrough(new y()).pipeTo(e);
+  function processSplat4Png(i, o) {
+    return i.pipeThrough(new Splat4PngTransformer()).pipeTo(o);
   }
-  function P(n, e) {
-    return n.pipeThrough(new g()).pipeTo(e);
+  function processRadiationPng(i, o) {
+    return i.pipeThrough(new RadiationPngTransformer()).pipeTo(o);
   }
-  var A = { highWaterMark: 1024 * 1024 }, S = [A, A], c = class {
+  var DEFAULT_TRASNFORM_STRATEGY = { highWaterMark: 1024 * 1024 }, DEFAULT_TRASNFORM_STRATEGIES = [DEFAULT_TRASNFORM_STRATEGY, DEFAULT_TRASNFORM_STRATEGY], ComposingTransformer = class {
     readable;
     writable;
-    constructor(e) {
-      let { readable: r, writable: t } = new TransformStream({}, ...S);
-      this.readable = e.reduce((a, o) => a.pipeThrough(o), r), this.writable = t;
+    constructor(transformStreams) {
+      let { readable, writable } = new TransformStream({}, ...DEFAULT_TRASNFORM_STRATEGIES);
+      this.readable = transformStreams.reduce((r, t) => r.pipeThrough(t), readable), this.writable = writable;
     }
-  }, m = class extends TransformStream {
+  }, OddByteTransformer = class extends TransformStream {
     constructor() {
-      let e = 1;
+      let nextOffset = 1;
       super(
         {
-          transform(r, t) {
-            let a = new Uint8Array(
-              r.length % 2 === 0 ? r.length / 2 : e === 1 ? (r.length - 1) / 2 : (r.length + 1) / 2
-            ), o = e;
-            for (; o < r.length; o += 2)
-              a[(o - e) / 2] = r[o];
-            e = o - r.length, t.enqueue(a);
+          transform(chunk, controller) {
+            let buffer = new Uint8Array(
+              chunk.length % 2 === 0 ? chunk.length / 2 : nextOffset === 1 ? (chunk.length - 1) / 2 : (chunk.length + 1) / 2
+            ), i = nextOffset;
+            for (; i < chunk.length; i += 2)
+              buffer[(i - nextOffset) / 2] = chunk[i];
+            nextOffset = i - chunk.length, controller.enqueue(buffer);
           }
         },
-        ...S
+        ...DEFAULT_TRASNFORM_STRATEGIES
       );
     }
-  }, u = class extends c {
+  }, DtmRawTransformer = class extends ComposingTransformer {
     constructor() {
-      super([new m(), new CompressionStream("gzip")]);
+      super([new OddByteTransformer(), new CompressionStream("gzip")]);
     }
-  }, l = class extends DecompressionStream {
+  }, DtmBlockRawDecompressor = class extends DecompressionStream {
     constructor() {
       super("gzip");
     }
-  }, i = class extends TransformStream {
-    constructor(e) {
-      let r = new U({ deflateLevel: 9, deflateStrategy: 0 }), { promise: t, resolve: a, reject: o } = Promise.withResolvers();
+  }, PngEditingTransfomer = class extends TransformStream {
+    constructor(copyAndEdit) {
+      let png = new PNG({ deflateLevel: 9, deflateStrategy: 0 }), { promise: flushPromise, resolve, reject } = Promise.withResolvers();
       super(
         {
-          start(s) {
-            r.on("parsed", () => {
-              T(r, e, s).then(a).catch((p) => {
-                o(p);
+          start(controller) {
+            png.on("parsed", () => {
+              packPng(png, copyAndEdit, controller).then(resolve).catch((e) => {
+                reject(e);
               });
             });
           },
-          transform(s) {
-            r.write(s);
+          transform(chunk) {
+            png.write(chunk);
           },
           flush() {
-            return t;
+            return flushPromise;
           }
         },
-        ...S
+        ...DEFAULT_TRASNFORM_STRATEGIES
       );
     }
   };
-  async function T(n, e, r) {
+  async function packPng(png, copyAndEdit, controller) {
     if (globalThis.OffscreenCanvas) {
-      let t = new OffscreenCanvas(n.width, n.height), a = t.getContext("2d"), o = a.createImageData(n.width, n.height);
-      e(n.data, o.data), a.putImageData(o, 0, 0);
-      let s = await t.convertToBlob({ type: "image/png" });
-      for await (let p of s.stream()) r.enqueue(p);
+      let canvas = new OffscreenCanvas(png.width, png.height), ctx = canvas.getContext("2d"), imageData = ctx.createImageData(png.width, png.height);
+      copyAndEdit(png.data, imageData.data), ctx.putImageData(imageData, 0, 0);
+      let blob = await canvas.convertToBlob({ type: "image/png" });
+      for await (let chunk of blob.stream()) controller.enqueue(chunk);
     } else
-      return e(n.data, n.data), new Promise((t, a) => {
-        n.pack().on("data", (o) => {
-          r.enqueue(o);
-        }).on("error", a).on("end", t);
+      return copyAndEdit(png.data, png.data), new Promise((resolve, reject) => {
+        png.pack().on("data", (chunk) => {
+          controller.enqueue(chunk);
+        }).on("error", reject).on("end", resolve);
       });
   }
-  var f = class extends i {
+  var Splat3PngTransformer = class extends PngEditingTransfomer {
     constructor() {
-      super((e, r) => {
-        for (let t = 0; t < r.length; t += 4)
-          e[t] === 0 && e[t + 1] === 0 && e[t + 2] === 0 ? (r[t] = 0, r[t + 1] = 0, r[t + 2] = 0, r[t + 3] = 0) : (r[t] = e[t], r[t + 1] = e[t + 1], r[t + 2] = e[t + 2], r[t + 3] = 255);
+      super((src, dst) => {
+        for (let i = 0; i < dst.length; i += 4)
+          src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0 ? (dst[i] = 0, dst[i + 1] = 0, dst[i + 2] = 0, dst[i + 3] = 0) : (dst[i] = src[i], dst[i + 1] = src[i + 1], dst[i + 2] = src[i + 2], dst[i + 3] = 255);
       });
     }
-  }, y = class extends i {
+  }, Splat4PngTransformer = class extends PngEditingTransfomer {
     constructor() {
-      super((e, r) => {
-        for (let t = 0; t < e.length; t += 4)
-          if (e[t] === 0 && e[t + 1] === 0 && e[t + 2] === 0)
-            r[t] = 0, r[t + 1] = 0, r[t + 2] = 0, r[t + 3] = 0;
-          else if (e[t + 1] === 255) {
-            r[t] = e[t];
-            let a = e[t + 1];
-            r[t + 1] = e[t + 2], r[t + 2] = a, r[t + 3] = 255;
-          } else
-            r[t] = e[t], r[t + 1] = e[t + 1], r[t + 2] = e[t + 2], r[t + 3] = 255;
+      super((src, dst) => {
+        for (let i = 0; i < src.length; i += 4)
+          src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0 ? (dst[i] = 0, dst[i + 1] = 0, dst[i + 2] = 0, dst[i + 3] = 0) : src[i + 1] === 255 || src[i + 2] === 29 ? (dst[i] = src[i], dst[i + 1] = src[i + 2], dst[i + 2] = 255, dst[i + 3] = 255) : (dst[i] = src[i], dst[i + 1] = src[i + 1], dst[i + 2] = src[i + 2], dst[i + 3] = 255);
       });
     }
-  }, g = class extends i {
+  }, RadiationPngTransformer = class extends PngEditingTransfomer {
     constructor() {
-      super((e, r) => {
-        for (let t = 0; t < e.length; t += 4)
-          e[t] === 0 && e[t + 1] === 0 && e[t + 2] === 0 ? (r[t] = 0, r[t + 1] = 0, r[t + 2] = 0, r[t + 3] = 0) : (r[t] = e[t], r[t + 1] = e[t + 1], r[t + 2] = e[t + 2], r[t + 3] = 255);
+      super((src, dst) => {
+        for (let i = 0; i < src.length; i += 4)
+          src[i] === 0 && src[i + 1] === 0 && src[i + 2] === 0 ? (dst[i] = 0, dst[i + 1] = 0, dst[i + 2] = 0, dst[i + 3] = 0) : (dst[i] = src[i], dst[i + 1] = src[i + 1], dst[i + 2] = src[i + 2], dst[i + 3] = 255);
       });
     }
-  }, d = class extends i {
+  }, RepackPngTransformer = class extends PngEditingTransfomer {
     constructor() {
-      super((e, r) => {
-        for (let t = 0; t < e.length; t++)
-          r[t] = e[t];
+      super((src, dst) => {
+        for (let i = 0; i < src.length; i++)
+          dst[i] = src[i];
       });
     }
   };
 
   // src/lib/storage.ts
-  var N = "workspace";
-  async function b() {
-    let n = await navigator.storage.getDirectory();
-    return new w(await n.getDirectoryHandle(N, { create: !0 }));
+  var WORKSPACE_DIR = "workspace";
+  async function workspaceDir() {
+    let root = await navigator.storage.getDirectory();
+    return new MapDir(await root.getDirectoryHandle(WORKSPACE_DIR, { create: !0 }));
   }
-  var w = class {
-    #e;
-    constructor(e) {
-      this.#e = e;
+  var MapDir = class {
+    #dir;
+    constructor(dir) {
+      this.#dir = dir;
     }
     get name() {
-      return this.#e.name;
+      return this.#dir.name;
     }
-    async put(e, r) {
-      console.debug("put", e);
-      let a = await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
-      r instanceof ArrayBuffer || r instanceof Blob ? await a.write(r) : await r.pipeTo(a), await a.close();
+    async put(name, data) {
+      console.debug("put", name);
+      let writable = await (await this.#dir.getFileHandle(name, { create: !0 })).createWritable();
+      data instanceof ArrayBuffer || data instanceof Blob ? await writable.write(data) : await data.pipeTo(writable), await writable.close();
     }
-    async createWritable(e) {
-      return await (await this.#e.getFileHandle(e, { create: !0 })).createWritable();
+    async createWritable(name) {
+      return await (await this.#dir.getFileHandle(name, { create: !0 })).createWritable();
     }
-    async get(e) {
-      console.debug("get", e);
+    async get(name) {
+      console.debug("get", name);
       try {
-        return await (await this.#e.getFileHandle(e)).getFile();
-      } catch (r) {
-        if (r instanceof DOMException && r.name === "NotFoundError")
+        return await (await this.#dir.getFileHandle(name)).getFile();
+      } catch (e) {
+        if (e instanceof DOMException && e.name === "NotFoundError")
           return null;
-        throw r;
+        throw e;
       }
     }
-    async size(e) {
-      return (await (await this.#e.getFileHandle(e)).getFile()).size;
+    async size(name) {
+      return (await (await this.#dir.getFileHandle(name)).getFile()).size;
     }
-    async remove(e) {
-      await this.#e.removeEntry(e);
+    async remove(name) {
+      await this.#dir.removeEntry(name);
     }
   };
 
   // src/lib/utils.ts
-  function R(n) {
-    console.error(n);
+  function printError(e) {
+    console.error(e);
   }
-  async function _(n) {
-    return new Uint8Array(await new Response(n).arrayBuffer());
+  async function readWholeStream(stream) {
+    return new Uint8Array(await new Response(stream).arrayBuffer());
   }
 
   // src/worker/dtm.ts
-  async function v() {
-    let n = await b(), e = null;
+  async function main() {
+    let workspace = await workspaceDir(), msg = null;
     try {
-      e = await W(n);
-    } catch (r) {
-      console.error(r);
+      msg = await readDtmBlockRaw(workspace);
+    } catch (e) {
+      console.error(e);
     }
-    postMessage(e, e ? [e.buffer] : []), close();
+    postMessage(msg, msg ? [msg.buffer] : []), close();
   }
-  async function W(n) {
-    let e = await n.get("dtm_block.raw.gz");
-    return e ? _(e.stream().pipeThrough(new l())) : null;
+  async function readDtmBlockRaw(workspace) {
+    let file = await workspace.get("dtm_block.raw.gz");
+    return file ? readWholeStream(file.stream().pipeThrough(new DtmBlockRawDecompressor())) : null;
   }
-  v().catch(R);
+  main().catch(printError);
 })();
 //# sourceMappingURL=dtm.js.map
