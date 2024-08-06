@@ -111,7 +111,7 @@
 
   // src/lib/ui/dialog-buttons.ts
   function init3() {
-    for (let button of document.querySelectorAll("button[data-show-dialog-for]")) {
+    for (let button of document.querySelectorAll("button[data-show-dialog-for]"))
       button.addEventListener("click", () => {
         let dialogId = button.dataset.showDialogFor;
         if (!dialogId) return;
@@ -120,16 +120,15 @@
         if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected element: ${dialogId}`);
         dialog.showModal();
       });
-      for (let button2 of document.querySelectorAll("button[data-close-dialog-for]"))
-        button2.addEventListener("click", () => {
-          let dialogId = button2.dataset.closeDialogFor;
-          if (dialogId == null) return;
-          let dialog = dialogId === "" ? button2.closest("dialog") : document.getElementById(dialogId);
-          if (!dialog) throw Error(`Dialog not found: ${dialogId}`);
-          if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected element: ${dialogId}`);
-          dialog.close("");
-        });
-    }
+    for (let button of document.querySelectorAll("button[data-close-dialog-for]"))
+      button.addEventListener("click", () => {
+        let dialogId = button.dataset.closeDialogFor;
+        if (dialogId == null) return;
+        let dialog = dialogId === "" ? button.closest("dialog") : document.getElementById(dialogId);
+        if (!dialog) throw Error(`Dialog not found: ${dialogId}`);
+        if (!(dialog instanceof HTMLDialogElement)) throw Error(`Unexpected element: ${dialogId}`);
+        dialog.close("");
+      });
   }
 
   // src/lib/ui/sync-output.ts
@@ -298,6 +297,58 @@
     }
     addListener(fn) {
       this.listener.push(fn);
+    }
+  };
+
+  // src/index/dialog-handler.ts
+  var STATUS = ["dragover", "processing", "error"], DialogHandler = class {
+    #doms;
+    #radioList;
+    constructor(doms) {
+      this.#doms = doms, this.#radioList = requireType(
+        requireNonnull(doms.dialog.querySelector("form")?.elements.namedItem("active-section"), () => "Unexpected dialog content"),
+        RadioNodeList
+      );
+    }
+    open() {
+      this.#doms.dialog.showModal();
+    }
+    close() {
+      this.#doms.dialog.close();
+    }
+    createProgression(taskNames) {
+      this.#doms.processingFiles.innerHTML = "";
+      let indicator = new FileProgressionIndicator(taskNames);
+      return this.#doms.processingFiles.append(...indicator.liList), indicator;
+    }
+    get state() {
+      if (STATUS.includes(this.#radioList.value))
+        return this.#radioList.value;
+      throw Error(`Unexpected state: ${this.#radioList.value}`);
+    }
+    set state(state) {
+      this.#radioList.value = state;
+    }
+    get isOpen() {
+      return this.#doms.dialog.open;
+    }
+  }, TERMINATED_STATES = ["completed", "skipped"], FileProgressionIndicator = class {
+    #liList = [];
+    constructor(taskNames) {
+      this.#liList = taskNames.map((taskName) => {
+        let li = document.createElement("li");
+        return li.textContent = taskName, li.classList.add("processing"), li;
+      });
+    }
+    setState(taskName, state) {
+      let li = this.#liList.find((li2) => li2.textContent === taskName);
+      li && (li.classList.replace("processing", state), console.log(state, taskName)), this.isAllCompleted && console.log("All completed");
+    }
+    get isAllCompleted() {
+      return this.#liList.every((li) => TERMINATED_STATES.find((state) => li.classList.contains(state)));
+    }
+    get liList() {
+      return this.#liList;
     }
   };
 
@@ -851,12 +902,12 @@
   ], FileHandler = class {
     #doms;
     #listeners = [];
-    #loadingHandler;
+    #dialogHandler;
     #processorFactory;
     #workspace = workspaceDir();
     #depletedFileHandler = new DepletedFileHandler();
-    constructor(doms, loadingHandler, processorFactory, dndHandler, bundledMapHandler) {
-      this.#doms = doms, this.#loadingHandler = loadingHandler, this.#processorFactory = processorFactory, doms.files.addEventListener("change", () => {
+    constructor(doms, dialogHandler, processorFactory, dndHandler, bundledMapHandler) {
+      this.#doms = doms, this.#dialogHandler = dialogHandler, this.#processorFactory = processorFactory, doms.files.addEventListener("change", () => {
         doms.files.files && this.#pushFiles(Array.from(doms.files.files)).catch(printError);
       }), doms.clearMap.addEventListener("click", () => {
         this.#setMapName(""), this.#clear().catch(printError);
@@ -914,13 +965,15 @@
       await this.#process(Array.from(MAP_FILE_NAMES).map((name) => ({ name, remove: !0 })));
     }
     async #process(resourceList) {
-      if (this.#loadingHandler.isLoading())
-        throw new Error("Loading is in progress");
-      this.#loadingHandler.add(resourceList.map(({ name }) => name));
+      if (this.#dialogHandler.state === "processing")
+        throw new Error("Already processing");
+      this.#dialogHandler.state = "processing";
+      let progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
+      this.#dialogHandler.open();
       let workspace = await this.#workspace, resourceNames = resourceList.map(({ name }) => name), processedNames = [];
       for (let resource of resourceList) {
         if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
-          console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list"), this.#loadingHandler.delete(resource.name);
+          console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list"), progression.setState(resource.name, "skipped");
           continue;
         }
         if (this.#depletedFileHandler.isSupport(resource.name) && this.#depletedFileHandler.handle(resource.name, "remove" in resource, "alreadyProcessed" in resource && resource.alreadyProcessed), "remove" in resource)
@@ -939,9 +992,9 @@
           console.timeEnd(`Process ${resource.name}`), console.log("Processed", result.name, "size=", result.size), processedNames.push(result.name);
         } else
           throw new Error(`Unexpected resource: ${resource.name}`);
-        this.#loadingHandler.delete(resource.name);
+        progression.setState(resource.name, "completed");
       }
-      processedNames.length > 0 && await this.#invokeListeners(processedNames);
+      processedNames.length > 0 && await this.#invokeListeners(processedNames), this.#dialogHandler.close();
     }
     async #processInWorker(message) {
       let worker = this.#processorFactory();
@@ -1085,6 +1138,10 @@
     addListener(listener) {
       this.#listeners.push(listener);
     }
+    removeListener(listener) {
+      let index = this.#listeners.indexOf(listener);
+      index >= 0 && this.#listeners.splice(index, 1);
+    }
     async emit(m) {
       await Promise.allSettled(this.#listeners.map((fn) => fn(m)));
     }
@@ -1095,55 +1152,19 @@
 
   // src/index/dnd-handler.ts
   var DndHandler = class extends Generator {
-    constructor(dom) {
+    constructor(dom, dialogHandler) {
       super(), dom.dragovered.addEventListener("dragenter", (event) => {
-        event.preventDefault(), dom.dialog.showModal();
+        event.preventDefault(), dialogHandler.state = "dragover", dialogHandler.open();
       }), dom.dragovered.addEventListener("dragover", (event) => {
         event.preventDefault(), event.dataTransfer && (event.dataTransfer.dropEffect = "copy");
       }), document.body.addEventListener("dragleave", (event) => {
-        dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0) || (event.preventDefault(), dom.dialog.close());
+        dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0) || (event.preventDefault(), dialogHandler.close());
       }), dom.dragovered.addEventListener("drop", (event) => {
-        event.preventDefault(), dom.dialog.close(), event.dataTransfer?.types.includes("Files") && this.emitNoAwait({
+        event.preventDefault(), event.dataTransfer?.types.includes("Files") && this.emitNoAwait({
           type: "drop",
           files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? [])
         });
       });
-    }
-  };
-
-  // src/index/loading-handler.ts
-  var ANIMATION_FRAMES = ["\uFF5C", "\uFF0F", "\u2015", "\uFF3C"], ANIMATION_INTERVAL_MSEC = 1e3, LoadingHandler = class {
-    #doms;
-    #loadingList = [];
-    #disabledElements = /* @__PURE__ */ new Set();
-    constructor(doms) {
-      this.#doms = doms;
-    }
-    add(list) {
-      this.#loadingList = this.#loadingList.concat(list), this.startAnimation().catch(printError);
-    }
-    delete(loading) {
-      this.#loadingList = this.#loadingList.filter((s) => s !== loading);
-    }
-    isLoading() {
-      return this.#loadingList.length !== 0;
-    }
-    #disable() {
-      let elements = this.#doms.disableTargets();
-      for (let e of elements)
-        e.disabled = !0, this.#disabledElements.add(e);
-    }
-    #enable() {
-      for (let e of this.#disabledElements)
-        e.disabled = !1, this.#disabledElements.delete(e);
-    }
-    async startAnimation() {
-      for (this.#disable(); this.#loadingList.length !== 0; )
-        this.#doms.indicator.textContent = `${this.bar()} Loading: ${this.#loadingList.join(", ")}`, await waitAnimationFrame();
-      this.#doms.indicator.textContent = "", this.#enable();
-    }
-    bar() {
-      return ANIMATION_FRAMES[Math.floor(Date.now() / ANIMATION_INTERVAL_MSEC) % ANIMATION_FRAMES.length];
     }
   };
 
@@ -15815,27 +15836,16 @@ void main() {
       let mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
       downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
     }), updateMapRightMargin(), window.addEventListener("resize", updateMapRightMargin);
-    let loadingHandler = new LoadingHandler({
-      indicator: component("loading_indicator"),
-      disableTargets() {
-        return [
-          component("files", HTMLInputElement),
-          component("map_name", HTMLInputElement),
-          component("terrain_viewer_show", HTMLButtonElement),
-          ...document.querySelectorAll("button[data-show-dialog-for]"),
-          ...document.querySelectorAll("button[data-map-dir]")
-        ];
-      }
-    }), dndHandler = new DndHandler({
-      dragovered: document.body,
-      dialog: component("dnd-dialog", HTMLDialogElement)
-    }), bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) }), fileHandler = new FileHandler(
+    let dialogHandler = new DialogHandler({
+      dialog: component("dialog", HTMLDialogElement),
+      processingFiles: component("processing-files", HTMLUListElement)
+    }), dndHandler = new DndHandler({ dragovered: document.body }, dialogHandler), bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) }), fileHandler = new FileHandler(
       {
         files: component("files", HTMLInputElement),
         clearMap: component("clear_map", HTMLButtonElement),
         mapName: component("map_name", HTMLInputElement)
       },
-      loadingHandler,
+      dialogHandler,
       () => new Worker("worker/file-processor.js"),
       dndHandler,
       bundledMapHandler
