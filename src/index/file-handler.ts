@@ -75,7 +75,7 @@ export class FileHandler {
     bundledMapHandler: BundledMapHandler,
   ) {
     this.#doms = doms;
-    this.#dialogHandler = dialogHandler
+    this.#dialogHandler = dialogHandler;
     this.#processorFactory = processorFactory;
 
     doms.files.addEventListener("change", () => {

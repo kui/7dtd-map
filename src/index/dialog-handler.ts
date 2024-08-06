@@ -64,7 +64,7 @@ export class FileProgressionIndicator {
     });
   }
 
-  setState(taskName: string, state: typeof TERMINATED_STATES[number]) {
+  setState(taskName: string, state: (typeof TERMINATED_STATES)[number]) {
     const li = this.#liList.find((li) => li.textContent === taskName);
     if (li) {
       li.classList.replace("processing", state);
