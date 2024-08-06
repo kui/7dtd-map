@@ -61,30 +61,27 @@ dialog > section {
 
 #processing-files > li {
   list-style: none;
+  &::before {
+    font-weight: bold;
+    margin-right: 0.5em;
+  }
   &.processing {
     &::before {
       content: "☐";
-      font-weight: bold;
       color: black;
-      margin-right: 0.5em;
     }
   }
   &.skipped {
     text-decoration: line-through gray;
     &::before {
-      text-decoration: none;
-      content: "☒";
-      font-weight: bold;
+      content: "☐";
       color: darkorange;
-      margin-right: 0.5em;
     }
   }
   &.completed {
     &::before {
       content: "☑";
-      font-weight: bold;
       color: darkgreen;
-      margin-right: 0.5em;
     }
   }
 }
