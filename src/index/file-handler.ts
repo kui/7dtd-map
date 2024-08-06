@@ -87,6 +87,7 @@ export class FileHandler {
     });
     dndHandler.addListener(({ files }) => this.#pushEntries(files));
     bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
+      console.log("Select bundled map", mapName);
       this.#setMapName(mapName);
       await this.#pushUrls(
         Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
@@ -159,12 +160,17 @@ export class FileHandler {
   }
 
   async #process(resourceList: ResourceLike[]) {
-    if (this.#dialogHandler.state === "processing") {
+    if (this.#dialogHandler.isOpen && this.#dialogHandler.state === "processing") {
       throw new Error("Already processing");
     }
     this.#dialogHandler.state = "processing";
-    const progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
-    this.#dialogHandler.open();
+    // Prevent opening the dialog because the dialog will be closed immediately.
+    let progression = null;
+    if (resourceList.some((r) => !("remove" in r))) {
+      progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
+      this.#dialogHandler.open();
+    }
+
     const workspace = await this.#workspace;
     const resourceNames = resourceList.map(({ name }) => name);
     const processedNames: MapFileName[] = [];
@@ -173,7 +179,7 @@ export class FileHandler {
     for (const resource of resourceList) {
       if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
         console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
-        progression.setState(resource.name, "skipped");
+        progression?.setState(resource.name, "skipped");
         continue;
       }
 
@@ -205,7 +211,7 @@ export class FileHandler {
       } else {
         throw new Error(`Unexpected resource: ${resource.name}`);
       }
-      progression.setState(resource.name, "completed");
+      progression?.setState(resource.name, "completed");
     }
 
     if (processedNames.length > 0) await this.#invokeListeners(processedNames);
