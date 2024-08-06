@@ -59,29 +59,32 @@ dialog > section {
   }
 }
 
-#processing-files > li {
-  list-style: none;
-  &::before {
-    font-weight: bold;
-    margin-right: 0.5em;
-  }
-  &.processing {
+#processing-files {
+  padding-inline-start: 0;
+  & > li {
+    list-style: none;
     &::before {
-      content: "☐";
-      color: black;
+      font-weight: bold;
+      margin-right: 0.5em;
     }
-  }
-  &.skipped {
-    text-decoration: line-through gray;
-    &::before {
-      content: "☐";
-      color: darkorange;
+    &.processing {
+      &::before {
+        content: "☐";
+        color: black;
+      }
     }
-  }
-  &.completed {
-    &::before {
-      content: "☑";
-      color: darkgreen;
+    &.skipped {
+      text-decoration: line-through gray;
+      &::before {
+        content: "☐";
+        color: darkorange;
+      }
+    }
+    &.completed {
+      &::before {
+        content: "☑";
+        color: darkgreen;
+      }
     }
   }
 }
