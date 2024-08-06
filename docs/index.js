@@ -912,7 +912,7 @@
       }), doms.clearMap.addEventListener("click", () => {
         this.#setMapName(""), this.#clear().catch(printError);
       }), dndHandler.addListener(({ files }) => this.#pushEntries(files)), bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
-        this.#setMapName(mapName), await this.#pushUrls(
+        console.log("Select bundled map", mapName), this.#setMapName(mapName), await this.#pushUrls(
           Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
           // Bundled world files are preprocessed. See tools/copy-map-files.ts
           !0
@@ -965,15 +965,15 @@
       await this.#process(Array.from(MAP_FILE_NAMES).map((name) => ({ name, remove: !0 })));
     }
     async #process(resourceList) {
-      if (this.#dialogHandler.state === "processing")
+      if (this.#dialogHandler.isOpen && this.#dialogHandler.state === "processing")
         throw new Error("Already processing");
       this.#dialogHandler.state = "processing";
-      let progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
-      this.#dialogHandler.open();
+      let progression = null;
+      resourceList.some((r) => !("remove" in r)) && (progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name)), this.#dialogHandler.open());
       let workspace = await this.#workspace, resourceNames = resourceList.map(({ name }) => name), processedNames = [];
       for (let resource of resourceList) {
         if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
-          console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list"), progression.setState(resource.name, "skipped");
+          console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list"), progression?.setState(resource.name, "skipped");
           continue;
         }
         if (this.#depletedFileHandler.isSupport(resource.name) && this.#depletedFileHandler.handle(resource.name, "remove" in resource, "alreadyProcessed" in resource && resource.alreadyProcessed), "remove" in resource)
@@ -992,7 +992,7 @@
           console.timeEnd(`Process ${resource.name}`), console.log("Processed", result.name, "size=", result.size), processedNames.push(result.name);
         } else
           throw new Error(`Unexpected resource: ${resource.name}`);
-        progression.setState(resource.name, "completed");
+        progression?.setState(resource.name, "completed");
       }
       processedNames.length > 0 && await this.#invokeListeners(processedNames), this.#dialogHandler.close();
     }
