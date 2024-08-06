@@ -1,10 +1,8 @@
 import type * as fileProcessor from "../worker/file-processor";
-import type { LoadingHandler } from "./loading-handler";
-import type { DndHandler } from "./dnd-handler";
 import type { BundledMapHandler } from "./bundled-map-hander";
+import type { DialogHandler } from "./dialog-handler";
+import type { DndHandler } from "./dnd-handler";
 
-import { basename, printError } from "../lib/utils";
-import * as storage from "../lib/storage";
 import {
   getPreferWorldFileName,
   hasPreferWorldFileNameIn,
@@ -13,6 +11,8 @@ import {
   MapFileName,
   PREFER_WORLD_FILE_NAMES,
 } from "../../lib/map-files";
+import * as storage from "../lib/storage";
+import { basename, printError } from "../lib/utils";
 
 type Listener = (updatedFileNames: MapFileName[]) => unknown;
 
@@ -62,20 +62,20 @@ interface Doms {
 export class FileHandler {
   #doms: Doms;
   #listeners: Listener[] = [];
-  #loadingHandler: LoadingHandler;
+  #dialogHandler: DialogHandler;
   #processorFactory: () => ImageProcessorWorker;
   #workspace = storage.workspaceDir();
   #depletedFileHandler = new DepletedFileHandler();
 
   constructor(
     doms: Doms,
-    loadingHandler: LoadingHandler,
+    dialogHandler: DialogHandler,
     processorFactory: () => ImageProcessorWorker,
     dndHandler: DndHandler,
     bundledMapHandler: BundledMapHandler,
   ) {
     this.#doms = doms;
-    this.#loadingHandler = loadingHandler;
+    this.#dialogHandler = dialogHandler
     this.#processorFactory = processorFactory;
 
     doms.files.addEventListener("change", () => {
@@ -159,11 +159,12 @@ export class FileHandler {
   }
 
   async #process(resourceList: ResourceLike[]) {
-    if (this.#loadingHandler.isLoading()) {
-      throw new Error("Loading is in progress");
+    if (this.#dialogHandler.state === "processing") {
+      throw new Error("Already processing");
     }
-    this.#loadingHandler.add(resourceList.map(({ name }) => name));
-
+    this.#dialogHandler.state = "processing";
+    const progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
+    this.#dialogHandler.open();
     const workspace = await this.#workspace;
     const resourceNames = resourceList.map(({ name }) => name);
     const processedNames: MapFileName[] = [];
@@ -172,7 +173,7 @@ export class FileHandler {
     for (const resource of resourceList) {
       if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
         console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
-        this.#loadingHandler.delete(resource.name);
+        progression.setState(resource.name, "skipped");
         continue;
       }
 
@@ -204,10 +205,12 @@ export class FileHandler {
       } else {
         throw new Error(`Unexpected resource: ${resource.name}`);
       }
-      this.#loadingHandler.delete(resource.name);
+      progression.setState(resource.name, "completed");
     }
 
     if (processedNames.length > 0) await this.#invokeListeners(processedNames);
+
+    this.#dialogHandler.close();
   }
 
   async #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {

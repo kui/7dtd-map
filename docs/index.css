@@ -51,3 +51,40 @@ body.use-splat3-png #warn-splat3-png,
 body.use-splat4-png #warn-splat4-png {
   display: inline-block;
 }
+
+dialog > section {
+  display: none;
+  &:has(> input[name="active-section"]:checked) {
+    display: block;
+  }
+}
+
+#processing-files > li {
+  list-style: none;
+  &.processing {
+    &::before {
+      content: "☐";
+      font-weight: bold;
+      color: black;
+      margin-right: 0.5em;
+    }
+  }
+  &.skipped {
+    text-decoration: line-through gray;
+    &::before {
+      text-decoration: none;
+      content: "☒";
+      font-weight: bold;
+      color: darkorange;
+      margin-right: 0.5em;
+    }
+  }
+  &.completed {
+    &::before {
+      content: "☑";
+      font-weight: bold;
+      color: darkgreen;
+      margin-right: 0.5em;
+    }
+  }
+}

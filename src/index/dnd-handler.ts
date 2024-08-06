@@ -1,4 +1,5 @@
 import * as events from "../lib/events";
+import { DialogHandler } from "./dialog-handler";
 
 export interface EventMessage {
   type: "drop";
@@ -7,15 +8,15 @@ export interface EventMessage {
 
 interface Doms {
   dragovered: HTMLElement;
-  dialog: HTMLDialogElement;
 }
 
 export class DndHandler extends events.Generator<"drop", EventMessage> {
-  constructor(dom: Doms) {
+  constructor(dom: Doms, dialogHandler: DialogHandler) {
     super();
     dom.dragovered.addEventListener("dragenter", (event) => {
       event.preventDefault();
-      dom.dialog.showModal();
+      dialogHandler.state = "dragover";
+      dialogHandler.open();
     });
     dom.dragovered.addEventListener("dragover", (event) => {
       event.preventDefault();
@@ -26,11 +27,10 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
       // clientX and clientY are 0 when the mouse cursor is out of the window frame.
       if (dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0)) return;
       event.preventDefault();
-      dom.dialog.close();
+      dialogHandler.close();
     });
     dom.dragovered.addEventListener("drop", (event) => {
       event.preventDefault();
-      dom.dialog.close();
       if (!event.dataTransfer?.types.includes("Files")) return;
       this.emitNoAwait({
         type: "drop",

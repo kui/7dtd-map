@@ -280,9 +280,9 @@
       </select>
     </p>
 
-    <dialog id="dnd-dialog">
-      <section id="dnd-dragover">
-        <p>Drop files:</p>
+    <dialog id="dialog">
+      <section>
+        <h2>Drop Files</h2>
         <ul>
           <li>📁 One world folder (Recommended)</li>
           <li>🗺️ map_info.xml</li>
@@ -293,7 +293,21 @@
           <li>🏘️ prefabs.xml</li>
           <li>⛰️ dtm.raw</li>
         </ul>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none;" checked value="dragover"/>
       </section>
+      <section>
+        <h2>⌛️ Processing Files</h2>
+        <p id="processing-message">Processing...</p>
+        <ul id="processing-files"></ul>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none;" value="processing" />
+      </section>
+      <section>
+        <h2>⚠️ Error</h2>
+        <p id="error-message">Error</p>
+        <footer><button data-close-dialog-for="dnd-dialog">Close</button></footer>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none;" value="error" />
+      </section>
+      <form id="dialog-active" style="display: none"></form>
     </dialog>
   </body>
 </html>

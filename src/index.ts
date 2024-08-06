@@ -7,6 +7,7 @@ import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import { LabelHandler } from "./lib/label-handler";
 import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
 
+import { DialogHandler } from "./index/dialog-handler";
 import { DtmHandler } from "./index/dtm-handler";
 import { PrefabsHandler } from "./index/prefabs-handler";
 import { DelayedRenderer } from "./lib/delayed-renderer";
@@ -15,7 +16,6 @@ import { MarkerHandler } from "./index/marker-handler";
 import { FileHandler, ImageProcessorWorker } from "./index/file-handler";
 import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
-import { LoadingHandler } from "./index/loading-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import { BundledMapHandler } from "./index/bundled-map-hander";
 
@@ -37,22 +37,11 @@ function main() {
   updateMapRightMargin();
   window.addEventListener("resize", updateMapRightMargin);
 
-  const loadingHandler = new LoadingHandler({
-    indicator: component("loading_indicator"),
-    disableTargets() {
-      return [
-        component("files", HTMLInputElement),
-        component("map_name", HTMLInputElement),
-        component("terrain_viewer_show", HTMLButtonElement),
-        ...document.querySelectorAll<HTMLButtonElement>("button[data-show-dialog-for]"),
-        ...document.querySelectorAll<HTMLButtonElement>("button[data-map-dir]"),
-      ];
-    },
+  const dialogHandler = new DialogHandler({
+    dialog: component("dialog", HTMLDialogElement),
+    processingFiles: component("processing-files", HTMLUListElement),
   });
-  const dndHandler = new DndHandler({
-    dragovered: document.body,
-    dialog: component("dnd-dialog", HTMLDialogElement),
-  });
+  const dndHandler = new DndHandler({ dragovered: document.body }, dialogHandler);
   const bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) });
   const fileHandler = new FileHandler(
     {
@@ -60,7 +49,7 @@ function main() {
       clearMap: component("clear_map", HTMLButtonElement),
       mapName: component("map_name", HTMLInputElement),
     },
-    loadingHandler,
+    dialogHandler,
     () => new Worker("worker/file-processor.js") as ImageProcessorWorker,
     dndHandler,
     bundledMapHandler,
