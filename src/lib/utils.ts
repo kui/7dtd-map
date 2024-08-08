@@ -28,11 +28,12 @@ export function removeAllChildren(e: HTMLElement): void {
   while (e.lastChild) e.removeChild(e.lastChild);
 }
 
-export function humanreadableDistance(d: number): string {
-  if (d < 1000) {
-    return `${d.toString()}m`;
+export function humanreadableDistance([direction, distance]: [Direction | null, number]): string {
+  const dir = direction ?? "";
+  if (distance < 1000) {
+    return `${dir} ${distance.toString()}m`;
   }
-  return `${(d / 1000).toFixed(2)}km`;
+  return `${dir} ${(distance / 1000).toFixed(2)}km`;
 }
 
 export function waitAnimationFrame(): Promise<number> {

@@ -8,7 +8,7 @@ interface HighlightedPrefab extends Prefab {
   highlightedName?: string;
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
-  dist?: number | null;
+  distance?: [Direction | null, number] | null;
 }
 interface HighlightedBlock {
   name: string;
@@ -32,6 +32,8 @@ interface ThreePlaneSize {
   width: number;
   height: number;
 }
+
+type Direction = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
 type GameCoords =
   | {

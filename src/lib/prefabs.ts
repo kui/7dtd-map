@@ -36,7 +36,7 @@ export class PrefabFilter {
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
     this.#updateStatus();
-    this.#updateDist();
+    this.#updateDistance();
     this.#sort();
     await this.#listeners.dispatch({ update: { status: this.#status, prefabs: this.#filtered } });
   }
@@ -136,12 +136,12 @@ export class PrefabFilter {
     return matchedPrefabNames;
   }
 
-  #updateDist() {
+  #updateDistance() {
     if (this.markCoords) {
       const { markCoords } = this;
-      this.#filtered.forEach((p) => (p.dist = calcDist(p, markCoords)));
+      this.#filtered.forEach((p) => (p.distance = [computeDirection(p, markCoords), computeDistance(p, markCoords)]));
     } else {
-      this.#filtered.forEach((p) => (p.dist = null));
+      this.#filtered.forEach((p) => (p.distance = null));
     }
   }
 
@@ -178,14 +178,29 @@ function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
 }
 
 function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
-  if (!a.dist || !b.dist) return nameSorter(a, b);
-  if (a.dist > b.dist) return 1;
-  if (a.dist < b.dist) return -1;
+  if (!a.distance || !b.distance) return nameSorter(a, b);
+  if (a.distance[1] > b.distance[1]) return 1;
+  if (a.distance[1] < b.distance[1]) return -1;
   return nameSorter(a, b);
 }
 
-function calcDist(targetCoords: GameCoords, baseCoords: GameCoords) {
+function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
   return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
+}
+
+function computeDirection(targetCoords: GameCoords, baseCoords: GameCoords): Direction | null {
+  const dx = targetCoords.x - baseCoords.x;
+  const dz = targetCoords.z - baseCoords.z;
+  if (dx === 0 && dz === 0) return null;
+  const angle = (Math.atan2(dz, dx) * 180) / Math.PI;
+  if (angle < -157.5 || angle >= 157.5) return "W";
+  if (angle < -112.5) return "SW";
+  if (angle < -67.5) return "S";
+  if (angle < -22.5) return "SE";
+  if (angle < 22.5) return "E";
+  if (angle < 67.5) return "NE";
+  if (angle < 112.5) return "N";
+  return "NW";
 }
 
 function matchAndHighlight(str: string, regex: RegExp) {

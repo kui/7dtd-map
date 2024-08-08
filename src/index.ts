@@ -130,7 +130,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   li.innerHTML = [
     `<button data-input-for="prefab_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
-    ...(prefab.dist ? [`${humanreadableDistance(prefab.dist)},`] : []),
+    ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
           `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
