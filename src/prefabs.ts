@@ -3,7 +3,6 @@ import type * as prefabsFilter from "./worker/prefabs-filter";
 import { DelayedRenderer } from "./lib/delayed-renderer";
 import * as events from "./lib/events";
 import { LabelHandler } from "./lib/label-handler";
-import { Language } from "./lib/labels";
 import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import * as presetButton from "./lib/ui/preset-button";
 import * as syncOutput from "./lib/ui/sync-output";
@@ -29,71 +28,37 @@ function main() {
   });
 
   const prefabsHandler = new PrefabsHandler(
-    { excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")) },
+    {
+      prefabFilter: component("prefab-filter", HTMLInputElement),
+      blockFilter: component("block-filter", HTMLInputElement),
+      minTier: component("min-tier", HTMLInputElement),
+      maxTier: component("max-tier", HTMLInputElement),
+      excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")),
+    },
     new Worker("worker/prefabs-filter.js"),
+    new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, navigator.languages),
+    async () => {
+      const [prefabBlockCounts, difficulties] = await Promise.all([
+        fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
+        fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
+      ]);
+      return Object.keys(prefabBlockCounts).map((n) => ({
+        name: n,
+        x: 0,
+        z: 0,
+        difficulty: difficulties[n] ?? 0,
+      }));
+    },
   );
-  (async () => {
-    const [prefabBlockCounts, difficulties] = await Promise.all([
-      fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
-      fetchJson<PrefabDifficulties>("prefab-difficulties.json"),
-    ]);
-    prefabsHandler.prefabs = Object.keys(prefabBlockCounts).map((n) => ({
-      name: n,
-      x: 0,
-      z: 0,
-      difficulty: difficulties[n] ?? 0,
-    }));
-  })().catch(printError);
 
-  const minTier = component("min_tier", HTMLInputElement);
-  const maxTier = component("max_tier", HTMLInputElement);
-  const tierRange = { start: minTier.valueAsNumber, end: maxTier.valueAsNumber };
-  prefabsHandler.tierRange = tierRange;
-  minTier.addEventListener("input", () => {
-    const newMinTier = minTier.valueAsNumber;
-    if (newMinTier === tierRange.start) return;
-    tierRange.start = newMinTier;
-    if (newMinTier > maxTier.valueAsNumber) {
-      maxTier.value = minTier.value;
-      tierRange.end = newMinTier;
-      maxTier.dispatchEvent(new Event("input"));
-    }
-    prefabsHandler.tierRange = tierRange;
-  });
-  maxTier.addEventListener("input", () => {
-    const newMaxTier = maxTier.valueAsNumber;
-    if (newMaxTier === tierRange.end) return;
-    tierRange.end = newMaxTier;
-    if (newMaxTier < minTier.valueAsNumber) {
-      minTier.value = maxTier.value;
-      tierRange.start = newMaxTier;
-      minTier.dispatchEvent(new Event("input"));
-    }
-    prefabsHandler.tierRange = tierRange;
-  });
-  const tierClear = component("tier_clear", HTMLButtonElement);
+  const minTier = component("min-tier", HTMLInputElement);
+  const maxTier = component("max-tier", HTMLInputElement);
+  const tierClear = component("tier-clear", HTMLButtonElement);
   tierClear.addEventListener("click", () => {
     minTier.value = minTier.defaultValue;
     maxTier.value = maxTier.defaultValue;
     minTier.dispatchEvent(new Event("input"));
     maxTier.dispatchEvent(new Event("input"));
-  });
-
-  const prefabFilter = component("prefab_filter", HTMLInputElement);
-  prefabsHandler.prefabFilter = prefabFilter.value;
-  prefabFilter.addEventListener("input", () => {
-    prefabsHandler.prefabFilter = prefabFilter.value;
-  });
-
-  const blockFilter = component("block_filter", HTMLInputElement);
-  prefabsHandler.blockFilter = blockFilter.value;
-  blockFilter.addEventListener("input", () => {
-    prefabsHandler.blockFilter = blockFilter.value;
-  });
-
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener(({ update: { lang } }) => {
-    prefabsHandler.language = lang;
   });
 
   const status = component("prefabs-status");
@@ -116,7 +81,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     ...(prefab.difficulty
       ? [
-          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
           `  💀${prefab.difficulty.toString()}`,
           `</span>`,
         ]
@@ -133,7 +98,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       if (block.count === undefined) return;
       const blockLi = document.createElement("li");
       blockLi.innerHTML = [
-        `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="blocks-filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
@@ -156,6 +121,10 @@ declare class PrefabsFilterWorker extends Worker {
 type PrefabsHandlerEventMessage = prefabsFilter.OutMessage;
 
 interface PrefabsHandlerDoms {
+  prefabFilter: HTMLInputElement;
+  blockFilter: HTMLInputElement;
+  minTier: HTMLInputElement;
+  maxTier: HTMLInputElement;
   excludes: HTMLInputElement[];
 }
 
@@ -164,48 +133,54 @@ class PrefabsHandler {
   #worker: PrefabsFilterWorker;
   #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
 
-  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker) {
+  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker, labelHandler: LabelHandler, fetchPrefabs: () => Promise<Prefab[]>) {
     this.#doms = doms;
     this.#worker = worker;
-    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
-      this.#listeners.dispatchNoAwait(event.data);
-    });
 
-    const excludes = this.#excludes;
-    if (excludes.length > 0) worker.postMessage({ preExcludes: excludes });
+    doms.prefabFilter.addEventListener("input", () => {
+      worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
+    });
+    doms.blockFilter.addEventListener("input", () => {
+      worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
+    });
+    const tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
+    this.#tierRange = tierRange;
+    doms.minTier.addEventListener("input", () => {
+      const newMinTier = doms.minTier.valueAsNumber;
+      if (newMinTier === tierRange.start) return;
+      tierRange.start = newMinTier;
+      this.#tierRange = tierRange;
+    });
+    doms.maxTier.addEventListener("input", () => {
+      const newMaxTier = doms.maxTier.valueAsNumber;
+      if (newMaxTier === tierRange.end) return;
+      tierRange.end = newMaxTier;
+      this.#tierRange = tierRange;
+    });
+    worker.postMessage({ preExcludes: this.#excludes });
     doms.excludes.forEach((e) => {
       e.addEventListener("change", () => {
         worker.postMessage({ preExcludes: this.#excludes });
       });
     });
+
+    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      this.#listeners.dispatchNoAwait(event.data);
+    });
+    labelHandler.addListener(({ update: { lang } }) => {
+      worker.postMessage({ language: lang });
+    });
+    fetchPrefabs().then((p) => {
+      worker.postMessage({ all: p });
+    }).catch(printError);
   }
 
   get #excludes(): string[] {
     return this.#doms.excludes.flatMap((e) => (e.checked ? [e.value] : []));
   }
 
-  set prefabs(p: Prefab[]) {
-    this.#worker.postMessage({ all: p });
-  }
-
-  set tierRange(range: NumberRange) {
+  set #tierRange(range: NumberRange) {
     this.#worker.postMessage({ difficulty: range });
-  }
-
-  set prefabFilter(filter: string) {
-    this.#worker.postMessage({ prefabFilterRegexp: filter });
-  }
-
-  set blockFilter(filter: string) {
-    this.#worker.postMessage({ blockFilterRegexp: filter });
-  }
-
-  set language(language: Language) {
-    this.#worker.postMessage({ language });
-  }
-
-  refresh() {
-    this.#worker.postMessage({});
   }
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
