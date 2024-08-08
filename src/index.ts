@@ -110,7 +110,7 @@ function main() {
     component("prefabs_list", HTMLElement),
     (p) => prefabLi(p),
   );
-  prefabsHandler.addListener((prefabs) => {
+  prefabsHandler.addListener(({ update: { prefabs } }) => {
     prefabListRenderer.iterator = prefabs;
   });
   new CursorCoodsHandler(

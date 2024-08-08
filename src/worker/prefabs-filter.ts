@@ -1,9 +1,10 @@
-import { PrefabFilter } from "../lib/prefabs";
+import { PrefabFilter, EventMessage } from "../lib/prefabs";
 import { printError, fetchJson } from "../lib/utils";
 
 export type InMessage = Partial<
   Pick<PrefabFilter, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language">
 >;
+export type OutMessage = EventMessage;
 
 const prefabs = new PrefabFilter("../labels", navigator.languages, async () =>
   invertCounts(await fetchJson("../prefab-block-counts.json")),
@@ -14,9 +15,9 @@ onmessage = ({ data }: MessageEvent<InMessage>) => {
   Object.assign(prefabs, data).update().catch(printError);
 };
 
-prefabs.addUpdateListener((u) => {
-  console.log("Prefab-filter send message: ", u);
-  postMessage(u);
+prefabs.addListener((m) => {
+  console.log("Prefab-filter send message: ", m);
+  postMessage(m);
 });
 
 function invertCounts(counts: PrefabBlockCounts): BlockPrefabCounts {

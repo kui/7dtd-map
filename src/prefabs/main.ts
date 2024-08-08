@@ -5,7 +5,7 @@ import { component } from "../lib/utils";
 function main() {
   const labelHolder = new LabelHolder("../labels", navigator.languages);
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener(async (lang) => {
+  labelHandler.addListener(async ({ update: { lang } }) => {
     labelHolder.language = lang;
     updatePrefabLabels(await labelHolder.get("prefabs"));
     udpateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));

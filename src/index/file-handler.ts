@@ -13,8 +13,7 @@ import {
 } from "../../lib/map-files";
 import * as storage from "../lib/storage";
 import { basename, printError } from "../lib/utils";
-
-type Listener = (updatedFileNames: MapFileName[]) => unknown;
+import * as events from "../lib/events";
 
 const PROCESS_REQUIRED_NAMES = [
   "biomes.png",
@@ -59,13 +58,17 @@ interface Doms {
   mapName: HTMLInputElement;
 }
 
+interface EventMessage {
+  update: MapFileName[];
+}
+
 export class FileHandler {
   #doms: Doms;
-  #listeners: Listener[] = [];
   #dialogHandler: DialogHandler;
   #processorFactory: () => ImageProcessorWorker;
   #workspace = storage.workspaceDir();
   #depletedFileHandler = new DepletedFileHandler();
+  #listeners = new events.ListenerManager<"update", EventMessage>();
 
   constructor(
     doms: Doms,
@@ -98,11 +101,11 @@ export class FileHandler {
   }
 
   async initialize() {
-    await this.#invokeListeners(Array.from(MAP_FILE_NAMES));
+    await this.#listeners.dispatch({ update: Array.from(MAP_FILE_NAMES) });
   }
 
-  addListener(listener: Listener): void {
-    this.#listeners.push(listener);
+  addListener(fn: events.Listener<"update", EventMessage>) {
+    this.#listeners.addListener(fn);
   }
 
   async #pushFiles(files: File[]) {
@@ -214,7 +217,7 @@ export class FileHandler {
       progression?.setState(resource.name, "completed");
     }
 
-    if (processedNames.length > 0) await this.#invokeListeners(processedNames);
+    if (processedNames.length > 0) await this.#listeners.dispatch({ update: processedNames });
 
     this.#dialogHandler.close();
   }
@@ -232,10 +235,6 @@ export class FileHandler {
       };
       worker.postMessage(message);
     });
-  }
-
-  async #invokeListeners(updatedFileNames: MapFileName[]) {
-    await Promise.allSettled(this.#listeners.map((fn) => fn(updatedFileNames)));
   }
 
   #setMapName(name: string) {

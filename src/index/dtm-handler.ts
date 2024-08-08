@@ -31,7 +31,7 @@ export class DtmHandler {
       },
     );
 
-    fileHandler.addListener((fileNames) => {
+    fileHandler.addListener(({ update: fileNames }) => {
       if (fileNames.includes("dtm_block.raw.gz")) this.#dtmRaw.invalidate();
       if (fileNames.includes("map_info.xml")) this.#mapSize.invalidate();
     });

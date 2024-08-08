@@ -11,9 +11,10 @@ interface Doms {
   dragovered: HTMLElement;
 }
 
-export class DndHandler extends events.Generator<"drop", EventMessage> {
+export class DndHandler {
+  #listeners = new events.ListenerManager<"drop", EventMessage>();
+
   constructor(dom: Doms, dialogHandler: DialogHandler) {
-    super();
     dom.dragovered.addEventListener("dragenter", (event) => {
       event.preventDefault();
       dialogHandler.state = "dragover";
@@ -33,11 +34,15 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
     dom.dragovered.addEventListener("drop", (event) => {
       event.preventDefault();
       if (!event.dataTransfer?.types.includes("Files")) return;
-      this.emitNoAwait({
+      this.#listeners.dispatchNoAwait({
         drop: {
           files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? []),
         },
       });
     });
+  }
+
+  addListener(fn: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 }

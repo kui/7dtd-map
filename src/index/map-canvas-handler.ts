@@ -2,7 +2,7 @@ import type * as mapRenderer from "../worker/map-renderer";
 import type { PrefabsHandler } from "./prefabs-handler";
 import type { MarkerHandler } from "./marker-handler";
 import type { FileHandler } from "./file-handler";
-import { printError } from "../lib/utils";
+import * as events from "../lib/events";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -16,6 +16,10 @@ interface Doms {
   scale: HTMLInputElement;
 }
 
+interface EventMessage {
+  update: { mapSize: GameMapSize };
+}
+
 interface MapRendererWorker extends Worker {
   postMessage(message: mapRenderer.InMessage, transfer: Transferable[]): void;
   postMessage(message: mapRenderer.InMessage, options?: StructuredSerializeOptions): void;
@@ -25,7 +29,7 @@ const DEPENDENT_FILES = ["biomes.png", "splat3.png", "splat4.png", "radiation.pn
 type DependentFile = (typeof DEPENDENT_FILES)[number];
 
 export class MapCanvasHandler {
-  #updateListeners: ((mapSize: GameMapSize) => unknown)[] = [];
+  #listeners = new events.ListenerManager<"update", EventMessage>();
 
   constructor(
     doms: Doms,
@@ -50,9 +54,8 @@ export class MapCanvasHandler {
       [canvas],
     );
 
-    worker.addEventListener("message", (e: MessageEvent<mapRenderer.OutMessage>) => {
-      const { mapSize } = e.data;
-      Promise.allSettled(this.#updateListeners.map((fn) => fn(mapSize))).catch(printError);
+    worker.addEventListener("message", ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
+      this.#listeners.dispatchNoAwait({ update: { mapSize } });
     });
     doms.biomesAlpha.addEventListener("input", () => {
       worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
@@ -78,13 +81,13 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
-    prefabsHandler.addListener((prefabs) => {
+    prefabsHandler.addListener(({ update: { prefabs } }) => {
       worker.postMessage({ prefabs });
     });
-    markerHandler.addListener((markerCoords) => {
-      worker.postMessage({ markerCoords });
+    markerHandler.addListener(({ update: { coords } }) => {
+      worker.postMessage({ markerCoords: coords });
     });
-    fileHandler.addListener((fileNames) => {
+    fileHandler.addListener(({ update: fileNames }) => {
       const invalidate: DependentFile[] = [];
       for (const n of fileNames) {
         if (DEPENDENT_FILES.includes(n as DependentFile)) invalidate.push(n as DependentFile);
@@ -93,7 +96,7 @@ export class MapCanvasHandler {
     });
   }
 
-  addUpdateListener(ln: (mapSize: GameMapSize) => unknown) {
-    this.#updateListeners.push(ln);
+  addUpdateListener(ln: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(ln);
   }
 }

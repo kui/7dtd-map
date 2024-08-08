@@ -12,18 +12,18 @@ export interface EventMessage {
   };
 }
 
-export class BundledMapHandler extends events.Generator<"select", EventMessage> {
+export class BundledMapHandler {
   #doms: Doms;
+  #listeners = new events.ListenerManager<"select", EventMessage>();
 
   constructor(doms: Doms) {
-    super();
     this.#doms = doms;
 
     this.#renderOptions().catch(printError);
     this.#doms.select.addEventListener("change", () => {
       if (this.#doms.select.value === "") return;
       const mapName = this.#doms.select.value;
-      this.emitNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
+      this.#listeners.dispatchNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
     });
   }
 
@@ -35,5 +35,9 @@ export class BundledMapHandler extends events.Generator<"select", EventMessage> 
       option.text = map;
       this.#doms.select.appendChild(option);
     }
+  }
+
+  addListener(fn: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 }

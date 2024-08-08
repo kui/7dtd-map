@@ -1,13 +1,14 @@
+import type * as prefabsFilter from "./worker/prefabs-filter";
+
+import { DelayedRenderer } from "./lib/delayed-renderer";
+import * as events from "./lib/events";
+import { LabelHandler } from "./lib/label-handler";
+import { Language } from "./lib/labels";
+import * as minMaxInputs from "./lib/ui/min-max-inputs";
 import * as presetButton from "./lib/ui/preset-button";
 import * as syncOutput from "./lib/ui/sync-output";
-import * as minMaxInputs from "./lib/ui/min-max-inputs";
-import { DelayedRenderer } from "./lib/delayed-renderer";
-import { component, fetchJson, printError } from "./lib/utils";
-import { PrefabUpdate } from "./lib/prefabs";
-import * as prefabsFilter from "./worker/prefabs-filter";
-import { Language } from "./lib/labels";
-import { LabelHandler } from "./lib/label-handler";
 import { UrlState } from "./lib/url-state";
+import { component, fetchJson, printError } from "./lib/utils";
 
 interface HighlightedPrefab {
   name: string;
@@ -88,7 +89,7 @@ function main() {
   });
 
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener((lang) => {
+  labelHandler.addListener(({ update: { lang } }) => {
     prefabsHandler.language = lang;
   });
 
@@ -100,7 +101,7 @@ function main() {
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.documentElement, component("prefabs_list"), (p) =>
     prefabLi(p),
   );
-  prefabsHandler.listeners.push((update) => {
+  prefabsHandler.addListener(({ update }) => {
     prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
   });
 
@@ -152,41 +153,45 @@ declare class PrefabsFilterWorker extends Worker {
   postMessage(message: prefabsFilter.InMessage): void;
 }
 
+type PrefabsHandlerEventMessage = prefabsFilter.OutMessage;
+
 class PrefabsHandler {
-  worker: PrefabsFilterWorker;
-  listeners: ((prefabs: PrefabUpdate) => void | Promise<void>)[] = [];
+  #worker: PrefabsFilterWorker;
+  #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
 
   constructor(worker: PrefabsFilterWorker) {
-    this.worker = worker;
-    this.worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
-      for (const fn of this.listeners) {
-        fn(event.data)?.catch(printError);
-      }
+    this.#worker = worker;
+    this.#worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      this.#listeners.dispatchNoAwait(event.data);
     });
   }
 
   set prefabs(p: Prefab[]) {
-    this.worker.postMessage({ all: p });
+    this.#worker.postMessage({ all: p });
   }
 
   set tierRange(range: NumberRange) {
-    this.worker.postMessage({ difficulty: range });
+    this.#worker.postMessage({ difficulty: range });
   }
 
   set prefabFilter(filter: string) {
-    this.worker.postMessage({ prefabFilterRegexp: filter });
+    this.#worker.postMessage({ prefabFilterRegexp: filter });
   }
 
   set blockFilter(filter: string) {
-    this.worker.postMessage({ blockFilterRegexp: filter });
+    this.#worker.postMessage({ blockFilterRegexp: filter });
   }
 
   set language(language: Language) {
-    this.worker.postMessage({ language });
+    this.#worker.postMessage({ language });
   }
 
   refresh() {
-    this.worker.postMessage({});
+    this.#worker.postMessage({});
+  }
+
+  addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 }
 

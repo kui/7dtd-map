@@ -1,11 +1,10 @@
 import type * as prefabsFilter from "../worker/prefabs-filter";
-import type { PrefabUpdate } from "../lib/prefabs";
 import type { MarkerHandler } from "./marker-handler";
 import type { LabelHandler } from "../lib/label-handler";
 import type { FileHandler } from "./file-handler";
 
-import { printError } from "../lib/utils";
 import * as storage from "../lib/storage";
+import * as events from "../lib/events";
 
 interface Doms {
   status: HTMLElement;
@@ -15,12 +14,16 @@ interface Doms {
   blockFilter: HTMLInputElement;
 }
 
+interface EventMessage {
+  update: { prefabs: HighlightedPrefab[] };
+}
+
 declare class PrefabsFilterWorker extends Worker {
   postMessage(message: prefabsFilter.InMessage): void;
 }
 
 export class PrefabsHandler {
-  #listeners: ((prefabs: HighlightedPrefab[]) => unknown)[] = [];
+  #listeners = new events.ListenerManager<"update", EventMessage>();
   #tierRange: NumberRange;
 
   constructor(
@@ -33,10 +36,12 @@ export class PrefabsHandler {
   ) {
     this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
 
-    worker.addEventListener("message", (event: MessageEvent<PrefabUpdate>) => {
-      const { prefabs, status } = event.data;
+    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      const {
+        update: { prefabs, status },
+      } = event.data;
       doms.status.textContent = status;
-      Promise.allSettled(this.#listeners.map((fn) => fn(prefabs))).catch(printError);
+      this.#listeners.dispatchNoAwait({ update: { prefabs } });
     });
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
@@ -56,19 +61,19 @@ export class PrefabsHandler {
     doms.blockFilter.addEventListener("input", () => {
       worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
-    markerHandler.addListener((markCoords) => {
-      worker.postMessage({ markCoords });
+    markerHandler.addListener((m) => {
+      worker.postMessage({ markCoords: m.update.coords });
     });
-    labelHandler.addListener((language) => {
-      worker.postMessage({ language });
+    labelHandler.addListener(({ update: { lang } }) => {
+      worker.postMessage({ language: lang });
     });
-    fileHandler.addListener(async (fileNames) => {
+    fileHandler.addListener(async ({ update: fileNames }) => {
       if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties()) });
     });
   }
 
-  addListener(fn: (prefabs: HighlightedPrefab[]) => unknown) {
-    this.#listeners.push(fn);
+  addListener(fn: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 }
 

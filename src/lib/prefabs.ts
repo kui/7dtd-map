@@ -1,10 +1,10 @@
 import { throttledInvoker } from "./throttled-invoker";
 import { LabelHolder, Language } from "./labels";
 import { CacheHolder } from "./cache-holder";
+import * as events from "./events";
 
-export interface PrefabUpdate {
-  status: string;
-  prefabs: HighlightedPrefab[];
+export interface EventMessage {
+  update: { prefabs: HighlightedPrefab[]; status: string };
 }
 
 export class PrefabFilter {
@@ -13,7 +13,7 @@ export class PrefabFilter {
 
   #filtered: HighlightedPrefab[] = [];
   #status = "";
-  #updateListeners: ((u: PrefabUpdate) => void)[] = [];
+  #listeners = new events.ListenerManager<"update", EventMessage>();
 
   all: Prefab[] = [];
   markCoords: GameCoords | null = null;
@@ -38,10 +38,7 @@ export class PrefabFilter {
     this.#updateStatus();
     this.#updateDist();
     this.#sort();
-    const update: PrefabUpdate = { status: this.#status, prefabs: this.#filtered };
-    this.#updateListeners.forEach((f) => {
-      f(update);
-    });
+    await this.#listeners.dispatch({ update: { status: this.#status, prefabs: this.#filtered } });
   }
 
   #updateStatus() {
@@ -59,8 +56,8 @@ export class PrefabFilter {
     }
   }
 
-  addUpdateListener(func: (update: PrefabUpdate) => void): void {
-    this.#updateListeners.push(func);
+  addListener(fn: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 
   async #applyFilter() {

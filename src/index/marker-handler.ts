@@ -1,6 +1,7 @@
 import type { DtmHandler } from "./dtm-handler";
 
 import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils";
+import * as events from "../lib/events";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -8,10 +9,14 @@ interface Doms {
   resetMarker: HTMLButtonElement;
 }
 
+interface EventMessage {
+  update: { coords: GameCoords | null };
+}
+
 export class MarkerHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;
-  #listeners: ((c: GameCoords | null) => unknown)[] = [];
+  #listeners = new events.ListenerManager<"update", EventMessage>();
 
   constructor(doms: Doms, dtmHandler: DtmHandler) {
     this.#doms = doms;
@@ -29,10 +34,10 @@ export class MarkerHandler {
     const size = await this.#dtmHandler.size();
     this.#doms.output.textContent = await formatCoords(size, this.#doms.canvas, (c) => this.#dtmHandler.getElevation(c), event);
     const coords = event && size ? canvasEventToGameCoords(event, size, this.#doms.canvas) : null;
-    await Promise.allSettled(this.#listeners.map((fn) => fn(coords))).catch(printError);
+    await this.#listeners.dispatch({ update: { coords } });
   }
 
-  addListener(fn: (c: GameCoords | null) => unknown) {
-    this.#listeners.push(fn);
+  addListener(fn: (m: EventMessage) => unknown) {
+    this.#listeners.addListener(fn);
   }
 }
