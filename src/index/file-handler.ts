@@ -85,8 +85,8 @@ export class FileHandler {
       this.#setMapName("");
       this.#clear().catch(printError);
     });
-    dndHandler.addListener(({ files }) => this.#pushEntries(files));
-    bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
+    dndHandler.addListener(({ drop: { files } }) => this.#pushEntries(files));
+    bundledMapHandler.addListener(async ({ select: { mapName, mapDir } }) => {
       console.log("Select bundled map", mapName);
       this.#setMapName(mapName);
       await this.#pushUrls(

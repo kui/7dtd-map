@@ -6,9 +6,10 @@ interface Doms {
 }
 
 export interface EventMessage {
-  type: "select";
-  mapName: string;
-  mapDir: string;
+  select: {
+    mapName: string;
+    mapDir: string;
+  };
 }
 
 export class BundledMapHandler extends events.Generator<"select", EventMessage> {
@@ -22,7 +23,7 @@ export class BundledMapHandler extends events.Generator<"select", EventMessage> 
     this.#doms.select.addEventListener("change", () => {
       if (this.#doms.select.value === "") return;
       const mapName = this.#doms.select.value;
-      this.emitNoAwait({ type: "select", mapName, mapDir: `maps/${mapName}` });
+      this.emitNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
     });
   }
 

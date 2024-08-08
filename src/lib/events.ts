@@ -1,8 +1,8 @@
 import { printError } from "./utils";
 
-export type Message<N extends string> = { [K in N]: { type: K } }[N];
+export type MessageMap<N extends string> = { [K in N]?: object };
 
-export class Generator<N extends string, M extends Message<N>> {
+export class Generator<N extends string, M extends MessageMap<N>> {
   #listeners: ((m: M) => unknown)[] = [];
 
   addListener(listener: (m: M) => unknown) {

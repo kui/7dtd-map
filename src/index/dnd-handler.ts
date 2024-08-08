@@ -2,8 +2,9 @@ import * as events from "../lib/events";
 import { DialogHandler } from "./dialog-handler";
 
 export interface EventMessage {
-  type: "drop";
-  files: FileSystemEntry[];
+  drop: {
+    files: FileSystemEntry[];
+  };
 }
 
 interface Doms {
@@ -33,8 +34,9 @@ export class DndHandler extends events.Generator<"drop", EventMessage> {
       event.preventDefault();
       if (!event.dataTransfer?.types.includes("Files")) return;
       this.emitNoAwait({
-        type: "drop",
-        files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? []),
+        drop: {
+          files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? []),
+        },
       });
     });
   }
