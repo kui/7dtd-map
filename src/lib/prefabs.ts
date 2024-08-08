@@ -11,9 +11,11 @@ export class PrefabFilter {
   #labelHolder: LabelHolder;
   #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
 
+  #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
   #status = "";
   #listeners = new events.ListenerManager<"update", EventMessage>();
+  #preExcluds: RegExp[] = [];
 
   all: Prefab[] = [];
   markCoords: GameCoords | null = null;
@@ -32,6 +34,10 @@ export class PrefabFilter {
     this.#labelHolder.language = lang;
   }
 
+  set preExcludes(patterns: string[]) {
+    this.#preExcluds = patterns.map((f) => new RegExp(f));
+  }
+
   update = throttledInvoker(() => this.updateImmediately());
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
@@ -48,7 +54,7 @@ export class PrefabFilter {
       this.difficulty.start === 0 &&
       this.difficulty.end === 5
     ) {
-      this.#status = `All ${this.all.length.toString()} prefabs`;
+      this.#status = `All ${this.#preFiltereds.length.toString()} prefabs`;
     } else if (this.#filtered.length === 0) {
       this.#status = "No prefabs matched";
     } else {
@@ -61,10 +67,18 @@ export class PrefabFilter {
   }
 
   async #applyFilter() {
-    let result = this.#matchByDifficulty(this.all);
+    this.#preFiltereds = this.#preMatch(this.all);
+    let result = this.#matchByDifficulty(this.#preFiltereds);
     result = await this.#matchByPrefabName(result);
     result = await this.#matchByBlockName(result);
     this.#filtered = result;
+  }
+
+  #preMatch(prefabs: Prefab[]) {
+    return prefabs.filter((p) => {
+      for (const filter of this.#preExcluds) if (filter.test(p.name)) return false;
+      return true;
+    });
   }
 
   #matchByDifficulty(prefabs: Prefab[]): Prefab[] {

@@ -71,6 +71,7 @@ function main() {
       maxTier: component("max_tier", HTMLInputElement),
       prefabFilter: component("prefab_filter", HTMLInputElement),
       blockFilter: component("block_filter", HTMLInputElement),
+      preExcludes: Array.from(component("prefab-pre-filters").querySelectorAll("input[type=checkbox]")),
     },
     new Worker("worker/prefabs-filter.js"),
     markerHandler,

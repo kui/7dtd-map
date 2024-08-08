@@ -28,7 +28,10 @@ function main() {
     window.history.replaceState(null, "", url.toString());
   });
 
-  const prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
+  const prefabsHandler = new PrefabsHandler(
+    { excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")) },
+    new Worker("worker/prefabs-filter.js"),
+  );
   (async () => {
     const [prefabBlockCounts, difficulties] = await Promise.all([
       fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
@@ -93,17 +96,10 @@ function main() {
     prefabsHandler.language = lang;
   });
 
-  const prefabFilterHandler = new PrefabFilterHandler({ devPrefabs: component("dev_prefabs", HTMLInputElement) });
-  prefabFilterHandler.addUpdateListener(() => {
-    prefabsHandler.refresh();
-  });
-
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.documentElement, component("prefabs_list"), (p) =>
     prefabLi(p),
   );
-  prefabsHandler.addListener(({ update }) => {
-    prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
-  });
+  prefabsHandler.addListener(({ update }) => (prefabListRenderer.iterator = update.prefabs));
 
   // Workaround that document.documentElement never fires "scroll" event
   document.addEventListener("scroll", () => {
@@ -155,15 +151,33 @@ declare class PrefabsFilterWorker extends Worker {
 
 type PrefabsHandlerEventMessage = prefabsFilter.OutMessage;
 
+interface PrefabsHandlerDoms {
+  excludes: HTMLInputElement[];
+}
+
 class PrefabsHandler {
+  #doms: PrefabsHandlerDoms;
   #worker: PrefabsFilterWorker;
   #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
 
-  constructor(worker: PrefabsFilterWorker) {
+  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker) {
+    this.#doms = doms;
     this.#worker = worker;
-    this.#worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
+    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
       this.#listeners.dispatchNoAwait(event.data);
     });
+
+    const excludes = this.#excludes;
+    if (excludes.length > 0) worker.postMessage({ preExcludes: excludes });
+    doms.excludes.forEach((e) => {
+      e.addEventListener("change", () => {
+        worker.postMessage({ preExcludes: this.#excludes });
+      });
+    });
+  }
+
+  get #excludes(): string[] {
+    return this.#doms.excludes.flatMap((e) => (e.checked ? [e.value] : []));
   }
 
   set prefabs(p: Prefab[]) {
@@ -192,36 +206,6 @@ class PrefabsHandler {
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
     this.#listeners.addListener(fn);
-  }
-}
-
-const DEV_PREFAB_REGEXP = /^(aaa_|AAA_|spacercise_|terrain_smoothing_bug)/;
-
-class PrefabFilterHandler {
-  displayDevPrefab = false;
-  updateListener: (() => void)[] = [];
-
-  constructor(doms: { devPrefabs: HTMLInputElement }) {
-    this.displayDevPrefab = doms.devPrefabs.checked;
-    doms.devPrefabs.addEventListener("input", () => {
-      this.displayDevPrefab = doms.devPrefabs.checked;
-      this.updateListener.forEach((fn) => {
-        fn();
-      });
-    });
-  }
-
-  filter(): (prefab: HighlightedPrefab) => boolean {
-    return (prefab) => {
-      if (!this.displayDevPrefab) {
-        return !DEV_PREFAB_REGEXP.test(prefab.name);
-      }
-      return true;
-    };
-  }
-
-  addUpdateListener(fn: () => void) {
-    this.updateListener.push(fn);
   }
 }
 

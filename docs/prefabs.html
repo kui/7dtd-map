@@ -68,14 +68,21 @@
             <button data-input-for="block_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
           </section>
         </section>
+        <details>
+          <summary>Advanced Filters</summary>
+          <section id="prefab-excludes">
+            <h2>Excludes</h2>
+            <p>
+                <label><input type="checkbox" id="prefab-excludes-test" value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)" checked />Test</label>
+                <label><input type="checkbox" id="prefab-excludes-tiles" value="^rwg_tile_" />Tiles</label>
+                <label><input type="checkbox" id="prefab-excludes-parts" value="^part_" />Parts</label>
+            </p>
+          </section>
+        </details>
       </section>
     </div>
 
     <h2>Prefabs</h2>
-
-    <p>
-      <label><input type="checkbox" id="dev_prefabs" />Dev prefabs</label>
-    </p>
 
     <ul id="prefabs_list"></ul>
   </body>

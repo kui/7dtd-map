@@ -17,4 +17,8 @@
       display: inline-block;
     }
   }
+  & > details > summary {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
 }

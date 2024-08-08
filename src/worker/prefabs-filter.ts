@@ -2,7 +2,7 @@ import { PrefabFilter, EventMessage } from "../lib/prefabs";
 import { printError, fetchJson } from "../lib/utils";
 
 export type InMessage = Partial<
-  Pick<PrefabFilter, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language">
+  Pick<PrefabFilter, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language" | "preExcludes">
 >;
 export type OutMessage = EventMessage;
 

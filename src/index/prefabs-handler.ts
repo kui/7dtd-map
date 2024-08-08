@@ -12,6 +12,7 @@ interface Doms {
   maxTier: HTMLInputElement;
   prefabFilter: HTMLInputElement;
   blockFilter: HTMLInputElement;
+  preExcludes: HTMLInputElement[];
 }
 
 interface EventMessage {
@@ -23,6 +24,7 @@ declare class PrefabsFilterWorker extends Worker {
 }
 
 export class PrefabsHandler {
+  #doms: Doms;
   #listeners = new events.ListenerManager<"update", EventMessage>();
   #tierRange: NumberRange;
 
@@ -34,6 +36,7 @@ export class PrefabsHandler {
     fileHandler: FileHandler,
     fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
+    this.#doms = doms;
     this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
 
     worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
@@ -61,6 +64,12 @@ export class PrefabsHandler {
     doms.blockFilter.addEventListener("input", () => {
       worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
+    worker.postMessage({ preExcludes: this.#preExcludes });
+    doms.preExcludes.forEach((input) => {
+      input.addEventListener("change", () => {
+        worker.postMessage({ preExcludes: this.#preExcludes });
+      });
+    });
     markerHandler.addListener((m) => {
       worker.postMessage({ markCoords: m.update.coords });
     });
@@ -74,6 +83,10 @@ export class PrefabsHandler {
 
   addListener(fn: (m: EventMessage) => unknown) {
     this.#listeners.addListener(fn);
+  }
+
+  get #preExcludes(): string[] {
+    return this.#doms.preExcludes.flatMap((i) => (i.checked ? i.value : []));
   }
 }
 

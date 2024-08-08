@@ -168,6 +168,20 @@
           <td>
             <input id="prefab_filter" placeholder="Input prefab name" />
             <button title="Clear" data-input-for="prefab_filter" data-input-text="">X</button>
+            <details id="prefab-pre-filters">
+              <summary>Excludes</summary>
+              <ul>
+                <li>
+                  <label><input type="checkbox" value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)" checked />Test</label>
+                </li>
+                <li>
+                  <label><input type="checkbox" value="^rwg_tile_" checked />Tiles</label>
+                </li>
+                <li>
+                  <label><input type="checkbox" value="^part_" checked />Parts</label>
+                </li>
+              </ul>
+            </details>
           </td>
         </tr>
         <tr>
