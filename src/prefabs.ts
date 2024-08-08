@@ -170,9 +170,11 @@ class PrefabsHandler {
     labelHandler.addListener(({ update: { lang } }) => {
       worker.postMessage({ language: lang });
     });
-    fetchPrefabs().then((p) => {
-      worker.postMessage({ all: p });
-    }).catch(printError);
+    fetchPrefabs()
+      .then((p) => {
+        worker.postMessage({ all: p });
+      })
+      .catch(printError);
   }
 
   get #excludes(): string[] {
