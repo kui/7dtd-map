@@ -25,67 +25,6 @@
     return await r.json();
   }
 
-  // src/lib/ui/preset-button.ts
-  function init() {
-    document.body.addEventListener("click", ({ target }) => {
-      if (target instanceof HTMLButtonElement && target.dataset.inputFor != null) {
-        let input = component(target.dataset.inputFor, HTMLInputElement);
-        input.value = requireNonnull(target.dataset.inputText ?? target.textContent), input.dispatchEvent(new Event("input", { bubbles: !0 }));
-      }
-    });
-  }
-
-  // src/lib/ui/sync-output.ts
-  function init2() {
-    for (let eventName of ["input", "change"])
-      window.addEventListener(eventName, ({ target }) => {
-        if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement)))
-          return;
-        let outputElements = document.querySelectorAll(`output[data-sync-for="${target.id}"]`);
-        for (let output of outputElements)
-          output.value = target.value;
-      });
-    for (let output of document.querySelectorAll("output[data-sync-for]")) {
-      let input = component(output.dataset.syncFor, HTMLInputElement);
-      output.value = input.value;
-    }
-  }
-
-  // src/lib/ui/min-max-inputs.ts
-  function init3() {
-    for (let eventName of ["input", "change"])
-      window.addEventListener(eventName, ({ target }) => {
-        target instanceof HTMLInputElement && updateMinMax(target);
-      });
-    for (let input of [
-      ...document.querySelectorAll("input[data-max]"),
-      ...document.querySelectorAll("input[data-min]")
-    ])
-      updateMinMax(input);
-  }
-  function updateMinMax(target) {
-    target.dataset.min && updateMaxValues(target, target.dataset.min), target.dataset.max && updateMinValues(target, target.dataset.max);
-  }
-  function updateMaxValues(target, minMaxId) {
-    let maxInputs = document.querySelectorAll(`input[data-max="${minMaxId}"]`);
-    for (let maxInput of maxInputs)
-      if (maxInput.valueAsNumber < target.valueAsNumber) {
-        let oldValue = maxInput.value;
-        maxInput.value = target.value, oldValue !== maxInput.value && dispatchInputEvent(maxInput);
-      }
-  }
-  function updateMinValues(target, minMaxId) {
-    let minInputs = document.querySelectorAll(`input[data-min="${minMaxId}"]`);
-    for (let minInput of minInputs)
-      if (minInput.valueAsNumber > target.valueAsNumber) {
-        let oldValue = minInput.value;
-        minInput.value = target.value, oldValue !== minInput.value && dispatchInputEvent(minInput);
-      }
-  }
-  function dispatchInputEvent(input) {
-    for (let eventName of ["input", "change"]) input.dispatchEvent(new Event(eventName, { bubbles: !0 }));
-  }
-
   // src/lib/delayed-renderer.ts
   var DelayedRenderer = class {
     _iterator = [][Symbol.iterator]();
@@ -145,6 +84,36 @@
   function isReturn(r) {
     return !!r.done;
   }
+
+  // src/lib/errors.ts
+  var MultipleErrors = class extends Error {
+    #causes;
+    constructor(errors) {
+      super("Multiple errors occurred"), this.#causes = errors;
+    }
+    get causes() {
+      return this.#causes;
+    }
+  };
+
+  // src/lib/events.ts
+  var ListenerManager = class {
+    #listeners = [];
+    addListener(listener) {
+      this.#listeners.push(listener);
+    }
+    removeListener(listener) {
+      let index = this.#listeners.indexOf(listener);
+      index >= 0 && this.#listeners.splice(index, 1);
+    }
+    async dispatch(m) {
+      let errors = (await Promise.allSettled(this.#listeners.map((fn) => fn(m)))).flatMap((r) => r.status === "rejected" ? [r.reason] : []);
+      if (errors.length > 0) throw new MultipleErrors(errors);
+    }
+    dispatchNoAwait(m) {
+      this.dispatch(m).catch(printError);
+    }
+  };
 
   // src/lib/labels.ts
   var LANGUAGES = [
@@ -222,30 +191,89 @@
 
   // src/lib/label-handler.ts
   var LabelHandler = class {
-    doms;
-    listener = [];
+    #doms;
+    #listener = new ListenerManager();
     constructor(doms, navigatorLanguages) {
-      this.doms = doms, this.buildSelectOptions(navigatorLanguages), this.doms.language.addEventListener("change", () => {
-        this.listener.forEach((fn) => {
-          fn(this.doms.language.value)?.catch(printError);
-        });
+      this.#doms = doms, this.buildSelectOptions(navigatorLanguages), this.#doms.language.addEventListener("change", () => {
+        this.#listener.dispatchNoAwait({ update: { lang: this.#doms.language.value } });
       });
     }
     buildSelectOptions(navigatorLanguages) {
-      let existingLangs = new Set(Array.from(this.doms.language.options).map((o) => o.value));
+      let existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
       for (let lang of LANGUAGES) {
         if (existingLangs.has(lang))
           continue;
         let option = document.createElement("option");
-        option.textContent = lang, this.doms.language.appendChild(option);
+        option.textContent = lang, this.#doms.language.appendChild(option);
       }
       let browserLang = resolveLanguage(navigatorLanguages);
-      this.doms.language.value !== browserLang && (this.doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
+      this.#doms.language.value !== browserLang && (this.#doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change"))));
     }
     addListener(fn) {
-      this.listener.push(fn);
+      this.#listener.addListener(fn);
     }
   };
+
+  // src/lib/ui/min-max-inputs.ts
+  function init() {
+    for (let eventName of ["input", "change"])
+      window.addEventListener(eventName, ({ target }) => {
+        target instanceof HTMLInputElement && updateMinMax(target);
+      });
+    for (let input of [
+      ...document.querySelectorAll("input[data-max]"),
+      ...document.querySelectorAll("input[data-min]")
+    ])
+      updateMinMax(input);
+  }
+  function updateMinMax(target) {
+    target.dataset.min && updateMaxValues(target, target.dataset.min), target.dataset.max && updateMinValues(target, target.dataset.max);
+  }
+  function updateMaxValues(target, minMaxId) {
+    let maxInputs = document.querySelectorAll(`input[data-max="${minMaxId}"]`);
+    for (let maxInput of maxInputs)
+      if (maxInput.valueAsNumber < target.valueAsNumber) {
+        let oldValue = maxInput.value;
+        maxInput.value = target.value, oldValue !== maxInput.value && dispatchInputEvent(maxInput);
+      }
+  }
+  function updateMinValues(target, minMaxId) {
+    let minInputs = document.querySelectorAll(`input[data-min="${minMaxId}"]`);
+    for (let minInput of minInputs)
+      if (minInput.valueAsNumber > target.valueAsNumber) {
+        let oldValue = minInput.value;
+        minInput.value = target.value, oldValue !== minInput.value && dispatchInputEvent(minInput);
+      }
+  }
+  function dispatchInputEvent(input) {
+    for (let eventName of ["input", "change"]) input.dispatchEvent(new Event(eventName, { bubbles: !0 }));
+  }
+
+  // src/lib/ui/preset-button.ts
+  function init2() {
+    document.body.addEventListener("click", ({ target }) => {
+      if (target instanceof HTMLButtonElement && target.dataset.inputFor != null) {
+        let input = component(target.dataset.inputFor, HTMLInputElement);
+        input.value = requireNonnull(target.dataset.inputText ?? target.textContent), input.dispatchEvent(new Event("input", { bubbles: !0 }));
+      }
+    });
+  }
+
+  // src/lib/ui/sync-output.ts
+  function init3() {
+    for (let eventName of ["input", "change"])
+      window.addEventListener(eventName, ({ target }) => {
+        if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement)))
+          return;
+        let outputElements = document.querySelectorAll(`output[data-sync-for="${target.id}"]`);
+        for (let output of outputElements)
+          output.value = target.value;
+      });
+    for (let output of document.querySelectorAll("output[data-sync-for]")) {
+      let input = component(output.dataset.syncFor, HTMLInputElement);
+      output.value = input.value;
+    }
+  }
 
   // src/lib/url-state.ts
   var UrlState = class _UrlState {
@@ -297,53 +325,42 @@
 
   // src/prefabs.ts
   function main() {
-    init(), init2(), init3(), UrlState.create(location, document.querySelectorAll("input")).addUpdateListener((url) => {
+    init2(), init3(), init(), UrlState.create(location, document.querySelectorAll("input")).addUpdateListener((url) => {
       window.history.replaceState(null, "", url.toString());
     });
-    let prefabsHandler = new PrefabsHandler(new Worker("worker/prefabs-filter.js"));
-    (async () => {
-      let [prefabBlockCounts, difficulties] = await Promise.all([
-        fetchJson("prefab-block-counts.json"),
-        fetchJson("prefab-difficulties.json")
-      ]);
-      prefabsHandler.prefabs = Object.keys(prefabBlockCounts).map((n) => ({
-        name: n,
-        x: 0,
-        z: 0,
-        difficulty: difficulties[n] ?? 0
-      }));
-    })().catch(printError);
-    let minTier = component("min_tier", HTMLInputElement), maxTier = component("max_tier", HTMLInputElement), tierRange = { start: minTier.valueAsNumber, end: maxTier.valueAsNumber };
-    prefabsHandler.tierRange = tierRange, minTier.addEventListener("input", () => {
-      let newMinTier = minTier.valueAsNumber;
-      newMinTier !== tierRange.start && (tierRange.start = newMinTier, newMinTier > maxTier.valueAsNumber && (maxTier.value = minTier.value, tierRange.end = newMinTier, maxTier.dispatchEvent(new Event("input"))), prefabsHandler.tierRange = tierRange);
-    }), maxTier.addEventListener("input", () => {
-      let newMaxTier = maxTier.valueAsNumber;
-      newMaxTier !== tierRange.end && (tierRange.end = newMaxTier, newMaxTier < minTier.valueAsNumber && (minTier.value = maxTier.value, tierRange.start = newMaxTier, minTier.dispatchEvent(new Event("input"))), prefabsHandler.tierRange = tierRange);
-    }), component("tier_clear", HTMLButtonElement).addEventListener("click", () => {
+    let prefabsHandler = new PrefabsHandler(
+      {
+        prefabFilter: component("prefab-filter", HTMLInputElement),
+        blockFilter: component("block-filter", HTMLInputElement),
+        minTier: component("min-tier", HTMLInputElement),
+        maxTier: component("max-tier", HTMLInputElement),
+        excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]"))
+      },
+      new Worker("worker/prefabs-filter.js"),
+      new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, navigator.languages),
+      async () => {
+        let [prefabBlockCounts, difficulties] = await Promise.all([
+          fetchJson("prefab-block-counts.json"),
+          fetchJson("prefab-difficulties.json")
+        ]);
+        return Object.keys(prefabBlockCounts).map((n) => ({
+          name: n,
+          x: 0,
+          z: 0,
+          difficulty: difficulties[n] ?? 0
+        }));
+      }
+    ), minTier = component("min-tier", HTMLInputElement), maxTier = component("max-tier", HTMLInputElement);
+    component("tier-clear", HTMLButtonElement).addEventListener("click", () => {
       minTier.value = minTier.defaultValue, maxTier.value = maxTier.defaultValue, minTier.dispatchEvent(new Event("input")), maxTier.dispatchEvent(new Event("input"));
     });
-    let prefabFilter = component("prefab_filter", HTMLInputElement);
-    prefabsHandler.prefabFilter = prefabFilter.value, prefabFilter.addEventListener("input", () => {
-      prefabsHandler.prefabFilter = prefabFilter.value;
-    });
-    let blockFilter = component("block_filter", HTMLInputElement);
-    prefabsHandler.blockFilter = blockFilter.value, blockFilter.addEventListener("input", () => {
-      prefabsHandler.blockFilter = blockFilter.value;
-    }), new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages).addListener((lang) => {
-      prefabsHandler.language = lang;
-    });
-    let prefabFilterHandler = new PrefabFilterHandler({ devPrefabs: component("dev_prefabs", HTMLInputElement) });
-    prefabFilterHandler.addUpdateListener(() => {
-      prefabsHandler.refresh();
-    });
-    let prefabListRenderer = new DelayedRenderer(
+    let status = component("prefabs-status"), prefabListRenderer = new DelayedRenderer(
       document.documentElement,
-      component("prefabs_list"),
+      component("prefabs-list"),
       (p) => prefabLi(p)
     );
-    prefabsHandler.listeners.push((update) => {
-      prefabListRenderer.iterator = update.prefabs.filter(prefabFilterHandler.filter());
+    prefabsHandler.addListener(({ update }) => {
+      status.textContent = update.status, prefabListRenderer.iterator = update.prefabs;
     }), document.addEventListener("scroll", () => {
       document.documentElement.dispatchEvent(new Event("scroll"));
     });
@@ -352,7 +369,7 @@
     let li = document.createElement("li");
     if (li.innerHTML = [
       ...prefab.difficulty ? [
-        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
         `  \u{1F480}${prefab.difficulty.toString()}`,
         "</span>"
       ] : [],
@@ -367,7 +384,7 @@
         if (block.count === void 0) return;
         let blockLi = document.createElement("li");
         blockLi.innerHTML = [
-          `<button data-input-for="blocks_filter" data-input-text="${block.name}" title="Filter with this block name">\u25B2</button>`,
+          `<button data-input-for="blocks-filter" data-input-text="${block.name}" title="Filter with this block name">\u25B2</button>`,
           `${block.count.toString()}x`,
           block.highlightedLabel,
           `<small>${block.highlightedName}</small>`
@@ -380,47 +397,42 @@
     return blocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
   }
   var PrefabsHandler = class {
-    worker;
-    listeners = [];
-    constructor(worker) {
-      this.worker = worker, this.worker.addEventListener("message", (event) => {
-        for (let fn of this.listeners)
-          fn(event.data)?.catch(printError);
+    #doms;
+    #worker;
+    #listeners = new ListenerManager();
+    constructor(doms, worker, labelHandler, fetchPrefabs) {
+      this.#doms = doms, this.#worker = worker, doms.prefabFilter.addEventListener("input", () => {
+        worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
+      }), doms.blockFilter.addEventListener("input", () => {
+        worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
       });
-    }
-    set prefabs(p) {
-      this.worker.postMessage({ all: p });
-    }
-    set tierRange(range) {
-      this.worker.postMessage({ difficulty: range });
-    }
-    set prefabFilter(filter) {
-      this.worker.postMessage({ prefabFilterRegexp: filter });
-    }
-    set blockFilter(filter) {
-      this.worker.postMessage({ blockFilterRegexp: filter });
-    }
-    set language(language) {
-      this.worker.postMessage({ language });
-    }
-    refresh() {
-      this.worker.postMessage({});
-    }
-  }, DEV_PREFAB_REGEXP = /^(aaa_|AAA_|spacercise_|terrain_smoothing_bug)/, PrefabFilterHandler = class {
-    displayDevPrefab = !1;
-    updateListener = [];
-    constructor(doms) {
-      this.displayDevPrefab = doms.devPrefabs.checked, doms.devPrefabs.addEventListener("input", () => {
-        this.displayDevPrefab = doms.devPrefabs.checked, this.updateListener.forEach((fn) => {
-          fn();
+      let tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
+      this.#tierRange = tierRange, doms.minTier.addEventListener("input", () => {
+        let newMinTier = doms.minTier.valueAsNumber;
+        newMinTier !== tierRange.start && (tierRange.start = newMinTier, this.#tierRange = tierRange);
+      }), doms.maxTier.addEventListener("input", () => {
+        let newMaxTier = doms.maxTier.valueAsNumber;
+        newMaxTier !== tierRange.end && (tierRange.end = newMaxTier, this.#tierRange = tierRange);
+      }), worker.postMessage({ preExcludes: this.#excludes }), doms.excludes.forEach((e) => {
+        e.addEventListener("change", () => {
+          worker.postMessage({ preExcludes: this.#excludes });
         });
-      });
+      }), worker.addEventListener("message", (event) => {
+        this.#listeners.dispatchNoAwait(event.data);
+      }), labelHandler.addListener(({ update: { lang } }) => {
+        worker.postMessage({ language: lang });
+      }), fetchPrefabs().then((p) => {
+        worker.postMessage({ all: p });
+      }).catch(printError);
     }
-    filter() {
-      return (prefab) => this.displayDevPrefab ? !0 : !DEV_PREFAB_REGEXP.test(prefab.name);
+    get #excludes() {
+      return this.#doms.excludes.flatMap((e) => e.checked ? [e.value] : []);
     }
-    addUpdateListener(fn) {
-      this.updateListener.push(fn);
+    set #tierRange(range) {
+      this.#worker.postMessage({ difficulty: range });
+    }
+    addListener(fn) {
+      this.#listeners.addListener(fn);
     }
   };
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", main) : main();

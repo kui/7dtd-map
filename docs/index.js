@@ -51,8 +51,9 @@
     let i = requireNonnull(id, () => "Unexpected argument: id is null"), e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
     return t ? requireType(e, t) : e;
   }
-  function humanreadableDistance(d) {
-    return d < 1e3 ? `${d.toString()}m` : `${(d / 1e3).toFixed(2)}km`;
+  function humanreadableDistance([direction, distance]) {
+    let dir = direction ?? "";
+    return distance < 1e3 ? `${dir} ${distance.toString()}m` : `${dir} ${(distance / 1e3).toFixed(2)}km`;
   }
   function waitAnimationFrame() {
     return new Promise((r) => requestAnimationFrame(r));
@@ -273,30 +274,58 @@
     return LabelHolder.DEFAULT_LANGUAGE;
   }
 
+  // src/lib/errors.ts
+  var MultipleErrors = class extends Error {
+    #causes;
+    constructor(errors) {
+      super("Multiple errors occurred"), this.#causes = errors;
+    }
+    get causes() {
+      return this.#causes;
+    }
+  };
+
+  // src/lib/events.ts
+  var ListenerManager = class {
+    #listeners = [];
+    addListener(listener) {
+      this.#listeners.push(listener);
+    }
+    removeListener(listener) {
+      let index = this.#listeners.indexOf(listener);
+      index >= 0 && this.#listeners.splice(index, 1);
+    }
+    async dispatch(m) {
+      let errors = (await Promise.allSettled(this.#listeners.map((fn) => fn(m)))).flatMap((r) => r.status === "rejected" ? [r.reason] : []);
+      if (errors.length > 0) throw new MultipleErrors(errors);
+    }
+    dispatchNoAwait(m) {
+      this.dispatch(m).catch(printError);
+    }
+  };
+
   // src/lib/label-handler.ts
   var LabelHandler = class {
-    doms;
-    listener = [];
+    #doms;
+    #listener = new ListenerManager();
     constructor(doms, navigatorLanguages) {
-      this.doms = doms, this.buildSelectOptions(navigatorLanguages), this.doms.language.addEventListener("change", () => {
-        this.listener.forEach((fn) => {
-          fn(this.doms.language.value)?.catch(printError);
-        });
+      this.#doms = doms, this.buildSelectOptions(navigatorLanguages), this.#doms.language.addEventListener("change", () => {
+        this.#listener.dispatchNoAwait({ update: { lang: this.#doms.language.value } });
       });
     }
     buildSelectOptions(navigatorLanguages) {
-      let existingLangs = new Set(Array.from(this.doms.language.options).map((o) => o.value));
+      let existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
       for (let lang of LANGUAGES) {
         if (existingLangs.has(lang))
           continue;
         let option = document.createElement("option");
-        option.textContent = lang, this.doms.language.appendChild(option);
+        option.textContent = lang, this.#doms.language.appendChild(option);
       }
       let browserLang = resolveLanguage(navigatorLanguages);
-      this.doms.language.value !== browserLang && (this.doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
+      this.#doms.language.value !== browserLang && (this.#doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change"))));
     }
     addListener(fn) {
-      this.listener.push(fn);
+      this.#listener.addListener(fn);
     }
   };
 
@@ -466,7 +495,7 @@
         },
         () => {
         }
-      ), fileHandler.addListener((fileNames) => {
+      ), fileHandler.addListener(({ update: fileNames }) => {
         fileNames.includes("dtm_block.raw.gz") && this.#dtmRaw.invalidate(), fileNames.includes("map_info.xml") && this.#mapSize.invalidate();
       });
     }
@@ -527,12 +556,15 @@
 
   // src/index/prefabs-handler.ts
   var PrefabsHandler = class {
-    #listeners = [];
+    #doms;
+    #listeners = new ListenerManager();
     #tierRange;
     constructor(doms, worker, markerHandler, labelHandler, fileHandler, fetchDifficulties) {
-      this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber }, worker.addEventListener("message", (event) => {
-        let { prefabs, status } = event.data;
-        doms.status.textContent = status, Promise.allSettled(this.#listeners.map((fn) => fn(prefabs))).catch(printError);
+      this.#doms = doms, this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber }, worker.addEventListener("message", (event) => {
+        let {
+          update: { prefabs, status }
+        } = event.data;
+        doms.status.textContent = status, this.#listeners.dispatchNoAwait({ update: { prefabs } });
       }), doms.minTier.addEventListener("input", () => {
         let newMinTier = doms.minTier.valueAsNumber;
         newMinTier !== this.#tierRange.start && (this.#tierRange.start = newMinTier, worker.postMessage({ difficulty: this.#tierRange }));
@@ -543,16 +575,23 @@
         worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
       }), doms.blockFilter.addEventListener("input", () => {
         worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
-      }), markerHandler.addListener((markCoords) => {
-        worker.postMessage({ markCoords });
-      }), labelHandler.addListener((language) => {
-        worker.postMessage({ language });
-      }), fileHandler.addListener(async (fileNames) => {
+      }), worker.postMessage({ preExcludes: this.#preExcludes }), doms.preExcludes.forEach((input) => {
+        input.addEventListener("change", () => {
+          worker.postMessage({ preExcludes: this.#preExcludes });
+        });
+      }), markerHandler.addListener((m) => {
+        worker.postMessage({ markCoords: m.update.coords });
+      }), labelHandler.addListener(({ update: { lang } }) => {
+        worker.postMessage({ language: lang });
+      }), fileHandler.addListener(async ({ update: fileNames }) => {
         fileNames.includes("prefabs.xml") && worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties()) });
       });
     }
     addListener(fn) {
-      this.#listeners.push(fn);
+      this.#listeners.addListener(fn);
+    }
+    get #preExcludes() {
+      return this.#doms.preExcludes.flatMap((i) => i.checked ? i.value : []);
     }
   };
   async function loadPrefabsXml(difficulties) {
@@ -703,7 +742,7 @@
   var MarkerHandler = class {
     #doms;
     #dtmHandler;
-    #listeners = [];
+    #listeners = new ListenerManager();
     constructor(doms, dtmHandler) {
       this.#doms = doms, this.#dtmHandler = dtmHandler, doms.canvas.addEventListener("click", (e) => {
         this.#update(e).catch(printError);
@@ -715,10 +754,10 @@
       let size = await this.#dtmHandler.size();
       this.#doms.output.textContent = await formatCoords(size, this.#doms.canvas, (c) => this.#dtmHandler.getElevation(c), event);
       let coords = event && size ? canvasEventToGameCoords(event, size, this.#doms.canvas) : null;
-      await Promise.allSettled(this.#listeners.map((fn) => fn(coords))).catch(printError);
+      await this.#listeners.dispatch({ update: { coords } });
     }
     addListener(fn) {
-      this.#listeners.push(fn);
+      this.#listeners.addListener(fn);
     }
   };
 
@@ -901,17 +940,17 @@
     "dtm.raw"
   ], FileHandler = class {
     #doms;
-    #listeners = [];
     #dialogHandler;
     #processorFactory;
     #workspace = workspaceDir();
     #depletedFileHandler = new DepletedFileHandler();
+    #listeners = new ListenerManager();
     constructor(doms, dialogHandler, processorFactory, dndHandler, bundledMapHandler) {
       this.#doms = doms, this.#dialogHandler = dialogHandler, this.#processorFactory = processorFactory, doms.files.addEventListener("change", () => {
         doms.files.files && this.#pushFiles(Array.from(doms.files.files)).catch(printError);
       }), doms.clearMap.addEventListener("click", () => {
         this.#setMapName(""), this.#clear().catch(printError);
-      }), dndHandler.addListener(({ files }) => this.#pushEntries(files)), bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
+      }), dndHandler.addListener(({ drop: { files } }) => this.#pushEntries(files)), bundledMapHandler.addListener(async ({ select: { mapName, mapDir } }) => {
         console.log("Select bundled map", mapName), this.#setMapName(mapName), await this.#pushUrls(
           Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
           // Bundled world files are preprocessed. See tools/copy-map-files.ts
@@ -920,10 +959,10 @@
       });
     }
     async initialize() {
-      await this.#invokeListeners(Array.from(MAP_FILE_NAMES));
+      await this.#listeners.dispatch({ update: Array.from(MAP_FILE_NAMES) });
     }
-    addListener(listener) {
-      this.#listeners.push(listener);
+    addListener(fn) {
+      this.#listeners.addListener(fn);
     }
     async #pushFiles(files) {
       await this.#process(
@@ -994,7 +1033,7 @@
           throw new Error(`Unexpected resource: ${resource.name}`);
         progression?.setState(resource.name, "completed");
       }
-      processedNames.length > 0 && await this.#invokeListeners(processedNames), this.#dialogHandler.close();
+      processedNames.length > 0 && await this.#listeners.dispatch({ update: processedNames }), this.#dialogHandler.close();
     }
     async #processInWorker(message) {
       let worker = this.#processorFactory();
@@ -1003,9 +1042,6 @@
           worker.terminate(), "error" in data ? reject(new Error(data.error)) : resolve(data);
         }, worker.postMessage(message);
       });
-    }
-    async #invokeListeners(updatedFileNames) {
-      await Promise.allSettled(this.#listeners.map((fn) => fn(updatedFileNames)));
     }
     #setMapName(name) {
       this.#doms.mapName.value = name, this.#doms.mapName.dispatchEvent(new Event("input", { bubbles: !0 }));
@@ -1081,7 +1117,7 @@
 
   // src/index/map-canvas-handler.ts
   var DEPENDENT_FILES = ["biomes.png", "splat3.png", "splat4.png", "radiation.png"], MapCanvasHandler = class {
-    #updateListeners = [];
+    #listeners = new ListenerManager();
     constructor(doms, worker, prefabsHandler, markerHandler, fileHandler) {
       let canvas = doms.canvas.transferControlToOffscreen();
       worker.postMessage(
@@ -1097,9 +1133,8 @@
           scale: doms.scale.valueAsNumber
         },
         [canvas]
-      ), worker.addEventListener("message", (e) => {
-        let { mapSize } = e.data;
-        Promise.allSettled(this.#updateListeners.map((fn) => fn(mapSize))).catch(printError);
+      ), worker.addEventListener("message", ({ data: { mapSize } }) => {
+        this.#listeners.dispatchNoAwait({ update: { mapSize } });
       }), doms.biomesAlpha.addEventListener("input", () => {
         worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
       }), doms.splat3Alpha.addEventListener("input", () => {
@@ -1116,11 +1151,11 @@
         worker.postMessage({ brightness: `${doms.brightness.valueAsNumber.toString()}%` });
       }), doms.scale.addEventListener("input", () => {
         worker.postMessage({ scale: doms.scale.valueAsNumber });
-      }), prefabsHandler.addListener((prefabs) => {
+      }), prefabsHandler.addListener(({ update: { prefabs } }) => {
         worker.postMessage({ prefabs });
-      }), markerHandler.addListener((markerCoords) => {
-        worker.postMessage({ markerCoords });
-      }), fileHandler.addListener((fileNames) => {
+      }), markerHandler.addListener(({ update: { coords } }) => {
+        worker.postMessage({ markerCoords: coords });
+      }), fileHandler.addListener(({ update: fileNames }) => {
         let invalidate = [];
         for (let n of fileNames)
           DEPENDENT_FILES.includes(n) && invalidate.push(n);
@@ -1128,43 +1163,30 @@
       });
     }
     addUpdateListener(ln) {
-      this.#updateListeners.push(ln);
-    }
-  };
-
-  // src/lib/events.ts
-  var Generator = class {
-    #listeners = [];
-    addListener(listener) {
-      this.#listeners.push(listener);
-    }
-    removeListener(listener) {
-      let index = this.#listeners.indexOf(listener);
-      index >= 0 && this.#listeners.splice(index, 1);
-    }
-    async emit(m) {
-      await Promise.allSettled(this.#listeners.map((fn) => fn(m)));
-    }
-    emitNoAwait(m) {
-      this.emit(m).catch(printError);
+      this.#listeners.addListener(ln);
     }
   };
 
   // src/index/dnd-handler.ts
-  var DndHandler = class extends Generator {
+  var DndHandler = class {
+    #listeners = new ListenerManager();
     constructor(dom, dialogHandler) {
-      super(), dom.dragovered.addEventListener("dragenter", (event) => {
+      dom.dragovered.addEventListener("dragenter", (event) => {
         event.preventDefault(), dialogHandler.state = "dragover", dialogHandler.open();
       }), dom.dragovered.addEventListener("dragover", (event) => {
         event.preventDefault(), event.dataTransfer && (event.dataTransfer.dropEffect = "copy");
       }), document.body.addEventListener("dragleave", (event) => {
         dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0) || (event.preventDefault(), dialogHandler.close());
       }), dom.dragovered.addEventListener("drop", (event) => {
-        event.preventDefault(), event.dataTransfer?.types.includes("Files") && this.emitNoAwait({
-          type: "drop",
-          files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? [])
+        event.preventDefault(), event.dataTransfer?.types.includes("Files") && this.#listeners.dispatchNoAwait({
+          drop: {
+            files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? [])
+          }
         });
       });
+    }
+    addListener(fn) {
+      this.#listeners.addListener(fn);
     }
   };
 
@@ -15802,13 +15824,14 @@ void main() {
   };
 
   // src/index/bundled-map-hander.ts
-  var BundledMapHandler = class extends Generator {
+  var BundledMapHandler = class {
     #doms;
+    #listeners = new ListenerManager();
     constructor(doms) {
-      super(), this.#doms = doms, this.#renderOptions().catch(printError), this.#doms.select.addEventListener("change", () => {
+      this.#doms = doms, this.#renderOptions().catch(printError), this.#doms.select.addEventListener("change", () => {
         if (this.#doms.select.value === "") return;
         let mapName = this.#doms.select.value;
-        this.emitNoAwait({ type: "select", mapName, mapDir: `maps/${mapName}` });
+        this.#listeners.dispatchNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
       });
     }
     async #renderOptions() {
@@ -15817,6 +15840,9 @@ void main() {
         let option = document.createElement("option");
         option.value = map, option.text = map, this.#doms.select.appendChild(option);
       }
+    }
+    addListener(fn) {
+      this.#listeners.addListener(fn);
     }
   };
 
@@ -15862,7 +15888,8 @@ void main() {
         minTier: component("min_tier", HTMLInputElement),
         maxTier: component("max_tier", HTMLInputElement),
         prefabFilter: component("prefab_filter", HTMLInputElement),
-        blockFilter: component("block_filter", HTMLInputElement)
+        blockFilter: component("block_filter", HTMLInputElement),
+        preExcludes: Array.from(component("prefab-pre-filters").querySelectorAll("input[type=checkbox]"))
       },
       new Worker("worker/prefabs-filter.js"),
       markerHandler,
@@ -15901,7 +15928,7 @@ void main() {
       component("prefabs_list", HTMLElement),
       (p) => prefabLi(p)
     );
-    prefabsHandler.addListener((prefabs) => {
+    prefabsHandler.addListener(({ update: { prefabs } }) => {
       prefabListRenderer.iterator = prefabs;
     }), new CursorCoodsHandler(
       {
@@ -15915,7 +15942,7 @@ void main() {
     let li = document.createElement("li");
     if (li.innerHTML = [
       `<button data-input-for="prefab_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">\u25B2</button>`,
-      ...prefab.dist ? [`${humanreadableDistance(prefab.dist)},`] : [],
+      ...prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : [],
       ...prefab.difficulty ? [
         `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
         `  \u{1F480}${prefab.difficulty.toString()}`,

@@ -163,13 +163,45 @@
     }
   };
 
+  // src/lib/errors.ts
+  var MultipleErrors = class extends Error {
+    #causes;
+    constructor(errors) {
+      super("Multiple errors occurred"), this.#causes = errors;
+    }
+    get causes() {
+      return this.#causes;
+    }
+  };
+
+  // src/lib/events.ts
+  var ListenerManager = class {
+    #listeners = [];
+    addListener(listener) {
+      this.#listeners.push(listener);
+    }
+    removeListener(listener) {
+      let index = this.#listeners.indexOf(listener);
+      index >= 0 && this.#listeners.splice(index, 1);
+    }
+    async dispatch(m) {
+      let errors = (await Promise.allSettled(this.#listeners.map((fn) => fn(m)))).flatMap((r) => r.status === "rejected" ? [r.reason] : []);
+      if (errors.length > 0) throw new MultipleErrors(errors);
+    }
+    dispatchNoAwait(m) {
+      this.dispatch(m).catch(printError);
+    }
+  };
+
   // src/lib/prefabs.ts
   var PrefabFilter = class {
     #labelHolder;
     #blockPrefabCountsHolder;
+    #preFiltereds = [];
     #filtered = [];
     #status = "";
-    #updateListeners = [];
+    #listeners = new ListenerManager();
+    #preExcluds = [];
     all = [];
     markCoords = null;
     difficulty = { start: 0, end: 5 };
@@ -182,23 +214,29 @@
     set language(lang) {
       this.#labelHolder.language = lang;
     }
+    set preExcludes(patterns) {
+      this.#preExcluds = patterns.map((f) => new RegExp(f));
+    }
     update = throttledInvoker(() => this.updateImmediately());
     async updateImmediately() {
-      await this.#applyFilter(), this.#updateStatus(), this.#updateDist(), this.#sort();
-      let update = { status: this.#status, prefabs: this.#filtered };
-      this.#updateListeners.forEach((f) => {
-        f(update);
-      });
+      await this.#applyFilter(), this.#updateStatus(), this.#updateDistance(), this.#sort(), await this.#listeners.dispatch({ update: { status: this.#status, prefabs: this.#filtered } });
     }
     #updateStatus() {
-      this.prefabFilterRegexp.length === 0 && this.blockFilterRegexp.length === 0 && this.difficulty.start === 0 && this.difficulty.end === 5 ? this.#status = `All ${this.all.length.toString()} prefabs` : this.#filtered.length === 0 ? this.#status = "No prefabs matched" : this.#status = `${this.#filtered.length.toString()} prefabs matched`;
+      this.prefabFilterRegexp.length === 0 && this.blockFilterRegexp.length === 0 && this.difficulty.start === 0 && this.difficulty.end === 5 ? this.#status = `All ${this.#preFiltereds.length.toString()} prefabs` : this.#filtered.length === 0 ? this.#status = "No prefabs matched" : this.#status = `${this.#filtered.length.toString()} prefabs matched`;
     }
-    addUpdateListener(func) {
-      this.#updateListeners.push(func);
+    addListener(fn) {
+      this.#listeners.addListener(fn);
     }
     async #applyFilter() {
-      let result = this.#matchByDifficulty(this.all);
+      this.#preFiltereds = this.#preMatch(this.all);
+      let result = this.#matchByDifficulty(this.#preFiltereds);
       result = await this.#matchByPrefabName(result), result = await this.#matchByBlockName(result), this.#filtered = result;
+    }
+    #preMatch(prefabs2) {
+      return prefabs2.filter((p) => {
+        for (let filter of this.#preExcluds) if (filter.test(p.name)) return !1;
+        return !0;
+      });
     }
     #matchByDifficulty(prefabs2) {
       return prefabs2.filter((p) => {
@@ -248,12 +286,12 @@
       }
       return matchedPrefabNames;
     }
-    #updateDist() {
+    #updateDistance() {
       if (this.markCoords) {
         let { markCoords } = this;
-        this.#filtered.forEach((p) => p.dist = calcDist(p, markCoords));
+        this.#filtered.forEach((p) => p.distance = [computeDirection(p, markCoords), computeDistance(p, markCoords)]);
       } else
-        this.#filtered.forEach((p) => p.dist = null);
+        this.#filtered.forEach((p) => p.distance = null);
     }
     #sort() {
       this.all.length === 0 ? this.#status = "No prefabs loaded" : this.#filtered.length === 0 ? this.#status += ". Please relax the filter conditions" : this.markCoords ? (this.#status += ", order by distances from the flag", this.#filtered.sort(distSorter)) : this.blockFilterRegexp.length > 0 ? (this.#status += ", order by counts of matched blocks", this.#filtered.sort(blockCountSorter)) : this.#filtered.sort(nameSorter);
@@ -268,10 +306,16 @@
     return aCount < bCount ? 1 : aCount > bCount ? -1 : nameSorter(a, b);
   }
   function distSorter(a, b) {
-    return !a.dist || !b.dist ? nameSorter(a, b) : a.dist > b.dist ? 1 : a.dist < b.dist ? -1 : nameSorter(a, b);
+    return !a.distance || !b.distance ? nameSorter(a, b) : a.distance[1] > b.distance[1] ? 1 : a.distance[1] < b.distance[1] ? -1 : nameSorter(a, b);
   }
-  function calcDist(targetCoords, baseCoords) {
+  function computeDistance(targetCoords, baseCoords) {
     return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
+  }
+  function computeDirection(targetCoords, baseCoords) {
+    let dx = targetCoords.x - baseCoords.x, dz = targetCoords.z - baseCoords.z;
+    if (dx === 0 && dz === 0) return null;
+    let angle = Math.atan2(dz, dx) * 180 / Math.PI;
+    return angle < -157.5 || angle >= 157.5 ? "W" : angle < -112.5 ? "SW" : angle < -67.5 ? "S" : angle < -22.5 ? "SE" : angle < 22.5 ? "E" : angle < 67.5 ? "NE" : angle < 112.5 ? "N" : "NW";
   }
   function matchAndHighlight(str, regex) {
     let isMatched = !1, highlighted = str.replace(regex, (m) => (isMatched = m.length > 0, `<mark>${m}</mark>`));
@@ -287,8 +331,8 @@
   onmessage = ({ data }) => {
     console.log("Prefab-filter received message: ", data), Object.assign(prefabs, data).update().catch(printError);
   };
-  prefabs.addUpdateListener((u) => {
-    console.log("Prefab-filter send message: ", u), postMessage(u);
+  prefabs.addListener((m) => {
+    console.log("Prefab-filter send message: ", m), postMessage(m);
   });
   function invertCounts(counts) {
     let blockPrefabCounts = {};

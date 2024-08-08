@@ -96,37 +96,65 @@
     return LabelHolder.DEFAULT_LANGUAGE;
   }
 
+  // src/lib/errors.ts
+  var MultipleErrors = class extends Error {
+    #causes;
+    constructor(errors) {
+      super("Multiple errors occurred"), this.#causes = errors;
+    }
+    get causes() {
+      return this.#causes;
+    }
+  };
+
+  // src/lib/events.ts
+  var ListenerManager = class {
+    #listeners = [];
+    addListener(listener) {
+      this.#listeners.push(listener);
+    }
+    removeListener(listener) {
+      let index = this.#listeners.indexOf(listener);
+      index >= 0 && this.#listeners.splice(index, 1);
+    }
+    async dispatch(m) {
+      let errors = (await Promise.allSettled(this.#listeners.map((fn) => fn(m)))).flatMap((r) => r.status === "rejected" ? [r.reason] : []);
+      if (errors.length > 0) throw new MultipleErrors(errors);
+    }
+    dispatchNoAwait(m) {
+      this.dispatch(m).catch(printError);
+    }
+  };
+
   // src/lib/label-handler.ts
   var LabelHandler = class {
-    doms;
-    listener = [];
+    #doms;
+    #listener = new ListenerManager();
     constructor(doms, navigatorLanguages) {
-      this.doms = doms, this.buildSelectOptions(navigatorLanguages), this.doms.language.addEventListener("change", () => {
-        this.listener.forEach((fn) => {
-          fn(this.doms.language.value)?.catch(printError);
-        });
+      this.#doms = doms, this.buildSelectOptions(navigatorLanguages), this.#doms.language.addEventListener("change", () => {
+        this.#listener.dispatchNoAwait({ update: { lang: this.#doms.language.value } });
       });
     }
     buildSelectOptions(navigatorLanguages) {
-      let existingLangs = new Set(Array.from(this.doms.language.options).map((o) => o.value));
+      let existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
       for (let lang of LANGUAGES) {
         if (existingLangs.has(lang))
           continue;
         let option = document.createElement("option");
-        option.textContent = lang, this.doms.language.appendChild(option);
+        option.textContent = lang, this.#doms.language.appendChild(option);
       }
       let browserLang = resolveLanguage(navigatorLanguages);
-      this.doms.language.value !== browserLang && (this.doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.doms.language.dispatchEvent(new Event("change"))));
+      this.#doms.language.value !== browserLang && (this.#doms.language.value = resolveLanguage(navigatorLanguages), requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change"))));
     }
     addListener(fn) {
-      this.listener.push(fn);
+      this.#listener.addListener(fn);
     }
   };
 
   // src/prefabs/main.ts
   function main() {
     let labelHolder = new LabelHolder("../labels", navigator.languages);
-    new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages).addListener(async (lang) => {
+    new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages).addListener(async ({ update: { lang } }) => {
       labelHolder.language = lang, updatePrefabLabels(await labelHolder.get("prefabs")), udpateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
     });
   }
