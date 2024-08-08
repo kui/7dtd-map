@@ -80,6 +80,7 @@ export default class MapRenderer {
 
     const context = this.canvas.getContext("2d");
     if (!context) return;
+    context.imageSmoothingEnabled = false;
     context.scale(this.scale, this.scale);
     context.filter = `brightness(${this.brightness})`;
 
@@ -99,9 +100,7 @@ export default class MapRenderer {
     context.filter = "none";
     if (rad && this.radAlpha !== 0) {
       context.globalAlpha = this.radAlpha;
-      context.imageSmoothingEnabled = false;
       context.drawImage(rad, 0, 0, width, height);
-      context.imageSmoothingEnabled = true;
     }
 
     context.globalAlpha = this.signAlpha;
