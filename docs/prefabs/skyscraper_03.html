@@ -30,7 +30,17 @@
 
   <img src="skyscraper_03.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
@@ -58,14 +68,14 @@
 <tr><th>Zoning</th><td>none</td></tr></table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>60</td></tr>
 <tr><th>y</th><td>92</td></tr>
 <tr><th>z</th><td>60</td></tr></table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -876,6 +886,61 @@
 <tr class="block"><td class="block_name">woodShapes:windowCentered</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowPanel</td><td class="block_label">-</td><td class="block_count">33</td></tr>
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>GroupNightClub</td><td>4</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>33x5x18</td><td>13x4x16</td></tr>
+<tr><td>1</td><td>GroupNightClub</td><td>8</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>33x5x10</td><td>13x4x34</td></tr>
+<tr><td>2</td><td>ZomBusinessman</td><td>8</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>33x5x10</td><td>13x10x34</td></tr>
+<tr><td>3</td><td>GroupNightClub</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x10</td><td>13x10x16</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x5x7</td><td>20x10x12</td></tr>
+<tr><td>5</td><td>GroupNightClub</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x10</td><td>39x10x16</td></tr>
+<tr><td>6</td><td>zombieBusinessManFeral</td><td>5-6</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x5x10</td><td>40x16x16</td></tr>
+<tr><td>7</td><td>GroupNightClub</td><td>5</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x5x14</td><td>30x16x12</td></tr>
+<tr><td>8</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x5x10</td><td>29x16x26</td></tr>
+<tr><td>9</td><td>zombieBusinessManFeral</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x5</td><td>12x16x40</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x5x7</td><td>20x16x41</td></tr>
+<tr><td>11</td><td>GroupGenericZombie</td><td>0</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x5x19</td><td>20x16x21</td></tr>
+<tr><td>12</td><td>GroupZomBadass</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x2x1</td><td>14x16x28</td></tr>
+<tr><td>13</td><td>zombieBusinessManFeral</td><td>2</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x5</td><td>13x16x16</td></tr>
+<tr><td>14</td><td>GroupNightClub</td><td>4</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x5x9</td><td>20x16x12</td></tr>
+<tr><td>15</td><td>zombieWightFeral</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x5x8</td><td>25x22x12</td></tr>
+<tr><td>16</td><td>GroupHospital</td><td>7</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>13x5x15</td><td>29x22x21</td></tr>
+<tr><td>17</td><td>zombieWightFeral</td><td>1</td><td>3</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>19x5x8</td><td>20x22x41</td></tr>
+<tr><td>18</td><td>ZomUtilityWorker</td><td>4</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>10x5x1</td><td>21x22x49</td></tr>
+<tr><td>19</td><td>zombieWightFeral</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x5x5</td><td>40x22x37</td></tr>
+<tr><td>20</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x10</td><td>25x28x12</td></tr>
+<tr><td>21</td><td>zombieUtilityWorkerFeral</td><td>1</td><td>4</td><td>-</td><td>1</td><td>-</td><td>-</td><td>-</td><td>1x2x2</td><td>34x29x24</td></tr>
+<tr><td>22</td><td>ZomUtilityWorker</td><td>0</td><td>4</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x1x3</td><td>30x28x26</td></tr>
+<tr><td>23</td><td>zombieUtilityWorkerFeral</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>1x3x5</td><td>23x28x30</td></tr>
+<tr><td>24</td><td>zombieUtilityWorkerFeral</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x3x4</td><td>30x28x32</td></tr>
+<tr><td>25</td><td>ZomUtilityWorker</td><td>4</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x4x9</td><td>13x28x35</td></tr>
+<tr><td>26</td><td>ZomUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x2x4</td><td>20x30x44</td></tr>
+<tr><td>27</td><td>GroupLabWorker</td><td>3</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x5x9</td><td>34x34x39</td></tr>
+<tr><td>28</td><td>ZomUtilityWorker</td><td>2</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x9</td><td>39x34x35</td></tr>
+<tr><td>29</td><td>GroupLabWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x5x10</td><td>37x34x16</td></tr>
+<tr><td>30</td><td>zombieWightFeral</td><td>5-6</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x5x10</td><td>23x34x12</td></tr>
+<tr><td>31</td><td>animalBoar</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x5x10</td><td>13x34x16</td></tr>
+<tr><td>32</td><td>GroupZomBadassOnly</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>10x3x10</td><td>24x35x26</td></tr>
+<tr><td>33</td><td>GroupGenericZombie</td><td>3</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x5x4</td><td>19x40x45</td></tr>
+<tr><td>34</td><td>GroupGenericZombie</td><td>2</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x4</td><td>32x40x45</td></tr>
+<tr><td>35</td><td>GroupHospital</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x5x9</td><td>32x40x35</td></tr>
+<tr><td>36</td><td>zombieFatHawaiianFeral</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x4x9</td><td>23x40x34</td></tr>
+<tr><td>37</td><td>GroupHospital</td><td>7</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>23x4x6</td><td>23x40x16</td></tr>
+<tr><td>38</td><td>GroupZomBadassOnly</td><td>15</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x5x21</td><td>20x55x19</td></tr>
+<tr><td>39</td><td>GroupNightClub</td><td>3</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x10</td><td>11x50x26</td></tr>
+<tr><td>40</td><td>GroupNightClub</td><td>3</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x12</td><td>39x50x23</td></tr>
+<tr><td>41</td><td>GroupNightClub</td><td>3</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x11</td><td>11x46x35</td></tr>
+<tr><td>42</td><td>zombieUtilityWorkerFeral</td><td>3</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x11</td><td>39x46x35</td></tr>
+<tr><td>43</td><td>ZomFatCops</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x4x6</td><td>23x40x27</td></tr>
+<tr><td>44</td><td>GroupHospital</td><td>7</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>9x5x6</td><td>27x40x23</td></tr>
+    </table>
+    <p>Total Count: 146-148</p>
+    
   </section>
 </body>
 </html>

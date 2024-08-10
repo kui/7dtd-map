@@ -30,7 +30,17 @@
 
   <img src="store_hardware_02.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table><tr><th>AllowedTownships</th><td>city,town,rural</td></tr>
 <tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
@@ -74,14 +84,14 @@
 <tr><th>Zoning</th><td>Commercial</td></tr></table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>60</td></tr>
 <tr><th>y</th><td>14</td></tr>
 <tr><th>z</th><td>60</td></tr></table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -419,6 +429,33 @@
 <tr class="block"><td class="block_name">woodShapes:windowBoarded</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">workLightPOI</td><td class="block_label">Work Light (POI)</td><td class="block_count">1</td></tr>
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>ZomUtilityWorker</td><td>0</td><td>2</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>11x7x8</td><td>31x0x44</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>4x8x12</td><td>17x0x40</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>0-1</td><td>3</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>✓</td><td>5x6x3</td><td>17x0x12</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x3x16</td><td>27x10x11</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>19x5x4</td><td>23x2x12</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x1x8</td><td>22x10x15</td></tr>
+<tr><td>6</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>25x5x23</td><td>17x2x16</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x2x6</td><td>36x9x46</td></tr>
+<tr><td>8</td><td>GroupGenericZombie</td><td>1</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x2x6</td><td>26x9x46</td></tr>
+<tr><td>9</td><td>GroupGenericZombie</td><td>0</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x5x4</td><td>22x2x48</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>1</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x3x3</td><td>32x1x55</td></tr>
+<tr><td>11</td><td>ZomBurnt</td><td>2</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x4x19</td><td>26x2x40</td></tr>
+<tr><td>12</td><td>GroupGenericZombie</td><td>1</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x3x12</td><td>17x10x27</td></tr>
+<tr><td>13</td><td>GroupGenericZombie</td><td>1</td><td>3</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>4x2x7</td><td>18x7x12</td></tr>
+<tr><td>14</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>✓</td><td>5x1x15</td><td>37x7x12</td></tr>
+<tr><td>15</td><td>GroupGenericZombie</td><td>1</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>10x3x16</td><td>32x10x27</td></tr>
+<tr><td>16</td><td>GroupBikerBar</td><td>3</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>3x3x3</td><td>27x9x39</td></tr>
+    </table>
+    <p>Total Count: 22-23</p>
+    
   </section>
 </body>
 </html>

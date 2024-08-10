@@ -30,7 +30,17 @@
 
   <img src="factory_01.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table><tr><th>AllowedTownships</th><td>city,city,town,town,rural,rural,wilderness,wilderness</td></tr>
 <tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
@@ -73,14 +83,14 @@
 <tr><th>Zoning</th><td>industrial</td></tr></table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>100</td></tr>
 <tr><th>y</th><td>55</td></tr>
 <tr><th>z</th><td>100</td></tr></table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -946,6 +956,74 @@
 <tr class="block"><td class="block_name">woodSpikesTrap2POI</td><td class="block_label">Wood Spikes Trap 2 (POI)</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">woodSpikesTrapBloodPOI</td><td class="block_label">Wood Spikes Blood (POI)</td><td class="block_count">22</td></tr>
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x4x27</td><td>63x2x35</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x3x14</td><td>31x8x17</td></tr>
+<tr><td>2</td><td>GroupLabWorker</td><td>6</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>18x4x10</td><td>72x8x30</td></tr>
+<tr><td>3</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x5x13</td><td>51x14x48</td></tr>
+<tr><td>4</td><td>ZomUtilityWorker</td><td>4</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>20x4x11</td><td>50x14x35</td></tr>
+<tr><td>5</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x6x7</td><td>17x14x42</td></tr>
+<tr><td>6</td><td>ZomUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x3x8</td><td>29x8x40</td></tr>
+<tr><td>7</td><td>ZomUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x6x25</td><td>17x20x24</td></tr>
+<tr><td>8</td><td>GroupLabWorker</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>6x1x8</td><td>17x26x41</td></tr>
+<tr><td>9</td><td>zombieMutatedFeral</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>5x3x9</td><td>24x26x24</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x4x12</td><td>71x2x30</td></tr>
+<tr><td>11</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x4x13</td><td>51x2x49</td></tr>
+<tr><td>12</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>18x3x19</td><td>24x7x58</td></tr>
+<tr><td>13</td><td>ZomUtilityWorker</td><td>4</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x4x17</td><td>29x1x24</td></tr>
+<tr><td>14</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>5x1x6</td><td>18x8x43</td></tr>
+<tr><td>15</td><td>ZomUtilityWorker</td><td>4</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x4x20</td><td>51x8x36</td></tr>
+<tr><td>16</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x7x6</td><td>78x2x43</td></tr>
+<tr><td>17</td><td>GroupLabWorker</td><td>2</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x3x10</td><td>71x14x30</td></tr>
+<tr><td>18</td><td>ZomUtilityWorker</td><td>8</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>18x5x18</td><td>24x12x63</td></tr>
+<tr><td>19</td><td>GroupZomBadass</td><td>12</td><td>7</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>17x5x15</td><td>21x30x29</td></tr>
+<tr><td>20</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>19x5x7</td><td>51x20x48</td></tr>
+<tr><td>21</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>18x6x7</td><td>24x20x24</td></tr>
+<tr><td>22</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>7x6x7</td><td>35x23x42</td></tr>
+<tr><td>23</td><td>GroupZomBadass</td><td>3</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>6x3x6</td><td>17x2x43</td></tr>
+<tr><td>24</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>21x13x18</td><td>70x20x29</td></tr>
+<tr><td>25</td><td>ZomUtilityWorker</td><td>4</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>13x4x14</td><td>50x2x35</td></tr>
+<tr><td>26</td><td>GroupGenericZombie</td><td>4</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>12x2x5</td><td>30x12x50</td></tr>
+<tr><td>27</td><td>GroupGenericZombie</td><td>8</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>18x3x18</td><td>24x2x65</td></tr>
+<tr><td>28</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>7x1x4</td><td>51x27x50</td></tr>
+<tr><td>29</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x3x17</td><td>17x8x24</td></tr>
+<tr><td>30</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>5x3x10</td><td>71x20x38</td></tr>
+<tr><td>31</td><td>ZomUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>3x1x3</td><td>53x14x38</td></tr>
+<tr><td>32</td><td>GroupLabWorker</td><td>3</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x3x9</td><td>78x14x40</td></tr>
+<tr><td>33</td><td>zombieSpider</td><td>1</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>7x3x8</td><td>35x13x24</td></tr>
+<tr><td>34</td><td>GroupGenericZombie</td><td>0</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x3x4</td><td>32x8x35</td></tr>
+<tr><td>35</td><td>GroupGenericZombie</td><td>0</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x4x3</td><td>21x35x35</td></tr>
+<tr><td>36</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>11x10x14</td><td>37x51x30</td></tr>
+<tr><td>37</td><td>GroupGenericZombie</td><td>0</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>5x4x5</td><td>44x17x56</td></tr>
+<tr><td>38</td><td>GroupGenericZombie</td><td>0</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>5x1x6</td><td>24x14x43</td></tr>
+<tr><td>39</td><td>ZomSpiderOnly</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>2x1x1</td><td>84x26x39</td></tr>
+<tr><td>40</td><td>ZomSpiderOnly</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>2x1x1</td><td>75x26x39</td></tr>
+<tr><td>41</td><td>animalZombieVulture</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>7x1x1</td><td>77x21x28</td></tr>
+<tr><td>42</td><td>animalZombieVulture</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>7x1x1</td><td>77x21x50</td></tr>
+<tr><td>43</td><td>GroupGenericZombie</td><td>4</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x4</td><td>63x27x50</td></tr>
+<tr><td>44</td><td>ZomUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>3x1x5</td><td>37x2x78</td></tr>
+<tr><td>45</td><td>ZomBurnt</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>✓</td><td>11x3x7</td><td>24x7x76</td></tr>
+<tr><td>46</td><td>ZomBurnt</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>3x2x8</td><td>24x8x50</td></tr>
+<tr><td>47</td><td>animalZombieVulture</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x1</td><td>15x16x39</td></tr>
+<tr><td>48</td><td>animalZombieVulture</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x1</td><td>15x16x33</td></tr>
+<tr><td>49</td><td>animalZombieVulture</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x1</td><td>15x16x27</td></tr>
+<tr><td>50</td><td>zombieFatHawaiianFeral</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>1x1x1</td><td>22x8x33</td></tr>
+<tr><td>51</td><td>ZomUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>2x1x1</td><td>46x5x59</td></tr>
+<tr><td>52</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>1x3x1</td><td>32x21x26</td></tr>
+<tr><td>53</td><td>zombieMutatedFeral</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x1</td><td>44x33x36</td></tr>
+<tr><td>54</td><td>GroupZomBadassOnly</td><td>5</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x10x4</td><td>39x36x34</td></tr>
+<tr><td>55</td><td>ZomSpiderOnly</td><td>1</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>10x2x9</td><td>26x15x33</td></tr>
+<tr><td>56</td><td>zombieMutatedFeral</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>3x1x3</td><td>17x26x38</td></tr>
+<tr><td>57</td><td>GroupGenericZombie</td><td>0</td><td>7</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>3x2x3</td><td>28x28x35</td></tr>
+    </table>
+    <p>Total Count: 165</p>
+    
   </section>
 </body>
 </html>

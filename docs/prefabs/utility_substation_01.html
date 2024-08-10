@@ -30,7 +30,17 @@
 
   <img src="utility_substation_01.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
@@ -64,14 +74,14 @@
 <tr><th>Zoning</th><td>none</td></tr></table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>60</td></tr>
 <tr><th>y</th><td>17</td></tr>
 <tr><th>z</th><td>60</td></tr></table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -513,6 +523,33 @@
 <tr class="block"><td class="block_name">woodShapes:windowPanel</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowStoreTwoSidedFull</td><td class="block_label">-</td><td class="block_count">4</td></tr>
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x3x1</td><td>9x3x37</td></tr>
+<tr><td>1</td><td>zombieLab</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>4x3x6</td><td>54x7x25</td></tr>
+<tr><td>2</td><td>zombieUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>2x3x2</td><td>50x7x18</td></tr>
+<tr><td>3</td><td>zombieUtilityWorker</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>3x3x2</td><td>54x3x28</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>0</td><td>2</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>5x4x2</td><td>50x2x29</td></tr>
+<tr><td>5</td><td>zombieJanitor</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>9x2x5</td><td>49x2x23</td></tr>
+<tr><td>6</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x10</td><td>52x2x14</td></tr>
+<tr><td>7</td><td>zombieBiker</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>2x3x9</td><td>57x7x11</td></tr>
+<tr><td>8</td><td>zombieBusinessMan</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>7x3x4</td><td>50x7x20</td></tr>
+<tr><td>9</td><td>zombieUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>23x3x15</td><td>26x3x20</td></tr>
+<tr><td>10</td><td>zombieUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>25x3x16</td><td>1x3x21</td></tr>
+<tr><td>11</td><td>zombieBurnt</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>26x3x17</td><td>1x3x38</td></tr>
+<tr><td>12</td><td>zombieUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>5x3x6</td><td>52x3x49</td></tr>
+<tr><td>13</td><td>GroupZomBadassOnly</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>4x3x6</td><td>50x7x25</td></tr>
+<tr><td>14</td><td>GroupGenericZombie</td><td>0</td><td>6</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>4x3x9</td><td>53x7x11</td></tr>
+<tr><td>15</td><td>GroupZomBadassOnly</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>3x3x5</td><td>48x3x35</td></tr>
+<tr><td>16</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>21x3x17</td><td>27x3x38</td></tr>
+    </table>
+    <p>Total Count: 24</p>
+    
   </section>
 </body>
 </html>

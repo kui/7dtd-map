@@ -30,7 +30,17 @@
 
   <img src="canyon_mine.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table><tr><th>AllowTopSoilDecorations</th><td>False</td></tr>
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
@@ -60,14 +70,14 @@
 <tr><th>Zoning</th><td>NavOnly</td></tr></table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>64</td></tr>
 <tr><th>y</th><td>69</td></tr>
 <tr><th>z</th><td>44</td></tr></table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -212,6 +222,20 @@
 <tr class="block"><td class="block_name">woodShapes:window01Broken04</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">woodShapes:windowBoarded</td><td class="block_label">-</td><td class="block_count">10</td></tr>
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>ZomUtilityWorker</td><td>7-8</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>64x18x44</td><td>0x0x0</td></tr>
+<tr><td>1</td><td>ZomUtilityWorker</td><td>7-8</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>64x23x44</td><td>0x18x0</td></tr>
+<tr><td>2</td><td>ZomUtilityWorker</td><td>5-6</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>64x26x44</td><td>0x41x0</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>3-4</td><td>0</td><td>medium</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>9x4x8</td><td>0x14x11</td></tr>
+    </table>
+    <p>Total Count: 22-26</p>
+    
   </section>
 </body>
 </html>
