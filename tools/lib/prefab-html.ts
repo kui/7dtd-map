@@ -3,6 +3,7 @@ import { parseNim } from "./nim-parser.js";
 import { parseTts } from "./tts-parser.js";
 import { parsePrefabXml } from "./prefab-xml-parser.js";
 import { Label, LabelId } from "./label-parser.js";
+import { requireNonnull } from "./utils.js";
 
 interface HtmlModel {
   name: string;
@@ -10,6 +11,7 @@ interface HtmlModel {
   xml: PrefabProperty[];
   dimensions: { x: number; y: number; z: number };
   blocks: BlockCount[];
+  sleeperVolumes: SleeperVolume[];
 }
 
 interface PrefabProperty {
@@ -55,19 +57,29 @@ function html(model: HtmlModel): string {
 
   <img src="${model.name}.jpg">
 
-  <section>
+  <nav>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#xml">XML</a></li>
+      <li><a href="#dimensions">Dimensions</a></li>
+      <li><a href="#blocks">Blocks</a></li>
+      <li><a href="#sleeper-volumes">SleeperVolumes</a></li>
+    </ul>
+  </nav>
+
+  <section id="xml">
     <h2>XML</h2>
     <table>${model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join("\n")}</table>
   </section>
 
-  <section>
+  <section id="dimensions">
     <h2>Dimensions</h2>
     <table>${Object.entries<number>(model.dimensions)
       .map(([axis, value]) => `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`)
       .join("\n")}</table>
   </section>
 
-  <section>
+  <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
@@ -83,6 +95,39 @@ function html(model: HtmlModel): string {
         )
         .join("\n")}
     </table>
+  </section>
+
+  <section id="sleeper-volumes">
+    <h2>SleeperVolumes</h2>
+    ${
+      model.sleeperVolumes.length === 0
+        ? "<p>No SleeperVolumes</p>"
+        : `
+    <table>
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      ${model.sleeperVolumes
+        .map((s, i) =>
+          [
+            "<tr>",
+            `<td>${i.toString()}</td>`,
+            `<td>${s.group}</td>`,
+            `<td>${s.count[0] === s.count[1] ? s.count[0].toString() : `${s.count[0].toString()}-${s.count[1].toString()}`}</td>`,
+            `<td>${s.groupId.toString()}</td>`,
+            `<td>${s.gameStageAdjust || "-"}</td>`,
+            `<td>${s.flags.toString()}</td>`,
+            `<td>${s.isBoss ? "✓" : "-"}</td>`,
+            `<td>${s.isLoot ? "✓" : "-"}</td>`,
+            `<td>${s.isQuestExclude ? "✓" : "-"}</td>`,
+            `<td>${s.size.join("x")}</td>`,
+            `<td>${s.start.join("x")}</td>`,
+            "</tr>",
+          ].join(""),
+        )
+        .join("\n")}
+    </table>
+    <p>Total Count: ${renderSleeperVolumeTotalCount(model.sleeperVolumes)}</p>
+    `
+    }
   </section>
 </body>
 </html>
@@ -123,12 +168,15 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
     console.warn("Unexpected state: unused block was asigned a ID: file=%s, blocks=%o", xml, noPlacedBlocks);
   }
 
+  const sleeperVolumes = buildSleeperVolumes(properties);
+
   return html({
     name,
     label,
     xml: properties,
     blocks,
     dimensions: { x: maxx, y: maxy, z: maxz },
+    sleeperVolumes,
   });
 }
 
@@ -141,4 +189,114 @@ const ESCAPE_HTML_PATTERNS: [RegExp, string][] = [
 function escapeHtml(s: string) {
   if (!s) return s;
   return ESCAPE_HTML_PATTERNS.reduce((str, [regex, newStr]) => str.replace(regex, newStr), s);
+}
+
+interface SleeperVolume {
+  group: string;
+  count: [number, number];
+  groupId: number;
+  gameStageAdjust: string;
+  flags: number;
+  isBoss: boolean;
+  isLoot: boolean;
+  isQuestExclude: boolean;
+  size: [number, number, number];
+  start: [number, number, number];
+}
+
+function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
+  const groupsRaw = properties
+    .find((p) => p.name === "SleeperVolumeGroup")
+    ?.value.split(",")
+    .map((s) => s.trim());
+  if (groupsRaw === undefined) return [];
+  const groups = [];
+  for (let i = 0; i < groupsRaw.length; i += 3) {
+    // NOTE: This implementation for SleeperVolumeGroup could be wrong.
+    // The 2nd and 3rd elements are treated as the number of sleepers in this implementation.
+    // However, I don't know the exact meaning of these values.
+    const countMin = parseInt(groupsRaw[i + 1] ?? "", 10);
+    const countMax = parseInt(groupsRaw[i + 2] ?? "", 10);
+    if (isNaN(countMin) || isNaN(countMax))
+      throw new Error(`Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${String(groupsRaw[i + 2])}`);
+    groups.push({
+      // Skip ith element checking because i+1 is alraedy checked
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      group: groupsRaw[i]!,
+      count: [countMin, countMax] as [number, number],
+    });
+  }
+  const groupIds = properties
+    .find((p) => p.name === "SleeperVolumeGroupId")
+    ?.value.split(",")
+    .map((s) => parseInt(s, 10));
+  if (groupIds === undefined) throw new Error("SleeperVolumeGroupId is not found");
+  // NOTE: This implementation for SleeperVolumeGameStageAdjust could be wrong.
+  // Some prefabs have no SleeperVolumeGameStageAdjust or shorter than SleeperVolumeGroup
+  // This implementation assumes that padding empty string to the length of SleeperVolumeGroup.
+  const gameStageAdjusts =
+    properties
+      .find((p) => p.name === "SleeperVolumeGameStageAdjust")
+      ?.value.split(",")
+      .map((s) => s.trim()) ?? Array.from(groups, () => "");
+  const flags = properties
+    .find((p) => p.name === "SleeperVolumeFlags")
+    ?.value.split(",")
+    .map((s) => parseInt(s, 10));
+  if (flags === undefined) throw new Error("SleeperVolumeFlags is not found");
+  // NOTE: This implementation for SleeperIsBossVolume could be wrong.
+  // See the comment for SleeperVolumeGameStageAdjust.
+  const isBosses =
+    properties
+      .find((p) => p.name === "SleeperIsBossVolume")
+      ?.value.split(",")
+      .map((s) => s === "True") ?? Array.from(groups, () => false);
+  const isLoots =
+    properties
+      .find((p) => p.name === "SleeperIsLootVolume")
+      ?.value.split(",")
+      .map((s) => s === "True") ?? Array.from(groups, () => false);
+  const isQuestExcludes =
+    properties
+      .find((p) => p.name === "SleeperIsQuestExclude")
+      ?.value.split(",")
+      .map((s) => s === "True") ?? Array.from(groups, () => false);
+  const sizes = properties
+    .find((p) => p.name === "SleeperVolumeSize")
+    ?.value.split("#")
+    .map((s) => {
+      const t = s.split(",").map((s) => parseInt(s, 10));
+      if (t.length !== 3) throw new Error(`Invalid sleeper volume size: ${s}`);
+      return t as [number, number, number];
+    });
+  if (sizes === undefined) throw new Error("SleeperVolumeSize is not found");
+  const starts = properties
+    .find((p) => p.name === "SleeperVolumeStart")
+    ?.value.split("#")
+    .map((s) => {
+      const t = s.split(",").map((s) => parseInt(s, 10));
+      if (t.length !== 3) throw new Error(`Invalid sleeper volume start: ${s}`);
+      return t as [number, number, number];
+    });
+  if (starts === undefined) throw new Error("SleeperVolumeStart is not found");
+  return groups.map<SleeperVolume>((group, i) => {
+    return {
+      group: group.group,
+      count: group.count,
+      groupId: requireNonnull(groupIds[i], () => `Unexpected state: groupId is not found: index=${String(i)}`),
+      gameStageAdjust: gameStageAdjusts[i] ?? "", // See the above comment for SleeperVolumeGameStageAdjust.
+      flags: requireNonnull(flags[i], () => `Unexpected state: flags is not found: index=${String(i)}`),
+      isBoss: isBosses[i] ?? false, // See the above comment for SleeperVolumeGameStageAdjust.
+      isLoot: requireNonnull(isLoots[i], () => `Unexpected state: isLoot is not found: index=${String(i)}`),
+      isQuestExclude: requireNonnull(isQuestExcludes[i], () => `Unexpected state: isQuestExclude is not found: index=${String(i)}`),
+      size: requireNonnull(sizes[i], () => `Unexpected state: size is not found: index=${String(i)}`),
+      start: requireNonnull(starts[i], () => `Unexpected state: start is not found: index=${String(i)}`),
+    };
+  });
+}
+
+function renderSleeperVolumeTotalCount(sleeperVolumes: SleeperVolume[]): string {
+  const min = sleeperVolumes.reduce((sum, s) => sum + s.count[0], 0);
+  const max = sleeperVolumes.reduce((sum, s) => sum + s.count[1], 0);
+  return min === max ? min.toString() : `${min.toString()}-${max.toString()}`;
 }
