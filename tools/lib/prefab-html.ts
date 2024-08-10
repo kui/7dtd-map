@@ -31,12 +31,8 @@ function html(model: HtmlModel): string {
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for ${model.label} / ${model.name}">
   <title>${model.label} / ${model.name}</title>
-  <style>
-  tr:nth-child(odd) {
-    background-color: lightcyan;
-  }
-  </style>
   <script src="main.js" async></script>
+  <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
   <h1><span class="prefab_label">${model.label}</span> / <small class="prefab_name">${model.name}</small></h1>
