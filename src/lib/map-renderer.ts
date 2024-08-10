@@ -88,6 +88,7 @@ export default class MapRenderer {
       context.globalAlpha = this.biomesAlpha;
       context.drawImage(biomes, 0, 0, width, height);
     }
+    context.imageSmoothingEnabled = true;
     if (splat3 && this.splat3Alpha !== 0) {
       context.globalAlpha = this.splat3Alpha;
       context.drawImage(splat3, 0, 0, width, height);
@@ -96,6 +97,7 @@ export default class MapRenderer {
       context.globalAlpha = this.splat4Alpha;
       context.drawImage(splat4, 0, 0, width, height);
     }
+    context.imageSmoothingEnabled = false;
 
     context.filter = "none";
     if (rad && this.radAlpha !== 0) {
