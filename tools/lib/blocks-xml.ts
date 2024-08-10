@@ -7,6 +7,8 @@ export type BlockName = string;
 export interface Block {
   name: BlockName;
   properties: BlockProperties;
+  drops: BlockDrop[];
+  disableDropExtends: boolean;
 }
 
 export type BlockProperties = Record<string, BlockPropertyValue | undefined>;
@@ -18,6 +20,17 @@ export interface BlockPropertyValue {
 
 export type DowngradeGraph = Block[];
 
+export type NumberRange = [number, number];
+
+export interface BlockDrop {
+  event: string;
+  name: string | undefined;
+  count: NumberRange;
+  tag: string[];
+  prob: number | undefined;
+  stickChance: number | undefined;
+}
+
 const LOOT_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
 
 export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
@@ -25,7 +38,9 @@ export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
   const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>((map, blockElement) => {
     const name = blockElement.$.name;
     const properties = buildProperties(blockElement.property);
-    map.set(name, { name, properties });
+    const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
+    const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
+    map.set(name, { name, properties, drops, disableDropExtends: enableDropExtendsOff });
     return map;
   }, new Map());
   return new Blocks(blocks);
@@ -89,10 +104,7 @@ export class Blocks {
     if (excludedPropNames.includes(propertyName)) return null;
 
     const parent = this.#blocks.get(extendsProp.value);
-    if (!parent) {
-      console.warn("Unknown parent block: %d", extendsProp.value);
-      return null;
-    }
+    if (!parent) throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
 
     return this.getPropertyExtended(parent, propertyName);
   }
@@ -108,6 +120,17 @@ export class Blocks {
     const materialDamage = material?.properties["MaxDamage"];
     return materialDamage ? parseInt(materialDamage, 10) : null;
   }
+
+  getDropsExtended(block: Block): BlockDrop[] {
+    const drops = block.drops;
+    if (drops.length > 0) return drops;
+    if (block.disableDropExtends) return [];
+    const extendsProp = block.properties["Extends"];
+    if (!extendsProp) return [];
+    const parent = this.#blocks.get(extendsProp.value);
+    if (!parent) throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
+    return this.getDropsExtended(parent);
+  }
 }
 
 function buildProperties(propertyElements: BlockXmlBlockProperty[]): BlockProperties {
@@ -115,4 +138,24 @@ function buildProperties(propertyElements: BlockXmlBlockProperty[]): BlockProper
     props[elem.$.name] = elem.$;
     return props;
   }, {});
+}
+
+function buildDrops(dropElements: BlockXmlBlockDrop[]): BlockDrop[] {
+  return dropElements.map<BlockDrop>((elem) => {
+    const count = parseCount(elem.$.count);
+    return {
+      event: elem.$.event,
+      name: elem.$.name,
+      count,
+      tag: elem.$.tag?.split(",") ?? [],
+      prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
+      stickChance: elem.$.stick_chance ? parseFloat(elem.$.stick_chance) : undefined,
+    };
+  });
+}
+
+function parseCount(count: string): NumberRange {
+  const [min, max] = count.split("-").map((s) => parseInt(s, 10));
+  if (min === undefined || isNaN(min) || (max !== undefined && isNaN(max))) throw new Error(`Invalid count: ${count}`);
+  return max ? [min, max] : [min, min];
 }

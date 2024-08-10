@@ -9,6 +9,8 @@ interface BlockXml {
 interface BlockXmlBlock {
   $: { name: string };
   property: BlockXmlBlockProperty[];
+  dropextendsoff?: object[];
+  drop?: BlockXmlBlockDrop[];
 }
 
 interface BlockXmlBlockProperty {
@@ -16,6 +18,17 @@ interface BlockXmlBlockProperty {
     name: string;
     value: string;
     param1?: string;
+  };
+}
+
+interface BlockXmlBlockDrop {
+  $: {
+    event: string;
+    name: string;
+    count: string;
+    tag?: string;
+    prob?: string;
+    stick_chance?: string;
   };
 }
 
