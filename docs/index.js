@@ -15846,6 +15846,32 @@ void main() {
     }
   };
 
+  // src/index/map-info-handler.ts
+  var MapInfoHandler = class {
+    #doms;
+    constructor(doms, fileHandler) {
+      this.#doms = doms, document.addEventListener("click", (event) => {
+        event.target === this.#doms.mapInfoDialog && this.#doms.mapInfoDialog.close();
+      }), fileHandler.addListener(async ({ update }) => {
+        update.includes("map_info.xml") && await this.#update();
+      });
+    }
+    async #update() {
+      let mapInfo = await (await workspaceDir()).get("map_info.xml");
+      this.#doms.mapInfoShow.disabled = mapInfo === null;
+      let table = this.#doms.mapInfoTable;
+      mapInfo === null ? table.innerHTML = "" : table.innerHTML = ["<tr><th>Name</th><th>Value</th></tr>", ...buildTableContent(await mapInfo.text())].join(`
+`);
+    }
+  };
+  function buildTableContent(text) {
+    let doc = new DOMParser().parseFromString(text, "application/xml");
+    return Array.from(doc.querySelectorAll("property")).map((element) => {
+      let key = element.getAttribute("name") ?? "-", value = element.getAttribute("value") ?? "-";
+      return `<tr><th>${key}</th><td>${value}</td></tr>`;
+    });
+  }
+
   // src/lib/map-storage.ts
   var DB_NAME = "7dtd-map-a20";
   function flushDb() {
@@ -15897,7 +15923,14 @@ void main() {
       fileHandler,
       () => fetchJson("prefab-difficulties.json")
     );
-    new MapCanvasHandler(
+    new MapInfoHandler(
+      {
+        mapInfoShow: component("map-info-show", HTMLButtonElement),
+        mapInfoDialog: component("map-info-dialog", HTMLDialogElement),
+        mapInfoTable: component("map-info-table", HTMLTableElement)
+      },
+      fileHandler
+    ), new MapCanvasHandler(
       {
         canvas: component("map", HTMLCanvasElement),
         biomesAlpha: component("biomes_alpha", HTMLInputElement),
