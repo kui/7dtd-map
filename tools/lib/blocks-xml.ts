@@ -31,15 +31,15 @@ export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
 }
 
 export class Blocks {
-  private blocks: Map<BlockName, Block>;
+  #blocks: Map<BlockName, Block>;
   // The downgrading of the value block results in the key blocks
   // e.g. key=cntGunSafeInsecure, value=[cntGunCafe] if cntGunSafe can be downgraded to cntGunSafeInsecure
-  private downgradeRelations: Map<Block, Block[]>;
+  #downgradeRelations: Map<Block, Block[]>;
 
   constructor(blocks: Map<BlockName, Block>) {
-    this.blocks = blocks;
-    this.downgradeRelations = buildArrayMapByEntries(
-      Array.from(this.blocks.values()).flatMap((b: Block) => {
+    this.#blocks = blocks;
+    this.#downgradeRelations = buildArrayMapByEntries(
+      Array.from(this.#blocks.values()).flatMap((b: Block) => {
         const downgradedBlockName = b.properties["DowngradeBlock"]?.value.trim();
         if (!downgradedBlockName) return [];
         const downgradedBlock = blocks.get(downgradedBlockName);
@@ -50,9 +50,9 @@ export class Blocks {
   }
 
   find(predicate: (block: Block) => boolean): Block[] {
-    return Array.from(this.blocks.values())
+    return Array.from(this.#blocks.values())
       .filter((b) => {
-        const creativeMode = this.getPropertyExtended(b, "CreativeMode")?.value;
+        const creativeMode = this.#getPropertyExtended(b, "CreativeMode")?.value;
         return !creativeMode || creativeMode !== "None";
       })
       .filter((b) => predicate(b));
@@ -60,16 +60,16 @@ export class Blocks {
 
   findByLootIds(lootContainerIds: Set<string>): Block[] {
     return this.find((b) => {
-      const blockClass = this.getPropertyExtended(b, "Class")?.value ?? "";
+      const blockClass = this.#getPropertyExtended(b, "Class")?.value ?? "";
       if (!LOOT_CLASS_NAMES.has(blockClass)) return false;
-      const lootId = this.getPropertyExtended(b, "LootList")?.value;
+      const lootId = this.#getPropertyExtended(b, "LootList")?.value;
       if (!lootId) return false;
       return lootContainerIds.has(lootId);
     });
   }
 
   findByDowngradeBlocks(graphs: DowngradeGraph): DowngradeGraph[] {
-    const upgradBlocks = this.downgradeRelations.get(requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"));
+    const upgradBlocks = this.#downgradeRelations.get(requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"));
     if (upgradBlocks) {
       return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
     } else {
@@ -77,7 +77,7 @@ export class Blocks {
     }
   }
 
-  private getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
+  #getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
     const p = block.properties[propertyName];
     if (p) return p;
 
@@ -87,13 +87,13 @@ export class Blocks {
     const excludedPropNames = extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
     if (excludedPropNames.includes(propertyName)) return null;
 
-    const parent = this.blocks.get(extendsProp.value);
+    const parent = this.#blocks.get(extendsProp.value);
     if (!parent) {
       console.warn("Unknown parent block: %d", extendsProp.value);
       return null;
     }
 
-    return this.getPropertyExtended(parent, propertyName);
+    return this.#getPropertyExtended(parent, propertyName);
   }
 }
 

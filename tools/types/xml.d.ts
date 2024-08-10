@@ -1,3 +1,5 @@
+// blocks.xml
+
 interface BlockXml {
   blocks: {
     block: BlockXmlBlock[];
@@ -17,7 +19,7 @@ interface BlockXmlBlockProperty {
   };
 }
 
-type LootGroupName = string;
+// loot.xml
 
 interface LootXml {
   lootcontainers: {
@@ -32,6 +34,7 @@ interface LootXml {
   };
 }
 
+type LootGroupName = string;
 type LootXmlItem = LootXmlItemGroup | LootXmlLootItem;
 
 interface LootXmlItemGroup {
@@ -40,4 +43,21 @@ interface LootXmlItemGroup {
 
 interface LootXmlLootItem {
   $: { name: string };
+}
+
+// materials.xml
+
+interface MaterialsXml {
+  materials: {
+    material: MaterialsXmlMaterial[];
+  };
+}
+
+interface MaterialsXmlMaterial {
+  $: { id: string };
+  property: MaterialsXmlMaterialProperty[];
+}
+
+interface MaterialsXmlMaterialProperty {
+  $: { name: string; value: string };
 }
