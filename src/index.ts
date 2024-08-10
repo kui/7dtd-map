@@ -18,6 +18,7 @@ import { MapCanvasHandler } from "./index/map-canvas-handler";
 import { DndHandler } from "./index/dnd-handler";
 import { TerrainViewer } from "./index/terrain-viewer";
 import { BundledMapHandler } from "./index/bundled-map-hander";
+import { MapInfoHandler } from "./index/map-info-handler";
 
 import "./lib/map-storage";
 
@@ -78,6 +79,14 @@ function main() {
     labelHandler,
     fileHandler,
     () => fetchJson("prefab-difficulties.json"),
+  );
+  new MapInfoHandler(
+    {
+      mapInfoShow: component("map-info-show", HTMLButtonElement),
+      mapInfoDialog: component("map-info-dialog", HTMLDialogElement),
+      mapInfoTable: component("map-info-table", HTMLTableElement),
+    },
+    fileHandler,
   );
   new MapCanvasHandler(
     {

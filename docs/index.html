@@ -51,6 +51,12 @@
           </td>
         </tr>
         <tr>
+          <th>ℹ️ map_info.xml</th>
+          <td>
+            <button id="map-info-show" disabled data-show-dialog-for="map-info-dialog">Show XML</button>
+          </td>
+        </tr>
+        <tr>
           <th><label for="biomes_alpha">🌲 biomes.png</label></th>
           <td>
             <label>
@@ -103,7 +109,7 @@
         </tr>
         <tr>
           <th title="Terrain"><label for="terrain_viewer_show">⛰️ dtm.raw</label></th>
-          <td><button id="terrain_viewer_show" disabled>Show terrain</button></td>
+          <td><button id="terrain_viewer_show" disabled title="Require dtm.raw and map_info.xml">Show terrain</button></td>
         </tr>
         <tr>
           <th title="Scale of each png files"><label for="scale">🔍️ Scale</label></th>
@@ -295,7 +301,7 @@
       </select>
     </p>
 
-    <dialog id="dialog">
+    <dialog id="dialog" class="multi-sections">
       <section>
         <h2>Drop Files</h2>
         <ul>
@@ -323,6 +329,12 @@
         <input type="radio" name="active-section" form="dialog-active" style="display: none" value="error" />
       </section>
       <form id="dialog-active" style="display: none"></form>
+    </dialog>
+
+    <dialog id="map-info-dialog">
+      <h2>map_info.xml</h2>
+      <table id="map-info-table"></table>
+      <footer><button data-close-dialog-for="map-info-dialog">Close</button></footer>
     </dialog>
   </body>
 </html>

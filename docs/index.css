@@ -64,7 +64,7 @@ body.use-splat4-png #warn-splat4-png {
   display: inline-block;
 }
 
-dialog > section {
+dialog.multi-sections > section {
   display: none;
   &:has(> input[name="active-section"]:checked) {
     display: block;
