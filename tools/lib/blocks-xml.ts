@@ -31,6 +31,15 @@ export interface BlockDrop {
   stickChance: number | undefined;
 }
 
+export interface HarvestItems {
+  [itenName: string]: {
+    name: string;
+    count: NumberRange;
+    countExpected: number;
+    prob: number;
+  };
+}
+
 const LOOT_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
 
 export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
@@ -130,6 +139,28 @@ export class Blocks {
     const parent = this.#blocks.get(extendsProp.value);
     if (!parent) throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
     return this.getDropsExtended(parent);
+  }
+
+  getHarvests(block: Block, untilDestroy = true): HarvestItems {
+    const drops = this.getDropsExtended(block);
+    const harvests = drops.filter((drop) => drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy"));
+    const items: HarvestItems = {};
+    for (const harvest of harvests) {
+      if (harvest.count[1] === 0) continue;
+      if (harvest.prob === 0) continue;
+      if (harvest.name === undefined) throw new Error(`Harvest drop without name: ${block.name}`);
+      const prob = harvest.prob ?? 1;
+      const countExpected = ((harvest.count[0] + harvest.count[1]) / 2) * prob;
+      const oldCount = items[harvest.name]?.count;
+      const oldCountExpected = items[harvest.name]?.countExpected;
+      items[harvest.name] = {
+        name: harvest.name,
+        count: oldCount ? [Math.min(oldCount[0], harvest.count[0]), oldCount[1] + harvest.count[1]] : harvest.count,
+        countExpected: oldCountExpected ? oldCountExpected + countExpected : countExpected,
+        prob,
+      };
+    }
+    return items;
   }
 }
 
