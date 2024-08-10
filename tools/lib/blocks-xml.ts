@@ -1,3 +1,4 @@
+import type { Materials } from "./materials-xml.js";
 import { buildArrayMapByEntries, requireNonnull } from "./utils.js";
 import { parseXml } from "./xml-parser.js";
 
@@ -52,7 +53,7 @@ export class Blocks {
   find(predicate: (block: Block) => boolean): Block[] {
     return Array.from(this.#blocks.values())
       .filter((b) => {
-        const creativeMode = this.#getPropertyExtended(b, "CreativeMode")?.value;
+        const creativeMode = this.getPropertyExtended(b, "CreativeMode")?.value;
         return !creativeMode || creativeMode !== "None";
       })
       .filter((b) => predicate(b));
@@ -60,9 +61,9 @@ export class Blocks {
 
   findByLootIds(lootContainerIds: Set<string>): Block[] {
     return this.find((b) => {
-      const blockClass = this.#getPropertyExtended(b, "Class")?.value ?? "";
+      const blockClass = this.getPropertyExtended(b, "Class")?.value ?? "";
       if (!LOOT_CLASS_NAMES.has(blockClass)) return false;
-      const lootId = this.#getPropertyExtended(b, "LootList")?.value;
+      const lootId = this.getPropertyExtended(b, "LootList")?.value;
       if (!lootId) return false;
       return lootContainerIds.has(lootId);
     });
@@ -77,7 +78,7 @@ export class Blocks {
     }
   }
 
-  #getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
+  getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
     const p = block.properties[propertyName];
     if (p) return p;
 
@@ -93,7 +94,19 @@ export class Blocks {
       return null;
     }
 
-    return this.#getPropertyExtended(parent, propertyName);
+    return this.getPropertyExtended(parent, propertyName);
+  }
+
+  getMaxDamage(block: Block, materials: Materials): number | null {
+    const damage = this.getPropertyExtended(block, "MaxDamage")?.value;
+    if (damage) return parseInt(damage, 10);
+
+    const materialId = this.getPropertyExtended(block, "Material")?.value;
+    if (!materialId) return null;
+
+    const material = materials.findById(materialId);
+    const materialDamage = material?.properties["MaxDamage"];
+    return materialDamage ? parseInt(materialDamage, 10) : null;
   }
 }
 
