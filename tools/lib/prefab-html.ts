@@ -12,6 +12,7 @@ interface HtmlModel {
   dimensions: { x: number; y: number; z: number };
   blocks: BlockCount[];
   sleeperVolumes: SleeperVolume[];
+  difficulty: string;
 }
 
 interface PrefabProperty {
@@ -35,7 +36,12 @@ function html(model: HtmlModel): string {
   <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
-  <h1><span class="prefab_label">${model.label}</span> / <small class="prefab_name">${model.name}</small></h1>
+  <h1>
+    <span class="prefab-tier" title="Difficulty Tier">${model.difficulty}</span>
+    <span class="prefab_label">${model.label}</span>
+    /
+    <span class="prefab_name">${model.name}</span>
+  </h1>
 
   <nav>
     <ul>
@@ -77,7 +83,7 @@ function html(model: HtmlModel): string {
 
   <section id="blocks">
     <h2>Blocks</h2>
-    <table id="blocks">
+    <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
       ${model.blocks
         .map((b) =>
@@ -99,7 +105,7 @@ function html(model: HtmlModel): string {
       model.sleeperVolumes.length === 0
         ? "<p>No SleeperVolumes</p>"
         : `
-    <table>
+    <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
       ${model.sleeperVolumes
         .map((s, i) =>
@@ -165,6 +171,8 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
   }
 
   const sleeperVolumes = buildSleeperVolumes(properties);
+  const difficultyRaw = properties.find((p) => p.name === "DifficultyTier")?.value ?? "0";
+  const difficulty = difficultyRaw === "0" ? "" : `💀${difficultyRaw}`;
 
   return html({
     name,
@@ -173,6 +181,7 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
     blocks,
     dimensions: { x: maxx, y: maxy, z: maxz },
     sleeperVolumes,
+    difficulty,
   });
 }
 
