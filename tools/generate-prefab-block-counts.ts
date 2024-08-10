@@ -15,21 +15,24 @@ interface PrefabBlockCounts {
 }
 
 async function main() {
-  const nimFiles = glob.iterate(await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"));
+  const nimFiles = await glob(await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"));
   const prefabBlockCount = await readCounts(nimFiles);
   await writeJsonFile(path.join(DOCS_DIR, FILE), prefabBlockCount);
   return 0;
 }
 
-async function readCounts(nimFiles: AsyncIterable<string>): Promise<PrefabBlockCounts> {
+async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
   const prefabBlockCounts: Promise<[string, { [blockName: string]: number }]>[] = [];
 
-  for await (const nimFile of nimFiles) {
+  let count = 0;
+  for (const nimFile of nimFiles) {
     const prefabName = path.basename(nimFile, ".blocks.nim");
     const ttsFile = path.join(path.dirname(nimFile), `${prefabName}.tts`);
     prefabBlockCounts.push(
       (async () => {
-        return [prefabName, await countBlocks(nimFile, ttsFile)];
+        const counts = await countBlocks(nimFile, ttsFile);
+        if (++count % 100 === 0 || count === nimFiles.length) console.log(`Processing ${count.toString()}/${nimFiles.length.toString()}`);
+        return [prefabName, counts];
       })(),
     );
   }
