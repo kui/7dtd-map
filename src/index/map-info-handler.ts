@@ -13,8 +13,7 @@ export class MapInfoHandler {
     this.#doms = doms;
 
     document.addEventListener("click", (event) => {
-      if (event.target === this.#doms.mapInfoDialog)
-        this.#doms.mapInfoDialog.close();
+      if (event.target === this.#doms.mapInfoDialog) this.#doms.mapInfoDialog.close();
     });
     fileHandler.addListener(async ({ update }) => {
       if (update.includes("map_info.xml")) await this.#update();
