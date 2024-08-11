@@ -17,24 +17,25 @@ export class LabelHandler {
     this.#doms = doms;
     this.buildSelectOptions(navigatorLanguages);
     this.#doms.language.addEventListener("change", () => {
-      this.#listener.dispatchNoAwait({ update: { lang: this.#doms.language.value as Language } });
+      const lang = this.#doms.language.value as Language;
+      if (lang === localStorage.getItem("language")) return;
+      localStorage.setItem("language", lang);
+      this.#listener.dispatchNoAwait({ update: { lang } });
     });
   }
 
   private buildSelectOptions(navigatorLanguages: readonly string[]) {
     const existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
     for (const lang of LANGUAGES) {
-      if (existingLangs.has(lang)) {
-        continue;
-      }
+      if (existingLangs.has(lang)) continue;
       const option = document.createElement("option");
       option.textContent = lang;
       this.#doms.language.appendChild(option);
     }
 
-    const browserLang = resolveLanguage(navigatorLanguages);
+    const browserLang = localStorage.getItem("language") ?? resolveLanguage(navigatorLanguages);
     if (this.#doms.language.value !== browserLang) {
-      this.#doms.language.value = resolveLanguage(navigatorLanguages);
+      this.#doms.language.value = browserLang;
       requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change")));
     }
   }
