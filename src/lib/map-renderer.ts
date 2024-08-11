@@ -5,7 +5,12 @@ import * as mapFiles from "../../lib/map-files";
 import { CacheHolder } from "./cache-holder";
 
 const SIGN_CHAR = "✘";
-const MARK_CHAR = "🚩️";
+const MARK_CHAR = "🚩";
+
+interface FontFamilies {
+  [SIGN_CHAR]: string;
+  [MARK_CHAR]: string;
+}
 
 export default class MapRenderer {
   brightness = "100%";
@@ -28,11 +33,11 @@ export default class MapRenderer {
   #splat4Image = new BitmapHolder("splat4.png");
   #radImage = new BitmapHolder("radiation.png");
   #imageFiles = [this.#biomesImage, this.#splat3Image, this.#splat4Image, this.#radImage] as const;
-  #fontFace: FontFace;
+  #fontFamilies: FontFamilies;
 
-  constructor(canvas: OffscreenCanvas, fontFace: FontFace) {
+  constructor(canvas: OffscreenCanvas, fontFamilies: FontFamilies) {
     this.canvas = canvas;
-    this.#fontFace = fontFace;
+    this.#fontFamilies = fontFamilies;
   }
 
   set invalidate(fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[]) {
@@ -115,7 +120,7 @@ export default class MapRenderer {
   }
 
   private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`;
+    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -138,7 +143,7 @@ export default class MapRenderer {
   private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px ${this.#fontFace.family}`;
+    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[MARK_CHAR]}'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";

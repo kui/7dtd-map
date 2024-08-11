@@ -1,11 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg"
   width="120"
-  height="120"
-  viewBox="0 0 120 120">
+  height="120">
   <defs>
     <filter id="shadow">
       <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="black" flood-opacity="1" />
     </filter>
   </defs>
-  <text x="15" y="90" font-size="100" fill="red" stroke="white" stroke-width="2px" style="filter: url(#shadow);">✘</text>
+  <style>
+    @font-face {
+      font-family: 'Noto Sans Symbols 2';
+      src: url('./NotoSansSymbols2.subset.woff2') format('woff2');
+    }
+    text {
+      font-family: 'Noto Sans Symbols 2';
+      filter: url(#shadow);
+    }
+  </style>
+  <text x="10" y="94" font-size="130" fill="red" stroke="white" stroke-width="2px">✘</text>
 </svg>
