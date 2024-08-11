@@ -19,7 +19,8 @@ export class ListenerManager<N extends string, M extends MessageMap<N>> {
   async dispatch(m: M) {
     const results = await Promise.allSettled(this.#listeners.map((fn) => fn(m)));
     const errors = results.flatMap((r) => (r.status === "rejected" ? [r.reason as unknown] : []));
-    if (errors.length > 0) throw new MultipleErrors(errors);
+    if (errors.length === 1) throw errors[0];
+    if (errors.length > 1) throw new MultipleErrors(errors);
   }
 
   dispatchNoAwait(m: M) {
