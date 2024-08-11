@@ -23,7 +23,7 @@ jobs:
       - run: npm run build:ts
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs
+          path: ./public
   deploy:
     environment:
       name: github-pages

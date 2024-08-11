@@ -6,7 +6,8 @@ targets=(
   "src/worker/*.ts"
   "src/prefabs/*.ts"
 )
-out="docs"
+out="public"
+
 esbuild_opts=(
   "--bundle"
   "--sourcemap"
@@ -19,9 +20,7 @@ serve_opts=(
   "--servedir=${out}"
 )
 prod_opts=(
-  #"--minify"
-  #"--minify-identifiers"
-  "--minify-syntax"
+  "--minify"
   "--sourcemap=external"
 )
 

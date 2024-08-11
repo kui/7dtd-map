@@ -1,9 +1,9 @@
-import { projectRoot, vanillaDir, handleMain } from "./lib/utils.js";
-import { parseLabel, LANGUAGES, Language, Label } from "./lib/label-parser.js";
-import * as path from "path";
-import { promises as fs } from "fs";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { LANGUAGES, Label, Language, parseLabel } from "./lib/label-parser.js";
+import { handleMain, publishDir, vanillaDir } from "./lib/utils.js";
 
-const DEST_DIR = projectRoot("docs", "labels");
+const DEST_DIR = publishDir("labels");
 
 async function main() {
   const labels = await parseLabel(await vanillaDir("Data", "Config", "Localization.txt"));

@@ -1,9 +1,9 @@
-import { projectRoot, vanillaDir, writeJsonFile, handleMain } from "./lib/utils.js";
-import * as path from "path";
 import { glob } from "glob";
+import * as path from "node:path";
 import { PrefabProperty, parsePrefabXml } from "./lib/prefab-xml-parser.js";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.js";
 
-const DOCS_DIR = projectRoot("docs");
+const DOCS_DIR = publishDir();
 const FILE = "prefab-difficulties.json";
 
 async function main() {

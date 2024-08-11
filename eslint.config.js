@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["docs/**/*.js", "webpack.config.ts"],
+    ignores: ["public", "node_modules"],
   },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,

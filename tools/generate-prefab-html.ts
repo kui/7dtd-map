@@ -1,11 +1,11 @@
-import * as path from "path";
-import { promises as fs } from "fs";
 import { glob } from "glob";
-import { prefabHtml } from "./lib/prefab-html.js";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
-import { handleMain, projectRoot, vanillaDir } from "./lib/utils.js";
+import { prefabHtml } from "./lib/prefab-html.js";
+import { handleMain, publishDir, vanillaDir } from "./lib/utils.js";
 
-const BASE_DEST = projectRoot("docs", "prefabs");
+const BASE_DEST = publishDir("prefabs");
 
 async function main() {
   await remove();

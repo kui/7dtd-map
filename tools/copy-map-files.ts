@@ -1,14 +1,14 @@
 import * as fs from "node:fs";
-import path from "node:path";
+import * as path from "node:path";
 import * as stream from "node:stream";
 import * as pngjs from "pngjs";
 import * as mapFiles from "../lib/map-files.js";
-import { handleMain, projectRoot, vanillaDir, writeJsonFile } from "./lib/utils.js";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.js";
 
 mapFiles.setPNG(pngjs.PNG);
 
 const WORLDS_DIR = await vanillaDir("Data", "Worlds");
-const DST_DIR = projectRoot("docs", "maps");
+const DST_DIR = publishDir("maps");
 
 async function main() {
   const worldDirs = await fs.promises.readdir(WORLDS_DIR).then(filterValidWorldDirs);

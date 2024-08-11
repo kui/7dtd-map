@@ -6,6 +6,10 @@ export function projectRoot(...pathList: string[]): string {
   return path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", ...pathList);
 }
 
+export function publishDir(...pathList: string[]): string {
+  return projectRoot("public", ...pathList);
+}
+
 export interface LocalJson {
   vanillaDir: string;
 }
