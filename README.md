@@ -26,6 +26,16 @@ npm run build
 npx tsx ./tools/copy-map-files.ts
 ```
 
+### Build: Font subset
+
+To rebuild some `.subset.woff2` files, you need to install `docker` and run:
+
+```
+./tools/font.bash
+```
+
+See `tools/fonts/subset.bash` for details.
+
 ## Code lint
 
 ```
