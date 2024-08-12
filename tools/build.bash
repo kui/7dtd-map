@@ -1,11 +1,10 @@
 #!/bin/bash
 
-targets=(
-  "src/index.ts"
-  "src/prefabs.ts"
-  "src/worker/*.ts"
-  "src/prefabs/*.ts"
-)
+declare -a targets
+for ts in src/*.ts src/worker/*.ts src/prefabs/*.ts; do
+  [[ "${ts}" =~ .config.ts$ ]] && continue
+  targets+=("${ts}")
+done
 out="public"
 
 esbuild_opts=(
