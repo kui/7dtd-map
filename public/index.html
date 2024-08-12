@@ -227,7 +227,10 @@
             >
               Steel with Wrench
             </button>
-            <button data-input-for="block_filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$|Speaker$)">
+            <button
+              data-input-for="block_filter"
+              data-input-text="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
+            >
               Book Containers
             </button>
             <button data-input-for="block_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">

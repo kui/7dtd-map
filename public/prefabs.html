@@ -77,7 +77,12 @@
             <button data-input-for="block-filter">Forge</button>
             <button data-input-for="block-filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
             <button data-input-for="block-filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
-            <button data-input-for="block-filter" data-input-text="^cnt.*book(case|shelf|pile|store)(?!.*Empty$)">Book Containers</button>
+            <button
+              data-input-for="block-filter"
+              data-input-text="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
+            >
+              Book Containers
+            </button>
           </section>
         </section>
         <details>
