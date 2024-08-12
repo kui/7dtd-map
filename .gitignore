@@ -4,3 +4,4 @@
 
 /public/**/*.js
 /public/**/*.js.map
+!/public/old/**
