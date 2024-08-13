@@ -11,8 +11,8 @@ cd "$(dirname "$0")"
 
 # This version of NotoEmoji might be the first version of NotoEmoji.
 pyftsubset NotoEmojiOld-Regular.ttf \
-   --output-file=../../public/NotoEmojiOld.subset.woff2 --flavor=woff2 \
-   --text=🚩
+  --output-file=../../public/NotoEmojiOld.subset.woff2 --flavor=woff2 \
+  --text=🚩
 
 pyftsubset NotoSansSymbols2-Regular.ttf \
   --output-file=../../public/NotoSansSymbols2.subset.woff2 --flavor=woff2 \
