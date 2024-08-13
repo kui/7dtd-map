@@ -1,7 +1,15 @@
 FROM ubuntu:24.04
 
 RUN apt-get update \
- && apt-get install --no-install-recommends -y locales fonttools \
+ && apt-get install --no-install-recommends -y fonttools=4.46.0-1build2 \
  && rm -rf /var/lib/apt/lists/* \
- && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
+
+ARG USER_ID
+ARG GROUP_ID
+RUN groupadd --gid $GROUP_ID fonttools \
+ && useradd --home-dir /work --create-home \
+        --uid $USER_ID --gid $GROUP_ID \
+        --no-log-init \
+        fonttools
+USER fonttools
