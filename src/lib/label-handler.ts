@@ -43,4 +43,8 @@ export class LabelHandler {
   addListener(fn: (m: EventMessage) => void | Promise<void>) {
     this.#listener.addListener(fn);
   }
+
+  get language(): Language {
+    return this.#doms.language.value as Language;
+  }
 }
