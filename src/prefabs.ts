@@ -198,7 +198,7 @@ class PrefabsHandler {
       preExcludes: this.#excludes,
       language: this.#labelHandler.language,
       all: await this.#fetchPrefabs(),
-     });
+    });
   }
 }
 
