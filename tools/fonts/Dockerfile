@@ -7,9 +7,8 @@ ENV LANG en_US.utf8
 
 ARG USER_ID
 ARG GROUP_ID
-RUN groupadd --gid $GROUP_ID fonttools \
- && useradd --home-dir /work --create-home \
+RUN id -ng 1000 2>/dev/null || groupadd --gid $GROUP_ID fonttools
+run id -nu 1000 2>/dev/null || useradd --home-dir /work --create-home \
         --uid $USER_ID --gid $GROUP_ID \
         --no-log-init \
         fonttools
-USER fonttools
