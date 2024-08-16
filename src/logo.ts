@@ -7,6 +7,12 @@ function main(): void {
   renderLogo2(component("logo2", HTMLCanvasElement)).catch(printError);
 }
 
+/**
+ * Put a mark at center to check if the logo is centered
+ */
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+const PUT_CENTER: boolean = false;
+
 const WIDTH = 256; // px
 
 /** Draw by code */
@@ -19,23 +25,33 @@ async function renderLogo1(canvas: HTMLCanvasElement): Promise<void> {
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  ctx.font = `${WIDTH.toString()}px '${FONT_FACE.family}'`;
+  putText(ctx, { text: "✘", x: WIDTH / 2 + 8, z: WIDTH / 2 + 24, size: 220 });
+
+  if (PUT_CENTER) putPointCenter(ctx, 2, "blue");
+}
+
+const LINE_WIDTH_FACTOR = 0.04;
+
+function putText(ctx: CanvasRenderingContext2D, { text, x, z, size }: { text: string; x: number; z: number; size: number }): void {
+  ctx.font = `${size.toString()}px '${FONT_FACE.family}'`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  putText(ctx, { text: "✘", x: WIDTH / 2, z: WIDTH / 2 + 40, size: WIDTH * 0.6 });
-}
 
-function putText(ctx: CanvasRenderingContext2D, { text, x, z, size }: { text: string; x: number; z: number; size: number }): void {
-  ctx.lineWidth = Math.round(size * 0.2);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.strokeText(text, x, z);
-
-  ctx.lineWidth = Math.round(size * 0.1);
-  ctx.strokeStyle = "white";
+  ctx.lineWidth = Math.round(size * LINE_WIDTH_FACTOR * 3);
+  ctx.strokeStyle = "black";
   ctx.strokeText(text, x, z);
 
   ctx.fillText(text, x, z);
+
+  ctx.lineWidth = Math.round(size * LINE_WIDTH_FACTOR);
+  ctx.strokeStyle = "white";
+  ctx.strokeText(text, x, z);
+}
+
+function putPointCenter(ctx: CanvasRenderingContext2D, size: number, color: string): void {
+  ctx.fillStyle = color;
+  ctx.fillRect(WIDTH / 2 - size / 2, WIDTH / 2 - size / 2, size, size);
 }
 
 /** Load logo.svg */
@@ -55,6 +71,8 @@ async function renderLogo2(canvas: HTMLCanvasElement): Promise<void> {
     img.onerror = resolve;
   });
   ctx.drawImage(img, 0, 0, WIDTH, WIDTH);
+
+  if (PUT_CENTER) putPointCenter(ctx, 2, "blue");
 }
 
 if (document.readyState === "loading") {
