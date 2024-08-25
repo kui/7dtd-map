@@ -74,6 +74,10 @@ function main() {
   document.addEventListener("scroll", () => {
     document.documentElement.dispatchEvent(new Event("scroll"));
   });
+
+  // init
+
+  prefabsHandler.init().catch(printError);
 }
 
 function prefabLi(prefab: HighlightedPrefab) {
@@ -131,11 +135,15 @@ interface PrefabsHandlerDoms {
 class PrefabsHandler {
   #doms: PrefabsHandlerDoms;
   #worker: PrefabsFilterWorker;
+  #labelHandler: LabelHandler;
+  #fetchPrefabs: () => Promise<Prefab[]>;
   #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
 
   constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker, labelHandler: LabelHandler, fetchPrefabs: () => Promise<Prefab[]>) {
     this.#doms = doms;
     this.#worker = worker;
+    this.#labelHandler = labelHandler;
+    this.#fetchPrefabs = fetchPrefabs;
 
     doms.prefabFilter.addEventListener("input", () => {
       worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
@@ -144,20 +152,18 @@ class PrefabsHandler {
       worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
     const tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
-    this.#tierRange = tierRange;
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === tierRange.start) return;
       tierRange.start = newMinTier;
-      this.#tierRange = tierRange;
+      this.#worker.postMessage({ difficulty: tierRange });
     });
     doms.maxTier.addEventListener("input", () => {
       const newMaxTier = doms.maxTier.valueAsNumber;
       if (newMaxTier === tierRange.end) return;
       tierRange.end = newMaxTier;
-      this.#tierRange = tierRange;
+      this.#worker.postMessage({ difficulty: tierRange });
     });
-    worker.postMessage({ preExcludes: this.#excludes });
     doms.excludes.forEach((e) => {
       e.addEventListener("change", () => {
         worker.postMessage({ preExcludes: this.#excludes });
@@ -170,23 +176,29 @@ class PrefabsHandler {
     labelHandler.addListener(({ update: { lang } }) => {
       worker.postMessage({ language: lang });
     });
-    fetchPrefabs()
-      .then((p) => {
-        worker.postMessage({ all: p });
-      })
-      .catch(printError);
   }
 
   get #excludes(): string[] {
     return this.#doms.excludes.flatMap((e) => (e.checked ? [e.value] : []));
   }
 
-  set #tierRange(range: NumberRange) {
-    this.#worker.postMessage({ difficulty: range });
+  get #tierRange(): { start: number; end: number } {
+    return { start: this.#doms.minTier.valueAsNumber, end: this.#doms.maxTier.valueAsNumber };
   }
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
     this.#listeners.addListener(fn);
+  }
+
+  async init() {
+    this.#worker.postMessage({
+      prefabFilterRegexp: this.#doms.prefabFilter.value,
+      blockFilterRegexp: this.#doms.blockFilter.value,
+      difficulty: this.#tierRange,
+      preExcludes: this.#excludes,
+      language: this.#labelHandler.language,
+      all: await this.#fetchPrefabs(),
+    });
   }
 }
 
