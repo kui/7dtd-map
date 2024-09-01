@@ -1,4 +1,4 @@
-import { PrefabFilter, EventMessage } from "../lib/prefabs";
+import { PrefabFilter, EventMessage } from "../lib/prefab-filter";
 import { printError, fetchJson } from "../lib/utils";
 
 export type InMessage = Partial<
