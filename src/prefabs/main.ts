@@ -1,12 +1,11 @@
 import { LabelHandler } from "../lib/label-handler";
-import { LabelHolder, Labels } from "../lib/labels";
+import { Labels } from "../lib/labels";
 import { component, printError } from "../lib/utils";
 
 function main() {
-  const labelHolder = new LabelHolder("../labels", navigator.languages);
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
-  labelHandler.addListener(async ({ update: { lang } }) => {
-    labelHolder.language = lang;
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "../labels", navigator.languages);
+  const labelHolder = labelHandler.holder;
+  labelHandler.addListener(async () => {
     updatePrefabLabels(await labelHolder.get("prefabs"));
     updateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
   });

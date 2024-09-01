@@ -1,4 +1,4 @@
-import { LANGUAGES, Language, resolveLanguage } from "./labels";
+import { LANGUAGES, LabelHolder, Language, resolveLanguage } from "./labels";
 import * as events from "./events";
 
 interface Doms {
@@ -12,19 +12,22 @@ interface EventMessage {
 export class LabelHandler {
   #doms: Doms;
   #listener = new events.ListenerManager<"update", EventMessage>();
+  #holder: LabelHolder;
 
-  constructor(doms: Doms, navigatorLanguages: readonly string[]) {
+  constructor(doms: Doms, labelsBaseUrl: string, navigatorLanguages: readonly string[]) {
     this.#doms = doms;
-    this.buildSelectOptions(navigatorLanguages);
+    this.#holder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
+    this.#buildSelectOptions(navigatorLanguages);
     this.#doms.language.addEventListener("change", () => {
       const lang = this.#doms.language.value as Language;
       if (lang === localStorage.getItem("language")) return;
       localStorage.setItem("language", lang);
+      this.holder.language = lang;
       this.#listener.dispatchNoAwait({ update: { lang } });
     });
   }
 
-  private buildSelectOptions(navigatorLanguages: readonly string[]) {
+  #buildSelectOptions(navigatorLanguages: readonly string[]) {
     const existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
     for (const lang of LANGUAGES) {
       if (existingLangs.has(lang)) continue;
@@ -46,5 +49,9 @@ export class LabelHandler {
 
   get language(): Language {
     return this.#doms.language.value as Language;
+  }
+
+  get holder(): LabelHolder {
+    return this.#holder;
   }
 }

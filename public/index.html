@@ -98,13 +98,8 @@
           </td>
         </tr>
         <tr>
-          <th title="Prefab signs"><label for="sign_alpha">🏘️ prefabs.xml</label></th>
-          <td>
-            <label>
-              <output data-sync-for="sign_alpha">1</output>
-              <input id="sign_alpha" type="range" title="Alpha signs for prefab or other markers" value="1" step="0.1" min="0" max="1" />
-            </label>
-          </td>
+          <th title="Prefabs">🏘️ prefabs.xml</th>
+          <td><button id="prefab-inspector-show" data-show-dialog-for="prefab-inspector-dialog">🔍️ Inspect prefabs</button></td>
         </tr>
         <tr>
           <th title="Terrain"><label for="terrain_viewer_show">⛰️ dtm.raw</label></th>
@@ -120,14 +115,28 @@
           </td>
         </tr>
         <tr>
-          <th>
-            <label for="sign_size"><span class="logo">✘</span> Sign Size</label>
-          </th>
+          <th><span class="logo">✘</span> Sign</th>
           <td>
-            <label>
-              <output data-sync-for="sign_size">200</output>px
-              <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
-            </label>
+            <table class="inner-table">
+              <tr>
+                <th><label for="sign_size">Size:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="sign_size">200</output>px
+                    <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="sign_alpha">Alpha:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="sign_alpha">1</output>
+                    <input id="sign_alpha" type="range" value="1" step="0.1" min="0" max="1" />
+                  </label>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
         <tr>
@@ -337,6 +346,30 @@
       <h2>map_info.xml</h2>
       <table id="map-info-table"></table>
       <footer><button data-close-dialog-for="map-info-dialog">Close</button></footer>
+    </dialog>
+
+    <dialog id="prefab-inspector-dialog">
+      <h2>🏘️🔍️ Prefab Inspector</h2>
+      <table>
+        <tr>
+          <th>Prefabs</th>
+          <td id="prefab-inspector-count">-</td>
+        </tr>
+        <tr>
+          <th>Unique Prefabs</th>
+          <td>
+            <span id="prefab-inspector-unique-count">-</span>
+            /
+            <span id="prefab-inspector-defined-count" title="Number of all prefabs defined in the game">-</span>
+          </td>
+        </tr>
+      </table>
+
+      <h3>Missing Prefabs</h3>
+      <p>These prefabs are not located in the map.</p>
+      <ol id="prefab-inspector-missings"></ol>
+
+      <footer><button data-close-dialog-for="prefab-inspector-dialog">Close</button></footer>
     </dialog>
   </body>
 </html>

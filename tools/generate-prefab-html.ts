@@ -3,7 +3,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.js";
 import { prefabHtml } from "./lib/prefab-html.js";
-import { handleMain, publishDir, vanillaDir } from "./lib/utils.js";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.js";
 
 const BASE_DEST = publishDir("prefabs");
 
@@ -35,6 +35,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   }
 
   let successCount = 0;
+  const index: string[] = [];
   await Promise.all(
     xmlFiles.map(async (xmlFileName) => {
       try {
@@ -50,9 +51,13 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
       if (++successCount % 50 === 0) {
         console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
       }
+      const prefabName = path.basename(xmlFileName, ".xml");
+      index.push(prefabName);
     }),
   );
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
+
+  await writeJsonFile(path.join(BASE_DEST, "index.json"), index);
 }
 
 async function generateHtml(xmlFileName: string, labels: Map<LabelId, Label>) {

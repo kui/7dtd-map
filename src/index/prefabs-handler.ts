@@ -3,8 +3,8 @@ import type { MarkerHandler } from "./marker-handler";
 import type { LabelHandler } from "../lib/label-handler";
 import type { FileHandler } from "./file-handler";
 
-import * as storage from "../lib/storage";
 import * as events from "../lib/events";
+import { loadPrefabsXml } from "../lib/prefabs";
 
 interface Doms {
   status: HTMLElement;
@@ -77,7 +77,7 @@ export class PrefabsHandler {
       worker.postMessage({ language: lang });
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
-      if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties()) });
+      if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties) });
     });
   }
 
@@ -88,29 +88,4 @@ export class PrefabsHandler {
   get #preExcludes(): string[] {
     return this.#doms.preExcludes.flatMap((i) => (i.checked ? i.value : []));
   }
-}
-
-// Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available.
-async function loadPrefabsXml(difficulties: Promise<PrefabDifficulties>): Promise<Prefab[]> {
-  const workspace = await storage.workspaceDir();
-  const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml ? parseXml(...(await Promise.all([prefabsXml.text(), difficulties]))) : [];
-}
-
-function parseXml(xml: string, difficulties: PrefabDifficulties): Prefab[] {
-  const dom = new DOMParser().parseFromString(xml, "text/xml");
-  return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
-    const position = e.getAttribute("position")?.split(",");
-    if (!position || position.length !== 3) return [];
-    const [x, , z] = position;
-    if (!x || !z) return [];
-    const name = e.getAttribute("name");
-    if (!name) return [];
-    return {
-      name,
-      x: parseInt(x),
-      z: parseInt(z),
-      difficulty: difficulties[name] ?? 0,
-    };
-  });
 }

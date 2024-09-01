@@ -21,6 +21,7 @@ import { BundledMapHandler } from "./index/bundled-map-hander";
 import { MapInfoHandler } from "./index/map-info-handler";
 
 import "./lib/map-storage";
+import { PrefabInspectorHandler } from "./index/prefab-inspector-handler";
 
 function main() {
   presetButton.init();
@@ -55,7 +56,7 @@ function main() {
     dndHandler,
     bundledMapHandler,
   );
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, navigator.languages);
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "labels", navigator.languages);
   const dtmHandler = new DtmHandler(() => new Worker("worker/dtm.js"), fileHandler);
   const markerHandler = new MarkerHandler(
     {
@@ -129,6 +130,19 @@ function main() {
       output: component("cursor_coods", HTMLElement),
     },
     dtmHandler,
+  );
+  new PrefabInspectorHandler(
+    {
+      dialog: component("prefab-inspector-dialog", HTMLDialogElement),
+      show: component("prefab-inspector-show", HTMLButtonElement),
+      count: component("prefab-inspector-count"),
+      uniqueCount: component("prefab-inspector-unique-count"),
+      definedCount: component("prefab-inspector-defined-count"),
+      missings: component("prefab-inspector-missings", HTMLOListElement),
+    },
+    labelHandler,
+    () => fetchJson("prefab-difficulties.json"),
+    () => fetchJson("prefabs/index.json"),
   );
 
   //

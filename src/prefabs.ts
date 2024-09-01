@@ -36,7 +36,7 @@ function main() {
       excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")),
     },
     new Worker("worker/prefabs-filter.js"),
-    new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, navigator.languages),
+    new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, "labels", navigator.languages),
     async () => {
       const [prefabBlockCounts, difficulties] = await Promise.all([
         fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
