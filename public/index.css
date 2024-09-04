@@ -105,6 +105,6 @@ dialog th {
   background-color: lightgray;
 }
 
-dialog tr > td:nth-child(even){
+dialog tr > td:nth-child(even) {
   background-color: lightcyan;
 }
