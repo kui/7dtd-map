@@ -2,12 +2,24 @@ import { LabelHandler } from "../lib/label-handler";
 import { loadPrefabsXml } from "../lib/prefabs";
 import { printError } from "../lib/utils";
 
+interface PrefabCountDoms {
+  inMap: HTMLElement;
+  defined: HTMLElement;
+}
+
 interface Doms {
   dialog: HTMLDialogElement;
   show: HTMLButtonElement;
   count: HTMLElement;
-  uniqueCount: HTMLElement;
-  definedCount: HTMLElement;
+  detailCounts: {
+    0: PrefabCountDoms;
+    1: PrefabCountDoms;
+    2: PrefabCountDoms;
+    3: PrefabCountDoms;
+    4: PrefabCountDoms;
+    5: PrefabCountDoms;
+    total: PrefabCountDoms;
+  }
   missings: HTMLUListElement | HTMLOListElement;
 }
 
@@ -52,13 +64,34 @@ export class PrefabInspectorHandler {
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    this.#doms.uniqueCount.textContent = uniquePrefabNames.size.toString();
-
     const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) => !isExcludedPrefabName(name));
-    this.#doms.definedCount.textContent = prefabIndex.length.toString();
+
+    const difficulties = await this.#fetchDifficulties();
+    const countsPerDifficulty: { inMap: number; defined: number; }[] = Array.from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
+    const totalCounts = { inMap: 0, defined: 0 };
+    for (const name of prefabIndex) {
+      const difficulty = difficulties[name] ?? 0;
+      // Should rise an error if the difficulty is not in the range of 0-5
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const counts = countsPerDifficulty[difficulty]!;
+      counts.defined++;
+      totalCounts.defined++;
+      if (uniquePrefabNames.has(name)) {
+        counts.inMap++;
+        totalCounts.inMap++;
+      }
+    }
+    for (let i = 0; i < 6; i++) {
+      const countDoms = this.#doms.detailCounts[i as 0 | 1 | 2 | 3 | 4 | 5];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const counts = countsPerDifficulty[i]!;
+      countDoms.inMap.textContent = counts.inMap.toString();
+      countDoms.defined.textContent = counts.defined.toString();
+    }
+    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap.toString();
+    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined.toString();
 
     const labels = await this.#labelHandler.holder.get("prefabs");
-    const difficulties = await this.#fetchDifficulties();
     const missingPrefabNames = new Set(prefabIndex.filter((name) => !uniquePrefabNames.has(name)));
     this.#doms.missings.innerHTML = [...missingPrefabNames]
       .map((name) => {

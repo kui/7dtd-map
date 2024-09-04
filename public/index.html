@@ -350,19 +350,57 @@
 
     <dialog id="prefab-inspector-dialog">
       <h2>🏘️🔍️ Prefab Inspector</h2>
+      <p><span id="prefab-inspector-count">-</span> prefabs exist in this map.</p>
+
+      <h3>Unique Prefabs</h3>
+      <p>Counts of unique prefabs in this map and defined in the game.</p>
       <table>
-        <tr>
-          <th>Prefabs</th>
-          <td id="prefab-inspector-count">-</td>
-        </tr>
-        <tr>
-          <th>Unique Prefabs</th>
-          <td>
-            <span id="prefab-inspector-unique-count">-</span>
-            /
-            <span id="prefab-inspector-defined-count" title="Number of all prefabs defined in the game">-</span>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>InMap</th>
+            <th>Defined</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>💀5</th>
+            <td><span id="prefab-inspector-tier-5-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-5-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀4</th>
+            <td><span id="prefab-inspector-tier-4-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-4-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀3</th>
+            <td><span id="prefab-inspector-tier-3-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-3-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀2</th>
+            <td><span id="prefab-inspector-tier-2-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-2-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀1</th>
+            <td><span id="prefab-inspector-tier-1-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-1-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀0</th>
+            <td><span id="prefab-inspector-tier-0-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-0-defined-count">-</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <td><span id="prefab-inspector-total-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-total-defined-count">-</span></td>
+          </tr>
+        </tfoot>
       </table>
 
       <h3>Missing Prefabs</h3>

@@ -136,8 +136,36 @@ function main() {
       dialog: component("prefab-inspector-dialog", HTMLDialogElement),
       show: component("prefab-inspector-show", HTMLButtonElement),
       count: component("prefab-inspector-count"),
-      uniqueCount: component("prefab-inspector-unique-count"),
-      definedCount: component("prefab-inspector-defined-count"),
+      detailCounts: {
+        0: {
+          inMap: component("prefab-inspector-tier-0-inmap-count"),
+          defined: component("prefab-inspector-tier-0-defined-count"),
+        },
+        1: {
+          inMap: component("prefab-inspector-tier-1-inmap-count"),
+          defined: component("prefab-inspector-tier-1-defined-count"),
+        },
+        2: {
+          inMap: component("prefab-inspector-tier-2-inmap-count"),
+          defined: component("prefab-inspector-tier-2-defined-count"),
+        },
+        3: {
+          inMap: component("prefab-inspector-tier-3-inmap-count"),
+          defined: component("prefab-inspector-tier-3-defined-count"),
+        },
+        4: {
+          inMap: component("prefab-inspector-tier-4-inmap-count"),
+          defined: component("prefab-inspector-tier-4-defined-count"),
+        },
+        5: {
+          inMap: component("prefab-inspector-tier-5-inmap-count"),
+          defined: component("prefab-inspector-tier-5-defined-count"),
+        },
+        total: {
+          inMap: component("prefab-inspector-total-inmap-count"),
+          defined: component("prefab-inspector-total-defined-count"),
+        },
+      },
       missings: component("prefab-inspector-missings", HTMLOListElement),
     },
     labelHandler,

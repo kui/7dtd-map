@@ -7,6 +7,9 @@ tr {
     border-top: 1px lightgray solid;
   }
 }
+th {
+  padding: 0 0.3em;
+}
 
 .inner-table {
   & tr:first-child {
