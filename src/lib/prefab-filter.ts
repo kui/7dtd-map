@@ -176,26 +176,24 @@ export class PrefabFilter {
   }
 }
 
-function nameSorter(a: { name: string }, b: { name: string }) {
-  if (a.name > b.name) return 1;
-  if (a.name < b.name) return -1;
-  return 0;
+function nameSorter(a: { name: string; difficulty?: number }, b: { name: string; difficulty?: number }) {
+  const aDifficulty = a.difficulty ?? 0;
+  const bDifficulty = b.difficulty ?? 0;
+  if (aDifficulty === bDifficulty) return a.name.localeCompare(b.name);
+  return bDifficulty - aDifficulty;
 }
 
 function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
   if (!a.matchedBlocks || !b.matchedBlocks) return nameSorter(a, b);
   const aCount = a.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
   const bCount = b.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
-  if (aCount < bCount) return 1;
-  if (aCount > bCount) return -1;
-  return nameSorter(a, b);
+  if (aCount === bCount) return nameSorter(a, b);
+  return bCount - aCount;
 }
 
 function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
-  if (!a.distance || !b.distance) return nameSorter(a, b);
-  if (a.distance[1] > b.distance[1]) return 1;
-  if (a.distance[1] < b.distance[1]) return -1;
-  return nameSorter(a, b);
+  if (!a.distance || !b.distance || a.distance[1] === b.distance[1]) return nameSorter(a, b);
+  return a.distance[1] - b.distance[1];
 }
 
 function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
