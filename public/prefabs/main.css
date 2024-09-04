@@ -1,11 +1,11 @@
 tr:nth-child(odd) > * {
-  background-color: lightcyan;
+  background-color: lavender;
 }
 
 table.long-table th {
   position: sticky;
   top: 0;
-  background-color: lightgray;
+  background-color: lavender;
   padding: 0 8px;
 }
 

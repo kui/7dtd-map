@@ -1,25 +1,3 @@
-table {
-  border-collapse: collapse;
-}
-tr {
-  border-bottom: 1px lightgray solid;
-  &:first-child {
-    border-top: 1px lightgray solid;
-  }
-}
-th {
-  padding: 0 0.3em;
-}
-
-.inner-table {
-  & tr:first-child {
-    border-top: none;
-  }
-  & tr:last-child {
-    border-bottom: none;
-  }
-}
-
 @font-face {
   font-family: "Noto Symbol";
   src: url("./NotoSansSymbols2.subset.woff2") format("woff2");

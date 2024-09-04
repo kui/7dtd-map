@@ -20,6 +20,9 @@
   background-color: rgba(255, 255, 255, 0.8);
   overflow: auto;
   & table {
+    & tr:hover {
+      background-color: whitesmoke;
+    }
     & td output {
       display: inline-block;
       font-size: 1em;
@@ -101,10 +104,13 @@ dialog.multi-sections > section {
   }
 }
 
-dialog th {
-  background-color: lightgray;
-}
-
-dialog tr > td:nth-child(even) {
-  background-color: lightcyan;
+dialog {
+  & th {
+    background-color: lavender;
+  }
+  & tfoot td {
+    border-width: 1px;
+    border-style: solid none;
+    border-color: lavender;
+  }
 }
