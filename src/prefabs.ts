@@ -62,8 +62,11 @@ function main() {
   });
 
   const status = component("prefabs-status");
-  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(document.documentElement, component("prefabs-list"), (p) =>
-    prefabLi(p),
+  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
+    document.documentElement,
+    component("prefabs-list"),
+    (p) => prefabLi(p),
+    true,
   );
   prefabsHandler.addListener(({ update }) => {
     status.textContent = update.status;
