@@ -58,7 +58,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>True,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,0,0,0,0,2,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2,S_-Group_Generic_Zombie,3,3,S_Zom_Janitor_Only,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,3,3,S_-Group_Generic_Zombie,3,3</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,2,2,GroupGenericZombie,3,3,ZomJanitorOnly,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,3,3,GroupGenericZombie,3,3</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,1,1,2,2</td></tr>
 <tr><th>SleeperVolumeSize</th><td>8, 4, 9#15, 6, 7#8, 5, 7#8, 5, 7#7, 5, 13#7, 5, 12#3, 4, 4#13, 6, 14#7, 5, 12</td></tr>
 <tr><th>SleeperVolumeStart</th><td>2, 22, 14#10, 0, 16#9, 0, 8#1, 0, 2#2, 0, 9#2, 6, 2#9, 6, 19#10, 11, 9#2, 12, 2</td></tr>
@@ -80,7 +80,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">9596</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">9600</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFanDouble</td><td class="block_label">Vent Fan, Double</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">awningCornerLeftBlack</td><td class="block_label">Black Awning Corner Left</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">awningCornerRightBlack</td><td class="block_label">Black Awning Corner Right</td><td class="block_count">3</td></tr>
@@ -103,7 +103,7 @@
 <tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBruteStyleTrashCanRandomLootHelper</td><td class="block_label">= Trash Can = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">9</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomRandomLootHelper</td><td class="block_label">= Cabinet = Random Helper</td><td class="block_count">4</td></tr>
@@ -200,7 +200,7 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cubeEighth</td><td class="block_label">-</td><td class="block_count">12</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">40</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cubeQuarter</td><td class="block_label">-</td><td class="block_count">34</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">70</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1m</td><td class="block_label">-</td><td class="block_count">66</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1mDouble</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim1mOffCenter</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:doorTrim2m</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -367,15 +367,15 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>✓</td><td>8x4x9</td><td>2x22x14</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x6x7</td><td>10x0x16</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>9x0x8</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>1x0x2</td></tr>
-<tr><td>4</td><td>S_Zom_Janitor_Only</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x13</td><td>2x0x9</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>7x5x12</td><td>2x6x2</td></tr>
-<tr><td>6</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x4x4</td><td>9x6x19</td></tr>
-<tr><td>7</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x6x14</td><td>10x11x9</td></tr>
-<tr><td>8</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x12</td><td>2x12x2</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>✓</td><td>8x4x9</td><td>2x22x14</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x6x7</td><td>10x0x16</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>9x0x8</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>1x0x2</td></tr>
+<tr><td>4</td><td>ZomJanitorOnly</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x13</td><td>2x0x9</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>7x5x12</td><td>2x6x2</td></tr>
+<tr><td>6</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x4x4</td><td>9x6x19</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>3</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x6x14</td><td>10x11x9</td></tr>
+<tr><td>8</td><td>GroupGenericZombie</td><td>3</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x12</td><td>2x12x2</td></tr>
     </table>
     <p>Total Count: 16</p>
     

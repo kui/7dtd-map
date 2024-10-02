@@ -52,7 +52,7 @@
 <tr><th>EditorGroups</th><td>Wilderness</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>True</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
-<tr><th>PrefabSize</th><td>33, 22, 54</td></tr>
+<tr><th>PrefabSize</th><td>33, 37, 54</td></tr>
 <tr><th>QuestTags</th><td>clear, fetch, infested</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
@@ -61,7 +61,7 @@
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,2,2,S_-_Group_Ghost_Town,1,1,S_-_Group_Ghost_Town,1,1,S_-_Group_Ghost_Town,1,1,S_-_Group_Ghost_Town,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGhostTown,2,2,GroupGhostTown,1,1,GroupGhostTown,1,1,GroupGhostTown,1,1,GroupGhostTown,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>16, 6, 15#15, 5, 8#14, 7, 10#9, 6, 15#5, 5, 15</td></tr>
 <tr><th>SleeperVolumeStart</th><td>16, 8, 33#1, 8, 45#2, 5, 28#5, 1, 38#1, 7, 12</td></tr>
@@ -75,7 +75,7 @@
   <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>33</td></tr>
-<tr><th>y</th><td>22</td></tr>
+<tr><th>y</th><td>37</td></tr>
 <tr><th>z</th><td>54</td></tr></table>
   </section>
 
@@ -83,7 +83,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">14092</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">41192</td></tr>
 <tr class="block"><td class="block_name">bedrollPOI</td><td class="block_label">Bedroll (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">burningBarrel</td><td class="block_label">Burning Barrel (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">candleTableLight</td><td class="block_label">Candle Table (POI)</td><td class="block_count">2</td></tr>
@@ -137,10 +137,10 @@
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">11</td></tr>
 <tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1253</td></tr>
-<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">770</td></tr>
+<tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">1147</td></tr>
+<tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">764</td></tr>
 <tr class="block"><td class="block_name">terrOreIron</td><td class="block_label">Iron Ore</td><td class="block_count">44</td></tr>
-<tr class="block"><td class="block_name">terrStoneHelper</td><td class="block_label">= Stone Terrain = Helper</td><td class="block_count">22625</td></tr>
+<tr class="block"><td class="block_name">terrStoneHelper</td><td class="block_label">= Stone Terrain = Helper</td><td class="block_count">22367</td></tr>
 <tr class="block"><td class="block_name">treeDeadTree02</td><td class="block_label">Tree Dead Tree 02</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">treeMediumRandomHelper</td><td class="block_label">= Tree Medium = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">1</td></tr>
@@ -183,11 +183,11 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-_Group_Ghost_Town</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x6x15</td><td>16x8x33</td></tr>
-<tr><td>1</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x5x8</td><td>1x8x45</td></tr>
-<tr><td>2</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x7x10</td><td>2x5x28</td></tr>
-<tr><td>3</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x6x15</td><td>5x1x38</td></tr>
-<tr><td>4</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x15</td><td>1x7x12</td></tr>
+      <tr><td>0</td><td>GroupGhostTown</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x6x15</td><td>16x8x33</td></tr>
+<tr><td>1</td><td>GroupGhostTown</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x5x8</td><td>1x8x45</td></tr>
+<tr><td>2</td><td>GroupGhostTown</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x7x10</td><td>2x5x28</td></tr>
+<tr><td>3</td><td>GroupGhostTown</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x6x15</td><td>5x1x38</td></tr>
+<tr><td>4</td><td>GroupGhostTown</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x15</td><td>1x7x12</td></tr>
     </table>
     <p>Total Count: 6</p>
     

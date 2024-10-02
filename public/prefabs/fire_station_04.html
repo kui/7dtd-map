@@ -47,7 +47,6 @@
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>2</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
-<tr><th>DuplicateRepeatDistance</th><td>1000</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
 <tr><th>POIMarkerGroup</th><td>driveway,driveway1</td></tr>
@@ -65,12 +64,12 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,True,False,False,False,True,False,False,False,True,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,True,True,True,False,False,False,False,False,False,False,False,False,False,True</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,2,3,0,3,0,0,0,0,0,2,2,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,animalZombieDog,0,1,S_Zom_Lumber_Jack,1,1,animalZombieVulture,1,1,zombieMoe,1,1,S_-Group_Generic_Zombie,2,2,S_Zom_FatCops,1,1,S_-Group_Generic_Zombie,1,1,S_Zom_Lumber_Jack,1,1,S_-_Group_Biker_Bar,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,animalZombieVulture,0,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,animalZombieDog,0,1,ZomLumberJack,1,1,animalZombieVulture,1,1,zombieMoe,1,1,GroupGenericZombie,2,2,ZomFatCops,1,1,GroupGenericZombie,1,1,ZomLumberJack,1,1,GroupBikerBar,1,1,GroupGenericZombie,1,1,GroupGenericZombie,0,0,GroupGenericZombie,1,1,GroupGenericZombie,1,1,animalZombieVulture,0,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>2,0,0,0,0,1,1,0,2,2,2,2,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>10, 3, 9#4, 3, 12#1, 3, 1#9, 8, 7#1, 3, 1#13, 5, 10#5, 3, 3#6, 3, 7#2, 3, 3#2, 3, 2#5, 1, 9#3, 4, 3#17, 3, 19#17, 3, 19#13, 3, 2</td></tr>
 <tr><th>SleeperVolumeStart</th><td>25, 10, 5#36, 4, 5#11, 4, 33#7, 28, 34#29, 10, 20#27, 2, 17#25, 4, 14#21, 4, 5#32, 10, 17#24, 10, 5#27, 15, 8#35, 10, 8#23, 4, 21#6, 4, 13#23, 16, 18</td></tr>
 <tr><th>SleeperVolumeTriggeredBy</th><td> # #1# #2# # # # # # # # # # </td></tr>
-<tr><th>Tags</th><td>countrytown,diagonal</td></tr>
+<tr><th>Tags</th><td>countrytown, diagonal</td></tr>
 <tr><th>ThemeDistance</th><td>500</td></tr>
 <tr><th>ThemeTags</th><td>stationFire</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
@@ -147,7 +146,7 @@
 <tr class="block"><td class="block_name">cntBirdnestCorner</td><td class="block_label">Bird Nest</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBookcaseCornerPoorRandomLootHelper</td><td class="block_label">= Corner Bookcase Poor = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookPile02</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomRandomLootHelper</td><td class="block_label">= Cabinet = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntClothesPileFloor01</td><td class="block_label">Clothes Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntClothesShelfHalfEmpty</td><td class="block_label">Clothes Shelf Half, Empty</td><td class="block_count">1</td></tr>
@@ -474,20 +473,20 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x3x9</td><td>25x10x5</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x3x9</td><td>25x10x5</td></tr>
 <tr><td>1</td><td>animalZombieDog</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>✓</td><td>4x3x12</td><td>36x4x5</td></tr>
-<tr><td>2</td><td>S_Zom_Lumber_Jack</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x3x1</td><td>11x4x33</td></tr>
+<tr><td>2</td><td>ZomLumberJack</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x3x1</td><td>11x4x33</td></tr>
 <tr><td>3</td><td>animalZombieVulture</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>9x8x7</td><td>7x28x34</td></tr>
 <tr><td>4</td><td>zombieMoe</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>1x3x1</td><td>29x10x20</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>13x5x10</td><td>27x2x17</td></tr>
-<tr><td>6</td><td>S_Zom_FatCops</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x3x3</td><td>25x4x14</td></tr>
-<tr><td>7</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x3x7</td><td>21x4x5</td></tr>
-<tr><td>8</td><td>S_Zom_Lumber_Jack</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x3</td><td>32x10x17</td></tr>
-<tr><td>9</td><td>S_-_Group_Biker_Bar</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>2x3x2</td><td>24x10x5</td></tr>
-<tr><td>10</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x1x9</td><td>27x15x8</td></tr>
-<tr><td>11</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>3x4x3</td><td>35x10x8</td></tr>
-<tr><td>12</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x19</td><td>23x4x21</td></tr>
-<tr><td>13</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>17x3x19</td><td>6x4x13</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>13x5x10</td><td>27x2x17</td></tr>
+<tr><td>6</td><td>ZomFatCops</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x3x3</td><td>25x4x14</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x3x7</td><td>21x4x5</td></tr>
+<tr><td>8</td><td>ZomLumberJack</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x3</td><td>32x10x17</td></tr>
+<tr><td>9</td><td>GroupBikerBar</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>2x3x2</td><td>24x10x5</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x1x9</td><td>27x15x8</td></tr>
+<tr><td>11</td><td>GroupGenericZombie</td><td>0</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>3x4x3</td><td>35x10x8</td></tr>
+<tr><td>12</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x19</td><td>23x4x21</td></tr>
+<tr><td>13</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>17x3x19</td><td>6x4x13</td></tr>
 <tr><td>14</td><td>animalZombieVulture</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>13x3x2</td><td>23x16x18</td></tr>
     </table>
     <p>Total Count: 13-15</p>

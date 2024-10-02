@@ -67,7 +67,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,True,True,True,True,True,True,True,False,True,True,True,False,True,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,2,2,2,2,2,2,0,0,3,3,0,2,2,2,0,2</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,2,S_-_Group_Zom_Badass,2,2,S_-Group_Generic_Zombie,3,3,zombieMaleHazmat,1,1,S_-Group_Generic_Zombie,1,2,S_-_Group_Zom_Badass,0,0,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_-_Group_Zom_Badass_Only,0,0,S_-Group_Generic_Zombie,0,0</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,0,0,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,2,GroupZomBadass,2,2,GroupGenericZombie,3,3,zombieMaleHazmat,1,1,GroupGenericZombie,1,2,GroupZomBadass,0,0,GroupGenericZombie,1,1,GroupGenericZombie,0,0,GroupZomBadassOnly,0,0,GroupGenericZombie,0,0</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,1,1,0,6,0,2,5,3,3,4,6,0,3,5,4</td></tr>
 <tr><th>SleeperVolumeSize</th><td>6, 3, 5#3, 3, 5#7, 4, 3#5, 6, 3#25, 3, 7#3, 3, 8#2, 3, 5#8, 3, 9#11, 3, 4#3, 3, 6#4, 3, 2#6, 3, 14#4, 7, 1#12, 3, 6#2, 4, 1#2, 3, 1#1, 3, 1</td></tr>
 <tr><th>SleeperVolumeStart</th><td>21, 6, 23#20, 11, 19#15, 11, 19#12, 5, 19#9, 5, 32#28, 6, 13#29, 6, 21#20, 6, 14#19, 1, 14#24, 1, 20#27, 1, 24#24, 11, 13#18, 5, 23#19, 16, 16#18, 5, 25#18, 6, 25#21, 5, 24</td></tr>
@@ -154,7 +154,7 @@
 <tr class="block"><td class="block_name">cntBookcaseEmpty</td><td class="block_label">Empty Bookcase</td><td class="block_count">16</td></tr>
 <tr class="block"><td class="block_name">cntBookcasePoorRandomLootHelper</td><td class="block_label">= Bookcase Poor = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookPile01</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfDoubleBottomEmpty</td><td class="block_label">Book Shelf Double Bottom Empty</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBruteStyleTrashCanRandomLootHelper</td><td class="block_label">= Trash Can = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottom</td><td class="block_label">Cabinet</td><td class="block_count">1</td></tr>
@@ -593,23 +593,23 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x3x5</td><td>21x6x23</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>3x3x5</td><td>20x11x19</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>7x4x3</td><td>15x11x19</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>5x6x3</td><td>12x5x19</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>25x3x7</td><td>9x5x32</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>3x3x8</td><td>28x6x13</td></tr>
-<tr><td>6</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>2x3x5</td><td>29x6x21</td></tr>
-<tr><td>7</td><td>S_-Group_Generic_Zombie</td><td>1-2</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>8x3x9</td><td>20x6x14</td></tr>
-<tr><td>8</td><td>S_-_Group_Zom_Badass</td><td>2</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x3x4</td><td>19x1x14</td></tr>
-<tr><td>9</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>3</td><td>-</td><td>3</td><td>✓</td><td>✓</td><td>-</td><td>3x3x6</td><td>24x1x20</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x3x5</td><td>21x6x23</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>3x3x5</td><td>20x11x19</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>7x4x3</td><td>15x11x19</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>5x6x3</td><td>12x5x19</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>25x3x7</td><td>9x5x32</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>3x3x8</td><td>28x6x13</td></tr>
+<tr><td>6</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>2x3x5</td><td>29x6x21</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>1-2</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>8x3x9</td><td>20x6x14</td></tr>
+<tr><td>8</td><td>GroupZomBadass</td><td>2</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x3x4</td><td>19x1x14</td></tr>
+<tr><td>9</td><td>GroupGenericZombie</td><td>3</td><td>3</td><td>-</td><td>3</td><td>✓</td><td>✓</td><td>-</td><td>3x3x6</td><td>24x1x20</td></tr>
 <tr><td>10</td><td>zombieMaleHazmat</td><td>1</td><td>3</td><td>-</td><td>3</td><td>✓</td><td>✓</td><td>-</td><td>4x3x2</td><td>27x1x24</td></tr>
-<tr><td>11</td><td>S_-Group_Generic_Zombie</td><td>1-2</td><td>4</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x14</td><td>24x11x13</td></tr>
-<tr><td>12</td><td>S_-_Group_Zom_Badass</td><td>0</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x7x1</td><td>18x5x23</td></tr>
-<tr><td>13</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>12x3x6</td><td>19x16x16</td></tr>
-<tr><td>14</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>3</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>2x4x1</td><td>18x5x25</td></tr>
-<tr><td>15</td><td>S_-_Group_Zom_Badass_Only</td><td>0</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x1</td><td>18x6x25</td></tr>
-<tr><td>16</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>4</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>1x3x1</td><td>21x5x24</td></tr>
+<tr><td>11</td><td>GroupGenericZombie</td><td>1-2</td><td>4</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x14</td><td>24x11x13</td></tr>
+<tr><td>12</td><td>GroupZomBadass</td><td>0</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x7x1</td><td>18x5x23</td></tr>
+<tr><td>13</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>12x3x6</td><td>19x16x16</td></tr>
+<tr><td>14</td><td>GroupGenericZombie</td><td>0</td><td>3</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>2x4x1</td><td>18x5x25</td></tr>
+<tr><td>15</td><td>GroupZomBadassOnly</td><td>0</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x1</td><td>18x6x25</td></tr>
+<tr><td>16</td><td>GroupGenericZombie</td><td>0</td><td>4</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>1x3x1</td><td>21x5x24</td></tr>
     </table>
     <p>Total Count: 15-17</p>
     

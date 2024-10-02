@@ -55,7 +55,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,True,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,3,0,0,0,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2,S_Zom_Utility_Worker,1,1,S_Zom_Businessman,1,1,S_-_Group_Hospital,1,1,S_-_Group_Hospital,1,1,S_-_Group_Hospital,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupGenericZombie,2,2,ZomUtilityWorker,1,1,ZomBusinessman,1,1,GroupHospital,1,1,GroupHospital,1,1,GroupHospital,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>7, 3, 7#17, 4, 18#1, 1, 1#30, 3, 8#21, 3, 9#24, 3, 20#30, 3, 13#30, 3, 19#30, 3, 15</td></tr>
 <tr><th>SleeperVolumeStart</th><td>3, 2, 50#25, 1, 24#30, 2, 41#23, 8, 7#23, 8, 37#29, 8, 15#23, 13, 9#23, 18, 10#23, 18, 29</td></tr>
@@ -141,7 +141,7 @@
 <tr class="block"><td class="block_name">cntBinTrashPlasticEmptyYellow</td><td class="block_label">Yellow Empty Plastic Trash Bin</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashPlasticWhiteRandomLootHelper</td><td class="block_label">= White Plastic Trash Bin = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookPile02</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">cntBookPileRandomLootHelper2</td><td class="block_label">= Book Pile = Random Helper 02</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleCapBottomEmpty</td><td class="block_label">Book Shelf Cap Bottom Empty</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleCapBottomRandomLootHelper</td><td class="block_label">= Book Shelf Cap Bottom = Random Helper</td><td class="block_count">6</td></tr>
@@ -684,15 +684,15 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x3x7</td><td>3x2x50</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x4x18</td><td>25x1x24</td></tr>
-<tr><td>2</td><td>S_Zom_Utility_Worker</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>1x1x1</td><td>30x2x41</td></tr>
-<tr><td>3</td><td>S_Zom_Businessman</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x8</td><td>23x8x7</td></tr>
-<tr><td>4</td><td>S_-_Group_Hospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>21x3x9</td><td>23x8x37</td></tr>
-<tr><td>5</td><td>S_-_Group_Hospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>24x3x20</td><td>29x8x15</td></tr>
-<tr><td>6</td><td>S_-_Group_Hospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x13</td><td>23x13x9</td></tr>
-<tr><td>7</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x19</td><td>23x18x10</td></tr>
-<tr><td>8</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x15</td><td>23x18x29</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x3x7</td><td>3x2x50</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x4x18</td><td>25x1x24</td></tr>
+<tr><td>2</td><td>ZomUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>1x1x1</td><td>30x2x41</td></tr>
+<tr><td>3</td><td>ZomBusinessman</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x8</td><td>23x8x7</td></tr>
+<tr><td>4</td><td>GroupHospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>21x3x9</td><td>23x8x37</td></tr>
+<tr><td>5</td><td>GroupHospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>24x3x20</td><td>29x8x15</td></tr>
+<tr><td>6</td><td>GroupHospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x13</td><td>23x13x9</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x19</td><td>23x18x10</td></tr>
+<tr><td>8</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>30x3x15</td><td>23x18x29</td></tr>
     </table>
     <p>Total Count: 10</p>
     

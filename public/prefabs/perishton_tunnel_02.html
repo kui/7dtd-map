@@ -55,7 +55,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,True,False,False,False,True,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,3,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_Zom_Utility_Worker,2,2,animalSnake,1,1,S_Zom_Spider_Only,1,1,S_-Group_Generic_Zombie,2,2,zombieBurntFeral,1,1,S_-Group_Generic_Zombie,2,2,S_Zom_Spider_Only,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>ZomUtilityWorker,2,2,animalSnake,1,1,ZomSpiderOnly,1,1,GroupGenericZombie,2,2,zombieBurntFeral,1,1,GroupGenericZombie,2,2,ZomSpiderOnly,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>17, 3, 16#3, 3, 7#8, 6, 14#14, 3, 15#2, 1, 3#14, 3, 21#16, 5, 11</td></tr>
 <tr><th>SleeperVolumeStart</th><td>4, 3, 0#21, 6, 7#15, 3, 16#7, 3, 30#22, 4, 34#7, 3, 54#7, 3, 50</td></tr>
@@ -92,7 +92,7 @@
 <tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntBarrelGasSingle45</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelPlasticSingle00</td><td class="block_label">Water Barrel</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBusSchoolShort</td><td class="block_label">Short School Bus</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCardboardBox</td><td class="block_label">Cardboard Box</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntFarmTruckOpen</td><td class="block_label">Farm Truck, Open</td><td class="block_count">1</td></tr>
@@ -243,13 +243,13 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_Zom_Utility_Worker</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x16</td><td>4x3x0</td></tr>
+      <tr><td>0</td><td>ZomUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x16</td><td>4x3x0</td></tr>
 <tr><td>1</td><td>animalSnake</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>3x3x7</td><td>21x6x7</td></tr>
-<tr><td>2</td><td>S_Zom_Spider_Only</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x6x14</td><td>15x3x16</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x15</td><td>7x3x30</td></tr>
+<tr><td>2</td><td>ZomSpiderOnly</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x6x14</td><td>15x3x16</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x15</td><td>7x3x30</td></tr>
 <tr><td>4</td><td>zombieBurntFeral</td><td>1</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>2x1x3</td><td>22x4x34</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>14x3x21</td><td>7x3x54</td></tr>
-<tr><td>6</td><td>S_Zom_Spider_Only</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x5x11</td><td>7x3x50</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>14x3x21</td><td>7x3x54</td></tr>
+<tr><td>6</td><td>ZomSpiderOnly</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x5x11</td><td>7x3x50</td></tr>
     </table>
     <p>Total Count: 10</p>
     

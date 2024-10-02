@@ -57,7 +57,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,2,0,0,2,2,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_Zom_Janitor_Only,1,1,S_Zom_Janitor_Only,1,1,S_Zom_Businessman,2,2,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_Zom_Businessman,1,1,S_-_Group_Biker_Bar,1,1,S_-_Group_Biker_Bar,0,0,S_-Group_Generic_Zombie,2,2,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2,S_-Group_Generic_Zombie,3,3,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_Zom_Janitor_Only,0,0,S_-_Group_Biker_Bar,1,1,S_-_Group_Biker_Bar,1,1,S_-_Group_Biker_Bar,0,0,S_-Group_Generic_Zombie,0,0</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>ZomJanitorOnly,1,1,ZomJanitorOnly,1,1,ZomBusinessman,2,2,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,ZomBusinessman,1,1,GroupBikerBar,1,1,GroupBikerBar,0,0,GroupGenericZombie,2,2,GroupGenericZombie,1,1,GroupGenericZombie,2,2,GroupGenericZombie,3,3,GroupGenericZombie,1,1,GroupGenericZombie,2,2,GroupGenericZombie,1,1,GroupGenericZombie,0,0,ZomJanitorOnly,0,0,GroupBikerBar,1,1,GroupBikerBar,1,1,GroupBikerBar,0,0,GroupGenericZombie,0,0</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>1,1,0,2,2,3,3,7,6,0,0,4,4,4,4,5,5,1,6,6,7,7</td></tr>
 <tr><th>SleeperVolumeSize</th><td>2, 3, 3#5, 5, 7#8, 4, 9#3, 5, 5#8, 5, 7#7, 8, 7#3, 8, 5#4, 6, 3#6, 5, 8#7, 4, 8#14, 3, 8#5, 4, 7#6, 6, 13#6, 2, 9#9, 2, 10#5, 1, 2#1, 2, 1#5, 9, 4#4, 5, 3#10, 5, 3#10, 5, 3#6, 5, 8</td></tr>
 <tr><th>SleeperVolumeStart</th><td>22, 8, 13#17, 8, 11#15, 9, 2#2, 9, 11#2, 9, 4#2, 0, 4#2, 0, 11#12, 8, 20#6, 14, 15#16, 14, 2#1, 15, 3#6, 21, 13#11, 21, 11#5, 25, 12#15, 19, 1#17, 3, 20#21, 3, 10#17, 5, 18#12, 14, 20#6, 14, 12#6, 9, 12#6, 9, 15</td></tr>
@@ -102,7 +102,7 @@
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookPile02</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleBottomRandomLootHelper</td><td class="block_label">= Book Shelf Single Bottom = Random Helper</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleCapBottomRandomLootHelper</td><td class="block_label">= Book Shelf Cap Bottom = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleTopRandomLootHelper</td><td class="block_label">= Book Shelf Single Top = Random Helper</td><td class="block_count">1</td></tr>
@@ -428,28 +428,28 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_Zom_Janitor_Only</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x3</td><td>22x8x13</td></tr>
-<tr><td>1</td><td>S_Zom_Janitor_Only</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x7</td><td>17x8x11</td></tr>
-<tr><td>2</td><td>S_Zom_Businessman</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x4x9</td><td>15x9x2</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x5x5</td><td>2x9x11</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>2x9x4</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x8x7</td><td>2x0x4</td></tr>
-<tr><td>6</td><td>S_Zom_Businessman</td><td>1</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x8x5</td><td>2x0x11</td></tr>
-<tr><td>7</td><td>S_-_Group_Biker_Bar</td><td>1</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x6x3</td><td>12x8x20</td></tr>
-<tr><td>8</td><td>S_-_Group_Biker_Bar</td><td>0</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x5x8</td><td>6x14x15</td></tr>
-<tr><td>9</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x4x8</td><td>16x14x2</td></tr>
-<tr><td>10</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x8</td><td>1x15x3</td></tr>
-<tr><td>11</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x4x7</td><td>6x21x13</td></tr>
-<tr><td>12</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x6x13</td><td>11x21x11</td></tr>
-<tr><td>13</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>4</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>6x2x9</td><td>5x25x12</td></tr>
-<tr><td>14</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>4</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>9x2x10</td><td>15x19x1</td></tr>
-<tr><td>15</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x1x2</td><td>17x3x20</td></tr>
-<tr><td>16</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>1x2x1</td><td>21x3x10</td></tr>
-<tr><td>17</td><td>S_Zom_Janitor_Only</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x9x4</td><td>17x5x18</td></tr>
-<tr><td>18</td><td>S_-_Group_Biker_Bar</td><td>1</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x5x3</td><td>12x14x20</td></tr>
-<tr><td>19</td><td>S_-_Group_Biker_Bar</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x5x3</td><td>6x14x12</td></tr>
-<tr><td>20</td><td>S_-_Group_Biker_Bar</td><td>0</td><td>7</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x5x3</td><td>6x9x12</td></tr>
-<tr><td>21</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x5x8</td><td>6x9x15</td></tr>
+      <tr><td>0</td><td>ZomJanitorOnly</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x3x3</td><td>22x8x13</td></tr>
+<tr><td>1</td><td>ZomJanitorOnly</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x7</td><td>17x8x11</td></tr>
+<tr><td>2</td><td>ZomBusinessman</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x4x9</td><td>15x9x2</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x5x5</td><td>2x9x11</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x7</td><td>2x9x4</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>1</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x8x7</td><td>2x0x4</td></tr>
+<tr><td>6</td><td>ZomBusinessman</td><td>1</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x8x5</td><td>2x0x11</td></tr>
+<tr><td>7</td><td>GroupBikerBar</td><td>1</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x6x3</td><td>12x8x20</td></tr>
+<tr><td>8</td><td>GroupBikerBar</td><td>0</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x5x8</td><td>6x14x15</td></tr>
+<tr><td>9</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x4x8</td><td>16x14x2</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x8</td><td>1x15x3</td></tr>
+<tr><td>11</td><td>GroupGenericZombie</td><td>2</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x4x7</td><td>6x21x13</td></tr>
+<tr><td>12</td><td>GroupGenericZombie</td><td>3</td><td>4</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x6x13</td><td>11x21x11</td></tr>
+<tr><td>13</td><td>GroupGenericZombie</td><td>1</td><td>4</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>6x2x9</td><td>5x25x12</td></tr>
+<tr><td>14</td><td>GroupGenericZombie</td><td>2</td><td>4</td><td>-</td><td>3</td><td>-</td><td>-</td><td>-</td><td>9x2x10</td><td>15x19x1</td></tr>
+<tr><td>15</td><td>GroupGenericZombie</td><td>1</td><td>5</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x1x2</td><td>17x3x20</td></tr>
+<tr><td>16</td><td>GroupGenericZombie</td><td>0</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>1x2x1</td><td>21x3x10</td></tr>
+<tr><td>17</td><td>ZomJanitorOnly</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x9x4</td><td>17x5x18</td></tr>
+<tr><td>18</td><td>GroupBikerBar</td><td>1</td><td>6</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x5x3</td><td>12x14x20</td></tr>
+<tr><td>19</td><td>GroupBikerBar</td><td>1</td><td>6</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x5x3</td><td>6x14x12</td></tr>
+<tr><td>20</td><td>GroupBikerBar</td><td>0</td><td>7</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>10x5x3</td><td>6x9x12</td></tr>
+<tr><td>21</td><td>GroupGenericZombie</td><td>0</td><td>7</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x5x8</td><td>6x9x15</td></tr>
     </table>
     <p>Total Count: 23</p>
     

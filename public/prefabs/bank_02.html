@@ -47,7 +47,6 @@
 <tr><th>CopyAirBlocks</th><td>True</td></tr>
 <tr><th>DifficultyTier</th><td>3</td></tr>
 <tr><th>DistantPOIYOffset</th><td>0</td></tr>
-<tr><th>DuplicateRepeatDistance</th><td>1000</td></tr>
 <tr><th>EditorGroups</th><td>downtown</td></tr>
 <tr><th>ExcludeDistantPOIMesh</th><td>False</td></tr>
 <tr><th>ExcludePOICulling</th><td>False</td></tr>
@@ -58,7 +57,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0,0,0,0,0,2,2</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Night_Club,3,3,zombieBusinessMan,1,1,zombieBusinessMan,2,2,zombieBusinessManFeral,1,1,zombieBusinessMan,1,1,S_-Group_Generic_Zombie,2,2,zombieUtilityWorker,2,2,zombieUtilityWorker,1,1,zombieJanitorFeral,1,1,S_-_Group_Special_Infected,2,2,S_-_Group_Zom_Badass,5,5</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupNightClub,3,3,zombieBusinessMan,1,1,zombieBusinessMan,2,2,zombieBusinessManFeral,1,1,zombieBusinessMan,1,1,GroupGenericZombie,2,2,zombieUtilityWorker,2,2,zombieUtilityWorker,1,1,zombieJanitorFeral,1,1,GroupSpecialInfected,2,2,GroupZomBadass,5,5</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>20, 4, 5#5, 4, 5#16, 4, 6#8, 4, 11#8, 4, 4#14, 3, 5#22, 3, 16#6, 4, 4#3, 4, 3#9, 4, 5#9, 4, 6</td></tr>
 <tr><th>SleeperVolumeStart</th><td>3, 7, 17#3, 7, 7#6, 12, 15#13, 17, 9#5, 17, 16#4, 17, 20#1, 22, 8#1, 2, 17#3, 2, 10#14, 2, 9#14, 2, 16</td></tr>
@@ -104,7 +103,7 @@
 <tr class="block"><td class="block_name">cntATMSecure</td><td class="block_label">ATM</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBagsRandomLootHelper</td><td class="block_label">= Bag / Backpack = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBinTrashMetalWhiteRandomLootHelper</td><td class="block_label">= Metal Trash Bin = Random Helper</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">cntBookPile03</td><td class="block_label">Pile of Books</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBookPile03AirRandomLootHelper</td><td class="block_label">= Book Pile 03 vs Air = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBookShelfSingleBottomRandomLootHelper</td><td class="block_label">= Book Shelf Single Bottom = Random Helper</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">8</td></tr>
 <tr class="block"><td class="block_name">cntCashRegisterRandomLootHelper</td><td class="block_label">= Cash Registers = Random Helper</td><td class="block_count">2</td></tr>
@@ -354,17 +353,17 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-_Group_Night_Club</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>20x4x5</td><td>3x7x17</td></tr>
+      <tr><td>0</td><td>GroupNightClub</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>20x4x5</td><td>3x7x17</td></tr>
 <tr><td>1</td><td>zombieBusinessMan</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x4x5</td><td>3x7x7</td></tr>
 <tr><td>2</td><td>zombieBusinessMan</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>16x4x6</td><td>6x12x15</td></tr>
 <tr><td>3</td><td>zombieBusinessManFeral</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x4x11</td><td>13x17x9</td></tr>
 <tr><td>4</td><td>zombieBusinessMan</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x4x4</td><td>5x17x16</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x5</td><td>4x17x20</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x3x5</td><td>4x17x20</td></tr>
 <tr><td>6</td><td>zombieUtilityWorker</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>22x3x16</td><td>1x22x8</td></tr>
 <tr><td>7</td><td>zombieUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>6x4x4</td><td>1x2x17</td></tr>
 <tr><td>8</td><td>zombieJanitorFeral</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>3x4x3</td><td>3x2x10</td></tr>
-<tr><td>9</td><td>S_-_Group_Special_Infected</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x5</td><td>14x2x9</td></tr>
-<tr><td>10</td><td>S_-_Group_Zom_Badass</td><td>5</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x6</td><td>14x2x16</td></tr>
+<tr><td>9</td><td>GroupSpecialInfected</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x5</td><td>14x2x9</td></tr>
+<tr><td>10</td><td>GroupZomBadass</td><td>5</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x6</td><td>14x2x16</td></tr>
     </table>
     <p>Total Count: 21</p>
     
