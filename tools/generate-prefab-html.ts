@@ -57,7 +57,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   );
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 
-  await writeJsonFile(path.join(BASE_DEST, "index.json"), index);
+  await writeJsonFile(path.join(BASE_DEST, "index.json"), index.toSorted());
 }
 
 async function generateHtml(xmlFileName: string, labels: Map<LabelId, Label>) {
