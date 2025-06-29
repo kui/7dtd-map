@@ -10,7 +10,7 @@ async function main() {
   try {
     msg = await readDtmBlockRaw(workspace);
   } catch (e) {
-    console.error(e);
+    printError(e);
   }
   postMessage(msg, msg ? [msg.buffer] : []);
   close();

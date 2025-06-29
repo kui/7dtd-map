@@ -90,7 +90,7 @@ function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, c
   }
   if ("return" in origin) {
     chunkIter.return = (treturn?: TReturn): IteratorResult<T[], TReturn> => {
-      const r = (origin.return as (treturn?: TReturn | undefined) => IteratorResult<T, TReturn>)(treturn);
+      const r = (origin.return as (treturn?: TReturn) => IteratorResult<T, TReturn>)(treturn);
       if (isReturn(r)) return r;
       else return { done: r.done ?? false, value: [r.value] };
     };

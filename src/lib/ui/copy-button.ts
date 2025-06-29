@@ -29,20 +29,24 @@ export function init(): void {
 const DEFAULT_SUCCESS_MESSAGE = "Copied!";
 const DEFAULT_FAILURE_MESSAGE = "⚠Failure";
 
-function copy(target: HTMLElement, button: HTMLButtonElement) {
+async function copy(target: HTMLElement, button: HTMLButtonElement) {
   selectNode(target);
 
-  // TODO Use Clipboard API
-  const commandResult = document.execCommand("copy");
-  if (commandResult) {
-    console.log("Copy Success", target);
-    button.dataset["message"] = button.dataset["successMessage"] ?? DEFAULT_SUCCESS_MESSAGE;
+  let textToCopy = "";
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+    textToCopy = target.value;
   } else {
-    console.log("Copy Failure", target);
-    button.dataset["message"] = button.dataset["failureMessage"] ?? DEFAULT_FAILURE_MESSAGE;
+    textToCopy = target.textContent ?? "";
   }
 
-  console.log(commandResult);
+  try {
+    await navigator.clipboard.writeText(textToCopy);
+    console.log("Copy Success", target);
+    button.dataset["message"] = button.dataset["successMessage"] ?? DEFAULT_SUCCESS_MESSAGE;
+  } catch (e) {
+    console.log("Copy Failure", target, e);
+    button.dataset["message"] = button.dataset["failureMessage"] ?? DEFAULT_FAILURE_MESSAGE;
+  }
 }
 
 function selectNode(target: HTMLElement) {
