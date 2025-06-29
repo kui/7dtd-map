@@ -32,7 +32,6 @@
     "@swc/jest": "^0.2.38",
     "@tsconfig/node24": "^24.0.1",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/eslint__js": "^9.14.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.7",
     "@types/pngjs": "^6.0.5",
