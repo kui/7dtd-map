@@ -1,3 +1,5 @@
+import { printError } from "../utils.js";
+
 export function init(): void {
   for (const button of Array.from(document.querySelectorAll("[data-copy-for]"))) {
     if (!(button instanceof HTMLButtonElement)) continue;
@@ -8,7 +10,7 @@ export function init(): void {
     if (!target) continue;
 
     button.addEventListener("click", () => {
-      copy(target, button);
+      copy(target, button).catch(printError);
     });
     button.addEventListener("mouseover", () => {
       selectNode(target);
