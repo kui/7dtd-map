@@ -1,0 +1,6 @@
+<MapInfo>
+  <property name="Name"		value="::Navezgane::"/>
+	<property name="Modes"		value="Survival,SurvivalSP,SurvivalMP,Creative"/>
+	<property name="Description"	value="mmNavezganeSpDesc"/>
+	<property name="HeightMapSize"	value="6144,6144"/>
+</MapInfo>

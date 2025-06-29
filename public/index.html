@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="description" content="Map renderer for 7 Day to Die 1.0" />
+    <meta name="description" content="Map renderer for 7 Day to Die" />
     <title>7 Days to Die Map Renderer</title>
     <script src="index.js" async></script>
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -10,14 +10,14 @@
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body>
-    <h1>7 Days to Die Map Renderer</h1>
+    <h1>7 Days to Die Map Renderer v2.0</h1>
 
     <p>Only supported in latest Google Chrome.</p>
 
     <nav>
       <ul>
         <li><a href="prefabs.html">Prefab List</a></li>
-        <li><a href="old/a20/">Alpha 20</a>, <a href="old/a21/">Alpha 21</a></li>
+        <li><a href="old/v1.4/">v1.4</a>, <a href="old/a21/">Alpha 21</a>, <a href="old/a20/">Alpha 20</a></li>
         <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
         <li>
           Prefab/Block Language:
@@ -205,12 +205,13 @@
             <button data-input-for="prefab_filter">skyscraper</button>
             <button data-input-for="prefab_filter" data-input-text="^downtown_">downtown</button>
             <!--
-              Go https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
-                 or https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%7C.*RandomLootHelper%29
+              Go https://kui.github.io/7dtd-map/prefabs.html?block-filter=%5Ecnt%28LootCrateBook%7CBook%7CshelfSupply%7CStoreElectronicsBook%7CDesk%7CFileCabinet%29%28%3F%21.*Empty%29&max-tier=2
+                 or http://127.0.0.1:8000/prefabs.html?block-filter=%5Ecnt%28LootCrateBook%7CBook%7CshelfSupply%7CStoreElectronicsBook%7CDesk%7CFileCabinet%29%28%3F%21.*Empty%29&max-tier=2
+              Run the following code in the browser console: `^(${Array.from($("#prefabs-list").querySelectorAll("li > a > small")).slice(0, 30).map(e => e.textContent).join('|')})$`
             -->
             <button
               data-input-for="prefab_filter"
-              data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_(01|07|09|12)$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$|house_modern_(26|28)$|apartments_03$|downtown_filler_(12|31)$|farm_17$|rural_church_01$)"
+              data-input-text="^(store_book_01|remnant_library_01|remnant_library_02|remnant_skyscraper_05|remnant_school_01|remnant_skyscraper_02|remnant_waste_18|remnant_downtown_strip_16|downtown_building_05|remnant_downtown_strip_13|remnant_downtown_strip_01|remnant_downtown_strip_12|downtown_business_06|remnant_waste_19|house_old_ranch_11|radio_station_03|remnant_church_01|remnant_hospital_01|radio_station_02|remnant_business_03|school_daycare_03|remnant_hotel_01|remnant_waste_15|store_book_04|remnant_downtown_filler_24|remnant_downtown_strip_18|bank_01|house_old_mansard_01|house_old_tudor_04|office_02)$"
             >
               Many Books except High Tiers
             </button>

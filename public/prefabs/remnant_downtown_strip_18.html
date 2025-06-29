@@ -56,7 +56,7 @@
 <tr><th>SleeperIsLootVolume</th><td>True,True,True,True,True,False,True,False,False,True,True</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0,0,2,0,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>zombieJanitor,0,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,0,0,S_-Group_Generic_Zombie,0,0,S_Zom_Utility_Worker,0,1,S_-Group_Generic_Zombie,0,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>zombieJanitor,0,1,GroupGenericZombie,1,1,GroupGenericZombie,0,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,0,0,GroupGenericZombie,1,1,GroupGenericZombie,0,0,GroupGenericZombie,0,0,ZomUtilityWorker,0,1,GroupGenericZombie,0,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,1,1,2,2,2,2,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>4, 3, 13#11, 3, 12#24, 3, 6#6, 3, 11#8, 3, 13#9, 3, 5#40, 4, 19#31, 5, 4#22, 4, 7#23, 9, 7#6, 3, 7</td></tr>
 <tr><th>SleeperVolumeStart</th><td>2, 3, 21#28, 3, 4#16, 8, 10#16, 3, 2#3, 3, 3#7, 3, 3#1, 12, 1#9, 9, 18#1, 8, 1#1, 8, 1#10, 8, 9</td></tr>
@@ -78,7 +78,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">16700</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">16698</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFanDouble</td><td class="block_label">Vent Fan, Double</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">apartmentMailboxClosedGrey</td><td class="block_label">Mailbox</td><td class="block_count">1</td></tr>
@@ -513,6 +513,9 @@
 <tr class="block"><td class="block_name">signGas21</td><td class="block_label">Sign: No Smoking</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">signGunsThinSmoke</td><td class="block_label">No Smoking Sign</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">signMegaCrushAd</td><td class="block_label">Sign: Mega Crush Ad</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signMiscAdministration</td><td class="block_label">Sign: Administration</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signMiscPrivate</td><td class="block_label">Sign: Private</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signMiscSmile</td><td class="block_label">Sign: Smile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signNeonColdBeer</td><td class="block_label">Cold Beer Neon Sign</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signNotice02</td><td class="block_label">Sign: Notice 02</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signOpenWallMountFrame</td><td class="block_label">Sign: Open, Wall Mount Frame</td><td class="block_count">2</td></tr>
@@ -526,7 +529,7 @@
 <tr class="block"><td class="block_name">signSnackPosterNerd</td><td class="block_label">Sign: Nerd Tats Poster</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signSnackPosterOopsClassic</td><td class="block_label">Sign: Oops Classic Poster</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signSnackPosterPrime</td><td class="block_label">Sign: Prime Bars Poster</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">signStaffOnly</td><td class="block_label">Sign: Staff Only</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signStaffOnly</td><td class="block_label">Sign: Staff Only</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
@@ -588,16 +591,16 @@
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
       <tr><td>0</td><td>zombieJanitor</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>4x3x13</td><td>2x3x21</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>11x3x12</td><td>28x3x4</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>24x3x6</td><td>16x8x10</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x11</td><td>16x3x2</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>8x3x13</td><td>3x3x3</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x5</td><td>7x3x3</td></tr>
-<tr><td>6</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>40x4x19</td><td>1x12x1</td></tr>
-<tr><td>7</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>31x5x4</td><td>9x9x18</td></tr>
-<tr><td>8</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>22x4x7</td><td>1x8x1</td></tr>
-<tr><td>9</td><td>S_Zom_Utility_Worker</td><td>0-1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>23x9x7</td><td>1x8x1</td></tr>
-<tr><td>10</td><td>S_-Group_Generic_Zombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x7</td><td>10x8x9</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>11x3x12</td><td>28x3x4</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>24x3x6</td><td>16x8x10</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x11</td><td>16x3x2</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>8x3x13</td><td>3x3x3</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x5</td><td>7x3x3</td></tr>
+<tr><td>6</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>40x4x19</td><td>1x12x1</td></tr>
+<tr><td>7</td><td>GroupGenericZombie</td><td>0</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>31x5x4</td><td>9x9x18</td></tr>
+<tr><td>8</td><td>GroupGenericZombie</td><td>0</td><td>2</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>22x4x7</td><td>1x8x1</td></tr>
+<tr><td>9</td><td>ZomUtilityWorker</td><td>0-1</td><td>2</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>23x9x7</td><td>1x8x1</td></tr>
+<tr><td>10</td><td>GroupGenericZombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>6x3x7</td><td>10x8x9</td></tr>
     </table>
     <p>Total Count: 4-8</p>
     

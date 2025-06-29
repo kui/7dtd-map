@@ -53,7 +53,19 @@
 <tr><th>PrefabSize</th><td>25, 23, 25</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
+<tr><th>SleeperIsLootVolume</th><td>True</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>False</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>3</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,3,4</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>0</td></tr>
+<tr><th>SleeperVolumeSize</th><td>10, 3, 6</td></tr>
+<tr><th>SleeperVolumeStart</th><td>2, 2, 17</td></tr>
+<tr><th>SleeperVolumeTriggeredBy</th><td>2</td></tr>
+<tr><th>SVS0</th><td>sleep 5</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>TriggerVolumeSize</th><td>5, 3, 16</td></tr>
+<tr><th>TriggerVolumeStart</th><td>0, 2, 0</td></tr>
+<tr><th>TriggerVolumeTriggers</th><td>2</td></tr>
 <tr><th>YOffset</th><td>-2</td></tr>
 <tr><th>Zoning</th><td>downtown</td></tr></table>
   </section>
@@ -69,8 +81,8 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">10237</td></tr>
-<tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">1066</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">10234</td></tr>
+<tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">1060</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeCornerBeveled</td><td class="block_label">-</td><td class="block_count">24</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">104</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubePoleCorner</td><td class="block_label">-</td><td class="block_count">24</td></tr>
@@ -78,7 +90,9 @@
 <tr class="block"><td class="block_name">brickShapes:polePlate</td><td class="block_label">-</td><td class="block_count">243</td></tr>
 <tr class="block"><td class="block_name">brickShapes:polePlateHalf</td><td class="block_label">-</td><td class="block_count">38</td></tr>
 <tr class="block"><td class="block_name">brickShapes:stairsFilledQuarterVerticalUV</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">1689</td></tr>
+<tr class="block"><td class="block_name">cntBarrelGasSingle00</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBarrelGenericSingle00</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">1690</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeHalf</td><td class="block_label">-</td><td class="block_count">142</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeQuarter</td><td class="block_label">-</td><td class="block_count">15</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:quarterInsideCorner</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -87,13 +101,20 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreCornerFull</td><td class="block_label">-</td><td class="block_count">72</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreFourSidedFull</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowStoreThreeSidedFull</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">terrainFiller</td><td class="block_label">Topsoil Terrain Filler (POI)</td><td class="block_count">625</td></tr>
     </table>
   </section>
 
   <section id="sleeper-volumes">
     <h2>SleeperVolumes</h2>
-    <p>No SleeperVolumes</p>
+    
+    <table class="long-table">
+      <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>3-4</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>10x3x6</td><td>2x2x17</td></tr>
+    </table>
+    <p>Total Count: 3-4</p>
+    
   </section>
 </body>
 </html>

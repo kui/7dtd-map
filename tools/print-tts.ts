@@ -23,7 +23,7 @@ async function main() {
       const row = [];
       for (let x = 0; x < tts.maxx; x += 1) {
         const blockId = tts.getBlockId(x, y, z);
-        if (blockId === undefined) throw Error(`Block ID not found: ${String({ x, y, z })}`);
+        if (blockId === undefined) throw Error(`Block ID not found: ${JSON.stringify({ x, y, z })}`);
         row.push(blockId.toString().padStart(5, "0"));
       }
       console.log(row.toString());

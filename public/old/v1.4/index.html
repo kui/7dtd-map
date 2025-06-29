@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Map renderer for 7 Day to Die 1.0" />
+    <title>7 Days to Die Map Renderer</title>
+    <script src="index.js" async></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+  </head>
+  <body>
+    <h1>7 Days to Die Map Renderer</h1>
+
+    <p>Only supported in latest Google Chrome.</p>
+
+    <nav>
+      <ul>
+        <li><a href="prefabs.html">Prefab List</a></li>
+        <li><a href="old/a20/">Alpha 20</a>, <a href="old/a21/">Alpha 21</a></li>
+        <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+        <li>
+          Prefab/Block Language:
+          <select id="label_lang">
+            <option selected>english</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="controller">
+      <p><input id="files" type="file" multiple webkitdirectory /></p>
+      <p>
+        <button id="clear_map" title="Clear all world files">Clear</button>
+        <button id="download">Download</button>
+      </p>
+      <table>
+        <tr>
+          <th><label for="map_name">🗺️ Map Name</label></th>
+          <td><input id="map_name" type="text" value="" data-remember="mapName" readonly /></td>
+        </tr>
+        <tr>
+          <th>🖱️ Cursor</th>
+          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
+        </tr>
+        <tr>
+          <th>🚩 Flag <button id="reset_mark" title="Reset">X</button></th>
+          <td>
+            <span id="mark_coods">E/W: -, N/S: -, Elev: -</span>
+          </td>
+        </tr>
+        <tr>
+          <th>ℹ️ map_info.xml</th>
+          <td>
+            <button id="map-info-show" disabled data-show-dialog-for="map-info-dialog">Show XML</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="biomes_alpha">🌲 biomes.png</label></th>
+          <td>
+            <label>
+              <output data-sync-for="biomes_alpha">1</output>
+              <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Roads">
+            <label for="splat3_alpha">🛣️ splat3_processed.png</label>
+            <span id="warn-splat3-png" title="Currently using splat3.png which is degrated compared to splat3_processed.png">⚠️</span>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="splat3_alpha">1</output>
+              <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Water">
+            <label for="splat4_alpha">🌊 splat4_processed.png</label>
+            <span id="warn-splat4-png" title="Currently using splat4.png which is degrated compared to splat4_processed.png">⚠️</span>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="splat4_alpha">0.7</output>
+              <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Radiation Area"><label for="rad_alpha">☢️ radiation.png</label></th>
+          <td>
+            <label>
+              <output data-sync-for="rad_alpha">0.5</output>
+              <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Prefabs">🏘️ prefabs.xml</th>
+          <td><button id="prefab-inspector-show" data-show-dialog-for="prefab-inspector-dialog">🔍️ Inspect prefabs</button></td>
+        </tr>
+        <tr>
+          <th title="Terrain"><label for="terrain_viewer_show">⛰️ dtm.raw</label></th>
+          <td><button id="terrain_viewer_show" disabled title="Require dtm.raw and map_info.xml">Show terrain</button></td>
+        </tr>
+        <tr>
+          <th title="Scale of each png files"><label for="scale">🔍️ Scale</label></th>
+          <td>
+            <label>
+              <output data-sync-for="scale">0.12</output>
+              <input id="scale" type="range" max="1" min="0.04" step="0.02" value="0.12" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><span class="logo">✘</span> Sign</th>
+          <td>
+            <table class="inner-table">
+              <tr>
+                <th><label for="sign_size">Size:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="sign_size">200</output>px
+                    <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="sign_alpha">Alpha:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="sign_alpha">1</output>
+                    <input id="sign_alpha" type="range" value="1" step="0.1" min="0" max="1" />
+                  </label>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="brightness">🔆 Brightness</label></th>
+          <td>
+            <label>
+              <output data-sync-for="brightness">60</output>%
+              <input id="brightness" type="range" max="100" min="0" step="1" value="60" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>💀 Prefab Tier</th>
+          <td>
+            <table class="inner-table">
+              <tr>
+                <th><label for="min_tier">Min:</label></th>
+                <td>
+                  <label for="min_tier"><output data-sync-for="min_tier">0</output></label>
+                </td>
+                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" data-min="tierRange" /></td>
+              </tr>
+              <tr>
+                <th><label for="max_tier">Max:</label></th>
+                <td>
+                  <label for="max_tier"><output data-sync-for="max_tier">5</output></label>
+                </td>
+                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" data-max="tierRange" /></td>
+              </tr>
+            </table>
+            <datalist id="tiers">
+              <option value="0"></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+              <option value="4"></option>
+              <option value="5"></option>
+            </datalist>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefab_filter">🏠️ Prefab Filter</label></th>
+          <td>
+            <input id="prefab_filter" placeholder="Input prefab name" />
+            <button title="Clear" data-input-for="prefab_filter" data-input-text="">X</button>
+            <details id="prefab-pre-filters">
+              <summary>Excludes</summary>
+              <ul>
+                <li>
+                  <label><input type="checkbox" value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)" checked />Test</label>
+                </li>
+                <li>
+                  <label><input type="checkbox" value="^rwg_tile_" checked />Tiles</label>
+                </li>
+                <li>
+                  <label><input type="checkbox" value="^part_" checked />Parts</label>
+                </li>
+              </ul>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <th>Prefab Filter Preset</th>
+          <td>
+            <button data-input-for="prefab_filter">trader</button>
+            <button data-input-for="prefab_filter">skyscraper</button>
+            <button data-input-for="prefab_filter" data-input-text="^downtown_">downtown</button>
+            <!--
+              Go https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%24%29
+                 or https://kui.github.io/7dtd-map/prefabs.html?max_tier=3&block_filter=%5Ecnt.*book%28case%7Cshelf%7Cpile%7Cstore%29%28%3F%21.*Empty%7CSpeaker%7C.*RandomLootHelper%29
+            -->
+            <button
+              data-input-for="prefab_filter"
+              data-input-text="^(store_book_|remnant_(library|school)_|school_daycare_0[23]$|remnant_downtown_strip_(01|07|09|12)$|remnant_business_03$|remnant_downtown_strip_12$|remnant_waste_18$|office_05$|cabin_20$|downtown_business_06$|canyon_gift_shop$|house_modern_(26|28)$|apartments_03$|downtown_filler_(12|31)$|farm_17$|rural_church_01$)"
+            >
+              Many Books except High Tiers
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="block_filter">📦 Block Filter</label></th>
+          <td>
+            <input id="block_filter" placeholder="Input block name" />
+            <button title="Clear" data-input-for="block_filter" data-input-text="">X</button>
+          </td>
+        </tr>
+        <tr>
+          <th>Block Filter Preset</th>
+          <td>
+            <button data-input-for="block_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
+            <button data-input-for="block_filter" data-input-text="^decoCookingPot">Cooking Pot</button>
+            <button data-input-for="block_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
+            <button data-input-for="block_filter" data-input-text="^planted.*Harvest">Plants</button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
+            >
+              Steel with Wrench
+            </button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
+            >
+              Book Containers
+            </button>
+            <button data-input-for="block_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
+              Working Vending-Machine
+            </button>
+            <button data-input-for="block_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+          </td>
+        </tr>
+      </table>
+      <p id="prefabs_num"></p>
+      <ul id="prefabs_list"></ul>
+    </div>
+    <div id="terrarian_viewer_hud" style="display: none">
+      <label style="user-select: none">
+        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
+        Show/Hide Help
+      </label>
+      <dl id="op_desc">
+        <dt><code>WASD</code> key / Grab with Mouse Left Button</dt>
+        <dd>Move horizontal</dd>
+        <dt><code>RF</code> key / Grab with Mouse Wheel Button</dt>
+        <dd>Tilt</dd>
+        <dt>Rotate Mouse Wheel</dt>
+        <dd>Move forward</dd>
+        <dt><code>Esc</code> key</dt>
+        <dd>Close</dd>
+      </dl>
+    </div>
+    <button id="terrain_viewer_close" style="display: none">❌</button>
+    <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+    <p id="loading_indicator"></p>
+    <canvas id="map" width="0" height="0"></canvas>
+
+    <h2>How to Use</h2>
+
+    <p>Upload a world folder:</p>
+
+    <ul>
+      <li>Drag and drop it here</li>
+      <li>Click "Choose Files" in the upper right corner of this page</li>
+    </ul>
+
+    <h3>Generated Worlds (Windows)</h3>
+
+    <ol>
+      <li>
+        Open "GeneratedWorlds" folder:
+        <ul>
+          <li>
+            <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <button
+              title="Copy this path"
+              data-copy-for="generated_world_path_windows"
+              data-success-message="✅ Press Win+R then paste this"
+            >
+              📋️
+            </button>
+          </li>
+        </ul>
+      </li>
+      <li>Drag and drop one folder with a world name</li>
+    </ol>
+
+    <h3>Bundled Worlds</h3>
+
+    <p>
+      Select:
+      <select id="bundled_map_select">
+        <option value="" selected>-- Choose a world --</option>
+      </select>
+    </p>
+
+    <dialog id="dialog" class="multi-sections">
+      <section>
+        <h2>Drop Files</h2>
+        <ul>
+          <li>📁 One world folder (Recommended)</li>
+          <li>🗺️ map_info.xml</li>
+          <li>🌲 biomes.png</li>
+          <li>🛣️ splat3_processed.png / splat3.png</li>
+          <li>🌊 splat4_processed.png / splat4.png</li>
+          <li>☢️ radiation.png</li>
+          <li>🏘️ prefabs.xml</li>
+          <li>⛰️ dtm.raw</li>
+        </ul>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none" checked value="dragover" />
+      </section>
+      <section>
+        <h2>⌛️ Processing Files</h2>
+        <p id="processing-message">Processing...</p>
+        <ul id="processing-files"></ul>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none" value="processing" />
+      </section>
+      <section>
+        <h2>⚠️ Error</h2>
+        <p id="error-message">Error</p>
+        <footer><button data-close-dialog-for="dnd-dialog">Close</button></footer>
+        <input type="radio" name="active-section" form="dialog-active" style="display: none" value="error" />
+      </section>
+      <form id="dialog-active" style="display: none"></form>
+    </dialog>
+
+    <dialog id="map-info-dialog">
+      <h2>map_info.xml</h2>
+      <table id="map-info-table"></table>
+      <footer><button data-close-dialog-for="map-info-dialog">Close</button></footer>
+    </dialog>
+
+    <dialog id="prefab-inspector-dialog">
+      <h2>🏘️🔍️ Prefab Inspector</h2>
+      <p><span id="prefab-inspector-count">-</span> prefabs exist in this map.</p>
+
+      <h3>Unique Prefabs</h3>
+      <p>Counts of unique prefabs in this map and defined in the game.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>InMap</th>
+            <th>Defined</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>💀5</th>
+            <td><span id="prefab-inspector-tier-5-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-5-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀4</th>
+            <td><span id="prefab-inspector-tier-4-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-4-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀3</th>
+            <td><span id="prefab-inspector-tier-3-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-3-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀2</th>
+            <td><span id="prefab-inspector-tier-2-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-2-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀1</th>
+            <td><span id="prefab-inspector-tier-1-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-1-defined-count">-</span></td>
+          </tr>
+          <tr>
+            <th>💀0</th>
+            <td><span id="prefab-inspector-tier-0-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-0-defined-count">-</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <td><span id="prefab-inspector-total-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-total-defined-count">-</span></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h3>Missing Prefabs</h3>
+      <p>These prefabs are not located in the map.</p>
+      <ol id="prefab-inspector-missings"></ol>
+
+      <footer><button data-close-dialog-for="prefab-inspector-dialog">Close</button></footer>
+    </dialog>
+  </body>
+</html>

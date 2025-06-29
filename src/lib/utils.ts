@@ -99,7 +99,7 @@ export function threePlaneSize(width: number, height: number): ThreePlaneSize {
 }
 
 export function printError(e: unknown): void {
-  console.error(e);
+  console.error("%o", e);
 }
 
 export async function fetchJson<T>(url: string): Promise<T> {
