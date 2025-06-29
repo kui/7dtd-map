@@ -30,11 +30,11 @@
     "@eslint/js": "^9.30.0",
     "@swc/core": "^1.7.10",
     "@swc/jest": "^0.2.36",
-    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/node24": "^24.0.1",
     "@tsconfig/strictest": "^2.0.5",
     "@types/eslint__js": "^9.14.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^22.2.0",
+    "@types/node": "^24.0.7",
     "@types/pngjs": "^6.0.5",
     "@types/three": "^0.167.1",
     "@types/xml2js": "^0.4.14",
@@ -54,6 +54,6 @@
     "xml2js": "^0.6.2"
   },
   "engines": {
-    "node": "~22"
+    "node": "~24"
   }
 }
