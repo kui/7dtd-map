@@ -60,7 +60,7 @@
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False,True,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,2,0,0,2,2,2,2</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,2,2,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-_Group_Ghost_Town,1,1,S_-Group_Generic_Zombie,2,2,S_-_Group_Ghost_Town,1,1,S_Zom_Janitor_Only,2,2,animalZombieDog,1,1,S_-_Group_Biker_Bar,3,3</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,2,2,GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGhostTown,1,1,GroupGenericZombie,2,2,GroupGhostTown,1,1,ZomJanitorOnly,2,2,animalZombieDog,1,1,GroupBikerBar,3,3</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>1,1,2,2,3,3,4,5,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>13, 3, 10#2, 2, 1#8, 8, 5#10, 3, 6#17, 3, 10#2, 2, 1#14, 4, 11#9, 7, 20#14, 4, 10</td></tr>
 <tr><th>SleeperVolumeStart</th><td>18, 7, 9#13, 7, 18#12, 7, 23#2, 7, 29#11, 13, 29#22, 13, 27#16, 7, 28#31, 7, 20#12, 2, 30</td></tr>
@@ -82,7 +82,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">17495</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">17494</td></tr>
 <tr class="block"><td class="block_name">airConditioner</td><td class="block_label">Air Conditioner</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">awningShapes:verticalBlindsTopRailOnly</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -137,6 +137,7 @@
 <tr class="block"><td class="block_name">cntMicrowaveRandomLootHelper</td><td class="block_label">= Microwave = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntMinivan01RandomHelper</td><td class="block_label">= Minivan = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntPickupTruck01RandomHelper</td><td class="block_label">= Pickup Truck = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntQuestInfestedT2LootHelper</td><td class="block_label">= Infested T2 = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntQuestRandomLootHelper</td><td class="block_label">= Quest Loot = Random Helper</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">cntRollingToolBoxRandomLootHelperRed</td><td class="block_label">= Red Rolling Toolbox = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntSedan01RandomHelper</td><td class="block_label">= Sedan = Random Helper</td><td class="block_count">3</td></tr>
@@ -369,15 +370,15 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x3x10</td><td>18x7x9</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x2x1</td><td>13x7x18</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x8x5</td><td>12x7x23</td></tr>
-<tr><td>3</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>2</td><td>-</td><td>0</td><td>✓</td><td>-</td><td>-</td><td>10x3x6</td><td>2x7x29</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x10</td><td>11x13x29</td></tr>
-<tr><td>5</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>3</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>2x2x1</td><td>22x13x27</td></tr>
-<tr><td>6</td><td>S_Zom_Janitor_Only</td><td>2</td><td>4</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x4x11</td><td>16x7x28</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>13x3x10</td><td>18x7x9</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>2x2x1</td><td>13x7x18</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>1</td><td>2</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>8x8x5</td><td>12x7x23</td></tr>
+<tr><td>3</td><td>GroupGhostTown</td><td>1</td><td>2</td><td>-</td><td>0</td><td>✓</td><td>-</td><td>-</td><td>10x3x6</td><td>2x7x29</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>2</td><td>3</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x3x10</td><td>11x13x29</td></tr>
+<tr><td>5</td><td>GroupGhostTown</td><td>1</td><td>3</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>2x2x1</td><td>22x13x27</td></tr>
+<tr><td>6</td><td>ZomJanitorOnly</td><td>2</td><td>4</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x4x11</td><td>16x7x28</td></tr>
 <tr><td>7</td><td>animalZombieDog</td><td>1</td><td>5</td><td>-</td><td>2</td><td>-</td><td>-</td><td>✓</td><td>9x7x20</td><td>31x7x20</td></tr>
-<tr><td>8</td><td>S_-_Group_Biker_Bar</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x4x10</td><td>12x2x30</td></tr>
+<tr><td>8</td><td>GroupBikerBar</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x4x10</td><td>12x2x30</td></tr>
     </table>
     <p>Total Count: 14</p>
     
