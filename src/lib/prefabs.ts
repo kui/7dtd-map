@@ -4,14 +4,14 @@ import * as storage from "./storage";
 export async function loadPrefabsXml(fetchDifficulties?: () => Promise<PrefabDifficulties>): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml ? parseXml(...(await Promise.all([prefabsXml.text(), fetchDifficulties?.()]))) : [];
+  return prefabsXml ? parseXml(await prefabsXml.text(), await fetchDifficulties?.()) : [];
 }
 
 function parseXml(xml: string, difficulties: PrefabDifficulties | undefined): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const position = e.getAttribute("position")?.split(",");
-    if (!position || position.length !== 3) return [];
+    if (position?.length !== 3) return [];
     const [x, , z] = position;
     if (!x || !z) return [];
     const name = e.getAttribute("name");

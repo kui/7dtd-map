@@ -192,11 +192,11 @@ class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array> {
 
 class DtmRawTransformer extends ComposingTransformer {
   constructor() {
-    super([new OddByteTransformer(), new CompressionStream("gzip")]);
+    super([new OddByteTransformer(), new CompressionStream("gzip") as unknown as TransformStream<Uint8Array, Uint8Array>]);
   }
 }
 
-export class DtmBlockRawDecompressor extends DecompressionStream implements TransformStream<Uint8Array, Uint8Array> {
+export class DtmBlockRawDecompressor extends DecompressionStream {
   constructor() {
     super("gzip");
   }

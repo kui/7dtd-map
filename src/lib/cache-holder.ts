@@ -27,23 +27,31 @@ export class CacheHolder<T> {
    *
    * If the value is not in the cache, it is fetched and stored.
    */
-  async get(): Promise<T> {
-    try {
-      return this.#value === NO_VALUE ? await this.#fetch() : this.#value;
-    } finally {
+  get(): Promise<T> {
+    const p = this.#value === NO_VALUE ? this.#fetch() : Promise.resolve(this.#value);
+    p.finally(() => {
       this.#resetTimer();
-    }
+    }).catch(() => {
+      // ignore
+    });
+    return p;
   }
 
-  async #fetch() {
+  #fetch(): Promise<T> {
     if (this.#fetchPromise) return this.#fetchPromise;
-    this.#fetchPromise = this.#fetchUntilNoInvalidation();
-    try {
-      this.#value = await this.#fetchPromise;
-    } finally {
-      this.#fetchPromise = null;
-    }
-    return this.#value;
+
+    const p = (async () => {
+      const promise = this.#fetchUntilNoInvalidation();
+      try {
+        this.#value = await promise;
+        return this.#value;
+      } finally {
+        this.#fetchPromise = null;
+      }
+    })();
+
+    this.#fetchPromise = p;
+    return p;
   }
 
   async #fetchUntilNoInvalidation(): Promise<T> {
