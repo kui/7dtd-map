@@ -38,7 +38,8 @@ async function copy(target: HTMLElement, button: HTMLButtonElement) {
   if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
     textToCopy = target.value;
   } else {
-    textToCopy = target.textContent || "";
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    textToCopy = target.textContent ?? "";
   }
 
   try {
