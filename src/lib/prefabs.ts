@@ -11,7 +11,7 @@ function parseXml(xml: string, difficulties: PrefabDifficulties | undefined): Pr
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const position = e.getAttribute("position")?.split(",");
-    if (!position || position.length !== 3) return [];
+    if (position?.length !== 3) return [];
     const [x, , z] = position;
     if (!x || !z) return [];
     const name = e.getAttribute("name");
