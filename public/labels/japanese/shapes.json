@@ -1719,6 +1719,8 @@
 	"shapestairsHollowRailingRight": "階段（中空・左手すり・右）",
 	"shapestairsRailing": "階段（手すり）",
 	"shapestairsRailingMetal": "階段（手すり・金属）",
+	"shapestairsRailingSplitInclineLeft": "階段（手すり・分割・傾斜付き・左）",
+	"shapestairsRailingSplitInclineRight": "階段（手すり・分割・傾斜付き・右）",
 	"shapestairsSpiralMetalLeft": "階段（らせん・金属・左）",
 	"shapestairsSpiralMetalRight": "階段（らせん・金属・右）",
 	"shapestairsSpiralPillar": "階段（らせん・支柱）",
