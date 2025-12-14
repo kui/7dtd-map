@@ -150,13 +150,16 @@ function processRadiationPng(i: ReadableStream<Uint8Array>, o: WritableStream<Ui
 const DEFAULT_TRASNFORM_STRATEGY = { highWaterMark: 1024 * 1024 };
 const DEFAULT_TRASNFORM_STRATEGIES = [DEFAULT_TRASNFORM_STRATEGY, DEFAULT_TRASNFORM_STRATEGY] as const;
 
-class ComposingTransformer {
-  readable: ReadableStream<Uint8Array>;
-  writable: WritableStream<Uint8Array>;
-  constructor(transformStreams: TransformStream<Uint8Array, Uint8Array>[]) {
-    const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>({}, ...DEFAULT_TRASNFORM_STRATEGIES);
-    this.readable = transformStreams.reduce((r, t) => r.pipeThrough(t), readable);
-    this.writable = writable;
+class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
+  readonly readable: ReadableStream<O>;
+  readonly writable: WritableStream<I>;
+
+  constructor(ts1: TransformStream<I, M>, ts2: TransformStream<M, O>) {
+    this.writable = ts1.writable;
+    ts1.readable.pipeTo(ts2.writable).catch((e: unknown) => {
+      console.error("Error piping streams in ComposingTransformer", e);
+    });
+    this.readable = ts2.readable;
   }
 }
 
@@ -164,8 +167,12 @@ class ComposingTransformer {
  * Pick odd bytes which indicate block height
  * raw[i] Sub-Block Height
  * raw[i + 1] Block Height
+ *
+ * NOTE: Generics <ArrayBuffer> for Uint8Array are required here.
+ * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
+ *  when piping to streams that accept strict BufferSource inputs.
  */
-class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array> {
+class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
   constructor() {
     let nextOffset = 1;
     super(
@@ -190,13 +197,13 @@ class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array> {
   }
 }
 
-class DtmRawTransformer extends ComposingTransformer {
+class DtmRawTransformer extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
   constructor() {
-    super([new OddByteTransformer(), new CompressionStream("gzip")]);
+    super(new OddByteTransformer(), new CompressionStream("gzip"));
   }
 }
 
-export class DtmBlockRawDecompressor extends DecompressionStream implements TransformStream<Uint8Array, Uint8Array> {
+export class DtmBlockRawDecompressor extends DecompressionStream {
   constructor() {
     super("gzip");
   }
