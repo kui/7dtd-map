@@ -38,7 +38,7 @@ async function copy(target: HTMLElement, button: HTMLButtonElement) {
   if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
     textToCopy = target.value;
   } else {
-    textToCopy = target.textContent || "";
+    textToCopy = target.textContent;
   }
 
   try {
