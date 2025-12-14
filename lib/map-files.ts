@@ -167,7 +167,7 @@ class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
  * Pick odd bytes which indicate block height
  * raw[i] Sub-Block Height
  * raw[i + 1] Block Height
- * 
+ *
  * NOTE: Generics <ArrayBuffer> for Uint8Array are required here.
  * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
  *  when piping to streams that accept strict BufferSource inputs.
