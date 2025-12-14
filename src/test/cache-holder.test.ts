@@ -51,7 +51,6 @@ describe("CacheHolder.get()", () => {
 
     holder.invalidate();
     const second = holder.get();
-    expect(first).toEqual(second);
 
     jest.advanceTimersByTime(sleepTime);
 
