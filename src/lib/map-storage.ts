@@ -1,4 +1,4 @@
-import { printError } from "./utils";
+import { printError } from "./utils.ts";
 
 const DB_NAME = "7dtd-map-a20";
 

@@ -1,7 +1,8 @@
-import * as path from "path";
-import { loadBlocks } from "./lib/blocks-xml.js";
-import { Loot, LootTable } from "./lib/loot.js";
-import { handleMain, program, vanillaDir } from "./lib/utils.js";
+import process from "node:process";
+import * as path from "node:path";
+import { loadBlocks } from "./lib/blocks-xml.ts";
+import { Loot, LootTable } from "./lib/loot.ts";
+import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const CMD = program();
 const USAGE = `Usage: ${CMD} <item name regexp>

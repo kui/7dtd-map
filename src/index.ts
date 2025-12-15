@@ -1,27 +1,27 @@
-import * as copyButton from "./lib/ui/copy-button";
-import * as presetButton from "./lib/ui/preset-button";
-import * as dialogButtons from "./lib/ui/dialog-buttons";
-import * as syncOutput from "./lib/ui/sync-output";
-import * as rememberValue from "./lib/ui/remember-value";
-import * as minMaxInputs from "./lib/ui/min-max-inputs";
-import { LabelHandler } from "./lib/label-handler";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils";
+import * as copyButton from "./lib/ui/copy-button.ts";
+import * as presetButton from "./lib/ui/preset-button.ts";
+import * as dialogButtons from "./lib/ui/dialog-buttons.ts";
+import * as syncOutput from "./lib/ui/sync-output.ts";
+import * as rememberValue from "./lib/ui/remember-value.ts";
+import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
+import { LabelHandler } from "./lib/label-handler.ts";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils.ts";
 
-import { DialogHandler } from "./index/dialog-handler";
-import { DtmHandler } from "./index/dtm-handler";
-import { PrefabsHandler } from "./index/prefabs-handler";
-import { DelayedRenderer } from "./lib/delayed-renderer";
-import { CursorCoodsHandler } from "./index/cursor-coods-handler";
-import { MarkerHandler } from "./index/marker-handler";
-import { FileHandler, ImageProcessorWorker } from "./index/file-handler";
-import { MapCanvasHandler } from "./index/map-canvas-handler";
-import { DndHandler } from "./index/dnd-handler";
-import { TerrainViewer } from "./index/terrain-viewer";
-import { BundledMapHandler } from "./index/bundled-map-hander";
-import { MapInfoHandler } from "./index/map-info-handler";
+import { DialogHandler } from "./index/dialog-handler.ts";
+import { DtmHandler } from "./index/dtm-handler.ts";
+import { PrefabsHandler } from "./index/prefabs-handler.ts";
+import { DelayedRenderer } from "./lib/delayed-renderer.ts";
+import { CursorCoodsHandler } from "./index/cursor-coods-handler.ts";
+import { MarkerHandler } from "./index/marker-handler.ts";
+import { FileHandler, ImageProcessorWorker } from "./index/file-handler.ts";
+import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
+import { DndHandler } from "./index/dnd-handler.ts";
+import { TerrainViewer } from "./index/terrain-viewer.ts";
+import { BundledMapHandler } from "./index/bundled-map-hander.ts";
+import { MapInfoHandler } from "./index/map-info-handler.ts";
 
-import "./lib/map-storage";
-import { PrefabInspectorHandler } from "./index/prefab-inspector-handler";
+import "./lib/map-storage.ts";
+import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
 
 function main() {
   presetButton.init();
@@ -37,7 +37,7 @@ function main() {
   });
 
   updateMapRightMargin();
-  window.addEventListener("resize", updateMapRightMargin);
+  globalThis.addEventListener("resize", updateMapRightMargin);
 
   const dialogHandler = new DialogHandler({
     dialog: component("dialog", HTMLDialogElement),
@@ -185,10 +185,10 @@ function prefabLi(prefab: HighlightedPrefab) {
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
-          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
-          `  💀${prefab.difficulty.toString()}`,
-          `</span>`,
-        ]
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+        `  💀${prefab.difficulty.toString()}`,
+        `</span>`,
+      ]
       : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",

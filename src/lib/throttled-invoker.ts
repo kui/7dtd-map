@@ -1,4 +1,4 @@
-import { sleep } from "./utils";
+import { sleep } from "./utils.ts";
 
 export function throttledInvoker(asyncFunc: () => Promise<void> | void, intervalMs = 100): () => Promise<void> {
   const workerPromises: Promise<void>[] = [];

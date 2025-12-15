@@ -2,16 +2,18 @@
 
 export function init() {
   for (const eventName of ["input", "change"]) {
-    window.addEventListener(eventName, ({ target }) => {
+    globalThis.addEventListener(eventName, ({ target }) => {
       if (!(target instanceof HTMLInputElement)) return;
       updateMinMax(target);
     });
   }
 
-  for (const input of [
-    ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
-    ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
-  ]) {
+  for (
+    const input of [
+      ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
+      ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
+    ]
+  ) {
     updateMinMax(input);
   }
 }

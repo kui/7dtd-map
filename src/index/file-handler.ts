@@ -1,7 +1,7 @@
-import type * as fileProcessor from "../worker/file-processor";
-import type { BundledMapHandler } from "./bundled-map-hander";
-import type { DialogHandler } from "./dialog-handler";
-import type { DndHandler } from "./dnd-handler";
+import type * as fileProcessor from "../worker/file-processor.ts";
+import type { BundledMapHandler } from "./bundled-map-hander.ts";
+import type { DialogHandler } from "./dialog-handler.ts";
+import type { DndHandler } from "./dnd-handler.ts";
 
 import {
   getPreferWorldFileName,
@@ -10,10 +10,10 @@ import {
   MAP_FILE_NAMES,
   MapFileName,
   PREFER_WORLD_FILE_NAMES,
-} from "../../lib/map-files";
-import * as storage from "../lib/storage";
-import { basename, printError } from "../lib/utils";
-import * as events from "../lib/events";
+} from "../../lib/map-files.ts";
+import * as storage from "../lib/storage.ts";
+import { basename, printError } from "../lib/utils.ts";
+import * as events from "../lib/events.ts";
 
 const PROCESS_REQUIRED_NAMES = [
   "biomes.png",
@@ -222,7 +222,7 @@ export class FileHandler {
     this.#dialogHandler.close();
   }
 
-  async #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {
+  #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {
     const worker = this.#processorFactory();
     return new Promise((resolve, reject) => {
       worker.onmessage = ({ data }) => {

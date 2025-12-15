@@ -1,5 +1,5 @@
-import { LANGUAGES, LabelHolder, Language, resolveLanguage } from "./labels";
-import * as events from "./events";
+import { LabelHolder, Language, LANGUAGES, resolveLanguage } from "./labels.ts";
+import * as events from "./events.ts";
 
 interface Doms {
   language: HTMLSelectElement;

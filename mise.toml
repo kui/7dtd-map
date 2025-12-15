@@ -1,2 +1,2 @@
 [tools]
-node = "latest"
+deno = "2.6"

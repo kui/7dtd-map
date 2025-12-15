@@ -1,6 +1,6 @@
-import { LabelHandler } from "../lib/label-handler";
-import { loadPrefabsXml } from "../lib/prefabs";
-import { printError } from "../lib/utils";
+import { LabelHandler } from "../lib/label-handler.ts";
+import { loadPrefabsXml } from "../lib/prefabs.ts";
+import { printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
   inMap: HTMLElement;

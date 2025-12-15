@@ -2,8 +2,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as stream from "node:stream";
 import * as pngjs from "pngjs";
-import * as mapFiles from "../lib/map-files.js";
-import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.js";
+import * as mapFiles from "../lib/map-files.ts";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
 
 mapFiles.setPNG(pngjs.PNG);
 

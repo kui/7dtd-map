@@ -1,4 +1,4 @@
-import { MapFileName } from "../../lib/map-files";
+import { MapFileName } from "../../lib/map-files.ts";
 
 const MAPS_DIR = "maps";
 const WORKSPACE_DIR = "workspace";

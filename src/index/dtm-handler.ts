@@ -1,10 +1,10 @@
 import type * as three from "three";
-import type * as dtmWorker from "../worker/dtm";
-import type { FileHandler } from "./file-handler";
+import type * as dtmWorker from "../worker/dtm.ts";
+import type { FileHandler } from "./file-handler.ts";
 
-import { gameMapSize, requireNonnull } from "../lib/utils";
-import { CacheHolder } from "../lib/cache-holder";
-import * as storage from "../lib/storage";
+import { gameMapSize, requireNonnull } from "../lib/utils.ts";
+import { CacheHolder } from "../lib/cache-holder.ts";
+import * as storage from "../lib/storage.ts";
 
 export class DtmHandler {
   #dtmRaw: CacheHolder<Uint8Array | null>;
@@ -17,7 +17,7 @@ export class DtmHandler {
 
   constructor(workerFactory: () => Worker, fileHandler: FileHandler) {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
-      async () => {
+      () => {
         const worker = workerFactory();
         return new Promise((resolve) => {
           worker.addEventListener("message", ({ data }: MessageEvent<dtmWorker.OutMessage>) => {
@@ -37,7 +37,7 @@ export class DtmHandler {
     });
   }
 
-  async size(): Promise<GameMapSize | null> {
+  size(): Promise<GameMapSize | null> {
     return this.#mapSize.get();
   }
 

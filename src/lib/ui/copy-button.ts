@@ -1,4 +1,4 @@
-import { printError } from "../utils.js";
+import { printError } from "../utils.ts";
 
 export function init(): void {
   for (const button of Array.from(document.querySelectorAll("[data-copy-for]"))) {

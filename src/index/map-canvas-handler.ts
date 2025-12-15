@@ -1,8 +1,8 @@
-import type * as mapRenderer from "../worker/map-renderer";
-import type { PrefabsHandler } from "./prefabs-handler";
-import type { MarkerHandler } from "./marker-handler";
-import type { FileHandler } from "./file-handler";
-import * as events from "../lib/events";
+import type * as mapRenderer from "../worker/map-renderer.ts";
+import type { PrefabsHandler } from "./prefabs-handler.ts";
+import type { MarkerHandler } from "./marker-handler.ts";
+import type { FileHandler } from "./file-handler.ts";
+import * as events from "../lib/events.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;

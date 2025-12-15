@@ -1,4 +1,4 @@
-import { component, printError } from "./lib/utils";
+import { component, printError } from "./lib/utils.ts";
 
 const FONT_FACE = new FontFace("Noto Sans Symbols 2", "url('./NotoSansSymbols2.subset.woff2') format('woff2')");
 

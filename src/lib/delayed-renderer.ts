@@ -1,4 +1,4 @@
-import { printError, waitAnimationFrame } from "./utils";
+import { printError, waitAnimationFrame } from "./utils.ts";
 
 export class DelayedRenderer<T> {
   #iterator: Iterator<T[]> = ([] as T[][])[Symbol.iterator]();

@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import { ByteReader } from "./byte-reader.js";
+import * as fs from "node:fs";
+import { ByteReader } from "./byte-reader.ts";
 
 export type BlockId = number;
 

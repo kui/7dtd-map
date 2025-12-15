@@ -1,5 +1,5 @@
-import MapRenderer from "../lib/map-renderer";
-import { printError } from "../lib/utils";
+import MapRenderer from "../lib/map-renderer.ts";
+import { printError } from "../lib/utils.ts";
 
 export type InMessage = Partial<
   Pick<

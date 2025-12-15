@@ -1,8 +1,8 @@
-import type { DtmHandler } from "./dtm-handler";
+import type { DtmHandler } from "./dtm-handler.ts";
 
 import * as three from "three";
-import { printError, threePlaneSize } from "../lib/utils";
-import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
+import { printError, threePlaneSize } from "../lib/utils.ts";
+import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller.ts";
 
 interface Doms {
   output: HTMLCanvasElement;

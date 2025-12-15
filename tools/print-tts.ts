@@ -1,5 +1,6 @@
-import { parseTts } from "./lib/tts-parser.js";
-import { handleMain, program } from "./lib/utils.js";
+import process from "node:process";
+import { parseTts } from "./lib/tts-parser.ts";
+import { handleMain, program } from "./lib/utils.ts";
 
 const usage = `${program()} <tts file>`;
 
