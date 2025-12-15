@@ -52,13 +52,17 @@ const FILE_PROCESS_RULES = {
   },
   "dtm.raw": {
     name: "dtm_block.raw.gz",
-    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) => i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
+    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) =>
+      i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
   },
 } as const;
 
 export type WorldFileName = keyof typeof FILE_PROCESS_RULES;
-export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> = (typeof FILE_PROCESS_RULES)[T]["name"];
-export const MAP_FILE_NAME_MAP = Object.fromEntries(Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name])) as {
+export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> =
+  (typeof FILE_PROCESS_RULES)[T]["name"];
+export const MAP_FILE_NAME_MAP = Object.fromEntries(
+  Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name]),
+) as {
   [K in WorldFileName]: MapFileNameMap<K>;
 };
 export type MapFileName = MapFileNameMap<WorldFileName>;
@@ -74,24 +78,41 @@ export class Processor<T extends keyof typeof FILE_PROCESS_RULES> {
     return FILE_PROCESS_RULES[this.#worldFileName].name;
   }
 
-  async process(src: ReadableStream<Uint8Array>, dst: WritableStream<Uint8Array>): Promise<void> {
+  async process(
+    src: ReadableStream<Uint8Array>,
+    dst: WritableStream<Uint8Array>,
+  ): Promise<void> {
     await FILE_PROCESS_RULES[this.#worldFileName].process(src, dst);
   }
 }
 
-export const WORLD_FILE_NAMES = new Set(Object.keys(FILE_PROCESS_RULES)) as Set<keyof typeof FILE_PROCESS_RULES>;
+export const WORLD_FILE_NAMES = new Set(Object.keys(FILE_PROCESS_RULES)) as Set<
+  keyof typeof FILE_PROCESS_RULES
+>;
 
-export function isWorldFileName(name: string): name is keyof typeof FILE_PROCESS_RULES {
+export function isWorldFileName(
+  name: string,
+): name is keyof typeof FILE_PROCESS_RULES {
   return WORLD_FILE_NAMES.has(name as keyof typeof FILE_PROCESS_RULES);
 }
 
-export const MAP_FILE_NAMES = new Set(Object.values(FILE_PROCESS_RULES).map((v) => v.name));
+export const MAP_FILE_NAMES = new Set(
+  Object.values(FILE_PROCESS_RULES).map((v) => v.name),
+);
 
-export function isMapFileName(name: string): name is MapFileNameMap<WorldFileName> {
-  return MAP_FILE_NAMES.has(name as unknown as (typeof FILE_PROCESS_RULES)[keyof typeof FILE_PROCESS_RULES]["name"]);
+export function isMapFileName(
+  name: string,
+): name is MapFileNameMap<WorldFileName> {
+  return MAP_FILE_NAMES.has(
+    name as unknown as (typeof FILE_PROCESS_RULES)[
+      keyof typeof FILE_PROCESS_RULES
+    ]["name"],
+  );
 }
 
-export function getMapFileName(name: WorldFileName): MapFileNameMap<WorldFileName> {
+export function getMapFileName(
+  name: WorldFileName,
+): MapFileNameMap<WorldFileName> {
   return FILE_PROCESS_RULES[name].name;
 }
 
@@ -111,7 +132,11 @@ export const PREFER_WORLD_FILE_NAMES = {
  */
 export function filterWorldFileNames(names: string[]): WorldFileName[] {
   const n = names.filter(isWorldFileName);
-  return n.filter((f) => !n.includes(PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES]));
+  return n.filter((f) =>
+    !n.includes(
+      PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES],
+    )
+  );
 }
 
 /**
@@ -119,36 +144,60 @@ export function filterWorldFileNames(names: string[]): WorldFileName[] {
  * @param files The file names
  * @returns true if the file `name` has the preferred file name in the `files`
  */
-export function hasPreferWorldFileNameIn(name: string, files: string[]): boolean {
-  return name in PREFER_WORLD_FILE_NAMES && files.includes(PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES]);
+export function hasPreferWorldFileNameIn(
+  name: string,
+  files: string[],
+): boolean {
+  return name in PREFER_WORLD_FILE_NAMES &&
+    files.includes(
+      PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES],
+    );
 }
 
 export function getPreferWorldFileName(name: string): string | undefined {
   return (PREFER_WORLD_FILE_NAMES as Record<string, string>)[name];
 }
 
-function copy(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+function copy(
+  i: ReadableStream<Uint8Array>,
+  o: WritableStream<Uint8Array>,
+): Promise<void> {
   return i.pipeTo(o);
 }
 
-function repackPng(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+function repackPng(
+  i: ReadableStream<Uint8Array>,
+  o: WritableStream<Uint8Array>,
+): Promise<void> {
   return i.pipeThrough(new RepackPngTransformer()).pipeTo(o);
 }
 
-function processSplat3Png(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+function processSplat3Png(
+  i: ReadableStream<Uint8Array>,
+  o: WritableStream<Uint8Array>,
+): Promise<void> {
   return i.pipeThrough(new Splat3PngTransformer()).pipeTo(o);
 }
 
-function processSplat4Png(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+function processSplat4Png(
+  i: ReadableStream<Uint8Array>,
+  o: WritableStream<Uint8Array>,
+): Promise<void> {
   return i.pipeThrough(new Splat4PngTransformer()).pipeTo(o);
 }
 
-function processRadiationPng(i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>): Promise<void> {
+function processRadiationPng(
+  i: ReadableStream<Uint8Array>,
+  o: WritableStream<Uint8Array>,
+): Promise<void> {
   return i.pipeThrough(new RadiationPngTransformer()).pipeTo(o);
 }
 
 const DEFAULT_TRASNFORM_STRATEGY = { highWaterMark: 1024 * 1024 };
-const DEFAULT_TRASNFORM_STRATEGIES = [DEFAULT_TRASNFORM_STRATEGY, DEFAULT_TRASNFORM_STRATEGY] as const;
+const DEFAULT_TRASNFORM_STRATEGIES = [
+  DEFAULT_TRASNFORM_STRATEGY,
+  DEFAULT_TRASNFORM_STRATEGY,
+] as const;
 
 class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
   readonly readable: ReadableStream<O>;
@@ -172,14 +221,19 @@ class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
  * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
  *  when piping to streams that accept strict BufferSource inputs.
  */
-class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
+class OddByteTransformer
+  extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
   constructor() {
     let nextOffset = 1;
     super(
       {
         transform(chunk, controller) {
           const buffer = new Uint8Array(
-            chunk.length % 2 === 0 ? chunk.length / 2 : nextOffset === 1 ? (chunk.length - 1) / 2 : (chunk.length + 1) / 2,
+            chunk.length % 2 === 0
+              ? chunk.length / 2
+              : nextOffset === 1
+              ? (chunk.length - 1) / 2
+              : (chunk.length + 1) / 2,
           );
 
           let i = nextOffset;
@@ -197,7 +251,8 @@ class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array<ArrayBuf
   }
 }
 
-class DtmRawTransformer extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
+class DtmRawTransformer
+  extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
   constructor() {
     super(new OddByteTransformer(), new CompressionStream("gzip"));
   }
@@ -210,9 +265,13 @@ export class DtmBlockRawDecompressor extends DecompressionStream {
 }
 
 class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
-  constructor(copyAndEdit: (src: Uint8Array, dst: Uint8ClampedArray | Uint8Array) => void) {
+  constructor(
+    copyAndEdit: (src: Uint8Array, dst: Uint8ClampedArray | Uint8Array) => void,
+  ) {
     const png = new PNG({ deflateLevel: 9, deflateStrategy: 0 });
-    const { promise: flushPromise, resolve, reject }: PromiseWithResolvers<void> = Promise.withResolvers();
+    const { promise: flushPromise, resolve, reject }: PromiseWithResolvers<
+      void
+    > = Promise.withResolvers();
     super(
       {
         start(controller) {

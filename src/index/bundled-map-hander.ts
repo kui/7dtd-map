@@ -1,5 +1,5 @@
-import { fetchJson, printError } from "../lib/utils";
-import * as events from "../lib/events";
+import { fetchJson, printError } from "../lib/utils.ts";
+import * as events from "../lib/events.ts";
 
 interface Doms {
   select: HTMLSelectElement;
@@ -23,7 +23,9 @@ export class BundledMapHandler {
     this.#doms.select.addEventListener("change", () => {
       if (this.#doms.select.value === "") return;
       const mapName = this.#doms.select.value;
-      this.#listeners.dispatchNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
+      this.#listeners.dispatchNoAwait({
+        select: { mapName, mapDir: `maps/${mapName}` },
+      });
     });
   }
 

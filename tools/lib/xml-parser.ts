@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+import * as fs from "node:fs/promises";
 import { parseString as parseXmlString } from "xml2js";
 
 export async function parseXml<T>(xmlFileName: string): Promise<T> {

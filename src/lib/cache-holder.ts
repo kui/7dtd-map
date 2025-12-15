@@ -16,7 +16,11 @@ export class CacheHolder<T> {
   #expirationTimeout: ReturnType<typeof setTimeout> | null = null;
   #lastInvalidation = Date.now();
 
-  constructor(fetcher: () => Promise<T>, deconstructor: (value: T) => unknown, age = 10000) {
+  constructor(
+    fetcher: () => Promise<T>,
+    deconstructor: (value: T) => unknown,
+    age = 10000,
+  ) {
     this.#fetcher = fetcher;
     this.#deconstructor = deconstructor;
     this.#age = age;

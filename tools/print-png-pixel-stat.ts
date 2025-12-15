@@ -1,5 +1,6 @@
-import { createReadStream } from "fs";
-import { program, handleMain } from "./lib/utils.js";
+import process from "node:process";
+import { createReadStream } from "node:fs";
+import { handleMain, program } from "./lib/utils.ts";
 import { PNG } from "pngjs";
 
 const usage = `${program()} <png>
@@ -13,13 +14,15 @@ async function main() {
   }
   const stat = await statPixels(pngFile);
   console.log("  red,gre,blu,alp: count");
-  for (const [pixels, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])) {
+  for (
+    const [pixels, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])
+  ) {
     console.log(`  ${pixels}: ${count.toString()}`);
   }
   return 0;
 }
 
-async function statPixels(pngFile: string): Promise<Map<string, number>> {
+function statPixels(pngFile: string): Promise<Map<string, number>> {
   return new Promise((resolve, reject) => {
     const pixelStat = new Map<string, number>();
     createReadStream(pngFile)

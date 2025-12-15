@@ -1,7 +1,7 @@
-import type { DtmHandler } from "./dtm-handler";
+import type { DtmHandler } from "./dtm-handler.ts";
 
-import { throttledInvoker } from "../lib/throttled-invoker";
-import { formatCoords, printError } from "../lib/utils";
+import { throttledInvoker } from "../lib/throttled-invoker.ts";
+import { formatCoords, printError } from "../lib/utils.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -31,7 +31,10 @@ export class CursorCoodsHandler {
     });
   }
 
-  #update = throttledInvoker(() => this.#updateImediately().catch(printError), 100);
+  #update = throttledInvoker(
+    () => this.#updateImediately().catch(printError),
+    100,
+  );
   async #updateImediately() {
     this.#doms.output.textContent = await formatCoords(
       await this.#dtmHandler.size(),

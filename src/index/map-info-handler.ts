@@ -1,5 +1,5 @@
-import { FileHandler } from "./file-handler";
-import * as storage from "../lib/storage";
+import { FileHandler } from "./file-handler.ts";
+import * as storage from "../lib/storage.ts";
 
 interface Doms {
   mapInfoShow: HTMLButtonElement;
@@ -13,7 +13,9 @@ export class MapInfoHandler {
     this.#doms = doms;
 
     document.addEventListener("click", (event) => {
-      if (event.target === this.#doms.mapInfoDialog) this.#doms.mapInfoDialog.close();
+      if (event.target === this.#doms.mapInfoDialog) {
+        this.#doms.mapInfoDialog.close();
+      }
     });
     fileHandler.addListener(async ({ update }) => {
       if (update.includes("map_info.xml")) await this.#update();
@@ -29,7 +31,10 @@ export class MapInfoHandler {
     if (mapInfo === null) {
       table.innerHTML = "";
     } else {
-      table.innerHTML = ["<tr><th>Name</th><th>Value</th></tr>", ...buildTableContent(await mapInfo.text())].join("\n");
+      table.innerHTML = [
+        "<tr><th>Name</th><th>Value</th></tr>",
+        ...buildTableContent(await mapInfo.text()),
+      ].join("\n");
     }
   }
 }

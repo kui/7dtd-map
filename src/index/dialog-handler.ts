@@ -1,4 +1,4 @@
-import { requireNonnull, requireType } from "../lib/utils";
+import { requireNonnull, requireType } from "../lib/utils.ts";
 
 const STATUS = ["dragover", "processing", "error"] as const;
 
@@ -14,7 +14,10 @@ export class DialogHandler {
   constructor(doms: Doms) {
     this.#doms = doms;
     this.#radioList = requireType(
-      requireNonnull(doms.dialog.querySelector("form")?.elements.namedItem("active-section"), () => "Unexpected dialog content"),
+      requireNonnull(
+        doms.dialog.querySelector("form")?.elements.namedItem("active-section"),
+        () => "Unexpected dialog content",
+      ),
       RadioNodeList,
     );
   }
@@ -74,7 +77,9 @@ export class FileProgressionIndicator {
   }
 
   get isAllCompleted() {
-    return this.#liList.every((li) => TERMINATED_STATES.find((state) => li.classList.contains(state)));
+    return this.#liList.every((li) =>
+      TERMINATED_STATES.find((state) => li.classList.contains(state))
+    );
   }
 
   get liList() {

@@ -2,16 +2,18 @@
 
 export function init() {
   for (const eventName of ["input", "change"]) {
-    window.addEventListener(eventName, ({ target }) => {
+    globalThis.addEventListener(eventName, ({ target }) => {
       if (!(target instanceof HTMLInputElement)) return;
       updateMinMax(target);
     });
   }
 
-  for (const input of [
-    ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
-    ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
-  ]) {
+  for (
+    const input of [
+      ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
+      ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
+    ]
+  ) {
     updateMinMax(input);
   }
 }
@@ -22,7 +24,9 @@ function updateMinMax(target: HTMLInputElement) {
 }
 
 function updateMaxValues(target: HTMLInputElement, minMaxId: string) {
-  const maxInputs = document.querySelectorAll<HTMLInputElement>(`input[data-max="${minMaxId}"]`);
+  const maxInputs = document.querySelectorAll<HTMLInputElement>(
+    `input[data-max="${minMaxId}"]`,
+  );
   for (const maxInput of maxInputs) {
     if (maxInput.valueAsNumber < target.valueAsNumber) {
       const oldValue = maxInput.value;
@@ -33,7 +37,9 @@ function updateMaxValues(target: HTMLInputElement, minMaxId: string) {
 }
 
 function updateMinValues(target: HTMLInputElement, minMaxId: string) {
-  const minInputs = document.querySelectorAll<HTMLInputElement>(`input[data-min="${minMaxId}"]`);
+  const minInputs = document.querySelectorAll<HTMLInputElement>(
+    `input[data-min="${minMaxId}"]`,
+  );
   for (const minInput of minInputs) {
     if (minInput.valueAsNumber > target.valueAsNumber) {
       const oldValue = minInput.value;
@@ -44,5 +50,7 @@ function updateMinValues(target: HTMLInputElement, minMaxId: string) {
 }
 
 function dispatchInputEvent(input: HTMLInputElement) {
-  for (const eventName of ["input", "change"]) input.dispatchEvent(new Event(eventName, { bubbles: true }));
+  for (const eventName of ["input", "change"]) {
+    input.dispatchEvent(new Event(eventName, { bubbles: true }));
+  }
 }
