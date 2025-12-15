@@ -1,13 +1,13 @@
-import type * as prefabsFilter from "./worker/prefabs-filter";
+import type * as prefabsFilter from "./worker/prefabs-filter.ts";
 
-import { DelayedRenderer } from "./lib/delayed-renderer";
-import * as events from "./lib/events";
-import { LabelHandler } from "./lib/label-handler";
-import * as minMaxInputs from "./lib/ui/min-max-inputs";
-import * as presetButton from "./lib/ui/preset-button";
-import * as syncOutput from "./lib/ui/sync-output";
-import { UrlState } from "./lib/url-state";
-import { component, fetchJson, printError } from "./lib/utils";
+import { DelayedRenderer } from "./lib/delayed-renderer.ts";
+import * as events from "./lib/events.ts";
+import { LabelHandler } from "./lib/label-handler.ts";
+import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
+import * as presetButton from "./lib/ui/preset-button.ts";
+import * as syncOutput from "./lib/ui/sync-output.ts";
+import { UrlState } from "./lib/url-state.ts";
+import { component, fetchJson, printError } from "./lib/utils.ts";
 
 interface HighlightedPrefab {
   name: string;
@@ -24,7 +24,7 @@ function main() {
 
   const urlState = UrlState.create(location, document.querySelectorAll("input"));
   urlState.addUpdateListener((url) => {
-    window.history.replaceState(null, "", url.toString());
+    globalThis.history.replaceState(null, "", url.toString());
   });
 
   const prefabsHandler = new PrefabsHandler(

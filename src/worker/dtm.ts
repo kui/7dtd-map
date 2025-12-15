@@ -1,6 +1,6 @@
-import { DtmBlockRawDecompressor } from "../../lib/map-files";
-import * as storage from "../lib/storage";
-import { printError, readWholeStream } from "../lib/utils";
+import { DtmBlockRawDecompressor } from "../../lib/map-files.ts";
+import * as storage from "../lib/storage.ts";
+import { printError, readWholeStream } from "../lib/utils.ts";
 
 export type OutMessage = null | Uint8Array;
 

@@ -1,5 +1,6 @@
-import { loadBlocks } from "./lib/blocks-xml.js";
-import { handleMain, program, vanillaDir } from "./lib/utils.js";
+import process from "node:process";
+import { loadBlocks } from "./lib/blocks-xml.ts";
+import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const USAGE = `Usage: ${program()} <block name regexp>`;
 

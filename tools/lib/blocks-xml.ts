@@ -1,6 +1,6 @@
-import type { Materials } from "./materials-xml.js";
-import { buildArrayMapByEntries, requireNonnull } from "./utils.js";
-import { parseXml } from "./xml-parser.js";
+import type { Materials } from "./materials-xml.ts";
+import { buildArrayMapByEntries, requireNonnull } from "./utils.ts";
+import { parseXml } from "./xml-parser.ts";
 
 export type BlockName = string;
 

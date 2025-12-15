@@ -1,61 +1,73 @@
-import { CacheHolder } from "../lib/cache-holder";
-import { sleep } from "../lib/utils";
-
-jest.useFakeTimers({ advanceTimers: true });
+import { CacheHolder } from "../lib/cache-holder.ts";
+import { sleep } from "../lib/utils.ts";
+import { expect } from "@std/expect";
+import { describe, it } from "@std/testing/bdd";
+import { FakeTime } from "@std/testing/time";
+import { spy as fn } from "@std/testing/mock";
 
 describe("CacheHolder.get()", () => {
-  test("should cache and invalidate", async () => {
-    const fetcher = jest.fn(() => Promise.resolve("value"));
-    const deconstructor = jest.fn((s: string) => s);
+  it("should cache and invalidate", async () => {
+    using time = new FakeTime(0);
+    const fetcher = fn(() => Promise.resolve("value"));
+    const deconstructor = fn((s: string) => s);
     const age = 10000;
     const holder = new CacheHolder<string>(fetcher, deconstructor, age);
     const first = holder.get();
     expect(await holder.get()).toBe("value");
     expect(await first).toBe("value");
-    expect(fetcher.mock.calls.length).toBe(1);
+    expect(fetcher.calls.length).toBe(1);
 
-    jest.advanceTimersByTime(age - 1000);
+    await time.tickAsync(age - 1000);
     expect(await holder.get()).toBe("value");
-    expect(fetcher.mock.calls.length).toBe(1);
+    expect(fetcher.calls.length).toBe(1);
 
-    expect(deconstructor.mock.calls.length).toBe(0);
-    jest.advanceTimersByTime(age + 1000);
-    expect(deconstructor.mock.calls.length).toBe(1);
+    expect(deconstructor.calls.length).toBe(0);
+
+    // We want to reach T=20000.
+    await time.tickAsync(age + 1000);
+
+    expect(deconstructor.calls.length).toBe(1);
 
     expect(await Promise.all([holder.get(), holder.get()])).toEqual(["value", "value"]);
-    expect(fetcher.mock.calls.length).toBe(2);
+    expect(fetcher.calls.length).toBe(2);
+    holder.invalidate();
   });
 
-  test("should raise error if fetcher throws", async () => {
-    const fetcher = jest.fn(() => {
+  it("should raise error if fetcher throws", async () => {
+    const fetcher = fn(() => {
       throw new Error("error");
     });
-    const deconstructor = jest.fn((s: string) => s);
+    const deconstructor = fn((s: string) => s);
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     await expect(holder.get()).rejects.toThrow("error");
-    expect(fetcher.mock.calls.length).toBe(1);
-    expect(deconstructor.mock.calls.length).toBe(0);
+    expect(fetcher.calls.length).toBe(1);
+    expect(deconstructor.calls.length).toBe(0);
+    holder.invalidate();
   });
 
-  test("should refetch if the fetching is invalidated", async () => {
+  it("should refetch if the fetching is invalidated", async () => {
+    using time = new FakeTime(0);
     const sleepTime = 300;
-    const fetcher = jest.fn(async () => {
+    const fetcher = fn(async () => {
       await sleep(sleepTime);
       return Promise.resolve("value");
     });
-    const deconstructor = jest.fn((s: string) => s);
+    const deconstructor = fn((s: string) => s);
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     const first = holder.get();
 
-    jest.advanceTimersByTime(1);
+    await time.tickAsync(1);
 
     holder.invalidate();
     const second = holder.get();
 
-    jest.advanceTimersByTime(sleepTime);
+    await time.tickAsync(sleepTime);
+    // Extra tick for the second fetch call
+    await time.tickAsync(sleepTime);
 
     expect(await first).toBe("value");
     expect(await second).toBe("value");
-    expect(fetcher.mock.calls.length).toBe(2);
+    expect(fetcher.calls.length).toBe(2);
+    holder.invalidate();
   });
 });

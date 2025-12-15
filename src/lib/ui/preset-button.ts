@@ -1,4 +1,4 @@
-import { component, requireNonnull } from "../utils";
+import { component, requireNonnull } from "../utils.ts";
 
 export function init(): void {
   document.body.addEventListener("click", ({ target }) => {

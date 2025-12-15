@@ -1,9 +1,9 @@
-import * as path from "path";
-import { parseNim } from "./nim-parser.js";
-import { parseTts } from "./tts-parser.js";
-import { parsePrefabXml } from "./prefab-xml-parser.js";
-import { Label, LabelId } from "./label-parser.js";
-import { requireNonnull } from "./utils.js";
+import * as path from "node:path";
+import { parseNim } from "./nim-parser.ts";
+import { parseTts } from "./tts-parser.ts";
+import { parsePrefabXml } from "./prefab-xml-parser.ts";
+import { Label, LabelId } from "./label-parser.ts";
+import { requireNonnull } from "./utils.ts";
 
 interface HtmlModel {
   name: string;
@@ -32,7 +32,7 @@ function html(model: HtmlModel): string {
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for ${model.label} / ${model.name}">
   <title>${model.label} / ${model.name}</title>
-  <script src="main.js" async></script>
+  <script src="main.ts" async></script>
   <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>

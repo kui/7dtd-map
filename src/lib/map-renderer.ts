@@ -1,8 +1,8 @@
-import { throttledInvoker } from "./throttled-invoker";
-import { gameMapSize } from "./utils";
-import * as storage from "./storage";
-import * as mapFiles from "../../lib/map-files";
-import { CacheHolder } from "./cache-holder";
+import { throttledInvoker } from "./throttled-invoker.ts";
+import { gameMapSize } from "./utils.ts";
+import * as storage from "./storage.ts";
+import * as mapFiles from "../../lib/map-files.ts";
+import { CacheHolder } from "./cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";

@@ -1,6 +1,6 @@
-import * as fs from "fs";
-import { ByteReader } from "./byte-reader.js";
-import { BlockId } from "./nim-parser.js";
+import * as fs from "node:fs";
+import { ByteReader } from "./byte-reader.ts";
+import { BlockId } from "./nim-parser.ts";
 
 // TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
 const KNOWN_VERSIONS = [13, 15, 16, 17, 18, 19];

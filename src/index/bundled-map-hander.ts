@@ -1,5 +1,5 @@
-import { fetchJson, printError } from "../lib/utils";
-import * as events from "../lib/events";
+import { fetchJson, printError } from "../lib/utils.ts";
+import * as events from "../lib/events.ts";
 
 interface Doms {
   select: HTMLSelectElement;

@@ -1,7 +1,7 @@
-import type { DtmHandler } from "./dtm-handler";
+import type { DtmHandler } from "./dtm-handler.ts";
 
-import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils";
-import * as events from "../lib/events";
+import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils.ts";
+import * as events from "../lib/events.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;

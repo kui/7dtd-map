@@ -1,5 +1,5 @@
 import * as three from "three";
-import { requireNonnull, threePlaneSize } from "../../lib/utils";
+import { requireNonnull, threePlaneSize } from "../../lib/utils.ts";
 
 const MOUSE_BUTTON_BITMASK = {
   left: 0b00000001,

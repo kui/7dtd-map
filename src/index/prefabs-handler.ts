@@ -1,10 +1,10 @@
-import type * as prefabsFilter from "../worker/prefabs-filter";
-import type { MarkerHandler } from "./marker-handler";
-import type { LabelHandler } from "../lib/label-handler";
-import type { FileHandler } from "./file-handler";
+import type * as prefabsFilter from "../worker/prefabs-filter.ts";
+import type { MarkerHandler } from "./marker-handler.ts";
+import type { LabelHandler } from "../lib/label-handler.ts";
+import type { FileHandler } from "./file-handler.ts";
 
-import * as events from "../lib/events";
-import { loadPrefabsXml } from "../lib/prefabs";
+import * as events from "../lib/events.ts";
+import { loadPrefabsXml } from "../lib/prefabs.ts";
 
 interface Doms {
   status: HTMLElement;

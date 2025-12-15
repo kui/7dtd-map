@@ -1,5 +1,5 @@
-import { printError } from "./utils";
-import { MultipleErrors } from "./errors";
+import { printError } from "./utils.ts";
+import { MultipleErrors } from "./errors.ts";
 
 export type MessageMap<N extends string> = { [K in N]?: object };
 export type Listener<N extends string, M extends MessageMap<N>> = (m: M) => unknown;

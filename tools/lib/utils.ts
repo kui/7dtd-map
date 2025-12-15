@@ -1,9 +1,11 @@
-import * as path from "path";
-import * as fs from "fs";
-import { fileURLToPath } from "url";
+import process from "node:process";
+import * as path from "node:path";
+import * as fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
 export function projectRoot(...pathList: string[]): string {
-  return path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", ...pathList);
+  const dirname = path.dirname(fileURLToPath(import.meta.url));
+  return path.join(dirname, "..", "..", ...pathList);
 }
 
 export function publishDir(...pathList: string[]): string {
@@ -35,7 +37,11 @@ export function handleMain(main: Promise<number>): void {
       return 1;
     })
     .then((exitCode) => {
-      process.on("exit", () => process.exit(exitCode));
+      if (typeof Deno !== "undefined") {
+        Deno.exit(exitCode);
+      } else {
+        process.exit(exitCode);
+      }
     });
 }
 
@@ -45,6 +51,9 @@ export async function writeJsonFile(file: string, json: unknown) {
 }
 
 export function program() {
+  if (typeof Deno !== "undefined") {
+    return path.basename(fileURLToPath(Deno.mainModule));
+  }
   return path.basename(requireNonnull(process.argv[1]), `Unexpected process.argv: ${process.argv.join(" ")}`);
 }
 

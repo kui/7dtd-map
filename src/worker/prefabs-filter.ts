@@ -1,5 +1,5 @@
-import { PrefabFilter, EventMessage } from "../lib/prefab-filter";
-import { printError, fetchJson } from "../lib/utils";
+import { PrefabFilter, EventMessage } from "../lib/prefab-filter.ts";
+import { printError, fetchJson } from "../lib/utils.ts";
 
 export type InMessage = Partial<
   Pick<PrefabFilter, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language" | "preExcludes">

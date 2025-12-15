@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 export class ByteReader {
   iter: AsyncIterator<number>;
 

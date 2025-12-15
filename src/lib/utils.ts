@@ -67,7 +67,7 @@ export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): 
   a.click();
 }
 
-export async function sleep(msec: number): Promise<void> {
+export function sleep(msec: number): Promise<void> {
   return new Promise((r) => setTimeout(r, msec));
 }
 

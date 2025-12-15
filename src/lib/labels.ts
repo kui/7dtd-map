@@ -1,4 +1,4 @@
-import { fetchJson } from "./utils";
+import { fetchJson } from "./utils.ts";
 
 export const LANGUAGES = [
   "english",

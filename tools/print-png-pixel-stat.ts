@@ -1,5 +1,6 @@
-import { createReadStream } from "fs";
-import { program, handleMain } from "./lib/utils.js";
+import process from "node:process";
+import { createReadStream } from "node:fs";
+import { program, handleMain } from "./lib/utils.ts";
 import { PNG } from "pngjs";
 
 const usage = `${program()} <png>
@@ -19,7 +20,7 @@ async function main() {
   return 0;
 }
 
-async function statPixels(pngFile: string): Promise<Map<string, number>> {
+function statPixels(pngFile: string): Promise<Map<string, number>> {
   return new Promise((resolve, reject) => {
     const pixelStat = new Map<string, number>();
     createReadStream(pngFile)

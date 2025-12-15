@@ -2,7 +2,7 @@
 
 export function init() {
   for (const eventName of ["input", "change"]) {
-    window.addEventListener(eventName, ({ target }) => {
+    globalThis.addEventListener(eventName, ({ target }) => {
       if (!(target instanceof HTMLInputElement)) return;
       updateMinMax(target);
     });
