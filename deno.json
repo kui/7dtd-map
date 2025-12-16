@@ -10,7 +10,8 @@
     "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
     "fix": "deno fmt && deno lint --fix",
     "lint": "deno lint && deno fmt --check",
-    "test": "deno test -A --parallel"
+    "test": "deno test -A --parallel",
+    "ci": "deno task lint && deno task test"
   },
   "imports": {
     "three": "npm:three@~0.182.0",
