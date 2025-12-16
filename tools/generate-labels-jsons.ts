@@ -1,6 +1,6 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { LANGUAGES, Label, Language, parseLabel } from "./lib/label-parser.ts";
+import { Label, Language, LANGUAGES, parseLabel } from "./lib/label-parser.ts";
 import { handleMain, publishDir, vanillaDir } from "./lib/utils.ts";
 
 const DEST_DIR = publishDir("labels");

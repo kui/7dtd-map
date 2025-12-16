@@ -1,4 +1,4 @@
-import { LANGUAGES, LabelHolder, Language, resolveLanguage } from "./labels.ts";
+import { LabelHolder, Language, LANGUAGES, resolveLanguage } from "./labels.ts";
 import * as events from "./events.ts";
 
 interface Doms {

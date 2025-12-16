@@ -8,10 +8,12 @@ export function init() {
     });
   }
 
-  for (const input of [
-    ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
-    ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
-  ]) {
+  for (
+    const input of [
+      ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
+      ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
+    ]
+  ) {
     updateMinMax(input);
   }
 }

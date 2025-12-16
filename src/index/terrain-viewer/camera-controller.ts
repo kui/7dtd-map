@@ -122,7 +122,9 @@ export class TerrainViewerCameraController {
   }
 
   private moveCameraXY(deltaMsec: number) {
-    if (this.speeds.x === 0 && this.speeds.y === 0 && this.mouseMove.left.x === 0 && this.mouseMove.left.y === 0) return;
+    if (this.speeds.x === 0 && this.speeds.y === 0 && this.mouseMove.left.x === 0 && this.mouseMove.left.y === 0) {
+      return;
+    }
 
     const scaleFactor = this.mapWidth / (this.terrainSize.width + 1);
 
@@ -175,7 +177,10 @@ export class TerrainViewerCameraController {
     this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
 
     const totalRad = TILT_RADIAN_BASE.angleTo(this.camera.position);
-    if (totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad || this.camera.position.z < this.minZ || this.maxZ < this.camera.position.z) {
+    if (
+      totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad || this.camera.position.z < this.minZ ||
+      this.maxZ < this.camera.position.z
+    ) {
       this.camera.position.applyAxisAngle(TILT_AXIS, -deltaRad);
     }
 

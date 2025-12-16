@@ -52,13 +52,16 @@ const FILE_PROCESS_RULES = {
   },
   "dtm.raw": {
     name: "dtm_block.raw.gz",
-    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) => i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
+    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) =>
+      i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
   },
 } as const;
 
 export type WorldFileName = keyof typeof FILE_PROCESS_RULES;
 export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> = (typeof FILE_PROCESS_RULES)[T]["name"];
-export const MAP_FILE_NAME_MAP = Object.fromEntries(Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name])) as {
+export const MAP_FILE_NAME_MAP = Object.fromEntries(
+  Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name]),
+) as {
   [K in WorldFileName]: MapFileNameMap<K>;
 };
 export type MapFileName = MapFileNameMap<WorldFileName>;
@@ -120,7 +123,8 @@ export function filterWorldFileNames(names: string[]): WorldFileName[] {
  * @returns true if the file `name` has the preferred file name in the `files`
  */
 export function hasPreferWorldFileNameIn(name: string, files: string[]): boolean {
-  return name in PREFER_WORLD_FILE_NAMES && files.includes(PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES]);
+  return name in PREFER_WORLD_FILE_NAMES &&
+    files.includes(PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES]);
 }
 
 export function getPreferWorldFileName(name: string): string | undefined {
@@ -179,7 +183,11 @@ class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array<ArrayBuf
       {
         transform(chunk, controller) {
           const buffer = new Uint8Array(
-            chunk.length % 2 === 0 ? chunk.length / 2 : nextOffset === 1 ? (chunk.length - 1) / 2 : (chunk.length + 1) / 2,
+            chunk.length % 2 === 0
+              ? chunk.length / 2
+              : nextOffset === 1
+              ? (chunk.length - 1) / 2
+              : (chunk.length + 1) / 2,
           );
 
           let i = nextOffset;

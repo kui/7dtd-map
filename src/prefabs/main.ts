@@ -3,7 +3,11 @@ import { Labels } from "../lib/labels.ts";
 import { component, printError } from "../lib/utils.ts";
 
 function main() {
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "../labels", navigator.languages);
+  const labelHandler = new LabelHandler(
+    { language: component("label_lang", HTMLSelectElement) },
+    "../labels",
+    navigator.languages,
+  );
   const labelHolder = labelHandler.holder;
   labelHandler.addListener(async () => {
     updatePrefabLabels(await labelHolder.get("prefabs"));

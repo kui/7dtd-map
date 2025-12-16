@@ -31,7 +31,9 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
     prefabBlockCounts.push(
       (async () => {
         const counts = await countBlocks(nimFile, ttsFile);
-        if (++count % 100 === 0 || count === nimFiles.length) console.log(`Processing ${count.toString()}/${nimFiles.length.toString()}`);
+        if (++count % 100 === 0 || count === nimFiles.length) {
+          console.log(`Processing ${count.toString()}/${nimFiles.length.toString()}`);
+        }
         return [prefabName, counts];
       })(),
     );

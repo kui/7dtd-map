@@ -28,8 +28,7 @@ const commonOpts: esbuild.BuildOptions = {
   entryPoints: targets,
 };
 
-const _serveOpts: esbuild.BuildOptions = {
-};
+const _serveOpts: esbuild.BuildOptions = {};
 
 const prodOpts = {
   minify: true,

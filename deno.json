@@ -32,13 +32,15 @@
   "lint": {
     "rules": {
       "tags": ["recommended"]
-    }
+    },
+    "exclude": ["public/"]
   },
   "fmt": {
     "useTabs": false,
     "lineWidth": 120,
     "indentWidth": 2,
     "singleQuote": false,
-    "proseWrap": "preserve"
+    "proseWrap": "preserve",
+    "exclude": ["public/"]
   }
 }

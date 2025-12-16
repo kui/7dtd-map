@@ -32,7 +32,10 @@ async function renderLogo1(canvas: HTMLCanvasElement): Promise<void> {
 
 const LINE_WIDTH_FACTOR = 0.04;
 
-function putText(ctx: CanvasRenderingContext2D, { text, x, z, size }: { text: string; x: number; z: number; size: number }): void {
+function putText(
+  ctx: CanvasRenderingContext2D,
+  { text, x, z, size }: { text: string; x: number; z: number; size: number },
+): void {
   ctx.font = `${size.toString()}px '${FONT_FACE.family}'`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";

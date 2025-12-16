@@ -1,6 +1,6 @@
 import process from "node:process";
 import { createReadStream } from "node:fs";
-import { program, handleMain } from "./lib/utils.ts";
+import { handleMain, program } from "./lib/utils.ts";
 import { PNG } from "pngjs";
 
 const usage = `${program()} <png>

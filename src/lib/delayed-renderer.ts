@@ -10,7 +10,12 @@ export class DelayedRenderer<T> {
     this.renderAll().catch(printError);
   };
 
-  constructor(scrollableWrapper: HTMLElement, appendee: HTMLElement, itemRenderer: (item: T) => Node, renderImmediatly = false) {
+  constructor(
+    scrollableWrapper: HTMLElement,
+    appendee: HTMLElement,
+    itemRenderer: (item: T) => Node,
+    renderImmediatly = false,
+  ) {
     if (!scrollableWrapper.contains(appendee)) throw Error("Wrapper element should contain appendee element");
     appendee.innerHTML = "";
     this.#appendee = appendee;

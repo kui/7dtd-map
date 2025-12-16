@@ -58,7 +58,13 @@ async function processFiles(srcDir: string, dstDir: string) {
       continue;
     }
     if (mapFiles.hasPreferWorldFileNameIn(srcFileName, srcFiles)) {
-      console.log("Skip ", srcFileName, " because ", mapFiles.getPreferWorldFileName(srcFileName), " is already in the list");
+      console.log(
+        "Skip ",
+        srcFileName,
+        " because ",
+        mapFiles.getPreferWorldFileName(srcFileName),
+        " is already in the list",
+      );
       continue;
     }
     const src = path.join(srcDir, srcFileName);

@@ -88,16 +88,18 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     ...(prefab.difficulty
       ? [
-          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
-          `  💀${prefab.difficulty.toString()}`,
-          `</span>`,
-        ]
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
+        `  💀${prefab.difficulty.toString()}`,
+        `</span>`,
+      ]
       : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",
     `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
-    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0 ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"] : []),
+    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
+      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
+      : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
@@ -142,7 +144,12 @@ class PrefabsHandler {
   #fetchPrefabs: () => Promise<Prefab[]>;
   #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
 
-  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker, labelHandler: LabelHandler, fetchPrefabs: () => Promise<Prefab[]>) {
+  constructor(
+    doms: PrefabsHandlerDoms,
+    worker: PrefabsFilterWorker,
+    labelHandler: LabelHandler,
+    fetchPrefabs: () => Promise<Prefab[]>,
+  ) {
     this.#doms = doms;
     this.#worker = worker;
     this.#labelHandler = labelHandler;

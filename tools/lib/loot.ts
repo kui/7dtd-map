@@ -38,7 +38,11 @@ export class Loot {
   }
 }
 
-function matchLootTable(pattern: RegExp | null, items: LootXmlItem[], groups: Map<string, LootXmlItem[]>): LootTable | null {
+function matchLootTable(
+  pattern: RegExp | null,
+  items: LootXmlItem[],
+  groups: Map<string, LootXmlItem[]>,
+): LootTable | null {
   const matchedItems: string[] = [];
   const matchedGroups: LootGroup[] = [];
 

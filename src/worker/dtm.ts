@@ -19,7 +19,9 @@ async function main() {
 async function readDtmBlockRaw(workspace: storage.MapDir): Promise<Uint8Array | null> {
   const file = await workspace.get("dtm_block.raw.gz");
   if (!file) return null;
-  return readWholeStream(file.stream().pipeThrough(new DtmBlockRawDecompressor() as TransformStream<Uint8Array, Uint8Array>));
+  return readWholeStream(
+    file.stream().pipeThrough(new DtmBlockRawDecompressor() as TransformStream<Uint8Array, Uint8Array>),
+  );
 }
 
 main().catch(printError);

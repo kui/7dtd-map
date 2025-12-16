@@ -67,7 +67,10 @@ export class PrefabInspectorHandler {
     const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) => !isExcludedPrefabName(name));
 
     const difficulties = await this.#fetchDifficulties();
-    const countsPerDifficulty: { inMap: number; defined: number }[] = Array.from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
+    const countsPerDifficulty: { inMap: number; defined: number }[] = Array.from(
+      { length: 6 },
+      () => ({ inMap: 0, defined: 0 }),
+    );
     const totalCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;

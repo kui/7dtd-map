@@ -56,7 +56,11 @@ function main() {
     dndHandler,
     bundledMapHandler,
   );
-  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "labels", navigator.languages);
+  const labelHandler = new LabelHandler(
+    { language: component("label_lang", HTMLSelectElement) },
+    "labels",
+    navigator.languages,
+  );
   const dtmHandler = new DtmHandler(() => new Worker("worker/dtm.js"), fileHandler);
   const markerHandler = new MarkerHandler(
     {
@@ -185,10 +189,10 @@ function prefabLi(prefab: HighlightedPrefab) {
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
-          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
-          `  💀${prefab.difficulty.toString()}`,
-          `</span>`,
-        ]
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+        `  💀${prefab.difficulty.toString()}`,
+        `</span>`,
+      ]
       : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",

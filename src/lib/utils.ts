@@ -3,7 +3,10 @@ export function requireNonnull<T>(t: T | undefined | null, errorMessage = () => 
   return t;
 }
 
-export function strictParseInt(s: string | undefined | null, errorMessage = () => `Unexpected argument: ${String(s)}`): number {
+export function strictParseInt(
+  s: string | undefined | null,
+  errorMessage = () => `Unexpected argument: ${String(s)}`,
+): number {
   const n = parseInt(s ?? "");
   if (isNaN(n)) throw Error(errorMessage());
   return n;
@@ -18,7 +21,10 @@ export function requireType<T>(
   throw Error(errorMessage());
 }
 
-export function component<T extends HTMLElement = HTMLElement>(id: string | undefined | null, t?: new (...a: unknown[]) => T): T {
+export function component<T extends HTMLElement = HTMLElement>(
+  id: string | undefined | null,
+  t?: new (...a: unknown[]) => T,
+): T {
   const i = requireNonnull(id, () => "Unexpected argument: id is null");
   const e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
   return t ? requireType(e, t) : (e as T);
@@ -80,7 +86,11 @@ export function gameCoords(c: { x: number; z: number }): GameCoords {
 }
 
 /** Returns null if the event was fired out of the canvas */
-export function canvasEventToGameCoords(event: EventOffsets, mapSize: GameMapSize, canvasSize: HTMLCanvasElement): GameCoords | null {
+export function canvasEventToGameCoords(
+  event: EventOffsets,
+  mapSize: GameMapSize,
+  canvasSize: HTMLCanvasElement,
+): GameCoords | null {
   // in-game scale coords with left-top offset
   const gx = (event.offsetX * mapSize.width) / canvasSize.width;
   const gz = (event.offsetY * mapSize.height) / canvasSize.height;

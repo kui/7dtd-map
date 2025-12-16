@@ -4,8 +4,12 @@
 export function init() {
   for (const eventName of ["input", "change"]) {
     globalThis.addEventListener(eventName, ({ target }) => {
-      if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement)))
+      if (
+        !(target instanceof HTMLInputElement) ||
+        !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement))
+      ) {
         return;
+      }
       const key = target.dataset["remember"];
       if (key) localStorage.setItem(key, target.value);
     });

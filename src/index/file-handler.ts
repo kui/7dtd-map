@@ -181,20 +181,32 @@ export class FileHandler {
     // TODO parallelize
     for (const resource of resourceList) {
       if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
-        console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
+        console.log(
+          "Skip ",
+          resource.name,
+          " because ",
+          getPreferWorldFileName(resource.name),
+          " is already in the list",
+        );
         progression?.setState(resource.name, "skipped");
         continue;
       }
 
       if (this.#depletedFileHandler.isSupport(resource.name)) {
-        this.#depletedFileHandler.handle(resource.name, "remove" in resource, "alreadyProcessed" in resource && resource.alreadyProcessed);
+        this.#depletedFileHandler.handle(
+          resource.name,
+          "remove" in resource,
+          "alreadyProcessed" in resource && resource.alreadyProcessed,
+        );
       }
 
       if ("remove" in resource) {
         console.log("Remove", resource.name);
         processedNames.push(resource.name);
         await workspace.remove(resource.name);
-      } else if (isNeverProcessRequiredResource(resource) || (isStateRequiredResource(resource) && resource.alreadyProcessed)) {
+      } else if (
+        isNeverProcessRequiredResource(resource) || (isStateRequiredResource(resource) && resource.alreadyProcessed)
+      ) {
         console.log("Copy", resource.name);
         processedNames.push(resource.name);
         if ("blob" in resource) {
@@ -204,7 +216,9 @@ export class FileHandler {
           if (!response.ok) throw new Error(`Failed to fetch ${resource.url}: ${response.statusText}`);
           await workspace.put(resource.name, await response.blob());
         }
-      } else if (isAlwaysProcessRequiredResource(resource) || (isStateRequiredResource(resource) && !resource.alreadyProcessed)) {
+      } else if (
+        isAlwaysProcessRequiredResource(resource) || (isStateRequiredResource(resource) && !resource.alreadyProcessed)
+      ) {
         console.log("Process", resource.name);
         console.time(`Process ${resource.name}`);
         const result = await this.#processInWorker(resource);
@@ -269,13 +283,19 @@ function isStateRequiredResource(
 
 function isNeverProcessRequiredResource(
   resource: ResourceLike,
-): resource is { name: NeverProcessRequiredMapFileName; blob: Blob } | { name: NeverProcessRequiredMapFileName; url: string } {
+): resource is { name: NeverProcessRequiredMapFileName; blob: Blob } | {
+  name: NeverProcessRequiredMapFileName;
+  url: string;
+} {
   return isNeverProcessRequiredMapFile(resource.name);
 }
 
 function isAlwaysProcessRequiredResource(
   resource: ResourceLike,
-): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | { name: AlwaysProcessRequiredFileName; url: string } {
+): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | {
+  name: AlwaysProcessRequiredFileName;
+  url: string;
+} {
   return isAlwaysProcessRequiredFile(resource.name);
 }
 

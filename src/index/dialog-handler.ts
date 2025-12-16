@@ -14,7 +14,10 @@ export class DialogHandler {
   constructor(doms: Doms) {
     this.#doms = doms;
     this.#radioList = requireType(
-      requireNonnull(doms.dialog.querySelector("form")?.elements.namedItem("active-section"), () => "Unexpected dialog content"),
+      requireNonnull(
+        doms.dialog.querySelector("form")?.elements.namedItem("active-section"),
+        () => "Unexpected dialog content",
+      ),
       RadioNodeList,
     );
   }
