@@ -5,28 +5,23 @@ repository. Agents must read and follow these rules closely.
 
 ## Critical Rules
 
-1. **Never submit a PR without explicit user approval.**
-   - Even if you are ready to submit, you must pause and ask for confirmation.
+1. **Explicit Approval Required**
+   - **Never submit a PR or push changes without explicit user approval.**
+   - You must pause and ask for confirmation before the final submission.
 
-2. **Atomic Commits & Thought Process.**
-   - **Think before committing:** Before running `git commit`, you must verify
-     `git status` and `git diff --cached --stat`.
-   - **Verify Message vs Content:** Ask yourself: "Does the commit message
-     accurately reflect ALL files in the index?"
-     - If the message says "Refactor code", but the index includes `README.md`
-       or `AGENTS.md`, **STOP**. Unstage the documentation or update the message
-       (or better, split the commit).
-   - **Separation of Concerns:** Strictly separate code logic changes from
-     documentation updates (README, AGENTS.md).
-   - **Formatting:** If `deno fmt` touches many files, commit the formatting
-     changes separately from logic changes if possible. If bundled due to lint
-     requirements, explicitly state which files are formatted vs modified
-     logically in the extended commit message.
+2. **Atomic Commits & Scope**
+   - **One Logical Change per Commit:** Do not bundle unrelated changes.
+   - **Separation of Concerns:**
+     - **Docs vs Code:** Strictly separate documentation updates (README,
+       AGENTS.md) from code logic changes.
+     - **Formatting:** Avoid bundling "drive-by" formatting of unrelated files.
+       If you must run a global formatter, do it in a distinct commit.
+   - **Verify Commit Message:** Ensure the message accurately describes
+     _everything_ in the commit. If the message says "Fix bug" but the index
+     includes `AGENTS.md`, split the commit.
 
-3. **CI Must Pass.**
-   - **Prohibition:** Commits causing Continuous Integration (CI) failures are
-     strictly prohibited.
-   - **Verification:** You MUST run `deno task ci` (or equivalent checks)
-     locally and confirm success before committing.
-   - **Recovery:** If CI fails, do not commit "partial fixes" that still fail.
-     Fix the root cause or revert to a passing state before proceeding.
+3. **CI & Verification**
+   - **Green CI Required:** Commits that break CI are prohibited.
+   - **Run Checks Locally:** You MUST run `deno task ci` and confirm success
+     before committing.
+   - **No Partial Fixes:** Do not commit broken code hoping to fix it later.
