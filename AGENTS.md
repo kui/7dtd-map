@@ -15,8 +15,6 @@ repository. Agents must read and follow these rules closely.
 2. **Atomic Commits & Scope**
    - **One Logical Change per Commit:** Do not bundle unrelated changes.
    - **Separation of Concerns:**
-     - **Docs vs Code:** Strictly separate documentation updates (README,
-       AGENTS.md) from code logic changes.
      - **Formatting:** Avoid bundling "drive-by" formatting of unrelated files.
        If you must run a global formatter, do it in a distinct commit.
    - **Verify Commit Message:** Ensure the message accurately describes
