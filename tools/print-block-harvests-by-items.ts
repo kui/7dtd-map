@@ -1,6 +1,7 @@
-import { loadBlocks } from "./lib/blocks-xml.js";
-import { loadMaterials } from "./lib/materials-xml.js";
-import { handleMain, program, vanillaDir } from "./lib/utils.js";
+import process from "node:process";
+import { loadBlocks } from "./lib/blocks-xml.ts";
+import { loadMaterials } from "./lib/materials-xml.ts";
+import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const USAGE = `Usage: ${program()} <item name regexp>`;
 
@@ -11,10 +12,16 @@ async function main() {
     return 1;
   }
 
-  const blocks = await loadBlocks(await vanillaDir("Data", "Config", "blocks.xml"));
-  const materials = await loadMaterials(await vanillaDir("Data", "Config", "materials.xml"));
+  const blocks = await loadBlocks(
+    await vanillaDir("Data", "Config", "blocks.xml"),
+  );
+  const materials = await loadMaterials(
+    await vanillaDir("Data", "Config", "materials.xml"),
+  );
   const itemPattern = new RegExp(itemPatternString);
-  const matchingBlocks = blocks.find((b) => Object.keys(blocks.getHarvests(b)).some((drop) => itemPattern.test(drop)));
+  const matchingBlocks = blocks.find((b) =>
+    Object.keys(blocks.getHarvests(b)).some((drop) => itemPattern.test(drop))
+  );
 
   const harvests: {
     blockName: string;
@@ -26,7 +33,9 @@ async function main() {
     countPerDamage: number;
   }[] = [];
   for (const block of matchingBlocks) {
-    const drops = Object.values(blocks.getHarvests(block)).filter((drop) => itemPattern.test(drop.name));
+    const drops = Object.values(blocks.getHarvests(block)).filter((drop) =>
+      itemPattern.test(drop.name)
+    );
     const damage = blocks.getMaxDamage(block, materials);
     if (damage === null) throw new Error(`No damage for ${block.name}`);
     for (const drop of drops) {

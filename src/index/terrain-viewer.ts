@@ -1,8 +1,8 @@
-import type { DtmHandler } from "./dtm-handler";
+import type { DtmHandler } from "./dtm-handler.ts";
 
 import * as three from "three";
-import { printError, threePlaneSize } from "../lib/utils";
-import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller";
+import { printError, threePlaneSize } from "../lib/utils.ts";
+import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller.ts";
 
 interface Doms {
   output: HTMLCanvasElement;
@@ -29,7 +29,10 @@ export class TerrainViewer {
     this.#doms = doms;
     this.#dtm = dtm;
 
-    this.#renderer = new three.WebGLRenderer({ canvas: doms.output, antialias: false });
+    this.#renderer = new three.WebGLRenderer({
+      canvas: doms.output,
+      antialias: false,
+    });
     this.#renderer.setPixelRatio(devicePixelRatio);
     this.#scene = new three.Scene();
 
@@ -38,7 +41,10 @@ export class TerrainViewer {
     this.#scene.add(light);
     this.#scene.add(new three.AmbientLight(0xffffff, 0.09));
 
-    this.#cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
+    this.#cameraController = new TerrainViewerCameraController(
+      doms.output,
+      new three.PerspectiveCamera(),
+    );
 
     doms.show.addEventListener("click", () => {
       this.#show().catch(printError);
@@ -73,7 +79,9 @@ export class TerrainViewer {
     if (mapSize === null) throw Error("Unexpected state");
 
     this.#terrainSize.width = TERRAIN_WIDTH;
-    this.#terrainSize.height = Math.floor((TERRAIN_WIDTH / mapSize.width) * mapSize.height);
+    this.#terrainSize.height = Math.floor(
+      (TERRAIN_WIDTH / mapSize.width) * mapSize.height,
+    );
 
     console.log("terrainSize=", this.#terrain, "mapSize=", mapSize);
     console.time("updateElevations");

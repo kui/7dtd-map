@@ -1,4 +1,4 @@
-import { MapFileName } from "../../lib/map-files";
+import { MapFileName } from "../../lib/map-files.ts";
 
 const MAPS_DIR = "maps";
 const WORKSPACE_DIR = "workspace";
@@ -19,7 +19,9 @@ export async function mapDir(name: string): Promise<MapDir> {
 
 export async function workspaceDir(): Promise<MapDir> {
   const root = await navigator.storage.getDirectory();
-  return new MapDir(await root.getDirectoryHandle(WORKSPACE_DIR, { create: true }));
+  return new MapDir(
+    await root.getDirectoryHandle(WORKSPACE_DIR, { create: true }),
+  );
 }
 
 async function mapsDir() {
@@ -38,7 +40,10 @@ export class MapDir {
     return this.#dir.name;
   }
 
-  async put(name: MapFileName, data: ArrayBuffer | Blob | ReadableStream<Uint8Array>) {
+  async put(
+    name: MapFileName,
+    data: ArrayBuffer | Blob | ReadableStream<Uint8Array>,
+  ) {
     console.debug("put", name);
     const file = await this.#dir.getFileHandle(name, { create: true });
     const writable = await file.createWritable();
@@ -50,7 +55,9 @@ export class MapDir {
     await writable.close();
   }
 
-  async createWritable(name: MapFileName): Promise<FileSystemWritableFileStream> {
+  async createWritable(
+    name: MapFileName,
+  ): Promise<FileSystemWritableFileStream> {
     const file = await this.#dir.getFileHandle(name, { create: true });
     return await file.createWritable();
   }

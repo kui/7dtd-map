@@ -1,5 +1,5 @@
 import * as three from "three";
-import { requireNonnull, threePlaneSize } from "../../lib/utils";
+import { requireNonnull, threePlaneSize } from "../../lib/utils.ts";
 
 const MOUSE_BUTTON_BITMASK = {
   left: 0b00000001,
@@ -122,11 +122,17 @@ export class TerrainViewerCameraController {
   }
 
   private moveCameraXY(deltaMsec: number) {
-    if (this.speeds.x === 0 && this.speeds.y === 0 && this.mouseMove.left.x === 0 && this.mouseMove.left.y === 0) return;
+    if (
+      this.speeds.x === 0 && this.speeds.y === 0 &&
+      this.mouseMove.left.x === 0 && this.mouseMove.left.y === 0
+    ) {
+      return;
+    }
 
     const scaleFactor = this.mapWidth / (this.terrainSize.width + 1);
 
-    const deltaDistKey = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 / 60;
+    const deltaDistKey = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 /
+      60;
     const deltaMouse = this.mouseMove.left;
 
     const oldPosition = new three.Vector3().copy(this.camera.position);
@@ -137,10 +143,16 @@ export class TerrainViewerCameraController {
     this.mouseMove.left.y = 0;
 
     const lookAt = requireNonnull(this.pointLookAtXYPlane());
-    if (lookAt.x < -this.terrainSize.width / 2 || this.terrainSize.width / 2 < lookAt.x) {
+    if (
+      lookAt.x < -this.terrainSize.width / 2 ||
+      this.terrainSize.width / 2 < lookAt.x
+    ) {
       this.camera.position.x = oldPosition.x;
     }
-    if (lookAt.y < -this.terrainSize.height / 2 || this.terrainSize.height / 2 < lookAt.y) {
+    if (
+      lookAt.y < -this.terrainSize.height / 2 ||
+      this.terrainSize.height / 2 < lookAt.y
+    ) {
       this.camera.position.y = oldPosition.y;
     }
   }
@@ -152,7 +164,9 @@ export class TerrainViewerCameraController {
     const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
     const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
-    if (this.camera.position.z < this.minZ || this.maxZ < this.camera.position.z) {
+    if (
+      this.camera.position.z < this.minZ || this.maxZ < this.camera.position.z
+    ) {
       this.camera.position.sub(moveVector);
     }
   }
@@ -175,7 +189,11 @@ export class TerrainViewerCameraController {
     this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
 
     const totalRad = TILT_RADIAN_BASE.angleTo(this.camera.position);
-    if (totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad || this.camera.position.z < this.minZ || this.maxZ < this.camera.position.z) {
+    if (
+      totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad ||
+      this.camera.position.z < this.minZ ||
+      this.maxZ < this.camera.position.z
+    ) {
       this.camera.position.applyAxisAngle(TILT_AXIS, -deltaRad);
     }
 

@@ -1,0 +1,40 @@
+{
+  "tasks": {
+    "serve": "deno run -A tools/build.ts serve",
+    "build": "deno task build:ts && deno task build:json:all && deno task build:prefab-html",
+    "build:ts": "deno run -A tools/build.ts",
+    "build:json:all": "deno task build:json:prefab-props && deno task build:json:labels && deno task build:json:block-counts",
+    "build:json:prefab-props": "deno run -A tools/generate-prefab-properties-jsons.ts",
+    "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
+    "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
+    "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
+    "fix": "deno fmt && deno lint --fix",
+    "lint": "deno lint && deno fmt --check",
+    "test": "deno test -A --parallel",
+    "ci": "deno task lint && deno task test"
+  },
+  "imports": {
+    "three": "npm:three@~0.182.0",
+    "pngjs": "npm:pngjs@^7.0.0",
+    "xml2js": "npm:xml2js@^0.6.2",
+    "csv-parse": "npm:csv-parse@^6.1.0",
+    "esbuild": "npm:esbuild@~0.27.1",
+    "@std/expect": "jsr:@std/expect@^1.0.11",
+    "@std/testing": "jsr:@std/testing@^1.0.9",
+    "jsdom": "npm:jsdom@^26.0.0"
+  },
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "strict": true,
+    "types": ["./src/types/7dtdmap.d.ts"]
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    },
+    "exclude": ["public/"]
+  },
+  "fmt": {
+    "exclude": ["public/"]
+  }
+}

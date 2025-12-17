@@ -1,6 +1,6 @@
-import * as fs from "fs";
-import { ByteReader } from "./byte-reader.js";
-import { BlockId } from "./nim-parser.js";
+import * as fs from "node:fs";
+import { ByteReader } from "./byte-reader.ts";
+import { BlockId } from "./nim-parser.ts";
 
 // TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
 const KNOWN_VERSIONS = [13, 15, 16, 17, 18, 19];
@@ -30,8 +30,16 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
   // End
   stream.close();
 
-  if (fileFormat !== "tts\x00") throw Error(`Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`);
-  if (!KNOWN_VERSIONS.includes(version)) throw Error(`Unknown version: filename=${ttsFileName} version=${String(version)}`);
+  if (fileFormat !== "tts\x00") {
+    throw Error(
+      `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
+    );
+  }
+  if (!KNOWN_VERSIONS.includes(version)) {
+    throw Error(
+      `Unknown version: filename=${ttsFileName} version=${String(version)}`,
+    );
+  }
   return new Tts(version, dim, blockIds);
 }
 
@@ -43,7 +51,11 @@ export class Tts {
   maxy: number;
   maxz: number;
 
-  constructor(version: number, dim: { x: number; y: number; z: number }, blockIds: Uint32Array) {
+  constructor(
+    version: number,
+    dim: { x: number; y: number; z: number },
+    blockIds: Uint32Array,
+  ) {
     this.version = version;
     this.maxx = dim.x;
     this.maxy = dim.y;
@@ -52,11 +64,17 @@ export class Tts {
     this.blockNums = countBlocks(blockIds);
   }
   getBlockId(x: number, y: number, z: number): BlockId | undefined {
-    if (x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z) {
+    if (
+      x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z
+    ) {
       throw Error(
-        `Out of index range: x=${String(x)}, y=${String(y)}, z=${String(z)}, maxValues=${String(this.maxx)},${String(this.maxy)},${String(
-          this.maxz,
-        )}`,
+        `Out of index range: x=${String(x)}, y=${String(y)}, z=${
+          String(z)
+        }, maxValues=${String(this.maxx)},${String(this.maxy)},${
+          String(
+            this.maxz,
+          )
+        }`,
       );
     }
     return this.blockIds[x + this.maxx * y + this.maxx * this.maxy * z];

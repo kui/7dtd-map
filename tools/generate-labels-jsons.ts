@@ -1,12 +1,14 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { LANGUAGES, Label, Language, parseLabel } from "./lib/label-parser.js";
-import { handleMain, publishDir, vanillaDir } from "./lib/utils.js";
+import { Label, Language, LANGUAGES, parseLabel } from "./lib/label-parser.ts";
+import { handleMain, publishDir, vanillaDir } from "./lib/utils.ts";
 
 const DEST_DIR = publishDir("labels");
 
 async function main() {
-  const labels = await parseLabel(await vanillaDir("Data", "Config", "Localization.txt"));
+  const labels = await parseLabel(
+    await vanillaDir("Data", "Config", "Localization.txt"),
+  );
 
   for (const lang of LANGUAGES) {
     const dir = path.join(DEST_DIR, lang);
@@ -19,7 +21,12 @@ async function main() {
   return 0;
 }
 
-async function extract(labels: Map<string, Label>, file: string, lang: Language, outputFile: string) {
+async function extract(
+  labels: Map<string, Label>,
+  file: string,
+  lang: Language,
+  outputFile: string,
+) {
   const extracted = Object.fromEntries(
     Array.from(labels)
       .flatMap<[string, string]>(([id, label]) => {
@@ -29,7 +36,11 @@ async function extract(labels: Map<string, Label>, file: string, lang: Language,
       })
       .toSorted((a, b) => a[0].localeCompare(b[0])),
   );
-  console.log("Load %d labels for %s", Object.keys(extracted).length, path.basename(outputFile));
+  console.log(
+    "Load %d labels for %s",
+    Object.keys(extracted).length,
+    path.basename(outputFile),
+  );
   await writeJsonFile(outputFile, extracted);
 }
 
