@@ -6,9 +6,7 @@ repository. Agents must read and follow these rules closely.
 ## Critical Rules
 
 1. **Never submit a PR without explicit user approval.**
-   - You must ask for permission using `message_user` before calling the
-     `submit` tool.
-   - Even if the plan says "Submit", you must pause and ask for confirmation.
+   - Even if you are ready to submit, you must pause and ask for confirmation.
 
 2. **Atomic Commits & Thought Process.**
    - **Think before committing:** Before running `git commit`, you must verify
