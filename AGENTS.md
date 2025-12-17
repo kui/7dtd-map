@@ -5,9 +5,12 @@ repository. Agents must read and follow these rules closely.
 
 ## Critical Rules
 
-1. **Explicit Approval Required**
+1. **Explicit Approval & Planning**
    - **Never submit a PR or push changes without explicit user approval.**
-   - You must pause and ask for confirmation before the final submission.
+   - **Strict Step Separation:** You must plan `git commit`, `git push`, and
+     `PR creation` as distinct, separate steps. Do not bundle them into a single
+     "Submit" action in your plan.
+   - You must pause and ask for confirmation before the final push/PR step.
 
 2. **Atomic Commits & Scope**
    - **One Logical Change per Commit:** Do not bundle unrelated changes.
