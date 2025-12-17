@@ -1,8 +1,13 @@
-import { glob } from "glob";
+import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
 import * as path from "node:path";
 import { parseNim } from "./lib/nim-parser.ts";
 import { parseTts } from "./lib/tts-parser.ts";
-import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
+import {
+  handleMain,
+  publishDir,
+  vanillaDir,
+  writeJsonFile,
+} from "./lib/utils.ts";
 
 const DOCS_DIR = publishDir();
 const FILE = "prefab-block-counts.json";
@@ -15,14 +20,23 @@ interface PrefabBlockCounts {
 }
 
 async function main() {
-  const nimFiles = await glob(await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"));
+  const nimFiles: string[] = [];
+  for await (
+    const entry of expandGlob(
+      await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"),
+    )
+  ) {
+    nimFiles.push(entry.path);
+  }
   const prefabBlockCount = await readCounts(nimFiles);
   await writeJsonFile(path.join(DOCS_DIR, FILE), prefabBlockCount);
   return 0;
 }
 
 async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
-  const prefabBlockCounts: Promise<[string, { [blockName: string]: number }]>[] = [];
+  const prefabBlockCounts: Promise<
+    [string, { [blockName: string]: number }]
+  >[] = [];
 
   let count = 0;
   for (const nimFile of nimFiles) {
@@ -32,17 +46,26 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
       (async () => {
         const counts = await countBlocks(nimFile, ttsFile);
         if (++count % 100 === 0 || count === nimFiles.length) {
-          console.log(`Processing ${count.toString()}/${nimFiles.length.toString()}`);
+          console.log(
+            `Processing ${count.toString()}/${nimFiles.length.toString()}`,
+          );
         }
         return [prefabName, counts];
       })(),
     );
   }
 
-  return Object.fromEntries((await Promise.all(prefabBlockCounts)).toSorted((a, b) => a[0].localeCompare(b[0])));
+  return Object.fromEntries(
+    (await Promise.all(prefabBlockCounts)).toSorted((a, b) =>
+      a[0].localeCompare(b[0])
+    ),
+  );
 }
 
-async function countBlocks(nimFile: string, ttsFile: string): Promise<{ [blockName: string]: number }> {
+async function countBlocks(
+  nimFile: string,
+  ttsFile: string,
+): Promise<{ [blockName: string]: number }> {
   const [nim, tts] = await Promise.all([parseNim(nimFile), parseTts(ttsFile)]);
   return Object.fromEntries(
     Array.from(nim)

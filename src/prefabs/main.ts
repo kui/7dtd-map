@@ -11,13 +11,19 @@ function main() {
   const labelHolder = labelHandler.holder;
   labelHandler.addListener(async () => {
     updatePrefabLabels(await labelHolder.get("prefabs"));
-    updateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
+    updateBlockLabels(
+      await labelHolder.get("blocks"),
+      await labelHolder.get("shapes"),
+    );
   });
 
   // init
   (async () => {
     updatePrefabLabels(await labelHolder.get("prefabs"));
-    updateBlockLabels(await labelHolder.get("blocks"), await labelHolder.get("shapes"));
+    updateBlockLabels(
+      await labelHolder.get("blocks"),
+      await labelHolder.get("shapes"),
+    );
   })().catch(printError);
 }
 
@@ -30,7 +36,9 @@ function updatePrefabLabels(labels: Labels) {
 }
 
 function updateBlockLabels(blockLabels: Labels, shapeLabels: Labels) {
-  for (const blockEl of component("blocks", HTMLElement).querySelectorAll(".block")) {
+  for (
+    const blockEl of component("blocks", HTMLElement).querySelectorAll(".block")
+  ) {
     const name = blockEl.querySelector(".block_name")?.textContent.trim();
     if (!name) continue;
     const labelEl = blockEl.querySelector(".block_label");

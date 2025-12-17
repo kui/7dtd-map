@@ -1,6 +1,9 @@
 import { component, printError } from "./lib/utils.ts";
 
-const FONT_FACE = new FontFace("Noto Sans Symbols 2", "url('./NotoSansSymbols2.subset.woff2') format('woff2')");
+const FONT_FACE = new FontFace(
+  "Noto Sans Symbols 2",
+  "url('./NotoSansSymbols2.subset.woff2') format('woff2')",
+);
 
 function main(): void {
   renderLogo1(component("logo1", HTMLCanvasElement)).catch(printError);
@@ -52,7 +55,11 @@ function putText(
   ctx.strokeText(text, x, z);
 }
 
-function putPointCenter(ctx: CanvasRenderingContext2D, size: number, color: string): void {
+function putPointCenter(
+  ctx: CanvasRenderingContext2D,
+  size: number,
+  color: string,
+): void {
   ctx.fillStyle = color;
   ctx.fillRect(WIDTH / 2 - size / 2, WIDTH / 2 - size / 2, size, size);
 }

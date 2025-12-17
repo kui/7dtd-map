@@ -20,9 +20,13 @@ export class Loot {
     this.lootXmlReading = parseXml<LootXml>(lootXmlFileName);
   }
 
-  async findLootContainer(pattern: RegExp | null = null): Promise<LootContainer[]> {
+  async findLootContainer(
+    pattern: RegExp | null = null,
+  ): Promise<LootContainer[]> {
     const lootXml = await this.lootXmlReading;
-    const groups = lootXml.lootcontainers.lootgroup.reduce<Map<string, LootXmlItem[]>>((map, g) => {
+    const groups = lootXml.lootcontainers.lootgroup.reduce<
+      Map<string, LootXmlItem[]>
+    >((map, g) => {
       if (g.item) map.set(g.$.name, g.item);
       return map;
     }, new Map());

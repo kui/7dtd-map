@@ -1,4 +1,7 @@
-export function requireNonnull<T>(t: T | undefined | null, errorMessage = () => `Unexpected state: ${String(t)}`): T {
+export function requireNonnull<T>(
+  t: T | undefined | null,
+  errorMessage = () => `Unexpected state: ${String(t)}`,
+): T {
   if (t == null) throw Error(errorMessage());
   return t;
 }
@@ -15,7 +18,8 @@ export function strictParseInt(
 export function requireType<T>(
   o: unknown,
   t: new (...a: unknown[]) => T,
-  errorMessage = () => `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`,
+  errorMessage = () =>
+    `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`,
 ): T {
   if (o instanceof t) return o;
   throw Error(errorMessage());
@@ -26,7 +30,10 @@ export function component<T extends HTMLElement = HTMLElement>(
   t?: new (...a: unknown[]) => T,
 ): T {
   const i = requireNonnull(id, () => "Unexpected argument: id is null");
-  const e = requireNonnull(document.getElementById(i), () => `Element not found: #${i}`);
+  const e = requireNonnull(
+    document.getElementById(i),
+    () => `Element not found: #${i}`,
+  );
   return t ? requireType(e, t) : (e as T);
 }
 
@@ -34,7 +41,9 @@ export function removeAllChildren(e: HTMLElement): void {
   while (e.lastChild) e.removeChild(e.lastChild);
 }
 
-export function humanreadableDistance([direction, distance]: [Direction | null, number]): string {
+export function humanreadableDistance(
+  [direction, distance]: [Direction | null, number],
+): string {
   const dir = direction ?? "";
   if (distance < 1000) {
     return `${dir} ${distance.toString()}m`;
@@ -66,7 +75,10 @@ export async function formatCoords(
   return `E/W: ${gameCoords.x.toString()}, N/S: ${gameCoords.z.toString()}, Elev: ${y.toString()}`;
 }
 
-export function downloadCanvasPng(fileName: string, canvas: HTMLCanvasElement): void {
+export function downloadCanvasPng(
+  fileName: string,
+  canvas: HTMLCanvasElement,
+): void {
   const a = document.createElement("a");
   a.download = fileName;
   a.href = canvas.toDataURL("image/png");
@@ -122,6 +134,8 @@ export function basename(path: string) {
   return path.substring(path.lastIndexOf("/") + 1);
 }
 
-export async function readWholeStream(stream: ReadableStream<Uint8Array>): Promise<Uint8Array> {
+export async function readWholeStream(
+  stream: ReadableStream<Uint8Array>,
+): Promise<Uint8Array> {
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }

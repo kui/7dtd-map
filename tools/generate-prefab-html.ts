@@ -1,9 +1,14 @@
-import { glob } from "glob";
+import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
 import { prefabHtml } from "./lib/prefab-html.ts";
-import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
+import {
+  handleMain,
+  publishDir,
+  vanillaDir,
+  writeJsonFile,
+} from "./lib/utils.ts";
 
 const BASE_DEST = publishDir("prefabs");
 
@@ -16,7 +21,11 @@ async function main() {
 
 async function remove() {
   const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  await Promise.all((await glob(globPath)).map(fs.unlink));
+  const promises: Promise<void>[] = [];
+  for await (const entry of expandGlob(globPath)) {
+    promises.push(fs.unlink(entry.path));
+  }
+  await Promise.all(promises);
   console.log("Remove %s", globPath);
 }
 
@@ -29,7 +38,10 @@ async function loadLabels() {
 
 async function buildHtmls(labels: Map<LabelId, Label>) {
   const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmlFiles = await glob(xmlGlob);
+  const xmlFiles: string[] = [];
+  for await (const entry of expandGlob(xmlGlob)) {
+    xmlFiles.push(entry.path);
+  }
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);
   }
@@ -39,7 +51,10 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   await Promise.all(
     xmlFiles.map(async (xmlFileName) => {
       try {
-        await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
+        await Promise.all([
+          generateHtml(xmlFileName, labels),
+          copyJpg(xmlFileName),
+        ]);
       } catch (e) {
         if (isErrnoException(e) && e.code === "ENOENT") {
           console.warn("Abort a prefab HTML: ", e.message);

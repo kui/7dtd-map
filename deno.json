@@ -18,7 +18,6 @@
     "pngjs": "npm:pngjs@^7.0.0",
     "xml2js": "npm:xml2js@^0.6.2",
     "csv-parse": "npm:csv-parse@^6.1.0",
-    "glob": "npm:glob@^13.0.0",
     "esbuild": "npm:esbuild@~0.27.1",
     "@std/expect": "jsr:@std/expect@^1.0.11",
     "@std/testing": "jsr:@std/testing@^1.0.9",
@@ -36,11 +35,6 @@
     "exclude": ["public/"]
   },
   "fmt": {
-    "useTabs": false,
-    "lineWidth": 120,
-    "indentWidth": 2,
-    "singleQuote": false,
-    "proseWrap": "preserve",
     "exclude": ["public/"]
   }
 }

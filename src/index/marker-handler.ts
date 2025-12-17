@@ -1,6 +1,10 @@
 import type { DtmHandler } from "./dtm-handler.ts";
 
-import { canvasEventToGameCoords, formatCoords, printError } from "../lib/utils.ts";
+import {
+  canvasEventToGameCoords,
+  formatCoords,
+  printError,
+} from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
 
 interface Doms {
@@ -38,7 +42,9 @@ export class MarkerHandler {
       (c) => this.#dtmHandler.getElevation(c),
       event,
     );
-    const coords = event && size ? canvasEventToGameCoords(event, size, this.#doms.canvas) : null;
+    const coords = event && size
+      ? canvasEventToGameCoords(event, size, this.#doms.canvas)
+      : null;
     await this.#listeners.dispatch({ update: { coords } });
   }
 

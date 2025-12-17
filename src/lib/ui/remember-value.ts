@@ -6,7 +6,8 @@ export function init() {
     globalThis.addEventListener(eventName, ({ target }) => {
       if (
         !(target instanceof HTMLInputElement) ||
-        !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement))
+        !(target instanceof HTMLTextAreaElement ||
+          !(target instanceof HTMLSelectElement))
       ) {
         return;
       }
@@ -15,7 +16,11 @@ export function init() {
     });
   }
 
-  for (const input of document.querySelectorAll<HTMLInputElement>("input[data-remember]")) {
+  for (
+    const input of document.querySelectorAll<HTMLInputElement>(
+      "input[data-remember]",
+    )
+  ) {
     const key = input.dataset["remember"];
     if (key === undefined) continue;
     const value = localStorage.getItem(key);

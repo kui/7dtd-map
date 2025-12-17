@@ -35,7 +35,9 @@ const prodOpts = {
   sourcemap: "external",
 };
 
-const args = Deno.args;
+import process from "node:process";
+
+const args = process.argv.slice(2);
 if (args[0] === "serve") {
   const ctx = await esbuild.context({
     ...commonOpts,

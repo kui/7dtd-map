@@ -29,9 +29,12 @@ export class PrefabFilter {
     fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
   ) {
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
-    this.#blockPrefabCountsHolder = new CacheHolder(fetchPrefabBlockCounts, () => {
-      /* do nothing */
-    });
+    this.#blockPrefabCountsHolder = new CacheHolder(
+      fetchPrefabBlockCounts,
+      () => {
+        /* do nothing */
+      },
+    );
   }
 
   set language(lang: Language) {
@@ -48,7 +51,9 @@ export class PrefabFilter {
     this.#updateStatus();
     this.#updateDistance();
     this.#sort();
-    await this.#listeners.dispatch({ update: { status: this.#status, prefabs: this.#filtered } });
+    await this.#listeners.dispatch({
+      update: { status: this.#status, prefabs: this.#filtered },
+    });
   }
 
   #updateStatus() {
@@ -80,7 +85,9 @@ export class PrefabFilter {
 
   #preMatch(prefabs: Prefab[]) {
     return prefabs.filter((p) => {
-      for (const filter of this.#preExcluds) if (filter.test(p.name)) return false;
+      for (const filter of this.#preExcluds) {
+        if (filter.test(p.name)) return false;
+      }
       return true;
     });
   }
@@ -136,19 +143,25 @@ export class PrefabFilter {
     const prefabNames = new Set(prefabs.map((p) => p.name));
     const matchedPrefabNames: { [prefabName: string]: HighlightedBlock[] } = {};
     const pattern = new RegExp(this.blockFilterRegexp, "i");
-    for (const [blockName, prefabs] of Object.entries(await this.#blockPrefabCountsHolder.get())) {
+    for (
+      const [blockName, prefabs] of Object.entries(
+        await this.#blockPrefabCountsHolder.get(),
+      )
+    ) {
       const highlightedName = matchAndHighlight(blockName, pattern);
-      const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
+      const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ??
+        "-";
       const highlightedLabel = label && matchAndHighlight(label, pattern);
       if (highlightedName == null && highlightedLabel == null) continue;
       for (const [prefabName, count] of Object.entries(prefabs)) {
         if (!prefabNames.has(prefabName)) continue;
-        matchedPrefabNames[prefabName] = (matchedPrefabNames[prefabName] ?? []).concat({
-          name: blockName,
-          highlightedName: highlightedName ?? blockName,
-          highlightedLabel: highlightedLabel ?? label,
-          count,
-        });
+        matchedPrefabNames[prefabName] = (matchedPrefabNames[prefabName] ?? [])
+          .concat({
+            name: blockName,
+            highlightedName: highlightedName ?? blockName,
+            highlightedLabel: highlightedLabel ?? label,
+            count,
+          });
       }
     }
     return matchedPrefabNames;
@@ -157,7 +170,12 @@ export class PrefabFilter {
   #updateDistance() {
     if (this.markCoords) {
       const { markCoords } = this;
-      this.#filtered.forEach((p) => (p.distance = [computeDirection(p, markCoords), computeDistance(p, markCoords)]));
+      this.#filtered.forEach((
+        p,
+      ) => (p.distance = [
+        computeDirection(p, markCoords),
+        computeDistance(p, markCoords),
+      ]));
     } else {
       this.#filtered.forEach((p) => (p.distance = null));
     }
@@ -180,7 +198,10 @@ export class PrefabFilter {
   }
 }
 
-function nameSorter(a: { name: string; difficulty?: number }, b: { name: string; difficulty?: number }) {
+function nameSorter(
+  a: { name: string; difficulty?: number },
+  b: { name: string; difficulty?: number },
+) {
   const aDifficulty = a.difficulty ?? 0;
   const bDifficulty = b.difficulty ?? 0;
   if (aDifficulty === bDifficulty) return a.name.localeCompare(b.name);
@@ -196,15 +217,25 @@ function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
 }
 
 function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
-  if (!a.distance || !b.distance || a.distance[1] === b.distance[1]) return nameSorter(a, b);
+  if (!a.distance || !b.distance || a.distance[1] === b.distance[1]) {
+    return nameSorter(a, b);
+  }
   return a.distance[1] - b.distance[1];
 }
 
 function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
-  return Math.round(Math.sqrt((targetCoords.x - baseCoords.x) ** 2 + (targetCoords.z - baseCoords.z) ** 2));
+  return Math.round(
+    Math.sqrt(
+      (targetCoords.x - baseCoords.x) ** 2 +
+        (targetCoords.z - baseCoords.z) ** 2,
+    ),
+  );
 }
 
-function computeDirection(targetCoords: GameCoords, baseCoords: GameCoords): Direction | null {
+function computeDirection(
+  targetCoords: GameCoords,
+  baseCoords: GameCoords,
+): Direction | null {
   const dx = targetCoords.x - baseCoords.x;
   const dz = targetCoords.z - baseCoords.z;
   if (dx === 0 && dz === 0) return null;

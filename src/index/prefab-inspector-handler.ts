@@ -60,17 +60,22 @@ export class PrefabInspectorHandler {
   }
 
   async inspect() {
-    const prefabNames = (await loadPrefabsXml()).flatMap(({ name }) => (isExcludedPrefabName(name) ? [] : [name]));
+    const prefabNames = (await loadPrefabsXml()).flatMap((
+      { name },
+    ) => (isExcludedPrefabName(name) ? [] : [name]));
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) => !isExcludedPrefabName(name));
+    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) =>
+      !isExcludedPrefabName(name)
+    );
 
     const difficulties = await this.#fetchDifficulties();
-    const countsPerDifficulty: { inMap: number; defined: number }[] = Array.from(
-      { length: 6 },
-      () => ({ inMap: 0, defined: 0 }),
-    );
+    const countsPerDifficulty: { inMap: number; defined: number }[] = Array
+      .from(
+        { length: 6 },
+        () => ({ inMap: 0, defined: 0 }),
+      );
     const totalCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
@@ -91,20 +96,32 @@ export class PrefabInspectorHandler {
       countDoms.inMap.textContent = counts.inMap.toString();
       countDoms.defined.textContent = counts.defined.toString();
     }
-    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap.toString();
-    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined.toString();
+    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap
+      .toString();
+    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined
+      .toString();
 
     const labels = await this.#labelHandler.holder.get("prefabs");
-    const missingPrefabNames = new Set(prefabIndex.filter((name) => !uniquePrefabNames.has(name)));
+    const missingPrefabNames = new Set(
+      prefabIndex.filter((name) => !uniquePrefabNames.has(name)),
+    );
     this.#doms.missings.innerHTML = [...missingPrefabNames]
       .map((name) => {
         const difficulty = difficulties[name] ?? 0;
         const label = labels.get(name) ?? "-";
         return { name, label, difficulty };
       })
-      .toSorted((a, b) => (a.difficulty === b.difficulty ? a.name.localeCompare(b.name) : b.difficulty - a.difficulty))
+      .toSorted((
+        a,
+        b,
+      ) => (a.difficulty === b.difficulty
+        ? a.name.localeCompare(b.name)
+        : b.difficulty - a.difficulty)
+      )
       .map(({ name, label, difficulty }) => {
-        const tierStr = difficulty === 0 ? "" : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
+        const tierStr = difficulty === 0
+          ? ""
+          : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
         return `<li>${tierStr}<a href="prefabs/${name}.html">${label} / ${name}</a></li>`;
       })
       .join("");

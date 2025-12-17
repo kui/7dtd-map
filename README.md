@@ -32,7 +32,8 @@ deno run -A ./tools/copy-map-files.ts
 
 ### Build: Font subset
 
-To build ".subset.woff2", you need to require fonttools or docker. If you already have fonttools, run:
+To build ".subset.woff2", you need to require fonttools or docker. If you
+already have fonttools, run:
 
 ```bash
 ./tools/fonts/subset.sh
@@ -57,6 +58,8 @@ deno task fix
 deno task serve
 ```
 
-Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][Secure Contexts]".
+Note: You need to use HTTPS for development or access it using "localhost"
+because 7dtd-map uses `navigator.storage` which requires
+"[Secure Contexts][Secure Contexts]".
 
 [Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts

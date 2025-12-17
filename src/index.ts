@@ -5,7 +5,13 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
-import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils.ts";
+import {
+  component,
+  downloadCanvasPng,
+  fetchJson,
+  humanreadableDistance,
+  printError,
+} from "./lib/utils.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
@@ -43,8 +49,13 @@ function main() {
     dialog: component("dialog", HTMLDialogElement),
     processingFiles: component("processing-files", HTMLUListElement),
   });
-  const dndHandler = new DndHandler({ dragovered: document.body }, dialogHandler);
-  const bundledMapHandler = new BundledMapHandler({ select: component("bundled_map_select", HTMLSelectElement) });
+  const dndHandler = new DndHandler(
+    { dragovered: document.body },
+    dialogHandler,
+  );
+  const bundledMapHandler = new BundledMapHandler({
+    select: component("bundled_map_select", HTMLSelectElement),
+  });
   const fileHandler = new FileHandler(
     {
       files: component("files", HTMLInputElement),
@@ -61,7 +72,10 @@ function main() {
     "labels",
     navigator.languages,
   );
-  const dtmHandler = new DtmHandler(() => new Worker("worker/dtm.js"), fileHandler);
+  const dtmHandler = new DtmHandler(
+    () => new Worker("worker/dtm.js"),
+    fileHandler,
+  );
   const markerHandler = new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
@@ -77,7 +91,11 @@ function main() {
       maxTier: component("max_tier", HTMLInputElement),
       prefabFilter: component("prefab_filter", HTMLInputElement),
       blockFilter: component("block_filter", HTMLInputElement),
-      preExcludes: Array.from(component("prefab-pre-filters").querySelectorAll("input[type=checkbox]")),
+      preExcludes: Array.from(
+        component("prefab-pre-filters").querySelectorAll(
+          "input[type=checkbox]",
+        ),
+      ),
     },
     new Worker("worker/prefabs-filter.js"),
     markerHandler,
@@ -221,7 +239,8 @@ function prefabLi(prefab: HighlightedPrefab) {
 
 function updateMapRightMargin() {
   const margin = component("controller").clientWidth + 48;
-  component("map", HTMLCanvasElement).style.marginRight = `${margin.toString()}px`;
+  component("map", HTMLCanvasElement).style.marginRight =
+    `${margin.toString()}px`;
 }
 
 if (document.readyState === "loading") {

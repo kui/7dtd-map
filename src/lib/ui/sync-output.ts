@@ -5,18 +5,25 @@ export function init(): void {
     globalThis.addEventListener(eventName, ({ target }) => {
       if (
         !(target instanceof HTMLInputElement) ||
-        !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement))
+        !(target instanceof HTMLTextAreaElement ||
+          !(target instanceof HTMLSelectElement))
       ) {
         return;
       }
-      const outputElements = document.querySelectorAll<HTMLOutputElement>(`output[data-sync-for="${target.id}"]`);
+      const outputElements = document.querySelectorAll<HTMLOutputElement>(
+        `output[data-sync-for="${target.id}"]`,
+      );
       for (const output of outputElements) {
         output.value = target.value;
       }
     });
   }
 
-  for (const output of document.querySelectorAll<HTMLOutputElement>("output[data-sync-for]")) {
+  for (
+    const output of document.querySelectorAll<HTMLOutputElement>(
+      "output[data-sync-for]",
+    )
+  ) {
     const input = component(output.dataset["syncFor"], HTMLInputElement);
     output.value = input.value;
   }

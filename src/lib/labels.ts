@@ -48,7 +48,9 @@ export class LabelHolder {
     this.#baseUrl = baseUrl;
     this.#language = resolveLanguage(navigatorLanguages);
     this.#fallbacks = new Map(
-      FILE_BASE_NAMES.map((n) => [n, this.#fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, n)] as const),
+      FILE_BASE_NAMES.map((n) =>
+        [n, this.#fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, n)] as const
+      ),
     );
     this.#labels = this.#buildAllLabels();
   }
@@ -72,12 +74,24 @@ export class LabelHolder {
 
   async #buildLabels(fileBaseName: FileBaseName): Promise<Labels> {
     const fallback = this.#fallbacks.get(fileBaseName);
-    if (!fallback) throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
-    return new Labels(await this.#fetchLabelMap(this.#language, fileBaseName), await fallback);
+    if (!fallback) {
+      throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
+    }
+    return new Labels(
+      await this.#fetchLabelMap(this.#language, fileBaseName),
+      await fallback,
+    );
   }
 
-  async #fetchLabelMap(language: Language, fileId: FileBaseName): Promise<Map<string, string>> {
-    return new Map(Object.entries(await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`)));
+  async #fetchLabelMap(
+    language: Language,
+    fileId: FileBaseName,
+  ): Promise<Map<string, string>> {
+    return new Map(
+      Object.entries(
+        await fetchJson(`${this.#baseUrl}/${language}/${fileId}.json`),
+      ),
+    );
   }
 }
 
