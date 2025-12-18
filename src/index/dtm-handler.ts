@@ -92,9 +92,7 @@ class Dtm {
     if (!this.#data) return;
 
     const pos = requireNonnull(geo.attributes["position"], () => "No position attribute");
-    if (pos.itemSize !== 3) {
-      throw Error("Unexpected item size of position attribute");
-    }
+    if (pos.itemSize !== 3) throw Error("Unexpected item size of position attribute");
 
     const scaleFactor = (this.#mapSize.width - 1) / geo.parameters.width;
 

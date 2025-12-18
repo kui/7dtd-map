@@ -323,12 +323,8 @@ type DeplateOrPreferedFileName =
  */
 class DepletedFileHandler {
   constructor() {
-    if (localStorage.getItem("useSplat3Png")) {
-      document.body.classList.add("use-splat3-png");
-    }
-    if (localStorage.getItem("useSplat4Png")) {
-      document.body.classList.add("use-splat4-png");
-    }
+    if (localStorage.getItem("useSplat3Png")) document.body.classList.add("use-splat3-png");
+    if (localStorage.getItem("useSplat4Png")) document.body.classList.add("use-splat4-png");
   }
 
   isSupport(worldFileName: string): worldFileName is DeplateOrPreferedFileName {
