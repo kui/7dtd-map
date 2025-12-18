@@ -24,7 +24,9 @@ interface PrefabXmlClassProperty {
   property: PrefabProperty[];
 }
 
-export async function parsePrefabXml(xmlFileName: string): Promise<PrefabProperty[]> {
+export async function parsePrefabXml(
+  xmlFileName: string,
+): Promise<PrefabProperty[]> {
   const xml = await parseXml<PrefabXml>(xmlFileName);
   return xml.prefab.property.flatMap((p) => {
     if ("name" in p.$) return p.$;

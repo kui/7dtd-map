@@ -22,10 +22,18 @@ interface EventMessage {
 
 interface MapRendererWorker extends Worker {
   postMessage(message: mapRenderer.InMessage, transfer: Transferable[]): void;
-  postMessage(message: mapRenderer.InMessage, options?: StructuredSerializeOptions): void;
+  postMessage(
+    message: mapRenderer.InMessage,
+    options?: StructuredSerializeOptions,
+  ): void;
 }
 
-const DEPENDENT_FILES = ["biomes.png", "splat3.png", "splat4.png", "radiation.png"] as const;
+const DEPENDENT_FILES = [
+  "biomes.png",
+  "splat3.png",
+  "splat4.png",
+  "radiation.png",
+] as const;
 type DependentFile = (typeof DEPENDENT_FILES)[number];
 
 export class MapCanvasHandler {
@@ -54,9 +62,12 @@ export class MapCanvasHandler {
       [canvas],
     );
 
-    worker.addEventListener("message", ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
-      this.#listeners.dispatchNoAwait({ update: { mapSize } });
-    });
+    worker.addEventListener(
+      "message",
+      ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
+        this.#listeners.dispatchNoAwait({ update: { mapSize } });
+      },
+    );
     doms.biomesAlpha.addEventListener("input", () => {
       worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
     });
@@ -76,7 +87,9 @@ export class MapCanvasHandler {
       worker.postMessage({ signAlpha: doms.signAlpha.valueAsNumber });
     });
     doms.brightness.addEventListener("input", () => {
-      worker.postMessage({ brightness: `${doms.brightness.valueAsNumber.toString()}%` });
+      worker.postMessage({
+        brightness: `${doms.brightness.valueAsNumber.toString()}%`,
+      });
     });
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
@@ -90,7 +103,9 @@ export class MapCanvasHandler {
     fileHandler.addListener(({ update: fileNames }) => {
       const invalidate: DependentFile[] = [];
       for (const n of fileNames) {
-        if (DEPENDENT_FILES.includes(n as DependentFile)) invalidate.push(n as DependentFile);
+        if (DEPENDENT_FILES.includes(n as DependentFile)) {
+          invalidate.push(n as DependentFile);
+        }
       }
       worker.postMessage({ invalidate });
     });

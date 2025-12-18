@@ -36,11 +36,6 @@
     "exclude": ["public"]
   },
   "fmt": {
-    "useTabs": false,
-    "lineWidth": 140,
-    "indentWidth": 2,
-    "singleQuote": false,
-    "proseWrap": "preserve",
     "exclude": ["public"]
   }
 }

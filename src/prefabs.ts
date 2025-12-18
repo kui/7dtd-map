@@ -22,7 +22,10 @@ function main() {
   syncOutput.init();
   minMaxInputs.init();
 
-  const urlState = UrlState.create(location, document.querySelectorAll("input"));
+  const urlState = UrlState.create(
+    location,
+    document.querySelectorAll("input"),
+  );
   urlState.addUpdateListener((url) => {
     globalThis.history.replaceState(null, "", url.toString());
   });
@@ -33,10 +36,16 @@ function main() {
       blockFilter: component("block-filter", HTMLInputElement),
       minTier: component("min-tier", HTMLInputElement),
       maxTier: component("max-tier", HTMLInputElement),
-      excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")),
+      excludes: Array.from(
+        component("prefab-excludes").querySelectorAll("input[type=checkbox]"),
+      ),
     },
     new Worker("worker/prefabs-filter.js"),
-    new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, "labels", navigator.languages),
+    new LabelHandler(
+      { language: component("label-lang", HTMLSelectElement) },
+      "labels",
+      navigator.languages,
+    ),
     async () => {
       const [prefabBlockCounts, difficulties] = await Promise.all([
         fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
@@ -97,7 +106,9 @@ function prefabLi(prefab: HighlightedPrefab) {
     prefab.highlightedLabel ?? "-",
     "/",
     `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
-    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0 ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"] : []),
+    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
+      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
+      : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
@@ -140,9 +151,17 @@ class PrefabsHandler {
   #worker: PrefabsFilterWorker;
   #labelHandler: LabelHandler;
   #fetchPrefabs: () => Promise<Prefab[]>;
-  #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
+  #listeners = new events.ListenerManager<
+    "update",
+    PrefabsHandlerEventMessage
+  >();
 
-  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker, labelHandler: LabelHandler, fetchPrefabs: () => Promise<Prefab[]>) {
+  constructor(
+    doms: PrefabsHandlerDoms,
+    worker: PrefabsFilterWorker,
+    labelHandler: LabelHandler,
+    fetchPrefabs: () => Promise<Prefab[]>,
+  ) {
     this.#doms = doms;
     this.#worker = worker;
     this.#labelHandler = labelHandler;
@@ -154,7 +173,10 @@ class PrefabsHandler {
     doms.blockFilter.addEventListener("input", () => {
       worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
-    const tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
+    const tierRange = {
+      start: doms.minTier.valueAsNumber,
+      end: doms.maxTier.valueAsNumber,
+    };
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === tierRange.start) return;
@@ -173,9 +195,12 @@ class PrefabsHandler {
       });
     });
 
-    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
-      this.#listeners.dispatchNoAwait(event.data);
-    });
+    worker.addEventListener(
+      "message",
+      (event: MessageEvent<prefabsFilter.OutMessage>) => {
+        this.#listeners.dispatchNoAwait(event.data);
+      },
+    );
     labelHandler.addListener(({ update: { lang } }) => {
       worker.postMessage({ language: lang });
     });
@@ -186,7 +211,10 @@ class PrefabsHandler {
   }
 
   get #tierRange(): { start: number; end: number } {
-    return { start: this.#doms.minTier.valueAsNumber, end: this.#doms.maxTier.valueAsNumber };
+    return {
+      start: this.#doms.minTier.valueAsNumber,
+      end: this.#doms.maxTier.valueAsNumber,
+    };
   }
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
