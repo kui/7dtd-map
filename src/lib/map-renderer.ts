@@ -133,9 +133,7 @@ export default class MapRenderer {
     width: number,
     height: number,
   ) {
-    ctx.font = `${this.signSize.toString()}px '${
-      this.#fontFamilies[SIGN_CHAR]
-    }'`;
+    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -162,9 +160,7 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px '${
-      this.#fontFamilies[MARK_CHAR]
-    }'`;
+    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[MARK_CHAR]}'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";

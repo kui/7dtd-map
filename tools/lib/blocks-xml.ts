@@ -107,9 +107,7 @@ export class Blocks {
       requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"),
     );
     if (upgradBlocks) {
-      return upgradBlocks.flatMap((b) =>
-        this.findByDowngradeBlocks([b, ...graphs])
-      );
+      return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
     } else {
       return [graphs];
     }
@@ -125,8 +123,7 @@ export class Blocks {
     const extendsProp = block.properties["Extends"];
     if (!extendsProp) return null;
 
-    const excludedPropNames =
-      extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
+    const excludedPropNames = extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
     if (excludedPropNames.includes(propertyName)) return null;
 
     const parent = this.#blocks.get(extendsProp.value);
@@ -168,9 +165,7 @@ export class Blocks {
 
   getHarvests(block: Block, untilDestroy = true): HarvestItems {
     const drops = this.getDropsExtended(block);
-    const harvests = drops.filter((drop) =>
-      drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy")
-    );
+    const harvests = drops.filter((drop) => drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy"));
     const items: HarvestItems = {};
     for (const harvest of harvests) {
       if (harvest.count[1] === 0) continue;
@@ -190,9 +185,7 @@ export class Blocks {
             oldCount[1] + harvest.count[1],
           ]
           : harvest.count,
-        countExpected: oldCountExpected
-          ? oldCountExpected + countExpected
-          : countExpected,
+        countExpected: oldCountExpected ? oldCountExpected + countExpected : countExpected,
         prob,
       };
     }
@@ -218,9 +211,7 @@ function buildDrops(dropElements: BlockXmlBlockDrop[]): BlockDrop[] {
       count,
       tag: elem.$.tag?.split(",") ?? [],
       prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
-      stickChance: elem.$.stick_chance
-        ? parseFloat(elem.$.stick_chance)
-        : undefined,
+      stickChance: elem.$.stick_chance ? parseFloat(elem.$.stick_chance) : undefined,
     };
   });
 }

@@ -46,9 +46,7 @@ export class DtmHandler {
 
   async getElevation(coords: GameCoords): Promise<number | null> {
     const size = await this.#mapSize.get();
-    return size
-      ? new Dtm(await this.#dtmRaw.get(), size).getElevation(coords)
-      : null;
+    return size ? new Dtm(await this.#dtmRaw.get(), size).getElevation(coords) : null;
   }
 
   async writeZ(geo: three.PlaneGeometry): Promise<void> {

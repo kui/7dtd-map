@@ -82,9 +82,7 @@ function html(model: HtmlModel): string {
     <h2>Dimensions</h2>
     <table>${
     Object.entries<number>(model.dimensions)
-      .map(([axis, value]) =>
-        `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`
-      )
+      .map(([axis, value]) => `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`)
       .join("\n")
   }</table>
   </section>
@@ -122,11 +120,7 @@ function html(model: HtmlModel): string {
             "<tr>",
             `<td>${i.toString()}</td>`,
             `<td>${s.group}</td>`,
-            `<td>${
-              s.count[0] === s.count[1]
-                ? s.count[0].toString()
-                : `${s.count[0].toString()}-${s.count[1].toString()}`
-            }</td>`,
+            `<td>${s.count[0] === s.count[1] ? s.count[0].toString() : `${s.count[0].toString()}-${s.count[1].toString()}`}</td>`,
             `<td>${s.groupId.toString()}</td>`,
             `<td>${s.gameStageAdjust || "-"}</td>`,
             `<td>${s.flags.toString()}</td>`,
@@ -169,9 +163,7 @@ export async function prefabHtml(
       }))
       .toSorted((a, b) => a.name.localeCompare(b.name))
   );
-  const propertiesPromise = parsePrefabXml(xml).then((ps) =>
-    ps.toSorted((a, b) => a.name.localeCompare(b.name))
-  );
+  const propertiesPromise = parsePrefabXml(xml).then((ps) => ps.toSorted((a, b) => a.name.localeCompare(b.name)));
   const [blocks, properties] = await Promise.all([
     blocksPromise,
     propertiesPromise,
@@ -179,9 +171,7 @@ export async function prefabHtml(
 
   // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));
-  const undefinedBlockIds = [...blockNums.keys()].filter((i) =>
-    !blockIdSet.has(i)
-  );
+  const undefinedBlockIds = [...blockNums.keys()].filter((i) => !blockIdSet.has(i));
   if (undefinedBlockIds.length > 0) {
     console.warn(
       "Unexpected state: unknown block ID used: file=%s, idCount=%o",
@@ -201,8 +191,7 @@ export async function prefabHtml(
   }
 
   const sleeperVolumes = buildSleeperVolumes(properties);
-  const difficultyRaw =
-    properties.find((p) => p.name === "DifficultyTier")?.value ?? "0";
+  const difficultyRaw = properties.find((p) => p.name === "DifficultyTier")?.value ?? "0";
   const difficulty = difficultyRaw === "0" ? "" : `💀${difficultyRaw}`;
 
   return html({
@@ -258,9 +247,7 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
     const countMax = parseInt(groupsRaw[i + 2] ?? "", 10);
     if (isNaN(countMin) || isNaN(countMax)) {
       throw new Error(
-        `Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${
-          String(groupsRaw[i + 2])
-        }`,
+        `Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${String(groupsRaw[i + 2])}`,
       );
     }
     groups.push({
@@ -341,8 +328,7 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
       ),
       isQuestExclude: requireNonnull(
         isQuestExcludes[i],
-        () =>
-          `Unexpected state: isQuestExclude is not found: index=${String(i)}`,
+        () => `Unexpected state: isQuestExclude is not found: index=${String(i)}`,
       ),
       size: requireNonnull(
         sizes[i],

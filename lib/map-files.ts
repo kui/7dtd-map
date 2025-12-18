@@ -52,14 +52,12 @@ const FILE_PROCESS_RULES = {
   },
   "dtm.raw": {
     name: "dtm_block.raw.gz",
-    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) =>
-      i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
+    process: (i: ReadableStream<Uint8Array>, o: WritableStream<Uint8Array>) => i.pipeThrough(new DtmRawTransformer()).pipeTo(o),
   },
 } as const;
 
 export type WorldFileName = keyof typeof FILE_PROCESS_RULES;
-export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> =
-  (typeof FILE_PROCESS_RULES)[T]["name"];
+export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> = (typeof FILE_PROCESS_RULES)[T]["name"];
 export const MAP_FILE_NAME_MAP = Object.fromEntries(
   Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name]),
 ) as {
@@ -221,19 +219,14 @@ class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
  * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
  *  when piping to streams that accept strict BufferSource inputs.
  */
-class OddByteTransformer
-  extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
+class OddByteTransformer extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
   constructor() {
     let nextOffset = 1;
     super(
       {
         transform(chunk, controller) {
           const buffer = new Uint8Array(
-            chunk.length % 2 === 0
-              ? chunk.length / 2
-              : nextOffset === 1
-              ? (chunk.length - 1) / 2
-              : (chunk.length + 1) / 2,
+            chunk.length % 2 === 0 ? chunk.length / 2 : nextOffset === 1 ? (chunk.length - 1) / 2 : (chunk.length + 1) / 2,
           );
 
           let i = nextOffset;
@@ -251,8 +244,7 @@ class OddByteTransformer
   }
 }
 
-class DtmRawTransformer
-  extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
+class DtmRawTransformer extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
   constructor() {
     super(new OddByteTransformer(), new CompressionStream("gzip"));
   }

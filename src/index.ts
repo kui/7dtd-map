@@ -5,13 +5,7 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
-import {
-  component,
-  downloadCanvasPng,
-  fetchJson,
-  humanreadableDistance,
-  printError,
-} from "./lib/utils.ts";
+import { component, downloadCanvasPng, fetchJson, humanreadableDistance, printError } from "./lib/utils.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
@@ -239,8 +233,7 @@ function prefabLi(prefab: HighlightedPrefab) {
 
 function updateMapRightMargin() {
   const margin = component("controller").clientWidth + 48;
-  component("map", HTMLCanvasElement).style.marginRight =
-    `${margin.toString()}px`;
+  component("map", HTMLCanvasElement).style.marginRight = `${margin.toString()}px`;
 }
 
 if (document.readyState === "loading") {

@@ -66,9 +66,7 @@ export class PrefabInspectorHandler {
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) =>
-      !isExcludedPrefabName(name)
-    );
+    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) => !isExcludedPrefabName(name));
 
     const difficulties = await this.#fetchDifficulties();
     const countsPerDifficulty: { inMap: number; defined: number }[] = Array
@@ -114,14 +112,9 @@ export class PrefabInspectorHandler {
       .toSorted((
         a,
         b,
-      ) => (a.difficulty === b.difficulty
-        ? a.name.localeCompare(b.name)
-        : b.difficulty - a.difficulty)
-      )
+      ) => (a.difficulty === b.difficulty ? a.name.localeCompare(b.name) : b.difficulty - a.difficulty))
       .map(({ name, label, difficulty }) => {
-        const tierStr = difficulty === 0
-          ? ""
-          : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
+        const tierStr = difficulty === 0 ? "" : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
         return `<li>${tierStr}<a href="prefabs/${name}.html">${label} / ${name}</a></li>`;
       })
       .join("");

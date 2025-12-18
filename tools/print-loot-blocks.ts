@@ -41,9 +41,7 @@ async function main() {
   console.log("Container Blocks");
   for (const b of matchedBlocks) console.log(b.name);
 
-  const downgradeGraph = matchedBlocks.flatMap((b) =>
-    blocks.findByDowngradeBlocks([b])
-  );
+  const downgradeGraph = matchedBlocks.flatMap((b) => blocks.findByDowngradeBlocks([b]));
   console.log();
   console.log("Downgrade");
   for (const g of downgradeGraph) {
@@ -55,9 +53,7 @@ async function main() {
 
 function flattenItems(lootContainers: LootTable[]): Set<string> {
   return new Set(
-    lootContainers.flatMap((c) =>
-      c.items.concat(Array.from(flattenItems(c.groups)))
-    ),
+    lootContainers.flatMap((c) => c.items.concat(Array.from(flattenItems(c.groups)))),
   );
 }
 

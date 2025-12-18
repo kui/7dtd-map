@@ -35,6 +35,8 @@
     "exclude": ["public/"]
   },
   "fmt": {
-    "exclude": ["public/"]
+    "exclude": ["public/"],
+    "lineWidth": 140,
+    "indentWidth": 2
   }
 }

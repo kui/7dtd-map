@@ -1,12 +1,7 @@
 import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
 import * as path from "node:path";
 import { parsePrefabXml, PrefabProperty } from "./lib/prefab-xml-parser.ts";
-import {
-  handleMain,
-  publishDir,
-  vanillaDir,
-  writeJsonFile,
-} from "./lib/utils.ts";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
 
 const DOCS_DIR = publishDir();
 const FILE = "prefab-difficulties.json";

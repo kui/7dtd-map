@@ -385,9 +385,7 @@ class DepletedFileHandler {
   }
 
   isSupport(worldFileName: string): worldFileName is DeplateOrPreferedFileName {
-    return Object.entries(PREFER_WORLD_FILE_NAMES).some((e) =>
-      e.includes(worldFileName)
-    );
+    return Object.entries(PREFER_WORLD_FILE_NAMES).some((e) => e.includes(worldFileName));
   }
 
   handle(

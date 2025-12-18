@@ -2,12 +2,7 @@ import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
 import * as path from "node:path";
 import { parseNim } from "./lib/nim-parser.ts";
 import { parseTts } from "./lib/tts-parser.ts";
-import {
-  handleMain,
-  publishDir,
-  vanillaDir,
-  writeJsonFile,
-} from "./lib/utils.ts";
+import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
 
 const DOCS_DIR = publishDir();
 const FILE = "prefab-block-counts.json";
@@ -56,9 +51,7 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
   }
 
   return Object.fromEntries(
-    (await Promise.all(prefabBlockCounts)).toSorted((a, b) =>
-      a[0].localeCompare(b[0])
-    ),
+    (await Promise.all(prefabBlockCounts)).toSorted((a, b) => a[0].localeCompare(b[0])),
   );
 }
 

@@ -41,9 +41,7 @@ export class DndHandler {
       event.preventDefault();
       this.#listeners.dispatchNoAwait({
         drop: {
-          files: Array.from(event.dataTransfer.items).flatMap((item) =>
-            item.webkitGetAsEntry() ?? []
-          ),
+          files: Array.from(event.dataTransfer.items).flatMap((item) => item.webkitGetAsEntry() ?? []),
         },
       });
     });

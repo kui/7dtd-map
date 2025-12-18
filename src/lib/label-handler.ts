@@ -46,9 +46,7 @@ export class LabelHandler {
       resolveLanguage(navigatorLanguages);
     if (this.#doms.language.value !== browserLang) {
       this.#doms.language.value = browserLang;
-      requestAnimationFrame(() =>
-        this.#doms.language.dispatchEvent(new Event("change"))
-      );
+      requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change")));
     }
   }
 

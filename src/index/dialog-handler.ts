@@ -77,9 +77,7 @@ export class FileProgressionIndicator {
   }
 
   get isAllCompleted() {
-    return this.#liList.every((li) =>
-      TERMINATED_STATES.find((state) => li.classList.contains(state))
-    );
+    return this.#liList.every((li) => TERMINATED_STATES.find((state) => li.classList.contains(state)));
   }
 
   get liList() {

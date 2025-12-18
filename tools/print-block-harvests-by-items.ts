@@ -19,9 +19,7 @@ async function main() {
     await vanillaDir("Data", "Config", "materials.xml"),
   );
   const itemPattern = new RegExp(itemPatternString);
-  const matchingBlocks = blocks.find((b) =>
-    Object.keys(blocks.getHarvests(b)).some((drop) => itemPattern.test(drop))
-  );
+  const matchingBlocks = blocks.find((b) => Object.keys(blocks.getHarvests(b)).some((drop) => itemPattern.test(drop)));
 
   const harvests: {
     blockName: string;
@@ -33,9 +31,7 @@ async function main() {
     countPerDamage: number;
   }[] = [];
   for (const block of matchingBlocks) {
-    const drops = Object.values(blocks.getHarvests(block)).filter((drop) =>
-      itemPattern.test(drop.name)
-    );
+    const drops = Object.values(blocks.getHarvests(block)).filter((drop) => itemPattern.test(drop.name));
     const damage = blocks.getMaxDamage(block, materials);
     if (damage === null) throw new Error(`No damage for ${block.name}`);
     for (const drop of drops) {

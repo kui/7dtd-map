@@ -18,8 +18,7 @@ export function strictParseInt(
 export function requireType<T>(
   o: unknown,
   t: new (...a: unknown[]) => T,
-  errorMessage = () =>
-    `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`,
+  errorMessage = () => `Unexpected type: expected as ${String(t)}, but actual type ${String(o)}`,
 ): T {
   if (o instanceof t) return o;
   throw Error(errorMessage());
