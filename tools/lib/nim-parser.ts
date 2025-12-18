@@ -29,9 +29,7 @@ export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   stream.close();
 
   if (version !== 1) {
-    throw Error(
-      `Unexpected version: filename=${nimFileName} version=${String(version)}`,
-    );
+    throw Error(`Unexpected version: filename=${nimFileName} version=${String(version)}`);
   }
 
   return blocks;

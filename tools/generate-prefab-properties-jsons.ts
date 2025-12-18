@@ -8,17 +8,12 @@ const FILE = "prefab-difficulties.json";
 
 async function main() {
   const prefabXmlFiles: string[] = [];
-  for await (
-    const entry of expandGlob(await vanillaDir("Data", "Prefabs", "*", "*.xml"))
-  ) {
+  for await (const entry of expandGlob(await vanillaDir("Data", "Prefabs", "*", "*.xml"))) {
     prefabXmlFiles.push(entry.path);
   }
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
-  await writeJsonFile(
-    path.join(DOCS_DIR, FILE),
-    extractDifficulties(prefabXmls),
-  );
+  await writeJsonFile(path.join(DOCS_DIR, FILE), extractDifficulties(prefabXmls));
   return 0;
 }
 
@@ -26,9 +21,7 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
       .flatMap<[string, number]>(([prefabName, props]) => {
-        const difficulty = parseInt(
-          props.find((p) => p.name === "DifficultyTier")?.value ?? "0",
-        );
+        const difficulty = parseInt(props.find((p) => p.name === "DifficultyTier")?.value ?? "0");
         if (difficulty > 0) return [[prefabName, difficulty]];
         else return [];
       })
@@ -52,10 +45,7 @@ async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   });
 
   console.log("Start to read %d xmls", xmlFiles.length);
-  return (await Promise.all(xmlPromises)).reduce(
-    (a, c) => Object.assign(a, c),
-    {},
-  );
+  return (await Promise.all(xmlPromises)).reduce((a, c) => Object.assign(a, c), {});
 }
 
 handleMain(main());

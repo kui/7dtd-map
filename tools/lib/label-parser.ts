@@ -35,12 +35,8 @@ type LocalizationLine = {
   File: string;
 } & LabelCore;
 
-export function parseLabel(
-  localizationFileName: string,
-): Promise<Map<LabelId, Label>> {
-  const parser = fs.createReadStream(localizationFileName).pipe(
-    csvParse({ columns: true }),
-  );
+export function parseLabel(localizationFileName: string): Promise<Map<LabelId, Label>> {
+  const parser = fs.createReadStream(localizationFileName).pipe(csvParse({ columns: true }));
   return reduceToLabelMap(parser);
 }
 

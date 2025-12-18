@@ -31,10 +31,7 @@ export class MapInfoHandler {
     if (mapInfo === null) {
       table.innerHTML = "";
     } else {
-      table.innerHTML = [
-        "<tr><th>Name</th><th>Value</th></tr>",
-        ...buildTableContent(await mapInfo.text()),
-      ].join("\n");
+      table.innerHTML = ["<tr><th>Name</th><th>Value</th></tr>", ...buildTableContent(await mapInfo.text())].join("\n");
     }
   }
 }

@@ -27,14 +27,8 @@ export interface OutMessage {
 let map: MapRenderer | null = null;
 
 const fontFaces = {
-  "Noto Sans Symbols 2": new FontFace(
-    "Noto Sans Symbols 2",
-    "url('../NotoSansSymbols2.subset.woff2') format('woff2')",
-  ),
-  "Noto Emoji Old": new FontFace(
-    "Noto Emoji Old",
-    "url('../NotoEmojiOld.subset.woff2') format('woff2')",
-  ),
+  "Noto Sans Symbols 2": new FontFace("Noto Sans Symbols 2", "url('../NotoSansSymbols2.subset.woff2') format('woff2')"),
+  "Noto Emoji Old": new FontFace("Noto Emoji Old", "url('../NotoEmojiOld.subset.woff2') format('woff2')"),
   // See tools/fonts/subset.sh
   // "Noto Emoji": new FontFace("Noto Emoji", "url('../NotoEmoji.subset.woff2') format('woff2')"),
 } as const;

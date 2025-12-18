@@ -42,16 +42,13 @@ export class PrefabsHandler {
       end: doms.maxTier.valueAsNumber,
     };
 
-    worker.addEventListener(
-      "message",
-      (event: MessageEvent<prefabsFilter.OutMessage>) => {
-        const {
-          update: { prefabs, status },
-        } = event.data;
-        doms.status.textContent = status;
-        this.#listeners.dispatchNoAwait({ update: { prefabs } });
-      },
-    );
+    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      const {
+        update: { prefabs, status },
+      } = event.data;
+      doms.status.textContent = status;
+      this.#listeners.dispatchNoAwait({ update: { prefabs } });
+    });
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === this.#tierRange.start) return;

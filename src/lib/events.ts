@@ -2,9 +2,7 @@ import { printError } from "./utils.ts";
 import { MultipleErrors } from "./errors.ts";
 
 export type MessageMap<N extends string> = { [K in N]?: object };
-export type Listener<N extends string, M extends MessageMap<N>> = (
-  m: M,
-) => unknown;
+export type Listener<N extends string, M extends MessageMap<N>> = (m: M) => unknown;
 
 export class ListenerManager<N extends string, M extends MessageMap<N>> {
   #listeners: Listener<N, M>[] = [];
@@ -19,12 +17,8 @@ export class ListenerManager<N extends string, M extends MessageMap<N>> {
   }
 
   async dispatch(m: M) {
-    const results = await Promise.allSettled(
-      this.#listeners.map((fn) => fn(m)),
-    );
-    const errors = results.flatMap((
-      r,
-    ) => (r.status === "rejected" ? [r.reason as unknown] : []));
+    const results = await Promise.allSettled(this.#listeners.map((fn) => fn(m)));
+    const errors = results.flatMap((r) => (r.status === "rejected" ? [r.reason as unknown] : []));
     if (errors.length === 1) throw errors[0];
     if (errors.length > 1) throw new MultipleErrors(errors);
   }

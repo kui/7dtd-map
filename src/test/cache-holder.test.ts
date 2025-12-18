@@ -28,10 +28,7 @@ describe("CacheHolder.get()", () => {
 
     expect(deconstructor.calls.length).toBe(1);
 
-    expect(await Promise.all([holder.get(), holder.get()])).toEqual([
-      "value",
-      "value",
-    ]);
+    expect(await Promise.all([holder.get(), holder.get()])).toEqual(["value", "value"]);
     expect(fetcher.calls.length).toBe(2);
     holder.invalidate();
   });

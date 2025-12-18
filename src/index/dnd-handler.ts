@@ -29,10 +29,7 @@ export class DndHandler {
     document.body.addEventListener("dragleave", (event) => {
       if (!event.dataTransfer?.types.includes("Files")) return;
       // clientX and clientY are 0 when the mouse cursor is out of the window frame.
-      if (
-        dom.dragovered === event.target ||
-        !(event.clientX === 0 && event.clientY === 0)
-      ) return;
+      if (dom.dragovered === event.target || !(event.clientX === 0 && event.clientY === 0)) return;
       event.preventDefault();
       dialogHandler.close();
     });

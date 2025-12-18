@@ -1,9 +1,7 @@
 import { printError } from "../utils.ts";
 
 export function init(): void {
-  for (
-    const button of Array.from(document.querySelectorAll("[data-copy-for]"))
-  ) {
+  for (const button of Array.from(document.querySelectorAll("[data-copy-for]"))) {
     if (!(button instanceof HTMLButtonElement)) continue;
 
     const targetId = button.dataset["copyFor"];
@@ -37,9 +35,7 @@ async function copy(target: HTMLElement, button: HTMLButtonElement) {
   selectNode(target);
 
   let textToCopy = "";
-  if (
-    target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement
-  ) {
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
     textToCopy = target.value;
   } else {
     textToCopy = target.textContent;
@@ -48,12 +44,10 @@ async function copy(target: HTMLElement, button: HTMLButtonElement) {
   try {
     await navigator.clipboard.writeText(textToCopy);
     console.log("Copy Success", target);
-    button.dataset["message"] = button.dataset["successMessage"] ??
-      DEFAULT_SUCCESS_MESSAGE;
+    button.dataset["message"] = button.dataset["successMessage"] ?? DEFAULT_SUCCESS_MESSAGE;
   } catch (e) {
     console.log("Copy Failure", target, e);
-    button.dataset["message"] = button.dataset["failureMessage"] ??
-      DEFAULT_FAILURE_MESSAGE;
+    button.dataset["message"] = button.dataset["failureMessage"] ?? DEFAULT_FAILURE_MESSAGE;
   }
 }
 

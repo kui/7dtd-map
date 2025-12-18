@@ -44,22 +44,19 @@ const LOOT_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
 
 export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
   const xml = await parseXml<BlockXml>(blocksXmlFileName);
-  const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>(
-    (map, blockElement) => {
-      const name = blockElement.$.name;
-      const properties = buildProperties(blockElement.property);
-      const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
-      const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
-      map.set(name, {
-        name,
-        properties,
-        drops,
-        disableDropExtends: enableDropExtendsOff,
-      });
-      return map;
-    },
-    new Map(),
-  );
+  const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>((map, blockElement) => {
+    const name = blockElement.$.name;
+    const properties = buildProperties(blockElement.property);
+    const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
+    const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
+    map.set(name, {
+      name,
+      properties,
+      drops,
+      disableDropExtends: enableDropExtendsOff,
+    });
+    return map;
+  }, new Map());
   return new Blocks(blocks);
 }
 
@@ -73,8 +70,7 @@ export class Blocks {
     this.#blocks = blocks;
     this.#downgradeRelations = buildArrayMapByEntries(
       Array.from(this.#blocks.values()).flatMap((b: Block) => {
-        const downgradedBlockName = b.properties["DowngradeBlock"]?.value
-          .trim();
+        const downgradedBlockName = b.properties["DowngradeBlock"]?.value.trim();
         if (!downgradedBlockName) return [];
         const downgradedBlock = blocks.get(downgradedBlockName);
         if (!downgradedBlock) return [];
@@ -103,9 +99,7 @@ export class Blocks {
   }
 
   findByDowngradeBlocks(graphs: DowngradeGraph): DowngradeGraph[] {
-    const upgradBlocks = this.#downgradeRelations.get(
-      requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"),
-    );
+    const upgradBlocks = this.#downgradeRelations.get(requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"));
     if (upgradBlocks) {
       return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
     } else {
@@ -113,10 +107,7 @@ export class Blocks {
     }
   }
 
-  getPropertyExtended(
-    block: Block,
-    propertyName: string,
-  ): BlockPropertyValue | null {
+  getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
     const p = block.properties[propertyName];
     if (p) return p;
 
@@ -128,9 +119,7 @@ export class Blocks {
 
     const parent = this.#blocks.get(extendsProp.value);
     if (!parent) {
-      throw new Error(
-        `Unknown parent block ${extendsProp.value} for ${block.name}`,
-      );
+      throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
     }
 
     return this.getPropertyExtended(parent, propertyName);
@@ -156,9 +145,7 @@ export class Blocks {
     if (!extendsProp) return [];
     const parent = this.#blocks.get(extendsProp.value);
     if (!parent) {
-      throw new Error(
-        `Unknown parent block ${extendsProp.value} for ${block.name}`,
-      );
+      throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
     }
     return this.getDropsExtended(parent);
   }
@@ -179,12 +166,7 @@ export class Blocks {
       const oldCountExpected = items[harvest.name]?.countExpected;
       items[harvest.name] = {
         name: harvest.name,
-        count: oldCount
-          ? [
-            Math.min(oldCount[0], harvest.count[0]),
-            oldCount[1] + harvest.count[1],
-          ]
-          : harvest.count,
+        count: oldCount ? [Math.min(oldCount[0], harvest.count[0]), oldCount[1] + harvest.count[1]] : harvest.count,
         countExpected: oldCountExpected ? oldCountExpected + countExpected : countExpected,
         prob,
       };
@@ -193,9 +175,7 @@ export class Blocks {
   }
 }
 
-function buildProperties(
-  propertyElements: BlockXmlBlockProperty[],
-): BlockProperties {
+function buildProperties(propertyElements: BlockXmlBlockProperty[]): BlockProperties {
   return propertyElements.reduce<BlockProperties>((props, elem) => {
     props[elem.$.name] = elem.$;
     return props;

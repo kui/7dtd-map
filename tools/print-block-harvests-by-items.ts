@@ -12,12 +12,8 @@ async function main() {
     return 1;
   }
 
-  const blocks = await loadBlocks(
-    await vanillaDir("Data", "Config", "blocks.xml"),
-  );
-  const materials = await loadMaterials(
-    await vanillaDir("Data", "Config", "materials.xml"),
-  );
+  const blocks = await loadBlocks(await vanillaDir("Data", "Config", "blocks.xml"));
+  const materials = await loadMaterials(await vanillaDir("Data", "Config", "materials.xml"));
   const itemPattern = new RegExp(itemPatternString);
   const matchingBlocks = blocks.find((b) => Object.keys(blocks.getHarvests(b)).some((drop) => itemPattern.test(drop)));
 

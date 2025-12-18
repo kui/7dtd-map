@@ -1,22 +1,13 @@
 import * as storage from "./storage.ts";
 
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.
-export async function loadPrefabsXml(
-  fetchDifficulties?: () => Promise<PrefabDifficulties>,
-): Promise<Prefab[]> {
+export async function loadPrefabsXml(fetchDifficulties?: () => Promise<PrefabDifficulties>): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml
-    ? parseXml(
-      ...(await Promise.all([prefabsXml.text(), fetchDifficulties?.()])),
-    )
-    : [];
+  return prefabsXml ? parseXml(...(await Promise.all([prefabsXml.text(), fetchDifficulties?.()]))) : [];
 }
 
-function parseXml(
-  xml: string,
-  difficulties: PrefabDifficulties | undefined,
-): Prefab[] {
+function parseXml(xml: string, difficulties: PrefabDifficulties | undefined): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const position = e.getAttribute("position")?.split(",");

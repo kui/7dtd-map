@@ -20,13 +20,10 @@ export class DtmHandler {
       () => {
         const worker = workerFactory();
         return new Promise((resolve) => {
-          worker.addEventListener(
-            "message",
-            ({ data }: MessageEvent<dtmWorker.OutMessage>) => {
-              worker.terminate();
-              resolve(data);
-            },
-          );
+          worker.addEventListener("message", ({ data }: MessageEvent<dtmWorker.OutMessage>) => {
+            worker.terminate();
+            resolve(data);
+          });
         });
       },
       () => {
@@ -73,10 +70,7 @@ class Dtm {
     if (!this.#data) return null;
 
     const { width, height } = this.#mapSize;
-    if (
-      this.#data.byteLength % width !== 0 ||
-      this.#data.byteLength / width !== height
-    ) {
+    if (this.#data.byteLength % width !== 0 || this.#data.byteLength / width !== height) {
       console.warn(
         "Game map size does not match with DTM byte array length:",
         "mapSize=",
@@ -97,10 +91,7 @@ class Dtm {
   writeZ(geo: three.PlaneGeometry) {
     if (!this.#data) return;
 
-    const pos = requireNonnull(
-      geo.attributes["position"],
-      () => "No position attribute",
-    );
+    const pos = requireNonnull(geo.attributes["position"], () => "No position attribute");
     if (pos.itemSize !== 3) {
       throw Error("Unexpected item size of position attribute");
     }
@@ -113,15 +104,10 @@ class Dtm {
       // x -> x
       // y -> z
       // z -> y
-      const dataX = Math.round(
-        (pos.getX(i) + geo.parameters.width / 2) * scaleFactor,
-      );
-      const dataZ = Math.round(
-        (pos.getY(i) + geo.parameters.height / 2) * scaleFactor,
-      );
+      const dataX = Math.round((pos.getX(i) + geo.parameters.width / 2) * scaleFactor);
+      const dataZ = Math.round((pos.getY(i) + geo.parameters.height / 2) * scaleFactor);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const elev = this.#data[dataX + dataZ * this.#mapSize.width]! /
-        scaleFactor;
+      const elev = this.#data[dataX + dataZ * this.#mapSize.width]! / scaleFactor;
       pos.setZ(i, elev);
     }
   }
@@ -131,27 +117,15 @@ async function getHightMapSize(): Promise<GameMapSize | null> {
   const workspace = await storage.workspaceDir();
   const file = await workspace.get("map_info.xml");
   if (!file) return null;
-  const doc = new DOMParser().parseFromString(
-    await file.text(),
-    "application/xml",
-  );
-  const size = doc.querySelector("property[name=HeightMapSize]")?.getAttribute(
-    "value",
-  );
+  const doc = new DOMParser().parseFromString(await file.text(), "application/xml");
+  const size = doc.querySelector("property[name=HeightMapSize]")?.getAttribute("value");
   if (!size) {
     console.warn("HeightMapSize not found in map_info.xml");
     return null;
   }
   const [width, height] = size.split(",").map((s) => parseInt(s));
   if (!width || isNaN(width) || !height || isNaN(height)) {
-    console.warn(
-      "Invalid HeightMapSize: size=",
-      size,
-      "width=",
-      width,
-      "height=",
-      height,
-    );
+    console.warn("Invalid HeightMapSize: size=", size, "width=", width, "height=", height);
     return null;
   }
   return gameMapSize({ width, height });

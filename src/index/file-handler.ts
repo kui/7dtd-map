@@ -33,16 +33,10 @@ export type ProcessRequiredFileName = (typeof PROCESS_REQUIRED_NAMES)[number];
 type StateRequiredMapFileName = Extract<MapFileName, ProcessRequiredFileName>;
 
 /** map file names that are not required to be processed */
-type NeverProcessRequiredMapFileName = Exclude<
-  MapFileName,
-  ProcessRequiredFileName
->;
+type NeverProcessRequiredMapFileName = Exclude<MapFileName, ProcessRequiredFileName>;
 
 /** File names that are required to be processed and not included in world file names */
-type AlwaysProcessRequiredFileName = Exclude<
-  ProcessRequiredFileName,
-  MapFileName
->;
+type AlwaysProcessRequiredFileName = Exclude<ProcessRequiredFileName, MapFileName>;
 
 type ResourceLike =
   | { name: MapFileName; remove: true }
@@ -139,17 +133,11 @@ export class FileHandler {
     if (!entry) return;
     if (entries.length === 1 && isDirectory(entry)) {
       this.#setMapName(entry.name);
-      const files = await Promise.all(
-        (await listEntries(entry)).flatMap((
-          e,
-        ) => (isFile(e) ? [toFile(e)] : [])),
-      );
+      const files = await Promise.all((await listEntries(entry)).flatMap((e) => (isFile(e) ? [toFile(e)] : [])));
       await this.#pushFiles(files);
       return;
     }
-    const files = await Promise.all(
-      entries.flatMap((e) => (isFile(e) ? [toFile(e)] : [])),
-    );
+    const files = await Promise.all(entries.flatMap((e) => (isFile(e) ? [toFile(e)] : [])));
     await this.#pushFiles(files);
   }
 
@@ -167,12 +155,7 @@ export class FileHandler {
           }
           return { name, url };
         } else {
-          console.log(
-            "Ignore file: name=",
-            name,
-            "alreadyProcessed=",
-            alreadyProcessed,
-          );
+          console.log("Ignore file: name=", name, "alreadyProcessed=", alreadyProcessed);
           return [];
         }
       }),
@@ -180,24 +163,18 @@ export class FileHandler {
   }
 
   async #clear() {
-    await this.#process(
-      Array.from(MAP_FILE_NAMES).map((name) => ({ name, remove: true })),
-    );
+    await this.#process(Array.from(MAP_FILE_NAMES).map((name) => ({ name, remove: true })));
   }
 
   async #process(resourceList: ResourceLike[]) {
-    if (
-      this.#dialogHandler.isOpen && this.#dialogHandler.state === "processing"
-    ) {
+    if (this.#dialogHandler.isOpen && this.#dialogHandler.state === "processing") {
       throw new Error("Already processing");
     }
     this.#dialogHandler.state = "processing";
     // Prevent opening the dialog because the dialog will be closed immediately.
     let progression = null;
     if (resourceList.some((r) => !("remove" in r))) {
-      progression = this.#dialogHandler.createProgression(
-        resourceList.map(({ name }) => name),
-      );
+      progression = this.#dialogHandler.createProgression(resourceList.map(({ name }) => name));
       this.#dialogHandler.open();
     }
 
@@ -208,33 +185,20 @@ export class FileHandler {
     // TODO parallelize
     for (const resource of resourceList) {
       if (hasPreferWorldFileNameIn(resource.name, resourceNames)) {
-        console.log(
-          "Skip ",
-          resource.name,
-          " because ",
-          getPreferWorldFileName(resource.name),
-          " is already in the list",
-        );
+        console.log("Skip ", resource.name, " because ", getPreferWorldFileName(resource.name), " is already in the list");
         progression?.setState(resource.name, "skipped");
         continue;
       }
 
       if (this.#depletedFileHandler.isSupport(resource.name)) {
-        this.#depletedFileHandler.handle(
-          resource.name,
-          "remove" in resource,
-          "alreadyProcessed" in resource && resource.alreadyProcessed,
-        );
+        this.#depletedFileHandler.handle(resource.name, "remove" in resource, "alreadyProcessed" in resource && resource.alreadyProcessed);
       }
 
       if ("remove" in resource) {
         console.log("Remove", resource.name);
         processedNames.push(resource.name);
         await workspace.remove(resource.name);
-      } else if (
-        isNeverProcessRequiredResource(resource) ||
-        (isStateRequiredResource(resource) && resource.alreadyProcessed)
-      ) {
+      } else if (isNeverProcessRequiredResource(resource) || (isStateRequiredResource(resource) && resource.alreadyProcessed)) {
         console.log("Copy", resource.name);
         processedNames.push(resource.name);
         if ("blob" in resource) {
@@ -242,16 +206,11 @@ export class FileHandler {
         } else {
           const response = await fetch(resource.url);
           if (!response.ok) {
-            throw new Error(
-              `Failed to fetch ${resource.url}: ${response.statusText}`,
-            );
+            throw new Error(`Failed to fetch ${resource.url}: ${response.statusText}`);
           }
           await workspace.put(resource.name, await response.blob());
         }
-      } else if (
-        isAlwaysProcessRequiredResource(resource) ||
-        (isStateRequiredResource(resource) && !resource.alreadyProcessed)
-      ) {
+      } else if (isAlwaysProcessRequiredResource(resource) || (isStateRequiredResource(resource) && !resource.alreadyProcessed)) {
         console.log("Process", resource.name);
         console.time(`Process ${resource.name}`);
         const result = await this.#processInWorker(resource);
@@ -271,9 +230,7 @@ export class FileHandler {
     this.#dialogHandler.close();
   }
 
-  #processInWorker(
-    message: fileProcessor.InMessage,
-  ): Promise<fileProcessor.SuccessOutMessage> {
+  #processInWorker(message: fileProcessor.InMessage): Promise<fileProcessor.SuccessOutMessage> {
     const worker = this.#processorFactory();
     return new Promise((resolve, reject) => {
       worker.onmessage = ({ data }) => {
@@ -298,21 +255,15 @@ function isProcessRequired(name: string): name is ProcessRequiredFileName {
   return PROCESS_REQUIRED_NAMES.includes(name as ProcessRequiredFileName);
 }
 
-function isStateRequiredMapFile(
-  name: string,
-): name is StateRequiredMapFileName {
+function isStateRequiredMapFile(name: string): name is StateRequiredMapFileName {
   return isMapFileName(name) && isProcessRequired(name);
 }
 
-function isNeverProcessRequiredMapFile(
-  name: string,
-): name is NeverProcessRequiredMapFileName {
+function isNeverProcessRequiredMapFile(name: string): name is NeverProcessRequiredMapFileName {
   return isMapFileName(name) && !isProcessRequired(name);
 }
 
-function isAlwaysProcessRequiredFile(
-  name: string,
-): name is AlwaysProcessRequiredFileName {
+function isAlwaysProcessRequiredFile(name: string): name is AlwaysProcessRequiredFileName {
   return !isMapFileName(name) && isProcessRequired(name);
 }
 
@@ -324,21 +275,21 @@ function isStateRequiredResource(
   return isStateRequiredMapFile(resource.name);
 }
 
-function isNeverProcessRequiredResource(
-  resource: ResourceLike,
-): resource is { name: NeverProcessRequiredMapFileName; blob: Blob } | {
-  name: NeverProcessRequiredMapFileName;
-  url: string;
-} {
+function isNeverProcessRequiredResource(resource: ResourceLike): resource is
+  | { name: NeverProcessRequiredMapFileName; blob: Blob }
+  | {
+      name: NeverProcessRequiredMapFileName;
+      url: string;
+    } {
   return isNeverProcessRequiredMapFile(resource.name);
 }
 
-function isAlwaysProcessRequiredResource(
-  resource: ResourceLike,
-): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | {
-  name: AlwaysProcessRequiredFileName;
-  url: string;
-} {
+function isAlwaysProcessRequiredResource(resource: ResourceLike): resource is
+  | { name: AlwaysProcessRequiredFileName; blob: Blob }
+  | {
+      name: AlwaysProcessRequiredFileName;
+      url: string;
+    } {
   return isAlwaysProcessRequiredFile(resource.name);
 }
 
@@ -346,9 +297,7 @@ function isFile(entry: FileSystemEntry): entry is FileSystemFileEntry {
   return entry.isFile;
 }
 
-function isDirectory(
-  entry: FileSystemEntry,
-): entry is FileSystemDirectoryEntry {
+function isDirectory(entry: FileSystemEntry): entry is FileSystemDirectoryEntry {
   return entry.isDirectory;
 }
 
@@ -358,9 +307,7 @@ function toFile(entry: FileSystemFileEntry): Promise<File> {
   });
 }
 
-function listEntries(
-  entry: FileSystemDirectoryEntry,
-): Promise<FileSystemEntry[]> {
+function listEntries(entry: FileSystemDirectoryEntry): Promise<FileSystemEntry[]> {
   return new Promise((resolve, reject) => {
     const reader = entry.createReader();
     reader.readEntries(resolve, reject);
@@ -388,11 +335,7 @@ class DepletedFileHandler {
     return Object.entries(PREFER_WORLD_FILE_NAMES).some((e) => e.includes(worldFileName));
   }
 
-  handle(
-    deplateOrPreferedFileName: DeplateOrPreferedFileName,
-    removing: boolean,
-    alreadyProcessed: boolean,
-  ) {
+  handle(deplateOrPreferedFileName: DeplateOrPreferedFileName, removing: boolean, alreadyProcessed: boolean) {
     switch (deplateOrPreferedFileName) {
       case "splat3.png":
         this.useSplat3Png = !removing && !alreadyProcessed;

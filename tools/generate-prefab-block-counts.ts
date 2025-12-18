@@ -16,11 +16,7 @@ interface PrefabBlockCounts {
 
 async function main() {
   const nimFiles: string[] = [];
-  for await (
-    const entry of expandGlob(
-      await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"),
-    )
-  ) {
+  for await (const entry of expandGlob(await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"))) {
     nimFiles.push(entry.path);
   }
   const prefabBlockCount = await readCounts(nimFiles);
@@ -29,9 +25,7 @@ async function main() {
 }
 
 async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
-  const prefabBlockCounts: Promise<
-    [string, { [blockName: string]: number }]
-  >[] = [];
+  const prefabBlockCounts: Promise<[string, { [blockName: string]: number }]>[] = [];
 
   let count = 0;
   for (const nimFile of nimFiles) {
@@ -41,24 +35,17 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
       (async () => {
         const counts = await countBlocks(nimFile, ttsFile);
         if (++count % 100 === 0 || count === nimFiles.length) {
-          console.log(
-            `Processing ${count.toString()}/${nimFiles.length.toString()}`,
-          );
+          console.log(`Processing ${count.toString()}/${nimFiles.length.toString()}`);
         }
         return [prefabName, counts];
       })(),
     );
   }
 
-  return Object.fromEntries(
-    (await Promise.all(prefabBlockCounts)).toSorted((a, b) => a[0].localeCompare(b[0])),
-  );
+  return Object.fromEntries((await Promise.all(prefabBlockCounts)).toSorted((a, b) => a[0].localeCompare(b[0])));
 }
 
-async function countBlocks(
-  nimFile: string,
-  ttsFile: string,
-): Promise<{ [blockName: string]: number }> {
+async function countBlocks(nimFile: string, ttsFile: string): Promise<{ [blockName: string]: number }> {
   const [nim, tts] = await Promise.all([parseNim(nimFile), parseTts(ttsFile)]);
   return Object.fromEntries(
     Array.from(nim)

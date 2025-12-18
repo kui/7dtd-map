@@ -12,12 +12,8 @@ async function main() {
     return 1;
   }
 
-  const blocks = await loadBlocks(
-    await vanillaDir("Data", "Config", "blocks.xml"),
-  );
-  const materials = await loadMaterials(
-    await vanillaDir("Data", "Config", "materials.xml"),
-  );
+  const blocks = await loadBlocks(await vanillaDir("Data", "Config", "blocks.xml"));
+  const materials = await loadMaterials(await vanillaDir("Data", "Config", "materials.xml"));
   const pattern = new RegExp(patternString);
   for (const block of blocks.find((b) => pattern.test(b.name))) {
     const damage = blocks.getMaxDamage(block, materials);

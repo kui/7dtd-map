@@ -3,13 +3,7 @@ import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.11.1";
 
 const targets: string[] = [];
-for (
-  const glob of [
-    "src/*.ts",
-    "src/worker/*.ts",
-    "src/prefabs/*.ts",
-  ]
-) {
+for (const glob of ["src/*.ts", "src/worker/*.ts", "src/prefabs/*.ts"]) {
   for await (const file of expandGlob(glob)) {
     if (file.path.endsWith(".config.ts")) continue;
     targets.push(file.path);

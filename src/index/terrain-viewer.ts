@@ -41,10 +41,7 @@ export class TerrainViewer {
     this.#scene.add(light);
     this.#scene.add(new three.AmbientLight(0xffffff, 0.09));
 
-    this.#cameraController = new TerrainViewerCameraController(
-      doms.output,
-      new three.PerspectiveCamera(),
-    );
+    this.#cameraController = new TerrainViewerCameraController(doms.output, new three.PerspectiveCamera());
 
     doms.show.addEventListener("click", () => {
       this.#show().catch(printError);
@@ -79,9 +76,7 @@ export class TerrainViewer {
     if (mapSize === null) throw Error("Unexpected state");
 
     this.#terrainSize.width = TERRAIN_WIDTH;
-    this.#terrainSize.height = Math.floor(
-      (TERRAIN_WIDTH / mapSize.width) * mapSize.height,
-    );
+    this.#terrainSize.height = Math.floor((TERRAIN_WIDTH / mapSize.width) * mapSize.height);
 
     console.log("terrainSize=", this.#terrain, "mapSize=", mapSize);
     console.time("updateElevations");

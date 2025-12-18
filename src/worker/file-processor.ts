@@ -8,10 +8,12 @@ import * as storage from "../lib/storage.ts";
 
 mapFiles.setPNG(pngjs.PNG);
 
-export type InMessage = { name: mapFiles.WorldFileName; blob: Blob } | {
-  name: mapFiles.WorldFileName;
-  url: string;
-};
+export type InMessage =
+  | { name: mapFiles.WorldFileName; blob: Blob }
+  | {
+      name: mapFiles.WorldFileName;
+      url: string;
+    };
 export interface SuccessOutMessage {
   name: mapFiles.MapFileName;
   size: number;
@@ -45,9 +47,6 @@ async function main(inMessage: InMessage): Promise<OutMessage> {
   const processor = new mapFiles.Processor(inMessage.name);
   const outName = processor.mapFileName;
   const workspace = await storage.workspaceDir();
-  await processor.process(
-    blob.stream(),
-    await workspace.createWritable(outName),
-  );
+  await processor.process(blob.stream(), await workspace.createWritable(outName));
   return { name: outName, size: await workspace.size(outName) };
 }

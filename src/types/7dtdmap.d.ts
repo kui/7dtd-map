@@ -37,10 +37,10 @@ type Direction = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
 type GameCoords =
   | {
-    type: "game";
-    x: number;
-    z: number;
-  }
+      type: "game";
+      x: number;
+      z: number;
+    }
   | Prefab;
 
 interface PrefabBlockCounts {

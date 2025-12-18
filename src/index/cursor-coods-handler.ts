@@ -31,10 +31,7 @@ export class CursorCoodsHandler {
     });
   }
 
-  #update = throttledInvoker(
-    () => this.#updateImediately().catch(printError),
-    100,
-  );
+  #update = throttledInvoker(() => this.#updateImediately().catch(printError), 100);
   async #updateImediately() {
     this.#doms.output.textContent = await formatCoords(
       await this.#dtmHandler.size(),

@@ -1,9 +1,6 @@
 import { sleep } from "./utils.ts";
 
-export function throttledInvoker(
-  asyncFunc: () => Promise<void> | void,
-  intervalMs = 100,
-): () => Promise<void> {
+export function throttledInvoker(asyncFunc: () => Promise<void> | void, intervalMs = 100): () => Promise<void> {
   const workerPromises: Promise<void>[] = [];
   let lastInvokationAt = 0;
   return () => {
@@ -43,9 +40,7 @@ export function throttledInvoker(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return workerPromises[1]!;
       default:
-        throw Error(
-          `Unexpected state: promiceses=${workerPromises.length.toString()}`,
-        );
+        throw Error(`Unexpected state: promiceses=${workerPromises.length.toString()}`);
     }
   };
 }

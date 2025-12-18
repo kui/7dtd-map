@@ -32,12 +32,7 @@ export class MarkerHandler {
 
   async #update(event: MouseEvent | null) {
     const size = await this.#dtmHandler.size();
-    this.#doms.output.textContent = await formatCoords(
-      size,
-      this.#doms.canvas,
-      (c) => this.#dtmHandler.getElevation(c),
-      event,
-    );
+    this.#doms.output.textContent = await formatCoords(size, this.#doms.canvas, (c) => this.#dtmHandler.getElevation(c), event);
     const coords = event && size ? canvasEventToGameCoords(event, size, this.#doms.canvas) : null;
     await this.#listeners.dispatch({ update: { coords } });
   }

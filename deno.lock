@@ -19,6 +19,8 @@
     "npm:esbuild@~0.27.1": "0.27.1",
     "npm:jsdom@26": "26.1.0",
     "npm:pngjs@7": "7.0.0",
+    "npm:prettier@*": "3.7.4",
+    "npm:prettier@^3.4.2": "3.7.4",
     "npm:three@0.182": "0.182.0",
     "npm:xml2js@~0.6.2": "0.6.2"
   },
@@ -388,6 +390,10 @@
     "pngjs@7.0.0": {
       "integrity": "sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow=="
     },
+    "prettier@3.7.4": {
+      "integrity": "sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==",
+      "bin": true
+    },
     "punycode@2.3.1": {
       "integrity": "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="
     },
@@ -487,6 +493,7 @@
       "npm:esbuild@~0.27.1",
       "npm:jsdom@26",
       "npm:pngjs@7",
+      "npm:prettier@^3.4.2",
       "npm:three@0.182",
       "npm:xml2js@~0.6.2"
     ]

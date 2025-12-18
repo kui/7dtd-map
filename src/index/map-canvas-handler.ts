@@ -22,18 +22,10 @@ interface EventMessage {
 
 interface MapRendererWorker extends Worker {
   postMessage(message: mapRenderer.InMessage, transfer: Transferable[]): void;
-  postMessage(
-    message: mapRenderer.InMessage,
-    options?: StructuredSerializeOptions,
-  ): void;
+  postMessage(message: mapRenderer.InMessage, options?: StructuredSerializeOptions): void;
 }
 
-const DEPENDENT_FILES = [
-  "biomes.png",
-  "splat3.png",
-  "splat4.png",
-  "radiation.png",
-] as const;
+const DEPENDENT_FILES = ["biomes.png", "splat3.png", "splat4.png", "radiation.png"] as const;
 type DependentFile = (typeof DEPENDENT_FILES)[number];
 
 export class MapCanvasHandler {
@@ -62,12 +54,9 @@ export class MapCanvasHandler {
       [canvas],
     );
 
-    worker.addEventListener(
-      "message",
-      ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
-        this.#listeners.dispatchNoAwait({ update: { mapSize } });
-      },
-    );
+    worker.addEventListener("message", ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
+      this.#listeners.dispatchNoAwait({ update: { mapSize } });
+    });
     doms.biomesAlpha.addEventListener("input", () => {
       worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
     });

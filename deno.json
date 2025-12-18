@@ -8,8 +8,8 @@
     "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
     "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
     "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
-    "fix": "deno fmt && deno lint --fix",
-    "lint": "deno lint && deno fmt --check",
+    "fix": "deno run -A npm:prettier . --write && deno lint --fix",
+    "lint": "deno lint && deno run -A npm:prettier . --check",
     "test": "deno test -A --parallel",
     "ci": "deno task lint && deno task test"
   },
@@ -21,7 +21,8 @@
     "esbuild": "npm:esbuild@~0.27.1",
     "@std/expect": "jsr:@std/expect@^1.0.11",
     "@std/testing": "jsr:@std/testing@^1.0.9",
-    "jsdom": "npm:jsdom@^26.0.0"
+    "jsdom": "npm:jsdom@^26.0.0",
+    "prettier": "npm:prettier@^3.4.2"
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
@@ -35,8 +36,6 @@
     "exclude": ["public/"]
   },
   "fmt": {
-    "exclude": ["public/"],
-    "lineWidth": 140,
-    "indentWidth": 2
+    "exclude": ["public/"]
   }
 }

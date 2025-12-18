@@ -46,10 +46,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   await Promise.all(
     xmlFiles.map(async (xmlFileName) => {
       try {
-        await Promise.all([
-          generateHtml(xmlFileName, labels),
-          copyJpg(xmlFileName),
-        ]);
+        await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
       } catch (e) {
         if (isErrnoException(e) && e.code === "ENOENT") {
           console.warn("Abort a prefab HTML: ", e.message);

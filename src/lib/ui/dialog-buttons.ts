@@ -1,9 +1,5 @@
 export function init() {
-  for (
-    const button of document.querySelectorAll<HTMLButtonElement>(
-      "button[data-show-dialog-for]",
-    )
-  ) {
+  for (const button of document.querySelectorAll<HTMLButtonElement>("button[data-show-dialog-for]")) {
     button.addEventListener("click", () => {
       const dialogId = button.dataset["showDialogFor"];
       if (!dialogId) return;
@@ -15,11 +11,7 @@ export function init() {
       dialog.showModal();
     });
   }
-  for (
-    const button of document.querySelectorAll<HTMLButtonElement>(
-      "button[data-close-dialog-for]",
-    )
-  ) {
+  for (const button of document.querySelectorAll<HTMLButtonElement>("button[data-close-dialog-for]")) {
     button.addEventListener("click", () => {
       const dialogId = button.dataset["closeDialogFor"];
       if (dialogId == null) return;

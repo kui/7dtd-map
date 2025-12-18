@@ -25,10 +25,7 @@ export async function vanillaDir(...pathList: string[]): Promise<string> {
   return path.join((await localJson()).vanillaDir, ...pathList);
 }
 
-export function requireNonnull<T>(
-  a: T | null | undefined,
-  message = () => "Unexpected error",
-): T {
+export function requireNonnull<T>(a: T | null | undefined, message = () => "Unexpected error"): T {
   if (a == null) throw Error(message());
   return a;
 }
@@ -50,15 +47,10 @@ export async function writeJsonFile(file: string, json: unknown) {
 }
 
 export function program() {
-  return path.basename(
-    requireNonnull(process.argv[1]),
-    `Unexpected process.argv: ${process.argv.join(" ")}`,
-  );
+  return path.basename(requireNonnull(process.argv[1]), `Unexpected process.argv: ${process.argv.join(" ")}`);
 }
 
-export function buildSetMapByEntries<K, V>(
-  entries: Iterable<[K, V]>,
-): Map<K, Set<V>> {
+export function buildSetMapByEntries<K, V>(entries: Iterable<[K, V]>): Map<K, Set<V>> {
   const map = new Map<K, Set<V>>();
   for (const [k, v] of entries) {
     const set = map.get(k) ?? new Set<V>();
@@ -68,9 +60,7 @@ export function buildSetMapByEntries<K, V>(
   return map;
 }
 
-export function buildArrayMapByEntries<K, V>(
-  entries: Iterable<[K, V]>,
-): Map<K, V[]> {
+export function buildArrayMapByEntries<K, V>(entries: Iterable<[K, V]>): Map<K, V[]> {
   const map = new Map<K, V[]>();
   for (const [k, v] of entries) {
     const array = map.get(k) ?? [];

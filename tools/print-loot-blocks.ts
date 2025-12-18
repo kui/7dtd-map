@@ -34,9 +34,7 @@ async function main() {
   for (const i of items) console.log(i);
 
   const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
-  const matchedBlocks = blocks.findByLootIds(
-    new Set(lootContainers.map((c) => c.name)),
-  );
+  const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.name)));
   console.log();
   console.log("Container Blocks");
   for (const b of matchedBlocks) console.log(b.name);
@@ -52,9 +50,7 @@ async function main() {
 }
 
 function flattenItems(lootContainers: LootTable[]): Set<string> {
-  return new Set(
-    lootContainers.flatMap((c) => c.items.concat(Array.from(flattenItems(c.groups)))),
-  );
+  return new Set(lootContainers.flatMap((c) => c.items.concat(Array.from(flattenItems(c.groups)))));
 }
 
 handleMain(main());

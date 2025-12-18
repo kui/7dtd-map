@@ -43,10 +43,7 @@ function main() {
     dialog: component("dialog", HTMLDialogElement),
     processingFiles: component("processing-files", HTMLUListElement),
   });
-  const dndHandler = new DndHandler(
-    { dragovered: document.body },
-    dialogHandler,
-  );
+  const dndHandler = new DndHandler({ dragovered: document.body }, dialogHandler);
   const bundledMapHandler = new BundledMapHandler({
     select: component("bundled_map_select", HTMLSelectElement),
   });
@@ -61,15 +58,8 @@ function main() {
     dndHandler,
     bundledMapHandler,
   );
-  const labelHandler = new LabelHandler(
-    { language: component("label_lang", HTMLSelectElement) },
-    "labels",
-    navigator.languages,
-  );
-  const dtmHandler = new DtmHandler(
-    () => new Worker("worker/dtm.js"),
-    fileHandler,
-  );
+  const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "labels", navigator.languages);
+  const dtmHandler = new DtmHandler(() => new Worker("worker/dtm.js"), fileHandler);
   const markerHandler = new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
@@ -85,11 +75,7 @@ function main() {
       maxTier: component("max_tier", HTMLInputElement),
       prefabFilter: component("prefab_filter", HTMLInputElement),
       blockFilter: component("block_filter", HTMLInputElement),
-      preExcludes: Array.from(
-        component("prefab-pre-filters").querySelectorAll(
-          "input[type=checkbox]",
-        ),
-      ),
+      preExcludes: Array.from(component("prefab-pre-filters").querySelectorAll("input[type=checkbox]")),
     },
     new Worker("worker/prefabs-filter.js"),
     markerHandler,
@@ -201,10 +187,10 @@ function prefabLi(prefab: HighlightedPrefab) {
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
-        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
-        `  💀${prefab.difficulty.toString()}`,
-        `</span>`,
-      ]
+          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+          `  💀${prefab.difficulty.toString()}`,
+          `</span>`,
+        ]
       : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
