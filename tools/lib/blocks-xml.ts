@@ -44,14 +44,22 @@ const LOOT_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
 
 export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
   const xml = await parseXml<BlockXml>(blocksXmlFileName);
-  const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>((map, blockElement) => {
-    const name = blockElement.$.name;
-    const properties = buildProperties(blockElement.property);
-    const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
-    const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
-    map.set(name, { name, properties, drops, disableDropExtends: enableDropExtendsOff });
-    return map;
-  }, new Map());
+  const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>(
+    (map, blockElement) => {
+      const name = blockElement.$.name;
+      const properties = buildProperties(blockElement.property);
+      const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
+      const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
+      map.set(name, {
+        name,
+        properties,
+        drops,
+        disableDropExtends: enableDropExtendsOff,
+      });
+      return map;
+    },
+    new Map(),
+  );
   return new Blocks(blocks);
 }
 
@@ -65,7 +73,8 @@ export class Blocks {
     this.#blocks = blocks;
     this.#downgradeRelations = buildArrayMapByEntries(
       Array.from(this.#blocks.values()).flatMap((b: Block) => {
-        const downgradedBlockName = b.properties["DowngradeBlock"]?.value.trim();
+        const downgradedBlockName = b.properties["DowngradeBlock"]?.value
+          .trim();
         if (!downgradedBlockName) return [];
         const downgradedBlock = blocks.get(downgradedBlockName);
         if (!downgradedBlock) return [];
@@ -94,26 +103,38 @@ export class Blocks {
   }
 
   findByDowngradeBlocks(graphs: DowngradeGraph): DowngradeGraph[] {
-    const upgradBlocks = this.#downgradeRelations.get(requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"));
+    const upgradBlocks = this.#downgradeRelations.get(
+      requireNonnull(graphs[0], () => "DowngradeGraph must not be empty"),
+    );
     if (upgradBlocks) {
-      return upgradBlocks.flatMap((b) => this.findByDowngradeBlocks([b, ...graphs]));
+      return upgradBlocks.flatMap((b) =>
+        this.findByDowngradeBlocks([b, ...graphs])
+      );
     } else {
       return [graphs];
     }
   }
 
-  getPropertyExtended(block: Block, propertyName: string): BlockPropertyValue | null {
+  getPropertyExtended(
+    block: Block,
+    propertyName: string,
+  ): BlockPropertyValue | null {
     const p = block.properties[propertyName];
     if (p) return p;
 
     const extendsProp = block.properties["Extends"];
     if (!extendsProp) return null;
 
-    const excludedPropNames = extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
+    const excludedPropNames =
+      extendsProp.param1?.split(",").map((p) => p.trim()) ?? [];
     if (excludedPropNames.includes(propertyName)) return null;
 
     const parent = this.#blocks.get(extendsProp.value);
-    if (!parent) throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
+    if (!parent) {
+      throw new Error(
+        `Unknown parent block ${extendsProp.value} for ${block.name}`,
+      );
+    }
 
     return this.getPropertyExtended(parent, propertyName);
   }
@@ -137,26 +158,41 @@ export class Blocks {
     const extendsProp = block.properties["Extends"];
     if (!extendsProp) return [];
     const parent = this.#blocks.get(extendsProp.value);
-    if (!parent) throw new Error(`Unknown parent block ${extendsProp.value} for ${block.name}`);
+    if (!parent) {
+      throw new Error(
+        `Unknown parent block ${extendsProp.value} for ${block.name}`,
+      );
+    }
     return this.getDropsExtended(parent);
   }
 
   getHarvests(block: Block, untilDestroy = true): HarvestItems {
     const drops = this.getDropsExtended(block);
-    const harvests = drops.filter((drop) => drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy"));
+    const harvests = drops.filter((drop) =>
+      drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy")
+    );
     const items: HarvestItems = {};
     for (const harvest of harvests) {
       if (harvest.count[1] === 0) continue;
       if (harvest.prob === 0) continue;
-      if (harvest.name === undefined) throw new Error(`Harvest drop without name: ${block.name}`);
+      if (harvest.name === undefined) {
+        throw new Error(`Harvest drop without name: ${block.name}`);
+      }
       const prob = harvest.prob ?? 1;
       const countExpected = ((harvest.count[0] + harvest.count[1]) / 2) * prob;
       const oldCount = items[harvest.name]?.count;
       const oldCountExpected = items[harvest.name]?.countExpected;
       items[harvest.name] = {
         name: harvest.name,
-        count: oldCount ? [Math.min(oldCount[0], harvest.count[0]), oldCount[1] + harvest.count[1]] : harvest.count,
-        countExpected: oldCountExpected ? oldCountExpected + countExpected : countExpected,
+        count: oldCount
+          ? [
+            Math.min(oldCount[0], harvest.count[0]),
+            oldCount[1] + harvest.count[1],
+          ]
+          : harvest.count,
+        countExpected: oldCountExpected
+          ? oldCountExpected + countExpected
+          : countExpected,
         prob,
       };
     }
@@ -164,7 +200,9 @@ export class Blocks {
   }
 }
 
-function buildProperties(propertyElements: BlockXmlBlockProperty[]): BlockProperties {
+function buildProperties(
+  propertyElements: BlockXmlBlockProperty[],
+): BlockProperties {
   return propertyElements.reduce<BlockProperties>((props, elem) => {
     props[elem.$.name] = elem.$;
     return props;
@@ -180,13 +218,17 @@ function buildDrops(dropElements: BlockXmlBlockDrop[]): BlockDrop[] {
       count,
       tag: elem.$.tag?.split(",") ?? [],
       prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
-      stickChance: elem.$.stick_chance ? parseFloat(elem.$.stick_chance) : undefined,
+      stickChance: elem.$.stick_chance
+        ? parseFloat(elem.$.stick_chance)
+        : undefined,
     };
   });
 }
 
 function parseCount(count: string): NumberRange {
   const [min, max] = count.split("-").map((s) => parseInt(s, 10));
-  if (min === undefined || isNaN(min) || (max !== undefined && isNaN(max))) throw new Error(`Invalid count: ${count}`);
+  if (min === undefined || isNaN(min) || (max !== undefined && isNaN(max))) {
+    throw new Error(`Invalid count: ${count}`);
+  }
   return max ? [min, max] : [min, min];
 }
