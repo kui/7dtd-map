@@ -1,6 +1,6 @@
-import * as pngjs from "pngjs/browser";
-import * as mapFiles from "../../lib/map-files";
-import * as storage from "../lib/storage";
+import * as pngjs from "npm:pngjs@^7.0.0";
+import * as mapFiles from "../../lib/map-files.ts";
+import * as storage from "../lib/storage.ts";
 
 //
 // Process world fiels into map files and store it in the workspace

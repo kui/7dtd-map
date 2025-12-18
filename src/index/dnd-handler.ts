@@ -1,5 +1,5 @@
-import * as events from "../lib/events";
-import { DialogHandler } from "./dialog-handler";
+import * as events from "../lib/events.ts";
+import { DialogHandler } from "./dialog-handler.ts";
 
 export interface EventMessage {
   drop: {

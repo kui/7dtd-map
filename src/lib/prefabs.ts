@@ -1,4 +1,4 @@
-import * as storage from "./storage";
+import * as storage from "./storage.ts";
 
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.
 export async function loadPrefabsXml(fetchDifficulties?: () => Promise<PrefabDifficulties>): Promise<Prefab[]> {

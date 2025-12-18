@@ -1,7 +1,7 @@
-import { throttledInvoker } from "./throttled-invoker";
-import { LabelHolder, Language } from "./labels";
-import { CacheHolder } from "./cache-holder";
-import * as events from "./events";
+import { throttledInvoker } from "./throttled-invoker.ts";
+import { LabelHolder, Language } from "./labels.ts";
+import { CacheHolder } from "./cache-holder.ts";
+import * as events from "./events.ts";
 
 export interface EventMessage {
   update: { prefabs: HighlightedPrefab[]; status: string };

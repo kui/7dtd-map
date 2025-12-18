@@ -1,6 +1,6 @@
-import { LabelHandler } from "../lib/label-handler";
-import { Labels } from "../lib/labels";
-import { component, printError } from "../lib/utils";
+import { LabelHandler } from "../lib/label-handler.ts";
+import { Labels } from "../lib/labels.ts";
+import { component, printError } from "../lib/utils.ts";
 
 function main() {
   const labelHandler = new LabelHandler({ language: component("label_lang", HTMLSelectElement) }, "../labels", navigator.languages);

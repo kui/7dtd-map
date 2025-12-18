@@ -1,4 +1,4 @@
-import { requireNonnull, requireType } from "../lib/utils";
+import { requireNonnull, requireType } from "../lib/utils.ts";
 
 const STATUS = ["dragover", "processing", "error"] as const;
 

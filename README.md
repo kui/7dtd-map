@@ -52,6 +52,6 @@ npm run lint
 npm run serve
 ```
 
-Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][]".
+Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][Secure Contexts]".
 
 [Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts

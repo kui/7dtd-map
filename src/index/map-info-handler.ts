@@ -1,5 +1,5 @@
-import { FileHandler } from "./file-handler";
-import * as storage from "../lib/storage";
+import { FileHandler } from "./file-handler.ts";
+import * as storage from "../lib/storage.ts";
 
 interface Doms {
   mapInfoShow: HTMLButtonElement;

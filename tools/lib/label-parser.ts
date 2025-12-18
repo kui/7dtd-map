@@ -1,5 +1,5 @@
-import fs from "fs";
-import { Parser, parse as csvParse } from "csv-parse";
+import * as fs from "node:fs";
+import { parse as csvParse, Parser } from "csv-parse";
 
 export const LANGUAGES = [
   "english",
@@ -35,7 +35,7 @@ type LocalizationLine = {
   File: string;
 } & LabelCore;
 
-export async function parseLabel(localizationFileName: string): Promise<Map<LabelId, Label>> {
+export function parseLabel(localizationFileName: string): Promise<Map<LabelId, Label>> {
   const parser = fs.createReadStream(localizationFileName).pipe(csvParse({ columns: true }));
   return reduceToLabelMap(parser);
 }

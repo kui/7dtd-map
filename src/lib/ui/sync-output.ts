@@ -1,10 +1,11 @@
-import { component } from "../utils";
+import { component } from "../utils.ts";
 
 export function init(): void {
   for (const eventName of ["input", "change"]) {
-    window.addEventListener(eventName, ({ target }) => {
-      if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement)))
+    globalThis.addEventListener(eventName, ({ target }) => {
+      if (!(target instanceof HTMLInputElement) || !(target instanceof HTMLTextAreaElement || !(target instanceof HTMLSelectElement))) {
         return;
+      }
       const outputElements = document.querySelectorAll<HTMLOutputElement>(`output[data-sync-for="${target.id}"]`);
       for (const output of outputElements) {
         output.value = target.value;
