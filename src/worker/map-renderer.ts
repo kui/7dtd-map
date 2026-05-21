@@ -41,7 +41,10 @@ const fontFaces = {
 Promise.all(
   Object.values(fontFaces).map(async (fontFace) => {
     await fontFace.load();
-    self.fonts.add(fontFace);
+    // WorkerGlobalScope.fonts is part of the spec but missing from Deno's type definitions
+    // https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API
+    // https://github.com/denoland/deno/blob/main/cli/tsc/dts/lib.deno.worker.d.ts
+    (self as unknown as { fonts: FontFaceSet }).fonts.add(fontFace);
     if (map) {
       await map.update();
       postMessage({ mapSize: map.size() });

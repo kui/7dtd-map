@@ -25,7 +25,13 @@
     "jsdom": "npm:jsdom@^26.0.0"
   },
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.worker"
+    ],
     "types": ["./src/types/7dtdmap.d.ts"]
   },
   "lint": {

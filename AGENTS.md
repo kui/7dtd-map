@@ -26,3 +26,6 @@ repository. Agents must read and follow these rules closely.
    - **Run Checks Locally:** You MUST run `deno task ci` and confirm success
      before committing.
    - **No Partial Fixes:** Do not commit broken code hoping to fix it later.
+
+4. **Language**
+   - **All generated comments and documentation must be written in English.**
