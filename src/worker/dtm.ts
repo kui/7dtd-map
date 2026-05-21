@@ -1,12 +1,11 @@
 import { DtmBlockRawDecompressor } from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
 import { printError, readWholeStream } from "../lib/utils.ts";
-
-export type OutMessage = null | Uint8Array;
+import type { DtmOutputMessage } from "./types.ts";
 
 async function main() {
   const workspace = await storage.workspaceDir();
-  let msg: OutMessage = null;
+  let msg: DtmOutputMessage = null;
   try {
     msg = await readDtmBlockRaw(workspace);
   } catch (e) {

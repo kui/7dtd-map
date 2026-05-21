@@ -1,4 +1,4 @@
-import { component } from "../utils.ts";
+import { component } from "../dom-utils.ts";
 
 export function init(): void {
   for (const eventName of ["input", "change"]) {

@@ -1,7 +1,15 @@
-import type * as prefabsFilter from "../worker/prefabs-filter.ts";
+import type {
+  PrefabsFilterInputMessage,
+  PrefabsFilterOutputMessage,
+} from "../worker/types.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
+import type {
+  HighlightedPrefab,
+  PrefabDifficulties,
+} from "../types/7dtdmap.ts";
+import type { NumberRange } from "../types/utils.ts";
 
 import * as events from "../lib/events.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
@@ -20,7 +28,7 @@ interface EventMessage {
 }
 
 declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: prefabsFilter.InMessage): void;
+  postMessage(message: PrefabsFilterInputMessage): void;
 }
 
 export class PrefabsHandler {
@@ -44,7 +52,7 @@ export class PrefabsHandler {
 
     worker.addEventListener(
       "message",
-      (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      (event: MessageEvent<PrefabsFilterOutputMessage>) => {
         const {
           update: { prefabs, status },
         } = event.data;

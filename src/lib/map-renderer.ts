@@ -1,3 +1,8 @@
+import type {
+  GameCoords,
+  GameMapSize,
+  HighlightedPrefab,
+} from "../types/7dtdmap.ts";
 import { throttledInvoker } from "./throttled-invoker.ts";
 import { gameMapSize } from "./utils.ts";
 import * as storage from "./storage.ts";

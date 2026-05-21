@@ -1,34 +1,23 @@
 import * as pngjs from "npm:pngjs@^7.0.0";
 import * as mapFiles from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
-
-//
-// Process world fiels into map files and store it in the workspace
-//
+import type {
+  FileProcessorInputMessage,
+  FileProcessorOutputMessage,
+} from "./types.ts";
 
 mapFiles.setPNG(pngjs.PNG);
 
-export type InMessage = { name: mapFiles.WorldFileName; blob: Blob } | {
-  name: mapFiles.WorldFileName;
-  url: string;
-};
-export interface SuccessOutMessage {
-  name: mapFiles.MapFileName;
-  size: number;
-}
-export interface ErrorOutMessage {
-  error: string;
-}
-export type OutMessage = SuccessOutMessage | ErrorOutMessage;
-
-onmessage = async (event: MessageEvent<InMessage>) => {
+onmessage = async (event: MessageEvent<FileProcessorInputMessage>) => {
   const out = await main(event.data).catch((e: unknown) => ({
     error: String(e),
   }));
   postMessage(out);
 };
 
-async function main(inMessage: InMessage): Promise<OutMessage> {
+async function main(
+  inMessage: FileProcessorInputMessage,
+): Promise<FileProcessorOutputMessage> {
   let blob;
   if ("blob" in inMessage) {
     blob = inMessage.blob;

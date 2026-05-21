@@ -1,7 +1,11 @@
-import type * as mapRenderer from "../worker/map-renderer.ts";
+import type {
+  MapRendererInputMessage,
+  MapRendererOutputMessage,
+} from "../worker/types.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
+import type { GameMapSize } from "../types/7dtdmap.ts";
 import * as events from "../lib/events.ts";
 
 interface Doms {
@@ -21,9 +25,12 @@ interface EventMessage {
 }
 
 interface MapRendererWorker extends Worker {
-  postMessage(message: mapRenderer.InMessage, transfer: Transferable[]): void;
   postMessage(
-    message: mapRenderer.InMessage,
+    message: MapRendererInputMessage,
+    transfer: Transferable[],
+  ): void;
+  postMessage(
+    message: MapRendererInputMessage,
     options?: StructuredSerializeOptions,
   ): void;
 }
@@ -64,7 +71,7 @@ export class MapCanvasHandler {
 
     worker.addEventListener(
       "message",
-      ({ data: { mapSize } }: MessageEvent<mapRenderer.OutMessage>) => {
+      ({ data: { mapSize } }: MessageEvent<MapRendererOutputMessage>) => {
         this.#listeners.dispatchNoAwait({ update: { mapSize } });
       },
     );

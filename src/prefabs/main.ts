@@ -1,6 +1,7 @@
 import { LabelHandler } from "../lib/label-handler.ts";
 import { Labels } from "../lib/labels.ts";
-import { component, printError } from "../lib/utils.ts";
+import { component } from "../lib/dom-utils.ts";
+import { printError } from "../lib/utils.ts";
 
 function main() {
   const labelHandler = new LabelHandler(

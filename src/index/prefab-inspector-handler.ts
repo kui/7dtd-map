@@ -1,3 +1,4 @@
+import type { PrefabDifficulties } from "../types/7dtdmap.ts";
 import { LabelHandler } from "../lib/label-handler.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
 import { printError } from "../lib/utils.ts";

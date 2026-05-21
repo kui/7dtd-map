@@ -1,4 +1,5 @@
 import type { DtmHandler } from "./dtm-handler.ts";
+import type { ThreePlaneSize } from "../types/7dtdmap.ts";
 
 import * as three from "three";
 import { printError, threePlaneSize } from "../lib/utils.ts";

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "deno.worker",
+      "webworker",
+      "webworker.iterable",
+      "webworker.asynciterable",
+      "deno.ns"
+    ]
+  }
+}

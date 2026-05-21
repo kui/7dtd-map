@@ -1,3 +1,12 @@
+import type {
+  BlockPrefabCounts,
+  Direction,
+  GameCoords,
+  HighlightedBlock,
+  HighlightedPrefab,
+  Prefab,
+} from "../types/7dtdmap.ts";
+import type { NumberRange } from "../types/utils.ts";
 import { throttledInvoker } from "./throttled-invoker.ts";
 import { LabelHolder, Language } from "./labels.ts";
 import { CacheHolder } from "./cache-holder.ts";

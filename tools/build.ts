@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
-import { expandGlob } from "jsr:@std/fs@^1.0.8/expand-glob";
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.11.1";
+import { expandGlob } from "@std/fs/expand-glob";
+import { denoPlugin } from "@deno/esbuild-plugin";
 
 const targets: string[] = [];
 for (
@@ -19,7 +19,7 @@ for (
 const outDir = "public";
 
 const commonOpts: esbuild.BuildOptions = {
-  plugins: [...denoPlugins()],
+  plugins: [denoPlugin()],
   bundle: true,
   sourcemap: true,
   outdir: outDir,
@@ -30,7 +30,7 @@ const commonOpts: esbuild.BuildOptions = {
 
 const _serveOpts: esbuild.BuildOptions = {};
 
-const prodOpts = {
+const prodOpts: esbuild.BuildOptions = {
   minify: true,
   sourcemap: "external",
 };
@@ -43,11 +43,11 @@ if (args[0] === "serve") {
 
   await ctx.watch();
 
-  const { host, port } = await ctx.serve({
+  const { hosts, port } = await ctx.serve({
     servedir: outDir,
   });
 
-  console.log(`Serving at http://${host}:${port}`);
+  console.log(`Serving at http://${hosts[0]}:${port}`);
 
   // Keep alive
   await new Promise(() => {});

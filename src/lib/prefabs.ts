@@ -1,3 +1,4 @@
+import type { Prefab, PrefabDifficulties } from "../types/7dtdmap.ts";
 import * as storage from "./storage.ts";
 
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.

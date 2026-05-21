@@ -1,4 +1,5 @@
-import { component, printError } from "./lib/utils.ts";
+import { component } from "./lib/dom-utils.ts";
+import { printError } from "./lib/utils.ts";
 
 const FONT_FACE = new FontFace(
   "Noto Sans Symbols 2",

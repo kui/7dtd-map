@@ -11,7 +11,8 @@
     "fix": "deno fmt && deno lint --fix",
     "lint": "deno lint && deno fmt --check",
     "test": "deno test -A --parallel",
-    "ci": "deno task lint && deno check && deno task test"
+    "check": "deno check src/index.ts src/prefabs.ts src/logo.ts && deno check src/worker/dtm.ts src/worker/file-processor.ts src/worker/map-renderer.ts src/worker/prefabs-filter.ts",
+    "ci": "deno task lint && deno task check && deno task test"
   },
   "imports": {
     "three": "npm:three@~0.182.0",
@@ -20,20 +21,13 @@
     "csv-parse": "npm:csv-parse@^6.1.0",
     "glob": "npm:glob@^13.0.0",
     "esbuild": "npm:esbuild@~0.27.1",
+    "@std/fs": "jsr:@std/fs@^1.0.8",
+    "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",
     "@std/expect": "jsr:@std/expect@^1.0.11",
     "@std/testing": "jsr:@std/testing@^1.0.9",
     "jsdom": "npm:jsdom@^26.0.0"
   },
-  "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "dom.asynciterable",
-      "deno.ns",
-      "deno.worker"
-    ],
-    "types": ["./src/types/7dtdmap.d.ts"]
-  },
+  "workspace": ["./src/worker"],
   "lint": {
     "rules": {
       "tags": ["recommended"]
@@ -42,5 +36,13 @@
   },
   "fmt": {
     "exclude": ["public"]
+  },
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ]
   }
 }

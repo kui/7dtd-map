@@ -1,10 +1,8 @@
 import type { DtmHandler } from "./dtm-handler.ts";
+import type { GameCoords } from "../types/7dtdmap.ts";
 
-import {
-  canvasEventToGameCoords,
-  formatCoords,
-  printError,
-} from "../lib/utils.ts";
+import { canvasEventToGameCoords, formatCoords } from "../lib/dom-utils.ts";
+import { printError } from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
 
 interface Doms {

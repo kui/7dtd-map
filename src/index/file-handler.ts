@@ -1,4 +1,8 @@
-import type * as fileProcessor from "../worker/file-processor.ts";
+import type {
+  FileProcessorInputMessage,
+  FileProcessorOutputMessage,
+  FileProcessorSuccessOutputMessage,
+} from "../worker/types.ts";
 import type { BundledMapHandler } from "./bundled-map-hander.ts";
 import type { DialogHandler } from "./dialog-handler.ts";
 import type { DndHandler } from "./dnd-handler.ts";
@@ -28,7 +32,7 @@ export type ProcessRequiredFileName = (typeof PROCESS_REQUIRED_NAMES)[number];
 
 /**
  * File names that cannot be decide whether or not be already processed by its name.
- * In other words, this names are intersected with `storage.MapFileName` and `fileProcessor.AcceptableFileName`.
+ * In other words, this names are intersected with `storage.MapFileName` and `FileProcessor.AcceptableFileName`.
  */
 type StateRequiredMapFileName = Extract<MapFileName, ProcessRequiredFileName>;
 
@@ -54,8 +58,8 @@ type ResourceLike =
   | { name: AlwaysProcessRequiredFileName; url: string };
 
 export interface ImageProcessorWorker extends Worker {
-  postMessage(message: fileProcessor.InMessage): void;
-  onmessage: (event: MessageEvent<fileProcessor.OutMessage>) => unknown;
+  postMessage(message: FileProcessorInputMessage): void;
+  onmessage: (event: MessageEvent<FileProcessorOutputMessage>) => unknown;
 }
 
 interface Doms {
@@ -272,8 +276,8 @@ export class FileHandler {
   }
 
   #processInWorker(
-    message: fileProcessor.InMessage,
-  ): Promise<fileProcessor.SuccessOutMessage> {
+    message: FileProcessorInputMessage,
+  ): Promise<FileProcessorSuccessOutputMessage> {
     const worker = this.#processorFactory();
     return new Promise((resolve, reject) => {
       worker.onmessage = ({ data }) => {

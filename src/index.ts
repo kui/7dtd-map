@@ -5,13 +5,9 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
-import {
-  component,
-  downloadCanvasPng,
-  fetchJson,
-  humanreadableDistance,
-  printError,
-} from "./lib/utils.ts";
+import type { HighlightedPrefab } from "./types/7dtdmap.ts";
+import { component, downloadCanvasPng } from "./lib/dom-utils.ts";
+import { fetchJson, humanreadableDistance, printError } from "./lib/utils.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";

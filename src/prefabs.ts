@@ -1,4 +1,14 @@
-import type * as prefabsFilter from "./worker/prefabs-filter.ts";
+import type {
+  PrefabsFilterInputMessage,
+  PrefabsFilterOutputMessage,
+} from "./worker/types.ts";
+import type {
+  HighlightedBlock,
+  HighlightedPrefab,
+  Prefab,
+  PrefabBlockCounts,
+  PrefabDifficulties,
+} from "./types/7dtdmap.ts";
 
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import * as events from "./lib/events.ts";
@@ -7,15 +17,8 @@ import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import * as presetButton from "./lib/ui/preset-button.ts";
 import * as syncOutput from "./lib/ui/sync-output.ts";
 import { UrlState } from "./lib/url-state.ts";
-import { component, fetchJson, printError } from "./lib/utils.ts";
-
-interface HighlightedPrefab {
-  name: string;
-  difficulty?: number;
-  highlightedName?: string;
-  highlightedLabel?: string;
-  matchedBlocks?: HighlightedBlock[];
-}
+import { component } from "./lib/dom-utils.ts";
+import { fetchJson, printError } from "./lib/utils.ts";
 
 function main() {
   presetButton.init();
@@ -133,10 +136,10 @@ function countHighlightedBlocks(blocks: HighlightedBlock[]): number {
 }
 
 declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: prefabsFilter.InMessage): void;
+  postMessage(message: PrefabsFilterInputMessage): void;
 }
 
-type PrefabsHandlerEventMessage = prefabsFilter.OutMessage;
+type PrefabsHandlerEventMessage = PrefabsFilterOutputMessage;
 
 interface PrefabsHandlerDoms {
   prefabFilter: HTMLInputElement;
@@ -197,7 +200,7 @@ class PrefabsHandler {
 
     worker.addEventListener(
       "message",
-      (event: MessageEvent<prefabsFilter.OutMessage>) => {
+      (event: MessageEvent<PrefabsFilterOutputMessage>) => {
         this.#listeners.dispatchNoAwait(event.data);
       },
     );

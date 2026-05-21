@@ -1,4 +1,5 @@
 import * as three from "three";
+import type { ThreePlaneSize } from "../../types/7dtdmap.ts";
 import { requireNonnull, threePlaneSize } from "../../lib/utils.ts";
 
 const MOUSE_BUTTON_BITMASK = {

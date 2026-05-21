@@ -1,6 +1,7 @@
 import type * as three from "three";
-import type * as dtmWorker from "../worker/dtm.ts";
+import type { DtmOutputMessage } from "../worker/types.ts";
 import type { FileHandler } from "./file-handler.ts";
+import type { GameCoords, GameMapSize } from "../types/7dtdmap.ts";
 
 import { gameMapSize, requireNonnull } from "../lib/utils.ts";
 import { CacheHolder } from "../lib/cache-holder.ts";
@@ -22,7 +23,7 @@ export class DtmHandler {
         return new Promise((resolve) => {
           worker.addEventListener(
             "message",
-            ({ data }: MessageEvent<dtmWorker.OutMessage>) => {
+            ({ data }: MessageEvent<DtmOutputMessage>) => {
               worker.terminate();
               resolve(data);
             },
