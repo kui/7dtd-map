@@ -1,4 +1,4 @@
-import * as pngjs from "npm:pngjs@^7.0.0";
+import * as pngjs from "pngjs";
 import * as mapFiles from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
 import type {
