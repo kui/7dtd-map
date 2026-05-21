@@ -35,16 +35,24 @@ type LocalizationLine = {
   File: string;
 } & LabelCore;
 
-export function parseLabel(localizationFileName: string): Promise<Map<LabelId, Label>> {
-  const parser = fs.createReadStream(localizationFileName).pipe(csvParse({ columns: true }));
+export function parseLabel(
+  localizationFileName: string,
+): Promise<Map<LabelId, Label>> {
+  const parser = fs.createReadStream(localizationFileName).pipe(
+    csvParse({ columns: true }),
+  );
   return reduceToLabelMap(parser);
 }
 
 async function reduceToLabelMap(parser: Parser): Promise<Map<string, Label>> {
   const labels = new Map<string, Label>();
   for await (const line of parser) {
-    if (!isLocalizationLine(line)) throw Error("Unexpected line: empty label key");
-    if (labels.has(line.Key)) console.warn("Unexpected line: duplicated label key: ", line.Key);
+    if (!isLocalizationLine(line)) {
+      throw Error("Unexpected line: empty label key");
+    }
+    if (labels.has(line.Key)) {
+      console.warn("Unexpected line: duplicated label key: ", line.Key);
+    }
     labels.set(line.Key, { key: line.Key, file: line.File, ...line });
   }
   return labels;

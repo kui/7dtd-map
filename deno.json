@@ -11,7 +11,7 @@
     "fix": "deno fmt && deno lint --fix",
     "lint": "deno lint && deno fmt --check",
     "test": "deno test -A --parallel",
-    "ci": "deno task lint && deno task test"
+    "ci": "deno task lint && deno check && deno task test"
   },
   "imports": {
     "three": "npm:three@~0.182.0",
@@ -26,7 +26,6 @@
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
-    "strict": true,
     "types": ["./src/types/7dtdmap.d.ts"]
   },
   "lint": {
@@ -36,11 +35,6 @@
     "exclude": ["public"]
   },
   "fmt": {
-    "useTabs": false,
-    "lineWidth": 140,
-    "indentWidth": 2,
-    "singleQuote": false,
-    "proseWrap": "preserve",
     "exclude": ["public"]
   }
 }

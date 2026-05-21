@@ -5,7 +5,9 @@ export interface Material {
   properties: Record<string, string>;
 }
 
-export async function loadMaterials(materialsXmlFileName: string): Promise<Materials> {
+export async function loadMaterials(
+  materialsXmlFileName: string,
+): Promise<Materials> {
   const xml = await parseXml<MaterialsXml>(materialsXmlFileName);
   const materials = xml.materials.material.map((materialElement) => {
     const id = materialElement.$.id;
@@ -31,7 +33,9 @@ export class Materials {
   }
 }
 
-function buildProperties(properties: MaterialsXmlMaterialProperty[]): Record<string, string> {
+function buildProperties(
+  properties: MaterialsXmlMaterialProperty[],
+): Record<string, string> {
   return properties.reduce<Record<string, string>>((map, property) => {
     map[property.$.name] = property.$.value;
     return map;

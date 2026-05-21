@@ -10,8 +10,15 @@ export class DelayedRenderer<T> {
     this.renderAll().catch(printError);
   };
 
-  constructor(scrollableWrapper: HTMLElement, appendee: HTMLElement, itemRenderer: (item: T) => Node, renderImmediatly = false) {
-    if (!scrollableWrapper.contains(appendee)) throw Error("Wrapper element should contain appendee element");
+  constructor(
+    scrollableWrapper: HTMLElement,
+    appendee: HTMLElement,
+    itemRenderer: (item: T) => Node,
+    renderImmediatly = false,
+  ) {
+    if (!scrollableWrapper.contains(appendee)) {
+      throw Error("Wrapper element should contain appendee element");
+    }
     appendee.innerHTML = "";
     this.#appendee = appendee;
     this.#scrollableWrapper = scrollableWrapper;
@@ -30,13 +37,22 @@ export class DelayedRenderer<T> {
 
     // Require a delay because flashing childlen like the above fires "scroll" events.
     requestAnimationFrame(() => {
-      this.#scrollableWrapper.removeEventListener("scroll", this.#scrollCallback);
+      this.#scrollableWrapper.removeEventListener(
+        "scroll",
+        this.#scrollCallback,
+      );
       if (this.#renderImmediatly) {
         this.renderAll().catch(printError);
       } else {
-        this.#scrollableWrapper.addEventListener("scroll", this.#scrollCallback, { once: true });
+        this.#scrollableWrapper.addEventListener(
+          "scroll",
+          this.#scrollCallback,
+          { once: true },
+        );
         // TODO Prevent double rendering iterations
-        this.#renderUntil(() => isFill(this.#scrollableWrapper)).catch(printError);
+        this.#renderUntil(() => isFill(this.#scrollableWrapper)).catch(
+          printError,
+        );
       }
     });
   }
@@ -61,7 +77,10 @@ function isFill(wrapper: HTMLElement) {
   return wrapper.clientHeight + 100 < wrapper.scrollHeight;
 }
 
-function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, chunkSize = 10) {
+function chunkIterator<T, TReturn, TNext>(
+  origin: Iterator<T, TReturn, TNext>,
+  chunkSize = 10,
+) {
   let returnResult: IteratorReturnResult<TReturn> | null = null;
   const chunkIter: Iterator<T[], TReturn, TNext> = {
     next(...args: [] | [TNext]): IteratorResult<T[], TReturn> {
@@ -83,14 +102,19 @@ function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, c
   };
   if ("throw" in origin) {
     chunkIter.throw = (e?: unknown): IteratorResult<T[], TReturn> => {
-      const r = (origin.throw as (e?: unknown) => IteratorResult<T, TReturn>)(e);
+      const r = (origin.throw as (e?: unknown) => IteratorResult<T, TReturn>)(
+        e,
+      );
       if (isReturn(r)) return r;
       else return { done: r.done ?? false, value: [r.value] };
     };
   }
   if ("return" in origin) {
     chunkIter.return = (treturn?: TReturn): IteratorResult<T[], TReturn> => {
-      const r = (origin.return as (treturn?: TReturn) => IteratorResult<T, TReturn>)(treturn);
+      const r =
+        (origin.return as (treturn?: TReturn) => IteratorResult<T, TReturn>)(
+          treturn,
+        );
       if (isReturn(r)) return r;
       else return { done: r.done ?? false, value: [r.value] };
     };
@@ -98,6 +122,8 @@ function chunkIterator<T, TReturn, TNext>(origin: Iterator<T, TReturn, TNext>, c
   return chunkIter;
 }
 
-function isReturn<T, TReturn>(r: IteratorResult<T, TReturn>): r is IteratorReturnResult<TReturn> {
+function isReturn<T, TReturn>(
+  r: IteratorResult<T, TReturn>,
+): r is IteratorReturnResult<TReturn> {
   return Boolean(r.done);
 }

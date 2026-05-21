@@ -11,7 +11,9 @@ async function main() {
     return 1;
   }
 
-  const blocks = await loadBlocks(await vanillaDir("Data", "Config", "blocks.xml"));
+  const blocks = await loadBlocks(
+    await vanillaDir("Data", "Config", "blocks.xml"),
+  );
   const pattern = new RegExp(patternString);
   for (const block of blocks.find((b) => pattern.test(b.name))) {
     console.log(block.name, ":", blocks.getDropsExtended(block));

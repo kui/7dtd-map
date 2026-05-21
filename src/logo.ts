@@ -1,6 +1,9 @@
 import { component, printError } from "./lib/utils.ts";
 
-const FONT_FACE = new FontFace("Noto Sans Symbols 2", "url('./NotoSansSymbols2.subset.woff2') format('woff2')");
+const FONT_FACE = new FontFace(
+  "Noto Sans Symbols 2",
+  "url('./NotoSansSymbols2.subset.woff2') format('woff2')",
+);
 
 function main(): void {
   renderLogo1(component("logo1", HTMLCanvasElement)).catch(printError);
@@ -32,7 +35,10 @@ async function renderLogo1(canvas: HTMLCanvasElement): Promise<void> {
 
 const LINE_WIDTH_FACTOR = 0.04;
 
-function putText(ctx: CanvasRenderingContext2D, { text, x, z, size }: { text: string; x: number; z: number; size: number }): void {
+function putText(
+  ctx: CanvasRenderingContext2D,
+  { text, x, z, size }: { text: string; x: number; z: number; size: number },
+): void {
   ctx.font = `${size.toString()}px '${FONT_FACE.family}'`;
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
@@ -49,7 +55,11 @@ function putText(ctx: CanvasRenderingContext2D, { text, x, z, size }: { text: st
   ctx.strokeText(text, x, z);
 }
 
-function putPointCenter(ctx: CanvasRenderingContext2D, size: number, color: string): void {
+function putPointCenter(
+  ctx: CanvasRenderingContext2D,
+  size: number,
+  color: string,
+): void {
   ctx.fillStyle = color;
   ctx.fillRect(WIDTH / 2 - size / 2, WIDTH / 2 - size / 2, size, size);
 }

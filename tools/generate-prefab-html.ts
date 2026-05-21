@@ -3,7 +3,12 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
 import { prefabHtml } from "./lib/prefab-html.ts";
-import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.ts";
+import {
+  handleMain,
+  publishDir,
+  vanillaDir,
+  writeJsonFile,
+} from "./lib/utils.ts";
 
 const BASE_DEST = publishDir("prefabs");
 
@@ -39,7 +44,10 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   await Promise.all(
     xmlFiles.map(async (xmlFileName) => {
       try {
-        await Promise.all([generateHtml(xmlFileName, labels), copyJpg(xmlFileName)]);
+        await Promise.all([
+          generateHtml(xmlFileName, labels),
+          copyJpg(xmlFileName),
+        ]);
       } catch (e) {
         if (isErrnoException(e) && e.code === "ENOENT") {
           console.warn("Abort a prefab HTML: ", e.message);

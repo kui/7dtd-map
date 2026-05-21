@@ -34,21 +34,31 @@ async function main() {
   for (const i of items) console.log(i);
 
   const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
-  const matchedBlocks = blocks.findByLootIds(new Set(lootContainers.map((c) => c.name)));
+  const matchedBlocks = blocks.findByLootIds(
+    new Set(lootContainers.map((c) => c.name)),
+  );
   console.log();
   console.log("Container Blocks");
   for (const b of matchedBlocks) console.log(b.name);
 
-  const downgradeGraph = matchedBlocks.flatMap((b) => blocks.findByDowngradeBlocks([b]));
+  const downgradeGraph = matchedBlocks.flatMap((b) =>
+    blocks.findByDowngradeBlocks([b])
+  );
   console.log();
   console.log("Downgrade");
-  for (const g of downgradeGraph) if (g.length > 1) console.log(g.map((b) => b.name).join(" -> "));
+  for (const g of downgradeGraph) {
+    if (g.length > 1) console.log(g.map((b) => b.name).join(" -> "));
+  }
 
   return 0;
 }
 
 function flattenItems(lootContainers: LootTable[]): Set<string> {
-  return new Set(lootContainers.flatMap((c) => c.items.concat(Array.from(flattenItems(c.groups)))));
+  return new Set(
+    lootContainers.flatMap((c) =>
+      c.items.concat(Array.from(flattenItems(c.groups)))
+    ),
+  );
 }
 
 handleMain(main());

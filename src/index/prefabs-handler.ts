@@ -37,15 +37,21 @@ export class PrefabsHandler {
     fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
     this.#doms = doms;
-    this.#tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
+    this.#tierRange = {
+      start: doms.minTier.valueAsNumber,
+      end: doms.maxTier.valueAsNumber,
+    };
 
-    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
-      const {
-        update: { prefabs, status },
-      } = event.data;
-      doms.status.textContent = status;
-      this.#listeners.dispatchNoAwait({ update: { prefabs } });
-    });
+    worker.addEventListener(
+      "message",
+      (event: MessageEvent<prefabsFilter.OutMessage>) => {
+        const {
+          update: { prefabs, status },
+        } = event.data;
+        doms.status.textContent = status;
+        this.#listeners.dispatchNoAwait({ update: { prefabs } });
+      },
+    );
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === this.#tierRange.start) return;
@@ -77,7 +83,9 @@ export class PrefabsHandler {
       worker.postMessage({ language: lang });
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
-      if (fileNames.includes("prefabs.xml")) worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties) });
+      if (fileNames.includes("prefabs.xml")) {
+        worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties) });
+      }
     });
   }
 

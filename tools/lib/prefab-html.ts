@@ -71,14 +71,20 @@ function html(model: HtmlModel): string {
 
   <section id="xml">
     <h2>XML</h2>
-    <table>${model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join("\n")}</table>
+    <table>${
+    model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join(
+      "\n",
+    )
+  }</table>
   </section>
 
   <section id="dimensions">
     <h2>Dimensions</h2>
     <table>${
     Object.entries<number>(model.dimensions)
-      .map(([axis, value]) => `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`)
+      .map(([axis, value]) =>
+        `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`
+      )
       .join("\n")
   }</table>
   </section>
@@ -116,7 +122,11 @@ function html(model: HtmlModel): string {
             "<tr>",
             `<td>${i.toString()}</td>`,
             `<td>${s.group}</td>`,
-            `<td>${s.count[0] === s.count[1] ? s.count[0].toString() : `${s.count[0].toString()}-${s.count[1].toString()}`}</td>`,
+            `<td>${
+              s.count[0] === s.count[1]
+                ? s.count[0].toString()
+                : `${s.count[0].toString()}-${s.count[1].toString()}`
+            }</td>`,
             `<td>${s.groupId.toString()}</td>`,
             `<td>${s.gameStageAdjust || "-"}</td>`,
             `<td>${s.flags.toString()}</td>`,
@@ -140,7 +150,12 @@ function html(model: HtmlModel): string {
 `;
 }
 
-export async function prefabHtml(xml: string, nim: string, tts: string, labels: Map<LabelId, Label>): Promise<string> {
+export async function prefabHtml(
+  xml: string,
+  nim: string,
+  tts: string,
+  labels: Map<LabelId, Label>,
+): Promise<string> {
   const name = path.basename(xml, ".xml");
   const label = labels.get(name)?.english ?? "-";
   const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
@@ -154,12 +169,19 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
       }))
       .toSorted((a, b) => a.name.localeCompare(b.name))
   );
-  const propertiesPromise = parsePrefabXml(xml).then((ps) => ps.toSorted((a, b) => a.name.localeCompare(b.name)));
-  const [blocks, properties] = await Promise.all([blocksPromise, propertiesPromise]);
+  const propertiesPromise = parsePrefabXml(xml).then((ps) =>
+    ps.toSorted((a, b) => a.name.localeCompare(b.name))
+  );
+  const [blocks, properties] = await Promise.all([
+    blocksPromise,
+    propertiesPromise,
+  ]);
 
   // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));
-  const undefinedBlockIds = [...blockNums.keys()].filter((i) => !blockIdSet.has(i));
+  const undefinedBlockIds = [...blockNums.keys()].filter((i) =>
+    !blockIdSet.has(i)
+  );
   if (undefinedBlockIds.length > 0) {
     console.warn(
       "Unexpected state: unknown block ID used: file=%s, idCount=%o",
@@ -171,11 +193,16 @@ export async function prefabHtml(xml: string, nim: string, tts: string, labels: 
   // List of blocks defined in .blocks.nim but not placed in .tts
   const noPlacedBlocks = blocks.filter((b) => b.count === 0);
   if (noPlacedBlocks.length > 0) {
-    console.warn("Unexpected state: unused block was asigned a ID: file=%s, blocks=%o", xml, noPlacedBlocks);
+    console.warn(
+      "Unexpected state: unused block was asigned a ID: file=%s, blocks=%o",
+      xml,
+      noPlacedBlocks,
+    );
   }
 
   const sleeperVolumes = buildSleeperVolumes(properties);
-  const difficultyRaw = properties.find((p) => p.name === "DifficultyTier")?.value ?? "0";
+  const difficultyRaw =
+    properties.find((p) => p.name === "DifficultyTier")?.value ?? "0";
   const difficulty = difficultyRaw === "0" ? "" : `💀${difficultyRaw}`;
 
   return html({
@@ -197,7 +224,10 @@ const ESCAPE_HTML_PATTERNS: [RegExp, string][] = [
 
 function escapeHtml(s: string) {
   if (!s) return s;
-  return ESCAPE_HTML_PATTERNS.reduce((str, [regex, newStr]) => str.replace(regex, newStr), s);
+  return ESCAPE_HTML_PATTERNS.reduce(
+    (str, [regex, newStr]) => str.replace(regex, newStr),
+    s,
+  );
 }
 
 interface SleeperVolume {
@@ -227,7 +257,11 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
     const countMin = parseInt(groupsRaw[i + 1] ?? "", 10);
     const countMax = parseInt(groupsRaw[i + 2] ?? "", 10);
     if (isNaN(countMin) || isNaN(countMax)) {
-      throw new Error(`Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${String(groupsRaw[i + 2])}`);
+      throw new Error(
+        `Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${
+          String(groupsRaw[i + 2])
+        }`,
+      );
     }
     groups.push({
       // Skip ith element checking because i+1 is alraedy checked
@@ -240,7 +274,9 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
     .find((p) => p.name === "SleeperVolumeGroupId")
     ?.value.split(",")
     .map((s) => parseInt(s, 10));
-  if (groupIds === undefined) throw new Error("SleeperVolumeGroupId is not found");
+  if (groupIds === undefined) {
+    throw new Error("SleeperVolumeGroupId is not found");
+  }
   // NOTE: This implementation for SleeperVolumeGameStageAdjust could be wrong.
   // Some prefabs have no SleeperVolumeGameStageAdjust or shorter than SleeperVolumeGroup
   // This implementation assumes that padding empty string to the length of SleeperVolumeGroup.
@@ -289,19 +325,40 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
     return {
       group: group.group,
       count: group.count,
-      groupId: requireNonnull(groupIds[i], () => `Unexpected state: groupId is not found: index=${String(i)}`),
+      groupId: requireNonnull(
+        groupIds[i],
+        () => `Unexpected state: groupId is not found: index=${String(i)}`,
+      ),
       gameStageAdjust: gameStageAdjusts[i] ?? "", // See the above comment for SleeperVolumeGameStageAdjust.
-      flags: requireNonnull(flags[i], () => `Unexpected state: flags is not found: index=${String(i)}`),
+      flags: requireNonnull(
+        flags[i],
+        () => `Unexpected state: flags is not found: index=${String(i)}`,
+      ),
       isBoss: isBosses[i] ?? false, // See the above comment for SleeperVolumeGameStageAdjust.
-      isLoot: requireNonnull(isLoots[i], () => `Unexpected state: isLoot is not found: index=${String(i)}`),
-      isQuestExclude: requireNonnull(isQuestExcludes[i], () => `Unexpected state: isQuestExclude is not found: index=${String(i)}`),
-      size: requireNonnull(sizes[i], () => `Unexpected state: size is not found: index=${String(i)}`),
-      start: requireNonnull(starts[i], () => `Unexpected state: start is not found: index=${String(i)}`),
+      isLoot: requireNonnull(
+        isLoots[i],
+        () => `Unexpected state: isLoot is not found: index=${String(i)}`,
+      ),
+      isQuestExclude: requireNonnull(
+        isQuestExcludes[i],
+        () =>
+          `Unexpected state: isQuestExclude is not found: index=${String(i)}`,
+      ),
+      size: requireNonnull(
+        sizes[i],
+        () => `Unexpected state: size is not found: index=${String(i)}`,
+      ),
+      start: requireNonnull(
+        starts[i],
+        () => `Unexpected state: start is not found: index=${String(i)}`,
+      ),
     };
   });
 }
 
-function renderSleeperVolumeTotalCount(sleeperVolumes: SleeperVolume[]): string {
+function renderSleeperVolumeTotalCount(
+  sleeperVolumes: SleeperVolume[],
+): string {
   const min = sleeperVolumes.reduce((sum, s) => sum + s.count[0], 0);
   const max = sleeperVolumes.reduce((sum, s) => sum + s.count[1], 0);
   return min === max ? min.toString() : `${min.toString()}-${max.toString()}`;

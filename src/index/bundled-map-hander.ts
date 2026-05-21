@@ -23,7 +23,9 @@ export class BundledMapHandler {
     this.#doms.select.addEventListener("change", () => {
       if (this.#doms.select.value === "") return;
       const mapName = this.#doms.select.value;
-      this.#listeners.dispatchNoAwait({ select: { mapName, mapDir: `maps/${mapName}` } });
+      this.#listeners.dispatchNoAwait({
+        select: { mapName, mapDir: `maps/${mapName}` },
+      });
     });
   }
 
