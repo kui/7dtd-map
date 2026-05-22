@@ -1,5 +1,5 @@
 import type { BlockPrefabCounts, PrefabBlockCounts } from "../types/7dtdmap.ts";
-import { PrefabFilter } from "../lib/prefab-filter.ts";
+import { PrefabFilter } from "./lib/prefab-filter.ts";
 import { fetchJson, printError } from "../lib/utils.ts";
 import type { PrefabsFilterInputMessage } from "./types.ts";
 

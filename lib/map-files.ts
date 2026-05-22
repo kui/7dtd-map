@@ -300,8 +300,7 @@ async function packPng(
   copyAndEdit: (src: Uint8Array, dst: Uint8Array | Uint8ClampedArray) => void,
   controller: TransformStreamDefaultController<Uint8Array>,
 ): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (globalThis.OffscreenCanvas) {
+  if (typeof OffscreenCanvas !== "undefined") {
     // Faster png packing using OffscreenCanvas
     const canvas = new OffscreenCanvas(png.width, png.height);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -29,9 +29,6 @@
   },
   "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
   "lint": {
-    "rules": {
-      "tags": ["recommended"]
-    },
     "exclude": ["public"]
   },
   "fmt": {

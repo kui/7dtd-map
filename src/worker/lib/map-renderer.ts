@@ -2,12 +2,12 @@ import type {
   GameCoords,
   GameMapSize,
   HighlightedPrefab,
-} from "../types/7dtdmap.ts";
-import { throttledInvoker } from "./throttled-invoker.ts";
-import { gameMapSize } from "./utils.ts";
-import * as storage from "./storage.ts";
-import * as mapFiles from "../../lib/map-files.ts";
-import { CacheHolder } from "./cache-holder.ts";
+} from "../../types/7dtdmap.ts";
+import { throttledInvoker } from "../../lib/throttled-invoker.ts";
+import { gameMapSize } from "../../lib/utils.ts";
+import * as storage from "../../lib/storage.ts";
+import * as mapFiles from "../../../lib/map-files.ts";
+import { CacheHolder } from "../../lib/cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";

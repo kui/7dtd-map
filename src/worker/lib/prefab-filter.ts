@@ -5,12 +5,12 @@ import type {
   HighlightedBlock,
   HighlightedPrefab,
   Prefab,
-} from "../types/7dtdmap.ts";
-import type { NumberRange } from "../types/utils.ts";
-import { throttledInvoker } from "./throttled-invoker.ts";
-import { LabelHolder, Language } from "./labels.ts";
-import { CacheHolder } from "./cache-holder.ts";
-import * as events from "./events.ts";
+} from "../../types/7dtdmap.ts";
+import type { NumberRange } from "../../types/utils.ts";
+import { throttledInvoker } from "../../lib/throttled-invoker.ts";
+import { LabelHolder, Language } from "../../lib/labels.ts";
+import { CacheHolder } from "../../lib/cache-holder.ts";
+import * as events from "../../lib/events.ts";
 
 export interface EventMessage {
   update: { prefabs: HighlightedPrefab[]; status: string };

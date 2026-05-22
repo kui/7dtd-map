@@ -1,4 +1,4 @@
-import MapRenderer from "../lib/map-renderer.ts";
+import MapRenderer from "./lib/map-renderer.ts";
 import { printError } from "../lib/utils.ts";
 import type { MapRendererInputMessage } from "./types.ts";
 
