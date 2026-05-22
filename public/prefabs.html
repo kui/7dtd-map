@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -17,7 +17,9 @@
         <nav>
           <ul>
             <li><a href=".">Map Renderer</a></li>
-            <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
+            <li>
+              <a href="https://github.com/kui/7dtd-map">Github repository</a>
+            </li>
             <li>
               Block/Prefab Language:
               <select id="label-lang">
@@ -39,14 +41,28 @@
               <th>Min</th>
               <td>
                 💀<output data-sync-for="min-tier">0</output>
-                <input id="min-tier" type="range" min="0" max="5" value="0" data-min="tierRange" />
+                <input
+                  id="min-tier"
+                  type="range"
+                  min="0"
+                  max="5"
+                  value="0"
+                  data-min="tierRange"
+                />
               </td>
             </tr>
             <tr>
               <th>Max</th>
               <td>
                 💀<output data-sync-for="max-tier">5</output>
-                <input id="max-tier" type="range" min="0" max="5" value="5" data-max="tierRange" />
+                <input
+                  id="max-tier"
+                  type="range"
+                  min="0"
+                  max="5"
+                  value="5"
+                  data-max="tierRange"
+                />
               </td>
             </tr>
           </table>
@@ -62,21 +78,45 @@
         <section>
           <h2>Prefab Name</h2>
           <input id="prefab-filter" placeholder="Input prefab name" />
-          <button title="Clear Prefab Name" data-input-for="prefab-filter" data-input-text="">X</button>
+          <button
+            title="Clear Prefab Name"
+            data-input-for="prefab-filter"
+            data-input-text=""
+          >
+            X
+          </button>
           <section>
             <button data-input-for="prefab-filter">trader</button>
             <button data-input-for="prefab-filter">store_book_</button>
-            <button data-input-for="prefab-filter" data-input-text="^remnant_">remnant</button>
+            <button data-input-for="prefab-filter" data-input-text="^remnant_">
+              remnant
+            </button>
           </section>
         </section>
         <section>
           <h2>Block Name</h2>
           <input id="block-filter" placeholder="Input block name" />
-          <button title="Clear Block Name" data-input-for="block-filter" data-input-text="">X</button>
+          <button
+            title="Clear Block Name"
+            data-input-for="block-filter"
+            data-input-text=""
+          >
+            X
+          </button>
           <section>
             <button data-input-for="block-filter">Forge</button>
-            <button data-input-for="block-filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
-            <button data-input-for="block-filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+            <button
+              data-input-for="block-filter"
+              data-input-text="(Grace|Super)Corn"
+            >
+              Super Corn
+            </button>
+            <button
+              data-input-for="block-filter"
+              data-input-text="^cntLootCrateHero"
+            >
+              Hidden Stash
+            </button>
             <button
               data-input-for="block-filter"
               data-input-text="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
@@ -90,16 +130,24 @@
           <section id="prefab-excludes">
             <h2>Excludes</h2>
             <p>
-              <label
-                ><input
+              <label><input
                   type="checkbox"
                   id="prefab-excludes-test"
                   value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
                   checked
-                />Test</label
-              >
-              <label><input type="checkbox" id="prefab-excludes-tiles" value="^rwg_tile_" checked />Tiles</label>
-              <label><input type="checkbox" id="prefab-excludes-parts" value="^part_" checked />Parts</label>
+                />Test</label>
+              <label><input
+                  type="checkbox"
+                  id="prefab-excludes-tiles"
+                  value="^rwg_tile_"
+                  checked
+                />Tiles</label>
+              <label><input
+                  type="checkbox"
+                  id="prefab-excludes-parts"
+                  value="^part_"
+                  checked
+                />Parts</label>
               <label>
                 <input
                   type="checkbox"

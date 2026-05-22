@@ -27,9 +27,15 @@
   },
   "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
   "lint": {
-    "exclude": ["public"]
+    "exclude": ["./public"]
   },
   "fmt": {
-    "exclude": ["public/**/*.js"]
+    "exclude": [
+      "./public/**/old",
+      "./public/**/maps",
+      "./public/**/*.js",
+      "./public/**/*.json",
+      "./public/**/prefabs"
+    ]
   }
 }
