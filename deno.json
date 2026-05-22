@@ -9,10 +9,8 @@
     "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
     "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
     "fix": "deno fmt && deno lint --fix",
-    "lint": "deno lint && deno fmt --check",
     "test": "deno test -A --parallel",
-    "check": "deno check src/index.ts src/prefabs.ts src/logo.ts && deno check src/worker/dtm.ts src/worker/file-processor.ts src/worker/map-renderer.ts src/worker/prefabs-filter.ts",
-    "ci": "deno task lint && deno task check && deno task test"
+    "ci": "deno lint && deno fmt --check && deno check && deno task test"
   },
   "imports": {
     "three": "npm:three@~0.182.0",
@@ -32,6 +30,6 @@
     "exclude": ["public"]
   },
   "fmt": {
-    "exclude": ["public"]
+    "exclude": ["public/**/*.js"]
   }
 }
