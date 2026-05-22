@@ -27,7 +27,7 @@
     "@std/testing": "jsr:@std/testing@^1.0.9",
     "jsdom": "npm:jsdom@^26.0.0"
   },
-  "workspace": ["./src/worker"],
+  "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
   "lint": {
     "rules": {
       "tags": ["recommended"]
@@ -36,13 +36,5 @@
   },
   "fmt": {
     "exclude": ["public"]
-  },
-  "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "dom.asynciterable",
-      "deno.ns"
-    ]
   }
 }
