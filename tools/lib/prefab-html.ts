@@ -32,7 +32,7 @@ function html(model: HtmlModel): string {
   <meta charset="utf-8">
   <meta name="description" content="7 Days to Die prefab information and block statistics for ${model.label} / ${model.name}">
   <title>${model.label} / ${model.name}</title>
-  <script src="main.ts" async></script>
+  <script src="main.js" async></script>
   <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
