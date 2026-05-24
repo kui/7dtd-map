@@ -6,6 +6,7 @@ import { prefabHtml } from "./lib/prefab-html.ts";
 import {
   handleMain,
   publishDir,
+  throttleAll,
   vanillaDir,
   writeJsonFile,
 } from "./lib/utils.ts";
@@ -30,13 +31,16 @@ async function remove() {
 }
 
 async function loadLabels() {
+  console.log("Load labels");
   const fileName = await vanillaDir("Data", "Config", "Localization.txt");
   const labels = await parseLabel(fileName);
-  console.log("Load %s labels", labels.size);
+  console.log("Loaded %s labels", labels.size);
   return labels;
 }
 
 async function buildHtmls(labels: Map<LabelId, Label>) {
+  console.log("Build HTML files");  
+
   const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
   const xmlFiles: string[] = [];
   for await (const entry of expandGlob(xmlGlob)) {
@@ -48,28 +52,27 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
 
   let successCount = 0;
   const index: string[] = [];
-  await Promise.all(
-    xmlFiles.map(async (xmlFileName) => {
-      try {
-        await Promise.all([
-          generateHtml(xmlFileName, labels),
-          copyJpg(xmlFileName),
-        ]);
-      } catch (e) {
-        if (isErrnoException(e) && e.code === "ENOENT") {
-          console.warn("Abort a prefab HTML: ", e.message);
-          return;
-        }
-        console.warn("Abort a prefab HTML: ", e);
+  const tasks = xmlFiles.map((xmlFileName) => async () => {
+    try {
+      await Promise.all([
+        generateHtml(xmlFileName, labels),
+        copyJpg(xmlFileName),
+      ]);
+    } catch (e) {
+      if (isErrnoException(e) && e.code === "ENOENT") {
+        console.warn("Abort a prefab HTML: ", e.message);
         return;
       }
-      if (++successCount % 50 === 0) {
-        console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
-      }
-      const prefabName = path.basename(xmlFileName, ".xml");
-      index.push(prefabName);
-    }),
-  );
+      console.warn("Abort a prefab HTML: ", e);
+      return;
+    }
+    if (++successCount % 50 === 0) {
+      console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
+    }
+    const prefabName = path.basename(xmlFileName, ".xml");
+    index.push(prefabName);
+  });
+  await throttleAll(tasks, 100);
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
 
   await writeJsonFile(path.join(BASE_DEST, "index.json"), index.toSorted());

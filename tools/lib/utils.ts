@@ -79,3 +79,25 @@ export function buildArrayMapByEntries<K, V>(
   }
   return map;
 }
+
+/**
+ * Run async tasks with a limit on the number of concurrently running tasks.
+ */
+export async function throttleAll<T>(
+  tasks: (() => Promise<T>)[],
+  maxConcurrency: number,
+): Promise<T[]> {
+  const results: T[] = new Array(tasks.length);
+  let index = 0;
+
+  async function worker(): Promise<void> {
+    while (true) {
+      const currentIndex = index++;
+      if (currentIndex >= tasks.length) break;
+      results[currentIndex] = await tasks[currentIndex]();
+    }
+  }
+
+  await Promise.all(Array.from({ length: maxConcurrency }, () => worker()));
+  return results;
+}

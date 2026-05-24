@@ -4,6 +4,7 @@ import { parsePrefabXml, PrefabProperty } from "./lib/prefab-xml-parser.ts";
 import {
   handleMain,
   publishDir,
+  throttleAll,
   vanillaDir,
   writeJsonFile,
 } from "./lib/utils.ts";
@@ -20,6 +21,7 @@ async function main() {
   ) {
     prefabXmlFiles.push(entry.path);
   }
+  console.log("Found %d prefab xml files", prefabXmlFiles.length);
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   await writeJsonFile(
@@ -49,7 +51,7 @@ interface PrefabXmls {
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;
-  const xmlPromises = xmlFiles.map(async (prefabXmlFile) => {
+  const xmlTasks = xmlFiles.map((prefabXmlFile) => async () => {
     const prefabName = path.basename(prefabXmlFile, ".xml");
     const props = await parsePrefabXml(prefabXmlFile);
     if (++completed % 50 === 0) {
@@ -59,7 +61,7 @@ async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   });
 
   console.log("Start to read %d xmls", xmlFiles.length);
-  return (await Promise.all(xmlPromises)).reduce(
+  return (await throttleAll(xmlTasks, 100)).reduce(
     (a, c) => Object.assign(a, c),
     {},
   );
