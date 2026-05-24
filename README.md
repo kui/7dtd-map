@@ -17,13 +17,7 @@ Map renderer for 7 Day to Die.
 2. Execute in your teminal:
 
 ```
-npm run build
-```
-
-3. Copy all bundle worlds:
-
-```
-npx tsx ./tools/copy-map-files.ts
+deno task build
 ```
 
 ### Build: Font subset
@@ -44,13 +38,13 @@ Or use docker wrapper:
 ## Code lint
 
 ```
-npm run lint
+deno task fix
 ```
 
 ## Serve pages for development
 
 ```
-npm run serve
+deno task serve
 ```
 
 Note: You need to use HTTPS for development or access it using "localhost"

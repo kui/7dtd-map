@@ -2,7 +2,12 @@
   "tasks": {
     "serve": "deno run -A tools/build.ts serve",
     "build": {
-      "dependencies": ["build:ts", "build:json", "build:prefab-html"]
+      "dependencies": [
+        "build:ts",
+        "build:json",
+        "build:prefab-html",
+        "build:copy-map-files"
+      ]
     },
     "build:ts": "deno run -A tools/build.ts",
     "build:json": {
@@ -16,6 +21,7 @@
     "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
     "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
     "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
+    "build:copy-map-files": "deno run -A tools/copy-map-files.ts",
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
     "ci": {
