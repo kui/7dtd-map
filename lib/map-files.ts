@@ -281,12 +281,15 @@ class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
               .catch((e: unknown) => {
                 reject(e);
               });
+          }).on("error", (e) => {
+            reject(e);
           });
         },
         transform(chunk) {
           png.write(chunk);
         },
         flush() {
+          png.end();
           return flushPromise;
         },
       },
@@ -314,7 +317,7 @@ function packPng(
   return new Promise((resolve, reject) => {
     png.pack()
       .on("data", (chunk: Uint8Array) => controller.enqueue(chunk))
-      .on("finish", resolve)
+      .on("end", resolve)
       .on("error", reject);
   });
 }

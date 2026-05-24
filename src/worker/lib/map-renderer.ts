@@ -234,7 +234,9 @@ class BitmapHolder extends CacheHolder<ImageBitmap | null> {
           const extra = file
             ? `(size: ${file.size} bytes, type: ${file.type})`
             : "(file not found)";
-          throw new Error(`Failed to decode image: ${fileName} ${extra}`, { cause: e });
+          throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
+            cause: e,
+          });
         } finally {
           console.timeEnd(`Loading image ${fileName}`);
         }
