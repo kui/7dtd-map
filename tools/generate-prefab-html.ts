@@ -21,7 +21,7 @@ async function main() {
 
 async function remove() {
   const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  await Promise.all((await glob(globPath)).map(fs.unlink));
+  await Promise.all((await glob(globPath)).map((f) => fs.unlink(f)));
   console.log("Remove %s", globPath);
 }
 
