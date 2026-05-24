@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import { expandGlob } from "@std/fs/expand-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
@@ -21,7 +21,11 @@ async function main() {
 
 async function remove() {
   const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  await Promise.all((await glob(globPath)).map((f) => fs.unlink(f)));
+  const files: string[] = [];
+  for await (const entry of expandGlob(globPath)) {
+    files.push(entry.path);
+  }
+  await Promise.all(files.map((f) => fs.unlink(f)));
   console.log("Remove %s", globPath);
 }
 
@@ -34,7 +38,10 @@ async function loadLabels() {
 
 async function buildHtmls(labels: Map<LabelId, Label>) {
   const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmlFiles = await glob(xmlGlob);
+  const xmlFiles: string[] = [];
+  for await (const entry of expandGlob(xmlGlob)) {
+    xmlFiles.push(entry.path);
+  }
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${xmlGlob}`);
   }

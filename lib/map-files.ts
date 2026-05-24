@@ -300,42 +300,18 @@ async function packPng(
   copyAndEdit: (src: Uint8Array, dst: Uint8Array | Uint8ClampedArray) => void,
   controller: TransformStreamDefaultController<Uint8Array>,
 ): Promise<void> {
-  // OffscreenCanvas packs PNGs faster, but it only exists in browser/worker,
-  // not in Deno. Since this module must run in all of those environments, we
-  // can't depend on the `webworker` lib's ambient `OffscreenCanvas` type: that
-  // would leak conflicting globals into the dom/deno consumers that import this
-  // file. So we reach it through `globalThis` and declare only the minimal
-  // shape we use, falling back to pngjs where it's unavailable.
-  type MinimalImageData = { data: Uint8ClampedArray<ArrayBuffer> };
-  type OffscreenCanvasCtor = new (width: number, height: number) => {
-    getContext(contextId: "2d"): {
-      createImageData(sw: number, sh: number): MinimalImageData;
-      putImageData(imagedata: MinimalImageData, dx: number, dy: number): void;
-    } | null;
-    convertToBlob(options?: { type?: string; quality?: number }): Promise<Blob>;
-  };
-  const OffscreenCanvasCtor = (globalThis as Record<string, unknown>)
-    .OffscreenCanvas as OffscreenCanvasCtor | undefined;
-  if (OffscreenCanvasCtor) {
-    const canvas = new OffscreenCanvasCtor(png.width, png.height);
-    const ctx = canvas.getContext("2d")!;
-    const imageData = ctx.createImageData(png.width, png.height);
-    copyAndEdit(png.data, imageData.data);
-    ctx.putImageData(imageData, 0, 0);
-    const blob = await canvas.convertToBlob({ type: "image/png" });
-    for await (const chunk of blob.stream()) controller.enqueue(chunk);
-  } else {
-    copyAndEdit(png.data, png.data);
-    return new Promise((resolve, reject) => {
-      png
-        .pack()
-        .on("data", (chunk: Uint8Array) => {
-          controller.enqueue(chunk);
-        })
-        .on("error", reject)
-        .on("end", resolve);
-    });
-  }
+  const clamped = new Uint8ClampedArray(
+    png.data.buffer.slice(0) as ArrayBuffer,
+  );
+  copyAndEdit(png.data, clamped);
+  const imageData = new ImageData(clamped, png.width, png.height);
+  const bitmap = await createImageBitmap(imageData);
+  const canvas = new OffscreenCanvas(png.width, png.height);
+  const ctx = canvas.getContext("bitmaprenderer");
+  if (!ctx) throw new Error("Failed to get bitmaprenderer context");
+  ctx.transferFromImageBitmap(bitmap);
+  const blob = await canvas.convertToBlob({ type: "image/png" });
+  for await (const chunk of blob.stream()) controller.enqueue(chunk);
 }
 
 /**

@@ -25,11 +25,12 @@ async function main() {
 function statPixels(pngFile: string): Promise<Map<string, number>> {
   return new Promise((resolve, reject) => {
     const pixelStat = new Map<string, number>();
+    const png = new PNG();
     createReadStream(pngFile)
-      .pipe(new PNG())
-      .on("parsed", function () {
-        for (let i = 0; i < this.data.length; i += 4) {
-          const pixels = Array.from(this.data.subarray(i, i + 4))
+      .pipe(png)
+      .on("parsed", () => {
+        for (let i = 0; i < png.data.length; i += 4) {
+          const pixels = [...png.data.subarray(i, i + 4)]
             .map((n) => n.toString().padStart(3))
             .join(",");
           const pixelCount = pixelStat.get(pixels) ?? 0;

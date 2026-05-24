@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import { expandGlob } from "@std/fs/expand-glob";
 import * as path from "node:path";
 import { parsePrefabXml, PrefabProperty } from "./lib/prefab-xml-parser.ts";
 import {
@@ -12,9 +12,14 @@ const DOCS_DIR = publishDir();
 const FILE = "prefab-difficulties.json";
 
 async function main() {
-  const prefabXmlFiles = await glob(
-    await vanillaDir("Data", "Prefabs", "*", "*.xml"),
-  );
+  const prefabXmlFiles: string[] = [];
+  for await (
+    const entry of expandGlob(
+      await vanillaDir("Data", "Prefabs", "*", "*.xml"),
+    )
+  ) {
+    prefabXmlFiles.push(entry.path);
+  }
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   await writeJsonFile(

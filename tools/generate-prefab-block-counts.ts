@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import { expandGlob } from "@std/fs/expand-glob";
 import * as path from "node:path";
 import { parseNim } from "./lib/nim-parser.ts";
 import { parseTts } from "./lib/tts-parser.ts";
@@ -20,9 +20,14 @@ interface PrefabBlockCounts {
 }
 
 async function main() {
-  const nimFiles = await glob(
-    await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"),
-  );
+  const nimFiles: string[] = [];
+  for await (
+    const entry of expandGlob(
+      await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"),
+    )
+  ) {
+    nimFiles.push(entry.path);
+  }
   const prefabBlockCount = await readCounts(nimFiles);
   await writeJsonFile(path.join(DOCS_DIR, FILE), prefabBlockCount);
   return 0;
