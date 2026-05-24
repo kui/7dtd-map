@@ -28,7 +28,9 @@ const commonOpts: esbuild.BuildOptions = {
   entryPoints: targets,
 };
 
-const _serveOpts: esbuild.BuildOptions = {};
+const serveOpts: esbuild.BuildOptions = {
+  sourcemap: "inline",
+};
 
 const prodOpts: esbuild.BuildOptions = {
   minify: true,
@@ -39,6 +41,7 @@ const args = Deno.args;
 if (args[0] === "serve") {
   const ctx = await esbuild.context({
     ...commonOpts,
+    ...serveOpts,
   });
 
   await ctx.watch();
