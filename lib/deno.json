@@ -3,9 +3,7 @@
     "lib": [
       "esnext",
       "webworker",
-      "webworker.asynciterable",
-      "deno.ns",
-      "deno.window"
+      "deno.ns"
     ]
   }
 }

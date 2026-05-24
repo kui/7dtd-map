@@ -39,7 +39,7 @@ async function loadLabels() {
 }
 
 async function buildHtmls(labels: Map<LabelId, Label>) {
-  console.log("Build HTML files");  
+  console.log("Build HTML files");
 
   const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
   const xmlFiles: string[] = [];

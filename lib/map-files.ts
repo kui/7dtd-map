@@ -269,9 +269,9 @@ class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
     copyAndEdit: (src: Uint8Array, dst: Uint8ClampedArray | Uint8Array) => void,
   ) {
     const png = new PNG({ deflateLevel: 9, deflateStrategy: 0 });
-    const { promise: flushPromise, resolve, reject }: PromiseWithResolvers<
+    const { promise: flushPromise, resolve, reject } = Promise.withResolvers<
       void
-    > = Promise.withResolvers();
+    >();
     super(
       {
         start(controller) {
@@ -295,23 +295,28 @@ class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
   }
 }
 
-async function packPng(
+/**
+ * Packs a PNG image into a stream of chunks.
+ *
+ * Avoid OffscreenCanvas to deserialize the image data. OffscreenCanvas.convertToBlob()
+ * generates a large PNG file because it does not support quality of PNG compression.
+ *
+ * @param png The PNG image to pack.
+ * @param copyAndEdit A function to edit the image data before packing.
+ * @param controller The controller for the transform stream.
+ */
+function packPng(
   png: pngjs.PNG,
   copyAndEdit: (src: Uint8Array, dst: Uint8Array | Uint8ClampedArray) => void,
   controller: TransformStreamDefaultController<Uint8Array>,
 ): Promise<void> {
-  const clamped = new Uint8ClampedArray(
-    png.data.buffer.slice(0) as ArrayBuffer,
-  );
-  copyAndEdit(png.data, clamped);
-  const imageData = new ImageData(clamped, png.width, png.height);
-  const bitmap = await createImageBitmap(imageData);
-  const canvas = new OffscreenCanvas(png.width, png.height);
-  const ctx = canvas.getContext("bitmaprenderer");
-  if (!ctx) throw new Error("Failed to get bitmaprenderer context");
-  ctx.transferFromImageBitmap(bitmap);
-  const blob = await canvas.convertToBlob({ type: "image/png" });
-  for await (const chunk of blob.stream()) controller.enqueue(chunk);
+  copyAndEdit(png.data, png.data);
+  return new Promise((resolve, reject) => {
+    png.pack()
+      .on("data", (chunk: Uint8Array) => controller.enqueue(chunk))
+      .on("finish", resolve)
+      .on("error", reject);
+  });
 }
 
 /**
