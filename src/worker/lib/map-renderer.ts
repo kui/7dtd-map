@@ -223,13 +223,20 @@ class BitmapHolder extends CacheHolder<ImageBitmap | null> {
   constructor(readonly fileName: mapFiles.MapFileName) {
     super(
       async () => {
-        console.log("Loading image", fileName);
+        console.time(`Loading image ${fileName}`);
         const workspace = await storage.workspaceDir();
         const file = await workspace.get(fileName);
         try {
-          return file ? await createImageBitmap(file) : null;
-        } finally {
+          const result = file ? await createImageBitmap(file) : null;
           console.log("Loaded image", fileName);
+          return result;
+        } catch (e) {
+          const extra = file
+            ? `(size: ${file.size} bytes, type: ${file.type})`
+            : "(file not found)";
+          throw new Error(`Failed to decode image: ${fileName} ${extra}`, { cause: e });
+        } finally {
+          console.timeEnd(`Loading image ${fileName}`);
         }
       },
       (img) => img?.close(),
