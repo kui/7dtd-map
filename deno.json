@@ -15,14 +15,7 @@
     "build:json:prefab-props": "deno run -A tools/generate-prefab-properties-jsons.ts",
     "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
     "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
-    "build:prefab-html": {
-      "command": "deno run -A tools/generate-prefab-html.ts",
-      "dependencies": [
-        "build:json:prefab-props",
-        "build:json:labels",
-        "build:json:block-counts"
-      ]
-    },
+    "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
     "ci": {
