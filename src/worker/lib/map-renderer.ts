@@ -7,7 +7,6 @@ import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
-import { CacheHolder } from "../../lib/cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
@@ -33,10 +32,10 @@ export default class MapRenderer {
   canvas: OffscreenCanvas;
   #mapSize = gameMapSize({ width: 0, height: 0 });
 
-  #biomesImage = new ScaledImageHolder("biomes.png");
-  #splat3Image = new ScaledImageHolder("splat3.png");
-  #splat4Image = new ScaledImageHolder("splat4.png");
-  #radImage = new ScaledImageHolder("radiation.png");
+  #biomesImage = new MapLayerImage("biomes.png");
+  #splat3Image = new MapLayerImage("splat3.png");
+  #splat4Image = new MapLayerImage("splat4.png");
+  #radImage = new MapLayerImage("radiation.png");
   #imageFiles = [
     this.#biomesImage,
     this.#splat3Image,
@@ -159,37 +158,43 @@ export default class MapRenderer {
       return this.#composite;
     }
 
-    const [biomes, splat3, splat4, rad] = await Promise.all([
-      this.#biomesImage.get(width, height),
-      this.#splat3Image.get(width, height),
-      this.#splat4Image.get(width, height),
-      this.#radImage.get(width, height),
-    ]);
-
     const canvas = this.#composite ?? new OffscreenCanvas(width, height);
     canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
-    context.clearRect(0, 0, width, height);
-    context.filter = `brightness(${this.brightness})`;
 
-    if (biomes && this.biomesAlpha !== 0) {
-      context.globalAlpha = this.biomesAlpha;
-      context.drawImage(biomes, 0, 0);
-    }
-    if (splat3 && this.splat3Alpha !== 0) {
-      context.globalAlpha = this.splat3Alpha;
-      context.drawImage(splat3, 0, 0);
-    }
-    if (splat4 && this.splat4Alpha !== 0) {
-      context.globalAlpha = this.splat4Alpha;
-      context.drawImage(splat4, 0, 0);
-    }
-    context.filter = "none";
-    if (rad && this.radAlpha !== 0) {
-      context.globalAlpha = this.radAlpha;
-      context.drawImage(rad, 0, 0);
+    const [biomes, splat3, splat4, rad] = await Promise.all([
+      this.#biomesImage.decode(width, height),
+      this.#splat3Image.decode(width, height),
+      this.#splat4Image.decode(width, height),
+      this.#radImage.decode(width, height),
+    ]);
+
+    try {
+      context.clearRect(0, 0, width, height);
+      context.filter = `brightness(${this.brightness})`;
+
+      if (biomes && this.biomesAlpha !== 0) {
+        context.globalAlpha = this.biomesAlpha;
+        context.drawImage(biomes, 0, 0);
+      }
+      if (splat3 && this.splat3Alpha !== 0) {
+        context.globalAlpha = this.splat3Alpha;
+        context.drawImage(splat3, 0, 0);
+      }
+      if (splat4 && this.splat4Alpha !== 0) {
+        context.globalAlpha = this.splat4Alpha;
+        context.drawImage(splat4, 0, 0);
+      }
+      context.filter = "none";
+      if (rad && this.radAlpha !== 0) {
+        context.globalAlpha = this.radAlpha;
+        context.drawImage(rad, 0, 0);
+      }
+    } finally {
+      // Only the composite is cached; release the per-layer bitmaps.
+      for (const bitmap of [biomes, splat3, splat4, rad]) bitmap?.close();
     }
 
     this.#composite = canvas;
@@ -286,28 +291,20 @@ function putText(
 }
 
 /**
- * Holds a source map image, decoding it lazily at the requested display
- * resolution rather than at full resolution. The decoded bitmap is cached
- * (with TTL) and re-decoded only when the requested size changes or the
- * source image is invalidated, keeping memory proportional to the displayed
- * size instead of the native image size.
+ * Accesses a source map image, decoding it at the requested display resolution
+ * rather than at full resolution. The decoded bitmap is NOT retained: the
+ * caller owns the returned bitmap and must close() it. Only the native
+ * dimensions (read cheaply from the PNG header) are memoized. This keeps just
+ * the single composited surface in memory, at the cost of re-decoding the
+ * layers whenever the composite is rebuilt.
  */
-class ScaledImageHolder {
-  #targetWidth = 0;
-  #targetHeight = 0;
+class MapLayerImage {
   #nativeSize: { width: number; height: number } | null = null;
-  #holder: CacheHolder<ImageBitmap | null>;
 
-  constructor(readonly fileName: mapFiles.MapFileName) {
-    this.#holder = new CacheHolder<ImageBitmap | null>(
-      () => this.#decode(),
-      (img) => img?.close(),
-    );
-  }
+  constructor(readonly fileName: mapFiles.MapFileName) {}
 
   invalidate() {
     this.#nativeSize = null;
-    this.#holder.invalidate();
   }
 
   async nativeSize(): Promise<{ width: number; height: number } | null> {
@@ -318,28 +315,12 @@ class ScaledImageHolder {
     return this.#nativeSize;
   }
 
-  get(width: number, height: number): Promise<ImageBitmap | null> {
-    if (width !== this.#targetWidth || height !== this.#targetHeight) {
-      this.#targetWidth = width;
-      this.#targetHeight = height;
-      this.#holder.invalidate();
-    }
-    return this.#holder.get();
-  }
-
-  async #getFile(): Promise<File | null> {
-    const workspace = await storage.workspaceDir();
-    return workspace.get(this.fileName);
-  }
-
-  async #decode(): Promise<ImageBitmap | null> {
-    const width = this.#targetWidth;
-    const height = this.#targetHeight;
+  async decode(width: number, height: number): Promise<ImageBitmap | null> {
     if (width <= 0 || height <= 0) return null;
-    console.time(`Loading image ${this.fileName}`);
     const file = await this.#getFile();
+    if (!file) return null;
+    console.time(`Loading image ${this.fileName}`);
     try {
-      if (!file) return null;
       const result = await createImageBitmap(file, {
         resizeWidth: width,
         resizeHeight: height,
@@ -348,15 +329,18 @@ class ScaledImageHolder {
       console.log("Loaded image", this.fileName, width, height);
       return result;
     } catch (e) {
-      const extra = file
-        ? `(size: ${file.size} bytes, type: ${file.type})`
-        : "(file not found)";
+      const extra = `(size: ${file.size} bytes, type: ${file.type})`;
       throw new Error(`Failed to decode image: ${this.fileName} ${extra}`, {
         cause: e,
       });
     } finally {
       console.timeEnd(`Loading image ${this.fileName}`);
     }
+  }
+
+  async #getFile(): Promise<File | null> {
+    const workspace = await storage.workspaceDir();
+    return workspace.get(this.fileName);
   }
 }
 
