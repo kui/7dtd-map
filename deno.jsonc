@@ -56,7 +56,8 @@
         "no-non-null-asserted-optional-chain",
         "eqeqeq",
         "camelcase",
-        "default-param-last"
+        "default-param-last",
+        "no-eval"
       ]
     }
   },
