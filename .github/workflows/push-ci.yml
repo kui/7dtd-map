@@ -11,4 +11,5 @@ jobs:
         with:
           deno-version: v2.x
       - run: echo '{}' > local.json
+      - run: deno ci
       - run: deno task ci
