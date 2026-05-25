@@ -29,7 +29,7 @@ export function requireNonnull<T>(
   a: T | null | undefined,
   message = () => "Unexpected error",
 ): T {
-  if (a == null) throw Error(message());
+  if (a === null || a === undefined) throw Error(message());
   return a;
 }
 

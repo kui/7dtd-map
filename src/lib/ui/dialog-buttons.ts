@@ -22,7 +22,7 @@ export function init() {
   ) {
     button.addEventListener("click", () => {
       const dialogId = button.dataset["closeDialogFor"];
-      if (dialogId == null) return;
+      if (dialogId === null || dialogId === undefined) return;
       const dialog = dialogId === ""
         ? button.closest("dialog")
         : document.getElementById(dialogId);

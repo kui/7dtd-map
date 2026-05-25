@@ -53,7 +53,8 @@
     "rules": {
       "include": [
         "no-non-null-assertion",
-        "no-non-null-asserted-optional-chain"
+        "no-non-null-asserted-optional-chain",
+        "eqeqeq"
       ]
     }
   },

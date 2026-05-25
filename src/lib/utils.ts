@@ -11,7 +11,7 @@ export function requireNonnull<T>(
   t: T | undefined | null,
   errorMessage = () => `Unexpected state: ${String(t)}`,
 ): T {
-  if (t == null) throw Error(errorMessage());
+  if (t === null || t === undefined) throw Error(errorMessage());
   return t;
 }
 
