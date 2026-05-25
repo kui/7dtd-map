@@ -57,7 +57,8 @@
         "eqeqeq",
         "camelcase",
         "default-param-last",
-        "no-eval"
+        "no-eval",
+        "no-self-compare"
       ]
     }
   },
