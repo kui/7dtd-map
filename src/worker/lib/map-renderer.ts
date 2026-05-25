@@ -103,13 +103,17 @@ export default class MapRenderer {
 
     const canvasWidth = Math.max(1, Math.round(width * this.scale));
     const canvasHeight = Math.max(1, Math.round(height * this.scale));
-    this.canvas.width = canvasWidth;
-    this.canvas.height = canvasHeight;
 
     const context = this.canvas.getContext("2d");
     if (!context) return;
 
+    // Compose the base map (which may re-decode at the new size) before
+    // touching the visible canvas. Resizing the canvas clears it, so doing it
+    // ahead of an await would expose a blank canvas and cause a flash while
+    // scaling; instead we resize and redraw in one synchronous pass below.
     const base = await this.#composeBase(canvasWidth, canvasHeight);
+    this.canvas.width = canvasWidth;
+    this.canvas.height = canvasHeight;
     context.imageSmoothingEnabled = false;
     if (base) context.drawImage(base, 0, 0);
 
