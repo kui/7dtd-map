@@ -28,7 +28,7 @@ interface BlockXmlBlockDrop {
     count: string;
     tag?: string;
     prob?: string;
-    stick_chance?: string;
+    "stick_chance"?: string;
   };
 }
 
