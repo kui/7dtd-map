@@ -49,7 +49,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${globPath}`);
   }
-  console.log("Found %d prefab xml from %s", xmlFiles.length, globPath);  
+  console.log("Found %d prefab xml from %s", xmlFiles.length, globPath);
 
   let successCount = 0;
   const index: string[] = [];

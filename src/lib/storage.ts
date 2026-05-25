@@ -23,7 +23,9 @@ export async function* listMapDirs(): AsyncIterable<MapDir> {
   }
 }
 
-function isDirectory(entry: FileSystemHandle): entry is FileSystemDirectoryHandle {
+function isDirectory(
+  entry: FileSystemHandle,
+): entry is FileSystemDirectoryHandle {
   return entry.kind === "directory";
 }
 
