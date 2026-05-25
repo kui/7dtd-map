@@ -58,7 +58,8 @@
         "camelcase",
         "default-param-last",
         "no-eval",
-        "no-self-compare"
+        "no-self-compare",
+        "no-throw-literal"
       ]
     }
   },
