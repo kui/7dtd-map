@@ -122,11 +122,9 @@ export class PrefabFilter {
       }
 
       const highlightedName = matchAndHighlight(prefab.name, pattern);
-      const highlightedLabel = label && matchAndHighlight(label, pattern);
-      if (
-        highlightedName !== null && highlightedName !== undefined ||
-        highlightedLabel !== null && highlightedLabel !== undefined
-      ) {
+      const highlightedLabel = (label && matchAndHighlight(label, pattern)) ??
+        null;
+      if (highlightedName !== null || highlightedLabel !== null) {
         return {
           ...prefab,
           highlightedName: highlightedName ?? prefab.name,
@@ -164,10 +162,7 @@ export class PrefabFilter {
       const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ??
         "-";
       const highlightedLabel = label && matchAndHighlight(label, pattern);
-      if (
-        highlightedName === null || highlightedName === undefined ||
-        highlightedLabel === null || highlightedLabel === undefined
-      ) continue;
+      if (highlightedName === null && highlightedLabel === null) continue;
       for (const [prefabName, count] of Object.entries(prefabs)) {
         if (!prefabNames.has(prefabName)) continue;
         matchedPrefabNames[prefabName] = (matchedPrefabNames[prefabName] ?? [])
