@@ -31,10 +31,16 @@ export class UrlState {
     }
   }
 
-  static create(location: Location, elements: ArrayLike<HTMLInputElement>): UrlState {
+  static create(
+    location: Location,
+    elements: ArrayLike<HTMLInputElement>,
+  ): UrlState {
     return new UrlState(
       new URL(location.href),
-      Array.from(elements).map((e) => ({ defaultValue: getValue(e), element: e })),
+      Array.from(elements).map((e) => ({
+        defaultValue: getValue(e),
+        element: e,
+      })),
     );
   }
 

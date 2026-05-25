@@ -1,0 +1,7 @@
+[
+  {
+    "label": "deno test",
+    "command": "deno test -A '$ZED_FILE'",
+    "tags": ["js-test"]
+  }
+]

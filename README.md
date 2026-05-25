@@ -17,18 +17,13 @@ Map renderer for 7 Day to Die.
 2. Execute in your teminal:
 
 ```
-npm run build
-```
-
-3. Copy all bundle worlds:
-
-```
-npx tsx ./tools/copy-map-files.ts
+deno task build
 ```
 
 ### Build: Font subset
 
-To build ".subset.woff2", you need to require fonttools or docker. If you already have fonttools, run:
+To build ".subset.woff2", you need to require fonttools or docker. If you
+already have fonttools, run:
 
 ```
 ./tools/fonts/subset.sh
@@ -43,15 +38,17 @@ Or use docker wrapper:
 ## Code lint
 
 ```
-npm run lint
+deno task fix
 ```
 
 ## Serve pages for development
 
 ```
-npm run serve
+deno task serve
 ```
 
-Note: You need to use HTTPS for development or access it using "localhost" because 7dtd-map uses `navigator.storage` which requires "[Secure Contexts][]".
+Note: You need to use HTTPS for development or access it using "localhost"
+because 7dtd-map uses `navigator.storage` which requires
+"[Secure Contexts][Secure Contexts]".
 
 [Secure Contexts]: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts

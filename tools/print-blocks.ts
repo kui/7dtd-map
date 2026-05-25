@@ -1,5 +1,6 @@
-import { parseNim } from "./lib/nim-parser.js";
-import { handleMain, program } from "./lib/utils.js";
+import process from "node:process";
+import { parseNim } from "./lib/nim-parser.ts";
+import { handleMain, program } from "./lib/utils.ts";
 
 const usage = `${program()} <nim file>`;
 

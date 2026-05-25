@@ -1,4 +1,4 @@
-import { parseXml } from "./xml-parser.js";
+import { parseXml } from "./xml-parser.ts";
 
 export interface LootTable {
   items: string[];
@@ -20,9 +20,13 @@ export class Loot {
     this.lootXmlReading = parseXml<LootXml>(lootXmlFileName);
   }
 
-  async findLootContainer(pattern: RegExp | null = null): Promise<LootContainer[]> {
+  async findLootContainer(
+    pattern: RegExp | null = null,
+  ): Promise<LootContainer[]> {
     const lootXml = await this.lootXmlReading;
-    const groups = lootXml.lootcontainers.lootgroup.reduce<Map<string, LootXmlItem[]>>((map, g) => {
+    const groups = lootXml.lootcontainers.lootgroup.reduce<
+      Map<string, LootXmlItem[]>
+    >((map, g) => {
       if (g.item) map.set(g.$.name, g.item);
       return map;
     }, new Map());
@@ -38,7 +42,11 @@ export class Loot {
   }
 }
 
-function matchLootTable(pattern: RegExp | null, items: LootXmlItem[], groups: Map<string, LootXmlItem[]>): LootTable | null {
+function matchLootTable(
+  pattern: RegExp | null,
+  items: LootXmlItem[],
+  groups: Map<string, LootXmlItem[]>,
+): LootTable | null {
   const matchedItems: string[] = [];
   const matchedGroups: LootGroup[] = [];
 

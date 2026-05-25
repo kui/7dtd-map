@@ -1,7 +1,8 @@
-import * as path from "path";
-import { prefabHtml } from "./lib/prefab-html.js";
-import { parseLabel } from "./lib/label-parser.js";
-import { handleMain, program, vanillaDir } from "./lib/utils.js";
+import process from "node:process";
+import * as path from "node:path";
+import { prefabHtml } from "./lib/prefab-html.ts";
+import { parseLabel } from "./lib/label-parser.ts";
+import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const usage = `${program()} <Prefab XML>`;
 

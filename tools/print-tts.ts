@@ -1,5 +1,6 @@
-import { parseTts } from "./lib/tts-parser.js";
-import { handleMain, program } from "./lib/utils.js";
+import process from "node:process";
+import { parseTts } from "./lib/tts-parser.ts";
+import { handleMain, program } from "./lib/utils.ts";
 
 const usage = `${program()} <tts file>`;
 
@@ -23,7 +24,9 @@ async function main() {
       const row = [];
       for (let x = 0; x < tts.maxx; x += 1) {
         const blockId = tts.getBlockId(x, y, z);
-        if (blockId === undefined) throw Error(`Block ID not found: ${JSON.stringify({ x, y, z })}`);
+        if (blockId === undefined) {
+          throw Error(`Block ID not found: ${JSON.stringify({ x, y, z })}`);
+        }
         row.push(blockId.toString().padStart(5, "0"));
       }
       console.log(row.toString());

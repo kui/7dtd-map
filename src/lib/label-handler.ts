@@ -1,5 +1,5 @@
-import { LANGUAGES, LabelHolder, Language, resolveLanguage } from "./labels";
-import * as events from "./events";
+import { LabelHolder, Language, LANGUAGES, resolveLanguage } from "./labels.ts";
+import * as events from "./events.ts";
 
 interface Doms {
   language: HTMLSelectElement;
@@ -14,7 +14,11 @@ export class LabelHandler {
   #listener = new events.ListenerManager<"update", EventMessage>();
   #holder: LabelHolder;
 
-  constructor(doms: Doms, labelsBaseUrl: string, navigatorLanguages: readonly string[]) {
+  constructor(
+    doms: Doms,
+    labelsBaseUrl: string,
+    navigatorLanguages: readonly string[],
+  ) {
     this.#doms = doms;
     this.#holder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
     this.#buildSelectOptions(navigatorLanguages);
@@ -28,7 +32,9 @@ export class LabelHandler {
   }
 
   #buildSelectOptions(navigatorLanguages: readonly string[]) {
-    const existingLangs = new Set(Array.from(this.#doms.language.options).map((o) => o.value));
+    const existingLangs = new Set(
+      Array.from(this.#doms.language.options).map((o) => o.value),
+    );
     for (const lang of LANGUAGES) {
       if (existingLangs.has(lang)) continue;
       const option = document.createElement("option");
@@ -36,10 +42,13 @@ export class LabelHandler {
       this.#doms.language.appendChild(option);
     }
 
-    const browserLang = localStorage.getItem("language") ?? resolveLanguage(navigatorLanguages);
+    const browserLang = localStorage.getItem("language") ??
+      resolveLanguage(navigatorLanguages);
     if (this.#doms.language.value !== browserLang) {
       this.#doms.language.value = browserLang;
-      requestAnimationFrame(() => this.#doms.language.dispatchEvent(new Event("change")));
+      requestAnimationFrame(() =>
+        this.#doms.language.dispatchEvent(new Event("change"))
+      );
     }
   }
 

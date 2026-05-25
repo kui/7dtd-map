@@ -1,8 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-  width="256"
-  height="256">
-  <style>
-    @font-face {
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256">
+  <style>@font-face {
       font-family: 'Noto Sans Symbols 2 Subset';
       /*
         Workaround that img element does not load external font files
@@ -13,8 +10,21 @@
     }
     text {
       font-family: 'Noto Sans Symbols 2 Subset';
-    }
-  </style>
-  <text x="52" y="180" font-size="220" fill="black" stroke="black" stroke-width="26.4px">✘</text>
-  <text x="52" y="180" font-size="220" fill="red" stroke="white" stroke-width="8.8px">✘</text>
+    }</style>
+  <text
+    x="52"
+    y="180"
+    font-size="220"
+    fill="black"
+    stroke="black"
+    stroke-width="26.4px"
+  >✘</text>
+  <text
+    x="52"
+    y="180"
+    font-size="220"
+    fill="red"
+    stroke="white"
+    stroke-width="8.8px"
+  >✘</text>
 </svg>

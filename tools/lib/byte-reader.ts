@@ -1,14 +1,11 @@
+import { Buffer } from "node:buffer";
 export class ByteReader {
   iter: AsyncIterator<number>;
 
   constructor(stream: AsyncIterable<Buffer>) {
     // TODO Use filehandle.read(buffer) instead of async iterator for better performance.
     this.iter = (async function* () {
-      for await (const c of stream) {
-        for (const b of c) {
-          yield b;
-        }
-      }
+      for await (const c of stream) yield* c;
     })();
   }
 

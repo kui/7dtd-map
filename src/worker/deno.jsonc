@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "webworker",
+      "webworker.iterable",
+      "webworker.asynciterable",
+      "esnext"
+    ]
+  }
+}

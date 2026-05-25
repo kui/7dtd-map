@@ -1,30 +1,36 @@
-import type * as prefabsFilter from "./worker/prefabs-filter";
+import type {
+  PrefabsFilterInputMessage,
+  PrefabsFilterOutputMessage,
+} from "./worker/types.ts";
+import type {
+  HighlightedBlock,
+  HighlightedPrefab,
+  Prefab,
+  PrefabBlockCounts,
+  PrefabDifficulties,
+} from "./types/7dtdmap.ts";
 
-import { DelayedRenderer } from "./lib/delayed-renderer";
-import * as events from "./lib/events";
-import { LabelHandler } from "./lib/label-handler";
-import * as minMaxInputs from "./lib/ui/min-max-inputs";
-import * as presetButton from "./lib/ui/preset-button";
-import * as syncOutput from "./lib/ui/sync-output";
-import { UrlState } from "./lib/url-state";
-import { component, fetchJson, printError } from "./lib/utils";
-
-interface HighlightedPrefab {
-  name: string;
-  difficulty?: number;
-  highlightedName?: string;
-  highlightedLabel?: string;
-  matchedBlocks?: HighlightedBlock[];
-}
+import { DelayedRenderer } from "./lib/delayed-renderer.ts";
+import * as events from "./lib/events.ts";
+import { LabelHandler } from "./lib/label-handler.ts";
+import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
+import * as presetButton from "./lib/ui/preset-button.ts";
+import * as syncOutput from "./lib/ui/sync-output.ts";
+import { UrlState } from "./lib/url-state.ts";
+import { component } from "./lib/dom-utils.ts";
+import { fetchJson, printError } from "./lib/utils.ts";
 
 function main() {
   presetButton.init();
   syncOutput.init();
   minMaxInputs.init();
 
-  const urlState = UrlState.create(location, document.querySelectorAll("input"));
+  const urlState = UrlState.create(
+    location,
+    document.querySelectorAll("input"),
+  );
   urlState.addUpdateListener((url) => {
-    window.history.replaceState(null, "", url.toString());
+    globalThis.history.replaceState(null, "", url.toString());
   });
 
   const prefabsHandler = new PrefabsHandler(
@@ -33,10 +39,16 @@ function main() {
       blockFilter: component("block-filter", HTMLInputElement),
       minTier: component("min-tier", HTMLInputElement),
       maxTier: component("max-tier", HTMLInputElement),
-      excludes: Array.from(component("prefab-excludes").querySelectorAll("input[type=checkbox]")),
+      excludes: Array.from(
+        component("prefab-excludes").querySelectorAll("input[type=checkbox]"),
+      ),
     },
     new Worker("worker/prefabs-filter.js"),
-    new LabelHandler({ language: component("label-lang", HTMLSelectElement) }, "labels", navigator.languages),
+    new LabelHandler(
+      { language: component("label-lang", HTMLSelectElement) },
+      "labels",
+      navigator.languages,
+    ),
     async () => {
       const [prefabBlockCounts, difficulties] = await Promise.all([
         fetchJson<PrefabBlockCounts>("prefab-block-counts.json"),
@@ -88,16 +100,18 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     ...(prefab.difficulty
       ? [
-          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
-          `  💀${prefab.difficulty.toString()}`,
-          `</span>`,
-        ]
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
+        `  💀${prefab.difficulty.toString()}`,
+        `</span>`,
+      ]
       : []),
     `<a href="prefabs/${prefab.name}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",
     `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
-    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0 ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"] : []),
+    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
+      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
+      : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
     const blocksUl = document.createElement("ul");
@@ -122,10 +136,10 @@ function countHighlightedBlocks(blocks: HighlightedBlock[]): number {
 }
 
 declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: prefabsFilter.InMessage): void;
+  postMessage(message: PrefabsFilterInputMessage): void;
 }
 
-type PrefabsHandlerEventMessage = prefabsFilter.OutMessage;
+type PrefabsHandlerEventMessage = PrefabsFilterOutputMessage;
 
 interface PrefabsHandlerDoms {
   prefabFilter: HTMLInputElement;
@@ -140,9 +154,17 @@ class PrefabsHandler {
   #worker: PrefabsFilterWorker;
   #labelHandler: LabelHandler;
   #fetchPrefabs: () => Promise<Prefab[]>;
-  #listeners = new events.ListenerManager<"update", PrefabsHandlerEventMessage>();
+  #listeners = new events.ListenerManager<
+    "update",
+    PrefabsHandlerEventMessage
+  >();
 
-  constructor(doms: PrefabsHandlerDoms, worker: PrefabsFilterWorker, labelHandler: LabelHandler, fetchPrefabs: () => Promise<Prefab[]>) {
+  constructor(
+    doms: PrefabsHandlerDoms,
+    worker: PrefabsFilterWorker,
+    labelHandler: LabelHandler,
+    fetchPrefabs: () => Promise<Prefab[]>,
+  ) {
     this.#doms = doms;
     this.#worker = worker;
     this.#labelHandler = labelHandler;
@@ -154,7 +176,10 @@ class PrefabsHandler {
     doms.blockFilter.addEventListener("input", () => {
       worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
     });
-    const tierRange = { start: doms.minTier.valueAsNumber, end: doms.maxTier.valueAsNumber };
+    const tierRange = {
+      start: doms.minTier.valueAsNumber,
+      end: doms.maxTier.valueAsNumber,
+    };
     doms.minTier.addEventListener("input", () => {
       const newMinTier = doms.minTier.valueAsNumber;
       if (newMinTier === tierRange.start) return;
@@ -173,9 +198,12 @@ class PrefabsHandler {
       });
     });
 
-    worker.addEventListener("message", (event: MessageEvent<prefabsFilter.OutMessage>) => {
-      this.#listeners.dispatchNoAwait(event.data);
-    });
+    worker.addEventListener(
+      "message",
+      (event: MessageEvent<PrefabsFilterOutputMessage>) => {
+        this.#listeners.dispatchNoAwait(event.data);
+      },
+    );
     labelHandler.addListener(({ update: { lang } }) => {
       worker.postMessage({ language: lang });
     });
@@ -186,7 +214,10 @@ class PrefabsHandler {
   }
 
   get #tierRange(): { start: number; end: number } {
-    return { start: this.#doms.minTier.valueAsNumber, end: this.#doms.maxTier.valueAsNumber };
+    return {
+      start: this.#doms.minTier.valueAsNumber,
+      end: this.#doms.maxTier.valueAsNumber,
+    };
   }
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {

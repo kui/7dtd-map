@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import { ByteReader } from "./byte-reader.js";
+import * as fs from "node:fs";
+import { ByteReader } from "./byte-reader.ts";
 
 export type BlockId = number;
 
@@ -28,7 +28,11 @@ export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   }
   stream.close();
 
-  if (version !== 1) throw Error(`Unexpected version: filename=${nimFileName} version=${String(version)}`);
+  if (version !== 1) {
+    throw Error(
+      `Unexpected version: filename=${nimFileName} version=${String(version)}`,
+    );
+  }
 
   return blocks;
 }

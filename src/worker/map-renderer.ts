@@ -1,41 +1,25 @@
-import MapRenderer from "../lib/map-renderer";
-import { printError } from "../lib/utils";
-
-export type InMessage = Partial<
-  Pick<
-    MapRenderer,
-    | "canvas"
-    | "biomesAlpha"
-    | "splat3Alpha"
-    | "splat4Alpha"
-    | "radAlpha"
-    | "showPrefabs"
-    | "brightness"
-    | "scale"
-    | "signSize"
-    | "signAlpha"
-    | "prefabs"
-    | "markerCoords"
-    | "invalidate"
-  >
->;
-
-export interface OutMessage {
-  mapSize: GameMapSize;
-}
+import MapRenderer from "./lib/map-renderer.ts";
+import { printError } from "../lib/utils.ts";
+import type { MapRendererInputMessage } from "./types.ts";
 
 let map: MapRenderer | null = null;
 
 const fontFaces = {
-  "Noto Sans Symbols 2": new FontFace("Noto Sans Symbols 2", "url('../NotoSansSymbols2.subset.woff2') format('woff2')"),
-  "Noto Emoji Old": new FontFace("Noto Emoji Old", "url('../NotoEmojiOld.subset.woff2') format('woff2')"),
+  "Noto Sans Symbols 2": new FontFace(
+    "Noto Sans Symbols 2",
+    "url('../NotoSansSymbols2.subset.woff2') format('woff2')",
+  ),
+  "Noto Emoji Old": new FontFace(
+    "Noto Emoji Old",
+    "url('../NotoEmojiOld.subset.woff2') format('woff2')",
+  ),
   // See tools/fonts/subset.sh
   // "Noto Emoji": new FontFace("Noto Emoji", "url('../NotoEmoji.subset.woff2') format('woff2')"),
 } as const;
 Promise.all(
   Object.values(fontFaces).map(async (fontFace) => {
     await fontFace.load();
-    self.fonts.add(fontFace);
+    fonts.add(fontFace);
     if (map) {
       await map.update();
       postMessage({ mapSize: map.size() });
@@ -49,7 +33,9 @@ const mapFonts = {
   "🚩": fontFaces["Noto Emoji Old"].family,
 };
 
-onmessage = async (event: MessageEvent<InMessage>) => {
+onmessage = async (
+  event: MessageEvent<MapRendererInputMessage>,
+) => {
   const message = event.data;
   console.log("map-renderer: recieved %o", message);
   if (!map) {

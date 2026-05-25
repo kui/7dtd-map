@@ -2,8 +2,13 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as stream from "node:stream";
 import * as pngjs from "pngjs";
-import * as mapFiles from "../lib/map-files.js";
-import { handleMain, publishDir, vanillaDir, writeJsonFile } from "./lib/utils.js";
+import * as mapFiles from "../lib/map-files.ts";
+import {
+  handleMain,
+  publishDir,
+  vanillaDir,
+  writeJsonFile,
+} from "./lib/utils.ts";
 
 mapFiles.setPNG(pngjs.PNG);
 
@@ -11,7 +16,9 @@ const WORLDS_DIR = await vanillaDir("Data", "Worlds");
 const DST_DIR = publishDir("maps");
 
 async function main() {
-  const worldDirs = await fs.promises.readdir(WORLDS_DIR).then(filterValidWorldDirs);
+  const worldDirs = await fs.promises.readdir(WORLDS_DIR).then(
+    filterValidWorldDirs,
+  );
   await writeJsonFile(path.join(DST_DIR, "index.json"), worldDirs);
   // TODO Make it parallel
   for (const worldDir of worldDirs) {
@@ -38,7 +45,8 @@ async function filterValidWorldDirs(dirs: string[]): Promise<string[]> {
 }
 
 async function isValidWorldDir(dir: string) {
-  return (await fs.promises.stat(dir)).isDirectory() && (await fs.promises.readdir(dir)).includes("map_info.xml");
+  return (await fs.promises.stat(dir)).isDirectory() &&
+    (await fs.promises.readdir(dir)).includes("map_info.xml");
 }
 
 async function pruneUnkownMapFiles(dir: string) {
@@ -58,7 +66,13 @@ async function processFiles(srcDir: string, dstDir: string) {
       continue;
     }
     if (mapFiles.hasPreferWorldFileNameIn(srcFileName, srcFiles)) {
-      console.log("Skip ", srcFileName, " because ", mapFiles.getPreferWorldFileName(srcFileName), " is already in the list");
+      console.log(
+        "Skip ",
+        srcFileName,
+        " because ",
+        mapFiles.getPreferWorldFileName(srcFileName),
+        " is already in the list",
+      );
       continue;
     }
     const src = path.join(srcDir, srcFileName);
@@ -67,7 +81,9 @@ async function processFiles(srcDir: string, dstDir: string) {
     console.log(`Process ${src}`);
     console.time(`-> ${dst}`);
     await processor.process(
-      stream.Readable.toWeb(fs.createReadStream(src)) as ReadableStream<Uint8Array>,
+      stream.Readable.toWeb(fs.createReadStream(src)) as ReadableStream<
+        Uint8Array
+      >,
       stream.Writable.toWeb(fs.createWriteStream(dst)),
     );
     console.timeEnd(`-> ${dst}`);

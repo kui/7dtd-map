@@ -1,8 +1,13 @@
-import { throttledInvoker } from "./throttled-invoker";
-import { gameMapSize } from "./utils";
-import * as storage from "./storage";
-import * as mapFiles from "../../lib/map-files";
-import { CacheHolder } from "./cache-holder";
+import type {
+  GameCoords,
+  GameMapSize,
+  HighlightedPrefab,
+} from "../../types/7dtdmap.ts";
+import { throttledInvoker } from "../../lib/throttled-invoker.ts";
+import { gameMapSize } from "../../lib/utils.ts";
+import * as storage from "../../lib/storage.ts";
+import * as mapFiles from "../../../lib/map-files.ts";
+import { CacheHolder } from "../../lib/cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
@@ -32,7 +37,12 @@ export default class MapRenderer {
   #splat3Image = new BitmapHolder("splat3.png");
   #splat4Image = new BitmapHolder("splat4.png");
   #radImage = new BitmapHolder("radiation.png");
-  #imageFiles = [this.#biomesImage, this.#splat3Image, this.#splat4Image, this.#radImage] as const;
+  #imageFiles = [
+    this.#biomesImage,
+    this.#splat3Image,
+    this.#splat4Image,
+    this.#radImage,
+  ] as const;
   #fontFamilies: FontFamilies;
 
   constructor(canvas: OffscreenCanvas, fontFamilies: FontFamilies) {
@@ -40,7 +50,9 @@ export default class MapRenderer {
     this.#fontFamilies = fontFamilies;
   }
 
-  set invalidate(fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[]) {
+  set invalidate(
+    fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[],
+  ) {
     for (const fileName of fileNames) {
       switch (fileName) {
         case "biomes.png":
@@ -69,7 +81,9 @@ export default class MapRenderer {
   });
 
   async #updateImmediately(): Promise<void> {
-    const [biomes, splat3, splat4, rad] = await Promise.all(this.#imageFiles.map((i) => i.get()));
+    const [biomes, splat3, splat4, rad] = await Promise.all(
+      this.#imageFiles.map((i) => i.get()),
+    );
 
     const { width, height } = mapSize(biomes, splat3, splat4, rad);
     this.#mapSize.width = width;
@@ -119,8 +133,14 @@ export default class MapRenderer {
     }
   }
 
-  private drawPrefabs(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
-    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
+  private drawPrefabs(
+    ctx: OffscreenCanvasRenderingContext2D,
+    width: number,
+    height: number,
+  ) {
+    ctx.font = `${this.signSize.toString()}px '${
+      this.#fontFamilies[SIGN_CHAR]
+    }'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -140,10 +160,16 @@ export default class MapRenderer {
     }
   }
 
-  private drawMark(ctx: OffscreenCanvasRenderingContext2D, width: number, height: number) {
+  private drawMark(
+    ctx: OffscreenCanvasRenderingContext2D,
+    width: number,
+    height: number,
+  ) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px '${this.#fontFamilies[MARK_CHAR]}'`;
+    ctx.font = `${this.signSize.toString()}px '${
+      this.#fontFamilies[MARK_CHAR]
+    }'`;
     ctx.fillStyle = "red";
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
@@ -178,7 +204,10 @@ interface MapSign {
   size: number;
 }
 
-function putText(ctx: OffscreenCanvasRenderingContext2D, { text, x, z, size }: MapSign) {
+function putText(
+  ctx: OffscreenCanvasRenderingContext2D,
+  { text, x, z, size }: MapSign,
+) {
   ctx.lineWidth = Math.round(size * 0.2);
   ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
   ctx.strokeText(text, x, z);
@@ -194,13 +223,22 @@ class BitmapHolder extends CacheHolder<ImageBitmap | null> {
   constructor(readonly fileName: mapFiles.MapFileName) {
     super(
       async () => {
-        console.log("Loading image", fileName);
+        console.time(`Loading image ${fileName}`);
         const workspace = await storage.workspaceDir();
         const file = await workspace.get(fileName);
         try {
-          return file ? await createImageBitmap(file) : null;
-        } finally {
+          const result = file ? await createImageBitmap(file) : null;
           console.log("Loaded image", fileName);
+          return result;
+        } catch (e) {
+          const extra = file
+            ? `(size: ${file.size} bytes, type: ${file.type})`
+            : "(file not found)";
+          throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
+            cause: e,
+          });
+        } finally {
+          console.timeEnd(`Loading image ${fileName}`);
         }
       },
       (img) => img?.close(),

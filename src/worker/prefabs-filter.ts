@@ -1,16 +1,15 @@
-import { PrefabFilter, EventMessage } from "../lib/prefab-filter";
-import { printError, fetchJson } from "../lib/utils";
+import type { BlockPrefabCounts, PrefabBlockCounts } from "../types/7dtdmap.ts";
+import { PrefabFilter } from "./lib/prefab-filter.ts";
+import { fetchJson, printError } from "../lib/utils.ts";
+import type { PrefabsFilterInputMessage } from "./types.ts";
 
-export type InMessage = Partial<
-  Pick<PrefabFilter, "all" | "difficulty" | "prefabFilterRegexp" | "blockFilterRegexp" | "markCoords" | "language" | "preExcludes">
->;
-export type OutMessage = EventMessage;
-
-const prefabs = new PrefabFilter("../labels", navigator.languages, async () =>
-  invertCounts(await fetchJson("../prefab-block-counts.json")),
+const prefabs = new PrefabFilter(
+  "../labels",
+  navigator.languages,
+  async () => invertCounts(await fetchJson("../prefab-block-counts.json")),
 );
 
-onmessage = ({ data }: MessageEvent<InMessage>) => {
+onmessage = ({ data }: MessageEvent<PrefabsFilterInputMessage>) => {
   console.log("Prefab-filter received message: ", data);
   Object.assign(prefabs, data).update().catch(printError);
 };
@@ -22,8 +21,13 @@ prefabs.addListener((m) => {
 
 function invertCounts(counts: PrefabBlockCounts): BlockPrefabCounts {
   const blockPrefabCounts: BlockPrefabCounts = {};
-  for (const [prefabName, blockCounts] of Object.entries(counts))
-    for (const [blockName, count] of Object.entries(blockCounts))
-      blockPrefabCounts[blockName] = Object.assign(blockPrefabCounts[blockName] ?? {}, { [prefabName]: count });
+  for (const [prefabName, blockCounts] of Object.entries(counts)) {
+    for (const [blockName, count] of Object.entries(blockCounts)) {
+      blockPrefabCounts[blockName] = Object.assign(
+        blockPrefabCounts[blockName] ?? {},
+        { [prefabName]: count },
+      );
+    }
+  }
   return blockPrefabCounts;
 }

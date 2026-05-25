@@ -1,6 +1,7 @@
-import { LabelHandler } from "../lib/label-handler";
-import { loadPrefabsXml } from "../lib/prefabs";
-import { printError } from "../lib/utils";
+import type { PrefabDifficulties } from "../types/7dtdmap.ts";
+import { LabelHandler } from "../lib/label-handler.ts";
+import { loadPrefabsXml } from "../lib/prefabs.ts";
+import { printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
   inMap: HTMLElement;
@@ -60,19 +61,24 @@ export class PrefabInspectorHandler {
   }
 
   async inspect() {
-    const prefabNames = (await loadPrefabsXml()).flatMap(({ name }) => (isExcludedPrefabName(name) ? [] : [name]));
+    const prefabNames = (await loadPrefabsXml()).flatMap((
+      { name },
+    ) => (isExcludedPrefabName(name) ? [] : [name]));
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) => !isExcludedPrefabName(name));
+    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) =>
+      !isExcludedPrefabName(name)
+    );
 
     const difficulties = await this.#fetchDifficulties();
-    const countsPerDifficulty: { inMap: number; defined: number }[] = Array.from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
+    const countsPerDifficulty: { inMap: number; defined: number }[] = Array
+      .from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
     const totalCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
       // Should rise an error if the difficulty is not in the range of 0-5
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[difficulty]!;
       counts.defined++;
       totalCounts.defined++;
@@ -83,25 +89,37 @@ export class PrefabInspectorHandler {
     }
     for (let i = 0; i < 6; i++) {
       const countDoms = this.#doms.detailCounts[i as 0 | 1 | 2 | 3 | 4 | 5];
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[i]!;
       countDoms.inMap.textContent = counts.inMap.toString();
       countDoms.defined.textContent = counts.defined.toString();
     }
-    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap.toString();
-    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined.toString();
+    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap
+      .toString();
+    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined
+      .toString();
 
     const labels = await this.#labelHandler.holder.get("prefabs");
-    const missingPrefabNames = new Set(prefabIndex.filter((name) => !uniquePrefabNames.has(name)));
+    const missingPrefabNames = new Set(
+      prefabIndex.filter((name) => !uniquePrefabNames.has(name)),
+    );
     this.#doms.missings.innerHTML = [...missingPrefabNames]
       .map((name) => {
         const difficulty = difficulties[name] ?? 0;
         const label = labels.get(name) ?? "-";
         return { name, label, difficulty };
       })
-      .toSorted((a, b) => (a.difficulty === b.difficulty ? a.name.localeCompare(b.name) : b.difficulty - a.difficulty))
+      .toSorted((
+        a,
+        b,
+      ) => (a.difficulty === b.difficulty
+        ? a.name.localeCompare(b.name)
+        : b.difficulty - a.difficulty)
+      )
       .map(({ name, label, difficulty }) => {
-        const tierStr = difficulty === 0 ? "" : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
+        const tierStr = difficulty === 0
+          ? ""
+          : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
         return `<li>${tierStr}<a href="prefabs/${name}.html">${label} / ${name}</a></li>`;
       })
       .join("");

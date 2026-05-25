@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -17,7 +17,11 @@
     <nav>
       <ul>
         <li><a href="prefabs.html">Prefab List</a></li>
-        <li><a href="old/v1.4/">v1.4</a>, <a href="old/a21/">Alpha 21</a>, <a href="old/a20/">Alpha 20</a></li>
+        <li>
+          <a href="old/v1.4/">v1.4</a>, <a href="old/a21/">Alpha 21</a>, <a
+            href="old/a20/"
+          >Alpha 20</a>
+        </li>
         <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
         <li>
           Prefab/Block Language:
@@ -37,7 +41,15 @@
       <table>
         <tr>
           <th><label for="map_name">🗺️ Map Name</label></th>
-          <td><input id="map_name" type="text" value="" data-remember="mapName" readonly /></td>
+          <td>
+            <input
+              id="map_name"
+              type="text"
+              value=""
+              data-remember="mapName"
+              readonly
+            />
+          </td>
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
@@ -52,7 +64,13 @@
         <tr>
           <th>ℹ️ map_info.xml</th>
           <td>
-            <button id="map-info-show" disabled data-show-dialog-for="map-info-dialog">Show XML</button>
+            <button
+              id="map-info-show"
+              disabled
+              data-show-dialog-for="map-info-dialog"
+            >
+              Show XML
+            </button>
           </td>
         </tr>
         <tr>
@@ -60,57 +78,123 @@
           <td>
             <label>
               <output data-sync-for="biomes_alpha">1</output>
-              <input id="biomes_alpha" type="range" title="Alpha biomes.png" value="1" step="0.1" min="0" max="1" />
+              <input
+                id="biomes_alpha"
+                type="range"
+                title="Alpha biomes.png"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+              />
             </label>
           </td>
         </tr>
         <tr>
           <th title="Roads">
             <label for="splat3_alpha">🛣️ splat3_processed.png</label>
-            <span id="warn-splat3-png" title="Currently using splat3.png which is degrated compared to splat3_processed.png">⚠️</span>
+            <span
+              id="warn-splat3-png"
+              title="Currently using splat3.png which is degrated compared to splat3_processed.png"
+            >⚠️</span>
           </th>
           <td>
             <label>
               <output data-sync-for="splat3_alpha">1</output>
-              <input id="splat3_alpha" type="range" title="Alpha splat3" value="1" step="0.1" min="0" max="1" />
+              <input
+                id="splat3_alpha"
+                type="range"
+                title="Alpha splat3"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+              />
             </label>
           </td>
         </tr>
         <tr>
           <th title="Water">
             <label for="splat4_alpha">🌊 splat4_processed.png</label>
-            <span id="warn-splat4-png" title="Currently using splat4.png which is degrated compared to splat4_processed.png">⚠️</span>
+            <span
+              id="warn-splat4-png"
+              title="Currently using splat4.png which is degrated compared to splat4_processed.png"
+            >⚠️</span>
           </th>
           <td>
             <label>
               <output data-sync-for="splat4_alpha">0.7</output>
-              <input id="splat4_alpha" type="range" title="Alpha splat4" value="0.7" step="0.1" min="0" max="1" />
+              <input
+                id="splat4_alpha"
+                type="range"
+                title="Alpha splat4"
+                value="0.7"
+                step="0.1"
+                min="0"
+                max="1"
+              />
             </label>
           </td>
         </tr>
         <tr>
-          <th title="Radiation Area"><label for="rad_alpha">☢️ radiation.png</label></th>
+          <th title="Radiation Area">
+            <label for="rad_alpha">☢️ radiation.png</label>
+          </th>
           <td>
             <label>
               <output data-sync-for="rad_alpha">0.5</output>
-              <input id="rad_alpha" type="range" title="Alpha radiation" value="0.5" step="0.1" min="0" max="1" />
+              <input
+                id="rad_alpha"
+                type="range"
+                title="Alpha radiation"
+                value="0.5"
+                step="0.1"
+                min="0"
+                max="1"
+              />
             </label>
           </td>
         </tr>
         <tr>
           <th title="Prefabs">🏘️ prefabs.xml</th>
-          <td><button id="prefab-inspector-show" data-show-dialog-for="prefab-inspector-dialog">🔍️ Inspect prefabs</button></td>
+          <td>
+            <button
+              id="prefab-inspector-show"
+              data-show-dialog-for="prefab-inspector-dialog"
+            >
+              🔍️ Inspect prefabs
+            </button>
+          </td>
         </tr>
         <tr>
-          <th title="Terrain"><label for="terrain_viewer_show">⛰️ dtm.raw</label></th>
-          <td><button id="terrain_viewer_show" disabled title="Require dtm.raw and map_info.xml">Show terrain</button></td>
+          <th title="Terrain">
+            <label for="terrain_viewer_show">⛰️ dtm.raw</label>
+          </th>
+          <td>
+            <button
+              id="terrain_viewer_show"
+              disabled
+              title="Require dtm.raw and map_info.xml"
+            >
+              Show terrain
+            </button>
+          </td>
         </tr>
         <tr>
-          <th title="Scale of each png files"><label for="scale">🔍️ Scale</label></th>
+          <th title="Scale of each png files">
+            <label for="scale">🔍️ Scale</label>
+          </th>
           <td>
             <label>
               <output data-sync-for="scale">0.12</output>
-              <input id="scale" type="range" max="1" min="0.04" step="0.02" value="0.12" />
+              <input
+                id="scale"
+                type="range"
+                max="1"
+                min="0.04"
+                step="0.02"
+                value="0.12"
+              />
             </label>
           </td>
         </tr>
@@ -123,7 +207,14 @@
                 <td>
                   <label>
                     <output data-sync-for="sign_size">200</output>px
-                    <input id="sign_size" type="range" max="500" min="20" step="20" value="200" />
+                    <input
+                      id="sign_size"
+                      type="range"
+                      max="500"
+                      min="20"
+                      step="20"
+                      value="200"
+                    />
                   </label>
                 </td>
               </tr>
@@ -132,7 +223,14 @@
                 <td>
                   <label>
                     <output data-sync-for="sign_alpha">1</output>
-                    <input id="sign_alpha" type="range" value="1" step="0.1" min="0" max="1" />
+                    <input
+                      id="sign_alpha"
+                      type="range"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
                   </label>
                 </td>
               </tr>
@@ -144,7 +242,14 @@
           <td>
             <label>
               <output data-sync-for="brightness">60</output>%
-              <input id="brightness" type="range" max="100" min="0" step="1" value="60" />
+              <input
+                id="brightness"
+                type="range"
+                max="100"
+                min="0"
+                step="1"
+                value="60"
+              />
             </label>
           </td>
         </tr>
@@ -155,16 +260,38 @@
               <tr>
                 <th><label for="min_tier">Min:</label></th>
                 <td>
-                  <label for="min_tier"><output data-sync-for="min_tier">0</output></label>
+                  <label for="min_tier"><output data-sync-for="min_tier"
+                    >0</output></label>
                 </td>
-                <td><input id="min_tier" type="range" min="0" max="5" value="0" list="tiers" data-min="tierRange" /></td>
+                <td>
+                  <input
+                    id="min_tier"
+                    type="range"
+                    min="0"
+                    max="5"
+                    value="0"
+                    list="tiers"
+                    data-min="tierRange"
+                  />
+                </td>
               </tr>
               <tr>
                 <th><label for="max_tier">Max:</label></th>
                 <td>
-                  <label for="max_tier"><output data-sync-for="max_tier">5</output></label>
+                  <label for="max_tier"><output data-sync-for="max_tier"
+                    >5</output></label>
                 </td>
-                <td><input id="max_tier" type="range" min="0" max="5" value="5" list="tiers" data-max="tierRange" /></td>
+                <td>
+                  <input
+                    id="max_tier"
+                    type="range"
+                    min="0"
+                    max="5"
+                    value="5"
+                    list="tiers"
+                    data-max="tierRange"
+                  />
+                </td>
               </tr>
             </table>
             <datalist id="tiers">
@@ -181,18 +308,36 @@
           <th><label for="prefab_filter">🏠️ Prefab Filter</label></th>
           <td>
             <input id="prefab_filter" placeholder="Input prefab name" />
-            <button title="Clear" data-input-for="prefab_filter" data-input-text="">X</button>
+            <button
+              title="Clear"
+              data-input-for="prefab_filter"
+              data-input-text=""
+            >
+              X
+            </button>
             <details id="prefab-pre-filters">
               <summary>Excludes</summary>
               <ul>
                 <li>
-                  <label><input type="checkbox" value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)" checked />Test</label>
+                  <label><input
+                      type="checkbox"
+                      value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
+                      checked
+                    />Test</label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="^rwg_tile_" checked />Tiles</label>
+                  <label><input
+                      type="checkbox"
+                      value="^rwg_tile_"
+                      checked
+                    />Tiles</label>
                 </li>
                 <li>
-                  <label><input type="checkbox" value="^part_" checked />Parts</label>
+                  <label><input
+                      type="checkbox"
+                      value="^part_"
+                      checked
+                    />Parts</label>
                 </li>
               </ul>
             </details>
@@ -203,7 +348,9 @@
           <td>
             <button data-input-for="prefab_filter">trader</button>
             <button data-input-for="prefab_filter">skyscraper</button>
-            <button data-input-for="prefab_filter" data-input-text="^downtown_">downtown</button>
+            <button data-input-for="prefab_filter" data-input-text="^downtown_">
+              downtown
+            </button>
             <!--
               Go https://kui.github.io/7dtd-map/prefabs.html?block-filter=%5Ecnt%28LootCrateBook%7CBook%7CshelfSupply%7CStoreElectronicsBook%7CDesk%7CFileCabinet%29%28%3F%21.*Empty%29&max-tier=2
                  or http://127.0.0.1:8000/prefabs.html?block-filter=%5Ecnt%28LootCrateBook%7CBook%7CshelfSupply%7CStoreElectronicsBook%7CDesk%7CFileCabinet%29%28%3F%21.*Empty%29&max-tier=2
@@ -221,16 +368,42 @@
           <th><label for="block_filter">📦 Block Filter</label></th>
           <td>
             <input id="block_filter" placeholder="Input block name" />
-            <button title="Clear" data-input-for="block_filter" data-input-text="">X</button>
+            <button
+              title="Clear"
+              data-input-for="block_filter"
+              data-input-text=""
+            >
+              X
+            </button>
           </td>
         </tr>
         <tr>
           <th>Block Filter Preset</th>
           <td>
-            <button data-input-for="block_filter" data-input-text="(Grace|Super)Corn">Super Corn</button>
-            <button data-input-for="block_filter" data-input-text="^decoCookingPot">Cooking Pot</button>
-            <button data-input-for="block_filter" data-input-text="^sleeper(?!Zombie|Vulture).*Animal$">Meats</button>
-            <button data-input-for="block_filter" data-input-text="^planted.*Harvest">Plants</button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="(Grace|Super)Corn"
+            >
+              Super Corn
+            </button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^decoCookingPot"
+            >
+              Cooking Pot
+            </button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^sleeper(?!Zombie|Vulture).*Animal$"
+            >
+              Meats
+            </button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^planted.*Harvest"
+            >
+              Plants
+            </button>
             <button
               data-input-for="block_filter"
               data-input-text="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
@@ -243,10 +416,18 @@
             >
               Book Containers
             </button>
-            <button data-input-for="block_filter" data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$">
+            <button
+              data-input-for="block_filter"
+              data-input-text="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$"
+            >
               Working Vending-Machine
             </button>
-            <button data-input-for="block_filter" data-input-text="^cntLootCrateHero">Hidden Stash</button>
+            <button
+              data-input-for="block_filter"
+              data-input-text="^cntLootCrateHero"
+            >
+              Hidden Stash
+            </button>
           </td>
         </tr>
       </table>
@@ -255,7 +436,11 @@
     </div>
     <div id="terrarian_viewer_hud" style="display: none">
       <label style="user-select: none">
-        <input type="checkbox" checked oninput="op_desc.style.display = checked ? 'block' : 'none'" />
+        <input
+          type="checkbox"
+          checked
+          oninput='op_desc.style.display = checked ? "block" : "none"'
+        />
         Show/Hide Help
       </label>
       <dl id="op_desc">
@@ -270,7 +455,13 @@
       </dl>
     </div>
     <button id="terrain_viewer_close" style="display: none">❌</button>
-    <canvas id="terrain_viewer" width="0" height="0" tabindex="0" style="display: none"></canvas>
+    <canvas
+      id="terrain_viewer"
+      width="0"
+      height="0"
+      tabindex="0"
+      style="display: none"
+    ></canvas>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
 
@@ -290,7 +481,8 @@
         Open "GeneratedWorlds" folder:
         <ul>
           <li>
-            <code><span id="generated_world_path_windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <code><span id="generated_world_path_windows"
+              >%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
             <button
               title="Copy this path"
               data-copy-for="generated_world_path_windows"
@@ -326,19 +518,40 @@
           <li>🏘️ prefabs.xml</li>
           <li>⛰️ dtm.raw</li>
         </ul>
-        <input type="radio" name="active-section" form="dialog-active" style="display: none" checked value="dragover" />
+        <input
+          type="radio"
+          name="active-section"
+          form="dialog-active"
+          style="display: none"
+          checked
+          value="dragover"
+        />
       </section>
       <section>
         <h2>⌛️ Processing Files</h2>
         <p id="processing-message">Processing...</p>
         <ul id="processing-files"></ul>
-        <input type="radio" name="active-section" form="dialog-active" style="display: none" value="processing" />
+        <input
+          type="radio"
+          name="active-section"
+          form="dialog-active"
+          style="display: none"
+          value="processing"
+        />
       </section>
       <section>
         <h2>⚠️ Error</h2>
         <p id="error-message">Error</p>
-        <footer><button data-close-dialog-for="dnd-dialog">Close</button></footer>
-        <input type="radio" name="active-section" form="dialog-active" style="display: none" value="error" />
+        <footer>
+          <button data-close-dialog-for="dnd-dialog">Close</button>
+        </footer>
+        <input
+          type="radio"
+          name="active-section"
+          form="dialog-active"
+          style="display: none"
+          value="error"
+        />
       </section>
       <form id="dialog-active" style="display: none"></form>
     </dialog>
@@ -346,12 +559,16 @@
     <dialog id="map-info-dialog">
       <h2>map_info.xml</h2>
       <table id="map-info-table"></table>
-      <footer><button data-close-dialog-for="map-info-dialog">Close</button></footer>
+      <footer>
+        <button data-close-dialog-for="map-info-dialog">Close</button>
+      </footer>
     </dialog>
 
     <dialog id="prefab-inspector-dialog">
       <h2>🏘️🔍️ Prefab Inspector</h2>
-      <p><span id="prefab-inspector-count">-</span> prefabs exist in this map.</p>
+      <p>
+        <span id="prefab-inspector-count">-</span> prefabs exist in this map.
+      </p>
 
       <h3>Unique Prefabs</h3>
       <p>Counts of unique prefabs in this map and defined in the game.</p>
@@ -408,7 +625,9 @@
       <p>These prefabs are not located in the map.</p>
       <ol id="prefab-inspector-missings"></ol>
 
-      <footer><button data-close-dialog-for="prefab-inspector-dialog">Close</button></footer>
+      <footer>
+        <button data-close-dialog-for="prefab-inspector-dialog">Close</button>
+      </footer>
     </dialog>
   </body>
 </html>

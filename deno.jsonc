@@ -1,0 +1,75 @@
+{
+  "tasks": {
+    "serve": "deno run -A tools/build.ts serve",
+    "build": {
+      "dependencies": [
+        "build:ts",
+        "build:json",
+        "build:prefab-html",
+        "build:copy-map-files"
+      ]
+    },
+    "build:ts": "deno run -A tools/build.ts",
+    "build:json": {
+      "dependencies": [
+        "build:json:prefab-props",
+        "build:json:labels",
+        "build:json:block-counts"
+      ]
+    },
+    "build:json:prefab-props": "deno run -A tools/generate-prefab-properties-jsons.ts",
+    "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
+    "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
+    "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
+    "build:copy-map-files": "deno run -A tools/copy-map-files.ts",
+    "fix": "deno fmt && deno lint --fix",
+    "test": "deno test -A --parallel",
+    "ci": {
+      "dependencies": ["ci:lint", "ci:fmt-check", "ci:type-check", "test"]
+    },
+    "ci:lint": "deno lint",
+    "ci:fmt-check": "deno fmt --check",
+    "ci:type-check": "deno check"
+  },
+  "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
+  "imports": {
+    "three": "npm:three@~0.182.0",
+    "pngjs": "npm:pngjs@^7.0.0",
+    "xml2js": "npm:xml2js@^0.6.2",
+    "csv-parse": "npm:csv-parse@^6.1.0",
+    "esbuild": "npm:esbuild@~0.27.1",
+    "@std/fs": "jsr:@std/fs@^1.0.8",
+    "@std/fs/expand-glob": "jsr:@std/fs@^1.0.8/expand-glob",
+    "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",
+    "@std/expect": "jsr:@std/expect@^1.0.11",
+    "@std/testing": "jsr:@std/testing@^1.0.9",
+    "@std/testing/bdd": "jsr:@std/testing@^1.0.16/bdd",
+    "@std/testing/mock": "jsr:@std/testing@^1.0.16/mock",
+    "@std/testing/time": "jsr:@std/testing@^1.0.16/time",
+    "jsdom": "npm:jsdom@^26.0.0"
+  },
+  "lint": {
+    "exclude": ["./public"],
+    "rules": {
+      "include": [
+        "no-non-null-assertion",
+        "no-non-null-asserted-optional-chain",
+        "eqeqeq",
+        "camelcase",
+        "default-param-last",
+        "no-eval",
+        "no-self-compare",
+        "no-throw-literal"
+      ]
+    }
+  },
+  "fmt": {
+    "exclude": [
+      "./public/**/old",
+      "./public/**/maps",
+      "./public/**/*.js",
+      "./public/**/*.json",
+      "./public/**/prefabs"
+    ]
+  }
+}
