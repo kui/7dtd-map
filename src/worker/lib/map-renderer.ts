@@ -105,7 +105,7 @@ export default class MapRenderer {
     const canvasHeight = Math.max(1, Math.round(height * this.scale));
 
     const context = this.canvas.getContext("2d");
-    if (!context) return;
+    if (!context) throw new Error("Failed to get 2d context");
 
     // Compose the base map (which may re-decode at the new size) before
     // touching the visible canvas. Resizing the canvas clears it, so doing it
@@ -169,27 +169,27 @@ export default class MapRenderer {
     const canvas = this.#composite ?? new OffscreenCanvas(width, height);
     canvas.width = width;
     canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-    ctx.clearRect(0, 0, width, height);
-    ctx.filter = `brightness(${this.brightness})`;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Failed to get 2d context");
+    context.clearRect(0, 0, width, height);
+    context.filter = `brightness(${this.brightness})`;
 
     if (biomes && this.biomesAlpha !== 0) {
-      ctx.globalAlpha = this.biomesAlpha;
-      ctx.drawImage(biomes, 0, 0);
+      context.globalAlpha = this.biomesAlpha;
+      context.drawImage(biomes, 0, 0);
     }
     if (splat3 && this.splat3Alpha !== 0) {
-      ctx.globalAlpha = this.splat3Alpha;
-      ctx.drawImage(splat3, 0, 0);
+      context.globalAlpha = this.splat3Alpha;
+      context.drawImage(splat3, 0, 0);
     }
     if (splat4 && this.splat4Alpha !== 0) {
-      ctx.globalAlpha = this.splat4Alpha;
-      ctx.drawImage(splat4, 0, 0);
+      context.globalAlpha = this.splat4Alpha;
+      context.drawImage(splat4, 0, 0);
     }
-    ctx.filter = "none";
+    context.filter = "none";
     if (rad && this.radAlpha !== 0) {
-      ctx.globalAlpha = this.radAlpha;
-      ctx.drawImage(rad, 0, 0);
+      context.globalAlpha = this.radAlpha;
+      context.drawImage(rad, 0, 0);
     }
 
     this.#composite = canvas;
@@ -198,16 +198,16 @@ export default class MapRenderer {
   }
 
   private drawPrefabs(
-    ctx: OffscreenCanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
   ) {
-    ctx.font = `${this.signSize.toString()}px '${
+    context.font = `${this.signSize.toString()}px '${
       this.#fontFamilies[SIGN_CHAR]
     }'`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    context.fillStyle = "red";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -220,23 +220,23 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      putText(context, { text: SIGN_CHAR, x, z, size: this.signSize });
     }
   }
 
   private drawMark(
-    ctx: OffscreenCanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
   ) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px '${
+    context.font = `${this.signSize.toString()}px '${
       this.#fontFamilies[MARK_CHAR]
     }'`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
+    context.fillStyle = "red";
+    context.textAlign = "left";
+    context.textBaseline = "alphabetic";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -246,7 +246,7 @@ export default class MapRenderer {
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
+    putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
   }
 
   size(): GameMapSize {
@@ -271,18 +271,18 @@ interface MapSign {
 }
 
 function putText(
-  ctx: OffscreenCanvasRenderingContext2D,
+  context: OffscreenCanvasRenderingContext2D,
   { text, x, z, size }: MapSign,
 ) {
-  ctx.lineWidth = Math.round(size * 0.2);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.strokeText(text, x, z);
+  context.lineWidth = Math.round(size * 0.2);
+  context.strokeStyle = "rgba(0, 0, 0, 0.8)";
+  context.strokeText(text, x, z);
 
-  ctx.lineWidth = Math.round(size * 0.1);
-  ctx.strokeStyle = "white";
-  ctx.strokeText(text, x, z);
+  context.lineWidth = Math.round(size * 0.1);
+  context.strokeStyle = "white";
+  context.strokeText(text, x, z);
 
-  ctx.fillText(text, x, z);
+  context.fillText(text, x, z);
 }
 
 /**
