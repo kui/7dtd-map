@@ -1,7 +1,0 @@
-/local.json
-
-# generated files
-/public/**/*.json
-/public/**/*.js
-/public/**/prefabs/*.html
-/public/**/old
