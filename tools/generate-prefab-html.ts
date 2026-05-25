@@ -22,10 +22,10 @@ async function main() {
 
 async function remove() {
   const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  const files: string[] = [];
-  for await (const entry of expandGlob(globPath)) {
-    files.push(entry.path);
-  }
+  const files = await Array.fromAsync(
+    expandGlob(globPath),
+    (e) => e.path,
+  );
   await Promise.all(files.map((f) => fs.unlink(f)));
   console.log("Remove %s", globPath);
 }
@@ -41,14 +41,15 @@ async function loadLabels() {
 async function buildHtmls(labels: Map<LabelId, Label>) {
   console.log("Build HTML files");
 
-  const xmlGlob = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmlFiles: string[] = [];
-  for await (const entry of expandGlob(xmlGlob)) {
-    xmlFiles.push(entry.path);
-  }
+  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
+  const xmlFiles = await Array.fromAsync(
+    expandGlob(globPath),
+    (e) => e.path,
+  );
   if (xmlFiles.length === 0) {
-    throw Error(`No xml file: ${xmlGlob}`);
+    throw Error(`No xml file: ${globPath}`);
   }
+  console.log("Found %d prefab xml from %s", xmlFiles.length, globPath);  
 
   let successCount = 0;
   const index: string[] = [];

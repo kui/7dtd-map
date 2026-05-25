@@ -22,15 +22,12 @@ interface PrefabBlockCounts {
 
 async function main() {
   console.log("Load nim files");
-  const nimFiles: string[] = [];
-  for await (
-    const entry of expandGlob(
-      await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim"),
-    )
-  ) {
-    nimFiles.push(entry.path);
-  }
-  console.log("Found %d nim files", nimFiles.length);
+  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim");
+  const nimFiles = await Array.fromAsync(
+    expandGlob(globPath),
+    (e) => e.path,
+  );
+  console.log("Found %d nim files from %s", nimFiles.length, globPath);
 
   console.log("Read counts");
   const prefabBlockCount = await readCounts(nimFiles);

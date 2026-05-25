@@ -2,19 +2,20 @@ import * as esbuild from "esbuild";
 import { expandGlob } from "@std/fs/expand-glob";
 import { denoPlugin } from "@deno/esbuild-plugin";
 
-const targets: string[] = [];
-for (
-  const glob of [
+async function* multiExmapndGlob(...globs: string[]) {
+  for (const glob of globs) {
+    yield* expandGlob(glob);
+  }
+}
+
+const targets = await Array.fromAsync(
+  multiExmapndGlob(
     "src/*.ts",
     "src/worker/*.ts",
     "src/prefabs/*.ts",
-  ]
-) {
-  for await (const file of expandGlob(glob)) {
-    if (file.path.endsWith(".config.ts")) continue;
-    targets.push(file.path);
-  }
-}
+  ),
+  (e) => e.path,
+);
 
 const outDir = "public";
 

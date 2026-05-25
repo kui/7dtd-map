@@ -13,15 +13,12 @@ const DOCS_DIR = publishDir();
 const FILE = "prefab-difficulties.json";
 
 async function main() {
-  const prefabXmlFiles: string[] = [];
-  for await (
-    const entry of expandGlob(
-      await vanillaDir("Data", "Prefabs", "*", "*.xml"),
-    )
-  ) {
-    prefabXmlFiles.push(entry.path);
-  }
-  console.log("Found %d prefab xml files", prefabXmlFiles.length);
+  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
+  const prefabXmlFiles = await Array.fromAsync(
+    expandGlob(globPath),
+    (e) => e.path,
+  );
+  console.log("Found %d prefab xml from %s", prefabXmlFiles.length, globPath);
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   await writeJsonFile(

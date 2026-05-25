@@ -1,15 +1,30 @@
 import { MapFileName } from "../../lib/map-files.ts";
 
+/**
+ * Expected directory structure within the Origin Private File System (OPFS).
+ *
+ * ```
+ * (OPFS root)
+ * ├── maps/
+ * │   └── <map-name>/       # One directory per map/world
+ * │       └── <map-files>   # Files defined by MapFileName (e.g., biomes.png, prefabs.xml, ...)
+ * └── workspace/            # Temporary working directory
+ *     └── <map-files>       # Files defined by MapFileName
+ * ```
+ */
+
 const MAPS_DIR = "maps";
 const WORKSPACE_DIR = "workspace";
 
 export async function* listMapDirs(): AsyncIterable<MapDir> {
   const worlds = await mapsDir();
   for await (const entry of worlds.values()) {
-    if (entry.kind === "directory") {
-      yield new MapDir(entry as FileSystemDirectoryHandle);
-    }
+    if (isDirectory(entry)) yield new MapDir(entry);
   }
+}
+
+function isDirectory(entry: FileSystemHandle): entry is FileSystemDirectoryHandle {
+  return entry.kind === "directory";
 }
 
 export async function mapDir(name: string): Promise<MapDir> {
