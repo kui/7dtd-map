@@ -1,18 +1,18 @@
 import process from "node:process";
-import { createReadStream } from "node:fs";
+import { readFileSync } from "node:fs";
 import { handleMain, program } from "./lib/utils.ts";
-import { PNG } from "pngjs";
+import { decode } from "fast-png";
 
 const usage = `${program()} <png>
 Print the statistics of pixels in the PNG file.`;
 
-async function main() {
+function main() {
   const pngFile = process.argv[2];
   if (pngFile === undefined) {
     console.error(usage);
     return 1;
   }
-  const stat = await statPixels(pngFile);
+  const stat = statPixels(pngFile);
   console.log("  red,gre,blu,alp: count");
   for (
     const [pixels, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])
@@ -22,24 +22,29 @@ async function main() {
   return 0;
 }
 
-function statPixels(pngFile: string): Promise<Map<string, number>> {
-  return new Promise((resolve, reject) => {
-    const pixelStat = new Map<string, number>();
-    const png = new PNG();
-    createReadStream(pngFile)
-      .pipe(png)
-      .on("parsed", () => {
-        for (let i = 0; i < png.data.length; i += 4) {
-          const pixels = [...png.data.subarray(i, i + 4)]
-            .map((n) => n.toString().padStart(3))
-            .join(",");
-          const pixelCount = pixelStat.get(pixels) ?? 0;
-          pixelStat.set(pixels, pixelCount + 1);
-        }
-        resolve(pixelStat);
-      })
-      .on("error", reject);
-  });
+function statPixels(pngFile: string): Map<string, number> {
+  const pixelStat = new Map<string, number>();
+  const buf = readFileSync(pngFile);
+  const decoded = decode(buf);
+  assertPng8Bit(decoded.data);
+  for (let i = 0; i < decoded.data.length; i += 4) {
+    const pixels = [...decoded.data.subarray(i, i + 4)]
+      .map((n) => n.toString().padStart(3))
+      .join(",");
+    const pixelCount = pixelStat.get(pixels) ?? 0;
+    pixelStat.set(pixels, pixelCount + 1);
+  }
+  return pixelStat;
 }
 
-handleMain(main());
+function assertPng8Bit(
+  data: Uint8Array | Uint8ClampedArray | Uint16Array,
+): asserts data is Uint8Array | Uint8ClampedArray {
+  if (data instanceof Uint16Array) {
+    throw new Error(
+      "Unsupported PNG format: 16-bit depth is not expected for this tool.",
+    );
+  }
+}
+
+handleMain(Promise.resolve(main()));

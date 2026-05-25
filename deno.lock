@@ -21,9 +21,9 @@
     "npm:csv-parse@^6.1.0": "6.2.1",
     "npm:esbuild@~0.25.5": "0.25.12",
     "npm:esbuild@~0.27.1": "0.27.7",
+    "npm:fast-png@8": "8.0.0",
     "npm:jsdom@26": "26.1.0",
     "npm:json5@*": "2.2.3",
-    "npm:pngjs@7": "7.0.0",
     "npm:three@0.182": "0.182.0",
     "npm:xml2js@~0.6.2": "0.6.2"
   },
@@ -495,6 +495,16 @@
       "scripts": true,
       "bin": true
     },
+    "fast-png@8.0.0": {
+      "integrity": "sha512-gCysNasJ8KEMgfdYIKd/wTDo6ENK1PWT0RJO7O+0pgmuHPw2O6tA1WvdxFRJoLf9V8yFYpG0FA1YgI8X97OhJA==",
+      "dependencies": [
+        "fflate",
+        "iobuffer"
+      ]
+    },
+    "fflate@0.8.3": {
+      "integrity": "sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA=="
+    },
     "html-encoding-sniffer@4.0.0": {
       "integrity": "sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==",
       "dependencies": [
@@ -520,6 +530,9 @@
       "dependencies": [
         "safer-buffer"
       ]
+    },
+    "iobuffer@6.0.1": {
+      "integrity": "sha512-SZWYkWNfjIXIBYSDpXDYIgshqtbOPsi4lviawAEceR1Kqk+sHDlcQjWrzNQsii80AyBY0q5c8HCTNjqo74ul+Q=="
     },
     "is-potential-custom-element-name@1.0.1": {
       "integrity": "sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ=="
@@ -567,9 +580,6 @@
       "dependencies": [
         "entities"
       ]
-    },
-    "pngjs@7.0.0": {
-      "integrity": "sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow=="
     },
     "punycode@2.3.1": {
       "integrity": "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="
@@ -675,8 +685,8 @@
       "jsr:@std/testing@^1.0.9",
       "npm:csv-parse@^6.1.0",
       "npm:esbuild@~0.27.1",
+      "npm:fast-png@8",
       "npm:jsdom@26",
-      "npm:pngjs@7",
       "npm:three@0.182",
       "npm:xml2js@~0.6.2"
     ]

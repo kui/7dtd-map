@@ -1,15 +1,4 @@
-import type * as pngjs from "pngjs";
-
-/**
- * pngjs needs to be set depending on the environment.
- *
- * Set "pngjs" module if in the Node.js.
- * Set "pngjs/browser" module if in the browser.
- */
-let PNG: typeof pngjs.PNG;
-export function setPNG(png: typeof pngjs.PNG): void {
-  PNG = png;
-}
+import { decode, encode } from "fast-png";
 
 /**
  * the `name` is the file name to be stored.
@@ -193,10 +182,10 @@ function processRadiationPng(
   return i.pipeThrough(new RadiationPngTransformer()).pipeTo(o);
 }
 
-const DEFAULT_TRASNFORM_STRATEGY = { highWaterMark: 1024 * 1024 };
-const DEFAULT_TRASNFORM_STRATEGIES = [
-  DEFAULT_TRASNFORM_STRATEGY,
-  DEFAULT_TRASNFORM_STRATEGY,
+const DEFAULT_TRANSFORM_STRATEGY = { highWaterMark: 1024 * 1024 };
+const DEFAULT_TRANSFORM_STRATEGIES = [
+  DEFAULT_TRANSFORM_STRATEGY,
+  DEFAULT_TRANSFORM_STRATEGY,
 ] as const;
 
 class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
@@ -246,7 +235,7 @@ class OddByteTransformer
           controller.enqueue(buffer);
         },
       },
-      ...DEFAULT_TRASNFORM_STRATEGIES,
+      ...DEFAULT_TRANSFORM_STRATEGIES,
     );
   }
 }
@@ -264,62 +253,68 @@ export class DtmBlockRawDecompressor extends DecompressionStream {
   }
 }
 
-class PngEditingTransfomer extends TransformStream<Uint8Array, Uint8Array> {
-  constructor(
-    copyAndEdit: (src: Uint8Array, dst: Uint8ClampedArray | Uint8Array) => void,
-  ) {
-    const png = new PNG({ deflateLevel: 9, deflateStrategy: 0 });
-    const { promise: flushPromise, resolve, reject } = Promise.withResolvers<
-      void
-    >();
-    super(
-      {
-        start(controller) {
-          png.on("parsed", () => {
-            packPng(png, copyAndEdit, controller)
-              .then(resolve)
-              .catch((e: unknown) => {
-                reject(e);
-              });
-          }).on("error", (e) => {
-            reject(e);
-          });
-        },
-        transform(chunk) {
-          png.write(chunk);
-        },
-        flush() {
-          png.end();
-          return flushPromise;
-        },
-      },
-      ...DEFAULT_TRASNFORM_STRATEGIES,
-    );
+/**
+ * Convert decoded PNG data (Uint8Array, Uint8ClampedArray, or Uint16Array) to 8-bit Uint8Array.
+ */
+function normalizeToUint8(
+  data: Uint8Array | Uint8ClampedArray | Uint16Array,
+): Uint8Array {
+  if (data instanceof Uint8Array || data instanceof Uint8ClampedArray) {
+    return new Uint8Array(data.buffer, data.byteOffset, data.length);
   }
+  const result = new Uint8Array(data.length);
+  for (let i = 0; i < data.length; i++) {
+    // deno-lint-ignore no-non-null-assertion
+    result[i] = data[i]! >> 8;
+  }
+  return result;
 }
 
 /**
- * Packs a PNG image into a stream of chunks.
- *
- * Avoid OffscreenCanvas to deserialize the image data. OffscreenCanvas.convertToBlob()
- * generates a large PNG file because it does not support quality of PNG compression.
- *
- * @param png The PNG image to pack.
- * @param copyAndEdit A function to edit the image data before packing.
- * @param controller The controller for the transform stream.
+ * Decode the whole PNG from accumulated chunks, edit pixels in-place,
+ * then re-encode as an 8-bit RGBA PNG with maximum compression.
  */
-function packPng(
-  png: pngjs.PNG,
-  copyAndEdit: (src: Uint8Array, dst: Uint8Array | Uint8ClampedArray) => void,
-  controller: TransformStreamDefaultController<Uint8Array>,
-): Promise<void> {
-  copyAndEdit(png.data, png.data);
-  return new Promise((resolve, reject) => {
-    png.pack()
-      .on("data", (chunk: Uint8Array) => controller.enqueue(chunk))
-      .on("end", resolve)
-      .on("error", reject);
-  });
+class PngEditingTransformer extends TransformStream<Uint8Array, Uint8Array> {
+  constructor(
+    copyAndEdit: (src: Uint8Array, dst: Uint8Array) => void,
+  ) {
+    const chunks: Uint8Array[] = [];
+    super(
+      {
+        transform(chunk) {
+          chunks.push(chunk);
+        },
+        flush(controller) {
+          const total = chunks.reduce((s, c) => s + c.length, 0);
+          const buf = new Uint8Array(total);
+          let off = 0;
+          for (const c of chunks) {
+            buf.set(c, off);
+            off += c.length;
+          }
+
+          const decoded = decode(buf);
+          const src = normalizeToUint8(decoded.data);
+
+          // Edit in place
+          copyAndEdit(src, src);
+
+          const encoded = encode(
+            {
+              width: decoded.width,
+              height: decoded.height,
+              data: src,
+              channels: 4,
+              depth: 8,
+            },
+            { zlib: { level: 9 } },
+          );
+          controller.enqueue(encoded);
+        },
+      },
+      ...DEFAULT_TRANSFORM_STRATEGIES,
+    );
+  }
 }
 
 /**
@@ -327,7 +322,7 @@ function packPng(
  *   - black to transparent
  *   - other to non-transparent
  */
-class Splat3PngTransformer extends PngEditingTransfomer {
+class Splat3PngTransformer extends PngEditingTransformer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < dst.length; i += 4) {
@@ -358,7 +353,7 @@ class Splat3PngTransformer extends PngEditingTransfomer {
  *   - rgb(0, 0, 29) to blue for splat4.png not splat4_processed.png
  *     See https://github.com/kui/7dtd-map/issues/103
  */
-class Splat4PngTransformer extends PngEditingTransfomer {
+class Splat4PngTransformer extends PngEditingTransformer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < src.length; i += 4) {
@@ -393,7 +388,7 @@ class Splat4PngTransformer extends PngEditingTransfomer {
  *   - black to 100% transparent
  *   - other to non-transparent
  */
-class RadiationPngTransformer extends PngEditingTransfomer {
+class RadiationPngTransformer extends PngEditingTransformer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < src.length; i += 4) {
@@ -419,7 +414,7 @@ class RadiationPngTransformer extends PngEditingTransfomer {
 /**
  * Just to repack the PNG
  */
-class RepackPngTransformer extends PngEditingTransfomer {
+class RepackPngTransformer extends PngEditingTransformer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < src.length; i++) {

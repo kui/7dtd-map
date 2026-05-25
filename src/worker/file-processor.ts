@@ -1,12 +1,9 @@
-import * as pngjs from "pngjs/browser";
 import * as mapFiles from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
 import type {
   FileProcessorInputMessage,
   FileProcessorOutputMessage,
 } from "./types.ts";
-
-mapFiles.setPNG(pngjs.PNG);
 
 onmessage = async (event: MessageEvent<FileProcessorInputMessage>) => {
   const out = await main(event.data).catch((e: unknown) => ({

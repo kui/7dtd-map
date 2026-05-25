@@ -33,8 +33,8 @@
   },
   "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
   "imports": {
+    "fast-png": "npm:fast-png@^8.0.0",
     "three": "npm:three@~0.182.0",
-    "pngjs": "npm:pngjs@^7.0.0",
     "xml2js": "npm:xml2js@^0.6.2",
     "csv-parse": "npm:csv-parse@^6.1.0",
     "esbuild": "npm:esbuild@~0.27.1",
