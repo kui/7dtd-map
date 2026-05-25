@@ -265,7 +265,7 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
     }
     groups.push({
       // Skip ith element checking because i+1 is alraedy checked
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       group: groupsRaw[i]!,
       count: [countMin, countMax] as [number, number],
     });

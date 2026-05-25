@@ -40,7 +40,7 @@ export function throttledInvoker(
         return p;
       }
       case 2:
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // deno-lint-ignore no-non-null-assertion
         return workerPromises[1]!;
       default:
         throw Error(

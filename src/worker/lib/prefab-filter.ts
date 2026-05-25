@@ -265,6 +265,5 @@ function matchAndHighlight(str: string, regex: RegExp) {
     isMatched = m.length > 0;
     return `<mark>${m}</mark>`;
   });
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return isMatched ? highlighted : null;
 }

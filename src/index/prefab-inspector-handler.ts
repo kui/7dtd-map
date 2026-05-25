@@ -78,7 +78,7 @@ export class PrefabInspectorHandler {
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
       // Should rise an error if the difficulty is not in the range of 0-5
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[difficulty]!;
       counts.defined++;
       totalCounts.defined++;
@@ -89,7 +89,7 @@ export class PrefabInspectorHandler {
     }
     for (let i = 0; i < 6; i++) {
       const countDoms = this.#doms.detailCounts[i as 0 | 1 | 2 | 3 | 4 | 5];
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[i]!;
       countDoms.inMap.textContent = counts.inMap.toString();
       countDoms.defined.textContent = counts.defined.toString();

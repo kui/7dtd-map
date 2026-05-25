@@ -14,7 +14,6 @@ function main(): void {
 /**
  * Put a mark at center to check if the logo is centered
  */
-// eslint-disable-next-line @typescript-eslint/no-inferrable-types
 const PUT_CENTER: boolean = false;
 
 const WIDTH = 256; // px

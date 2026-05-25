@@ -122,7 +122,7 @@ class Dtm {
       const dataZ = Math.round(
         (pos.getY(i) + geo.parameters.height / 2) * scaleFactor,
       );
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // deno-lint-ignore no-non-null-assertion
       const elev = this.#data[dataX + dataZ * this.#mapSize.width]! /
         scaleFactor;
       pos.setZ(i, elev);

@@ -238,7 +238,7 @@ class OddByteTransformer
 
           let i = nextOffset;
           for (; i < chunk.length; i += 2) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            // deno-lint-ignore no-non-null-assertion
             buffer[(i - nextOffset) / 2] = chunk[i]!;
           }
 
@@ -337,11 +337,12 @@ class Splat3PngTransformer extends PngEditingTransfomer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else {
-          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          // deno-lint-ignore no-non-null-assertion
           dst[i] = src[i]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
-          /* eslint-enable */
           dst[i + 3] = 255;
         }
       }
@@ -367,17 +368,20 @@ class Splat4PngTransformer extends PngEditingTransfomer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else if (src[i + 1] === 255 || src[i + 2] === 29) {
-          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          // deno-lint-ignore no-non-null-assertion
           dst[i] = src[i]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 1] = src[i + 2]!;
           dst[i + 2] = 255;
           dst[i + 3] = 255;
         } else {
+          // deno-lint-ignore no-non-null-assertion
           dst[i] = src[i]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
           dst[i + 3] = 255;
-          /* eslint-enable */
         }
       }
     });
@@ -399,11 +403,12 @@ class RadiationPngTransformer extends PngEditingTransfomer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else {
-          /* eslint-disable @typescript-eslint/no-non-null-assertion */
+          // deno-lint-ignore no-non-null-assertion
           dst[i] = src[i]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
+          // deno-lint-ignore no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
-          /* eslint-enable */
           dst[i + 3] = 255;
         }
       }
@@ -418,7 +423,7 @@ class RepackPngTransformer extends PngEditingTransfomer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < src.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // deno-lint-ignore no-non-null-assertion
         dst[i] = src[i]!;
       }
     });
