@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import { parseNim } from "./nim-parser.ts";
 import { parseTts } from "./tts-parser.ts";
-import { parsePrefabXml } from "./prefab-xml-parser.ts";
+import { parsePrefabXml } from "./xmls/prefab-xml.ts";
 import { Label, LabelId } from "./label-parser.ts";
 import { requireNonnull } from "./utils.ts";
 

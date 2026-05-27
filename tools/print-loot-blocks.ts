@@ -1,8 +1,7 @@
 import process from "node:process";
-import * as path from "node:path";
-import { loadBlocks } from "./lib/blocks-xml.ts";
-import { Loot, LootTable } from "./lib/loot.ts";
-import { handleMain, program, vanillaDir } from "./lib/utils.ts";
+import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
+import { loadLoot, LootTable } from "./lib/xmls/loot-xml.ts";
+import { handleMain, program } from "./lib/utils.ts";
 
 const CMD = program();
 const USAGE = `Usage: ${CMD} <item name regexp>
@@ -20,10 +19,9 @@ async function main() {
     return 1;
   }
 
-  const configDir = await vanillaDir("Data", "Config");
   const pattern = new RegExp(patternString);
-  const lootXml = new Loot(path.join(configDir, "loot.xml"));
-  const lootContainers = await lootXml.findLootContainer(pattern);
+  const loot = await loadLoot();
+  const lootContainers = loot.findLootContainer(pattern);
   const items = flattenItems(lootContainers);
 
   console.log("Container Names");
@@ -33,7 +31,7 @@ async function main() {
   console.log("Items");
   for (const i of items) console.log(i);
 
-  const blocks = await loadBlocks(path.join(configDir, "blocks.xml"));
+  const blocks = await loadBlocks();
   const matchedBlocks = blocks.findByLootIds(
     new Set(lootContainers.map((c) => c.name)),
   );

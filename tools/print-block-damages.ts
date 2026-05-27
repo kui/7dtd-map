@@ -1,6 +1,6 @@
 import process from "node:process";
-import { loadBlocks } from "./lib/blocks-xml.ts";
-import { loadMaterials } from "./lib/materials-xml.ts";
+import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
+import { loadMaterials } from "./lib/xmls/materials-xml.ts";
 import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const USAGE = `Usage: ${program()} <block name regexp>`;
@@ -12,9 +12,7 @@ async function main() {
     return 1;
   }
 
-  const blocks = await loadBlocks(
-    await vanillaDir("Data", "Config", "blocks.xml"),
-  );
+  const blocks = await loadBlocks();
   const materials = await loadMaterials(
     await vanillaDir("Data", "Config", "materials.xml"),
   );

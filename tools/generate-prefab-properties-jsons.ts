@@ -1,6 +1,9 @@
 import { expandGlob } from "@std/fs/expand-glob";
 import * as path from "node:path";
-import { parsePrefabXml, PrefabProperty } from "./lib/prefab-xml-parser.ts";
+import {
+  type ParsedPrefabProperty,
+  parsePrefabXml,
+} from "./lib/xmls/prefab-xml.ts";
 import {
   handleMain,
   publishDir,
@@ -43,7 +46,7 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
 }
 
 interface PrefabXmls {
-  [prefabName: string]: PrefabProperty[];
+  [prefabName: string]: ParsedPrefabProperty[];
 }
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {

@@ -16,9 +16,14 @@ export interface LocalJson {
   vanillaDir: string;
 }
 
+let localJsonCache: LocalJson | undefined;
+
 export async function localJson(): Promise<LocalJson> {
-  const buffer = await fs.promises.readFile(projectRoot("local.json"));
-  return JSON.parse(buffer.toString()) as LocalJson;
+  if (localJsonCache === undefined) {
+    const buffer = await fs.promises.readFile(projectRoot("local.json"));
+    localJsonCache = JSON.parse(buffer.toString()) as LocalJson;
+  }
+  return localJsonCache;
 }
 
 export async function vanillaDir(...pathList: string[]): Promise<string> {

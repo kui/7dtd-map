@@ -1,6 +1,49 @@
+import { parseXml } from "../xml-parser.ts";
+import {
+  buildArrayMapByEntries,
+  requireNonnull,
+  vanillaDir,
+} from "../utils.ts";
 import type { Materials } from "./materials-xml.ts";
-import { buildArrayMapByEntries, requireNonnull } from "./utils.ts";
-import { parseXml } from "./xml-parser.ts";
+
+const LOOTABLE_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
+const DEFAULT_BLOCKS_XML = await vanillaDir("Data", "Config", "blocks.xml");
+
+/* Raw XML types (encapsulated) */
+
+interface RawBlocksXml {
+  blocks: {
+    block: RawBlock[];
+  };
+}
+
+interface RawBlock {
+  $: { name: string };
+  property: RawBlockProperty[];
+  dropextendsoff?: object[];
+  drop?: RawBlockDrop[];
+}
+
+interface RawBlockProperty {
+  $: {
+    name: string;
+    value: string;
+    param1?: string;
+  };
+}
+
+interface RawBlockDrop {
+  $: {
+    event: string;
+    name: string;
+    count: string;
+    tag?: string;
+    prob?: string;
+    "stick_chance"?: string;
+  };
+}
+
+/* Public types */
 
 export type BlockName = string;
 
@@ -40,15 +83,34 @@ export interface HarvestItems {
   };
 }
 
-const LOOT_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
+/* Public API */
 
-export async function loadBlocks(blocksXmlFileName: string): Promise<Blocks> {
-  const xml = await parseXml<BlockXml>(blocksXmlFileName);
+export async function loadBlocks(
+  blocksXmlFileName: string = DEFAULT_BLOCKS_XML,
+): Promise<Blocks> {
+  const xml = await parseXml(blocksXmlFileName) as RawBlocksXml;
   const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>(
     (map, blockElement) => {
       const name = blockElement.$.name;
-      const properties = buildProperties(blockElement.property);
-      const drops = blockElement.drop ? buildDrops(blockElement.drop) : [];
+      const properties = blockElement.property.reduce<BlockProperties>(
+        (props, elem) => {
+          props[elem.$.name] = elem.$;
+          return props;
+        },
+        {},
+      );
+      const drops = blockElement.drop
+        ? blockElement.drop.map<BlockDrop>((elem) => ({
+          event: elem.$.event,
+          name: elem.$.name,
+          count: parseCount(elem.$.count),
+          tag: elem.$.tag?.split(",") ?? [],
+          prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
+          stickChance: elem.$["stick_chance"]
+            ? parseFloat(elem.$["stick_chance"])
+            : undefined,
+        }))
+        : [];
       const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
       map.set(name, {
         name,
@@ -95,7 +157,7 @@ export class Blocks {
   findByLootIds(lootContainerIds: Set<string>): Block[] {
     return this.find((b) => {
       const blockClass = this.getPropertyExtended(b, "Class")?.value ?? "";
-      if (!LOOT_CLASS_NAMES.has(blockClass)) return false;
+      if (!LOOTABLE_CLASS_NAMES.has(blockClass)) return false;
       const lootId = this.getPropertyExtended(b, "LootList")?.value;
       if (!lootId) return false;
       return lootContainerIds.has(lootId);
@@ -198,31 +260,6 @@ export class Blocks {
     }
     return items;
   }
-}
-
-function buildProperties(
-  propertyElements: BlockXmlBlockProperty[],
-): BlockProperties {
-  return propertyElements.reduce<BlockProperties>((props, elem) => {
-    props[elem.$.name] = elem.$;
-    return props;
-  }, {});
-}
-
-function buildDrops(dropElements: BlockXmlBlockDrop[]): BlockDrop[] {
-  return dropElements.map<BlockDrop>((elem) => {
-    const count = parseCount(elem.$.count);
-    return {
-      event: elem.$.event,
-      name: elem.$.name,
-      count,
-      tag: elem.$.tag?.split(",") ?? [],
-      prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
-      stickChance: elem.$.stick_chance
-        ? parseFloat(elem.$.stick_chance)
-        : undefined,
-    };
-  });
 }
 
 function parseCount(count: string): NumberRange {
