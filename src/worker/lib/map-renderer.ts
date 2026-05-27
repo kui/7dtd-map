@@ -7,7 +7,6 @@ import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
-import { CacheHolder } from "../../lib/cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
@@ -32,18 +31,12 @@ export default class MapRenderer {
 
   canvas: OffscreenCanvas;
   #mapSize = gameMapSize({ width: 0, height: 0 });
-
-  #biomesImage = new ScaledImageHolder("biomes.png");
-  #splat3Image = new ScaledImageHolder("splat3.png");
-  #splat4Image = new ScaledImageHolder("splat4.png");
-  #radImage = new ScaledImageHolder("radiation.png");
-  #imageFiles = [
-    this.#biomesImage,
-    this.#splat3Image,
-    this.#splat4Image,
-    this.#radImage,
-  ] as const;
   #fontFamilies: FontFamilies;
+
+  #nativeSizes = new Map<
+    mapFiles.MapFileName,
+    { width: number; height: number }
+  >();
 
   // Composited base map (layers + brightness + per-layer alpha) cached so that
   // prefab/marker-only updates can skip recompositing.
@@ -61,22 +54,7 @@ export default class MapRenderer {
     fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[],
   ) {
     for (const fileName of fileNames) {
-      switch (fileName) {
-        case "biomes.png":
-          this.#biomesImage.invalidate();
-          break;
-        case "splat3.png":
-          this.#splat3Image.invalidate();
-          break;
-        case "splat4.png":
-          this.#splat4Image.invalidate();
-          break;
-        case "radiation.png":
-          this.#radImage.invalidate();
-          break;
-        default:
-          throw new Error(`Invalid file name: ${String(fileName)}`);
-      }
+      this.#nativeSizes.delete(fileName);
     }
     this.#generation++;
   }
@@ -90,7 +68,7 @@ export default class MapRenderer {
 
   async #updateImmediately(): Promise<void> {
     const sizes = await Promise.all(
-      this.#imageFiles.map((i) => i.nativeSize()),
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#nativeSize(f)),
     );
     const { width, height } = mapSize(...sizes);
     this.#mapSize.width = width;
@@ -159,37 +137,40 @@ export default class MapRenderer {
       return this.#composite;
     }
 
-    const [biomes, splat3, splat4, rad] = await Promise.all([
-      this.#biomesImage.get(width, height),
-      this.#splat3Image.get(width, height),
-      this.#splat4Image.get(width, height),
-      this.#radImage.get(width, height),
-    ]);
-
     const canvas = this.#composite ?? new OffscreenCanvas(width, height);
     canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
-    context.clearRect(0, 0, width, height);
-    context.filter = `brightness(${this.brightness})`;
 
-    if (biomes && this.biomesAlpha !== 0) {
-      context.globalAlpha = this.biomesAlpha;
-      context.drawImage(biomes, 0, 0);
-    }
-    if (splat3 && this.splat3Alpha !== 0) {
-      context.globalAlpha = this.splat3Alpha;
-      context.drawImage(splat3, 0, 0);
-    }
-    if (splat4 && this.splat4Alpha !== 0) {
-      context.globalAlpha = this.splat4Alpha;
-      context.drawImage(splat4, 0, 0);
-    }
-    context.filter = "none";
-    if (rad && this.radAlpha !== 0) {
-      context.globalAlpha = this.radAlpha;
-      context.drawImage(rad, 0, 0);
+    const [biomes, splat3, splat4, rad] = await Promise.all(
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#decode(f, width, height)),
+    );
+
+    try {
+      context.clearRect(0, 0, width, height);
+      context.filter = `brightness(${this.brightness})`;
+
+      if (biomes && this.biomesAlpha !== 0) {
+        context.globalAlpha = this.biomesAlpha;
+        context.drawImage(biomes, 0, 0);
+      }
+      if (splat3 && this.splat3Alpha !== 0) {
+        context.globalAlpha = this.splat3Alpha;
+        context.drawImage(splat3, 0, 0);
+      }
+      if (splat4 && this.splat4Alpha !== 0) {
+        context.globalAlpha = this.splat4Alpha;
+        context.drawImage(splat4, 0, 0);
+      }
+      context.filter = "none";
+      if (rad && this.radAlpha !== 0) {
+        context.globalAlpha = this.radAlpha;
+        context.drawImage(rad, 0, 0);
+      }
+    } finally {
+      // Only the composite is cached; release the per-layer bitmaps.
+      for (const bitmap of [biomes, splat3, splat4, rad]) bitmap?.close();
     }
 
     this.#composite = canvas;
@@ -249,6 +230,50 @@ export default class MapRenderer {
     putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
   }
 
+  async #nativeSize(
+    fileName: mapFiles.MapFileName,
+  ): Promise<{ width: number; height: number } | null> {
+    const cached = this.#nativeSizes.get(fileName);
+    if (cached) return cached;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    const size = await readPngSize(file);
+    this.#nativeSizes.set(fileName, size);
+    return size;
+  }
+
+  async #decode(
+    fileName: mapFiles.MapFileName,
+    width: number,
+    height: number,
+  ): Promise<ImageBitmap | null> {
+    if (width <= 0 || height <= 0) return null;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    console.time(`Loading image ${fileName}`);
+    try {
+      const result = await createImageBitmap(file, {
+        resizeWidth: width,
+        resizeHeight: height,
+        resizeQuality: "high",
+      });
+      console.log("Loaded image", fileName, width, height);
+      return result;
+    } catch (e) {
+      const extra = `(size: ${file.size} bytes, type: ${file.type})`;
+      throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
+        cause: e,
+      });
+    } finally {
+      console.timeEnd(`Loading image ${fileName}`);
+    }
+  }
+
+  async #getFile(fileName: mapFiles.MapFileName): Promise<File | null> {
+    const workspace = await storage.workspaceDir();
+    return workspace.get(fileName);
+  }
+
   size(): GameMapSize {
     return this.#mapSize;
   }
@@ -283,81 +308,6 @@ function putText(
   context.strokeText(text, x, z);
 
   context.fillText(text, x, z);
-}
-
-/**
- * Holds a source map image, decoding it lazily at the requested display
- * resolution rather than at full resolution. The decoded bitmap is cached
- * (with TTL) and re-decoded only when the requested size changes or the
- * source image is invalidated, keeping memory proportional to the displayed
- * size instead of the native image size.
- */
-class ScaledImageHolder {
-  #targetWidth = 0;
-  #targetHeight = 0;
-  #nativeSize: { width: number; height: number } | null = null;
-  #holder: CacheHolder<ImageBitmap | null>;
-
-  constructor(readonly fileName: mapFiles.MapFileName) {
-    this.#holder = new CacheHolder<ImageBitmap | null>(
-      () => this.#decode(),
-      (img) => img?.close(),
-    );
-  }
-
-  invalidate() {
-    this.#nativeSize = null;
-    this.#holder.invalidate();
-  }
-
-  async nativeSize(): Promise<{ width: number; height: number } | null> {
-    if (this.#nativeSize) return this.#nativeSize;
-    const file = await this.#getFile();
-    if (!file) return null;
-    this.#nativeSize = await readPngSize(file);
-    return this.#nativeSize;
-  }
-
-  get(width: number, height: number): Promise<ImageBitmap | null> {
-    if (width !== this.#targetWidth || height !== this.#targetHeight) {
-      this.#targetWidth = width;
-      this.#targetHeight = height;
-      this.#holder.invalidate();
-    }
-    return this.#holder.get();
-  }
-
-  async #getFile(): Promise<File | null> {
-    const workspace = await storage.workspaceDir();
-    return workspace.get(this.fileName);
-  }
-
-  async #decode(): Promise<ImageBitmap | null> {
-    const width = this.#targetWidth;
-    const height = this.#targetHeight;
-    if (width <= 0 || height <= 0) return null;
-    console.time(`Loading image ${this.fileName}`);
-    const file = await this.#getFile();
-    try {
-      if (!file) return null;
-      const result = await createImageBitmap(file, {
-        resizeWidth: width,
-        resizeHeight: height,
-        resizeQuality: "high",
-      });
-      console.log("Loaded image", this.fileName, width, height);
-      return result;
-    } catch (e) {
-      const extra = file
-        ? `(size: ${file.size} bytes, type: ${file.type})`
-        : "(file not found)";
-      throw new Error(`Failed to decode image: ${this.fileName} ${extra}`, {
-        cause: e,
-      });
-    } finally {
-      console.timeEnd(`Loading image ${this.fileName}`);
-    }
-  }
 }
 
 /**
