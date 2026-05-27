@@ -7,7 +7,6 @@ import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
-import { CacheHolder } from "../../lib/cache-holder.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
@@ -32,18 +31,19 @@ export default class MapRenderer {
 
   canvas: OffscreenCanvas;
   #mapSize = gameMapSize({ width: 0, height: 0 });
-
-  #biomesImage = new BitmapHolder("biomes.png");
-  #splat3Image = new BitmapHolder("splat3.png");
-  #splat4Image = new BitmapHolder("splat4.png");
-  #radImage = new BitmapHolder("radiation.png");
-  #imageFiles = [
-    this.#biomesImage,
-    this.#splat3Image,
-    this.#splat4Image,
-    this.#radImage,
-  ] as const;
   #fontFamilies: FontFamilies;
+
+  #nativeSizes = new Map<
+    mapFiles.MapFileName,
+    { width: number; height: number }
+  >();
+
+  // Composited base map (layers + brightness + per-layer alpha) cached so that
+  // prefab/marker-only updates can skip recompositing.
+  #composite: OffscreenCanvas | null = null;
+  #compositeKey: string | null = null;
+  // Bumped whenever a source image is invalidated, to invalidate the composite.
+  #generation = 0;
 
   constructor(canvas: OffscreenCanvas, fontFamilies: FontFamilies) {
     this.canvas = canvas;
@@ -54,23 +54,9 @@ export default class MapRenderer {
     fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[],
   ) {
     for (const fileName of fileNames) {
-      switch (fileName) {
-        case "biomes.png":
-          this.#biomesImage.invalidate();
-          break;
-        case "splat3.png":
-          this.#splat3Image.invalidate();
-          break;
-        case "splat4.png":
-          this.#splat4Image.invalidate();
-          break;
-        case "radiation.png":
-          this.#radImage.invalidate();
-          break;
-        default:
-          throw new Error(`Invalid file name: ${String(fileName)}`);
-      }
+      this.#nativeSizes.delete(fileName);
     }
+    this.#generation++;
   }
 
   update = throttledInvoker(async () => {
@@ -81,11 +67,10 @@ export default class MapRenderer {
   });
 
   async #updateImmediately(): Promise<void> {
-    const [biomes, splat3, splat4, rad] = await Promise.all(
-      this.#imageFiles.map((i) => i.get()),
+    const sizes = await Promise.all(
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#nativeSize(f)),
     );
-
-    const { width, height } = mapSize(biomes, splat3, splat4, rad);
+    const { width, height } = mapSize(...sizes);
     this.#mapSize.width = width;
     this.#mapSize.height = height;
     if (width === 0 || height === 0) {
@@ -94,36 +79,25 @@ export default class MapRenderer {
       return;
     }
 
-    this.canvas.width = width * this.scale;
-    this.canvas.height = height * this.scale;
+    const canvasWidth = Math.max(1, Math.round(width * this.scale));
+    const canvasHeight = Math.max(1, Math.round(height * this.scale));
 
     const context = this.canvas.getContext("2d");
-    if (!context) return;
+    if (!context) throw new Error("Failed to get 2d context");
+
+    // Compose the base map (which may re-decode at the new size) before
+    // touching the visible canvas. Resizing the canvas clears it, so doing it
+    // ahead of an await would expose a blank canvas and cause a flash while
+    // scaling; instead we resize and redraw in one synchronous pass below.
+    const base = await this.#composeBase(canvasWidth, canvasHeight);
+    this.canvas.width = canvasWidth;
+    this.canvas.height = canvasHeight;
     context.imageSmoothingEnabled = false;
+    if (base) context.drawImage(base, 0, 0);
+
+    // Overlays are drawn in native map coordinates, scaled down to the canvas.
+    context.save();
     context.scale(this.scale, this.scale);
-    context.filter = `brightness(${this.brightness})`;
-
-    if (biomes && this.biomesAlpha !== 0) {
-      context.globalAlpha = this.biomesAlpha;
-      context.drawImage(biomes, 0, 0, width, height);
-    }
-    context.imageSmoothingEnabled = true;
-    if (splat3 && this.splat3Alpha !== 0) {
-      context.globalAlpha = this.splat3Alpha;
-      context.drawImage(splat3, 0, 0, width, height);
-    }
-    if (splat4 && this.splat4Alpha !== 0) {
-      context.globalAlpha = this.splat4Alpha;
-      context.drawImage(splat4, 0, 0, width, height);
-    }
-    context.imageSmoothingEnabled = false;
-
-    context.filter = "none";
-    if (rad && this.radAlpha !== 0) {
-      context.globalAlpha = this.radAlpha;
-      context.drawImage(rad, 0, 0, width, height);
-    }
-
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
       this.drawPrefabs(context, width, height);
@@ -131,19 +105,90 @@ export default class MapRenderer {
     if (this.markerCoords) {
       this.drawMark(context, width, height);
     }
+    context.restore();
+  }
+
+  /**
+   * Composite the base layers (with brightness and per-layer alpha) onto a
+   * cached offscreen canvas at the current display resolution. The cache is
+   * reused as long as the display size, brightness, alphas, and source images
+   * are unchanged, so prefab/marker-only updates avoid re-decoding/compositing.
+   */
+  async #composeBase(
+    width: number,
+    height: number,
+  ): Promise<OffscreenCanvas | null> {
+    const key = [
+      width,
+      height,
+      this.brightness,
+      this.biomesAlpha,
+      this.splat3Alpha,
+      this.splat4Alpha,
+      this.radAlpha,
+      this.#generation,
+    ].join(":");
+    if (
+      this.#composite &&
+      this.#compositeKey === key &&
+      this.#composite.width === width &&
+      this.#composite.height === height
+    ) {
+      return this.#composite;
+    }
+
+    const canvas = this.#composite ?? new OffscreenCanvas(width, height);
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Failed to get 2d context");
+
+    const [biomes, splat3, splat4, rad] = await Promise.all(
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#decode(f, width, height)),
+    );
+
+    try {
+      context.clearRect(0, 0, width, height);
+      context.filter = `brightness(${this.brightness})`;
+
+      if (biomes && this.biomesAlpha !== 0) {
+        context.globalAlpha = this.biomesAlpha;
+        context.drawImage(biomes, 0, 0);
+      }
+      if (splat3 && this.splat3Alpha !== 0) {
+        context.globalAlpha = this.splat3Alpha;
+        context.drawImage(splat3, 0, 0);
+      }
+      if (splat4 && this.splat4Alpha !== 0) {
+        context.globalAlpha = this.splat4Alpha;
+        context.drawImage(splat4, 0, 0);
+      }
+      context.filter = "none";
+      if (rad && this.radAlpha !== 0) {
+        context.globalAlpha = this.radAlpha;
+        context.drawImage(rad, 0, 0);
+      }
+    } finally {
+      // Only the composite is cached; release the per-layer bitmaps.
+      for (const bitmap of [biomes, splat3, splat4, rad]) bitmap?.close();
+    }
+
+    this.#composite = canvas;
+    this.#compositeKey = key;
+    return canvas;
   }
 
   private drawPrefabs(
-    ctx: OffscreenCanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
   ) {
-    ctx.font = `${this.signSize.toString()}px '${
+    context.font = `${this.signSize.toString()}px '${
       this.#fontFamilies[SIGN_CHAR]
     }'`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    context.fillStyle = "red";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -156,23 +201,23 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z + charOffsetY;
-      putText(ctx, { text: SIGN_CHAR, x, z, size: this.signSize });
+      putText(context, { text: SIGN_CHAR, x, z, size: this.signSize });
     }
   }
 
   private drawMark(
-    ctx: OffscreenCanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
   ) {
     if (!this.markerCoords) return;
 
-    ctx.font = `${this.signSize.toString()}px '${
+    context.font = `${this.signSize.toString()}px '${
       this.#fontFamilies[MARK_CHAR]
     }'`;
-    ctx.fillStyle = "red";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
+    context.fillStyle = "red";
+    context.textAlign = "left";
+    context.textBaseline = "alphabetic";
 
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -182,7 +227,51 @@ export default class MapRenderer {
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(ctx, { text: MARK_CHAR, x, z, size: this.signSize });
+    putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
+  }
+
+  async #nativeSize(
+    fileName: mapFiles.MapFileName,
+  ): Promise<{ width: number; height: number } | null> {
+    const cached = this.#nativeSizes.get(fileName);
+    if (cached) return cached;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    const size = await readPngSize(file);
+    this.#nativeSizes.set(fileName, size);
+    return size;
+  }
+
+  async #decode(
+    fileName: mapFiles.MapFileName,
+    width: number,
+    height: number,
+  ): Promise<ImageBitmap | null> {
+    if (width <= 0 || height <= 0) return null;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    console.time(`Loading image ${fileName}`);
+    try {
+      const result = await createImageBitmap(file, {
+        resizeWidth: width,
+        resizeHeight: height,
+        resizeQuality: "high",
+      });
+      console.log("Loaded image", fileName, width, height);
+      return result;
+    } catch (e) {
+      const extra = `(size: ${file.size} bytes, type: ${file.type})`;
+      throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
+        cause: e,
+      });
+    } finally {
+      console.timeEnd(`Loading image ${fileName}`);
+    }
+  }
+
+  async #getFile(fileName: mapFiles.MapFileName): Promise<File | null> {
+    const workspace = await storage.workspaceDir();
+    return workspace.get(fileName);
   }
 
   size(): GameMapSize {
@@ -190,10 +279,12 @@ export default class MapRenderer {
   }
 }
 
-function mapSize(...images: (ImageBitmap | null | undefined)[]): GameMapSize {
+function mapSize(
+  ...sizes: ({ width: number; height: number } | null | undefined)[]
+): GameMapSize {
   return gameMapSize({
-    width: Math.max(...images.map((i) => i?.width ?? 0)),
-    height: Math.max(...images.map((i) => i?.height ?? 0)),
+    width: Math.max(0, ...sizes.map((s) => s?.width ?? 0)),
+    height: Math.max(0, ...sizes.map((s) => s?.height ?? 0)),
   });
 }
 
@@ -205,43 +296,29 @@ interface MapSign {
 }
 
 function putText(
-  ctx: OffscreenCanvasRenderingContext2D,
+  context: OffscreenCanvasRenderingContext2D,
   { text, x, z, size }: MapSign,
 ) {
-  ctx.lineWidth = Math.round(size * 0.2);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.strokeText(text, x, z);
+  context.lineWidth = Math.round(size * 0.2);
+  context.strokeStyle = "rgba(0, 0, 0, 0.8)";
+  context.strokeText(text, x, z);
 
-  ctx.lineWidth = Math.round(size * 0.1);
-  ctx.strokeStyle = "white";
-  ctx.strokeText(text, x, z);
+  context.lineWidth = Math.round(size * 0.1);
+  context.strokeStyle = "white";
+  context.strokeText(text, x, z);
 
-  ctx.fillText(text, x, z);
+  context.fillText(text, x, z);
 }
 
-class BitmapHolder extends CacheHolder<ImageBitmap | null> {
-  constructor(readonly fileName: mapFiles.MapFileName) {
-    super(
-      async () => {
-        console.time(`Loading image ${fileName}`);
-        const workspace = await storage.workspaceDir();
-        const file = await workspace.get(fileName);
-        try {
-          const result = file ? await createImageBitmap(file) : null;
-          console.log("Loaded image", fileName);
-          return result;
-        } catch (e) {
-          const extra = file
-            ? `(size: ${file.size} bytes, type: ${file.type})`
-            : "(file not found)";
-          throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
-            cause: e,
-          });
-        } finally {
-          console.timeEnd(`Loading image ${fileName}`);
-        }
-      },
-      (img) => img?.close(),
-    );
-  }
+/**
+ * Read width/height from a PNG's IHDR chunk without decoding pixels.
+ * Layout: 8-byte signature, 4-byte chunk length, 4-byte "IHDR" type,
+ * then 4-byte width and 4-byte height (big-endian).
+ */
+async function readPngSize(
+  file: Blob,
+): Promise<{ width: number; height: number }> {
+  const header = await file.slice(0, 24).arrayBuffer();
+  const view = new DataView(header);
+  return { width: view.getUint32(16), height: view.getUint32(20) };
 }

@@ -47,14 +47,14 @@ const FILE_PROCESS_RULES = {
 } as const;
 
 export type WorldFileName = keyof typeof FILE_PROCESS_RULES;
-export type MapFileNameMap<T extends keyof typeof FILE_PROCESS_RULES> =
-  (typeof FILE_PROCESS_RULES)[T]["name"];
-export const MAP_FILE_NAME_MAP = Object.fromEntries(
-  Object.entries(FILE_PROCESS_RULES).map(([k, v]) => [k, v.name]),
-) as {
-  [K in WorldFileName]: MapFileNameMap<K>;
-};
-export type MapFileName = MapFileNameMap<WorldFileName>;
+export type MapFileName = (typeof FILE_PROCESS_RULES)[WorldFileName]["name"];
+
+export const MAP_IMAGE_FILE_NAMES = [
+  "biomes.png",
+  "splat3.png",
+  "splat4.png",
+  "radiation.png",
+] as const satisfies readonly MapFileName[];
 
 export class Processor<T extends keyof typeof FILE_PROCESS_RULES> {
   #worldFileName: T;
@@ -63,7 +63,7 @@ export class Processor<T extends keyof typeof FILE_PROCESS_RULES> {
     this.#worldFileName = worldFileName;
   }
 
-  get mapFileName(): MapFileNameMap<T> {
+  get mapFileName(): MapFileName {
     return FILE_PROCESS_RULES[this.#worldFileName].name;
   }
 
@@ -89,19 +89,11 @@ export const MAP_FILE_NAMES = new Set(
   Object.values(FILE_PROCESS_RULES).map((v) => v.name),
 );
 
-export function isMapFileName(
-  name: string,
-): name is MapFileNameMap<WorldFileName> {
-  return MAP_FILE_NAMES.has(
-    name as unknown as (typeof FILE_PROCESS_RULES)[
-      keyof typeof FILE_PROCESS_RULES
-    ]["name"],
-  );
+export function isMapFileName(name: string): name is MapFileName {
+  return MAP_FILE_NAMES.has(name as MapFileName);
 }
 
-export function getMapFileName(
-  name: WorldFileName,
-): MapFileNameMap<WorldFileName> {
+export function getMapFileName(name: WorldFileName): MapFileName {
   return FILE_PROCESS_RULES[name].name;
 }
 
