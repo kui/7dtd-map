@@ -16,13 +16,6 @@ interface FontFamilies {
   [MARK_CHAR]: string;
 }
 
-const MAP_FILE_NAMES = [
-  "biomes.png",
-  "splat3.png",
-  "splat4.png",
-  "radiation.png",
-] as const satisfies readonly mapFiles.MapFileName[];
-
 export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
@@ -75,7 +68,7 @@ export default class MapRenderer {
 
   async #updateImmediately(): Promise<void> {
     const sizes = await Promise.all(
-      MAP_FILE_NAMES.map((f) => this.#nativeSize(f)),
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#nativeSize(f)),
     );
     const { width, height } = mapSize(...sizes);
     this.#mapSize.width = width;
@@ -150,12 +143,9 @@ export default class MapRenderer {
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
 
-    const [biomes, splat3, splat4, rad] = await Promise.all([
-      this.#decode("biomes.png", width, height),
-      this.#decode("splat3.png", width, height),
-      this.#decode("splat4.png", width, height),
-      this.#decode("radiation.png", width, height),
-    ]);
+    const [biomes, splat3, splat4, rad] = await Promise.all(
+      mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#decode(f, width, height)),
+    );
 
     try {
       context.clearRect(0, 0, width, height);
