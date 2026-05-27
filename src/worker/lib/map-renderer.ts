@@ -16,6 +16,13 @@ interface FontFamilies {
   [MARK_CHAR]: string;
 }
 
+const MAP_FILE_NAMES = [
+  "biomes.png",
+  "splat3.png",
+  "splat4.png",
+  "radiation.png",
+] as const satisfies readonly mapFiles.MapFileName[];
+
 export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
@@ -31,18 +38,12 @@ export default class MapRenderer {
 
   canvas: OffscreenCanvas;
   #mapSize = gameMapSize({ width: 0, height: 0 });
-
-  #biomesImage = new MapLayerImage("biomes.png");
-  #splat3Image = new MapLayerImage("splat3.png");
-  #splat4Image = new MapLayerImage("splat4.png");
-  #radImage = new MapLayerImage("radiation.png");
-  #imageFiles = [
-    this.#biomesImage,
-    this.#splat3Image,
-    this.#splat4Image,
-    this.#radImage,
-  ] as const;
   #fontFamilies: FontFamilies;
+
+  #nativeSizes = new Map<
+    mapFiles.MapFileName,
+    { width: number; height: number }
+  >();
 
   // Composited base map (layers + brightness + per-layer alpha) cached so that
   // prefab/marker-only updates can skip recompositing.
@@ -60,22 +61,7 @@ export default class MapRenderer {
     fileNames: ("biomes.png" | "splat3.png" | "splat4.png" | "radiation.png")[],
   ) {
     for (const fileName of fileNames) {
-      switch (fileName) {
-        case "biomes.png":
-          this.#biomesImage.invalidate();
-          break;
-        case "splat3.png":
-          this.#splat3Image.invalidate();
-          break;
-        case "splat4.png":
-          this.#splat4Image.invalidate();
-          break;
-        case "radiation.png":
-          this.#radImage.invalidate();
-          break;
-        default:
-          throw new Error(`Invalid file name: ${String(fileName)}`);
-      }
+      this.#nativeSizes.delete(fileName);
     }
     this.#generation++;
   }
@@ -89,7 +75,7 @@ export default class MapRenderer {
 
   async #updateImmediately(): Promise<void> {
     const sizes = await Promise.all(
-      this.#imageFiles.map((i) => i.nativeSize()),
+      MAP_FILE_NAMES.map((f) => this.#nativeSize(f)),
     );
     const { width, height } = mapSize(...sizes);
     this.#mapSize.width = width;
@@ -165,10 +151,10 @@ export default class MapRenderer {
     if (!context) throw new Error("Failed to get 2d context");
 
     const [biomes, splat3, splat4, rad] = await Promise.all([
-      this.#biomesImage.decode(width, height),
-      this.#splat3Image.decode(width, height),
-      this.#splat4Image.decode(width, height),
-      this.#radImage.decode(width, height),
+      this.#decode("biomes.png", width, height),
+      this.#decode("splat3.png", width, height),
+      this.#decode("splat4.png", width, height),
+      this.#decode("radiation.png", width, height),
     ]);
 
     try {
@@ -254,6 +240,50 @@ export default class MapRenderer {
     putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
   }
 
+  async #nativeSize(
+    fileName: mapFiles.MapFileName,
+  ): Promise<{ width: number; height: number } | null> {
+    const cached = this.#nativeSizes.get(fileName);
+    if (cached) return cached;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    const size = await readPngSize(file);
+    this.#nativeSizes.set(fileName, size);
+    return size;
+  }
+
+  async #decode(
+    fileName: mapFiles.MapFileName,
+    width: number,
+    height: number,
+  ): Promise<ImageBitmap | null> {
+    if (width <= 0 || height <= 0) return null;
+    const file = await this.#getFile(fileName);
+    if (!file) return null;
+    console.time(`Loading image ${fileName}`);
+    try {
+      const result = await createImageBitmap(file, {
+        resizeWidth: width,
+        resizeHeight: height,
+        resizeQuality: "high",
+      });
+      console.log("Loaded image", fileName, width, height);
+      return result;
+    } catch (e) {
+      const extra = `(size: ${file.size} bytes, type: ${file.type})`;
+      throw new Error(`Failed to decode image: ${fileName} ${extra}`, {
+        cause: e,
+      });
+    } finally {
+      console.timeEnd(`Loading image ${fileName}`);
+    }
+  }
+
+  async #getFile(fileName: mapFiles.MapFileName): Promise<File | null> {
+    const workspace = await storage.workspaceDir();
+    return workspace.get(fileName);
+  }
+
   size(): GameMapSize {
     return this.#mapSize;
   }
@@ -288,60 +318,6 @@ function putText(
   context.strokeText(text, x, z);
 
   context.fillText(text, x, z);
-}
-
-/**
- * Accesses a source map image, decoding it at the requested display resolution
- * rather than at full resolution. The decoded bitmap is NOT retained: the
- * caller owns the returned bitmap and must close() it. Only the native
- * dimensions (read cheaply from the PNG header) are memoized. This keeps just
- * the single composited surface in memory, at the cost of re-decoding the
- * layers whenever the composite is rebuilt.
- */
-class MapLayerImage {
-  #nativeSize: { width: number; height: number } | null = null;
-
-  constructor(readonly fileName: mapFiles.MapFileName) {}
-
-  invalidate() {
-    this.#nativeSize = null;
-  }
-
-  async nativeSize(): Promise<{ width: number; height: number } | null> {
-    if (this.#nativeSize) return this.#nativeSize;
-    const file = await this.#getFile();
-    if (!file) return null;
-    this.#nativeSize = await readPngSize(file);
-    return this.#nativeSize;
-  }
-
-  async decode(width: number, height: number): Promise<ImageBitmap | null> {
-    if (width <= 0 || height <= 0) return null;
-    const file = await this.#getFile();
-    if (!file) return null;
-    console.time(`Loading image ${this.fileName}`);
-    try {
-      const result = await createImageBitmap(file, {
-        resizeWidth: width,
-        resizeHeight: height,
-        resizeQuality: "high",
-      });
-      console.log("Loaded image", this.fileName, width, height);
-      return result;
-    } catch (e) {
-      const extra = `(size: ${file.size} bytes, type: ${file.type})`;
-      throw new Error(`Failed to decode image: ${this.fileName} ${extra}`, {
-        cause: e,
-      });
-    } finally {
-      console.timeEnd(`Loading image ${this.fileName}`);
-    }
-  }
-
-  async #getFile(): Promise<File | null> {
-    const workspace = await storage.workspaceDir();
-    return workspace.get(this.fileName);
-  }
 }
 
 /**
