@@ -5,27 +5,27 @@ interface StateElement {
 
 // Store values of input elements in the URL query string.
 export class UrlState {
-  private url: URL;
-  private inputs: Map<HTMLInputElement, StateElement>;
-  private udpateListeners: ((url: URL) => void)[] = [];
+  #url: URL;
+  #inputs: Map<HTMLInputElement, StateElement>;
+  #udpateListeners: ((url: URL) => void)[] = [];
 
   private constructor(browserUrl: URL, elements: ArrayLike<StateElement>) {
-    this.url = browserUrl;
-    this.inputs = new Map(Array.from(elements).map((e) => [e.element, e]));
-    this.init();
+    this.#url = browserUrl;
+    this.#inputs = new Map(Array.from(elements).map((e) => [e.element, e]));
+    this.#init();
   }
 
-  private init() {
-    for (const [input, { defaultValue }] of this.inputs.entries()) {
-      if (this.url.searchParams.has(input.id)) {
-        setValue(input, this.url.searchParams.get(input.id) ?? defaultValue);
+  #init() {
+    for (const [input, { defaultValue }] of this.#inputs.entries()) {
+      if (this.#url.searchParams.has(input.id)) {
+        setValue(input, this.#url.searchParams.get(input.id) ?? defaultValue);
         input.dispatchEvent(new Event("input"));
       }
 
       input.addEventListener("input", () => {
-        this.updateUrl(input, defaultValue);
-        this.udpateListeners.forEach((fn) => {
-          fn(this.url);
+        this.#updateUrl(input, defaultValue);
+        this.#udpateListeners.forEach((fn) => {
+          fn(this.#url);
         });
       });
     }
@@ -44,17 +44,17 @@ export class UrlState {
     );
   }
 
-  private updateUrl(input: HTMLInputElement, defaultValue: string) {
+  #updateUrl(input: HTMLInputElement, defaultValue: string) {
     const value = getValue(input);
     if (value === defaultValue) {
-      this.url.searchParams.delete(input.id);
+      this.#url.searchParams.delete(input.id);
     } else {
-      this.url.searchParams.set(input.id, value);
+      this.#url.searchParams.set(input.id, value);
     }
   }
 
   addUpdateListener(listener: (url: URL) => void) {
-    this.udpateListeners.push(listener);
+    this.#udpateListeners.push(listener);
   }
 }
 

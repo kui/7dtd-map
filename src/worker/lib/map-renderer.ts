@@ -100,10 +100,10 @@ export default class MapRenderer {
     context.scale(this.scale, this.scale);
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
-      this.drawPrefabs(context, width, height);
+      this.#drawPrefabs(context, width, height);
     }
     if (this.markerCoords) {
-      this.drawMark(context, width, height);
+      this.#drawMark(context, width, height);
     }
     context.restore();
   }
@@ -178,7 +178,7 @@ export default class MapRenderer {
     return canvas;
   }
 
-  private drawPrefabs(
+  #drawPrefabs(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
@@ -205,7 +205,7 @@ export default class MapRenderer {
     }
   }
 
-  private drawMark(
+  #drawMark(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
