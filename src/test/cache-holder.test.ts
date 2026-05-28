@@ -48,6 +48,16 @@ describe("CacheHolder.get()", () => {
     holder.invalidate();
   });
 
+  it("should not call deconstructor when invalidating before any get", () => {
+    const fetcher = fn(() => Promise.resolve("value"));
+    const deconstructor = fn((s: string) => s);
+    const holder = new CacheHolder<string>(fetcher, deconstructor);
+    holder.invalidate();
+    expect(fetcher.calls.length).toBe(0);
+    expect(deconstructor.calls.length).toBe(0);
+    holder.invalidate();
+  });
+
   it("should refetch if the fetching is invalidated", async () => {
     using time = new FakeTime(0);
     const sleepTime = 300;
