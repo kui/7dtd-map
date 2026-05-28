@@ -20,7 +20,9 @@ export class ListenerManager<N extends string, M extends MessageMap<N>> {
 
   async dispatch(m: M) {
     const results = await Promise.allSettled(
-      this.#listeners.map((fn) => fn(m)),
+      this.#listeners.map((fn) =>
+        new Promise<unknown>((resolve) => resolve(fn(m)))
+      ),
     );
     const errors = results.flatMap((
       r,
