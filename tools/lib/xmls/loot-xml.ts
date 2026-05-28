@@ -1,4 +1,4 @@
-import { parseXml } from "../xml-parser.ts";
+import { parse as parseXml } from "@libs/xml";
 import { vanillaDir } from "../utils.ts";
 
 const LOOT_XML = await vanillaDir("Data", "Config", "loot.xml");
@@ -15,23 +15,23 @@ interface RawLootXml {
 }
 
 interface RawLootGroup {
-  $: { name: LootGroupName };
+  "@name": LootGroupName;
   item?: RawLootItem[];
 }
 
 interface RawLootContainer {
-  $: { name: string };
+  "@name": string;
   item?: RawLootItem[];
 }
 
 type RawLootItem = RawLootItemGroup | RawLootLootItem;
 
 interface RawLootItemGroup {
-  $: { group: LootGroupName };
+  "@group": LootGroupName;
 }
 
 interface RawLootLootItem {
-  $: { name: string };
+  "@name": string;
 }
 
 /* Public types */
@@ -49,21 +49,33 @@ export interface LootGroup extends LootTable {
   name: string;
 }
 
+function isRawLootXml(value: unknown): value is RawLootXml {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  const containers = v["lootcontainers"];
+  if (typeof containers !== "object" || containers === null) return false;
+  const c = containers as Record<string, unknown>;
+  return Array.isArray(c["lootgroup"]) && Array.isArray(c["lootcontainer"]);
+}
+
 /* Public API */
 
 export async function loadLoot(
   lootXmlFileName: string = LOOT_XML,
 ): Promise<Loot> {
-  const xml = await parseXml(lootXmlFileName) as RawLootXml;
+  const parsed = parseXml(await Deno.readTextFile(lootXmlFileName));
+  if (!isRawLootXml(parsed)) {
+    throw new Error(`Unexpected structure in ${lootXmlFileName}`);
+  }
   const groups = new Map<string, { items: string[]; groups: string[] }>();
-  for (const g of xml.lootcontainers.lootgroup) {
-    groups.set(g.$.name, {
+  for (const g of parsed.lootcontainers.lootgroup) {
+    groups.set(g["@name"], {
       items: extractItems(g.item ?? []),
       groups: extractGroups(g.item ?? []),
     });
   }
-  const containers = xml.lootcontainers.lootcontainer.map((c) => ({
-    name: c.$.name,
+  const containers = parsed.lootcontainers.lootcontainer.map((c) => ({
+    name: c["@name"],
     items: extractItems(c.item ?? []),
     groups: extractGroups(c.item ?? []),
   }));
@@ -101,14 +113,14 @@ export class Loot {
 
 function extractItems(items: RawLootItem[]): string[] {
   return items
-    .filter((item): item is RawLootLootItem => "name" in item.$)
-    .map((item) => item.$.name);
+    .filter((item): item is RawLootLootItem => "@name" in item)
+    .map((item) => item["@name"]);
 }
 
 function extractGroups(items: RawLootItem[]): string[] {
   return items
-    .filter((item): item is RawLootItemGroup => "group" in item.$)
-    .map((item) => item.$.group);
+    .filter((item): item is RawLootItemGroup => "@group" in item)
+    .map((item) => item["@group"]);
 }
 
 function matchLootTable(

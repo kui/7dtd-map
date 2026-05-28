@@ -35,7 +35,7 @@
   "imports": {
     "fast-png": "npm:fast-png@^8.0.0",
     "three": "npm:three@~0.184.0",
-    "xml2js": "npm:xml2js@^0.6.2",
+    "@libs/xml": "jsr:@libs/xml@^7.0.4",
     "csv-parse": "npm:csv-parse@^6.2.1",
     "esbuild": "npm:esbuild@~0.28.0",
     "@std/fs": "jsr:@std/fs@^1.0.24",

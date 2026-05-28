@@ -1,4 +1,4 @@
-import { parseXml } from "../xml-parser.ts";
+import { parse as parseXml } from "@libs/xml";
 import { vanillaDir } from "../utils.ts";
 
 const MATERIALS_XML = await vanillaDir("Data", "Config", "materials.xml");
@@ -12,12 +12,13 @@ interface RawMaterialsXml {
 }
 
 interface RawMaterial {
-  $: { id: string };
+  "@id": string;
   property: RawMaterialProperty[];
 }
 
 interface RawMaterialProperty {
-  $: { name: string; value: string };
+  "@name": string;
+  "@value": string;
 }
 
 /* Public types */
@@ -27,17 +28,28 @@ export interface Material {
   properties: Record<string, string>;
 }
 
+function isRawMaterialsXml(value: unknown): value is RawMaterialsXml {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  const materials = v["materials"];
+  if (typeof materials !== "object" || materials === null) return false;
+  return Array.isArray((materials as Record<string, unknown>)["material"]);
+}
+
 /* Public API */
 
 export async function loadMaterials(
   materialsXmlFileName: string = MATERIALS_XML,
 ): Promise<Materials> {
-  const xml = await parseXml(materialsXmlFileName) as RawMaterialsXml;
-  const materials = xml.materials.material.map((materialElement) => {
-    const id = materialElement.$.id;
+  const parsed = parseXml(await Deno.readTextFile(materialsXmlFileName));
+  if (!isRawMaterialsXml(parsed)) {
+    throw new Error(`Unexpected structure in ${materialsXmlFileName}`);
+  }
+  const materials = parsed.materials.material.map((materialElement) => {
+    const id = materialElement["@id"];
     const properties = materialElement.property.reduce<Record<string, string>>(
       (map, property) => {
-        map[property.$.name] = property.$.value;
+        map[property["@name"]] = property["@value"];
         return map;
       },
       {},

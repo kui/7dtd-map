@@ -1,4 +1,4 @@
-import { parseXml } from "../xml-parser.ts";
+import { parse as parseXml } from "@libs/xml";
 import {
   buildArrayMapByEntries,
   requireNonnull,
@@ -18,29 +18,25 @@ interface RawBlocksXml {
 }
 
 interface RawBlock {
-  $: { name: string };
+  "@name": string;
   property: RawBlockProperty[];
   dropextendsoff?: object[];
   drop?: RawBlockDrop[];
 }
 
 interface RawBlockProperty {
-  $: {
-    name: string;
-    value: string;
-    param1?: string;
-  };
+  "@name": string;
+  "@value": string;
+  "@param1"?: string;
 }
 
 interface RawBlockDrop {
-  $: {
-    event: string;
-    name: string;
-    count: string;
-    tag?: string;
-    prob?: string;
-    "stick_chance"?: string;
-  };
+  "@event": string;
+  "@name": string;
+  "@count": string;
+  "@tag"?: string;
+  "@prob"?: string;
+  "@stick_chance"?: string;
 }
 
 /* Public types */
@@ -83,31 +79,45 @@ export interface HarvestItems {
   };
 }
 
+function isRawBlocksXml(value: unknown): value is RawBlocksXml {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  const blocks = v["blocks"];
+  if (typeof blocks !== "object" || blocks === null) return false;
+  return Array.isArray((blocks as Record<string, unknown>)["block"]);
+}
+
 /* Public API */
 
 export async function loadBlocks(
   blocksXmlFileName: string = DEFAULT_BLOCKS_XML,
 ): Promise<Blocks> {
-  const xml = await parseXml(blocksXmlFileName) as RawBlocksXml;
-  const blocks = xml.blocks.block.reduce<Map<BlockName, Block>>(
+  const parsed = parseXml(await Deno.readTextFile(blocksXmlFileName));
+  if (!isRawBlocksXml(parsed)) {
+    throw new Error(`Unexpected structure in ${blocksXmlFileName}`);
+  }
+  const blocks = parsed.blocks.block.reduce<Map<BlockName, Block>>(
     (map, blockElement) => {
-      const name = blockElement.$.name;
+      const name = blockElement["@name"];
       const properties = blockElement.property.reduce<BlockProperties>(
         (props, elem) => {
-          props[elem.$.name] = elem.$;
+          props[elem["@name"]] = {
+            value: elem["@value"],
+            param1: elem["@param1"],
+          };
           return props;
         },
         {},
       );
       const drops = blockElement.drop
         ? blockElement.drop.map<BlockDrop>((elem) => ({
-          event: elem.$.event,
-          name: elem.$.name,
-          count: parseCount(elem.$.count),
-          tag: elem.$.tag?.split(",") ?? [],
-          prob: elem.$.prob ? parseFloat(elem.$.prob) : undefined,
-          stickChance: elem.$["stick_chance"]
-            ? parseFloat(elem.$["stick_chance"])
+          event: elem["@event"],
+          name: elem["@name"],
+          count: parseCount(elem["@count"]),
+          tag: elem["@tag"]?.split(",") ?? [],
+          prob: elem["@prob"] ? parseFloat(elem["@prob"]) : undefined,
+          stickChance: elem["@stick_chance"]
+            ? parseFloat(elem["@stick_chance"])
             : undefined,
         }))
         : [];
