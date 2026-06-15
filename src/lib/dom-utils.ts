@@ -17,6 +17,15 @@ export function removeAllChildren(e: HTMLElement): void {
   while (e.lastChild) e.removeChild(e.lastChild);
 }
 
+/** Form elements that expose a `value` and `id` we sync on. */
+export function isFormValueElement(
+  target: EventTarget | null,
+): target is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement {
+  return target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement;
+}
+
 export function waitAnimationFrame(): Promise<number> {
   return new Promise((r) => requestAnimationFrame(r));
 }

@@ -1,16 +1,12 @@
 // Store the value in the local storage
 // And restore it when the page is reloaded
 
+import { isFormValueElement } from "../dom-utils.ts";
+
 export function init() {
   for (const eventName of ["input", "change"]) {
     globalThis.addEventListener(eventName, ({ target }) => {
-      if (
-        !(target instanceof HTMLInputElement) ||
-        !(target instanceof HTMLTextAreaElement ||
-          !(target instanceof HTMLSelectElement))
-      ) {
-        return;
-      }
+      if (!isFormValueElement(target)) return;
       const key = target.dataset["remember"];
       if (key) localStorage.setItem(key, target.value);
     });
