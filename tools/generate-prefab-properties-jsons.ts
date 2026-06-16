@@ -17,10 +17,10 @@ const FILE = "prefab-difficulties.json";
 
 async function main() {
   const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const prefabXmlFiles = await Array.fromAsync(
+  const prefabXmlFiles = (await Array.fromAsync(
     expandGlob(globPath),
     (e) => e.path,
-  );
+  )).filter((p) => !p.endsWith("_signs.xml"));
   console.log("Found %d prefab xml from %s", prefabXmlFiles.length, globPath);
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);

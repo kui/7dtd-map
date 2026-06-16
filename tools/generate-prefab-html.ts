@@ -42,10 +42,10 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
   console.log("Build HTML files");
 
   const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmlFiles = await Array.fromAsync(
+  const xmlFiles = (await Array.fromAsync(
     expandGlob(globPath),
     (e) => e.path,
-  );
+  )).filter((p) => !p.endsWith("_signs.xml"));
   if (xmlFiles.length === 0) {
     throw Error(`No xml file: ${globPath}`);
   }
