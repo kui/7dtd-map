@@ -12,14 +12,11 @@ export function init() {
     });
   }
 
-  for (
-    const input of document.querySelectorAll<HTMLInputElement>(
-      "input[data-remember]",
-    )
-  ) {
-    const key = input.dataset["remember"];
+  for (const element of document.querySelectorAll("[data-remember]")) {
+    if (!isFormValueElement(element)) continue;
+    const key = element.dataset["remember"];
     if (key === undefined) continue;
     const value = localStorage.getItem(key);
-    if (value !== null) input.value = value;
+    if (value !== null) element.value = value;
   }
 }
