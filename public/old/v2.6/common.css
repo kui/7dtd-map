@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "Noto Symbol";
+  src: url("./NotoSansSymbols2.subset.woff2") format("woff2");
+}
+.logo {
+  font-family: "Noto Symbol";
+  -webkit-text-fill-color: red;
+  -webkit-text-stroke-width: 0.1px;
+  -webkit-text-stroke-color: white;
+  text-shadow: 0px 0px 3px;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(2px);
+  background-color: rgba(125, 125, 125, 0.4);
+}

@@ -57,7 +57,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Hospital,1,1,S_Zom_Burnt,3,3,S_-_Group_Hospital,0,1,S_-Group_Generic_Zombie,0,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupHospital,1,1,ZomBurnt,3,3,GroupHospital,0,1,GroupGenericZombie,0,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>17, 4, 13#15, 9, 19#9, 4, 9#19, 3, 24</td></tr>
 <tr><th>SleeperVolumeStart</th><td>10, 7, 20#28, 2, 19#24, 12, 29#18, 17, 16</td></tr>
@@ -79,7 +79,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">64764</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">64773</td></tr>
 <tr class="block"><td class="block_name">airConditioner</td><td class="block_label">Air Conditioner</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">bathroomStallCTRBeam</td><td class="block_label">Bathroom Stall Wall Top Support</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bathroomStallDoor</td><td class="block_label">Bathroom Stall Door</td><td class="block_count">2</td></tr>
@@ -224,14 +224,6 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:railing</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:ramp</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:shantywall04</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_c</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_e</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_g</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_n</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_r</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_t</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_u</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:signNumber_1</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:signNumber_2</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:signNumber_3</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -307,6 +299,7 @@
 <tr class="block"><td class="block_name">sectionalLeatherCouchSofaMiddle</td><td class="block_label">Leather Couch Middle</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">signBathroomSignUnisexWallMount</td><td class="block_label">Bathroom Sign Unisex Wall</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signBulletinBoard01</td><td class="block_label">Bulletin Board 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signDecalCorrugatedMetal9x1</td><td class="block_label">Sign Decal Corrugated Metal 9x1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signExitFrameMount</td><td class="block_label">Exit Sign Frame Mount</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signNotice04</td><td class="block_label">Sign: Notice 04</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signSafetyWorkProtection</td><td class="block_label">Sign: Safety Work Protection</td><td class="block_count">2</td></tr>
@@ -361,10 +354,10 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-_Group_Hospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x4x13</td><td>10x7x20</td></tr>
-<tr><td>1</td><td>S_Zom_Burnt</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x9x19</td><td>28x2x19</td></tr>
-<tr><td>2</td><td>S_-_Group_Hospital</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x9</td><td>24x12x29</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x3x24</td><td>18x17x16</td></tr>
+      <tr><td>0</td><td>GroupHospital</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>17x4x13</td><td>10x7x20</td></tr>
+<tr><td>1</td><td>ZomBurnt</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>15x9x19</td><td>28x2x19</td></tr>
+<tr><td>2</td><td>GroupHospital</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x9</td><td>24x12x29</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>19x3x24</td><td>18x17x16</td></tr>
     </table>
     <p>Total Count: 4-6</p>
     

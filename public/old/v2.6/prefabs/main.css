@@ -1,0 +1,15 @@
+tr:nth-child(odd) > * {
+  background-color: lavender;
+}
+
+table.long-table th {
+  position: sticky;
+  top: 0;
+  background-color: lavender;
+  padding: 0 8px;
+}
+
+.prefab-tier {
+  font-size: 80%;
+  font-weight: lighter;
+}

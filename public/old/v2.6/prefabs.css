@@ -1,0 +1,24 @@
+#header {
+  display: flex;
+  gap: 10px;
+}
+
+#filters {
+  border: 1px solid lightgray;
+  padding: 10px;
+
+  & h2 {
+    margin: 8px 0 4px;
+    font-size: 1.2em;
+  }
+  & > section > header {
+    display: block;
+    & > h2 {
+      display: inline-block;
+    }
+  }
+  & > details > summary {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+}

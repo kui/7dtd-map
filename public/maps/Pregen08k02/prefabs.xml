@@ -2969,7 +2969,7 @@
   <decoration type="model" name="part_streetlight_single_diagonal" position="923,47,-2385" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="part_crosswalk" position="941,40,-2366" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="rwg_tile_industrial_cap" position="704,38,-2596" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="remnant_lot_industrial_01" position="726,38,-2560" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="remnant_industrial_large_02" position="726,38,-2560" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_04" position="783,38,-2561" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_01" position="741,38,-2460" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="lot_industrial_16" position="705,38,-2595" rotation="2" y_is_groundlevel="true" />

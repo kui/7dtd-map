@@ -59,7 +59,7 @@
 <tr><th>POIMarkerStart</th><td>25, 1, -5</td></tr>
 <tr><th>POIMarkerTags</th><td>residential</td></tr>
 <tr><th>POIMarkerType</th><td>PartSpawn</td></tr>
-<tr><th>PrefabSize</th><td>60, 13, 60</td></tr>
+<tr><th>PrefabSize</th><td>60, 23, 60</td></tr>
 <tr><th>QuestTags</th><td>clear, fetch, infested</td></tr>
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
@@ -67,7 +67,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,0,0,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,3,3,S_Zom_Businessman,3,3,S_-Group_Generic_Zombie,5,5,S_-Group_Generic_Zombie,5,5,S_-Group_Generic_Zombie,3,3,S_-Group_Generic_Zombie,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,3,3,ZomBusinessman,3,3,GroupGenericZombie,5,5,GroupGenericZombie,5,5,GroupGenericZombie,3,3,GroupGenericZombie,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>17, 6, 7#7, 5, 18#9, 3, 16#10, 6, 17#32, 5, 15#8, 5, 17</td></tr>
 <tr><th>SleeperVolumeStart</th><td>18, 0, 36#18, 1, 18#22, 7, 23#25, 0, 18#12, 2, 44#36, 2, 27</td></tr>
@@ -81,7 +81,7 @@
   <section id="dimensions">
     <h2>Dimensions</h2>
     <table><tr><th>x</th><td>60</td></tr>
-<tr><th>y</th><td>13</td></tr>
+<tr><th>y</th><td>23</td></tr>
 <tr><th>z</th><td>60</td></tr></table>
   </section>
 
@@ -89,10 +89,8 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">34192</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">70192</td></tr>
 <tr class="block"><td class="block_name">airConditioner</td><td class="block_label">Air Conditioner</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsBottom</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTop2</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">barStoolGrey</td><td class="block_label">Bar Stool Grey</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">bed02</td><td class="block_label">Black King Size Bed</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">breakerBoxWallClosed</td><td class="block_label">Breaker Box Wall Closed</td><td class="block_count">1</td></tr>
@@ -334,6 +332,8 @@
 <tr class="block"><td class="block_name">tvLargeStand3x2</td><td class="block_label">Large TV, 3x2</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">tvSmallStand1x1</td><td class="block_label">Small TV</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">utilityGasMeter01</td><td class="block_label">Gas Meter 01</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottom2White</td><td class="block_label">White Vertical Blinds Bottom Right</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTop2White</td><td class="block_label">White Vertical Blinds Top Right</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">wallMirrorRandomHelper</td><td class="block_label">= Wall Mirror = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">waterHeaterWhite</td><td class="block_label">White Water Heater</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">windowPlug01CTRPlate</td><td class="block_label">Window Plug 01</td><td class="block_count">1</td></tr>
@@ -435,12 +435,12 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>17x6x7</td><td>18x0x36</td></tr>
-<tr><td>1</td><td>S_Zom_Businessman</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x18</td><td>18x1x18</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x16</td><td>22x7x23</td></tr>
-<tr><td>3</td><td>S_-Group_Generic_Zombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>10x6x17</td><td>25x0x18</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>32x5x15</td><td>12x2x44</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x17</td><td>36x2x27</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>17x6x7</td><td>18x0x36</td></tr>
+<tr><td>1</td><td>ZomBusinessman</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x5x18</td><td>18x1x18</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x16</td><td>22x7x23</td></tr>
+<tr><td>3</td><td>GroupGenericZombie</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>10x6x17</td><td>25x0x18</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>32x5x15</td><td>12x2x44</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x17</td><td>36x2x27</td></tr>
     </table>
     <p>Total Count: 20</p>
     

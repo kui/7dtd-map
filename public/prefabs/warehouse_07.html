@@ -63,15 +63,21 @@
 <tr><th>RotationToFaceNorth</th><td>2</td></tr>
 <tr><th>ShowQuestClearCount</th><td>1</td></tr>
 <tr><th>SleeperIsLootVolume</th><td>False,False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,False</td></tr>
-<tr><th>SleeperIsQuestExclude</th><td>True,True,False,False,False,False,False,False,False,False,False,False,False,False,False,False,True</td></tr>
-<tr><th>SleeperVolumeFlags</th><td>2,2,2,2,2,2,2,0,0,2,1,2,1,2,2,0,3</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,2,GroupGenericZombie,0,0,ZomUtilityWorker,2,2,ZomUtilityWorker,3,3,zombieMaleHazmat,2,2,zombieMaleHazmatFeral,1,1,ZomUtilityWorker,2,2,ZomUtilityWorker,3,3,ZomUtilityWorker,2,3,GroupZomBadassOnly,0,0,zombieUtilityWorker,1,1,ZomUtilityWorker,2,2,zombieMaleHazmatFeral,1,1,GroupGenericZombie,0,0,zombieMaleHazmat,1,1,GroupGenericZombie,0,0,zombieMaleHazmat,2,2</td></tr>
-<tr><th>SleeperVolumeGroupId</th><td>1,1,24,0,38,8,0,0,0,8,38,38,38,38,24,24,0</td></tr>
-<tr><th>SleeperVolumeSize</th><td>25, 5, 21#14, 6, 1#5, 10, 7#9, 2, 8#3, 6, 9#9, 3, 3#3, 3, 7#14, 3, 16#10, 5, 9#3, 1, 3#1, 2, 3#11, 6, 9#1, 2, 3#14, 6, 3#9, 10, 11#5, 8, 8#10, 2, 3</td></tr>
-<tr><th>SleeperVolumeStart</th><td>12, 10, 20#0, 7, 12#2, 2, 33#32, 2, 33#27, 2, 20#27, 6, 37#2, 2, 12#12, 2, 20#2, 2, 2#31, 9, 37#28, 6, 32#30, 2, 20#29, 6, 32#27, 2, 29#2, 2, 22#7, 2, 33#21, 2, 33</td></tr>
-<tr><th>SleeperVolumeTriggeredBy</th><td># # # # # # # # # # # # # # # #2</td></tr>
+<tr><th>SleeperIsQuestExclude</th><td>True,True,False,False,False,False,False,False,False,False,False,False,False,False,False,True,True</td></tr>
+<tr><th>SleeperVolumeFlags</th><td>2,2,2,2,2,2,2,0,0,2,2,3,2,2,0,3,3</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,2,GroupGenericZombie,0,0,ZomUtilityWorker,2,2,ZomUtilityWorker,3,3,zombieMaleHazmat,2,2,zombieMaleHazmatFeral,1,1,ZomUtilityWorker,2,2,ZomUtilityWorker,3,3,ZomUtilityWorker,2,3,GroupZomBadassOnly,0,0,ZomUtilityWorker,2,2,zombieMaleHazmatFeral,0,0,GroupGenericZombie,0,0,zombieMaleHazmat,1,1,GroupGenericZombie,0,0,zombieMaleHazmat,0,0,GroupGenericZombie,0,0</td></tr>
+<tr><th>SleeperVolumeGroupId</th><td>1,1,24,0,38,8,0,0,0,8,38,0,38,24,24,0,0</td></tr>
+<tr><th>SleeperVolumeSize</th><td>25, 5, 21#14, 6, 1#5, 10, 7#9, 2, 8#3, 6, 9#9, 3, 3#3, 3, 7#14, 3, 16#10, 5, 9#3, 1, 3#11, 6, 9#1, 1, 3#14, 6, 3#9, 10, 11#5, 8, 8#10, 2, 3#1, 1, 1</td></tr>
+<tr><th>SleeperVolumeStart</th><td>12, 10, 20#0, 7, 12#2, 2, 33#32, 2, 33#27, 2, 20#27, 6, 37#2, 2, 12#12, 2, 20#2, 2, 2#31, 9, 37#30, 2, 20#29, 6, 32#27, 2, 29#2, 2, 22#7, 2, 33#21, 2, 33#32, 8, 20</td></tr>
+<tr><th>SleeperVolumeTriggeredBy</th><td># # # # # # # # # # #5# # # #6#2</td></tr>
+<tr><th>SVS11</th><td>sleep 1^spawn zombieMaleHazmatFeral 1^sleep 5^spawn zombieUtilityWorker 1</td></tr>
+<tr><th>SVS15</th><td>sleep 1^sound sysadmin_generators_online^sleep 2.5^spawn zombieMaleHazmat 1^spawn zombieUtilityWorker 1^sleep 1^trigger 7</td></tr>
+<tr><th>SVS16</th><td>sleep 0.5^sound explosion_buzzer1^sleep 0.5^trigger 4^sleep 1^trigger 3</td></tr>
 <tr><th>Tags</th><td>industrial</td></tr>
 <tr><th>TraderArea</th><td>False</td></tr>
+<tr><th>TriggerVolumeSize</th><td>14, 6, 12</td></tr>
+<tr><th>TriggerVolumeStart</th><td>27, 2, 20</td></tr>
+<tr><th>TriggerVolumeTriggers</th><td>5</td></tr>
 <tr><th>YOffset</th><td>-2</td></tr>
 <tr><th>Zoning</th><td>Industrial</td></tr></table>
   </section>
@@ -87,12 +93,15 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">21186</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">21117</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFanDouble</td><td class="block_label">Vent Fan, Double</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">bathroomStallDoor</td><td class="block_label">Bathroom Stall Door</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bathroomStallSCTRBeam</td><td class="block_label">Bathroom Stall Door Top Support</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bathroomStallSupport</td><td class="block_label">Bathroom Stall Support</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">bloodDecor01</td><td class="block_label">Blood Decor01</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">bloodDecor02</td><td class="block_label">Blood Decor02</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">bloodDecor05</td><td class="block_label">Blood Decor05</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">breakerBoxClosed</td><td class="block_label">Breaker Box Closed</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">200</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cubeBaseboard</td><td class="block_label">-</td><td class="block_count">31</td></tr>
@@ -106,17 +115,6 @@
 <tr class="block"><td class="block_name">brickShapes:halfBaseboard</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">brickShapes:halfTrimSplit</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">brickShapes:halfTrimSplit2</td><td class="block_label">-</td><td class="block_count">66</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_c</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_k</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_m</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_n</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_o</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_p</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_u</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">brickShapes:signLetter_y</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">brickShapes:windowTopRoundFilled</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">brickShapes:windowTrimTopRound</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">bulletproofShapes:windowStoreCornerBulletproofFull</td><td class="block_label">-</td><td class="block_count">6</td></tr>
@@ -139,9 +137,10 @@
 <tr class="block"><td class="block_name">chainlinkFenceTopRailBridge</td><td class="block_label">Chain Link Top Rail Bridge</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">chainlinkFenceTopRailPoleLeft</td><td class="block_label">Chain Link Top Rail Pole Left</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">chainlinkFenceTopRailPoleRight</td><td class="block_label">Chain Link Top Rail Pole Right</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">chairFoldingMetalFoldedLeaningGreen</td><td class="block_label">Green Metal Folding Chair</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">chairFoldingMetalFoldedFallenGreen</td><td class="block_label">Green Metal Folding Chair</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">chairFoldingMetalUnfoldedGreen</td><td class="block_label">Green Metal Folding Chair</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntAmmoPileMedium</td><td class="block_label">Ammo Pile, Medium</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntAmmoPileSmall</td><td class="block_label">Ammo Pile, Small</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelAcidSingle00</td><td class="block_label">Rusty Barrel</td><td class="block_count">7</td></tr>
 <tr class="block"><td class="block_name">cntBarrelAcidSingle45</td><td class="block_label">Rusty Barrel</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">cntBarrelPlasticQuadA</td><td class="block_label">Water Barrel</td><td class="block_count">2</td></tr>
@@ -149,7 +148,7 @@
 <tr class="block"><td class="block_name">cntBarrelPlasticSingle45</td><td class="block_label">Water Barrel</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">cntBarrelWhiteSingle00</td><td class="block_label">Rusty Barrel</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntbinTrashRollingGreen</td><td class="block_label">Rolling Trash Bin</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">cntClothesPileFloor01</td><td class="block_label">Clothes Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCoffeeMaker</td><td class="block_label">Coffee Maker</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCounterHollowCabinetRandomLootHelper</td><td class="block_label">= Counter Hollow Cabinet = Random Helper</td><td class="block_count">1</td></tr>
@@ -176,6 +175,7 @@
 <tr class="block"><td class="block_name">cntWeaponsBagSmall</td><td class="block_label">Weapons Bag</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialDistributionBox</td><td class="block_label">Commercial Distribution Box</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">commercialDoorV2Green</td><td class="block_label">Green Commercial Door V2</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">commercialDoorV2White</td><td class="block_label">White Commercial Door V2</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">commercialDoorV4Green</td><td class="block_label">Green Commercial Door V4</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialDualMeter</td><td class="block_label">Commercial Dual Meter</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialSingleMeter</td><td class="block_label">Commercial Single Meter</td><td class="block_count">2</td></tr>
@@ -265,7 +265,7 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cornerRound</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:counterFlipDoorOpen</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:counterWallMountRound</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">81</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">71</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cube3mCenter</td><td class="block_label">-</td><td class="block_count">24</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cube3mCorner</td><td class="block_label">-</td><td class="block_count">24</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cubeBaseboard</td><td class="block_label">-</td><td class="block_count">4</td></tr>
@@ -294,7 +294,7 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:ladderRoundBroken1</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:ladderRoundBroken2</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:morticianDrawer</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.025</td><td class="block_label">-</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.025</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.025Double</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pillar0.25Triple</td><td class="block_label">-</td><td class="block_count">12</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pillar50</td><td class="block_label">-</td><td class="block_count">15</td></tr>
@@ -310,7 +310,7 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pipeStraightOpenEnded</td><td class="block_label">-</td><td class="block_count">12</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pipeThin</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pipeThinCornerDown</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">710</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plate</td><td class="block_label">-</td><td class="block_count">706</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCladding01</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCladding03</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCladding04</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -319,9 +319,10 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCornerHalfTop</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCornerTwoWall</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateCounter02</td><td class="block_label">-</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed</td><td class="block_label">-</td><td class="block_count">7</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed02</td><td class="block_label">-</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed03</td><td class="block_label">-</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed01UV</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed02</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed02UV</td><td class="block_label">-</td><td class="block_count">7</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:plateDestroyed03UV</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateDouble</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalf</td><td class="block_label">-</td><td class="block_count">28</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:plateHalfTriangle</td><td class="block_label">-</td><td class="block_count">8</td></tr>
@@ -349,19 +350,15 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:prepTableCornerLeft</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:prepTableCornerRight</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:quarterPillar1m</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_c</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_e</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_h</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_m</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_o</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_s</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlate01</td><td class="block_label">-</td><td class="block_count">116</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlate02</td><td class="block_label">-</td><td class="block_count">160</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlate03</td><td class="block_label">-</td><td class="block_count">164</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlate04</td><td class="block_label">-</td><td class="block_count">170</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateDestroyedLeft05</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateDestroyedLeft06</td><td class="block_label">-</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateDestroyedRight05</td><td class="block_label">-</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateDestroyedRight06</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateLeft01</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateLeft02</td><td class="block_label">-</td><td class="block_count">7</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:slopePlateLeft03</td><td class="block_label">-</td><td class="block_count">7</td></tr>
@@ -381,6 +378,7 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:wedgeNarrowMid</td><td class="block_label">-</td><td class="block_count">7</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:wedgeNarrowTip</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowPanel</td><td class="block_label">-</td><td class="block_count">16</td></tr>
+<tr class="block"><td class="block_name">corrugatedMetalShapes:windowPlateRoundedSquare3SidedEmpty</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowRampFourSidedBroken</td><td class="block_label">-</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowRampFourSidedFull</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:windowRampTwoSidedBroken</td><td class="block_label">-</td><td class="block_count">2</td></tr>
@@ -405,7 +403,8 @@
 <tr class="block"><td class="block_name">decoHandTruck</td><td class="block_label">Hand Truck</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">decoLaptop</td><td class="block_label">Laptop Open, Screen 1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">decoServerRackGreen</td><td class="block_label">Green Server Rack</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">fakeCabinetDoorTrap1x2SheetMetal</td><td class="block_label">Fake Cabinet Door 1x2 Metal</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">fakeCabinetDoorTrap1x1SheetMetal</td><td class="block_label">Fake Cabinet Door 1x1 Metal</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">fakeCabinetDoorTrap1x2SheetMetal</td><td class="block_label">Fake Cabinet Door 1x2 Metal</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">flashlightDecorRed</td><td class="block_label">Red Flashlight (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">fluorescentLight</td><td class="block_label">Fluorescent Light (POI)</td><td class="block_count">15</td></tr>
 <tr class="block"><td class="block_name">forkliftGreen</td><td class="block_label">Green Forklift 01</td><td class="block_count">2</td></tr>
@@ -416,6 +415,7 @@
 <tr class="block"><td class="block_name">goreBlockHumanCorpse2</td><td class="block_label">Decaying Human Corpse 2</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">heatVentIndustrial</td><td class="block_label">Heat Vent Industrial, Plate</td><td class="block_count">8</td></tr>
 <tr class="block"><td class="block_name">industrialLight01</td><td class="block_label">Industrial Light 01 (POI)</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">infestedSleeperSit</td><td class="block_label">Infested Sleeper Sit</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">ironDoorArmyGreen</td><td class="block_label">Army Green Iron Door</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">ladderMetal</td><td class="block_label">Iron Ladder</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">lanternDecorLightBlue</td><td class="block_label">Lantern</td><td class="block_count">1</td></tr>
@@ -436,6 +436,10 @@
 <tr class="block"><td class="block_name">motionsensorLeftPOI</td><td class="block_label">Security Camera Left (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">motionsensorPOI</td><td class="block_label">Security Camera (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">motionsensorRightPOI</td><td class="block_label">Security Camera Right (POI)</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor01</td><td class="block_label">Newspaper Decor 01</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor02</td><td class="block_label">Newspaper Decor 02</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor03</td><td class="block_label">Newspaper Decor 03</td><td class="block_count">5</td></tr>
+<tr class="block"><td class="block_name">newspaperDecor04</td><td class="block_label">Newspaper Decor 04</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">oldChair1Green</td><td class="block_label">Old Chair Green</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">palletBagBlankBaseFullArmyGreen</td><td class="block_label">Army Green Bulk Goods Base Full</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">palletBagBlankBaseFullBrown</td><td class="block_label">Brown Bulk Goods Base Full</td><td class="block_count">4</td></tr>
@@ -465,8 +469,6 @@
 <tr class="block"><td class="block_name">palletTarpBaseWhite</td><td class="block_label">Pallet, White Tarp, Base</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">palletTarpTileGreen</td><td class="block_label">Pallet, Green Tarp, Tile</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">palletTarpTileWhite</td><td class="block_label">Pallet, White Tarp, Tile</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">pantryDoorGreen</td><td class="block_label">Green Pantry Door</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">pantryDoorGrey</td><td class="block_label">Grey Pantry Door</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">pictureFrame_01b</td><td class="block_label">Picture B</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">pipeSmallWall1x1Red</td><td class="block_label">Pipe Small Wall 1x1 Red</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">pipeSmallWall1x1Yellow</td><td class="block_label">Pipe Small Wall 1x1 Yellow</td><td class="block_count">1</td></tr>
@@ -479,6 +481,18 @@
 <tr class="block"><td class="block_name">rollUpDoor3x3Green</td><td class="block_label">Green Roll Up Door 3x3</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">rollUpDoor5x4Brown</td><td class="block_label">Brown Roll Up Door 5x4</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">rollUpGate4x3White</td><td class="block_label">Roll Up Security Gate 4x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor01</td><td class="block_label">Rubbish Decor 01</td><td class="block_count">8</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor02</td><td class="block_label">Rubbish Decor 02</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor03</td><td class="block_label">Rubbish Decor 03</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor04</td><td class="block_label">Rubbish Decor 04</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor05</td><td class="block_label">Rubbish Decor 05</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor06</td><td class="block_label">Rubbish Decor 06</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor08</td><td class="block_label">Rubbish Decor 08</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor09</td><td class="block_label">Rubbish Decor 09</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor10</td><td class="block_label">Rubbish Decor 10</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor11</td><td class="block_label">Rubbish Decor 11</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor12</td><td class="block_label">Rubbish Decor 12</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">rubbishDecor13</td><td class="block_label">Rubbish Decor 13</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">rubblePileConcreteSmall</td><td class="block_label">Small Concrete Rubble Pile</td><td class="block_count">9</td></tr>
 <tr class="block"><td class="block_name">rubbleRampTop</td><td class="block_label">Rubble Ramp Top</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">rustyIronTable</td><td class="block_label">Rusty Iron Table</td><td class="block_count">3</td></tr>
@@ -490,11 +504,18 @@
 <tr class="block"><td class="block_name">shippingContainerSideHoleOrange</td><td class="block_label">Shipping Container Side Hole Orange</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">shippingContainerSideOrange</td><td class="block_label">Shipping Container Side Orange</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">shippingContainerSideTextOrange</td><td class="block_label">Shipping Container Side Text Orange</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">signAuthorizedPersonnel</td><td class="block_label">Sign: Authorized Personnel</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signAuthorizedPersonnel</td><td class="block_label">Sign: Authorized Personnel</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">signBulletinBoard01</td><td class="block_label">Bulletin Board 01</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">signCaution</td><td class="block_label">Sign: Caution</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">signCanvasCorrugatedMetal7x2</td><td class="block_label">Sign Canvas Corrugated Metal 7x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signCaution</td><td class="block_label">Sign: Caution</td><td class="block_count">6</td></tr>
+<tr class="block"><td class="block_name">signDecalCorrugatedMetal2x2</td><td class="block_label">Sign Decal Corrugated Metal 2x2</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signDecalWood3x3</td><td class="block_label">Sign Decal Wood 3x3</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signDecalWood7x2</td><td class="block_label">Sign Decal Wood 7x2</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signExitFrameMount</td><td class="block_label">Exit Sign Frame Mount</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signGas21</td><td class="block_label">Sign: No Smoking</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signGunsThinSmoke</td><td class="block_label">No Smoking Sign</td><td class="block_count">9</td></tr>
 <tr class="block"><td class="block_name">signHardHat</td><td class="block_label">Sign: Hard Hat</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">signMiscDangerHazard</td><td class="block_label">Sign: Danger Hazard</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">signNotice01</td><td class="block_label">Sign: Notice 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterWantedMissing01</td><td class="block_label">Poster Wanted Missing 01</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterWantedMissing02</td><td class="block_label">Poster Wanted Missing 02</td><td class="block_count">1</td></tr>
@@ -503,10 +524,11 @@
 <tr class="block"><td class="block_name">signStaffOnly</td><td class="block_label">Sign: Staff Only</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperBack</td><td class="block_label">Sleeper Back</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">23</td></tr>
-<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">14</td></tr>
+<tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">17</td></tr>
+<tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">16</td></tr>
 <tr class="block"><td class="block_name">sleeperStomach</td><td class="block_label">Sleeper Stomach</td><td class="block_count">14</td></tr>
 <tr class="block"><td class="block_name">sleeperVultureAnimal</td><td class="block_label">Sleeper Vulture (zombie)</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">steelShapes:cube</td><td class="block_label">-</td><td class="block_count">16</td></tr>
 <tr class="block"><td class="block_name">steelShapes:pole</td><td class="block_label">-</td><td class="block_count">232</td></tr>
 <tr class="block"><td class="block_name">steelShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">128</td></tr>
 <tr class="block"><td class="block_name">steelShapes:poleSquareBracketCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
@@ -516,7 +538,6 @@
 <tr class="block"><td class="block_name">steelShapes:poleSquareSideCenteredTeeFourWay</td><td class="block_label">-</td><td class="block_count">14</td></tr>
 <tr class="block"><td class="block_name">steelShapes:poleThreeWayCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">steelShapes:poleTwoWayCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">steelShapes:securityGatePlate</td><td class="block_label">-</td><td class="block_count">13</td></tr>
 <tr class="block"><td class="block_name">streetLight01</td><td class="block_label">Street Light (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">streetLight04</td><td class="block_label">Street Light Quadruple (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">tallCabinetDoorBlack</td><td class="block_label">Black Tall Cabinet Door</td><td class="block_count">2</td></tr>
@@ -524,6 +545,7 @@
 <tr class="block"><td class="block_name">terrAsphalt</td><td class="block_label">Asphalt</td><td class="block_count">324</td></tr>
 <tr class="block"><td class="block_name">terrConcrete</td><td class="block_label">Concrete Terrain (POI)</td><td class="block_count">58</td></tr>
 <tr class="block"><td class="block_name">terrGravel</td><td class="block_label">Gravel</td><td class="block_count">336</td></tr>
+<tr class="block"><td class="block_name">trailerDoorOrange</td><td class="block_label">Orange Trailer Door</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">treeGreenBrownGrassDiagonal</td><td class="block_label">Tree Green Brown Grass Diagonal</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">utilitySink</td><td class="block_label">Utility Sink</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">wallClockRandomLootHelper</td><td class="block_label">= Wall Clock = Random Helper</td><td class="block_count">1</td></tr>
@@ -558,15 +580,15 @@
 <tr><td>7</td><td>ZomUtilityWorker</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>14x3x16</td><td>12x2x20</td></tr>
 <tr><td>8</td><td>ZomUtilityWorker</td><td>2-3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>10x5x9</td><td>2x2x2</td></tr>
 <tr><td>9</td><td>GroupZomBadassOnly</td><td>0</td><td>8</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>3x1x3</td><td>31x9x37</td></tr>
-<tr><td>10</td><td>zombieUtilityWorker</td><td>1</td><td>38</td><td>-</td><td>1</td><td>-</td><td>✓</td><td>-</td><td>1x2x3</td><td>28x6x32</td></tr>
-<tr><td>11</td><td>ZomUtilityWorker</td><td>2</td><td>38</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>11x6x9</td><td>30x2x20</td></tr>
-<tr><td>12</td><td>zombieMaleHazmatFeral</td><td>1</td><td>38</td><td>-</td><td>1</td><td>-</td><td>✓</td><td>-</td><td>1x2x3</td><td>29x6x32</td></tr>
-<tr><td>13</td><td>GroupGenericZombie</td><td>0</td><td>38</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>14x6x3</td><td>27x2x29</td></tr>
-<tr><td>14</td><td>zombieMaleHazmat</td><td>1</td><td>24</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>9x10x11</td><td>2x2x22</td></tr>
-<tr><td>15</td><td>GroupGenericZombie</td><td>0</td><td>24</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>5x8x8</td><td>7x2x33</td></tr>
-<tr><td>16</td><td>zombieMaleHazmat</td><td>2</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>10x2x3</td><td>21x2x33</td></tr>
+<tr><td>10</td><td>ZomUtilityWorker</td><td>2</td><td>38</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>11x6x9</td><td>30x2x20</td></tr>
+<tr><td>11</td><td>zombieMaleHazmatFeral</td><td>0</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>-</td><td>1x1x3</td><td>29x6x32</td></tr>
+<tr><td>12</td><td>GroupGenericZombie</td><td>0</td><td>38</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>14x6x3</td><td>27x2x29</td></tr>
+<tr><td>13</td><td>zombieMaleHazmat</td><td>1</td><td>24</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>9x10x11</td><td>2x2x22</td></tr>
+<tr><td>14</td><td>GroupGenericZombie</td><td>0</td><td>24</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>5x8x8</td><td>7x2x33</td></tr>
+<tr><td>15</td><td>zombieMaleHazmat</td><td>0</td><td>0</td><td>-</td><td>3</td><td>-</td><td>✓</td><td>✓</td><td>10x2x3</td><td>21x2x33</td></tr>
+<tr><td>16</td><td>GroupGenericZombie</td><td>0</td><td>0</td><td>-</td><td>3</td><td>-</td><td>-</td><td>✓</td><td>1x1x1</td><td>32x8x20</td></tr>
     </table>
-    <p>Total Count: 23-25</p>
+    <p>Total Count: 19-21</p>
     
   </section>
 </body>

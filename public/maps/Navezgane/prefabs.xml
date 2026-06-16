@@ -6,7 +6,6 @@
   <decoration type="model" name="part_citysign_noname" position="-1993,61,-1849" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_countrytown_10" position="1830,61,-1689" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_hospital_01" position="1731,60,-1929" rotation="1" y_is_groundlevel="true" />
-  <decoration type="model" name="part_driveway_hospital_01_navezgane" position="1101,60,684" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_08" position="-549,61,-530" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_10" position="-437,61,-416" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_10" position="-337,61,-416" rotation="3" y_is_groundlevel="true" />
@@ -17,8 +16,8 @@
   <decoration type="model" name="part_park_02_to_04_path" position="-1596,81,1748" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_pedestrian_bridge_perishton" position="-1860,58,1634" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_pedestrian_bridge_perishton" position="-1367,80,1536" rotation="1" y_is_groundlevel="true" />
-  <decoration type="model" name="part_perishton_sign_01" position="-1744,70,1568" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="part_perishton_sign_01" position="-1359,85,1790" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="part_perishton_sign_01" position="-1742,70,1570" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="part_perishton_sign_01" position="-1358,83,1791" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_road_ramp_perishton_sw" position="-1761,61,1541" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="part_road_shoulder_01" position="-1609,81,1654" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="abandoned_house_01" position="-872,61,612" rotation="0" y_is_groundlevel="true" />
@@ -100,7 +99,7 @@
   <decoration type="model" name="countrytown_business_09" position="610,61,1334" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="countrytown_business_10" position="-103,76,1322" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="courthouse_med_01" position="-1596,81,1798" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="culvert_01" position="-1810,68,1762" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="culvert_01" position="-1810,72,1762" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="departure_city_blk_01" position="1842,60,-1723" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="departure_city_blk_01" position="1730,60,-1723" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="departure_city_blk_01" position="1618,60,-1723" rotation="0" y_is_groundlevel="true" />
@@ -108,16 +107,12 @@
   <decoration type="model" name="departure_city_blk_01" position="1618,60,-1947" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="departure_city_blk_01" position="1730,60,-1947" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="departure_city_blk_plaza" position="1730,61,-1835" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="departure_city_sign" position="1831,69,-1538" rotation="1" y_is_groundlevel="true" />
-  <decoration type="model" name="departure_city_sign" position="1548,61,-1846" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="desert_town_blk_01" position="107,62,-1814" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="diersville_city_blk_01" position="935,60,697" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="diersville_city_blk_01" position="1079,60,697" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="diersville_city_blk_01" position="935,60,573" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="diersville_city_blk_02" position="1079,60,573" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="diersville_city_sign_01" position="910,61,686" rotation="2" y_is_groundlevel="true" />
-  <decoration type="model" name="diersville_city_sign_01" position="1236,61,686" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="diersville_city_sign_01" position="1068,61,423" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="part_diersville_sign_01" position="914,61,700" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="diner_02" position="-1910,76,634" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="diner_03" position="81,78,-2321" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="docks_01" position="-1323,48,680" rotation="3" y_is_groundlevel="true" />
@@ -171,10 +166,10 @@
   <decoration type="model" name="gravestowne_city_blk_quarter" position="-584,60,-364" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_city_blk_quarter" position="-326,60,-364" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_city_blk_quarter" position="-550,60,-364" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="gravestowne_city_sign_01" position="-451,61,-629" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="gravestowne_city_sign_01" position="-444,61,-135" rotation="1" y_is_groundlevel="true" />
-  <decoration type="model" name="gravestowne_city_sign_01" position="-211,61,-489" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="gravestowne_city_sign_01" position="-588,61,-489" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="part_gravestowne_sign_01" position="-458,61,-642" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="part_gravestowne_sign_01" position="-431,61,-186" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="part_gravestowne_sign_01" position="-207,61,-494" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="part_gravestowne_sign_01" position="-610,61,-474" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_street_crater_01" position="-447,57,-373" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_street_crater_01" position="-566,57,-373" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_street_crater_01" position="-559,57,-471" rotation="0" y_is_groundlevel="true" />
@@ -195,7 +190,7 @@
   <decoration type="model" name="gravestowne_street_crater_01" position="1721,57,-1732" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_street_crater_01" position="1833,57,-1732" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="gravestowne_street_crater_01" position="1833,57,-1844" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="hospital_01" position="1101,61,584" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="hospital_01" position="1101,61,587" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="hotel_01" position="541,61,-1434" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="house_burnt_01" position="522,61,194" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="house_burnt_02" position="648,61,104" rotation="2" y_is_groundlevel="true" />
@@ -621,9 +616,8 @@
   <decoration type="model" name="sign_phoenix" position="-864,61,-910" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_phoenix" position="-452,61,-935" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="sign_phoenix" position="150,58,-938" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_phoenix" position="-451,61,-637" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_phoenix" position="-601,62,-474" rotation="2" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_phoenix" position="-925,54,935" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_phoenix" position="-452,61,-635" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_phoenix" position="-925,56,935" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_phoenix" position="-1985,81,1049" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_phoenix" position="-1645,58,-993" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="sign_phoenix" position="-1951,63,-621" rotation="2" y_is_groundlevel="true" />
@@ -652,7 +646,7 @@
   <decoration type="model" name="sign_slow" position="-339,76,1780" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="76,76,1716" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-717,76,1809" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_slow" position="439,60,125" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_slow" position="439,60,126" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="565,61,232" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="674,61,157" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="1034,81,1717" rotation="2" y_is_groundlevel="true" />
@@ -660,8 +654,8 @@
   <decoration type="model" name="sign_slow" position="574,76,1869" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="605,76,1620" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="1772,61,423" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_slow" position="1224,61,642" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_slow" position="-158,61,916" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_slow" position="1224,61,633" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_slow" position="-158,61,901" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="443,63,996" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="1495,61,160" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="1717,61,-740" rotation="3" y_is_groundlevel="true" />
@@ -670,7 +664,7 @@
   <decoration type="model" name="sign_slow" position="999,61,-310" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-737,61,614" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-707,61,586" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_slow" position="-543,61,934" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_slow" position="-543,61,935" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-60,71,-489" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-1228,71,639" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_slow" position="-1279,61,739" rotation="3" y_is_groundlevel="true" />
@@ -758,7 +752,7 @@
   <decoration type="model" name="sign_speed_25" position="1811,61,328" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="1834,61,240" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="1369,76,698" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_speed_25" position="1302,66,686" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_speed_25" position="1302,66,685" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="1001,61,562" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="924,61,625" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="993,61,823" rotation="0" y_is_groundlevel="true" />
@@ -790,7 +784,7 @@
   <decoration type="model" name="sign_speed_25" position="-1652,61,618" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="-1662,61,500" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="-1522,61,274" rotation="1" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_speed_25" position="-871,54,919" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_speed_25" position="-871,54,920" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="-1624,61,-92" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="-1754,61,-134" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_25" position="-1847,59,-590" rotation="2" y_is_groundlevel="true" />
@@ -842,9 +836,9 @@
   <decoration type="model" name="sign_speed_35" position="1647,76,1260" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_35" position="1780,76,807" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_35" position="1834,61,90" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_speed_35" position="-798,61,946" rotation="0" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_speed_35" position="-605,61,935" rotation="2" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_speed_35" position="93,61,-493" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_speed_35" position="-798,61,945" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_speed_35" position="-605,61,936" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_speed_35" position="122,61,-494" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_35" position="-170,61,-475" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_35" position="-435,61,-707" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="sign_speed_35" position="-746,61,-475" rotation="0" y_is_groundlevel="true" />
@@ -955,7 +949,7 @@
   <decoration type="model" name="sign_stop" position="1301,61,-675" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="1032,61,-292" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="-137,61,397" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="sign_stop" position="-721,61,933" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="sign_stop" position="-721,61,935" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="-241,76,1320" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="-227,76,1328" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="26,61,-477" rotation="3" y_is_groundlevel="true" />
@@ -1255,7 +1249,7 @@
   <decoration type="model" name="remnant_downtown_strip_20" position="-1765,54,-798" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="sign_stop" position="-1715,54,-785" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="bus_stop_01" position="-1724,54,-609" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="remnant_lot_industrial_01" position="-1869,54,-725" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="remnant_industrial_large_02" position="-1869,54,-725" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="remnant_selfstorage_02" position="1954,61,-1694" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="countrytown_business_16" position="1710,66,-1082" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="countrytown_business_17" position="-370,76,1781" rotation="0" y_is_groundlevel="true" />
@@ -1401,7 +1395,7 @@
   <decoration type="model" name="part_armytruck_01" position="-1281,58,-1827" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="site_vendor_01" position="-1521,66,-1209" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="site_vendor_05" position="-1560,66,-1249" rotation="2" y_is_groundlevel="true" />
-  <decoration type="model" name="hotel_03" position="1732,61,-1946" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="hotel_03" position="1732,61,-1945" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="downtown_filler_plaza_01" position="1627,61,-1889" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="remnant_skyscraper_03" position="-437,61,-475" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="downtown_building_03" position="-1935,61,-1618" rotation="0" y_is_groundlevel="true" />
@@ -1558,4 +1552,11 @@
   <decoration type="model" name="part_kiosk_foodtrailer_01" position="1854,61,-1609" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="part_roadside_fruit_stand_01" position="650,61,814" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_roadside_fruit_stand_02" position="974,61,919" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="part_diersville_sign_01" position="1084,61,462" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="part_diersville_sign_01" position="1291,65,700" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="part_departure_sign_01" position="1536,61,-1830" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="part_departure_sign_01" position="1821,71,-1401" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="part_departure_sign_01" position="1980,61,-1831" rotation="1" y_is_groundlevel="true" />
+  <decoration type="model" name="part_departure_sign_01" position="1822,65,-2006" rotation="0" y_is_groundlevel="true" />
+  <decoration type="model" name="part_farm60_field_03" position="83,61,-524" rotation="2" y_is_groundlevel="true" />
 </prefabs>

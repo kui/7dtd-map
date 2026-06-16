@@ -59,7 +59,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,2,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-_Group_Ghost_Town,2,2,S_-_Group_Ghost_Town,0,1,S_-_Group_Ghost_Town,0,0,S_-_Group_Ghost_Town,0,1,S_-_Group_Ghost_Town,0,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGhostTown,2,2,GroupGhostTown,0,1,GroupGhostTown,0,0,GroupGhostTown,0,1,GroupGhostTown,0,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,1,1,1,1</td></tr>
 <tr><th>SleeperVolumeSize</th><td>12, 5, 12#12, 4, 5#9, 4, 7#4, 6, 5#4, 3, 4</td></tr>
 <tr><th>SleeperVolumeStart</th><td>8, 5, 5#8, 1, 5#8, 1, 10#4, 1, 10#12, 2, 17</td></tr>
@@ -81,7 +81,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">8154</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">8162</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">brickShapes:brickDestroyed02</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">brickShapes:cube</td><td class="block_label">-</td><td class="block_count">1</td></tr>
@@ -106,15 +106,6 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pipeThin</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:pipeThinCornerUp</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">4</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_b</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_d</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_e</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_g</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_i</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_j</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_n</td><td class="block_label">-</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_w</td><td class="block_label">-</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60Incline</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60InclineCorner</td><td class="block_label">-</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">decoCowSkull</td><td class="block_label">Cow Skull</td><td class="block_count">1</td></tr>
@@ -146,6 +137,7 @@
 <tr class="block"><td class="block_name">palletEmptyStack</td><td class="block_label">Empty Pallets, Full Stack</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">questRallyMarker</td><td class="block_label">Rally Marker</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">rustyIronTable</td><td class="block_label">Rusty Iron Table</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signDecalWood7x1</td><td class="block_label">Sign Decal Wood 7x1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperIdle</td><td class="block_label">Sleeper Idle</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperSideLeft</td><td class="block_label">Sleeper Left Side</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sleeperSit</td><td class="block_label">Sleeper Sitting</td><td class="block_count">6</td></tr>
@@ -212,11 +204,11 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-_Group_Ghost_Town</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x5x12</td><td>8x5x5</td></tr>
-<tr><td>1</td><td>S_-_Group_Ghost_Town</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x4x5</td><td>8x1x5</td></tr>
-<tr><td>2</td><td>S_-_Group_Ghost_Town</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x7</td><td>8x1x10</td></tr>
-<tr><td>3</td><td>S_-_Group_Ghost_Town</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x6x5</td><td>4x1x10</td></tr>
-<tr><td>4</td><td>S_-_Group_Ghost_Town</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>12x2x17</td></tr>
+      <tr><td>0</td><td>GroupGhostTown</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x5x12</td><td>8x5x5</td></tr>
+<tr><td>1</td><td>GroupGhostTown</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x4x5</td><td>8x1x5</td></tr>
+<tr><td>2</td><td>GroupGhostTown</td><td>0</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x4x7</td><td>8x1x10</td></tr>
+<tr><td>3</td><td>GroupGhostTown</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x6x5</td><td>4x1x10</td></tr>
+<tr><td>4</td><td>GroupGhostTown</td><td>0-1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>12x2x17</td></tr>
     </table>
     <p>Total Count: 2-5</p>
     

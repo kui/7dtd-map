@@ -1,0 +1,116 @@
+:root {
+  --controller-width: 550px;
+}
+
+#map {
+  margin-right: var(--controller-width);
+  cursor: crosshair;
+}
+
+#controller {
+  position: fixed;
+  margin: 10px;
+  padding: 5px;
+  border: solid lightgray 1px;
+  width: 30%;
+  max-width: var(--controller-width);
+  max-height: calc(100% - 40px);
+  right: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  overflow: auto;
+  & table {
+    & tr:hover {
+      background-color: whitesmoke;
+    }
+    & td output {
+      display: inline-block;
+      font-size: 1em;
+      width: 2em;
+      text-align: right;
+    }
+    & th {
+      white-space: nowrap;
+    }
+  }
+}
+
+#prefab-pre-filters {
+  font-size: small;
+  & > ul {
+    margin: 0;
+    padding: 0;
+    & > li {
+      list-style-type: none;
+      margin: 0 0.5em;
+    }
+  }
+}
+
+#prefabs_list,
+#prefabs_list ul {
+  list-style-type: none;
+  padding-inline-start: 16px;
+}
+
+[data-copy-for]:focus::after {
+  content: attr(data-message);
+}
+
+/* Handle warn message to use depleted files */
+#warn-splat3-png,
+#warn-splat4-png {
+  display: none;
+}
+body.use-splat3-png #warn-splat3-png,
+body.use-splat4-png #warn-splat4-png {
+  display: inline-block;
+}
+
+dialog.multi-sections > section {
+  display: none;
+  &:has(> input[name="active-section"]:checked) {
+    display: block;
+  }
+}
+
+#processing-files {
+  padding-inline-start: 0;
+  & > li {
+    list-style: none;
+    &::before {
+      font-weight: bold;
+      margin-right: 0.5em;
+    }
+    &.processing {
+      &::before {
+        content: "☐";
+        color: black;
+      }
+    }
+    &.skipped {
+      text-decoration: line-through gray;
+      &::before {
+        content: "☐";
+        color: darkorange;
+      }
+    }
+    &.completed {
+      &::before {
+        content: "☑";
+        color: darkgreen;
+      }
+    }
+  }
+}
+
+dialog {
+  & th {
+    background-color: lavender;
+  }
+  & tfoot td {
+    border-width: 1px;
+    border-style: solid none;
+    border-color: lavender;
+  }
+}

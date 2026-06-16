@@ -63,7 +63,7 @@
 <tr><th>SleeperIsLootVolume</th><td>True,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,2,2,2,0,2</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,1,1,S_Zom_Utility_Worker,1,1,S_-Group_Generic_Zombie,1,1,S_-Group_Generic_Zombie,2,2</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupGenericZombie,1,1,GroupGenericZombie,1,1,ZomUtilityWorker,1,1,GroupGenericZombie,1,1,GroupGenericZombie,2,2</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>5, 4, 7#14, 3, 13#7, 9, 22#6, 3, 4#9, 3, 5#37, 3, 7</td></tr>
 <tr><th>SleeperVolumeStart</th><td>16, 7, 46#110, 7, 137#71, -1, 123#87, 8, 143#136, 7, 3#97, 2, 2</td></tr>
@@ -279,9 +279,9 @@
 <tr class="block"><td class="block_name">goreBlockAnimal</td><td class="block_label">Decaying Animal Corpse</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">goreBlockHumanCorpse1</td><td class="block_label">Decaying Human Corpse 1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">goreBlockHumanCorpse3</td><td class="block_label">Decaying Human Corpse 3</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">guardRailBarrier</td><td class="block_label">Guardrail End Right</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">guardRailBarrierFlipped</td><td class="block_label">Guardrail End Left</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">guardRailPole</td><td class="block_label">Guardrail Straight Pole</td><td class="block_count">17</td></tr>
+<tr class="block"><td class="block_name">guardRailBarrierFlippedTall</td><td class="block_label">Guardrail End Left Tall</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">guardRailBarrierTall</td><td class="block_label">Guardrail End Right Tall</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">guardRailPoleTall</td><td class="block_label">Guardrail Straight Pole Tall</td><td class="block_count">17</td></tr>
 <tr class="block"><td class="block_name">guardRailStraight</td><td class="block_label">Guardrail Straight</td><td class="block_count">22</td></tr>
 <tr class="block"><td class="block_name">industrialLight01</td><td class="block_label">Industrial Light 01 (POI)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">ironDoorGrey</td><td class="block_label">Grey Iron Door</td><td class="block_count">1</td></tr>
@@ -348,7 +348,7 @@
 <tr class="block"><td class="block_name">treeSmallRandomHelper</td><td class="block_label">= Tree Small = Random Helper</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">treeStumpPOI</td><td class="block_label">Tree Stump POI</td><td class="block_count">4</td></tr>
 <tr class="block"><td class="block_name">utilityInsulator</td><td class="block_label">Insulator</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">wallClock</td><td class="block_label">Wall Clock</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">wallClock</td><td class="block_label">Stopped Wall Clock</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">wallMountSinkCommercial</td><td class="block_label">Commercial Sink</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">woodPillar375</td><td class="block_label">Utility Pole Small</td><td class="block_count">24</td></tr>
 <tr class="block"><td class="block_name">woodPillar375UtilityTop</td><td class="block_label">Utility Pole Small Top</td><td class="block_count">3</td></tr>
@@ -375,12 +375,12 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>5x4x7</td><td>16x7x46</td></tr>
-<tr><td>1</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x3x13</td><td>110x7x137</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>7x9x22</td><td>71x-1x123</td></tr>
-<tr><td>3</td><td>S_Zom_Utility_Worker</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x3x4</td><td>87x8x143</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x5</td><td>136x7x3</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>37x3x7</td><td>97x2x2</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>✓</td><td>-</td><td>5x4x7</td><td>16x7x46</td></tr>
+<tr><td>1</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>14x3x13</td><td>110x7x137</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>7x9x22</td><td>71x-1x123</td></tr>
+<tr><td>3</td><td>ZomUtilityWorker</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x3x4</td><td>87x8x143</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x3x5</td><td>136x7x3</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>2</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>37x3x7</td><td>97x2x2</td></tr>
     </table>
     <p>Total Count: 7</p>
     

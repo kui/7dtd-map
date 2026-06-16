@@ -2510,7 +2510,7 @@
   <decoration type="model" name="part_shed_02" position="2814,50,-561" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="part_streetlight_single_diagonal" position="2872,59,-565" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="rwg_tile_industrial_cap" position="2654,50,-796" rotation="3" y_is_groundlevel="true" />
-  <decoration type="model" name="remnant_lot_industrial_01" position="2690,50,-768" rotation="3" y_is_groundlevel="true" />
+  <decoration type="model" name="remnant_industrial_large_02" position="2690,50,-768" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_04" position="2689,50,-735" rotation="3" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_01" position="2790,50,-690" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="utility_celltower_02" position="2655,50,-672" rotation="1" y_is_groundlevel="true" />
@@ -3400,7 +3400,7 @@
   <decoration type="model" name="part_trafficlight_single" position="779,44,-3181" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_streetlight_single_diagonal" position="723,47,-3177" rotation="1" y_is_groundlevel="true" />
   <decoration type="model" name="rwg_tile_industrial_cap" position="854,38,-3046" rotation="2" y_is_groundlevel="true" />
-  <decoration type="model" name="remnant_lot_industrial_01" position="882,38,-3032" rotation="2" y_is_groundlevel="true" />
+  <decoration type="model" name="remnant_industrial_large_02" position="882,38,-3032" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_04" position="915,38,-2932" rotation="2" y_is_groundlevel="true" />
   <decoration type="model" name="part_driveway_industrial_01" position="960,38,-3033" rotation="0" y_is_groundlevel="true" />
   <decoration type="model" name="lot_industrial_04" position="978,38,-2922" rotation="0" y_is_groundlevel="true" />

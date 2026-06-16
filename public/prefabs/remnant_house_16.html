@@ -65,7 +65,7 @@
 <tr><th>SleeperIsLootVolume</th><td>False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,2,2,2,2,2,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,0,1,zombieMaleHazmat,0,1,S_-_Group_Lab_Worker,0,1,S_Zom_HazMat_Only,1,1,S_-_Group_Lab_Worker,0,1,S_Zom_HazMat_Only,0,1,zombieNurse,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,0,1,zombieMaleHazmat,0,1,GroupLabWorker,0,1,ZomHazMatOnly,1,1,GroupLabWorker,0,1,ZomHazMatOnly,0,1,zombieNurse,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>5, 3, 6#6, 3, 9#4, 3, 1#6, 3, 3#4, 3, 4#4, 3, 4#7, 3, 6</td></tr>
 <tr><th>SleeperVolumeStart</th><td>8, 2, 22#14, 2, 14#21, 2, 15#24, 2, 16#22, 2, 19#27, 2, 23#17, 2, 25</td></tr>
@@ -87,7 +87,7 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">17324</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">17323</td></tr>
 <tr class="block"><td class="block_name">bed02</td><td class="block_label">Black King Size Bed</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">bodyBagYellowFlies</td><td class="block_label">Body Bag Yellow, Flies</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">brickShapes:brickDestroyed01</td><td class="block_label">-</td><td class="block_count">9</td></tr>
@@ -236,6 +236,7 @@
 <tr class="block"><td class="block_name">rubblePileBricksSmall</td><td class="block_label">Rubble Pile Bricks Small</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">showerHandle01</td><td class="block_label">Shower Handle</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">showerHead02</td><td class="block_label">Shower Head 02</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">signDecalWood1x1</td><td class="block_label">Sign Decal Wood 1x1</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterMovieLoneWolf</td><td class="block_label">Sign: Movie Poster Lone Wolf</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signPosterMovieMammasJustice</td><td class="block_label">Sign: Movie Poster Mama's Justice</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">sinkKitchen</td><td class="block_label">Kitchen Sink</td><td class="block_count">1</td></tr>
@@ -356,12 +357,12 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x3x6</td><td>8x2x22</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>5x3x6</td><td>8x2x22</td></tr>
 <tr><td>1</td><td>zombieMaleHazmat</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x3x9</td><td>14x2x14</td></tr>
-<tr><td>2</td><td>S_-_Group_Lab_Worker</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x1</td><td>21x2x15</td></tr>
-<tr><td>3</td><td>S_Zom_HazMat_Only</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x3x3</td><td>24x2x16</td></tr>
-<tr><td>4</td><td>S_-_Group_Lab_Worker</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>22x2x19</td></tr>
-<tr><td>5</td><td>S_Zom_HazMat_Only</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>27x2x23</td></tr>
+<tr><td>2</td><td>GroupLabWorker</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x1</td><td>21x2x15</td></tr>
+<tr><td>3</td><td>ZomHazMatOnly</td><td>1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>6x3x3</td><td>24x2x16</td></tr>
+<tr><td>4</td><td>GroupLabWorker</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>22x2x19</td></tr>
+<tr><td>5</td><td>ZomHazMatOnly</td><td>0-1</td><td>0</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>4x3x4</td><td>27x2x23</td></tr>
 <tr><td>6</td><td>zombieNurse</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>7x3x6</td><td>17x2x25</td></tr>
     </table>
     <p>Total Count: 2-7</p>

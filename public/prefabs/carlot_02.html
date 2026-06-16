@@ -60,7 +60,7 @@
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>2,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td>,</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_-_Group_Special_Infected,3,3,S_-Group_Generic_Zombie,2,2,S_-_Group_Zom_Soldier,3,3,S_Zom_Utility_Worker,5,5,S_-Group_Generic_Zombie,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,GroupSpecialInfected,3,3,GroupGenericZombie,2,2,GroupZomSoldier,3,3,ZomUtilityWorker,5,5,GroupGenericZombie,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>1,0,1,0,0,1</td></tr>
 <tr><th>SleeperVolumeSize</th><td>9, 5, 19#5, 6, 21#11, 4, 21#11, 5, 15#12, 5, 12#8, 5, 13</td></tr>
 <tr><th>SleeperVolumeStart</th><td>20, 7, 15#19, 0, 13#19, 12, 14#8, 0, 6#7, 7, 21#29, 7, 21</td></tr>
@@ -82,16 +82,9 @@
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">25466</td></tr>
+      <tr class="block"><td class="block_name">air</td><td class="block_label">Air</td><td class="block_count">25496</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFan</td><td class="block_label">Vent Fan</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">airConditionVentFanDouble</td><td class="block_label">Vent Fan, Double</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsBottom</td><td class="block_label">-</td><td class="block_count">30</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsBottomOpen</td><td class="block_label">-</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTop</td><td class="block_label">-</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTop2</td><td class="block_label">-</td><td class="block_count">9</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTop2Open</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTopOpen</td><td class="block_label">-</td><td class="block_count">2</td></tr>
-<tr class="block"><td class="block_name">awningShapes:verticalBlindsTopRailOnly</td><td class="block_label">-</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">bathroomStallDoor</td><td class="block_label">Bathroom Stall Door</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">bathroomStallSCTRBeam</td><td class="block_label">Bathroom Stall Door Top Support</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">bathroomStallSupport</td><td class="block_label">Bathroom Stall Support</td><td class="block_count">3</td></tr>
@@ -251,12 +244,6 @@
 <tr class="block"><td class="block_name">corrugatedMetalShapes:poleSideCentered</td><td class="block_label">-</td><td class="block_count">18</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:poleSquareDouble</td><td class="block_label">-</td><td class="block_count">5</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:rampInclineBaseboardChairRailFiller</td><td class="block_label">-</td><td class="block_count">8</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:roadPaintDashCNTR</td><td class="block_label">-</td><td class="block_count">7</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_a</td><td class="block_label">-</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_c</td><td class="block_label">-</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_l</td><td class="block_label">-</td><td class="block_count">3</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_r</td><td class="block_label">-</td><td class="block_count">6</td></tr>
-<tr class="block"><td class="block_name">corrugatedMetalShapes:signLetter_s</td><td class="block_label">-</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:stairsFilledQuarterVerticalUV</td><td class="block_label">-</td><td class="block_count">28</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:table</td><td class="block_label">-</td><td class="block_count">10</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:wedge60</td><td class="block_label">-</td><td class="block_count">10</td></tr>
@@ -334,6 +321,8 @@
 <tr class="block"><td class="block_name">rubblePileCement</td><td class="block_label">Cement Rubble Pile</td><td class="block_count">7</td></tr>
 <tr class="block"><td class="block_name">signBathroomSignMenWallMount</td><td class="block_label">Bathroom Sign Men Wall</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signBathroomSignWomenWallMount</td><td class="block_label">Bathroom Sign Women Wall</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signCanvasWood7x2</td><td class="block_label">Sign Canvas Wood 7x2</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">signDecalCorrugatedMetal10x1</td><td class="block_label">Sign Decal Corrugated Metal 10x1</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">signExitFrameMount</td><td class="block_label">Exit Sign Frame Mount</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">signExitFrameMount2mCentered</td><td class="block_label">Exit Sign Frame Mount 2m Centered</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">signMegaCrushAd</td><td class="block_label">Sign: Mega Crush Ad</td><td class="block_count">1</td></tr>
@@ -368,6 +357,15 @@
 <tr class="block"><td class="block_name">treeDeadTree01</td><td class="block_label">Tree Dead Tree 01</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">treeGreenBrownGrassDiagonal</td><td class="block_label">Tree Green Brown Grass Diagonal</td><td class="block_count">15</td></tr>
 <tr class="block"><td class="block_name">urinalCommercialMounted</td><td class="block_label">Urinal</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottom2OpenWhite</td><td class="block_label">White Vertical Blinds Bottom Open Right</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottom2White</td><td class="block_label">White Vertical Blinds Bottom Right</td><td class="block_count">18</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottomOpenWhite</td><td class="block_label">White Vertical Blinds Bottom Open Left</td><td class="block_count">4</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsBottomWhite</td><td class="block_label">White Vertical Blinds Bottom Left</td><td class="block_count">12</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTop2OpenWhite</td><td class="block_label">White Vertical Blinds Top Open Right</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTop2White</td><td class="block_label">White Vertical Blinds Top Right</td><td class="block_count">9</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTopOpenWhite</td><td class="block_label">White Vertical Blinds Top Open Left</td><td class="block_count">2</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTopRailWhite</td><td class="block_label">White Vertical Blinds Top Rail</td><td class="block_count">3</td></tr>
+<tr class="block"><td class="block_name">verticalBlindsTopWhite</td><td class="block_label">White Vertical Blinds Top Left</td><td class="block_count">6</td></tr>
 <tr class="block"><td class="block_name">wallClockRandomLootHelper</td><td class="block_label">= Wall Clock = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">wallMirrorRandomHelper</td><td class="block_label">= Wall Mirror = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">wallMountSinkCommercial</td><td class="block_label">Commercial Sink</td><td class="block_count">2</td></tr>
@@ -386,12 +384,12 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x5x19</td><td>20x7x15</td></tr>
-<tr><td>1</td><td>S_-_Group_Special_Infected</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x6x21</td><td>19x0x13</td></tr>
-<tr><td>2</td><td>S_-Group_Generic_Zombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>✓</td><td>✓</td><td>-</td><td>11x4x21</td><td>19x12x14</td></tr>
-<tr><td>3</td><td>S_-_Group_Zom_Soldier</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x5x15</td><td>8x0x6</td></tr>
-<tr><td>4</td><td>S_Zom_Utility_Worker</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x5x12</td><td>7x7x21</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x13</td><td>29x7x21</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>2</td><td>-</td><td>-</td><td>-</td><td>9x5x19</td><td>20x7x15</td></tr>
+<tr><td>1</td><td>GroupSpecialInfected</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x6x21</td><td>19x0x13</td></tr>
+<tr><td>2</td><td>GroupGenericZombie</td><td>2</td><td>1</td><td>-</td><td>0</td><td>✓</td><td>✓</td><td>-</td><td>11x4x21</td><td>19x12x14</td></tr>
+<tr><td>3</td><td>GroupZomSoldier</td><td>3</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x5x15</td><td>8x0x6</td></tr>
+<tr><td>4</td><td>ZomUtilityWorker</td><td>5</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x5x12</td><td>7x7x21</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>1</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>8x5x13</td><td>29x7x21</td></tr>
     </table>
     <p>Total Count: 15</p>
     
