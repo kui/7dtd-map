@@ -7,7 +7,7 @@ const DEST_DIR = publishDir("labels");
 
 async function main() {
   const labels = await parseLabel(
-    await vanillaDir("Data", "Config", "Localization.txt"),
+    await vanillaDir("Data", "Config", "Localization.csv"),
   );
 
   for (const lang of LANGUAGES) {

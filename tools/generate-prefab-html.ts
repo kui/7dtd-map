@@ -32,7 +32,7 @@ async function remove() {
 
 async function loadLabels() {
   console.log("Load labels");
-  const fileName = await vanillaDir("Data", "Config", "Localization.txt");
+  const fileName = await vanillaDir("Data", "Config", "Localization.csv");
   const labels = await parseLabel(fileName);
   console.log("Loaded %s labels", labels.size);
   return labels;
