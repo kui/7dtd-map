@@ -126,3 +126,83 @@ describe("MapDir", () => {
     expect(createSpy.calls.length).toBe(1);
   });
 });
+
+describe("MapDir.remove() idempotency", () => {
+  it("swallows NotFoundError so bulk clears stay idempotent", async () => {
+    const { dir } = buildMapDir();
+    // No file has been put — the underlying handle would throw NotFoundError.
+    await dir.remove("biomes.png");
+  });
+
+  it("rethrows other DOMExceptions", async () => {
+    const fake = {
+      removeEntry: () =>
+        Promise.reject(
+          new DOMException("denied", "NoModificationAllowedError"),
+        ),
+    } as unknown as FileSystemDirectoryHandle;
+    const dir = new MapDir(fake);
+    await expect(dir.remove("biomes.png")).rejects.toThrow(DOMException);
+  });
+
+  it("rethrows non-DOMException errors", async () => {
+    const fake = {
+      removeEntry: () => Promise.reject(new TypeError("boom")),
+    } as unknown as FileSystemDirectoryHandle;
+    const dir = new MapDir(fake);
+    await expect(dir.remove("biomes.png")).rejects.toThrow(TypeError);
+  });
+});
+
+describe("MapDir.put() resource handling", () => {
+  it("closes the writable even when write() throws (Blob path)", async () => {
+    let closed = false;
+    const writable = {
+      write: () => Promise.reject(new Error("disk full")),
+      close: () => {
+        closed = true;
+        return Promise.resolve();
+      },
+    } as unknown as FileSystemWritableFileStream;
+    const fileHandle = {
+      createWritable: () => Promise.resolve(writable),
+    } as unknown as FileSystemFileHandle;
+    const dirHandle = {
+      getFileHandle: () => Promise.resolve(fileHandle),
+    } as unknown as FileSystemDirectoryHandle;
+    const dir = new MapDir(dirHandle);
+
+    await expect(dir.put("biomes.png", new Blob(["x"]))).rejects.toThrow(
+      "disk full",
+    );
+    expect(closed).toBe(true);
+  });
+
+  it("does not double-close on the ReadableStream path", async () => {
+    let closeCount = 0;
+    const writable = new WritableStream<Uint8Array>({
+      write() {},
+      close() {
+        closeCount += 1;
+      },
+    });
+    const fileHandle = {
+      createWritable: () => Promise.resolve(writable),
+    } as unknown as FileSystemFileHandle;
+    const dirHandle = {
+      getFileHandle: () => Promise.resolve(fileHandle),
+    } as unknown as FileSystemDirectoryHandle;
+    const dir = new MapDir(dirHandle);
+
+    const source = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new Uint8Array([1, 2, 3]));
+        controller.close();
+      },
+    });
+
+    await dir.put("biomes.png", source);
+    // pipeTo is responsible for closing exactly once.
+    expect(closeCount).toBe(1);
+  });
+});

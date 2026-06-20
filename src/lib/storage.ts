@@ -65,11 +65,16 @@ export class MapDir {
     const file = await this.#dir.getFileHandle(name, { create: true });
     const writable = await file.createWritable();
     if (data instanceof ArrayBuffer || data instanceof Blob) {
-      await writable.write(data);
+      try {
+        await writable.write(data);
+      } finally {
+        await writable.close();
+      }
     } else {
+      // pipeTo closes the writable on its own (preventClose defaults to false),
+      // so we must not call close() again here.
       await data.pipeTo(writable);
     }
-    await writable.close();
   }
 
   async createWritable(
@@ -98,6 +103,15 @@ export class MapDir {
   }
 
   async remove(name: MapFileName) {
-    await this.#dir.removeEntry(name);
+    try {
+      await this.#dir.removeEntry(name);
+    } catch (e: unknown) {
+      // Treat removal as idempotent: ignore missing entries so that bulk
+      // clears (e.g. FileHandler#clear) don't abort halfway through.
+      if (e instanceof DOMException && e.name === "NotFoundError") {
+        return;
+      }
+      throw e;
+    }
   }
 }
