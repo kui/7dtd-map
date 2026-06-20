@@ -12,4 +12,6 @@ jobs:
           deno-version: v2.x
       - run: echo '{}' > local.json
       - run: deno ci
+      - name: Install Playwright browsers
+        run: deno run -A npm:playwright install --with-deps chromium
       - run: deno task ci
