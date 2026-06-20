@@ -11,6 +11,7 @@ import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { LabelHolder, Language } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
+import { escapeHtml } from "../../lib/utils.ts";
 
 export interface EventMessage {
   update: { prefabs: HighlightedPrefab[]; status: string };
@@ -260,11 +261,28 @@ function computeDirection(
   return "NW";
 }
 
-function matchAndHighlight(str: string, regex: RegExp) {
+// Escapes non-matching segments and wraps matches in <mark>, so the resulting
+// string is safe to assign to innerHTML even when `str` came from user XML.
+// Exported for testing.
+export function matchAndHighlight(str: string, regex: RegExp) {
   let isMatched = false;
-  const highlighted = str.replace(regex, (m) => {
-    isMatched = m.length > 0;
-    return `<mark>${m}</mark>`;
-  });
-  return isMatched ? highlighted : null;
+  let lastIndex = 0;
+  let out = "";
+  // Use matchAll so we can interleave escaped non-matches with wrapped matches
+  // regardless of whether the regex has the global flag set by the caller.
+  const source = regex.global
+    ? regex
+    : new RegExp(regex.source, regex.flags + "g");
+  for (const match of str.matchAll(source)) {
+    const m = match[0];
+    if (m.length === 0) continue;
+    isMatched = true;
+    const start = match.index;
+    out += escapeHtml(str.slice(lastIndex, start));
+    out += `<mark>${escapeHtml(m)}</mark>`;
+    lastIndex = start + m.length;
+  }
+  if (!isMatched) return null;
+  out += escapeHtml(str.slice(lastIndex));
+  return out;
 }

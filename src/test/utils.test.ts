@@ -1,5 +1,6 @@
 import {
   basename,
+  escapeHtml,
   humanreadableDistance,
   requireNonnull,
   requireType,
@@ -110,5 +111,26 @@ describe("basename", () => {
 
   it("returns empty string for trailing slash", () => {
     expect(basename("/foo/bar/")).toBe("");
+  });
+});
+
+describe("escapeHtml", () => {
+  it("escapes the five HTML special characters", () => {
+    expect(escapeHtml(`<script>alert("x&y")</script>`)).toBe(
+      "&lt;script&gt;alert(&quot;x&amp;y&quot;)&lt;/script&gt;",
+    );
+  });
+
+  it("escapes single quotes for safe single-quoted attribute use", () => {
+    expect(escapeHtml("it's")).toBe("it&#39;s");
+  });
+
+  it("escapes ampersand first so existing entity text is preserved literally", () => {
+    expect(escapeHtml("&amp;")).toBe("&amp;amp;");
+  });
+
+  it("returns plain ASCII unchanged", () => {
+    expect(escapeHtml("plain text 123")).toBe("plain text 123");
+    expect(escapeHtml("")).toBe("");
   });
 });
