@@ -18,7 +18,7 @@ import * as presetButton from "./lib/ui/preset-button.ts";
 import * as syncOutput from "./lib/ui/sync-output.ts";
 import { UrlState } from "./lib/url-state.ts";
 import { component } from "./lib/dom-utils.ts";
-import { fetchJson, printError } from "./lib/utils.ts";
+import { escapeHtml, fetchJson, printError } from "./lib/utils.ts";
 
 function main() {
   presetButton.init();
@@ -97,6 +97,7 @@ function main() {
 
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
+  const safeName = escapeHtml(prefab.name);
   li.innerHTML = [
     ...(prefab.difficulty
       ? [
@@ -105,10 +106,10 @@ function prefabLi(prefab: HighlightedPrefab) {
         `</span>`,
       ]
       : []),
-    `<a href="prefabs/${prefab.name}.html" target="_blank">`,
+    `<a href="prefabs/${safeName}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",
-    `<small>${prefab.highlightedName ?? prefab.name}</small></a>`,
+    `<small>${prefab.highlightedName ?? safeName}</small></a>`,
     ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
       ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
       : []),
@@ -118,8 +119,9 @@ function prefabLi(prefab: HighlightedPrefab) {
     prefab.matchedBlocks.forEach((block) => {
       if (block.count === undefined) return;
       const blockLi = document.createElement("li");
+      const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-for="blocks-filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="blocks-filter" data-input-text="${safeBlockName}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,

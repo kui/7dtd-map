@@ -7,7 +7,12 @@ import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type { HighlightedPrefab } from "./types/7dtdmap.ts";
 import { component, downloadCanvasPng } from "./lib/dom-utils.ts";
-import { fetchJson, humanreadableDistance, printError } from "./lib/utils.ts";
+import {
+  escapeHtml,
+  fetchJson,
+  humanreadableDistance,
+  printError,
+} from "./lib/utils.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
@@ -198,8 +203,9 @@ function main() {
 
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
+  const safeName = escapeHtml(prefab.name);
   li.innerHTML = [
-    `<button data-input-for="prefab_filter" data-input-text="${prefab.name}" title="Filter with this prefab name">▲</button>`,
+    `<button data-input-for="prefab_filter" data-input-text="${safeName}" title="Filter with this prefab name">▲</button>`,
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
@@ -208,10 +214,10 @@ function prefabLi(prefab: HighlightedPrefab) {
         `</span>`,
       ]
       : []),
-    `<a href="prefabs/${prefab.name}.html" target="_blank">`,
+    `<a href="prefabs/${safeName}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",
-    `<small>${prefab.highlightedName ?? prefab.name}</small>`,
+    `<small>${prefab.highlightedName ?? safeName}</small>`,
     "</a>",
     `(${prefab.x.toString()}, ${prefab.z.toString()})`,
   ].join(" ");
@@ -220,8 +226,9 @@ function prefabLi(prefab: HighlightedPrefab) {
     prefab.matchedBlocks.forEach((block) => {
       if (block.count === undefined) return;
       const blockLi = document.createElement("li");
+      const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-for="block_filter" data-input-text="${block.name}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="block_filter" data-input-text="${safeBlockName}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,

@@ -1,5 +1,6 @@
 import { FileHandler } from "./file-handler.ts";
 import * as storage from "../lib/storage.ts";
+import { escapeHtml } from "../lib/utils.ts";
 
 interface Doms {
   mapInfoShow: HTMLButtonElement;
@@ -45,6 +46,6 @@ function buildTableContent(text: string): string[] {
   return Array.from(doc.querySelectorAll("property")).map((element) => {
     const key = element.getAttribute("name") ?? "-";
     const value = element.getAttribute("value") ?? "-";
-    return `<tr><th>${key}</th><td>${value}</td></tr>`;
+    return `<tr><th>${escapeHtml(key)}</th><td>${escapeHtml(value)}</td></tr>`;
   });
 }

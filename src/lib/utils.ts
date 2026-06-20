@@ -74,6 +74,29 @@ export function basename(path: string) {
   return path.substring(path.lastIndexOf("/") + 1);
 }
 
+// Escape characters that have special meaning in HTML text content or in
+// double-quoted attribute values. Inputs sourced from user-supplied XML files
+// or worker output must be passed through this before being interpolated into
+// innerHTML strings.
+export function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => {
+    switch (c) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case '"':
+        return "&quot;";
+      case "'":
+        return "&#39;";
+      default:
+        return c;
+    }
+  });
+}
+
 export async function readWholeStream(
   stream: ReadableStream<Uint8Array>,
 ): Promise<Uint8Array> {

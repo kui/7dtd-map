@@ -1,7 +1,7 @@
 import type { PrefabDifficulties } from "../types/7dtdmap.ts";
 import { LabelHandler } from "../lib/label-handler.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
-import { printError } from "../lib/utils.ts";
+import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
   inMap: HTMLElement;
@@ -120,7 +120,9 @@ export class PrefabInspectorHandler {
         const tierStr = difficulty === 0
           ? ""
           : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
-        return `<li>${tierStr}<a href="prefabs/${name}.html">${label} / ${name}</a></li>`;
+        const safeName = escapeHtml(name);
+        const safeLabel = escapeHtml(label);
+        return `<li>${tierStr}<a href="prefabs/${safeName}.html">${safeLabel} / ${safeName}</a></li>`;
       })
       .join("");
   }
