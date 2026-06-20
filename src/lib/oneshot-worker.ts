@@ -1,17 +1,33 @@
 /**
- * Wraps a Web Worker that is expected to post exactly one message and then
- * be discarded ("one-shot"). Listens for `message`, `error`, and
- * `messageerror`, terminates the worker on whichever event arrives first,
- * and settles the returned promise. Without this guard, an `error` or
- * `messageerror` event would leave the promise pending forever.
- *
- * The caller is responsible for `postMessage`, since some one-shot workers
- * self-initiate work on spawn and have no input message.
- *
- * Always rejects on `error` / `messageerror`. Catch the rejection at the
- * call site if a fallback value is preferable.
+ * Main-thread side of the one-shot worker framework. Pair with
+ * `handleOneshotWorker` in `src/worker/lib/oneshot-worker.ts`. See that
+ * module for the design rationale.
  */
-export function awaitOneshotWorker<T>(worker: Worker): Promise<T> {
+
+/**
+ * Wire-format result that the worker posts back. Shared between the
+ * worker-side and main-thread modules.
+ */
+export type OneshotWorkerResult<T> = { ok: true; value: T } | { ok: false };
+
+/**
+ * Post `input` to a one-shot worker and await its single result message.
+ * Terminates the worker on any outcome. Throws if the worker reported
+ * failure (the rich error was already logged in the worker console via
+ * printError) or died before responding.
+ */
+export async function runOneshotWorker<TIn, TOut>(
+  worker: Worker,
+  input: TIn,
+): Promise<TOut> {
+  const promise = awaitOneshotWorker<OneshotWorkerResult<TOut>>(worker);
+  worker.postMessage(input);
+  const result = await promise;
+  if (!result.ok) throw new Error("Worker reported failure");
+  return result.value;
+}
+
+function awaitOneshotWorker<T>(worker: Worker): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     let settled = false;
     const settle = (fn: () => void) => {

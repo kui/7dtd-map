@@ -5,7 +5,7 @@ import type { GameCoords, GameMapSize } from "../types/7dtdmap.ts";
 
 import { gameMapSize, requireNonnull } from "../lib/utils.ts";
 import { CacheHolder } from "../lib/cache-holder.ts";
-import { awaitOneshotWorker } from "../lib/oneshot-worker.ts";
+import { runOneshotWorker } from "../lib/oneshot-worker.ts";
 import * as storage from "../lib/storage.ts";
 
 export class DtmHandler {
@@ -21,7 +21,10 @@ export class DtmHandler {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
       async () => {
         try {
-          return await awaitOneshotWorker<DtmOutputMessage>(workerFactory());
+          return await runOneshotWorker<void, DtmOutputMessage>(
+            workerFactory(),
+            undefined,
+          );
         } catch (e) {
           console.warn("DTM worker failed:", e);
           return null;

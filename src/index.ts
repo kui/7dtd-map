@@ -20,7 +20,7 @@ import { PrefabsHandler } from "./index/prefabs-handler.ts";
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import { CursorCoodsHandler } from "./index/cursor-coods-handler.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
-import { FileHandler, ImageProcessorWorker } from "./index/file-handler.ts";
+import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
 import { DndHandler } from "./index/dnd-handler.ts";
 import { TerrainViewer } from "./index/terrain-viewer.ts";
@@ -64,7 +64,7 @@ function main() {
       mapName: component("map_name", HTMLInputElement),
     },
     dialogHandler,
-    () => new Worker("worker/file-processor.js") as ImageProcessorWorker,
+    () => new Worker("worker/file-processor.js"),
     dndHandler,
     bundledMapHandler,
   );
