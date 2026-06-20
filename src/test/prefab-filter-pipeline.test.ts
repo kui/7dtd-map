@@ -127,12 +127,66 @@ describe("PrefabFilter", () => {
     );
   });
 
-  it("throws on invalid prefabFilterRegexp (documents current behavior)", async () => {
+  it("reports invalid prefab name pattern without throwing", async () => {
     const f = build();
     f.all = prefabs;
     f.preExcludes = [];
     f.prefabFilterRegexp = "(unbalanced";
-    await expect(f.updateImmediately()).rejects.toThrow();
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toBe("Invalid prefab name pattern");
+    expect(slot.current!.prefabs).toEqual([]);
+  });
+
+  it("reports invalid block name pattern without throwing", async () => {
+    const f = build({ stone: { house_01: 5 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "[unbalanced";
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toBe("Invalid block name pattern");
+    expect(slot.current!.prefabs).toEqual([]);
+  });
+
+  it("reports both invalid patterns together", async () => {
+    const f = build({ stone: { house_01: 5 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.prefabFilterRegexp = "(unbalanced";
+    f.blockFilterRegexp = "[unbalanced";
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toBe(
+      "Invalid prefab name and block name patterns",
+    );
+    expect(slot.current!.prefabs).toEqual([]);
+  });
+
+  it("recovers when invalid prefab pattern is corrected", async () => {
+    const f = build();
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.prefabFilterRegexp = "(unbalanced";
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toBe("Invalid prefab name pattern");
+
+    f.prefabFilterRegexp = "house";
+    await f.updateImmediately();
+    expect(slot.current!.prefabs.map((p) => p.name)).toContain("house_01");
+    expect(slot.current!.status).not.toContain("Invalid");
+  });
+
+  it("skips invalid preExcludes patterns without throwing", async () => {
+    const f = build();
+    f.all = prefabs;
+    f.preExcludes = ["(unbalanced", "^aaa_"];
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.prefabs.map((p) => p.name)).not.toContain(
+      "aaa_test_01",
+    );
   });
 
   it("re-runs filter when language changes", async () => {

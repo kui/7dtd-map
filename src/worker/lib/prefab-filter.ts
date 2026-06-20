@@ -26,6 +26,8 @@ export class PrefabFilter {
   #status = "";
   #listeners = new events.ListenerManager<"update", EventMessage>();
   #preExcluds: RegExp[] = [];
+  #prefabFilterInvalid = false;
+  #blockFilterInvalid = false;
 
   all: Prefab[] = [];
   markCoords: GameCoords | null = null;
@@ -52,7 +54,14 @@ export class PrefabFilter {
   }
 
   set preExcludes(patterns: string[]) {
-    this.#preExcluds = patterns.map((f) => new RegExp(f));
+    this.#preExcluds = patterns.flatMap((f) => {
+      const re = tryCompileRegex(f, "");
+      if (re === null) {
+        console.warn(`Invalid preExcludes pattern, skipping: ${f}`);
+        return [];
+      }
+      return re;
+    });
   }
 
   update = throttledInvoker(() => this.updateImmediately());
@@ -67,6 +76,18 @@ export class PrefabFilter {
   }
 
   #updateStatus() {
+    if (this.#prefabFilterInvalid && this.#blockFilterInvalid) {
+      this.#status = "Invalid prefab name and block name patterns";
+      return;
+    }
+    if (this.#prefabFilterInvalid) {
+      this.#status = "Invalid prefab name pattern";
+      return;
+    }
+    if (this.#blockFilterInvalid) {
+      this.#status = "Invalid block name pattern";
+      return;
+    }
     if (
       this.prefabFilterRegexp.length === 0 &&
       this.blockFilterRegexp.length === 0 &&
@@ -86,10 +107,16 @@ export class PrefabFilter {
   }
 
   async #applyFilter() {
+    this.#prefabFilterInvalid = false;
+    this.#blockFilterInvalid = false;
     this.#preFiltereds = this.#preMatch(this.all);
     let result = this.#matchByDifficulty(this.#preFiltereds);
     result = await this.#matchByPrefabName(result);
     result = await this.#matchByBlockName(result);
+    if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
+      this.#filtered = [];
+      return;
+    }
     this.#filtered = result;
   }
 
@@ -111,7 +138,16 @@ export class PrefabFilter {
 
   async #matchByPrefabName(prefabs: Prefab[]): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
-    const pattern = new RegExp(this.prefabFilterRegexp, "i");
+    const pattern = this.prefabFilterRegexp.length === 0
+      ? new RegExp("", "i")
+      : tryCompileRegex(this.prefabFilterRegexp, "i");
+    if (pattern === null) {
+      console.warn(
+        `Invalid prefab name pattern: ${this.prefabFilterRegexp}`,
+      );
+      this.#prefabFilterInvalid = true;
+      return [];
+    }
     return prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const label = labels.get(prefab.name);
       if (this.prefabFilterRegexp.length === 0) {
@@ -141,19 +177,27 @@ export class PrefabFilter {
     if (this.blockFilterRegexp.length === 0) {
       return prefabs;
     }
-    const matchedPrefabNames = await this.#matchPrefabTypesByBlockName(prefabs);
+    const pattern = tryCompileRegex(this.blockFilterRegexp, "i");
+    if (pattern === null) {
+      console.warn(`Invalid block name pattern: ${this.blockFilterRegexp}`);
+      this.#blockFilterInvalid = true;
+      return [];
+    }
+    const matchedPrefabNames = await this.#matchPrefabTypesByBlockName(
+      prefabs,
+      pattern,
+    );
     return prefabs.flatMap((prefab) => {
       const matchedBlocks = matchedPrefabNames[prefab.name];
       return matchedBlocks ? { ...prefab, matchedBlocks } : [];
     });
   }
 
-  async #matchPrefabTypesByBlockName(prefabs: Prefab[]) {
+  async #matchPrefabTypesByBlockName(prefabs: Prefab[], pattern: RegExp) {
     const blockLabels = await this.#labelHolder.get("blocks");
     const shapeLabels = await this.#labelHolder.get("shapes");
     const prefabNames = new Set(prefabs.map((p) => p.name));
     const matchedPrefabNames: { [prefabName: string]: HighlightedBlock[] } = {};
-    const pattern = new RegExp(this.blockFilterRegexp, "i");
     for (
       const [blockName, prefabs] of Object.entries(
         await this.#blockPrefabCountsHolder.get(),
@@ -193,6 +237,9 @@ export class PrefabFilter {
   }
 
   #sort() {
+    if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
+      return;
+    }
     if (this.all.length === 0) {
       this.#status = "No prefabs loaded";
     } else if (this.#filtered.length === 0) {
@@ -259,6 +306,16 @@ function computeDirection(
   if (angle < 67.5) return "NE";
   if (angle < 112.5) return "N";
   return "NW";
+}
+
+// Returns null instead of throwing when `source` is not a valid RegExp pattern,
+// so partial / mid-typed user input does not break the worker pipeline.
+function tryCompileRegex(source: string, flags: string): RegExp | null {
+  try {
+    return new RegExp(source, flags);
+  } catch (_e) {
+    return null;
+  }
 }
 
 // Escapes non-matching segments and wraps matches in <mark>, so the resulting
