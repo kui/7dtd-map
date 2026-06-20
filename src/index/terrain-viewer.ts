@@ -57,10 +57,12 @@ export class TerrainViewer {
       this.#close();
     });
 
-    this.updateShowButton().catch(printError);
+    dtm.addListener(() => this.#updateShowButton());
+
+    this.#updateShowButton().catch(printError);
   }
 
-  async updateShowButton() {
+  async #updateShowButton() {
     this.#doms.show.disabled = (await this.#dtm.size()) === null;
   }
 
