@@ -8,12 +8,12 @@ import { describe, it } from "@std/testing/bdd";
 // dispatchEvent.
 class FakeInput extends EventTarget {
   id: string;
-  type: "text" | "checkbox";
+  type: "text" | "checkbox" | "select-one";
   value: string;
   checked: boolean;
   constructor(
     id: string,
-    type: "text" | "checkbox" = "text",
+    type: "text" | "checkbox" | "select-one" = "text",
     initial: string | boolean = "",
   ) {
     super();
@@ -53,6 +53,32 @@ describe("UrlState", () => {
     expect(cb.checked).toBe(true);
   });
 
+  it("dispatches both input and change events on text restore", () => {
+    const input = new FakeInput("filter", "text", "");
+    const seen: string[] = [];
+    input.addEventListener("input", () => seen.push("input"));
+    input.addEventListener("change", () => seen.push("change"));
+    build("http://x/p?filter=hello", [input]);
+    expect(seen).toEqual(["input", "change"]);
+  });
+
+  it("dispatches a change event on checkbox restore", () => {
+    const cb = new FakeInput("opt", "checkbox", false);
+    let changes = 0;
+    cb.addEventListener("change", () => changes++);
+    build("http://x/p?opt=t", [cb]);
+    expect(changes).toBe(1);
+  });
+
+  it("dispatches a change event on select restore", () => {
+    const sel = new FakeInput("mode", "select-one", "");
+    let changes = 0;
+    sel.addEventListener("change", () => changes++);
+    build("http://x/p?mode=hard", [sel]);
+    expect(sel.value).toBe("hard");
+    expect(changes).toBe(1);
+  });
+
   it("updates the URL when an input event fires", () => {
     const input = new FakeInput("filter", "text", "");
     const state = build("http://x/p", [input]);
@@ -64,6 +90,19 @@ describe("UrlState", () => {
 
     expect(seen.length).toBe(1);
     expect(seen[0].searchParams.get("filter")).toBe("hello");
+  });
+
+  it("updates the URL when a change event fires (checkbox)", () => {
+    const cb = new FakeInput("opt", "checkbox", false);
+    const state = build("http://x/p", [cb]);
+    const seen: URL[] = [];
+    state.addUpdateListener((u) => seen.push(new URL(u.toString())));
+
+    cb.checked = true;
+    cb.dispatchEvent(new Event("change"));
+
+    expect(seen.length).toBe(1);
+    expect(seen[0].searchParams.get("opt")).toBe("t");
   });
 
   it("removes the query param when the value returns to its default", () => {
@@ -81,7 +120,7 @@ describe("UrlState", () => {
     expect(seen.at(-1)!.searchParams.has("filter")).toBe(false);
   });
 
-  it("uses 'input' (not 'change') events — change-only listeners miss updates", () => {
+  it("does not re-notify listeners when the value did not change", () => {
     const input = new FakeInput("filter", "text", "");
     const state = build("http://x/p", [input]);
     let called = 0;
@@ -89,10 +128,14 @@ describe("UrlState", () => {
       called++;
     });
 
-    // change events should NOT trigger a URL update — only input events do.
+    input.value = "hello";
+    // Browsers fire input + change for the same edit; we should only notify
+    // listeners once per distinct value.
+    input.dispatchEvent(new Event("input"));
     input.dispatchEvent(new Event("change"));
-    expect(called).toBe(0);
+    expect(called).toBe(1);
 
+    // Same value again should not notify.
     input.dispatchEvent(new Event("input"));
     expect(called).toBe(1);
   });
