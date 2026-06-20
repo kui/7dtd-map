@@ -47,8 +47,12 @@ if (args[0] === "serve") {
 
   await ctx.watch();
 
+  const envPort = Deno.env.get("PORT");
+  const envHost = Deno.env.get("HOST");
   const { hosts, port } = await ctx.serve({
     servedir: outDir,
+    ...(envPort ? { port: Number(envPort) } : {}),
+    ...(envHost ? { host: envHost } : {}),
   });
 
   console.log(`Serving at http://${hosts[0]}:${port}`);

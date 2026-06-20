@@ -6,3 +6,9 @@
 /public/**/*.js
 /public/**/*.js.map
 !/public/old/**
+
+# Playwright artifacts
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
