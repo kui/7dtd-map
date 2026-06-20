@@ -8,19 +8,10 @@
  * The caller is responsible for `postMessage`, since some one-shot workers
  * self-initiate work on spawn and have no input message.
  *
- * By default `error` rejects with a descriptive Error and `messageerror`
- * rejects with a generic Error. Pass `onError` / `onMessageError` to
- * recover with a fallback value instead.
+ * Always rejects on `error` / `messageerror`. Catch the rejection at the
+ * call site if a fallback value is preferable.
  */
-export interface OneshotWorkerOptions<T> {
-  onError?: (event: ErrorEvent) => T;
-  onMessageError?: () => T;
-}
-
-export function awaitOneshotWorker<T>(
-  worker: Worker,
-  options: OneshotWorkerOptions<T> = {},
-): Promise<T> {
+export function awaitOneshotWorker<T>(worker: Worker): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     let settled = false;
     const settle = (fn: () => void) => {
@@ -36,26 +27,14 @@ export function awaitOneshotWorker<T>(
       // Prevent the browser from also logging an "Uncaught" notice for an
       // error we are about to surface through the promise.
       event.preventDefault();
-      settle(() => {
-        if (options.onError) {
-          resolve(options.onError(event));
-        } else {
-          const { message, filename, lineno } = event;
-          const detail = message || filename
-            ? `${message || "error"} (${filename ?? "?"}:${lineno ?? "?"})`
-            : "error";
-          reject(new Error(`Worker failed: ${detail}`));
-        }
-      });
+      const { message, filename, lineno } = event;
+      const detail = message || filename
+        ? `${message || "error"} (${filename ?? "?"}:${lineno ?? "?"})`
+        : "error";
+      settle(() => reject(new Error(`Worker failed: ${detail}`)));
     });
     worker.addEventListener("messageerror", () => {
-      settle(() => {
-        if (options.onMessageError) {
-          resolve(options.onMessageError());
-        } else {
-          reject(new Error("Worker message deserialization failed"));
-        }
-      });
+      settle(() => reject(new Error("Worker message deserialization failed")));
     });
   });
 }

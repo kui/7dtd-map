@@ -19,22 +19,14 @@ export class DtmHandler {
 
   constructor(workerFactory: () => Worker, fileHandler: FileHandler) {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
-      () =>
-        awaitOneshotWorker<DtmOutputMessage>(workerFactory(), {
-          onError: (event) => {
-            console.warn(
-              "DTM worker failed:",
-              event.message,
-              event.filename,
-              event.lineno,
-            );
-            return null;
-          },
-          onMessageError: () => {
-            console.warn("DTM worker message deserialization failed");
-            return null;
-          },
-        }),
+      async () => {
+        try {
+          return await awaitOneshotWorker<DtmOutputMessage>(workerFactory());
+        } catch (e) {
+          console.warn("DTM worker failed:", e);
+          return null;
+        }
+      },
       () => {
         // Do nothing
       },
