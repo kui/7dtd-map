@@ -83,4 +83,58 @@ describe("CacheHolder.get()", () => {
     expect(fetcher.calls.length).toBe(2);
     holder.invalidate();
   });
+
+  it("should deconstruct values discarded by mid-fetch invalidations", async () => {
+    using time = new FakeTime(0);
+    const sleepTime = 300;
+    let counter = 0;
+    const fetcher = fn(async () => {
+      const id = ++counter;
+      await sleep(sleepTime);
+      // Invalidate while the first fetch is still pending, so its result
+      // will be discarded once it resolves.
+      if (id === 1) holder.invalidate();
+      return `value-${id.toString()}`;
+    });
+    const deconstructor = fn((_s: string) => {});
+    const holder = new CacheHolder<string>(fetcher, deconstructor);
+    const first = holder.get();
+
+    await time.tickAsync(sleepTime);
+    await time.tickAsync(sleepTime);
+
+    expect(await first).toBe("value-2");
+    expect(fetcher.calls.length).toBe(2);
+    // The first fetched value was discarded and must be deconstructed.
+    expect(deconstructor.calls.length).toBe(1);
+    expect(deconstructor.calls[0].args[0]).toBe("value-1");
+    holder.invalidate();
+    // After explicit invalidate, the retained final value is deconstructed too.
+    expect(deconstructor.calls.length).toBe(2);
+    expect(deconstructor.calls[1].args[0]).toBe("value-2");
+  });
+
+  it("should not abort refetch if deconstructor throws on discarded values", async () => {
+    using time = new FakeTime(0);
+    const sleepTime = 300;
+    const fetcher = fn(async () => {
+      await sleep(sleepTime);
+      return "value";
+    });
+    const deconstructor = fn((_s: string) => {
+      throw new Error("deconstructor failure");
+    });
+    const holder = new CacheHolder<string>(fetcher, deconstructor);
+    const first = holder.get();
+
+    await time.tickAsync(1);
+    holder.invalidate();
+
+    await time.tickAsync(sleepTime);
+    await time.tickAsync(sleepTime);
+
+    expect(await first).toBe("value");
+    expect(fetcher.calls.length).toBe(2);
+    expect(deconstructor.calls.length).toBe(1);
+  });
 });

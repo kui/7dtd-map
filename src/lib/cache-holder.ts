@@ -1,3 +1,5 @@
+import { printError } from "./utils.ts";
+
 const NO_VALUE = Symbol("NO_VALUE");
 type NoValue = typeof NO_VALUE;
 
@@ -56,6 +58,13 @@ export class CacheHolder<T> {
     do {
       now = Date.now();
       value = await this.#fetcher();
+      if (now < this.#lastInvalidation) {
+        try {
+          this.#deconstructor(value);
+        } catch (e) {
+          printError(e);
+        }
+      }
     } while (now < this.#lastInvalidation);
     return value;
   }
