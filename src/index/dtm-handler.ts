@@ -6,6 +6,11 @@ import type { GameCoords, GameMapSize } from "../types/7dtdmap.ts";
 import { gameMapSize, requireNonnull } from "../lib/utils.ts";
 import { CacheHolder } from "../lib/cache-holder.ts";
 import * as storage from "../lib/storage.ts";
+import * as events from "../lib/events.ts";
+
+interface EventMessage {
+  update: Record<string, never>;
+}
 
 export class DtmHandler {
   #dtmRaw: CacheHolder<Uint8Array | null>;
@@ -15,6 +20,7 @@ export class DtmHandler {
       // Do nothing
     },
   );
+  #listeners = new events.ListenerManager<"update", EventMessage>();
 
   constructor(workerFactory: () => Worker, fileHandler: FileHandler) {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
@@ -35,10 +41,19 @@ export class DtmHandler {
       },
     );
 
-    fileHandler.addListener(({ update: fileNames }) => {
-      if (fileNames.includes("dtm_block.raw.gz")) this.#dtmRaw.invalidate();
-      if (fileNames.includes("map_info.xml")) this.#mapSize.invalidate();
+    fileHandler.addListener(async ({ update: fileNames }) => {
+      const dtmChanged = fileNames.includes("dtm_block.raw.gz");
+      const mapSizeChanged = fileNames.includes("map_info.xml");
+      if (dtmChanged) this.#dtmRaw.invalidate();
+      if (mapSizeChanged) this.#mapSize.invalidate();
+      if (dtmChanged || mapSizeChanged) {
+        await this.#listeners.dispatch({ update: {} });
+      }
     });
+  }
+
+  addListener(fn: events.Listener<"update", EventMessage>) {
+    this.#listeners.addListener(fn);
   }
 
   size(): Promise<GameMapSize | null> {
