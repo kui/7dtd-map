@@ -24,13 +24,25 @@
     "build:copy-map-files": "deno run -A tools/copy-map-files.ts",
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
+    // Playwright E2E. Install browsers first with:
+    //   deno run -A npm:playwright install chromium
+    // The dev server (deno task serve) is launched by Playwright's
+    // webServer config and listens on the PORT env var (default 18234).
+    "e2e": "deno run -A npm:@playwright/test test",
     "ci": {
-      "dependencies": ["ci:lint", "ci:fmt-check", "ci:type-check", "test"]
+      "dependencies": [
+        "ci:lint",
+        "ci:fmt-check",
+        "ci:type-check",
+        "test",
+        "e2e"
+      ]
     },
     "ci:lint": "deno lint",
     "ci:fmt-check": "deno fmt --check",
     "ci:type-check": "deno check"
   },
+  "nodeModulesDir": "auto",
   "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
   "imports": {
     "fast-png": "npm:fast-png@^8.0.0",
@@ -45,8 +57,16 @@
     "@std/testing": "jsr:@std/testing@^1.0.19",
     "@std/testing/bdd": "jsr:@std/testing@^1.0.19/bdd",
     "@std/testing/mock": "jsr:@std/testing@^1.0.19/mock",
-    "@std/testing/time": "jsr:@std/testing@^1.0.19/time"
+    "@std/testing/time": "jsr:@std/testing@^1.0.19/time",
+    "@playwright/test": "npm:@playwright/test@^1.49.0"
   },
+  // Top-level exclude keeps deno fmt/lint/check away from Playwright sources.
+  "exclude": [
+    "./e2e",
+    "./playwright.config.ts",
+    "./playwright-report",
+    "./test-results"
+  ],
   "lint": {
     "exclude": ["./public"],
     "rules": {

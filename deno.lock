@@ -17,6 +17,8 @@
     "jsr:@std/path@^1.1.4": "1.1.5",
     "jsr:@std/path@^1.1.5": "1.1.5",
     "jsr:@std/testing@^1.0.19": "1.0.19",
+    "npm:@playwright/test@*": "1.61.0",
+    "npm:@playwright/test@^1.49.0": "1.61.0",
     "npm:@types/pngjs@*": "6.0.5",
     "npm:csv-parse@^6.2.1": "6.2.1",
     "npm:esbuild@0.28": "0.28.0",
@@ -349,6 +351,13 @@
       "os": ["win32"],
       "cpu": ["x64"]
     },
+    "@playwright/test@1.61.0": {
+      "integrity": "sha512-cKA5B6lpFEMyMGjxF54QihfYpB4FkEGH+qZhtArDEG+wezQAJY8Pq6C7T1SjWz+FFzt3TbyoXBQYk/0292TdJA==",
+      "dependencies": [
+        "playwright"
+      ],
+      "bin": true
+    },
     "@types/node@25.9.1": {
       "integrity": "sha512-xfrlY7UD5rMJk3ZVJP8BNzS28J36YJg+xp+LPXV1TdWxr8uMH5A860QNxYDGQe/ylDSgjxE52Q9VnO7p75tJxg==",
       "dependencies": [
@@ -440,11 +449,30 @@
     "fflate@0.8.3": {
       "integrity": "sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA=="
     },
+    "fsevents@2.3.2": {
+      "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",
+      "os": ["darwin"],
+      "scripts": true
+    },
     "iobuffer@6.0.1": {
       "integrity": "sha512-SZWYkWNfjIXIBYSDpXDYIgshqtbOPsi4lviawAEceR1Kqk+sHDlcQjWrzNQsii80AyBY0q5c8HCTNjqo74ul+Q=="
     },
     "json5@2.2.3": {
       "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==",
+      "bin": true
+    },
+    "playwright-core@1.61.0": {
+      "integrity": "sha512-caX7TrY3Ml6egyDX0WUcTHDxodl/b51y5wJOdCEA36QviK/s2g081hvmGs8eaE3DWb6NYZQ6BjO/QkNRPenoPA==",
+      "bin": true
+    },
+    "playwright@1.61.0": {
+      "integrity": "sha512-Z+7BeeqQPRRzklHsVFP4KTGIyMxKUmfeRA4WisM6G3/XW6nwGeX6fX9qYaDa+CiUqpOkb2f6X3nar05R3kSuJQ==",
+      "dependencies": [
+        "playwright-core"
+      ],
+      "optionalDependencies": [
+        "fsevents"
+      ],
       "bin": true
     },
     "three@0.184.0": {
@@ -461,6 +489,7 @@
       "jsr:@std/expect@^1.0.19",
       "jsr:@std/fs@^1.0.24",
       "jsr:@std/testing@^1.0.19",
+      "npm:@playwright/test@^1.49.0",
       "npm:csv-parse@^6.2.1",
       "npm:esbuild@0.28",
       "npm:fast-png@8",
