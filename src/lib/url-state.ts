@@ -7,7 +7,8 @@ interface StateElement {
 export class UrlState {
   #url: URL;
   #inputs: Map<HTMLInputElement, StateElement>;
-  #udpateListeners: ((url: URL) => void)[] = [];
+  #lastValues: Map<HTMLInputElement, string> = new Map();
+  #updateListeners: ((url: URL) => void)[] = [];
 
   private constructor(browserUrl: URL, elements: ArrayLike<StateElement>) {
     this.#url = browserUrl;
@@ -19,15 +20,28 @@ export class UrlState {
     for (const [input, { defaultValue }] of this.#inputs.entries()) {
       if (this.#url.searchParams.has(input.id)) {
         setValue(input, this.#url.searchParams.get(input.id) ?? defaultValue);
-        input.dispatchEvent(new Event("input"));
+        // Dispatch both events so listeners that subscribe to either one
+        // observe the restored value. Both are bubbling to match how
+        // browsers fire native user-driven events.
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
       }
+      this.#lastValues.set(input, getValue(input));
 
-      input.addEventListener("input", () => {
+      const handler = () => {
+        const value = getValue(input);
+        if (this.#lastValues.get(input) === value) return;
+        this.#lastValues.set(input, value);
         this.#updateUrl(input, defaultValue);
-        this.#udpateListeners.forEach((fn) => {
+        this.#updateListeners.forEach((fn) => {
           fn(this.#url);
         });
-      });
+      };
+      // Subscribe to both events so we catch text-style typing (input) and
+      // checkbox/radio/select toggles (change). The value-equality guard
+      // above prevents the duplicate dispatch from causing double updates.
+      input.addEventListener("input", handler);
+      input.addEventListener("change", handler);
     }
   }
 
@@ -54,7 +68,7 @@ export class UrlState {
   }
 
   addUpdateListener(listener: (url: URL) => void) {
-    this.#udpateListeners.push(listener);
+    this.#updateListeners.push(listener);
   }
 }
 
