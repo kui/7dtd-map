@@ -16,14 +16,14 @@ const fontFaces = {
   // See tools/fonts/subset.sh
   // "Noto Emoji": new FontFace("Noto Emoji", "url('../NotoEmoji.subset.woff2') format('woff2')"),
 } as const;
-Promise.all(
+// Resolves once every font has either loaded or failed. Awaited at the top of
+// the message handler so the first paint uses the intended fonts, avoiding a
+// fallback render followed by a redundant re-render + postMessage once the
+// fonts finish loading.
+const fontsReady: Promise<unknown> = Promise.all(
   Object.values(fontFaces).map(async (fontFace) => {
     await fontFace.load();
     fonts.add(fontFace);
-    if (map) {
-      await map.update();
-      postMessage({ mapSize: map.size() });
-    }
     console.log("map-renderer: loaded font", fontFace);
   }),
 ).catch(printError);
@@ -37,13 +37,18 @@ onmessage = async (
   event: MessageEvent<MapRendererInputMessage>,
 ) => {
   const message = event.data;
-  console.log("map-renderer: recieved %o", message);
+  console.log("map-renderer: received %o", message);
+  await fontsReady;
   if (!map) {
     if (message.canvas) {
       map = new MapRenderer(message.canvas, mapFonts);
     } else {
       throw Error("Unexpected state");
     }
+  } else if (message.canvas) {
+    // The OffscreenCanvas is captured at construction time and must not be
+    // replaced by later messages; drop any stray `canvas` field defensively.
+    delete message.canvas;
   }
   await Object.assign(map, message).update();
   const out = { mapSize: map.size() };
