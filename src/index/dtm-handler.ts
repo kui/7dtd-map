@@ -21,13 +21,34 @@ export class DtmHandler {
       () => {
         const worker = workerFactory();
         return new Promise((resolve) => {
+          // Guard against double settle in case multiple events fire.
+          let settled = false;
+          const settle = (value: Uint8Array | null) => {
+            if (settled) return;
+            settled = true;
+            worker.terminate();
+            resolve(value);
+          };
           worker.addEventListener(
             "message",
-            ({ data }: MessageEvent<DtmOutputMessage>) => {
-              worker.terminate();
-              resolve(data);
-            },
+            ({ data }: MessageEvent<DtmOutputMessage>) => settle(data),
           );
+          // If the worker dies before posting a message, fall back to null
+          // rather than leaving the promise pending forever.
+          worker.addEventListener("error", (event) => {
+            event.preventDefault();
+            console.warn(
+              "DTM worker failed:",
+              event.message,
+              event.filename,
+              event.lineno,
+            );
+            settle(null);
+          });
+          worker.addEventListener("messageerror", () => {
+            console.warn("DTM worker message deserialization failed");
+            settle(null);
+          });
         });
       },
       () => {

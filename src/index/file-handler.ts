@@ -280,14 +280,44 @@ export class FileHandler {
   ): Promise<FileProcessorSuccessOutputMessage> {
     const worker = this.#processorFactory();
     return new Promise((resolve, reject) => {
-      worker.onmessage = ({ data }) => {
+      // Guard against double settle: any of message / error / messageerror
+      // can fire, and a worker that throws after posting a result would
+      // otherwise reject an already-resolved promise.
+      let settled = false;
+      const settle = (fn: () => void) => {
+        if (settled) return;
+        settled = true;
         worker.terminate();
-        if ("error" in data) {
-          reject(new Error(data.error));
-        } else {
-          resolve(data);
-        }
+        fn();
       };
+      worker.onmessage = ({ data }) => {
+        settle(() => {
+          if ("error" in data) {
+            reject(new Error(data.error));
+          } else {
+            resolve(data);
+          }
+        });
+      };
+      worker.addEventListener("error", (event) => {
+        // Prevent the browser from also logging an "Uncaught" notice for
+        // an error we are about to surface as a rejected promise.
+        event.preventDefault();
+        const { message: m, filename, lineno } = event;
+        const detail = m || filename
+          ? `${m || "Worker error"} (${filename ?? "?"}:${lineno ?? "?"})`
+          : "Worker error";
+        settle(() =>
+          reject(new Error(`File processor worker failed: ${detail}`))
+        );
+      });
+      worker.addEventListener("messageerror", () => {
+        settle(() =>
+          reject(
+            new Error("File processor worker message deserialization failed"),
+          )
+        );
+      });
       worker.postMessage(message);
     });
   }
