@@ -1,6 +1,7 @@
 /node_modules
 /local.json
 .DS_Store
+/.claude
 
 /public/**/*.js
 /public/**/*.js.map
