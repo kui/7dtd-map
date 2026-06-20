@@ -1,7 +1,6 @@
 import type {
   FileProcessorInputMessage,
   FileProcessorOutputMessage,
-  FileProcessorSuccessOutputMessage,
 } from "../worker/types.ts";
 import type { BundledMapHandler } from "./bundled-map-hander.ts";
 import type { DialogHandler } from "./dialog-handler.ts";
@@ -18,6 +17,7 @@ import {
 import * as storage from "../lib/storage.ts";
 import { basename, printError } from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
+import { runOneshotWorker } from "../lib/oneshot-worker.ts";
 
 const PROCESS_REQUIRED_NAMES = [
   "biomes.png",
@@ -57,11 +57,6 @@ type ResourceLike =
   | { name: AlwaysProcessRequiredFileName; blob: Blob }
   | { name: AlwaysProcessRequiredFileName; url: string };
 
-export interface ImageProcessorWorker extends Worker {
-  postMessage(message: FileProcessorInputMessage): void;
-  onmessage: (event: MessageEvent<FileProcessorOutputMessage>) => unknown;
-}
-
 interface Doms {
   files: HTMLInputElement;
   clearMap: HTMLButtonElement;
@@ -75,7 +70,7 @@ interface EventMessage {
 export class FileHandler {
   #doms: Doms;
   #dialogHandler: DialogHandler;
-  #processorFactory: () => ImageProcessorWorker;
+  #processorFactory: () => Worker;
   #workspace = storage.workspaceDir();
   #depletedFileHandler = new DepletedFileHandler();
   #listeners = new events.ListenerManager<"update", EventMessage>();
@@ -83,7 +78,7 @@ export class FileHandler {
   constructor(
     doms: Doms,
     dialogHandler: DialogHandler,
-    processorFactory: () => ImageProcessorWorker,
+    processorFactory: () => Worker,
     dndHandler: DndHandler,
     bundledMapHandler: BundledMapHandler,
   ) {
@@ -277,19 +272,8 @@ export class FileHandler {
 
   #processInWorker(
     message: FileProcessorInputMessage,
-  ): Promise<FileProcessorSuccessOutputMessage> {
-    const worker = this.#processorFactory();
-    return new Promise((resolve, reject) => {
-      worker.onmessage = ({ data }) => {
-        worker.terminate();
-        if ("error" in data) {
-          reject(new Error(data.error));
-        } else {
-          resolve(data);
-        }
-      };
-      worker.postMessage(message);
-    });
+  ): Promise<FileProcessorOutputMessage> {
+    return runOneshotWorker(this.#processorFactory(), message);
   }
 
   #setMapName(name: string) {

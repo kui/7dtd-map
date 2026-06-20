@@ -1,16 +1,14 @@
 import * as mapFiles from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
+import { handleOneshotWorker } from "./lib/oneshot-worker.ts";
 import type {
   FileProcessorInputMessage,
   FileProcessorOutputMessage,
 } from "./types.ts";
 
-onmessage = async (event: MessageEvent<FileProcessorInputMessage>) => {
-  const out = await main(event.data).catch((e: unknown) => ({
-    error: String(e),
-  }));
-  postMessage(out);
-};
+handleOneshotWorker<FileProcessorInputMessage, FileProcessorOutputMessage>(
+  main,
+);
 
 async function main(
   inMessage: FileProcessorInputMessage,

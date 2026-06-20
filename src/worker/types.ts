@@ -9,18 +9,10 @@ export type FileProcessorInputMessage =
   | { name: mapFiles.WorldFileName; blob: Blob }
   | { name: mapFiles.WorldFileName; url: string };
 
-export interface FileProcessorSuccessOutputMessage {
+export interface FileProcessorOutputMessage {
   name: mapFiles.MapFileName;
   size: number;
 }
-
-export interface FileProcessorErrorOutputMessage {
-  error: string;
-}
-
-export type FileProcessorOutputMessage =
-  | FileProcessorSuccessOutputMessage
-  | FileProcessorErrorOutputMessage;
 
 export type MapRendererInputMessage = Partial<
   Pick<

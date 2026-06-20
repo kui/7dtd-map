@@ -1,23 +1,16 @@
 import { DtmBlockRawDecompressor } from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
-import { printError, readWholeStream } from "../lib/utils.ts";
+import { readWholeStream } from "../lib/utils.ts";
+import { handleOneshotWorker } from "./lib/oneshot-worker.ts";
 import type { DtmOutputMessage } from "./types.ts";
 
-async function main() {
-  const workspace = await storage.workspaceDir();
-  let msg: DtmOutputMessage = null;
-  try {
-    msg = await readDtmBlockRaw(workspace);
-  } catch (e) {
-    printError(e);
-  }
-  postMessage(msg, msg ? [msg.buffer] : []);
-  close();
-}
+handleOneshotWorker<void, DtmOutputMessage>(
+  () => readDtmBlockRaw(),
+  (buf) => (buf ? [buf.buffer as ArrayBuffer] : []),
+);
 
-async function readDtmBlockRaw(
-  workspace: storage.MapDir,
-): Promise<Uint8Array | null> {
+async function readDtmBlockRaw(): Promise<Uint8Array | null> {
+  const workspace = await storage.workspaceDir();
   const file = await workspace.get("dtm_block.raw.gz");
   if (!file) return null;
   return readWholeStream(
@@ -26,5 +19,3 @@ async function readDtmBlockRaw(
     ),
   );
 }
-
-main().catch(printError);
