@@ -18,6 +18,7 @@ import {
 import * as storage from "../lib/storage.ts";
 import { basename, printError } from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
+import { awaitOneshotWorker } from "../lib/oneshot-worker.ts";
 
 const PROCESS_REQUIRED_NAMES = [
   "biomes.png",
@@ -275,51 +276,15 @@ export class FileHandler {
     this.#dialogHandler.close();
   }
 
-  #processInWorker(
+  async #processInWorker(
     message: FileProcessorInputMessage,
   ): Promise<FileProcessorSuccessOutputMessage> {
     const worker = this.#processorFactory();
-    return new Promise((resolve, reject) => {
-      // Guard against double settle: any of message / error / messageerror
-      // can fire, and a worker that throws after posting a result would
-      // otherwise reject an already-resolved promise.
-      let settled = false;
-      const settle = (fn: () => void) => {
-        if (settled) return;
-        settled = true;
-        worker.terminate();
-        fn();
-      };
-      worker.onmessage = ({ data }) => {
-        settle(() => {
-          if ("error" in data) {
-            reject(new Error(data.error));
-          } else {
-            resolve(data);
-          }
-        });
-      };
-      worker.addEventListener("error", (event) => {
-        // Prevent the browser from also logging an "Uncaught" notice for
-        // an error we are about to surface as a rejected promise.
-        event.preventDefault();
-        const { message: m, filename, lineno } = event;
-        const detail = m || filename
-          ? `${m || "Worker error"} (${filename ?? "?"}:${lineno ?? "?"})`
-          : "Worker error";
-        settle(() =>
-          reject(new Error(`File processor worker failed: ${detail}`))
-        );
-      });
-      worker.addEventListener("messageerror", () => {
-        settle(() =>
-          reject(
-            new Error("File processor worker message deserialization failed"),
-          )
-        );
-      });
-      worker.postMessage(message);
-    });
+    const result = awaitOneshotWorker<FileProcessorOutputMessage>(worker);
+    worker.postMessage(message);
+    const data = await result;
+    if ("error" in data) throw new Error(data.error);
+    return data;
   }
 
   #setMapName(name: string) {

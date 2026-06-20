@@ -5,6 +5,7 @@ import type { GameCoords, GameMapSize } from "../types/7dtdmap.ts";
 
 import { gameMapSize, requireNonnull } from "../lib/utils.ts";
 import { CacheHolder } from "../lib/cache-holder.ts";
+import { awaitOneshotWorker } from "../lib/oneshot-worker.ts";
 import * as storage from "../lib/storage.ts";
 
 export class DtmHandler {
@@ -18,39 +19,22 @@ export class DtmHandler {
 
   constructor(workerFactory: () => Worker, fileHandler: FileHandler) {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
-      () => {
-        const worker = workerFactory();
-        return new Promise((resolve) => {
-          // Guard against double settle in case multiple events fire.
-          let settled = false;
-          const settle = (value: Uint8Array | null) => {
-            if (settled) return;
-            settled = true;
-            worker.terminate();
-            resolve(value);
-          };
-          worker.addEventListener(
-            "message",
-            ({ data }: MessageEvent<DtmOutputMessage>) => settle(data),
-          );
-          // If the worker dies before posting a message, fall back to null
-          // rather than leaving the promise pending forever.
-          worker.addEventListener("error", (event) => {
-            event.preventDefault();
+      () =>
+        awaitOneshotWorker<DtmOutputMessage>(workerFactory(), {
+          onError: (event) => {
             console.warn(
               "DTM worker failed:",
               event.message,
               event.filename,
               event.lineno,
             );
-            settle(null);
-          });
-          worker.addEventListener("messageerror", () => {
+            return null;
+          },
+          onMessageError: () => {
             console.warn("DTM worker message deserialization failed");
-            settle(null);
-          });
-        });
-      },
+            return null;
+          },
+        }),
       () => {
         // Do nothing
       },
