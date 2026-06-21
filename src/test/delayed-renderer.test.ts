@@ -86,7 +86,7 @@ describe("DelayedRenderer", () => {
     }
   }
 
-  it("renders all items when renderImmediatly is true", async () => {
+  it("renders all items when renderImmediately is true", async () => {
     const wrapper = new FakeElement();
     const appendee = new FakeElement();
     const items = Array.from({ length: 25 }, (_, i) => i);
@@ -134,6 +134,31 @@ describe("DelayedRenderer", () => {
     // Default chunk size is 10. The first chunk is rendered before the
     // predicate is checked, so we expect exactly one chunk.
     expect(appendee.children.length).toBe(10);
+  });
+
+  it("does not call origin.next() again after it returns done", async () => {
+    const wrapper = new FakeElement();
+    const appendee = new FakeElement();
+    const items = [0, 1, 2, 3, 4];
+    const origin = items[Symbol.iterator]();
+    let calls = 0;
+    const spyIterator: Iterator<number> = {
+      next() {
+        calls++;
+        return origin.next();
+      },
+    };
+    const renderer = new DelayedRenderer<number>(
+      wrapper as unknown as HTMLElement,
+      appendee as unknown as HTMLElement,
+      (i) => ({ __id: String(i) }) as unknown as Node,
+      true,
+    );
+    renderer.iterator = spyIterator;
+    await flush();
+    expect(appendee.children.length).toBe(items.length);
+    // Exactly items.length successful pulls plus one terminating done pull.
+    expect(calls).toBe(items.length + 1);
   });
 
   it("renderAll() completes a partially rendered list", async () => {
