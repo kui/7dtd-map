@@ -114,6 +114,7 @@ export class MapCanvasHandler {
           invalidate.push(n as DependentFile);
         }
       }
+      if (invalidate.length === 0) return;
       worker.postMessage({ invalidate });
     });
   }
