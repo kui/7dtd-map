@@ -116,10 +116,14 @@ dialog {
 }
 
 #terrain_viewer_dialog {
-  width: 100vw;
-  height: 100vh;
-  max-width: 100vw;
-  max-height: 100vh;
+  /* When opened via showModal() the dialog is position: fixed in the top
+     layer; pin it to the viewport edges with inset:0 rather than width:100vw
+     so the scrollbar width does not push the right edge off-screen. */
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
   padding: 0;
   margin: 0;
   border: 0;
