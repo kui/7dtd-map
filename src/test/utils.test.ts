@@ -51,7 +51,9 @@ describe("strictParseInt", () => {
   });
 
   it("uses custom error message", () => {
-    expect(() => strictParseInt("abc", () => "bad input")).toThrow("bad input");
+    expect(() => strictParseInt("abc", 10, () => "bad input")).toThrow(
+      "bad input",
+    );
   });
 
   it("uses radix 10 by default and does not treat leading zeros as octal", () => {
@@ -60,8 +62,8 @@ describe("strictParseInt", () => {
   });
 
   it("supports an explicit radix argument", () => {
-    expect(strictParseInt("ff", undefined, 16)).toBe(255);
-    expect(strictParseInt("10", undefined, 2)).toBe(2);
+    expect(strictParseInt("ff", 16)).toBe(255);
+    expect(strictParseInt("10", 2)).toBe(2);
   });
 
   it("stops at the first non-decimal character under radix 10", () => {

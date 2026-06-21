@@ -17,8 +17,8 @@ export function requireNonnull<T>(
 
 export function strictParseInt(
   s: string | undefined | null,
-  errorMessage = () => `Unexpected argument: ${String(s)}`,
   radix = 10,
+  errorMessage = () => `Unexpected argument: ${String(s)}`,
 ): number {
   const n = parseInt(s ?? "", radix);
   if (isNaN(n)) throw Error(errorMessage());
