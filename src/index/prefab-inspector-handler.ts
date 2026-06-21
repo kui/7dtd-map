@@ -1,6 +1,9 @@
 import type { PrefabDifficulties } from "../types/7dtdmap.ts";
 import { LabelHandler } from "../lib/label-handler.ts";
-import { loadPrefabsXml } from "../lib/prefabs.ts";
+import {
+  assertDifficultyIndex,
+  loadPrefabsWithDifficulties,
+} from "../lib/prefabs.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
@@ -61,17 +64,20 @@ export class PrefabInspectorHandler {
   }
 
   async inspect() {
-    const prefabNames = (await loadPrefabsXml()).flatMap((
+    const [{ prefabs, difficulties }, rawPrefabIndex] = await Promise.all([
+      loadPrefabsWithDifficulties(this.#fetchDifficulties),
+      this.#fetchPrefabIndex(),
+    ]);
+    const prefabNames = prefabs.flatMap((
       { name },
     ) => (isExcludedPrefabName(name) ? [] : [name]));
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    const prefabIndex = (await this.#fetchPrefabIndex()).filter((name) =>
+    const prefabIndex = rawPrefabIndex.filter((name) =>
       !isExcludedPrefabName(name)
     );
 
-    const difficulties = await this.#fetchDifficulties();
     const countsPerDifficulty: { inMap: number; defined: number }[] = Array
       .from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
     const totalCounts = { inMap: 0, defined: 0 };
@@ -88,7 +94,8 @@ export class PrefabInspectorHandler {
       }
     }
     for (let i = 0; i < 6; i++) {
-      const countDoms = this.#doms.detailCounts[i as 0 | 1 | 2 | 3 | 4 | 5];
+      assertDifficultyIndex(i);
+      const countDoms = this.#doms.detailCounts[i];
       // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[i]!;
       countDoms.inMap.textContent = counts.inMap.toString();

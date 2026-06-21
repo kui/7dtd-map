@@ -1,6 +1,20 @@
 import type { Prefab, PrefabDifficulties } from "../types/7dtdmap.ts";
 import * as storage from "./storage.ts";
 
+export type DifficultyIndex = 0 | 1 | 2 | 3 | 4 | 5;
+
+const MAX_DIFFICULTY: DifficultyIndex = 5;
+
+export function assertDifficultyIndex(
+  i: number,
+): asserts i is DifficultyIndex {
+  if (!Number.isInteger(i) || i < 0 || i > MAX_DIFFICULTY) {
+    throw new RangeError(
+      `Difficulty index out of range (0-5): ${i.toString()}`,
+    );
+  }
+}
+
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.
 export async function loadPrefabsXml(
   fetchDifficulties?: () => Promise<PrefabDifficulties>,
@@ -12,6 +26,22 @@ export async function loadPrefabsXml(
       ...(await Promise.all([prefabsXml.text(), fetchDifficulties?.()])),
     )
     : [];
+}
+
+// Single entrypoint for fetching prefab metadata: parses the placed prefabs
+// in the workspace's `prefabs.xml` and the difficulty table in parallel,
+// then returns both so callers can avoid issuing the same fetches twice.
+export async function loadPrefabsWithDifficulties(
+  fetchDifficulties: () => Promise<PrefabDifficulties>,
+): Promise<{ prefabs: Prefab[]; difficulties: PrefabDifficulties }> {
+  const workspace = await storage.workspaceDir();
+  const prefabsXml = await workspace.get("prefabs.xml");
+  const [xmlText, difficulties] = await Promise.all([
+    prefabsXml?.text() ?? Promise.resolve(undefined),
+    fetchDifficulties(),
+  ]);
+  const prefabs = xmlText ? parseXml(xmlText, difficulties) : [];
+  return { prefabs, difficulties };
 }
 
 function parseXml(
