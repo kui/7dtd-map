@@ -53,6 +53,22 @@ describe("strictParseInt", () => {
   it("uses custom error message", () => {
     expect(() => strictParseInt("abc", () => "bad input")).toThrow("bad input");
   });
+
+  it("uses radix 10 by default and does not treat leading zeros as octal", () => {
+    expect(strictParseInt("08")).toBe(8);
+    expect(strictParseInt("010")).toBe(10);
+  });
+
+  it("supports an explicit radix argument", () => {
+    expect(strictParseInt("ff", undefined, 16)).toBe(255);
+    expect(strictParseInt("10", undefined, 2)).toBe(2);
+  });
+
+  it("stops at the first non-decimal character under radix 10", () => {
+    // "0x10" is documented behavior: parseInt(_, 10) parses up to the "x"
+    // and yields 0 rather than 16.
+    expect(strictParseInt("0x10")).toBe(0);
+  });
 });
 
 class Cls {
@@ -111,6 +127,25 @@ describe("basename", () => {
 
   it("returns empty string for trailing slash", () => {
     expect(basename("/foo/bar/")).toBe("");
+  });
+
+  it("strips a query string", () => {
+    expect(basename("foo/bar.png?v=1")).toBe("bar.png");
+    expect(basename("bar.png?v=1")).toBe("bar.png");
+  });
+
+  it("strips a hash fragment", () => {
+    expect(basename("foo/bar.png#section")).toBe("bar.png");
+  });
+
+  it("strips both query and hash", () => {
+    expect(basename("foo/bar.png?v=1#section")).toBe("bar.png");
+    expect(basename("foo/bar.png#section?v=1")).toBe("bar.png");
+  });
+
+  it("strips query and hash from a full URL", () => {
+    expect(basename("https://example.com/path/to/a.png?q=1")).toBe("a.png");
+    expect(basename("https://example.com/path/to/a.png#frag")).toBe("a.png");
   });
 });
 
