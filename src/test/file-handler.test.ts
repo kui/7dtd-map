@@ -1,6 +1,6 @@
 import { FileHandler } from "../index/file-handler.ts";
 import { MapDir } from "../lib/storage.ts";
-import type { BundledMapHandler } from "../index/bundled-map-hander.ts";
+import type { BundledMapHandler } from "../index/bundled-map-handler.ts";
 import type { DialogHandler } from "../index/dialog-handler.ts";
 import type { DndHandler } from "../index/dnd-handler.ts";
 import { expect } from "@std/expect";

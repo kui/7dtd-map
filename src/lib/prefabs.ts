@@ -1,6 +1,20 @@
 import type { Prefab, PrefabDifficulties } from "../types/7dtdmap.ts";
 import * as storage from "./storage.ts";
 
+export type DifficultyIndex = 0 | 1 | 2 | 3 | 4 | 5;
+
+const MAX_DIFFICULTY: DifficultyIndex = 5;
+
+export function assertDifficultyIndex(
+  i: number,
+): asserts i is DifficultyIndex {
+  if (!Number.isInteger(i) || i < 0 || i > MAX_DIFFICULTY) {
+    throw new RangeError(
+      `Difficulty index out of range (0-5): ${i.toString()}`,
+    );
+  }
+}
+
 // Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.
 export async function loadPrefabsXml(
   fetchDifficulties?: () => Promise<PrefabDifficulties>,
