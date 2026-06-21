@@ -435,43 +435,56 @@
       <p id="prefabs_num"></p>
       <ul id="prefabs_list"></ul>
     </div>
-    <div id="terrarian_viewer_hud" style="display: none">
-      <label style="user-select: none">
-        <input
-          id="terrain_viewer_help_toggle"
-          type="checkbox"
-          checked
-          oninput='op_desc.style.display = checked ? "block" : "none"'
-        />
-        Show/Hide Help
-      </label>
-      <dl id="op_desc">
-        <dt>
-          <code>WASD</code> or <code>Arrow</code> keys / Grab with Mouse Left
-          Button
-        </dt>
-        <dd>Move horizontally</dd>
-        <dt>
-          <code>R</code>/<code>F</code> or <code>PageUp</code>/<code
-          >PageDown</code> / Grab with Mouse Wheel Button
-        </dt>
-        <dd>Tilt</dd>
-        <dt><code>+</code>/<code>-</code> keys / Rotate Mouse Wheel</dt>
-        <dd>Zoom (move forward/back)</dd>
-        <dt><code>?</code> key</dt>
-        <dd>Toggle this help</dd>
-        <dt><code>Esc</code> key</dt>
-        <dd>Close</dd>
-      </dl>
-    </div>
-    <button id="terrain_viewer_close" style="display: none">❌</button>
-    <canvas
-      id="terrain_viewer"
-      width="0"
-      height="0"
-      tabindex="0"
-      style="display: none"
-    ></canvas>
+    <dialog
+      id="terrain_viewer_dialog"
+      class="terrain-viewer-dialog"
+      aria-labelledby="terrain_viewer_title"
+    >
+      <h2 id="terrain_viewer_title" class="visually-hidden">Terrain Viewer</h2>
+      <canvas
+        id="terrain_viewer"
+        width="0"
+        height="0"
+        tabindex="0"
+      ></canvas>
+      <div id="terrarian_viewer_hud" class="terrain-viewer-hud">
+        <label style="user-select: none">
+          <input
+            id="terrain_viewer_help_toggle"
+            type="checkbox"
+            checked
+            oninput='op_desc.style.display = checked ? "block" : "none"'
+          />
+          Show/Hide Help
+        </label>
+        <dl id="op_desc">
+          <dt>
+            <code>WASD</code> or <code>Arrow</code> keys / Grab with Mouse Left
+            Button
+          </dt>
+          <dd>Move horizontally</dd>
+          <dt>
+            <code>R</code>/<code>F</code> or <code>PageUp</code>/<code
+            >PageDown</code> / Grab with Mouse Wheel Button
+          </dt>
+          <dd>Tilt</dd>
+          <dt><code>+</code>/<code>-</code> keys / Rotate Mouse Wheel</dt>
+          <dd>Zoom (move forward/back)</dd>
+          <dt><code>?</code> key</dt>
+          <dd>Toggle this help</dd>
+          <dt><code>Esc</code> key</dt>
+          <dd>Close</dd>
+        </dl>
+      </div>
+      <button
+        id="terrain_viewer_close"
+        class="terrain-viewer-close"
+        type="button"
+        aria-label="Close terrain viewer"
+      >
+        ❌
+      </button>
+    </dialog>
     <p id="loading_indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
 

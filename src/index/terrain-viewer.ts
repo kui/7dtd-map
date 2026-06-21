@@ -6,6 +6,7 @@ import { printError, threePlaneSize } from "../lib/utils.ts";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller.ts";
 
 interface Doms {
+  dialog: HTMLDialogElement;
   output: HTMLCanvasElement;
   texture: HTMLCanvasElement;
   show: HTMLButtonElement;
@@ -53,15 +54,19 @@ export class TerrainViewer {
       this.#show().catch(printError);
     });
     doms.close.addEventListener("click", () => {
-      this.#close();
+      doms.dialog.close();
     });
-    doms.output.addEventListener("blur", () => {
-      this.#close();
+    // The native <dialog> close event fires for Esc key, programmatic close(),
+    // or form submit. Use it as the single teardown point so the render loop
+    // stops regardless of how the dialog was dismissed.
+    doms.dialog.addEventListener("close", () => {
+      this.#stopRender();
     });
-    // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) used to
-    // move focus off the canvas, triggering its blur handler and closing
-    // the viewer. Suppress the default focus shift on mousedown so the
-    // canvas keeps focus while the click event still toggles the control.
+    // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
+    // otherwise move focus off the canvas and break keyboard camera
+    // controls until the user clicks back. Suppress the default focus
+    // shift on mousedown so the canvas keeps focus while the click event
+    // still toggles the control.
     doms.hud.addEventListener("mousedown", (event) => {
       event.preventDefault();
     });
@@ -77,9 +82,9 @@ export class TerrainViewer {
 
   async #show() {
     await this.#updateElevations();
+    this.#doms.dialog.showModal();
     const { clientWidth, clientHeight } = document.documentElement;
     this.#renderer.setSize(clientWidth, clientHeight);
-    this.#applyVisibleCss();
     this.#cameraController.onResizeCanvas(clientWidth / clientHeight);
     this.#doms.output.focus();
     this.#startRender();
@@ -121,37 +126,10 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
-  #applyVisibleCss() {
-    Object.assign(this.#doms.output.style, {
-      display: "block",
-      zIndex: "100",
-      position: "fixed",
-      top: "0",
-      left: "0",
-    });
-    Object.assign(this.#doms.hud.style, {
-      display: "block",
-      zIndex: "101",
-      position: "fixed",
-      top: "0",
-      left: "0",
-      backgroundColor: "rgba(0, 0, 0, 0.7)",
-      color: "#fff",
-      padding: "0 16px",
-    });
-    Object.assign(this.#doms.close.style, {
-      display: "block",
-      zIndex: "101",
-      position: "fixed",
-      top: "0",
-      right: "0",
-    });
-  }
-
   #startRender(): void {
-    if (this.#animationRequestId) return;
+    if (this.#animationRequestId !== null) return;
     const r = (prevTime: number, currentTime: number) => {
-      if (this.#doms.output.style.display === "none") {
+      if (!this.#doms.dialog.open) {
         this.#animationRequestId = null;
         return;
       }
@@ -164,11 +142,11 @@ export class TerrainViewer {
     r(0, 0);
   }
 
-  #close() {
-    this.#doms.output.blur();
-    this.#doms.output.style.display = "none";
-    this.#doms.hud.style.display = "none";
-    this.#doms.close.style.display = "none";
+  #stopRender(): void {
+    if (this.#animationRequestId !== null) {
+      cancelAnimationFrame(this.#animationRequestId);
+      this.#animationRequestId = null;
+    }
   }
 
   // Drives the existing Show/Hide Help checkbox; its inline oninput

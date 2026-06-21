@@ -132,6 +132,7 @@ function main() {
   );
   new TerrainViewer(
     {
+      dialog: component("terrain_viewer_dialog", HTMLDialogElement),
       output: component("terrain_viewer", HTMLCanvasElement),
       texture: component("map", HTMLCanvasElement),
       show: component("terrain_viewer_show", HTMLButtonElement),

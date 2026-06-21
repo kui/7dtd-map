@@ -114,3 +114,44 @@ dialog {
     border-color: lavender;
   }
 }
+
+#terrain_viewer_dialog {
+  /* When opened via showModal() the dialog is position: fixed in the top
+     layer; pin it to the viewport edges with inset:0 rather than width:100vw
+     so the scrollbar width does not push the right edge off-screen. */
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+
+  & #terrain_viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  & .terrain-viewer-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 0 16px;
+  }
+
+  & .terrain-viewer-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+#terrain_viewer_dialog::backdrop {
+  background-color: black;
+}
