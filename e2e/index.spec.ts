@@ -148,6 +148,21 @@ test.describe("index.html", () => {
     ).toBe(0);
   });
 
+  test("terrain viewer dialog is wired up with a11y attributes", async ({ page }) => {
+    await page.goto("/index.html");
+    const dialog = page.locator("#terrain_viewer_dialog");
+    await expect(dialog).toBeAttached();
+    await expect(dialog).not.toHaveAttribute("open", /.*/);
+    await expect(dialog).toHaveAttribute("aria-labelledby", "terrain_viewer_title");
+
+    // Show button is disabled until a DTM is loaded.
+    await expect(page.locator("#terrain_viewer_show")).toBeDisabled();
+
+    // Close button carries an accessible name for screen readers.
+    await expect(page.locator("#terrain_viewer_close"))
+      .toHaveAttribute("aria-label", "Close terrain viewer");
+  });
+
   test("prefab inspector dialog opens and closes", async ({ page }) => {
     await page.goto("/index.html");
     const dialog = page.locator("#prefab-inspector-dialog");
