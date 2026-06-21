@@ -136,6 +136,7 @@ function main() {
       show: component("terrain_viewer_show", HTMLButtonElement),
       close: component("terrain_viewer_close", HTMLButtonElement),
       hud: component("terrarian_viewer_hud"),
+      helpToggle: component("terrain_viewer_help_toggle", HTMLInputElement),
     },
     dtmHandler,
   );

@@ -11,6 +11,7 @@ interface Doms {
   show: HTMLButtonElement;
   close: HTMLButtonElement;
   hud: HTMLElement;
+  helpToggle: HTMLInputElement;
 }
 
 const TERRAIN_WIDTH = 2048;
@@ -56,6 +57,13 @@ export class TerrainViewer {
     });
     doms.output.addEventListener("blur", () => {
       this.#close();
+    });
+    // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) used to
+    // move focus off the canvas, triggering its blur handler and closing
+    // the viewer. Suppress the default focus shift on mousedown so the
+    // canvas keeps focus while the click event still toggles the control.
+    doms.hud.addEventListener("mousedown", (event) => {
+      event.preventDefault();
     });
 
     dtm.addListener(() => this.#updateShowButton());
@@ -163,16 +171,10 @@ export class TerrainViewer {
     this.#doms.close.style.display = "none";
   }
 
-  // Toggles the visibility of the help description list inside the HUD.
-  // Bound to the "?" key by the camera controller.
+  // Drives the existing Show/Hide Help checkbox; its inline oninput
+  // handles updating the op_desc visibility, so we just synthesise a
+  // click. Bound to the "?" key by the camera controller.
   #toggleHelp() {
-    const desc = document.getElementById("op_desc");
-    if (!desc) return;
-    const hidden = desc.style.display === "none";
-    desc.style.display = hidden ? "block" : "none";
-    const checkbox = this.#doms.hud.querySelector(
-      'input[type="checkbox"]',
-    );
-    if (checkbox instanceof HTMLInputElement) checkbox.checked = hidden;
+    this.#doms.helpToggle.click();
   }
 }
