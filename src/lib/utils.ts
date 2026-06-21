@@ -17,9 +17,10 @@ export function requireNonnull<T>(
 
 export function strictParseInt(
   s: string | undefined | null,
+  radix = 10,
   errorMessage = () => `Unexpected argument: ${String(s)}`,
 ): number {
-  const n = parseInt(s ?? "");
+  const n = parseInt(s ?? "", radix);
   if (isNaN(n)) throw Error(errorMessage());
   return n;
 }
@@ -71,7 +72,8 @@ export async function fetchJson<T>(url: string): Promise<T> {
 }
 
 export function basename(path: string) {
-  return path.substring(path.lastIndexOf("/") + 1);
+  const tail = path.substring(path.lastIndexOf("/") + 1);
+  return tail.split(/[?#]/, 1)[0];
 }
 
 // Escape characters that have special meaning in HTML text content or in
