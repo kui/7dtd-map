@@ -1,9 +1,6 @@
 import type { PrefabDifficulties } from "../types/7dtdmap.ts";
 import { LabelHandler } from "../lib/label-handler.ts";
-import {
-  assertDifficultyIndex,
-  loadPrefabsWithDifficulties,
-} from "../lib/prefabs.ts";
+import { assertDifficultyIndex, loadPrefabsXml } from "../lib/prefabs.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
@@ -64,8 +61,9 @@ export class PrefabInspectorHandler {
   }
 
   async inspect() {
-    const [{ prefabs, difficulties }, rawPrefabIndex] = await Promise.all([
-      loadPrefabsWithDifficulties(this.#fetchDifficulties),
+    const [prefabs, difficulties, rawPrefabIndex] = await Promise.all([
+      loadPrefabsXml(),
+      this.#fetchDifficulties(),
       this.#fetchPrefabIndex(),
     ]);
     const prefabNames = prefabs.flatMap((

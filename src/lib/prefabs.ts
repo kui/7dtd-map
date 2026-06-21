@@ -28,22 +28,6 @@ export async function loadPrefabsXml(
     : [];
 }
 
-// Single entrypoint for fetching prefab metadata: parses the placed prefabs
-// in the workspace's `prefabs.xml` and the difficulty table in parallel,
-// then returns both so callers can avoid issuing the same fetches twice.
-export async function loadPrefabsWithDifficulties(
-  fetchDifficulties: () => Promise<PrefabDifficulties>,
-): Promise<{ prefabs: Prefab[]; difficulties: PrefabDifficulties }> {
-  const workspace = await storage.workspaceDir();
-  const prefabsXml = await workspace.get("prefabs.xml");
-  const [xmlText, difficulties] = await Promise.all([
-    prefabsXml?.text() ?? Promise.resolve(undefined),
-    fetchDifficulties(),
-  ]);
-  const prefabs = xmlText ? parseXml(xmlText, difficulties) : [];
-  return { prefabs, difficulties };
-}
-
 function parseXml(
   xml: string,
   difficulties: PrefabDifficulties | undefined,
