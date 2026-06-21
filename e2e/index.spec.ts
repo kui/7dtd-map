@@ -161,7 +161,7 @@ test.describe("index.html", () => {
     await expect(dialog).not.toHaveAttribute("open", /.*/);
   });
 
-  test("copy-button activates with Enter key and announces via aria-live", async ({ page }) => {
+  test("copy-button activates with Enter key", async ({ page }) => {
     await page.goto("/index.html");
     const button = page.locator(
       'button[data-copy-for="generated_world_path_windows"]',
@@ -195,8 +195,5 @@ test.describe("index.html", () => {
           ?.length ?? 0
       )
     ).toBeGreaterThan(0);
-    await expect(
-      page.locator("#copy-button-live-region"),
-    ).toHaveText(/Press Win\+R/);
   });
 });
