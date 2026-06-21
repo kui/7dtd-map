@@ -1,7 +1,4 @@
-import type {
-  PrefabsFilterInputMessage,
-  PrefabsFilterOutputMessage,
-} from "./worker/types.ts";
+import type { PrefabsFilterOutputMessage } from "./worker/types.ts";
 import type {
   HighlightedBlock,
   HighlightedPrefab,
@@ -13,6 +10,13 @@ import type {
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import * as events from "./lib/events.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
+import {
+  bindPrefabsFilterControls,
+  type PrefabsFilterControlsDoms,
+  type PrefabsFilterWorker,
+  readPreExcludes,
+  readTierRange,
+} from "./lib/prefabs-filter-controls.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import * as presetButton from "./lib/ui/preset-button.ts";
 import * as syncOutput from "./lib/ui/sync-output.ts";
@@ -39,7 +43,7 @@ function main() {
       blockFilter: component("block-filter", HTMLInputElement),
       minTier: component("min-tier", HTMLInputElement),
       maxTier: component("max-tier", HTMLInputElement),
-      excludes: Array.from(
+      preExcludes: Array.from(
         component("prefab-excludes").querySelectorAll("input[type=checkbox]"),
       ),
     },
@@ -137,22 +141,10 @@ function countHighlightedBlocks(blocks: HighlightedBlock[]): number {
   return blocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
 }
 
-declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: PrefabsFilterInputMessage): void;
-}
-
 type PrefabsHandlerEventMessage = PrefabsFilterOutputMessage;
 
-interface PrefabsHandlerDoms {
-  prefabFilter: HTMLInputElement;
-  blockFilter: HTMLInputElement;
-  minTier: HTMLInputElement;
-  maxTier: HTMLInputElement;
-  excludes: HTMLInputElement[];
-}
-
 class PrefabsHandler {
-  #doms: PrefabsHandlerDoms;
+  #doms: PrefabsFilterControlsDoms;
   #worker: PrefabsFilterWorker;
   #labelHandler: LabelHandler;
   #fetchPrefabs: () => Promise<Prefab[]>;
@@ -162,7 +154,7 @@ class PrefabsHandler {
   >();
 
   constructor(
-    doms: PrefabsHandlerDoms,
+    doms: PrefabsFilterControlsDoms,
     worker: PrefabsFilterWorker,
     labelHandler: LabelHandler,
     fetchPrefabs: () => Promise<Prefab[]>,
@@ -172,33 +164,7 @@ class PrefabsHandler {
     this.#labelHandler = labelHandler;
     this.#fetchPrefabs = fetchPrefabs;
 
-    doms.prefabFilter.addEventListener("input", () => {
-      worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
-    });
-    doms.blockFilter.addEventListener("input", () => {
-      worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
-    });
-    const tierRange = {
-      start: doms.minTier.valueAsNumber,
-      end: doms.maxTier.valueAsNumber,
-    };
-    doms.minTier.addEventListener("input", () => {
-      const newMinTier = doms.minTier.valueAsNumber;
-      if (newMinTier === tierRange.start) return;
-      tierRange.start = newMinTier;
-      this.#worker.postMessage({ difficulty: tierRange });
-    });
-    doms.maxTier.addEventListener("input", () => {
-      const newMaxTier = doms.maxTier.valueAsNumber;
-      if (newMaxTier === tierRange.end) return;
-      tierRange.end = newMaxTier;
-      this.#worker.postMessage({ difficulty: tierRange });
-    });
-    doms.excludes.forEach((e) => {
-      e.addEventListener("change", () => {
-        worker.postMessage({ preExcludes: this.#excludes });
-      });
-    });
+    bindPrefabsFilterControls(doms, worker, labelHandler);
 
     worker.addEventListener(
       "message",
@@ -206,20 +172,6 @@ class PrefabsHandler {
         this.#listeners.dispatchNoAwait(event.data);
       },
     );
-    labelHandler.addListener(({ update: { lang } }) => {
-      worker.postMessage({ language: lang });
-    });
-  }
-
-  get #excludes(): string[] {
-    return this.#doms.excludes.flatMap((e) => (e.checked ? [e.value] : []));
-  }
-
-  get #tierRange(): { start: number; end: number } {
-    return {
-      start: this.#doms.minTier.valueAsNumber,
-      end: this.#doms.maxTier.valueAsNumber,
-    };
   }
 
   addListener(fn: (m: PrefabsHandlerEventMessage) => unknown) {
@@ -230,8 +182,8 @@ class PrefabsHandler {
     this.#worker.postMessage({
       prefabFilterRegexp: this.#doms.prefabFilter.value,
       blockFilterRegexp: this.#doms.blockFilter.value,
-      difficulty: this.#tierRange,
-      preExcludes: this.#excludes,
+      difficulty: readTierRange(this.#doms),
+      preExcludes: readPreExcludes(this.#doms),
       language: this.#labelHandler.language,
       all: await this.#fetchPrefabs(),
     });
