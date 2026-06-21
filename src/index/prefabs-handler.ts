@@ -1,7 +1,4 @@
-import type {
-  PrefabsFilterInputMessage,
-  PrefabsFilterOutputMessage,
-} from "../worker/types.ts";
+import type { PrefabsFilterOutputMessage } from "../worker/types.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
@@ -9,32 +6,26 @@ import type {
   HighlightedPrefab,
   PrefabDifficulties,
 } from "../types/7dtdmap.ts";
-import type { NumberRange } from "../types/utils.ts";
 
 import * as events from "../lib/events.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
+import {
+  bindPrefabsFilterControls,
+  type PrefabsFilterControlsDoms,
+  type PrefabsFilterWorker,
+  readPreExcludes,
+} from "../lib/prefabs-filter-controls.ts";
 
-interface Doms {
+interface Doms extends PrefabsFilterControlsDoms {
   status: HTMLElement;
-  minTier: HTMLInputElement;
-  maxTier: HTMLInputElement;
-  prefabFilter: HTMLInputElement;
-  blockFilter: HTMLInputElement;
-  preExcludes: HTMLInputElement[];
 }
 
 interface EventMessage {
   update: { prefabs: HighlightedPrefab[] };
 }
 
-declare class PrefabsFilterWorker extends Worker {
-  postMessage(message: PrefabsFilterInputMessage): void;
-}
-
 export class PrefabsHandler {
-  #doms: Doms;
   #listeners = new events.ListenerManager<"update", EventMessage>();
-  #tierRange: NumberRange;
 
   constructor(
     doms: Doms,
@@ -44,12 +35,6 @@ export class PrefabsHandler {
     fileHandler: FileHandler,
     fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
-    this.#doms = doms;
-    this.#tierRange = {
-      start: doms.minTier.valueAsNumber,
-      end: doms.maxTier.valueAsNumber,
-    };
-
     worker.addEventListener(
       "message",
       (event: MessageEvent<PrefabsFilterOutputMessage>) => {
@@ -60,35 +45,12 @@ export class PrefabsHandler {
         this.#listeners.dispatchNoAwait({ update: { prefabs } });
       },
     );
-    doms.minTier.addEventListener("input", () => {
-      const newMinTier = doms.minTier.valueAsNumber;
-      if (newMinTier === this.#tierRange.start) return;
-      this.#tierRange.start = newMinTier;
-      worker.postMessage({ difficulty: this.#tierRange });
-    });
-    doms.maxTier.addEventListener("input", () => {
-      const newMaxTier = doms.maxTier.valueAsNumber;
-      if (newMaxTier === this.#tierRange.end) return;
-      this.#tierRange.end = newMaxTier;
-      worker.postMessage({ difficulty: this.#tierRange });
-    });
-    doms.prefabFilter.addEventListener("input", () => {
-      worker.postMessage({ prefabFilterRegexp: doms.prefabFilter.value });
-    });
-    doms.blockFilter.addEventListener("input", () => {
-      worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
-    });
-    worker.postMessage({ preExcludes: this.#preExcludes });
-    doms.preExcludes.forEach((input) => {
-      input.addEventListener("change", () => {
-        worker.postMessage({ preExcludes: this.#preExcludes });
-      });
-    });
+
+    bindPrefabsFilterControls(doms, worker, labelHandler);
+    worker.postMessage({ preExcludes: readPreExcludes(doms) });
+
     markerHandler.addListener((m) => {
       worker.postMessage({ markCoords: m.update.coords });
-    });
-    labelHandler.addListener(({ update: { lang } }) => {
-      worker.postMessage({ language: lang });
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
       if (fileNames.includes("prefabs.xml")) {
@@ -99,9 +61,5 @@ export class PrefabsHandler {
 
   addListener(fn: (m: EventMessage) => unknown) {
     this.#listeners.addListener(fn);
-  }
-
-  get #preExcludes(): string[] {
-    return this.#doms.preExcludes.flatMap((i) => (i.checked ? i.value : []));
   }
 }
