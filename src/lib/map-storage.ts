@@ -13,4 +13,6 @@ function flushDb() {
   });
 }
 
-flushDb().catch(printError);
+export function initMapStorage() {
+  flushDb().catch(printError);
+}
