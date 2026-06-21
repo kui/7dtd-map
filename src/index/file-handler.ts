@@ -2,7 +2,7 @@ import type {
   FileProcessorInputMessage,
   FileProcessorOutputMessage,
 } from "../worker/types.ts";
-import type { BundledMapHandler } from "./bundled-map-hander.ts";
+import type { BundledMapHandler } from "./bundled-map-handler.ts";
 import type { DialogHandler } from "./dialog-handler.ts";
 import type { DndHandler } from "./dnd-handler.ts";
 
