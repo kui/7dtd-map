@@ -45,6 +45,7 @@ export class TerrainViewer {
     this.#cameraController = new TerrainViewerCameraController(
       doms.output,
       new three.PerspectiveCamera(),
+      { onToggleHelp: () => this.#toggleHelp() },
     );
 
     doms.show.addEventListener("click", () => {
@@ -160,5 +161,18 @@ export class TerrainViewer {
     this.#doms.output.style.display = "none";
     this.#doms.hud.style.display = "none";
     this.#doms.close.style.display = "none";
+  }
+
+  // Toggles the visibility of the help description list inside the HUD.
+  // Bound to the "?" key by the camera controller.
+  #toggleHelp() {
+    const desc = document.getElementById("op_desc");
+    if (!desc) return;
+    const hidden = desc.style.display === "none";
+    desc.style.display = hidden ? "block" : "none";
+    const checkbox = this.#doms.hud.querySelector(
+      'input[type="checkbox"]',
+    );
+    if (checkbox instanceof HTMLInputElement) checkbox.checked = hidden;
   }
 }
