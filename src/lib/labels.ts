@@ -77,10 +77,11 @@ export class LabelHolder {
     if (!fallback) {
       throw new Error(`No fallback for ${this.#language}/${fileBaseName}`);
     }
-    return new Labels(
-      await this.#fetchLabelMap(this.#language, fileBaseName),
-      await fallback,
-    );
+    const [labels, fallbackLabels] = await Promise.all([
+      this.#fetchLabelMap(this.#language, fileBaseName),
+      fallback,
+    ]);
+    return new Labels(labels, fallbackLabels);
   }
 
   async #fetchLabelMap(
