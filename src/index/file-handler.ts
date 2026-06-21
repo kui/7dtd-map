@@ -71,7 +71,7 @@ export class FileHandler {
   #doms: Doms;
   #dialogHandler: DialogHandler;
   #processorFactory: () => Worker;
-  #workspace = storage.workspaceDir();
+  #workspace: Promise<storage.MapDir>;
   #depletedFileHandler = new DepletedFileHandler();
   #listeners = new events.ListenerManager<"update", EventMessage>();
 
@@ -81,10 +81,12 @@ export class FileHandler {
     processorFactory: () => Worker,
     dndHandler: DndHandler,
     bundledMapHandler: BundledMapHandler,
+    workspace: Promise<storage.MapDir> = storage.workspaceDir(),
   ) {
     this.#doms = doms;
     this.#dialogHandler = dialogHandler;
     this.#processorFactory = processorFactory;
+    this.#workspace = workspace;
 
     doms.files.addEventListener("change", () => {
       if (doms.files.files) {
@@ -108,7 +110,11 @@ export class FileHandler {
   }
 
   async initialize() {
-    await this.#listeners.dispatch({ update: Array.from(MAP_FILE_NAMES) });
+    const workspace = await this.#workspace;
+    const existing = await workspace.list();
+    const update = Array.from(MAP_FILE_NAMES).filter((n) => existing.has(n));
+    if (update.length === 0) return;
+    await this.#listeners.dispatch({ update });
   }
 
   addListener(fn: events.Listener<"update", EventMessage>) {
