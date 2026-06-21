@@ -102,6 +102,14 @@ export class MapDir {
     return (await file.getFile()).size;
   }
 
+  async list(): Promise<Set<string>> {
+    const names = new Set<string>();
+    for await (const name of this.#dir.keys()) {
+      names.add(name);
+    }
+    return names;
+  }
+
   async remove(name: MapFileName) {
     try {
       await this.#dir.removeEntry(name);

@@ -62,6 +62,11 @@ class FakeDirHandle {
     }
     return Promise.reject(new DOMException(`No file ${name}`, "NotFoundError"));
   }
+  async *keys(): AsyncIterableIterator<string> {
+    for (const name of this.files.keys()) {
+      yield name;
+    }
+  }
   removeEntry(name: string) {
     if (!this.files.has(name)) {
       return Promise.reject(
@@ -110,6 +115,14 @@ describe("MapDir", () => {
     expect(fake.files.has("map_info.xml")).toBe(false);
     // After removal a subsequent get() resolves to null again.
     expect(await dir.get("map_info.xml")).toBeNull();
+  });
+
+  it("list() returns the set of stored file names", async () => {
+    const { dir } = buildMapDir();
+    expect(await dir.list()).toEqual(new Set());
+    await dir.put("map_info.xml", new TextEncoder().encode("a").buffer);
+    await dir.put("biomes.png", new TextEncoder().encode("b").buffer);
+    expect(await dir.list()).toEqual(new Set(["map_info.xml", "biomes.png"]));
   });
 
   it("name proxies to the underlying handle", () => {
