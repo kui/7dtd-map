@@ -27,10 +27,11 @@ import { TerrainViewer } from "./index/terrain-viewer.ts";
 import { BundledMapHandler } from "./index/bundled-map-handler.ts";
 import { MapInfoHandler } from "./index/map-info-handler.ts";
 
-import "./lib/map-storage.ts";
+import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
 
 function main() {
+  initMapStorage();
   presetButton.init();
   copyButton.init();
   syncOutput.init();
@@ -137,6 +138,7 @@ function main() {
       show: component("terrain_viewer_show", HTMLButtonElement),
       close: component("terrain_viewer_close", HTMLButtonElement),
       hud: component("terrarian_viewer_hud"),
+      helpToggle: component("terrain_viewer_help_toggle", HTMLInputElement),
     },
     dtmHandler,
   );

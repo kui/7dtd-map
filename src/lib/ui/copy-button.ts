@@ -14,6 +14,15 @@ export function init(): void {
     button.addEventListener("click", () => {
       copy(target, button).catch(printError);
     });
+    // Native <button> fires click on Enter/Space already; we additionally
+    // select the target text on focus so keyboard users see the same
+    // affordance that mouse-over provides.
+    button.addEventListener("focus", () => {
+      selectNode(target);
+    });
+    button.addEventListener("blur", () => {
+      clearSelection();
+    });
     button.addEventListener("mouseover", () => {
       selectNode(target);
     });

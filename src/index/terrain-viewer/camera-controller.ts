@@ -14,6 +14,67 @@ const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
 
+// Keyboard action set. Movement actions translate to a signed axis speed;
+// "toggle-help" is one-shot. Extracted so the keymap can be unit-tested
+// independently of the controller and the DOM.
+export type CameraKeyAction =
+  | "pan-left"
+  | "pan-right"
+  | "pan-up"
+  | "pan-down"
+  | "tilt-up"
+  | "tilt-down"
+  | "zoom-in"
+  | "zoom-out"
+  | "toggle-help"
+  | null;
+
+interface KeyEventLike {
+  code: string;
+  key: string;
+  ctrlKey: boolean;
+  altKey: boolean;
+  metaKey: boolean;
+}
+
+export function mapCameraKey(event: KeyEventLike): CameraKeyAction {
+  // Defer to the browser when a modifier is held so we do not steal
+  // shortcuts like Ctrl+R (reload) or Cmd+Left (history back).
+  if (event.ctrlKey || event.altKey || event.metaKey) return null;
+  switch (event.code) {
+    case "KeyA":
+    case "ArrowLeft":
+      return "pan-left";
+    case "KeyD":
+    case "ArrowRight":
+      return "pan-right";
+    case "KeyW":
+    case "ArrowUp":
+      return "pan-up";
+    case "KeyS":
+    case "ArrowDown":
+      return "pan-down";
+    case "KeyR":
+    case "PageUp":
+      return "tilt-up";
+    case "KeyF":
+    case "PageDown":
+      return "tilt-down";
+    case "Equal":
+    case "NumpadAdd":
+      return "zoom-in";
+    case "Minus":
+    case "NumpadSubtract":
+      return "zoom-out";
+  }
+  if (event.key === "?") return "toggle-help";
+  return null;
+}
+
+interface CameraControllerOptions {
+  onToggleHelp?: () => void;
+}
+
 export class TerrainViewerCameraController {
   camera: three.PerspectiveCamera;
 
@@ -22,53 +83,35 @@ export class TerrainViewerCameraController {
   #minZ = 1;
   #maxZ = 1;
 
-  #speeds = { x: 0, y: 0, tilt: 0 };
+  #speeds = { x: 0, y: 0, tilt: 0, zoom: 0 };
   #mouseMove = {
     left: { x: 0, y: 0 },
     center: { x: 0, y: 0 },
     wheel: 0,
   };
 
-  constructor(canvas: HTMLCanvasElement, camera: three.PerspectiveCamera) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    camera: three.PerspectiveCamera,
+    options: CameraControllerOptions = {},
+  ) {
     this.camera = camera;
 
     canvas.addEventListener("keydown", (event) => {
-      switch (event.code) {
-        case "KeyA":
-          this.#speeds.x = -1;
-          return;
-        case "KeyD":
-          this.#speeds.x = 1;
-          return;
-        case "KeyS":
-          this.#speeds.y = -1;
-          return;
-        case "KeyW":
-          this.#speeds.y = 1;
-          return;
-        case "KeyR":
-          this.#speeds.tilt = 1;
-          return;
-        case "KeyF":
-          this.#speeds.tilt = -1;
-          return;
+      const action = mapCameraKey(event);
+      if (action === null) return;
+      if (action === "toggle-help") {
+        event.preventDefault();
+        options.onToggleHelp?.();
+        return;
       }
+      this.#applyKeyAction(action, true);
+      event.preventDefault();
     });
     canvas.addEventListener("keyup", (event) => {
-      switch (event.code) {
-        case "KeyA":
-        case "KeyD":
-          this.#speeds.x = 0;
-          return;
-        case "KeyS":
-        case "KeyW":
-          this.#speeds.y = 0;
-          return;
-        case "KeyR":
-        case "KeyF":
-          this.#speeds.tilt = 0;
-          return;
-      }
+      const action = mapCameraKey(event);
+      if (action === null || action === "toggle-help") return;
+      this.#applyKeyAction(action, false);
     });
     canvas.addEventListener("wheel", (event) => {
       if (canvas !== document.activeElement || event.deltaY === 0) return;
@@ -119,7 +162,40 @@ export class TerrainViewerCameraController {
   update(deltaMsec: number): void {
     this.#moveCameraXY(deltaMsec);
     this.#tiltCamera(deltaMsec);
-    this.#moveCameraForward();
+    this.#moveCameraForward(deltaMsec);
+  }
+
+  #applyKeyAction(
+    action: Exclude<CameraKeyAction, null | "toggle-help">,
+    pressed: boolean,
+  ) {
+    const value = pressed ? 1 : 0;
+    switch (action) {
+      case "pan-left":
+        this.#speeds.x = pressed ? -1 : 0;
+        return;
+      case "pan-right":
+        this.#speeds.x = value;
+        return;
+      case "pan-down":
+        this.#speeds.y = pressed ? -1 : 0;
+        return;
+      case "pan-up":
+        this.#speeds.y = value;
+        return;
+      case "tilt-down":
+        this.#speeds.tilt = pressed ? -1 : 0;
+        return;
+      case "tilt-up":
+        this.#speeds.tilt = value;
+        return;
+      case "zoom-out":
+        this.#speeds.zoom = pressed ? -1 : 0;
+        return;
+      case "zoom-in":
+        this.#speeds.zoom = value;
+        return;
+    }
   }
 
   #moveCameraXY(deltaMsec: number) {
@@ -156,10 +232,16 @@ export class TerrainViewerCameraController {
     }
   }
 
-  #moveCameraForward() {
-    if (this.#mouseMove.wheel === 0) return;
-    const moveDelta = (this.#mouseMove.wheel * this.#terrainSize.width) / -5000;
+  #moveCameraForward(deltaMsec: number) {
+    if (this.#mouseMove.wheel === 0 && this.#speeds.zoom === 0) return;
+    const wheelDelta = (this.#mouseMove.wheel * this.#terrainSize.width) /
+      -5000;
     this.#mouseMove.wheel = 0;
+    // Keyboard zoom advances roughly 30% of the terrain width per second at
+    // speed 1; matches the perceived feel of the mouse wheel at moderate use.
+    const keyDelta = (this.#speeds.zoom * this.#terrainSize.width * 0.3 *
+      deltaMsec) / 1000;
+    const moveDelta = wheelDelta + keyDelta;
     const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
     const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);

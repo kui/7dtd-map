@@ -12,6 +12,7 @@ interface Doms {
   show: HTMLButtonElement;
   close: HTMLButtonElement;
   hud: HTMLElement;
+  helpToggle: HTMLInputElement;
 }
 
 const TERRAIN_WIDTH = 2048;
@@ -46,6 +47,7 @@ export class TerrainViewer {
     this.#cameraController = new TerrainViewerCameraController(
       doms.output,
       new three.PerspectiveCamera(),
+      { onToggleHelp: () => this.#toggleHelp() },
     );
 
     doms.show.addEventListener("click", () => {
@@ -59,6 +61,14 @@ export class TerrainViewer {
     // stops regardless of how the dialog was dismissed.
     doms.dialog.addEventListener("close", () => {
       this.#stopRender();
+    });
+    // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
+    // otherwise move focus off the canvas and break keyboard camera
+    // controls until the user clicks back. Suppress the default focus
+    // shift on mousedown so the canvas keeps focus while the click event
+    // still toggles the control.
+    doms.hud.addEventListener("mousedown", (event) => {
+      event.preventDefault();
     });
 
     dtm.addListener(() => this.#updateShowButton());
@@ -137,5 +147,12 @@ export class TerrainViewer {
       cancelAnimationFrame(this.#animationRequestId);
       this.#animationRequestId = null;
     }
+  }
+
+  // Drives the existing Show/Hide Help checkbox; its inline oninput
+  // handles updating the op_desc visibility, so we just synthesise a
+  // click. Bound to the "?" key by the camera controller.
+  #toggleHelp() {
+    this.#doms.helpToggle.click();
   }
 }

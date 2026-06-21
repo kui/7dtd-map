@@ -175,4 +175,40 @@ test.describe("index.html", () => {
     await page.click("[data-close-dialog-for=\"prefab-inspector-dialog\"]");
     await expect(dialog).not.toHaveAttribute("open", /.*/);
   });
+
+  test("copy-button activates with Enter key", async ({ page }) => {
+    await page.goto("/index.html");
+    const button = page.locator(
+      'button[data-copy-for="generated_world_path_windows"]',
+    );
+    await expect(button).toBeVisible();
+
+    // Replace clipboard.writeText with a spy stored on globalThis so the test
+    // can assert it was invoked by a keyboard activation.
+    await page.evaluate(() => {
+      const w = globalThis as unknown as {
+        __copyCalls?: string[];
+      };
+      w.__copyCalls = [];
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          writeText: (text: string) => {
+            w.__copyCalls!.push(text);
+            return Promise.resolve();
+          },
+        },
+      });
+    });
+
+    await button.focus();
+    await page.keyboard.press("Enter");
+
+    await expect.poll(async () =>
+      await page.evaluate(() =>
+        (globalThis as unknown as { __copyCalls?: string[] }).__copyCalls
+          ?.length ?? 0
+      )
+    ).toBeGreaterThan(0);
+  });
 });
