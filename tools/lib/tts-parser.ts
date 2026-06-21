@@ -8,39 +8,40 @@ const BLOCK_ID_BIT_MASK = 0b0111111111111111;
 
 export async function parseTts(ttsFileName: string): Promise<Tts> {
   const stream = fs.createReadStream(ttsFileName);
-  const r = new ByteReader(stream);
+  try {
+    const r = new ByteReader(stream);
 
-  // Header
-  const fileFormat = (await r.read(4)).toString();
-  const version = (await r.read(4)).readUInt32LE();
-  const dim = {
-    x: (await r.read(2)).readUInt16LE(),
-    y: (await r.read(2)).readUInt16LE(),
-    z: (await r.read(2)).readUInt16LE(),
-  };
+    // Header
+    const fileFormat = (await r.read(4)).toString();
+    if (fileFormat !== "tts\x00") {
+      throw Error(
+        `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
+      );
+    }
+    const version = (await r.read(4)).readUInt32LE();
+    if (!KNOWN_VERSIONS.includes(version)) {
+      throw Error(
+        `Unknown version: filename=${ttsFileName} version=${String(version)}`,
+      );
+    }
+    const dim = {
+      x: (await r.read(2)).readUInt16LE(),
+      y: (await r.read(2)).readUInt16LE(),
+      z: (await r.read(2)).readUInt16LE(),
+    };
 
-  // Block data
-  const blocksNum = dim.x * dim.y * dim.z;
-  const blockIds = new Uint32Array(blocksNum);
-  for (let i = 0; i < blocksNum; i++) {
-    const blockData = (await r.read(4)).readInt32LE();
-    blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
+    // Block data
+    const blocksNum = dim.x * dim.y * dim.z;
+    const blockIds = new Uint32Array(blocksNum);
+    for (let i = 0; i < blocksNum; i++) {
+      const blockData = (await r.read(4)).readInt32LE();
+      blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
+    }
+
+    return new Tts(version, dim, blockIds);
+  } finally {
+    stream.close();
   }
-
-  // End
-  stream.close();
-
-  if (fileFormat !== "tts\x00") {
-    throw Error(
-      `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
-    );
-  }
-  if (!KNOWN_VERSIONS.includes(version)) {
-    throw Error(
-      `Unknown version: filename=${ttsFileName} version=${String(version)}`,
-    );
-  }
-  return new Tts(version, dim, blockIds);
 }
 
 export class Tts {
@@ -65,7 +66,9 @@ export class Tts {
   }
   getBlockId(x: number, y: number, z: number): BlockId | undefined {
     if (
-      x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z
+      x < 0 || x >= this.maxx ||
+      y < 0 || y >= this.maxy ||
+      z < 0 || z >= this.maxz
     ) {
       throw Error(
         `Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`,
