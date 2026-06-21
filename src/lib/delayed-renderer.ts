@@ -6,7 +6,7 @@ export class DelayedRenderer<T> {
   #appendee: HTMLElement;
   #scrollableWrapper: HTMLElement;
   #itemRenderer: (item: T) => Node;
-  #renderImmediatly: boolean;
+  #renderImmediately: boolean;
   #scrollCallback = (): void => {
     this.renderAll().catch(printError);
   };
@@ -15,7 +15,7 @@ export class DelayedRenderer<T> {
     scrollableWrapper: HTMLElement,
     appendee: HTMLElement,
     itemRenderer: (item: T) => Node,
-    renderImmediatly = false,
+    renderImmediately = false,
   ) {
     if (!scrollableWrapper.contains(appendee)) {
       throw Error("Wrapper element should contain appendee element");
@@ -24,7 +24,7 @@ export class DelayedRenderer<T> {
     this.#appendee = appendee;
     this.#scrollableWrapper = scrollableWrapper;
     this.#itemRenderer = itemRenderer;
-    this.#renderImmediatly = renderImmediatly;
+    this.#renderImmediately = renderImmediately;
   }
 
   set iterator(iteratorOrIterable: Iterator<T> | Iterable<T>) {
@@ -36,13 +36,13 @@ export class DelayedRenderer<T> {
     this.#appendee.innerHTML = "";
     this.#scrollableWrapper.removeEventListener("scroll", this.#scrollCallback);
 
-    // Require a delay because flashing childlen like the above fires "scroll" events.
+    // Require a delay because flushing children like the above fires "scroll" events.
     requestAnimationFrame(() => {
       this.#scrollableWrapper.removeEventListener(
         "scroll",
         this.#scrollCallback,
       );
-      if (this.#renderImmediatly) {
+      if (this.#renderImmediately) {
         this.renderAll().catch(printError);
       } else {
         this.#scrollableWrapper.addEventListener(
@@ -86,14 +86,14 @@ function chunkIterator<T, TReturn, TNext>(
   const chunkIter: Iterator<T[], TReturn, TNext> = {
     next(...args: [] | [TNext]): IteratorResult<T[], TReturn> {
       if (returnResult) return returnResult;
-      const chunk = Array<T>(chunkSize);
+      const chunk: T[] = [];
       for (let i = 0; i < chunkSize; i++) {
         const result = origin.next(...args);
         if (isReturn(result)) {
           returnResult = result;
-        } else {
-          chunk[i] = result.value;
+          break;
         }
+        chunk.push(result.value);
       }
       return {
         done: false,
