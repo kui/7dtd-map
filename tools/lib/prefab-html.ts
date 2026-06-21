@@ -15,7 +15,7 @@ interface HtmlModel {
   difficulty: string;
 }
 
-interface PrefabProperty {
+export interface PrefabProperty {
   name: string;
   value: string;
 }
@@ -216,13 +216,15 @@ export async function prefabHtml(
   });
 }
 
+// `&` must be replaced first; otherwise the `&` introduced by `&lt;`/`&gt;`
+// would be re-escaped into `&amp;lt;` / `&amp;gt;`.
 const ESCAPE_HTML_PATTERNS: [RegExp, string][] = [
+  [/&/g, "&amp;"],
   [/</g, "&lt;"],
   [/>/g, "&gt;"],
-  [/&/g, "&amp;"],
 ];
 
-function escapeHtml(s: string) {
+export function escapeHtml(s: string) {
   if (!s) return s;
   return ESCAPE_HTML_PATTERNS.reduce(
     (str, [regex, newStr]) => str.replace(regex, newStr),
@@ -230,7 +232,7 @@ function escapeHtml(s: string) {
   );
 }
 
-interface SleeperVolume {
+export interface SleeperVolume {
   group: string;
   count: [number, number];
   groupId: number;
@@ -243,7 +245,9 @@ interface SleeperVolume {
   start: [number, number, number];
 }
 
-function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
+export function buildSleeperVolumes(
+  properties: PrefabProperty[],
+): SleeperVolume[] {
   const groupsRaw = properties
     .find((p) => p.name === "SleeperVolumeGroup")
     ?.value.split(",")
@@ -334,16 +338,12 @@ function buildSleeperVolumes(properties: PrefabProperty[]): SleeperVolume[] {
         flags[i],
         () => `Unexpected state: flags is not found: index=${String(i)}`,
       ),
-      isBoss: isBosses[i] ?? false, // See the above comment for SleeperVolumeGameStageAdjust.
-      isLoot: requireNonnull(
-        isLoots[i],
-        () => `Unexpected state: isLoot is not found: index=${String(i)}`,
-      ),
-      isQuestExclude: requireNonnull(
-        isQuestExcludes[i],
-        () =>
-          `Unexpected state: isQuestExclude is not found: index=${String(i)}`,
-      ),
+      // See the above comment for SleeperVolumeGameStageAdjust: the property
+      // may be absent or shorter than `groups`, so default missing entries to
+      // false instead of throwing (which would drop the whole prefab).
+      isBoss: isBosses[i] ?? false,
+      isLoot: isLoots[i] ?? false,
+      isQuestExclude: isQuestExcludes[i] ?? false,
       size: requireNonnull(
         sizes[i],
         () => `Unexpected state: size is not found: index=${String(i)}`,
