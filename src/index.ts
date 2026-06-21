@@ -24,7 +24,7 @@ import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
 import { DndHandler } from "./index/dnd-handler.ts";
 import { TerrainViewer } from "./index/terrain-viewer.ts";
-import { BundledMapHandler } from "./index/bundled-map-hander.ts";
+import { BundledMapHandler } from "./index/bundled-map-handler.ts";
 import { MapInfoHandler } from "./index/map-info-handler.ts";
 
 import "./lib/map-storage.ts";

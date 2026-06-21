@@ -1,12 +1,7 @@
-import type {
-  MapRendererInputMessage,
-  MapRendererOutputMessage,
-} from "../worker/types.ts";
+import type { MapRendererInputMessage } from "../worker/types.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
-import type { GameMapSize } from "../types/7dtdmap.ts";
-import * as events from "../lib/events.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -18,10 +13,6 @@ interface Doms {
   signAlpha: HTMLInputElement;
   brightness: HTMLInputElement;
   scale: HTMLInputElement;
-}
-
-interface EventMessage {
-  update: { mapSize: GameMapSize };
 }
 
 interface MapRendererWorker extends Worker {
@@ -44,8 +35,6 @@ const DEPENDENT_FILES = [
 type DependentFile = (typeof DEPENDENT_FILES)[number];
 
 export class MapCanvasHandler {
-  #listeners = new events.ListenerManager<"update", EventMessage>();
-
   constructor(
     doms: Doms,
     worker: MapRendererWorker,
@@ -69,12 +58,6 @@ export class MapCanvasHandler {
       [canvas],
     );
 
-    worker.addEventListener(
-      "message",
-      ({ data: { mapSize } }: MessageEvent<MapRendererOutputMessage>) => {
-        this.#listeners.dispatchNoAwait({ update: { mapSize } });
-      },
-    );
     doms.biomesAlpha.addEventListener("input", () => {
       worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
     });
@@ -116,9 +99,5 @@ export class MapCanvasHandler {
       }
       worker.postMessage({ invalidate });
     });
-  }
-
-  addUpdateListener(ln: (m: EventMessage) => unknown) {
-    this.#listeners.addListener(ln);
   }
 }
