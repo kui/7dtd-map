@@ -56,8 +56,10 @@ export async function writeJsonFile(file: string, json: unknown) {
 
 export function program() {
   return path.basename(
-    requireNonnull(process.argv[1]),
-    `Unexpected process.argv: ${process.argv.join(" ")}`,
+    requireNonnull(
+      process.argv[1],
+      () => `Unexpected process.argv: ${process.argv.join(" ")}`,
+    ),
   );
 }
 
