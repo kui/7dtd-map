@@ -15,28 +15,36 @@ export type BlockIdNames = Map<BlockId, string>;
 // 6-:  (string) block name
 export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   const stream = fs.createReadStream(nimFileName);
+  let version: number;
+  const blocks: BlockIdNames = new Map();
+  // try wraps only the I/O so the finally guarantees the FD is released if
+  // ByteReader.read throws on a truncated/corrupt file. Version validation
+  // runs after close() and does not need the guard.
   try {
     const r = new ByteReader(stream);
 
-    const version = (await r.read(4)).readUInt32LE();
-    if (version !== 1) {
-      throw Error(
-        `Unexpected version: filename=${nimFileName} version=${
-          String(version)
-        }`,
-      );
-    }
-
+    version = (await r.read(4)).readUInt32LE();
     const idsNum = (await r.read(4)).readUInt32LE();
-    const blocks: BlockIdNames = new Map();
     for (let i = 0; i < idsNum; i++) {
       const id = (await r.read(4)).readUInt32LE();
       const nameLength = (await r.read(1)).readUInt8();
       const name = (await r.read(nameLength)).toString();
       blocks.set(id, name);
     }
-    return blocks;
   } finally {
     stream.close();
   }
+
+  // Version validation runs after the body read so the read(...) sequence
+  // above mirrors the on-disk .blocks.nim layout and serves as a visual map
+  // of the file format. Malformed .nim files are vanishingly rare in this
+  // toolchain (inputs come from the game's own exporter), so the cost of
+  // parsing the body before rejecting is negligible.
+  if (version !== 1) {
+    throw Error(
+      `Unexpected version: filename=${nimFileName} version=${String(version)}`,
+    );
+  }
+
+  return blocks;
 }

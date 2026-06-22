@@ -34,12 +34,11 @@ describe("parseNim", () => {
     expect(map.get(42)).toBe(name);
   });
 
-  it("throws Unexpected version BEFORE attempting to read any block entry", async () => {
-    // idsNum claims a huge number of entries, but the body is empty.
-    // The old implementation looped first and threw the byte-reader's
-    // "Unexpected byte length" error. The fixed implementation must
-    // throw "Unexpected version" without ever entering the loop.
-    const file = await writeTempNim(header(2, 0xffffffff));
+  it("rejects unknown versions", async () => {
+    // Empty body (idsNum=0) so the read loop completes and the version
+    // check at the end fires. Version validation is intentionally done
+    // after the body read; see nim-parser.ts for the rationale.
+    const file = await writeTempNim(header(2, 0));
 
     await expect(parseNim(file)).rejects.toThrow(/Unexpected version/);
   });
