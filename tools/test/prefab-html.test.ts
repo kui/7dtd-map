@@ -63,4 +63,18 @@ describe("buildSleeperVolumes", () => {
       expect(v.isQuestExclude).toBe(false);
     }
   });
+
+  it("returns [] when SleeperVolumeGroup is absent", () => {
+    expect(buildSleeperVolumes([])).toEqual([]);
+  });
+
+  it("throws the original message when SleeperVolumeFlags is missing", () => {
+    // Guards the refactor that replaced direct properties.find() lookups with
+    // a propMap-backed helper; the specific error messages are part of the
+    // contract and must not regress.
+    const props = baseProps().filter((p) => p.name !== "SleeperVolumeFlags");
+    expect(() => buildSleeperVolumes(props)).toThrow(
+      "SleeperVolumeFlags is not found",
+    );
+  });
 });

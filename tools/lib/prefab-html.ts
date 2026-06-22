@@ -158,24 +158,26 @@ export async function prefabHtml(
 ): Promise<string> {
   const name = path.basename(xml, ".xml");
   const label = labels.get(name)?.english ?? "-";
-  const { maxx, maxy, maxz, blockNums } = await parseTts(tts);
-  const blocksPromise = parseNim(nim).then((bs) =>
-    Array.from(bs)
-      .map(([id, name]) => ({
-        id,
-        name,
-        localizedName: labels.get(name)?.english ?? "-",
-        count: blockNums.get(id) ?? 0,
-      }))
-      .toSorted((a, b) => a.name.localeCompare(b.name))
-  );
-  const propertiesPromise = parsePrefabXml(xml).then((ps) =>
-    ps.toSorted((a, b) => a.name.localeCompare(b.name))
-  );
-  const [blocks, properties] = await Promise.all([
-    blocksPromise,
-    propertiesPromise,
+  // Launch all three I/O operations in parallel; previously parseTts was
+  // awaited before the other two were even constructed, doubling per-prefab
+  // latency across the throttled fan-out in generate-prefab-html.ts.
+  const [ttsData, blockNimEntries, rawProperties] = await Promise.all([
+    parseTts(tts),
+    parseNim(nim),
+    parsePrefabXml(xml),
   ]);
+  const { maxx, maxy, maxz, blockNums } = ttsData;
+  const blocks = Array.from(blockNimEntries)
+    .map(([id, blockName]) => ({
+      id,
+      name: blockName,
+      localizedName: labels.get(blockName)?.english ?? "-",
+      count: blockNums.get(id) ?? 0,
+    }))
+    .toSorted((a, b) => a.name.localeCompare(b.name));
+  const properties = rawProperties.toSorted((a, b) =>
+    a.name.localeCompare(b.name)
+  );
 
   // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));
@@ -245,13 +247,36 @@ export interface SleeperVolume {
   start: [number, number, number];
 }
 
+// Apply `parser` to each `separator`-split token of the property identified
+// by `key`, or return undefined if the property is absent. Replaces ~7
+// repetitions of `properties.find(p => p.name === key)?.value.split(...).map(...)`.
+function parseCsvField<T>(
+  propMap: Map<string, string>,
+  key: string,
+  parser: (s: string) => T,
+  separator: string | RegExp = ",",
+): T[] | undefined {
+  return propMap.get(key)?.split(separator).map(parser);
+}
+
+function parseTriple(raw: string, kind: string): [number, number, number] {
+  const t = raw.split(",").map((s) => parseInt(s, 10));
+  if (t.length !== 3) throw new Error(`Invalid sleeper volume ${kind}: ${raw}`);
+  return t as [number, number, number];
+}
+
 export function buildSleeperVolumes(
   properties: PrefabProperty[],
 ): SleeperVolume[] {
-  const groupsRaw = properties
-    .find((p) => p.name === "SleeperVolumeGroup")
-    ?.value.split(",")
-    .map((s) => s.trim());
+  // Single O(N) scan up front; subsequent lookups are O(1) instead of O(N)
+  // per field (previously ~10 full scans of `properties`).
+  const propMap = new Map(properties.map((p) => [p.name, p.value]));
+
+  const groupsRaw = parseCsvField(
+    propMap,
+    "SleeperVolumeGroup",
+    (s) => s.trim(),
+  );
   if (groupsRaw === undefined) return [];
   const groups = [];
   for (let i = 0; i < groupsRaw.length; i += 3) {
@@ -274,56 +299,49 @@ export function buildSleeperVolumes(
       count: [countMin, countMax] as [number, number],
     });
   }
-  const groupIds = properties
-    .find((p) => p.name === "SleeperVolumeGroupId")
-    ?.value.split(",")
-    .map((s) => parseInt(s, 10));
+  const groupIds = parseCsvField(
+    propMap,
+    "SleeperVolumeGroupId",
+    (s) => parseInt(s, 10),
+  );
   if (groupIds === undefined) {
     throw new Error("SleeperVolumeGroupId is not found");
   }
   // NOTE: This implementation for SleeperVolumeGameStageAdjust could be wrong.
   // Some prefabs have no SleeperVolumeGameStageAdjust or shorter than SleeperVolumeGroup
   // This implementation assumes that padding empty string to the length of SleeperVolumeGroup.
-  const gameStageAdjusts = properties
-    .find((p) => p.name === "SleeperVolumeGameStageAdjust")
-    ?.value.split(",")
-    .map((s) => s.trim()) ?? Array.from(groups, () => "");
-  const flags = properties
-    .find((p) => p.name === "SleeperVolumeFlags")
-    ?.value.split(",")
-    .map((s) => parseInt(s, 10));
+  const gameStageAdjusts =
+    parseCsvField(propMap, "SleeperVolumeGameStageAdjust", (s) => s.trim()) ??
+      Array.from(groups, () => "");
+  const flags = parseCsvField(
+    propMap,
+    "SleeperVolumeFlags",
+    (s) => parseInt(s, 10),
+  );
   if (flags === undefined) throw new Error("SleeperVolumeFlags is not found");
   // NOTE: This implementation for SleeperIsBossVolume could be wrong.
   // See the comment for SleeperVolumeGameStageAdjust.
-  const isBosses = properties
-    .find((p) => p.name === "SleeperIsBossVolume")
-    ?.value.split(",")
-    .map((s) => s === "True") ?? Array.from(groups, () => false);
-  const isLoots = properties
-    .find((p) => p.name === "SleeperIsLootVolume")
-    ?.value.split(",")
-    .map((s) => s === "True") ?? Array.from(groups, () => false);
-  const isQuestExcludes = properties
-    .find((p) => p.name === "SleeperIsQuestExclude")
-    ?.value.split(",")
-    .map((s) => s === "True") ?? Array.from(groups, () => false);
-  const sizes = properties
-    .find((p) => p.name === "SleeperVolumeSize")
-    ?.value.split("#")
-    .map((s) => {
-      const t = s.split(",").map((s) => parseInt(s, 10));
-      if (t.length !== 3) throw new Error(`Invalid sleeper volume size: ${s}`);
-      return t as [number, number, number];
-    });
+  const parseBool = (s: string) => s === "True";
+  const isBosses = parseCsvField(propMap, "SleeperIsBossVolume", parseBool) ??
+    Array.from(groups, () => false);
+  const isLoots = parseCsvField(propMap, "SleeperIsLootVolume", parseBool) ??
+    Array.from(groups, () => false);
+  const isQuestExcludes =
+    parseCsvField(propMap, "SleeperIsQuestExclude", parseBool) ??
+      Array.from(groups, () => false);
+  const sizes = parseCsvField(
+    propMap,
+    "SleeperVolumeSize",
+    (s) => parseTriple(s, "size"),
+    "#",
+  );
   if (sizes === undefined) throw new Error("SleeperVolumeSize is not found");
-  const starts = properties
-    .find((p) => p.name === "SleeperVolumeStart")
-    ?.value.split("#")
-    .map((s) => {
-      const t = s.split(",").map((s) => parseInt(s, 10));
-      if (t.length !== 3) throw new Error(`Invalid sleeper volume start: ${s}`);
-      return t as [number, number, number];
-    });
+  const starts = parseCsvField(
+    propMap,
+    "SleeperVolumeStart",
+    (s) => parseTriple(s, "start"),
+    "#",
+  );
   if (starts === undefined) throw new Error("SleeperVolumeStart is not found");
   return groups.map<SleeperVolume>((group, i) => {
     return {
