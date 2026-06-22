@@ -1,36 +1,60 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, Language, LANGUAGES, parseLabel } from "./lib/label-parser.ts";
-import { handleMain, publishDir, vanillaDir } from "./lib/utils.ts";
+import {
+  buildArrayMapByEntries,
+  handleMain,
+  publishDir,
+  throttleAll,
+  vanillaDir,
+  writeJsonFile,
+} from "./lib/utils.ts";
 
 const DEST_DIR = publishDir("labels");
+const LANG_CONCURRENCY = 8;
 
 async function main() {
   const labels = await parseLabel(
     await vanillaDir("Data", "Config", "Localization.csv"),
   );
 
-  for (const lang of LANGUAGES) {
-    const dir = path.join(DEST_DIR, lang);
-    await fs.mkdir(dir, { recursive: true });
-    await extract(labels, "blocks", lang, path.join(dir, "blocks.json"));
-    await extract(labels, "POI", lang, path.join(dir, "prefabs.json"));
-    await extract(labels, "shapes", lang, path.join(dir, "shapes.json"));
-  }
+  // Pre-group labels by their source file once, so per-language extraction
+  // does not re-scan the full label Map for every (lang, file) pair.
+  const labelsByFile = buildArrayMapByEntries(
+    Array.from(labels, ([id, label]) => [label.file, [id, label] as const]),
+  );
+
+  await throttleAll(
+    LANGUAGES.map((lang) => () => processLang(labelsByFile, lang)),
+    LANG_CONCURRENCY,
+  );
 
   return 0;
 }
 
+async function processLang(
+  labelsByFile: Map<string, (readonly [string, Label])[]>,
+  lang: Language,
+) {
+  const dir = path.join(DEST_DIR, lang);
+  await fs.mkdir(dir, { recursive: true });
+  await Promise.all([
+    extract(labelsByFile, "blocks", lang, path.join(dir, "blocks.json")),
+    extract(labelsByFile, "POI", lang, path.join(dir, "prefabs.json")),
+    extract(labelsByFile, "shapes", lang, path.join(dir, "shapes.json")),
+  ]);
+}
+
 async function extract(
-  labels: Map<string, Label>,
+  labelsByFile: Map<string, (readonly [string, Label])[]>,
   file: string,
   lang: Language,
   outputFile: string,
 ) {
+  const entries = labelsByFile.get(file) ?? [];
   const extracted = Object.fromEntries(
-    Array.from(labels)
+    entries
       .flatMap<[string, string]>(([id, label]) => {
-        if (file !== label.file) return [];
         if (!label[lang]) return [];
         return [[id, label[lang]]];
       })
@@ -42,11 +66,6 @@ async function extract(
     path.basename(outputFile),
   );
   await writeJsonFile(outputFile, extracted);
-}
-
-async function writeJsonFile(file: string, json: unknown) {
-  await fs.writeFile(file, JSON.stringify(json, null, "\t"));
-  console.log("Write %s", file);
 }
 
 handleMain(main());
