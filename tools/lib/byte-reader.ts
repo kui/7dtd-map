@@ -15,7 +15,9 @@ export class ByteReader {
     while (written < bytesNum) {
       if (this.#offset >= this.#buf.length) {
         const r = await this.#iter.next();
-        if (r.done) throw Error(`Unexpeted byte length: ${bytesNum.toString()}`);
+        if (r.done) {
+          throw Error(`Unexpeted byte length: ${bytesNum.toString()}`);
+        }
         this.#buf = r.value;
         this.#offset = 0;
       }
