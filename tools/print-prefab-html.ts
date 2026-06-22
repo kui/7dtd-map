@@ -1,7 +1,7 @@
 import process from "node:process";
-import * as path from "node:path";
 import { prefabHtml } from "./lib/prefab-html.ts";
 import { parseLabel } from "./lib/label-parser.ts";
+import { prefabSiblingFiles } from "./lib/prefab-files.ts";
 import { handleMain, program, vanillaDir } from "./lib/utils.ts";
 
 const usage = `${program()} <Prefab XML>`;
@@ -13,9 +13,7 @@ async function main() {
     return 1;
   }
   const labels = await loadLabels();
-  const pathBasename = path.join(path.dirname(xml), path.basename(xml, ".xml"));
-  const nim = `${pathBasename}.blocks.nim`;
-  const tts = `${pathBasename}.tts`;
+  const { nim, tts } = prefabSiblingFiles(xml);
   console.log(await prefabHtml(xml, nim, tts, labels));
   return 0;
 }
