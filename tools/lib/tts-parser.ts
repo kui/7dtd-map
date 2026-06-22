@@ -8,28 +8,41 @@ const BLOCK_ID_BIT_MASK = 0b0111111111111111;
 
 export async function parseTts(ttsFileName: string): Promise<Tts> {
   const stream = fs.createReadStream(ttsFileName);
-  const r = new ByteReader(stream);
+  let fileFormat: string;
+  let version: number;
+  let dim: { x: number; y: number; z: number };
+  let blockIds: Uint32Array;
+  // try wraps only the I/O so the finally guarantees the FD is released if
+  // ByteReader.read throws on a truncated/corrupt file. Header validation
+  // and the Tts allocation run after close() and don't need the guard.
+  try {
+    const r = new ByteReader(stream);
 
-  // Header
-  const fileFormat = (await r.read(4)).toString();
-  const version = (await r.read(4)).readUInt32LE();
-  const dim = {
-    x: (await r.read(2)).readUInt16LE(),
-    y: (await r.read(2)).readUInt16LE(),
-    z: (await r.read(2)).readUInt16LE(),
-  };
+    // Header
+    fileFormat = (await r.read(4)).toString();
+    version = (await r.read(4)).readUInt32LE();
+    dim = {
+      x: (await r.read(2)).readUInt16LE(),
+      y: (await r.read(2)).readUInt16LE(),
+      z: (await r.read(2)).readUInt16LE(),
+    };
 
-  // Block data
-  const blocksNum = dim.x * dim.y * dim.z;
-  const blockIds = new Uint32Array(blocksNum);
-  for (let i = 0; i < blocksNum; i++) {
-    const blockData = (await r.read(4)).readInt32LE();
-    blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
+    // Block data
+    const blocksNum = dim.x * dim.y * dim.z;
+    blockIds = new Uint32Array(blocksNum);
+    for (let i = 0; i < blocksNum; i++) {
+      const blockData = (await r.read(4)).readInt32LE();
+      blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
+    }
+  } finally {
+    stream.close();
   }
 
-  // End
-  stream.close();
-
+  // Header validation runs after the body read so the read(...) sequence
+  // above mirrors the on-disk TTS layout and serves as a visual map of the
+  // file format. Malformed TTS files are vanishingly rare in this toolchain
+  // (inputs come from the game's own exporter), so the cost of parsing the
+  // body before rejecting is negligible.
   if (fileFormat !== "tts\x00") {
     throw Error(
       `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
@@ -65,7 +78,9 @@ export class Tts {
   }
   getBlockId(x: number, y: number, z: number): BlockId | undefined {
     if (
-      x < 0 || this.maxx < x || y < 0 || this.maxy < y || z < 0 || this.maxz < z
+      x < 0 || x >= this.maxx ||
+      y < 0 || y >= this.maxy ||
+      z < 0 || z >= this.maxz
     ) {
       throw Error(
         `Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`,
