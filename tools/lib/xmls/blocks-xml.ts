@@ -7,7 +7,6 @@ import {
 import type { Materials } from "./materials-xml.ts";
 
 const LOOTABLE_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
-const DEFAULT_BLOCKS_XML = await vanillaDir("Data", "Config", "blocks.xml");
 
 /* Raw XML types (encapsulated) */
 
@@ -90,11 +89,13 @@ function isRawBlocksXml(value: unknown): value is RawBlocksXml {
 /* Public API */
 
 export async function loadBlocks(
-  blocksXmlFileName: string = DEFAULT_BLOCKS_XML,
+  blocksXmlFileName?: string,
 ): Promise<Blocks> {
-  const parsed = parseXml(await Deno.readTextFile(blocksXmlFileName));
+  const fileName = blocksXmlFileName ??
+    await vanillaDir("Data", "Config", "blocks.xml");
+  const parsed = parseXml(await Deno.readTextFile(fileName));
   if (!isRawBlocksXml(parsed)) {
-    throw new Error(`Unexpected structure in ${blocksXmlFileName}`);
+    throw new Error(`Unexpected structure in ${fileName}`);
   }
   const blocks = parsed.blocks.block.reduce<Map<BlockName, Block>>(
     (map, blockElement) => {
@@ -272,10 +273,10 @@ export class Blocks {
   }
 }
 
-function parseCount(count: string): NumberRange {
+export function parseCount(count: string): NumberRange {
   const [min, max] = count.split("-").map((s) => parseInt(s, 10));
   if (min === undefined || isNaN(min) || (max !== undefined && isNaN(max))) {
     throw new Error(`Invalid count: ${count}`);
   }
-  return max ? [min, max] : [min, min];
+  return max === undefined ? [min, min] : [min, max];
 }
