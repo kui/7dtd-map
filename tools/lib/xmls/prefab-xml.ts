@@ -2,7 +2,9 @@ import { parse as parseXml } from "@libs/xml";
 
 interface RawPrefabXml {
   prefab: {
-    property: RawPrefabProperty[];
+    // @libs/xml collapses a single repeated element into the bare object
+    // instead of a one-element array, so accept either shape here.
+    property: RawPrefabProperty | RawPrefabProperty[];
   };
 }
 
@@ -29,12 +31,19 @@ function isRawPrefabPropertyValue(
   return "@name" in p;
 }
 
+function looksLikeRawPrefabProperty(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  return "@name" in value || "@class" in value;
+}
+
 function isRawPrefabXml(value: unknown): value is RawPrefabXml {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;
   const prefab = v["prefab"];
   if (typeof prefab !== "object" || prefab === null) return false;
-  return Array.isArray((prefab as Record<string, unknown>)["property"]);
+  const property = (prefab as Record<string, unknown>)["property"];
+  if (Array.isArray(property)) return true;
+  return looksLikeRawPrefabProperty(property);
 }
 
 export async function parsePrefabXml(
@@ -44,7 +53,9 @@ export async function parsePrefabXml(
   if (!isRawPrefabXml(parsed)) {
     throw new Error(`Unexpected structure in ${fileName}`);
   }
-  return parsed.prefab.property.flatMap((p) => {
+  const rawProps = parsed.prefab.property;
+  const properties = Array.isArray(rawProps) ? rawProps : [rawProps];
+  return properties.flatMap((p) => {
     if (isRawPrefabPropertyValue(p)) {
       return { name: p["@name"], value: p["@value"] };
     } else {

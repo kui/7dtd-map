@@ -1,14 +1,13 @@
-import { expandGlob } from "@std/fs/expand-glob";
 import * as path from "node:path";
 import {
   type ParsedPrefabProperty,
   parsePrefabXml,
 } from "./lib/xmls/prefab-xml.ts";
+import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {
   handleMain,
   publishDir,
   throttleAll,
-  vanillaDir,
   writeJsonFile,
 } from "./lib/utils.ts";
 
@@ -16,12 +15,8 @@ const DOCS_DIR = publishDir();
 const FILE = "prefab-difficulties.json";
 
 async function main() {
-  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const prefabXmlFiles = (await Array.fromAsync(
-    expandGlob(globPath),
-    (e) => e.path,
-  )).filter((p) => !p.endsWith("_signs.xml"));
-  console.log("Found %d prefab xml from %s", prefabXmlFiles.length, globPath);
+  const prefabXmlFiles = await listPrefabXmlPaths();
+  console.log("Found %d prefab xml", prefabXmlFiles.length);
   const prefabXmls = await parseXmls(prefabXmlFiles);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   await writeJsonFile(
@@ -37,6 +32,7 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
       .flatMap<[string, number]>(([prefabName, props]) => {
         const difficulty = parseInt(
           props.find((p) => p.name === "DifficultyTier")?.value ?? "0",
+          10,
         );
         if (difficulty > 0) return [[prefabName, difficulty]];
         else return [];
@@ -51,20 +47,19 @@ interface PrefabXmls {
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;
-  const xmlTasks = xmlFiles.map((prefabXmlFile) => async () => {
-    const prefabName = path.basename(prefabXmlFile, ".xml");
-    const props = await parsePrefabXml(prefabXmlFile);
-    if (++completed % 50 === 0) {
-      console.log("Read xmls: %d / %d", completed, xmlFiles.length);
-    }
-    return { [prefabName]: props };
-  });
+  const xmlTasks = xmlFiles.map(
+    (prefabXmlFile) => async (): Promise<[string, ParsedPrefabProperty[]]> => {
+      const { name } = prefabSiblingFiles(prefabXmlFile);
+      const props = await parsePrefabXml(prefabXmlFile);
+      if (++completed % 50 === 0) {
+        console.log("Read xmls: %d / %d", completed, xmlFiles.length);
+      }
+      return [name, props];
+    },
+  );
 
   console.log("Start to read %d xmls", xmlFiles.length);
-  return (await throttleAll(xmlTasks, 100)).reduce(
-    (a, c) => Object.assign(a, c),
-    {},
-  );
+  return Object.fromEntries(await throttleAll(xmlTasks, 100));
 }
 
 handleMain(main());

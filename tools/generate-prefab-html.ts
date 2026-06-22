@@ -3,6 +3,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
 import { prefabHtml } from "./lib/prefab-html.ts";
+import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {
   handleMain,
   publishDir,
@@ -41,15 +42,11 @@ async function loadLabels() {
 async function buildHtmls(labels: Map<LabelId, Label>) {
   console.log("Build HTML files");
 
-  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmlFiles = (await Array.fromAsync(
-    expandGlob(globPath),
-    (e) => e.path,
-  )).filter((p) => !p.endsWith("_signs.xml"));
+  const xmlFiles = await listPrefabXmlPaths();
   if (xmlFiles.length === 0) {
-    throw Error(`No xml file: ${globPath}`);
+    throw Error("No prefab xml file found");
   }
-  console.log("Found %d prefab xml from %s", xmlFiles.length, globPath);
+  console.log("Found %d prefab xml", xmlFiles.length);
 
   let successCount = 0;
   const index: string[] = [];
@@ -70,8 +67,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
     if (++successCount % 50 === 0) {
       console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
     }
-    const prefabName = path.basename(xmlFileName, ".xml");
-    index.push(prefabName);
+    index.push(prefabSiblingFiles(xmlFileName).name);
   });
   await throttleAll(tasks, 100);
   console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
@@ -80,22 +76,17 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
 }
 
 async function generateHtml(xmlFileName: string, labels: Map<LabelId, Label>) {
-  const prefabName = path.basename(xmlFileName, ".xml");
-  const prefabDir = path.dirname(xmlFileName);
-  const nimFileName = path.join(prefabDir, `${prefabName}.blocks.nim`);
-  const ttsFileName = path.join(prefabDir, `${prefabName}.tts`);
-  const html = await prefabHtml(xmlFileName, nimFileName, ttsFileName, labels);
-  const dist = path.join(BASE_DEST, `${prefabName}.html`);
+  const { name, nim, tts } = prefabSiblingFiles(xmlFileName);
+  const html = await prefabHtml(xmlFileName, nim, tts, labels);
+  const dist = path.join(BASE_DEST, `${name}.html`);
   await fs.writeFile(dist, html);
 }
 
 async function copyJpg(xmlFileName: string) {
-  const prefabName = path.basename(xmlFileName, ".xml");
-  const prefabDir = path.dirname(xmlFileName);
-  const jpgFileName = path.join(prefabDir, `${prefabName}.jpg`);
-  const dist = path.join(BASE_DEST, path.basename(jpgFileName));
+  const { jpg } = prefabSiblingFiles(xmlFileName);
+  const dist = path.join(BASE_DEST, path.basename(jpg));
   try {
-    await fs.copyFile(jpgFileName, dist);
+    await fs.copyFile(jpg, dist);
   } catch (e) {
     if (isErrnoException(e) && e.code === "ENOENT") {
       // No jpg
