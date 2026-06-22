@@ -13,17 +13,7 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
 
     // Header
     const fileFormat = (await r.read(4)).toString();
-    if (fileFormat !== "tts\x00") {
-      throw Error(
-        `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
-      );
-    }
     const version = (await r.read(4)).readUInt32LE();
-    if (!KNOWN_VERSIONS.includes(version)) {
-      throw Error(
-        `Unknown version: filename=${ttsFileName} version=${String(version)}`,
-      );
-    }
     const dim = {
       x: (await r.read(2)).readUInt16LE(),
       y: (await r.read(2)).readUInt16LE(),
@@ -38,6 +28,22 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
       blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
     }
 
+    // Header validation is intentionally done after the body read so the
+    // sequence of read(...) calls above mirrors the on-disk TTS layout and
+    // serves as a visual map of the file format. Moving these checks earlier
+    // would fail faster on malformed input, but malformed TTS files are
+    // vanishingly rare in this toolchain (inputs come from the game's own
+    // exporter), and a bad file still fails fast inside ByteReader.read.
+    if (fileFormat !== "tts\x00") {
+      throw Error(
+        `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
+      );
+    }
+    if (!KNOWN_VERSIONS.includes(version)) {
+      throw Error(
+        `Unknown version: filename=${ttsFileName} version=${String(version)}`,
+      );
+    }
     return new Tts(version, dim, blockIds);
   } finally {
     stream.close();

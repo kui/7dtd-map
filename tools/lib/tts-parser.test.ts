@@ -44,35 +44,45 @@ describe("parseTts error handling", () => {
     return p;
   }
 
-  it("rejects files with unexpected prefix without reading the body", async () => {
-    // Header with bogus magic; if version/body were parsed first, this would
-    // read garbage instead of throwing the prefix error.
-    const buf = new Uint8Array(4);
-    buf.set([0x00, 0x00, 0x00, 0x00]);
-    const p = writeTmp("bad-prefix.tts", buf);
+  // Empty-body fixture: valid 14-byte header with dim 0,0,0 so the block
+  // loop iterates zero times. Lets us exercise the post-loop header checks
+  // without needing a real prefab body.
+  function emptyBodyHeader(magic: number[], version: number): Uint8Array {
+    const buf = new Uint8Array(14);
+    buf.set(magic, 0);
+    const view = new DataView(buf.buffer);
+    view.setUint32(4, version, true);
+    // dim x=y=z=0
+    return buf;
+  }
+
+  it("rejects files with unexpected prefix", async () => {
+    const p = writeTmp(
+      "bad-prefix.tts",
+      emptyBodyHeader([0x00, 0x00, 0x00, 0x00], 19),
+    );
     await expect(parseTts(p)).rejects.toThrow("Unexpected file prefix");
   });
 
-  it("rejects files with unknown version before allocating block buffer", async () => {
-    // Magic "tts\0" + version = 9999 (unknown). No body bytes follow; if the
-    // parser tried to read the body, ByteReader would throw a different error.
-    const buf = new Uint8Array(8);
-    buf.set([0x74, 0x74, 0x73, 0x00], 0); // "tts\0"
-    new DataView(buf.buffer).setUint32(4, 9999, true);
-    const p = writeTmp("bad-version.tts", buf);
+  it("rejects files with unknown version", async () => {
+    const p = writeTmp(
+      "bad-version.tts",
+      emptyBodyHeader([0x74, 0x74, 0x73, 0x00], 9999),
+    );
     await expect(parseTts(p)).rejects.toThrow("Unknown version");
   });
 
-  it("closes the file descriptor when parsing throws", async () => {
-    // Truncated file: valid header but no block body. parseTts must reject and
-    // release the FD via the finally block; if it leaks, repeated calls would
-    // eventually exhaust the FD limit. We assert the rejection here and rely
-    // on the try/finally to free the FD.
-    const buf = new Uint8Array(10);
-    buf.set([0x74, 0x74, 0x73, 0x00], 0); // "tts\0"
-    new DataView(buf.buffer).setUint32(4, 19, true); // known version
-    // dim x=1 (rest of header truncated)
-    buf.set([0x01, 0x00], 8);
+  it("rejects truncated files (FD must still be released via finally)", async () => {
+    // Valid header claiming a 1-block body but no body bytes follow.
+    // ByteReader.read should throw; the try/finally in parseTts is what
+    // keeps the ReadStream FD from leaking under throttleAll concurrency.
+    const buf = new Uint8Array(14);
+    buf.set([0x74, 0x74, 0x73, 0x00], 0);
+    const view = new DataView(buf.buffer);
+    view.setUint32(4, 19, true);
+    view.setUint16(8, 1, true); // x = 1
+    view.setUint16(10, 1, true); // y = 1
+    view.setUint16(12, 1, true); // z = 1
     const p = writeTmp("truncated.tts", buf);
     await expect(parseTts(p)).rejects.toThrow();
   });
