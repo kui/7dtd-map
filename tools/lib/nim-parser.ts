@@ -15,24 +15,28 @@ export type BlockIdNames = Map<BlockId, string>;
 // 6-:  (string) block name
 export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   const stream = fs.createReadStream(nimFileName);
-  const r = new ByteReader(stream);
+  try {
+    const r = new ByteReader(stream);
 
-  const version = (await r.read(4)).readUInt32LE();
-  const idsNum = (await r.read(4)).readUInt32LE();
-  const blocks: BlockIdNames = new Map();
-  for (let i = 0; i < idsNum; i++) {
-    const id = (await r.read(4)).readUInt32LE();
-    const nameLength = (await r.read(1)).readUInt8();
-    const name = (await r.read(nameLength)).toString();
-    blocks.set(id, name);
+    const version = (await r.read(4)).readUInt32LE();
+    if (version !== 1) {
+      throw Error(
+        `Unexpected version: filename=${nimFileName} version=${
+          String(version)
+        }`,
+      );
+    }
+
+    const idsNum = (await r.read(4)).readUInt32LE();
+    const blocks: BlockIdNames = new Map();
+    for (let i = 0; i < idsNum; i++) {
+      const id = (await r.read(4)).readUInt32LE();
+      const nameLength = (await r.read(1)).readUInt8();
+      const name = (await r.read(nameLength)).toString();
+      blocks.set(id, name);
+    }
+    return blocks;
+  } finally {
+    stream.close();
   }
-  stream.close();
-
-  if (version !== 1) {
-    throw Error(
-      `Unexpected version: filename=${nimFileName} version=${String(version)}`,
-    );
-  }
-
-  return blocks;
 }
