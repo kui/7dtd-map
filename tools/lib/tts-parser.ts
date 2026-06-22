@@ -8,13 +8,20 @@ const BLOCK_ID_BIT_MASK = 0b0111111111111111;
 
 export async function parseTts(ttsFileName: string): Promise<Tts> {
   const stream = fs.createReadStream(ttsFileName);
+  let fileFormat: string;
+  let version: number;
+  let dim: { x: number; y: number; z: number };
+  let blockIds: Uint32Array;
+  // try wraps only the I/O so the finally guarantees the FD is released if
+  // ByteReader.read throws on a truncated/corrupt file. Header validation
+  // and the Tts allocation run after close() and don't need the guard.
   try {
     const r = new ByteReader(stream);
 
     // Header
-    const fileFormat = (await r.read(4)).toString();
-    const version = (await r.read(4)).readUInt32LE();
-    const dim = {
+    fileFormat = (await r.read(4)).toString();
+    version = (await r.read(4)).readUInt32LE();
+    dim = {
       x: (await r.read(2)).readUInt16LE(),
       y: (await r.read(2)).readUInt16LE(),
       z: (await r.read(2)).readUInt16LE(),
@@ -22,32 +29,31 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
 
     // Block data
     const blocksNum = dim.x * dim.y * dim.z;
-    const blockIds = new Uint32Array(blocksNum);
+    blockIds = new Uint32Array(blocksNum);
     for (let i = 0; i < blocksNum; i++) {
       const blockData = (await r.read(4)).readInt32LE();
       blockIds[i] = blockData & BLOCK_ID_BIT_MASK;
     }
-
-    // Header validation is intentionally done after the body read so the
-    // sequence of read(...) calls above mirrors the on-disk TTS layout and
-    // serves as a visual map of the file format. Moving these checks earlier
-    // would fail faster on malformed input, but malformed TTS files are
-    // vanishingly rare in this toolchain (inputs come from the game's own
-    // exporter), and a bad file still fails fast inside ByteReader.read.
-    if (fileFormat !== "tts\x00") {
-      throw Error(
-        `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
-      );
-    }
-    if (!KNOWN_VERSIONS.includes(version)) {
-      throw Error(
-        `Unknown version: filename=${ttsFileName} version=${String(version)}`,
-      );
-    }
-    return new Tts(version, dim, blockIds);
   } finally {
     stream.close();
   }
+
+  // Header validation runs after the body read so the read(...) sequence
+  // above mirrors the on-disk TTS layout and serves as a visual map of the
+  // file format. Malformed TTS files are vanishingly rare in this toolchain
+  // (inputs come from the game's own exporter), so the cost of parsing the
+  // body before rejecting is negligible.
+  if (fileFormat !== "tts\x00") {
+    throw Error(
+      `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,
+    );
+  }
+  if (!KNOWN_VERSIONS.includes(version)) {
+    throw Error(
+      `Unknown version: filename=${ttsFileName} version=${String(version)}`,
+    );
+  }
+  return new Tts(version, dim, blockIds);
 }
 
 export class Tts {
