@@ -42,13 +42,20 @@ export class LabelHandler {
       this.#doms.language.appendChild(option);
     }
 
-    const browserLang = localStorage.getItem("language") ??
+    const stored = localStorage.getItem("language");
+    const browserLang = (stored as Language | null) ??
       resolveLanguage(navigatorLanguages);
-    if (this.#doms.language.value !== browserLang) {
+    const needsAdjust = this.#doms.language.value !== browserLang;
+    if (needsAdjust) {
       this.#doms.language.value = browserLang;
-      requestAnimationFrame(() =>
-        this.#doms.language.dispatchEvent(new Event("change"))
-      );
+    }
+    // Synchronize the holder with the resolved language so that callers can
+    // pull the current language via `labelHandler.language` / `holder` right
+    // after construction. Subscribers receive subsequent user changes via
+    // `addListener`; the initial value is delivered by pull, not push.
+    this.#holder.language = browserLang;
+    if (needsAdjust && stored !== browserLang) {
+      localStorage.setItem("language", browserLang);
     }
   }
 
