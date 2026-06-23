@@ -29,6 +29,34 @@ describe("resolveLanguage", () => {
     expect(resolveLanguage(["zh-TW"])).toBe("tchinese");
   });
 
+  it("resolves Chinese script subtags (Hans/Hant)", () => {
+    expect(resolveLanguage(["zh-Hans"])).toBe("schinese");
+    expect(resolveLanguage(["zh-Hans-CN"])).toBe("schinese");
+    expect(resolveLanguage(["zh-Hant"])).toBe("tchinese");
+    expect(resolveLanguage(["zh-Hant-TW"])).toBe("tchinese");
+  });
+
+  it("defaults bare zh to Simplified Chinese", () => {
+    expect(resolveLanguage(["zh"])).toBe("schinese");
+  });
+
+  it("matches Chinese tags case-insensitively", () => {
+    expect(resolveLanguage(["zh-cn"])).toBe("schinese");
+    expect(resolveLanguage(["zh-tw"])).toBe("tchinese");
+    expect(resolveLanguage(["zh-hans"])).toBe("schinese");
+  });
+
+  it("resolves additional Chinese regions", () => {
+    expect(resolveLanguage(["zh-SG"])).toBe("schinese");
+    expect(resolveLanguage(["zh-HK"])).toBe("tchinese");
+    expect(resolveLanguage(["zh-MO"])).toBe("tchinese");
+  });
+
+  it("matches other languages case-insensitively", () => {
+    expect(resolveLanguage(["DE-DE"])).toBe("german");
+    expect(resolveLanguage(["EN-us"])).toBe("english");
+  });
+
   it("returns the first matching language when multiple are given", () => {
     expect(resolveLanguage(["unknown", "ja"])).toBe("japanese");
     expect(resolveLanguage(["de", "ja"])).toBe("german");

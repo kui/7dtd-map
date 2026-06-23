@@ -17,7 +17,10 @@ export const LANGUAGES = [
 ] as const;
 export type Language = (typeof LANGUAGES)[number];
 
-const LANGUAGE_TAGS: { [tag: string]: Language } = {
+// Maps a BCP47 primary language subtag (lowercase) to a 7 Days to Die label set.
+// Chinese is resolved separately so script/region subtags can disambiguate
+// Simplified vs Traditional.
+const PRIMARY_SUBTAG_LANGUAGES: { [primary: string]: Language } = {
   en: "english",
   de: "german",
   es: "spanish",
@@ -29,9 +32,12 @@ const LANGUAGE_TAGS: { [tag: string]: Language } = {
   pt: "brazilian",
   ru: "russian",
   tr: "turkish",
-  "zh-CN": "schinese",
-  "zh-TW": "tchinese",
 };
+
+// Regions that imply Simplified Chinese (mainland China, Singapore).
+const SIMPLIFIED_CHINESE_REGIONS = new Set(["cn", "sg"]);
+// Regions that imply Traditional Chinese (Taiwan, Hong Kong, Macao).
+const TRADITIONAL_CHINESE_REGIONS = new Set(["tw", "hk", "mo"]);
 
 const FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"] as const;
 type FileBaseName = (typeof FILE_BASE_NAMES)[number];
@@ -112,9 +118,31 @@ export class Labels {
 
 export function resolveLanguage(languages: readonly string[]): Language {
   for (const clientTag of languages) {
-    for (const [tag, lang] of Object.entries(LANGUAGE_TAGS)) {
-      if (clientTag.startsWith(tag)) return lang;
-    }
+    const match = matchLanguage(clientTag);
+    if (match) return match;
   }
   return LabelHolder.DEFAULT_LANGUAGE;
+}
+
+function matchLanguage(clientTag: string): Language | undefined {
+  const subtags = clientTag.toLowerCase().split("-").filter((s) =>
+    s.length > 0
+  );
+  const primary = subtags[0];
+  if (!primary) return undefined;
+  if (primary === "zh") return resolveChinese(subtags.slice(1));
+  return PRIMARY_SUBTAG_LANGUAGES[primary];
+}
+
+// Bare `zh` (no script/region) defaults to Simplified, matching the upstream
+// 7 Days to Die / Steam convention where `schinese` is the canonical Chinese
+// label set.
+function resolveChinese(subtags: readonly string[]): Language {
+  for (const subtag of subtags) {
+    if (subtag === "hans") return "schinese";
+    if (subtag === "hant") return "tchinese";
+    if (SIMPLIFIED_CHINESE_REGIONS.has(subtag)) return "schinese";
+    if (TRADITIONAL_CHINESE_REGIONS.has(subtag)) return "tchinese";
+  }
+  return "schinese";
 }
