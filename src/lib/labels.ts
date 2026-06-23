@@ -17,9 +17,10 @@ export const LANGUAGES = [
 ] as const;
 export type Language = (typeof LANGUAGES)[number];
 
-// Maps a BCP47 primary language subtag (lowercase) to a 7 Days to Die label set.
-// Chinese is resolved separately so script/region subtags can disambiguate
-// Simplified vs Traditional.
+// Maps a BCP47 primary language subtag to a 7 Days to Die label set.
+// Chinese is resolved separately because its label set depends on the script
+// subtag (Hans vs Hant), which we derive via Intl.Locale's CLDR-backed
+// Likely Subtags expansion.
 const PRIMARY_SUBTAG_LANGUAGES: { [primary: string]: Language } = {
   en: "english",
   de: "german",
@@ -33,11 +34,6 @@ const PRIMARY_SUBTAG_LANGUAGES: { [primary: string]: Language } = {
   ru: "russian",
   tr: "turkish",
 };
-
-// Regions that imply Simplified Chinese (mainland China, Singapore).
-const SIMPLIFIED_CHINESE_REGIONS = new Set(["cn", "sg"]);
-// Regions that imply Traditional Chinese (Taiwan, Hong Kong, Macao).
-const TRADITIONAL_CHINESE_REGIONS = new Set(["tw", "hk", "mo"]);
 
 const FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"] as const;
 type FileBaseName = (typeof FILE_BASE_NAMES)[number];
@@ -125,24 +121,22 @@ export function resolveLanguage(languages: readonly string[]): Language {
 }
 
 function matchLanguage(clientTag: string): Language | undefined {
-  const subtags = clientTag.toLowerCase().split("-").filter((s) =>
-    s.length > 0
-  );
-  const primary = subtags[0];
-  if (!primary) return undefined;
-  if (primary === "zh") return resolveChinese(subtags.slice(1));
-  return PRIMARY_SUBTAG_LANGUAGES[primary];
+  let locale: Intl.Locale;
+  try {
+    locale = new Intl.Locale(clientTag);
+  } catch {
+    return undefined;
+  }
+  if (locale.language === "zh") return resolveChinese(locale);
+  return PRIMARY_SUBTAG_LANGUAGES[locale.language];
 }
 
-// Bare `zh` (no script/region) defaults to Simplified, matching the upstream
+// Use Intl.Locale's `maximize()` (backed by CLDR Likely Subtags) to fill in the
+// script subtag from language/region — so `zh-CN`, `zh-SG` expand to Hans and
+// `zh-TW`, `zh-HK`, `zh-MO` expand to Hant without us hand-maintaining the
+// region list. Bare `zh` expands to `zh-Hans-CN`, matching the upstream
 // 7 Days to Die / Steam convention where `schinese` is the canonical Chinese
 // label set.
-function resolveChinese(subtags: readonly string[]): Language {
-  for (const subtag of subtags) {
-    if (subtag === "hans") return "schinese";
-    if (subtag === "hant") return "tchinese";
-    if (SIMPLIFIED_CHINESE_REGIONS.has(subtag)) return "schinese";
-    if (TRADITIONAL_CHINESE_REGIONS.has(subtag)) return "tchinese";
-  }
-  return "schinese";
+function resolveChinese(locale: Intl.Locale): Language {
+  return locale.maximize().script === "Hant" ? "tchinese" : "schinese";
 }
