@@ -17,7 +17,11 @@ export const LANGUAGES = [
 ] as const;
 export type Language = (typeof LANGUAGES)[number];
 
-const LANGUAGE_TAGS: { [tag: string]: Language } = {
+// Maps a BCP47 primary language subtag to a 7 Days to Die label set.
+// Chinese is resolved separately because its label set depends on the script
+// subtag (Hans vs Hant), which we derive via Intl.Locale's CLDR-backed
+// Likely Subtags expansion.
+const PRIMARY_SUBTAG_LANGUAGES: { [primary: string]: Language } = {
   en: "english",
   de: "german",
   es: "spanish",
@@ -29,8 +33,6 @@ const LANGUAGE_TAGS: { [tag: string]: Language } = {
   pt: "brazilian",
   ru: "russian",
   tr: "turkish",
-  "zh-CN": "schinese",
-  "zh-TW": "tchinese",
 };
 
 const FILE_BASE_NAMES = ["blocks", "prefabs", "shapes"] as const;
@@ -112,9 +114,29 @@ export class Labels {
 
 export function resolveLanguage(languages: readonly string[]): Language {
   for (const clientTag of languages) {
-    for (const [tag, lang] of Object.entries(LANGUAGE_TAGS)) {
-      if (clientTag.startsWith(tag)) return lang;
-    }
+    const match = matchLanguage(clientTag);
+    if (match) return match;
   }
   return LabelHolder.DEFAULT_LANGUAGE;
+}
+
+function matchLanguage(clientTag: string): Language | undefined {
+  let locale: Intl.Locale;
+  try {
+    locale = new Intl.Locale(clientTag);
+  } catch {
+    return undefined;
+  }
+  if (locale.language === "zh") return resolveChinese(locale);
+  return PRIMARY_SUBTAG_LANGUAGES[locale.language];
+}
+
+// Use Intl.Locale's `maximize()` (backed by CLDR Likely Subtags) to fill in the
+// script subtag from language/region — so `zh-CN`, `zh-SG` expand to Hans and
+// `zh-TW`, `zh-HK`, `zh-MO` expand to Hant without us hand-maintaining the
+// region list. Bare `zh` expands to `zh-Hans-CN`, matching the upstream
+// 7 Days to Die / Steam convention where `schinese` is the canonical Chinese
+// label set.
+function resolveChinese(locale: Intl.Locale): Language {
+  return locale.maximize().script === "Hant" ? "tchinese" : "schinese";
 }
