@@ -143,7 +143,6 @@ function main() {
     dtmHandler,
   );
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
-    component("controller", HTMLElement),
     component("prefabs_list", HTMLElement),
     (p) => prefabLi(p),
   );

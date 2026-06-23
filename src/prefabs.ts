@@ -79,19 +79,12 @@ function main() {
 
   const status = component("prefabs-status");
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
-    document.documentElement,
     component("prefabs-list"),
     (p) => prefabLi(p),
-    true,
   );
   prefabsHandler.addListener(({ update }) => {
     status.textContent = update.status;
     prefabListRenderer.iterator = update.prefabs;
-  });
-
-  // Workaround that document.documentElement never fires "scroll" event
-  document.addEventListener("scroll", () => {
-    document.documentElement.dispatchEvent(new Event("scroll"));
   });
 
   // init
