@@ -92,11 +92,6 @@ describe("LabelHandler", () => {
         throw new Error(`Unexpected createElement: ${tag}`);
       },
     });
-    // Deferred dispatch path inside LabelHandler.
-    setGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
-      queueMicrotask(() => cb(0));
-      return 0;
-    });
     // LabelHolder eagerly kicks off background fetches in its constructor.
     setGlobal("fetch", () =>
       Promise.resolve(
@@ -142,6 +137,24 @@ describe("LabelHandler", () => {
       ["en"],
     );
     expect(h.language).toBe("french");
+  });
+
+  it("does not fire the listener during construction", async () => {
+    const sel = new FakeSelect();
+    const h = new LabelHandler(
+      { language: sel as unknown as HTMLSelectElement },
+      "/labels",
+      ["ja"],
+    );
+    const received: string[] = [];
+    h.addListener((m) => {
+      received.push(m.update.lang);
+    });
+    // Give any deferred work (microtasks, timers) a chance to run.
+    await new Promise((r) => setTimeout(r, 0));
+    expect(received).toEqual([]);
+    // Initial value is still available via the pull-style getter.
+    expect(h.language).toBe("japanese");
   });
 
   it("change event persists to localStorage and dispatches to listeners", async () => {

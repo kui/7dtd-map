@@ -66,4 +66,5 @@ export function bindPrefabsFilterControls(
   labelHandler.addListener(({ update: { lang } }) => {
     worker.postMessage({ language: lang });
   });
+  worker.postMessage({ language: labelHandler.language });
 }
