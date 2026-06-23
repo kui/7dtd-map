@@ -21,17 +21,24 @@ export class LabelHandler {
   ) {
     this.#doms = doms;
     this.#holder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
-    this.#buildSelectOptions(navigatorLanguages);
+    this.#buildSelectOptions();
+    // Resolve and apply the initial language synchronously so that callers
+    // can pull it via `labelHandler.language` / `holder` right after
+    // construction. The initial value is delivered by pull, not push;
+    // subscribers only receive subsequent user changes via `addListener`.
+    this.#commitLanguage(
+      (localStorage.getItem("language") as Language | null) ??
+        resolveLanguage(navigatorLanguages),
+    );
     this.#doms.language.addEventListener("change", () => {
       const lang = this.#doms.language.value as Language;
       if (lang === localStorage.getItem("language")) return;
-      localStorage.setItem("language", lang);
-      this.holder.language = lang;
+      this.#commitLanguage(lang);
       this.#listener.dispatchNoAwait({ update: { lang } });
     });
   }
 
-  #buildSelectOptions(navigatorLanguages: readonly string[]) {
+  #buildSelectOptions() {
     const existingLangs = new Set(
       Array.from(this.#doms.language.options).map((o) => o.value),
     );
@@ -41,22 +48,12 @@ export class LabelHandler {
       option.textContent = lang;
       this.#doms.language.appendChild(option);
     }
+  }
 
-    const stored = localStorage.getItem("language");
-    const browserLang = (stored as Language | null) ??
-      resolveLanguage(navigatorLanguages);
-    const needsAdjust = this.#doms.language.value !== browserLang;
-    if (needsAdjust) {
-      this.#doms.language.value = browserLang;
-    }
-    // Synchronize the holder with the resolved language so that callers can
-    // pull the current language via `labelHandler.language` / `holder` right
-    // after construction. Subscribers receive subsequent user changes via
-    // `addListener`; the initial value is delivered by pull, not push.
-    this.#holder.language = browserLang;
-    if (needsAdjust && stored !== browserLang) {
-      localStorage.setItem("language", browserLang);
-    }
+  #commitLanguage(lang: Language) {
+    this.#doms.language.value = lang;
+    this.#holder.language = lang;
+    localStorage.setItem("language", lang);
   }
 
   addListener(fn: (m: EventMessage) => void | Promise<void>) {
