@@ -31,7 +31,7 @@ export class LabelHandler {
         resolveLanguage(navigatorLanguages),
     );
     this.#doms.language.addEventListener("change", () => {
-      const lang = this.#doms.language.value as Language;
+      const lang = this.language;
       if (lang === localStorage.getItem("language")) return;
       this.#commitLanguage(lang);
       this.#listener.dispatchNoAwait({ update: { lang } });
