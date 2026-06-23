@@ -8256,6 +8256,7 @@
 	"wallClockRandomLootHelper": "= Wall Clock = Random Helper",
 	"wallClockRandomLootHelperDesc": "Will randomly spawn broken and whole wall clocks.",
 	"wallClockWorking": "Wall Clock",
+	"wallClockWorkingDesc": "A simple clock that tells the time of day. (Shows game time)",
 	"wallLight01": "Warehouse Outdoor Light (POI)",
 	"wallLight01_player": "Warehouse Outdoor Light",
 	"wallMirror": "Wall Mirror",

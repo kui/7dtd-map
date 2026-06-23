@@ -68,7 +68,7 @@
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False,True,True</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0,0,0</td></tr>
 <tr><th>SleeperVolumeGameStageAdjust</th><td></td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,5,6,S_-_Group_Ghost_Town,2,2,S_-_Group_Ghost_Town,0,1,S_-_Group_Ghost_Town,1,1,S_-Group_Generic_Zombie,2,3,S_-Group_Generic_Zombie,0,0</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,5,6,GroupGhostTown,2,2,GroupGhostTown,0,1,GroupGhostTown,1,1,GroupGenericZombie,2,3,GroupGenericZombie,0,0</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0,1,1</td></tr>
 <tr><th>SleeperVolumeSize</th><td>43, 5, 37#14, 4, 5#5, 5, 7#9, 4, 16#23, 3, 18#15, 3, 38</td></tr>
 <tr><th>SleeperVolumeStart</th><td>16, 1, 1#25, 1, 40#34, 1, 48#30, 8, 39#1, 1, 39#1, 1, 1</td></tr>
@@ -97,7 +97,6 @@
 <tr class="block"><td class="block_name">cntAmmoPileSmall</td><td class="block_label">Ammo Pile, Small</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBarrelGasOld</td><td class="block_label">Rusty Barrel</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntBirdnest</td><td class="block_label">Bird Nest</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntCollapsedWorkbench</td><td class="block_label">Destroyed Workbench</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntLootChestHeroInsecureT2</td><td class="block_label">Leather Trunk</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntMedicLootPileA</td><td class="block_label">Medical Supplies</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntQuestInfestedT2LootHelper</td><td class="block_label">= Infested T2 = Random Helper</td><td class="block_count">1</td></tr>
@@ -109,6 +108,7 @@
 <tr class="block"><td class="block_name">cntTrashPile07</td><td class="block_label">Garbage Pile</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntTroughPigRandomHelper</td><td class="block_label">= Pig Trough = Random Helper</td><td class="block_count">3</td></tr>
 <tr class="block"><td class="block_name">cntUtilityCartRandomLootHelper</td><td class="block_label">= Utility Cart = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWorkbenchBustedRandomLootHelper</td><td class="block_label">= Destroyed Workbench = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialSingleMeterDisconnect</td><td class="block_label">Commercial Single Meter Disconnect</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">conduitSingleOffset</td><td class="block_label">Conduit Single Offset</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">corrugatedMetalShapes:cube</td><td class="block_label">-</td><td class="block_count">77</td></tr>
@@ -249,12 +249,12 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>5-6</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>43x5x37</td><td>16x1x1</td></tr>
-<tr><td>1</td><td>S_-_Group_Ghost_Town</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x4x5</td><td>25x1x40</td></tr>
-<tr><td>2</td><td>S_-_Group_Ghost_Town</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>5x5x7</td><td>34x1x48</td></tr>
-<tr><td>3</td><td>S_-_Group_Ghost_Town</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x16</td><td>30x8x39</td></tr>
-<tr><td>4</td><td>S_-Group_Generic_Zombie</td><td>2-3</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>23x3x18</td><td>1x1x39</td></tr>
-<tr><td>5</td><td>S_-Group_Generic_Zombie</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>15x3x38</td><td>1x1x1</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>5-6</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>43x5x37</td><td>16x1x1</td></tr>
+<tr><td>1</td><td>GroupGhostTown</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>14x4x5</td><td>25x1x40</td></tr>
+<tr><td>2</td><td>GroupGhostTown</td><td>0-1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>5x5x7</td><td>34x1x48</td></tr>
+<tr><td>3</td><td>GroupGhostTown</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>9x4x16</td><td>30x8x39</td></tr>
+<tr><td>4</td><td>GroupGenericZombie</td><td>2-3</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>23x3x18</td><td>1x1x39</td></tr>
+<tr><td>5</td><td>GroupGenericZombie</td><td>0</td><td>1</td><td>-</td><td>0</td><td>-</td><td>-</td><td>✓</td><td>15x3x38</td><td>1x1x1</td></tr>
     </table>
     <p>Total Count: 10-13</p>
     

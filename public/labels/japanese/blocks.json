@@ -8252,6 +8252,7 @@
 	"wallClockRandomLootHelper": "= 壁掛け時計 = ランダムヘルパー",
 	"wallClockRandomLootHelperDesc": "壊れた壁掛け時計と普通の壁掛け時計をランダムに出現させます。",
 	"wallClockWorking": "壁掛け時計",
+	"wallClockWorkingDesc": "時刻を表示するシンプルな時計。（ゲーム内時間を表示します）",
 	"wallLight01": "倉庫用屋外照明（POI）",
 	"wallLight01_player": "倉庫用屋外照明",
 	"wallMirror": "壁掛け鏡",

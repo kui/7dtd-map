@@ -67,7 +67,7 @@
 <tr><th>SleeperIsLootVolume</th><td>True,False,False,False</td></tr>
 <tr><th>SleeperIsQuestExclude</th><td>False,False,False,False</td></tr>
 <tr><th>SleeperVolumeFlags</th><td>0,0,0,0</td></tr>
-<tr><th>SleeperVolumeGroup</th><td>S_-Group_Generic_Zombie,1,1,S_Zom_Burnt,2,2,S_Zom_Burnt,2,2,S_Zom_Burnt,1,1</td></tr>
+<tr><th>SleeperVolumeGroup</th><td>GroupGenericZombie,1,1,ZomBurnt,2,2,ZomBurnt,2,2,ZomBurnt,1,1</td></tr>
 <tr><th>SleeperVolumeGroupId</th><td>0,0,0,0</td></tr>
 <tr><th>SleeperVolumeSize</th><td>3, 6, 7#11, 9, 10#12, 4, 8#5, 5, 9</td></tr>
 <tr><th>SleeperVolumeStart</th><td>25, 11, 16#19, 1, 21#19, 1, 8#25, 5, 12</td></tr>
@@ -125,7 +125,6 @@
 <tr class="block"><td class="block_name">cntBruteStyleTrashCanRandomLootHelper</td><td class="block_label">= Trash Can = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntCabinetBottomFiller</td><td class="block_label">Cabinet Filler (No Loot)</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntClothesPileFloor01</td><td class="block_label">Clothes Pile</td><td class="block_count">1</td></tr>
-<tr class="block"><td class="block_name">cntCollapsedWorkbench</td><td class="block_label">Destroyed Workbench</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCounterHollowCabinetOldRandomLootHelper</td><td class="block_label">= Counter Hollow Cabinet Old = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntCupboardCabinetOldTopLootHelper</td><td class="block_label">= Cupboard Old = Random Helper</td><td class="block_count">2</td></tr>
 <tr class="block"><td class="block_name">cntDeskMetalEmptyWhite</td><td class="block_label">White Metal Desk, Empty</td><td class="block_count">1</td></tr>
@@ -148,6 +147,7 @@
 <tr class="block"><td class="block_name">cntTrashPile02</td><td class="block_label">Pile of Garbage</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntTrashPile03</td><td class="block_label">Mound of Garbage</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">cntWasherRandomLootHelper</td><td class="block_label">= Washing Machine = Random Helper</td><td class="block_count">1</td></tr>
+<tr class="block"><td class="block_name">cntWorkbenchBustedRandomLootHelper</td><td class="block_label">= Destroyed Workbench = Random Helper</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">commercialSingleMeterDisconnect</td><td class="block_label">Commercial Single Meter Disconnect</td><td class="block_count">1</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cube</td><td class="block_label">-</td><td class="block_count">380</td></tr>
 <tr class="block"><td class="block_name">concreteShapes:cubeBaseboard4Sided</td><td class="block_label">-</td><td class="block_count">24</td></tr>
@@ -345,10 +345,10 @@
     
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      <tr><td>0</td><td>S_-Group_Generic_Zombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>3x6x7</td><td>25x11x16</td></tr>
-<tr><td>1</td><td>S_Zom_Burnt</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x9x10</td><td>19x1x21</td></tr>
-<tr><td>2</td><td>S_Zom_Burnt</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x4x8</td><td>19x1x8</td></tr>
-<tr><td>3</td><td>S_Zom_Burnt</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x9</td><td>25x5x12</td></tr>
+      <tr><td>0</td><td>GroupGenericZombie</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>✓</td><td>-</td><td>3x6x7</td><td>25x11x16</td></tr>
+<tr><td>1</td><td>ZomBurnt</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>11x9x10</td><td>19x1x21</td></tr>
+<tr><td>2</td><td>ZomBurnt</td><td>2</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>12x4x8</td><td>19x1x8</td></tr>
+<tr><td>3</td><td>ZomBurnt</td><td>1</td><td>0</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>5x5x9</td><td>25x5x12</td></tr>
     </table>
     <p>Total Count: 6</p>
     
