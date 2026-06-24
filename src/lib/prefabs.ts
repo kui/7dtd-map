@@ -41,7 +41,7 @@ function parseXml(
     const name = e.getAttribute("name");
     if (!name) return [];
     const rotationAttr = e.getAttribute("rotation");
-    const rotation = rotationAttr == null ? 0 : parseInt(rotationAttr, 10);
+    const rotation = rotationAttr === null ? 0 : parseInt(rotationAttr, 10);
     return {
       name,
       x: parseInt(x),
