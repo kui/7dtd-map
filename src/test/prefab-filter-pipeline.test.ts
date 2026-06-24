@@ -3,6 +3,7 @@ import type {
   BlockPrefabCounts,
   HighlightedPrefab,
   Prefab,
+  PrefabDifficulties,
   PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 import { PrefabFilter } from "../worker/lib/prefab-filter.ts";
@@ -39,12 +40,14 @@ function stubFetch(map: Record<string, unknown>) {
 function build(
   blockCounts: BlockPrefabCounts = {},
   meshSizes: PrefabMeshSizes = {},
+  difficulties: PrefabDifficulties = {},
 ): PrefabFilter {
   return new PrefabFilter(
     "/labels",
     ["en"],
     () => Promise.resolve(blockCounts),
     () => Promise.resolve(meshSizes),
+    () => Promise.resolve(difficulties),
   );
 }
 
@@ -67,11 +70,17 @@ describe("PrefabFilter", () => {
   });
 
   const prefabs: Prefab[] = [
-    { name: "aaa_test_01", x: 0, z: 0, difficulty: 0 },
-    { name: "house_01", x: 100, z: 0, difficulty: 1 },
-    { name: "trader_01", x: 0, z: 200, difficulty: 3 },
-    { name: "skyscraper_01", x: 500, z: 500, difficulty: 5 },
+    { name: "aaa_test_01", x: 0, z: 0 },
+    { name: "house_01", x: 100, z: 0 },
+    { name: "trader_01", x: 0, z: 200 },
+    { name: "skyscraper_01", x: 500, z: 500 },
   ];
+  const difficulties: PrefabDifficulties = {
+    "aaa_test_01": 0,
+    "house_01": 1,
+    "trader_01": 3,
+    "skyscraper_01": 5,
+  };
 
   function capture(f: PrefabFilter): { current: Update | null } {
     const slot: { current: Update | null } = { current: null };
@@ -94,7 +103,7 @@ describe("PrefabFilter", () => {
   });
 
   it("filters by difficulty range", async () => {
-    const f = build();
+    const f = build({}, {}, difficulties);
     f.all = prefabs;
     f.preExcludes = [];
     f.difficulty = { start: 2, end: 4 };

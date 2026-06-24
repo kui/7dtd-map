@@ -2,11 +2,7 @@ import type { PrefabsFilterOutputMessage } from "../worker/types.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
-import type {
-  HighlightedPrefab,
-  Prefab,
-  PrefabDifficulties,
-} from "../types/7dtdmap.ts";
+import type { HighlightedPrefab, Prefab } from "../types/7dtdmap.ts";
 
 import * as events from "../lib/events.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
@@ -45,7 +41,6 @@ export class PrefabsHandler {
     markerHandler: MarkerHandler,
     labelHandler: LabelHandler,
     fileHandler: FileHandler,
-    fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
     worker.addEventListener(
       "message",
@@ -68,7 +63,7 @@ export class PrefabsHandler {
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
       if (fileNames.includes("prefabs.xml")) {
-        const all = await loadPrefabsXml(fetchDifficulties);
+        const all = await loadPrefabsXml();
         worker.postMessage({ all });
         this.#allPrefabsListeners.dispatchNoAwait({ update: { all } });
       }

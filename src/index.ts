@@ -103,7 +103,6 @@ function main() {
     markerHandler,
     labelHandler,
     fileHandler,
-    () => fetchJson("prefab-difficulties.json"),
   );
   new MapInfoHandler(
     {

@@ -1,6 +1,7 @@
 import type {
   BlockPrefabCounts,
   PrefabBlockCounts,
+  PrefabDifficulties,
   PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 import { PrefabFilter } from "./lib/prefab-filter.ts";
@@ -12,6 +13,7 @@ const prefabs = new PrefabFilter(
   navigator.languages,
   async () => invertCounts(await fetchJson("../prefab-block-counts.json")),
   () => fetchJson<PrefabMeshSizes>("../prefab-mesh-sizes.json"),
+  () => fetchJson<PrefabDifficulties>("../prefab-difficulties.json"),
 );
 
 onmessage = ({ data }: MessageEvent<PrefabsFilterInputMessage>) => {

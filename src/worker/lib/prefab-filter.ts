@@ -5,6 +5,7 @@ import type {
   HighlightedBlock,
   HighlightedPrefab,
   Prefab,
+  PrefabDifficulties,
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
@@ -22,6 +23,7 @@ export class PrefabFilter {
   #labelHolder: LabelHolder;
   #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
   #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
+  #difficultiesHolder: CacheHolder<PrefabDifficulties>;
 
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
@@ -42,6 +44,7 @@ export class PrefabFilter {
     navigatorLanguages: readonly string[],
     fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
     fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchPrefabDifficulties: () => Promise<PrefabDifficulties>,
   ) {
     const noop = () => {};
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
@@ -50,6 +53,7 @@ export class PrefabFilter {
       noop,
     );
     this.#meshSizesHolder = new CacheHolder(fetchPrefabMeshSizes, noop);
+    this.#difficultiesHolder = new CacheHolder(fetchPrefabDifficulties, noop);
   }
 
   set language(lang: Language) {
@@ -112,9 +116,10 @@ export class PrefabFilter {
   async #applyFilter() {
     this.#prefabFilterInvalid = false;
     this.#blockFilterInvalid = false;
+    const difficulties = await this.#difficultiesHolder.get();
     this.#preFiltereds = this.#preMatch(this.all);
-    let result = this.#matchByDifficulty(this.#preFiltereds);
-    result = await this.#matchByPrefabName(result);
+    let result = this.#matchByDifficulty(this.#preFiltereds, difficulties);
+    result = await this.#matchByPrefabName(result, difficulties);
     result = await this.#matchByBlockName(result);
     if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
       this.#filtered = [];
@@ -132,14 +137,20 @@ export class PrefabFilter {
     });
   }
 
-  #matchByDifficulty(prefabs: Prefab[]): Prefab[] {
+  #matchByDifficulty(
+    prefabs: Prefab[],
+    difficulties: PrefabDifficulties,
+  ): Prefab[] {
     return prefabs.filter((p) => {
-      const d = p.difficulty ?? 0;
+      const d = difficulties[p.name] ?? 0;
       return d >= this.difficulty.start && d <= this.difficulty.end;
     });
   }
 
-  async #matchByPrefabName(prefabs: Prefab[]): Promise<HighlightedPrefab[]> {
+  async #matchByPrefabName(
+    prefabs: Prefab[],
+    difficulties: PrefabDifficulties,
+  ): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
     const pattern = this.prefabFilterRegexp.length === 0
       ? new RegExp("", "i")
@@ -153,9 +164,11 @@ export class PrefabFilter {
     }
     return prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const label = labels.get(prefab.name);
+      const difficulty = difficulties[prefab.name] ?? 0;
       if (this.prefabFilterRegexp.length === 0) {
         return {
           ...prefab,
+          difficulty,
           highlightedName: prefab.name,
           highlightedLabel: label ?? "-",
         };
@@ -167,6 +180,7 @@ export class PrefabFilter {
       if (highlightedName !== null || highlightedLabel !== null) {
         return {
           ...prefab,
+          difficulty,
           highlightedName: highlightedName ?? prefab.name,
           highlightedLabel: highlightedLabel ?? label ?? "-",
         };

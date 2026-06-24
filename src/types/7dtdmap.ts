@@ -2,7 +2,6 @@ export interface Prefab {
   name: string;
   x: number;
   z: number;
-  difficulty?: number;
   // Placed rotation from prefabs.xml `decoration.rotation`, 0..3 = 0/90/180/270
   // degrees clockwise applied at placement time.
   rotation?: number;
@@ -24,6 +23,10 @@ export interface PrefabDensityScores {
 }
 
 export interface HighlightedPrefab extends Prefab {
+  // Looked up from prefab-difficulties.json inside the filter worker — kept on
+  // the highlighted variant (not Prefab itself) so the type stays a pure
+  // representation of the prefabs.xml entry.
+  difficulty?: number;
   highlightedName?: string;
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];

@@ -26,5 +26,7 @@ repository. Agents must read and follow these rules closely.
      property, an unexpected XML element, or an unknown variant tag should
      surface as an exception that names the offending file/value, not as a
      hidden gap in the generated JSON.
-   - This rule applies to `tools/` specifically. Runtime code under `src/` can
-     still degrade gracefully where appropriate (e.g. UI fallbacks).
+   - This rule applies to `tools/` specifically. Runtime code under `src/`
+     should prefer graceful degradation: missing JSON entries are tolerated via
+     nullish-coalescing defaults so a partial dataset still produces a usable UI
+     rather than crashing the page.
