@@ -122,7 +122,10 @@ function main() {
       radAlpha: component("rad_alpha", HTMLInputElement),
       signSize: component("sign_size", HTMLInputElement),
       signAlpha: component("sign_alpha", HTMLInputElement),
-      prefabDimAlpha: component("prefab_dim_alpha", HTMLInputElement),
+      prefabFootprintAlpha: component(
+        "prefab_footprint_alpha",
+        HTMLInputElement,
+      ),
       brightness: component("brightness", HTMLInputElement),
       scale: component("scale", HTMLInputElement),
     },

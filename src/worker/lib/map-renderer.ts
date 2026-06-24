@@ -45,7 +45,7 @@ export default class MapRenderer {
   #districtColorsHolder: CacheHolder<DistrictColors>;
   signSize = 200;
   signAlpha = 1;
-  prefabDimAlpha = 1;
+  prefabFootprintAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
   splat4Alpha = 1;
@@ -145,9 +145,9 @@ export default class MapRenderer {
     context.scale(this.scale, this.scale);
     // Prefab footprints (independent of the active filter) are drawn first so
     // the sign markers for filtered prefabs sit on top of them.
-    if (this.prefabDimAlpha > 0) {
-      context.globalAlpha = this.prefabDimAlpha;
-      this.#drawPrefabDimensions(
+    if (this.prefabFootprintAlpha > 0) {
+      context.globalAlpha = this.prefabFootprintAlpha;
+      this.#drawPrefabFootprints(
         context,
         width,
         height,
@@ -172,7 +172,7 @@ export default class MapRenderer {
   // itself) and `part_driveway*` (sub-parts that overlap their parent POI).
   // Per-POI colour matches the in-game preview: it comes from the tile that
   // contains the POI, with name- and DensityScore-based modifiers applied.
-  #drawPrefabDimensions(
+  #drawPrefabFootprints(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,

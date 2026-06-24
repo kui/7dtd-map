@@ -11,7 +11,7 @@ interface Doms {
   radAlpha: HTMLInputElement;
   signSize: HTMLInputElement;
   signAlpha: HTMLInputElement;
-  prefabDimAlpha: HTMLInputElement;
+  prefabFootprintAlpha: HTMLInputElement;
   brightness: HTMLInputElement;
   scale: HTMLInputElement;
 }
@@ -54,15 +54,15 @@ export class MapCanvasHandler {
         brightness: `${doms.brightness.valueAsNumber.toString()}%`,
         signSize: doms.signSize.valueAsNumber,
         signAlpha: doms.signAlpha.valueAsNumber,
-        prefabDimAlpha: doms.prefabDimAlpha.valueAsNumber,
+        prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
         scale: doms.scale.valueAsNumber,
       },
       [canvas],
     );
 
-    doms.prefabDimAlpha.addEventListener("input", () => {
+    doms.prefabFootprintAlpha.addEventListener("input", () => {
       worker.postMessage({
-        prefabDimAlpha: doms.prefabDimAlpha.valueAsNumber,
+        prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
       });
     });
 
