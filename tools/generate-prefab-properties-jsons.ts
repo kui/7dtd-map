@@ -46,6 +46,7 @@ async function main() {
     writeJsonFile(
       path.join(DOCS_DIR, MESH_SIZE_FILE),
       extractMeshSizes(prefabXmls),
+      { collapseLeafArrays: true },
     ),
     writeJsonFile(
       path.join(DOCS_DIR, DENSITY_FILE),

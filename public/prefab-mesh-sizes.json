@@ -1,7322 +1,1832 @@
 {
-	"000_Terrain_Textures": [
-		6,
-		4
-	],
-	"000_Tree_Compare": [
-		150,
-		150
-	],
-	"aaa_5m_round_test": [
-		54,
-		76
-	],
-	"aaa_all_foliage_plants": [
-		42,
-		42
-	],
-	"aaa_all_glass": [
-		181,
-		86
-	],
-	"aaa_all_loot_test": [
-		170,
-		133
-	],
-	"aaa_all_zombies": [
-		92,
-		11
-	],
-	"aaa_anim_test": [
-		43,
-		38
-	],
-	"aaa_arizona_downtown_01": [
-		173,
-		204
-	],
-	"aaa_armor_testing": [
-		25,
-		25
-	],
-	"aaa_bandit_platforms_test": [
-		43,
-		28
-	],
-	"aaa_bandits": [
-		76,
-		122
-	],
-	"aaa_barriers": [
-		13,
-		22
-	],
-	"aaa_base_cheese": [
-		25,
-		25
-	],
-	"aaa_bathroom_stalls": [
-		5,
-		5
-	],
-	"aaa_billboards": [
-		121,
-		26
-	],
-	"aaa_bleachers": [
-		26,
-		25
-	],
-	"aaa_block_event_test": [
-		176,
-		138
-	],
-	"aaa_block_props": [
-		141,
-		174
-	],
-	"aaa_block_shapes": [
-		57,
-		199
-	],
-	"aaa_block_textures": [
-		173,
-		167
-	],
-	"aaa_boats": [
-		98,
-		86
-	],
-	"aaa_bookshelf_test": [
-		24,
-		63
-	],
-	"aaa_cars": [
-		156,
-		72
-	],
-	"aaa_cathedral": [
-		60,
-		60
-	],
-	"aaa_catwalk_test": [
-		36,
-		47
-	],
-	"aaa_cheebscoblock": [
-		25,
-		25
-	],
-	"aaa_chemical_lot": [
-		25,
-		25
-	],
-	"aaa_city_kiosks": [
-		56,
-		19
-	],
-	"aaa_city_props": [
-		16,
-		60
-	],
-	"aaa_citycenter": [
-		61,
-		132
-	],
-	"aaa_clear_quest_01": [
-		18,
-		27
-	],
-	"aaa_crater_01": [
-		25,
-		23
-	],
-	"aaa_creepy_env_01": [
-		44,
-		29
-	],
-	"aaa_crown_test": [
-		38,
-		15
-	],
-	"aaa_defense_test": [
-		32,
-		31
-	],
-	"aaa_demolition": [
-		88,
-		68
-	],
-	"aaa_destruction": [
-		53,
-		75
-	],
-	"aaa_dms_test": [
-		67,
-		40
-	],
-	"aaa_doors_test": [
-		179,
-		61
-	],
-	"aaa_enemy_breakouts_01": [
-		110,
-		76
-	],
-	"aaa_envkeys_elevator": [
-		46,
-		62
-	],
-	"aaa_envkeys_office": [
-		25,
-		32
-	],
-	"aaa_faces_test": [
-		38,
-		21
-	],
-	"aaa_hazards_test": [
-		78,
-		44
-	],
-	"aaa_horde_base": [
-		25,
-		25
-	],
-	"aaa_hotel_01_alt": [
-		146,
-		57
-	],
-	"AAA_light_test": [
-		90,
-		123
-	],
-	"aaa_materials_particle_test": [
-		27,
-		73
-	],
-	"aaa_multiblock_terrain_density_bug": [
-		10,
-		12
-	],
-	"aaa_pathing_test_01": [
-		134,
-		101
-	],
-	"aaa_plate_cladding": [
-		44,
-		22
-	],
-	"aaa_poi_loot_01": [
-		41,
-		79
-	],
-	"aaa_police_station_02": [
-		60,
-		60
-	],
-	"aaa_restore_power": [
-		38,
-		42
-	],
-	"aaa_roof_intersections": [
-		114,
-		59
-	],
-	"aaa_rwg_tile_cap": [
-		150,
-		150
-	],
-	"aaa_rwg_tile_corner": [
-		150,
-		150
-	],
-	"aaa_rwg_tile_intersection": [
-		150,
-		150
-	],
-	"aaa_rwg_tile_neighborhood_cap_01": [
-		150,
-		150
-	],
-	"aaa_rwg_tile_straight": [
-		150,
-		150
-	],
-	"aaa_rwg_tile_t": [
-		150,
-		150
-	],
-	"aaa_script_entrances": [
-		88,
-		25
-	],
-	"aaa_script_test": [
-		68,
-		116
-	],
-	"aaa_shipping_containers": [
-		51,
-		39
-	],
-	"aaa_sleeper_animal_test": [
-		154,
-		25
-	],
-	"aaa_sleeper_boss_test": [
-		24,
-		45
-	],
-	"aaa_sleeper_examples": [
-		60,
-		60
-	],
-	"aaa_sleeper_spawntimeloctest_1": [
-		20,
-		24
-	],
-	"aaa_sleeper_test": [
-		154,
-		25
-	],
-	"aaa_sleeper_volume_groups_01": [
-		20,
-		31
-	],
-	"AAA_stained_glass_tiling": [
-		86,
-		100
-	],
-	"aaa_store_clothing_facades_01": [
-		127,
-		30
-	],
-	"aaa_store_electronics_facades_01": [
-		246,
-		31
-	],
-	"aaa_tent_test": [
-		109,
-		80
-	],
-	"aaa_texture_room": [
-		8,
-		7
-	],
-	"aaa_tier_1_quest": [
-		25,
-		25
-	],
-	"aaa_tier_2_quest": [
-		25,
-		25
-	],
-	"aaa_tier_3_quest": [
-		25,
-		25
-	],
-	"aaa_tier_4_quest": [
-		25,
-		25
-	],
-	"aaa_tier_5_quest": [
-		25,
-		25
-	],
-	"aaa_trailers": [
-		98,
-		65
-	],
-	"aaa_trigger_test": [
-		77,
-		92
-	],
-	"aaa_trims_test": [
-		66,
-		42
-	],
-	"aaa_truck_trailers": [
-		25,
-		52
-	],
-	"AAA_utility_waterworks": [
-		25,
-		25
-	],
-	"aaa_vents_test": [
-		31,
-		30
-	],
-	"aaa_water_sim_test": [
-		57,
-		60
-	],
-	"aaa_wedge60_slope_set": [
-		42,
-		42
-	],
-	"abandoned_house_01": [
-		42,
-		42
-	],
-	"abandoned_house_02": [
-		42,
-		42
-	],
-	"abandoned_house_03": [
-		42,
-		42
-	],
-	"abandoned_house_04": [
-		42,
-		42
-	],
-	"abandoned_house_05": [
-		42,
-		42
-	],
-	"abandoned_house_06": [
-		42,
-		42
-	],
-	"abandoned_house_07": [
-		42,
-		42
-	],
-	"abandoned_house_08": [
-		42,
-		42
-	],
-	"abandoned_house_09": [
-		42,
-		42
-	],
-	"abandoned_house_10": [
-		42,
-		42
-	],
-	"apartments_01": [
-		42,
-		42
-	],
-	"apartments_02": [
-		60,
-		60
-	],
-	"apartments_03": [
-		42,
-		42
-	],
-	"apartments_04": [
-		42,
-		42
-	],
-	"apartments_05": [
-		42,
-		42
-	],
-	"apartments_06": [
-		100,
-		100
-	],
-	"army_camp_01": [
-		53,
-		61
-	],
-	"army_camp_02": [
-		54,
-		60
-	],
-	"army_camp_03": [
-		60,
-		60
-	],
-	"army_camp_04": [
-		60,
-		60
-	],
-	"army_camp_05": [
-		60,
-		60
-	],
-	"army_camp_06": [
-		60,
-		60
-	],
-	"army_camp_07": [
-		60,
-		60
-	],
-	"army_camp_08": [
-		60,
-		60
-	],
-	"army_camp_09": [
-		60,
-		60
-	],
-	"army_camp_10": [
-		60,
-		60
-	],
-	"auto_mechanic_01": [
-		60,
-		60
-	],
-	"bank_01": [
-		42,
-		42
-	],
-	"bank_02": [
-		25,
-		25
-	],
-	"bar_01": [
-		42,
-		42
-	],
-	"barn_01": [
-		60,
-		60
-	],
-	"barn_02": [
-		60,
-		60
-	],
-	"barn_03": [
-		60,
-		60
-	],
-	"base_military_01": [
-		100,
-		100
-	],
-	"base_survivor_02": [
-		60,
-		60
-	],
-	"blueberryfield_sm": [
-		12,
-		12
-	],
-	"bluff01": [
-		15,
-		19
-	],
-	"body_shop_01": [
-		42,
-		42
-	],
-	"bombshelter_01": [
-		42,
-		42
-	],
-	"bombshelter_02": [
-		60,
-		60
-	],
-	"bombshelter_03": [
-		25,
-		25
-	],
-	"bombshelter_04": [
-		25,
-		25
-	],
-	"bombshelter_05": [
-		25,
-		25
-	],
-	"bombshelter_06": [
-		25,
-		25
-	],
-	"bombshelter_07": [
-		25,
-		25
-	],
-	"bombshelter_08": [
-		25,
-		25
-	],
-	"bombshelter_09": [
-		25,
-		25
-	],
-	"bombshelter_10": [
-		25,
-		25
-	],
-	"bombshelter_11": [
-		25,
-		25
-	],
-	"bowling_alley_01": [
-		60,
-		60
-	],
-	"bowling_alley_02": [
-		42,
-		42
-	],
-	"bridge_asphalt_broken": [
-		15,
-		47
-	],
-	"bridge_asphalt1": [
-		15,
-		43
-	],
-	"bridge_concrete_1": [
-		13,
-		39
-	],
-	"bridge_concrete_2": [
-		45,
-		17
-	],
-	"bridge_concrete1": [
-		39,
-		11
-	],
-	"bridge_wood1": [
-		39,
-		11
-	],
-	"bridge_wood2": [
-		31,
-		9
-	],
-	"bunker_00": [
-		100,
-		100
-	],
-	"bus_stop_01": [
-		29,
-		9
-	],
-	"bus_wreck_01": [
-		27,
-		7
-	],
-	"business_burnt_01": [
-		42,
-		42
-	],
-	"business_burnt_02": [
-		42,
-		42
-	],
-	"cabin_01": [
-		42,
-		42
-	],
-	"cabin_02": [
-		42,
-		42
-	],
-	"cabin_03": [
-		60,
-		60
-	],
-	"cabin_04": [
-		42,
-		42
-	],
-	"cabin_05": [
-		42,
-		42
-	],
-	"cabin_06": [
-		39,
-		32
-	],
-	"cabin_07": [
-		42,
-		42
-	],
-	"cabin_08": [
-		42,
-		42
-	],
-	"cabin_09": [
-		60,
-		60
-	],
-	"cabin_10": [
-		30,
-		52
-	],
-	"cabin_11": [
-		42,
-		42
-	],
-	"cabin_12": [
-		42,
-		42
-	],
-	"cabin_13": [
-		60,
-		60
-	],
-	"cabin_14": [
-		42,
-		42
-	],
-	"cabin_15": [
-		40,
-		48
-	],
-	"cabin_16": [
-		42,
-		42
-	],
-	"cabin_17": [
-		60,
-		60
-	],
-	"cabin_18": [
-		60,
-		60
-	],
-	"cabin_20": [
-		60,
-		60
-	],
-	"canyon_car_wreck": [
-		29,
-		19
-	],
-	"canyon_cliff_dwellings": [
-		48,
-		77
-	],
-	"canyon_gift_shop": [
-		56,
-		50
-	],
-	"canyon_gift_shop_parking": [
-		36,
-		40
-	],
-	"canyon_gift_shop_sign": [
-		4,
-		10
-	],
-	"canyon_mine": [
-		64,
-		44
-	],
-	"carlot_01": [
-		42,
-		42
-	],
-	"carlot_02": [
-		42,
-		42
-	],
-	"cave_01": [
-		33,
-		54
-	],
-	"cave_02": [
-		33,
-		54
-	],
-	"cave_03": [
-		44,
-		54
-	],
-	"cave_04": [
-		33,
-		54
-	],
-	"cave_05": [
-		26,
-		61
-	],
-	"cave_06": [
-		25,
-		25
-	],
-	"cave_07": [
-		60,
-		60
-	],
-	"cave_09": [
-		100,
-		100
-	],
-	"cave_10": [
-		25,
-		25
-	],
-	"cave_11": [
-		25,
-		25
-	],
-	"cave_12": [
-		25,
-		25
-	],
-	"cave_13": [
-		25,
-		25
-	],
-	"cave_14": [
-		25,
-		25
-	],
-	"cave_16": [
-		25,
-		25
-	],
-	"cave_17": [
-		25,
-		25
-	],
-	"cave_18": [
-		25,
-		25
-	],
-	"cave_19": [
-		25,
-		25
-	],
-	"cave_20": [
-		25,
-		25
-	],
-	"cemetery_01": [
-		42,
-		42
-	],
-	"cemetery_02": [
-		42,
-		42
-	],
-	"church_01": [
-		60,
-		60
-	],
-	"church_02": [
-		42,
-		42
-	],
-	"church_sm_01": [
-		42,
-		42
-	],
-	"city_center_01": [
-		60,
-		60
-	],
-	"commercial_site_01": [
-		42,
-		42
-	],
-	"commercial_site_02": [
-		42,
-		42
-	],
-	"commercial_strip_01": [
-		42,
-		42
-	],
-	"commercial_strip_02": [
-		42,
-		42
-	],
-	"commercial_strip_03": [
-		60,
-		60
-	],
-	"commercial_strip_04": [
-		42,
-		42
-	],
-	"commercial_strip_05": [
-		60,
-		60
-	],
-	"commercial_strip_07": [
-		42,
-		42
-	],
-	"commercial_strip_08": [
-		42,
-		42
-	],
-	"commercial_strip_09": [
-		42,
-		42
-	],
-	"commercial_strip_10": [
-		42,
-		42
-	],
-	"cornfield_lg": [
-		48,
-		48
-	],
-	"cornfield_med": [
-		24,
-		24
-	],
-	"cornfield_sm": [
-		12,
-		12
-	],
-	"country_junkyard_01": [
-		42,
-		42
-	],
-	"country_junkyard_02": [
-		60,
-		60
-	],
-	"countrytown_business_01": [
-		42,
-		42
-	],
-	"countrytown_business_02": [
-		42,
-		42
-	],
-	"countrytown_business_03": [
-		42,
-		42
-	],
-	"countrytown_business_04": [
-		42,
-		42
-	],
-	"countrytown_business_05": [
-		42,
-		42
-	],
-	"countrytown_business_06": [
-		42,
-		42
-	],
-	"countrytown_business_07": [
-		42,
-		42
-	],
-	"countrytown_business_08": [
-		42,
-		42
-	],
-	"countrytown_business_09": [
-		42,
-		42
-	],
-	"countrytown_business_10": [
-		42,
-		42
-	],
-	"countrytown_business_11": [
-		42,
-		42
-	],
-	"countrytown_business_12": [
-		42,
-		42
-	],
-	"countrytown_business_13": [
-		42,
-		42
-	],
-	"countrytown_business_14": [
-		42,
-		42
-	],
-	"countrytown_business_15": [
-		60,
-		60
-	],
-	"countrytown_business_16": [
-		42,
-		42
-	],
-	"countrytown_business_17": [
-		42,
-		42
-	],
-	"countrytown_church_02": [
-		42,
-		42
-	],
-	"courthouse_med_01": [
-		60,
-		60
-	],
-	"crater_deco_01": [
-		25,
-		25
-	],
-	"crater_deco_02": [
-		25,
-		25
-	],
-	"crater_deco_03": [
-		25,
-		25
-	],
-	"culvert_01": [
-		21,
-		45
-	],
-	"deco_coal_vein": [
-		2,
-		2
-	],
-	"deco_foilage_01": [
-		7,
-		7
-	],
-	"deco_foilage_02": [
-		7,
-		7
-	],
-	"deco_foilage_03": [
-		7,
-		7
-	],
-	"deco_foilage_04": [
-		7,
-		7
-	],
-	"deco_foilage_05": [
-		7,
-		7
-	],
-	"deco_iron_vein": [
-		2,
-		2
-	],
-	"deco_lead_vein": [
-		2,
-		2
-	],
-	"deco_nitrate_vein": [
-		2,
-		2
-	],
-	"deco_remnant_stone_01": [
-		8,
-		8
-	],
-	"deco_remnant_stone_02": [
-		9,
-		8
-	],
-	"deco_remnant_stone_03": [
-		9,
-		9
-	],
-	"deco_remnant_stone_04": [
-		9,
-		9
-	],
-	"deco_remnant_stone_05": [
-		9,
-		9
-	],
-	"deco_remnant_wood_01": [
-		8,
-		8
-	],
-	"deco_remnant_wood_02": [
-		6,
-		7
-	],
-	"deco_rubble_brick_01": [
-		5,
-		5
-	],
-	"deco_rubble_brick_02": [
-		5,
-		5
-	],
-	"deco_rubble_brick_03": [
-		5,
-		5
-	],
-	"deco_rubble_stone_01": [
-		5,
-		5
-	],
-	"deco_rubble_stone_02": [
-		7,
-		7
-	],
-	"deco_rubble_stone_03": [
-		4,
-		4
-	],
-	"deco_rubble_stone_04": [
-		7,
-		7
-	],
-	"deco_rubble_stone_05": [
-		9,
-		9
-	],
-	"deco_rubble_stone_06": [
-		5,
-		5
-	],
-	"deco_rubble_stone_07": [
-		5,
-		5
-	],
-	"deco_rubble_stone_08": [
-		7,
-		7
-	],
-	"deco_rubble_stone_09": [
-		9,
-		9
-	],
-	"deco_rubble_stone_10": [
-		4,
-		4
-	],
-	"deco_rubble_stone_11": [
-		7,
-		7
-	],
-	"deco_rubble_stone_12": [
-		7,
-		7
-	],
-	"deco_rubble_stone_13": [
-		7,
-		7
-	],
-	"deco_rubble_stone_14": [
-		7,
-		7
-	],
-	"deco_rubble_stone_15": [
-		7,
-		7
-	],
-	"deco_rubble_stone_16": [
-		7,
-		7
-	],
-	"deco_rubble_wood_01": [
-		7,
-		7
-	],
-	"deco_rubble_wood_02": [
-		5,
-		5
-	],
-	"deco_shale_vein": [
-		2,
-		2
-	],
-	"departure_bridge_01": [
-		32,
-		11
-	],
-	"departure_bridge_02": [
-		16,
-		11
-	],
-	"departure_bridge_1": [
-		146,
-		17
-	],
-	"departure_bridge_2": [
-		176,
-		19
-	],
-	"departure_city_blk_01": [
-		103,
-		103
-	],
-	"departure_city_blk_plaza": [
-		103,
-		103
-	],
-	"desert_arch": [
-		24,
-		8
-	],
-	"desert_form01": [
-		26,
-		29
-	],
-	"desert_form02": [
-		9,
-		10
-	],
-	"desert_town_blk_01": [
-		150,
-		161
-	],
-	"desert_town_blk_02": [
-		150,
-		100
-	],
-	"diersville_city_blk_01": [
-		135,
-		115
-	],
-	"diersville_city_blk_02": [
-		135,
-		115
-	],
-	"diner_01": [
-		42,
-		42
-	],
-	"diner_02": [
-		42,
-		42
-	],
-	"diner_03": [
-		42,
-		42
-	],
-	"diner_04": [
-		42,
-		42
-	],
-	"diner_07": [
-		60,
-		60
-	],
-	"docks_01": [
-		27,
-		27
-	],
-	"docks_02": [
-		44,
-		58
-	],
-	"docks_03": [
-		53,
-		54
-	],
-	"docks_04": [
-		12,
-		25
-	],
-	"docks_05": [
-		25,
-		25
-	],
-	"downtown_building_01": [
-		42,
-		42
-	],
-	"downtown_building_02": [
-		42,
-		42
-	],
-	"downtown_building_03": [
-		60,
-		60
-	],
-	"downtown_building_04": [
-		42,
-		42
-	],
-	"downtown_building_05": [
-		42,
-		42
-	],
-	"downtown_business_06": [
-		42,
-		42
-	],
-	"downtown_business_07": [
-		42,
-		42
-	],
-	"downtown_filler_01": [
-		25,
-		25
-	],
-	"downtown_filler_02": [
-		25,
-		25
-	],
-	"downtown_filler_03": [
-		25,
-		25
-	],
-	"downtown_filler_04": [
-		25,
-		25
-	],
-	"downtown_filler_05": [
-		25,
-		25
-	],
-	"downtown_filler_06": [
-		25,
-		25
-	],
-	"downtown_filler_07": [
-		25,
-		25
-	],
-	"downtown_filler_08": [
-		25,
-		25
-	],
-	"downtown_filler_09": [
-		25,
-		25
-	],
-	"downtown_filler_11": [
-		25,
-		25
-	],
-	"downtown_filler_12": [
-		25,
-		25
-	],
-	"downtown_filler_13": [
-		25,
-		25
-	],
-	"downtown_filler_14": [
-		25,
-		25
-	],
-	"downtown_filler_15": [
-		25,
-		25
-	],
-	"downtown_filler_21": [
-		25,
-		25
-	],
-	"downtown_filler_22": [
-		25,
-		25
-	],
-	"downtown_filler_23": [
-		25,
-		25
-	],
-	"downtown_filler_24": [
-		25,
-		25
-	],
-	"downtown_filler_25": [
-		25,
-		25
-	],
-	"downtown_filler_26": [
-		25,
-		25
-	],
-	"downtown_filler_27": [
-		25,
-		25
-	],
-	"downtown_filler_29": [
-		25,
-		25
-	],
-	"downtown_filler_30": [
-		25,
-		25
-	],
-	"downtown_filler_31": [
-		25,
-		25
-	],
-	"downtown_filler_park_01": [
-		25,
-		25
-	],
-	"downtown_filler_park_02": [
-		25,
-		25
-	],
-	"downtown_filler_park_03": [
-		25,
-		25
-	],
-	"downtown_filler_park_04": [
-		25,
-		25
-	],
-	"downtown_filler_park_05": [
-		25,
-		25
-	],
-	"downtown_filler_plaza_01": [
-		25,
-		25
-	],
-	"downtown_filler_plaza_02": [
-		25,
-		25
-	],
-	"downtown_filler_plaza_03": [
-		25,
-		25
-	],
-	"downtown_filler_plaza_04": [
-		25,
-		25
-	],
-	"downtown_filler_plaza_05": [
-		25,
-		25
-	],
-	"downtown_park_01": [
-		60,
-		60
-	],
-	"downtown_park_02": [
-		60,
-		60
-	],
-	"downtown_park_03": [
-		60,
-		60
-	],
-	"downtown_parking_lot_01": [
-		42,
-		42
-	],
-	"downtown_strip_01": [
-		42,
-		42
-	],
-	"downtown_strip_02": [
-		42,
-		42
-	],
-	"downtown_strip_03": [
-		42,
-		42
-	],
-	"downtown_strip_04": [
-		42,
-		42
-	],
-	"downtown_strip_05": [
-		42,
-		42
-	],
-	"downtown_strip_06": [
-		42,
-		42
-	],
-	"downtown_strip_07": [
-		42,
-		42
-	],
-	"downtown_strip_08": [
-		42,
-		25
-	],
-	"downtown_strip_09": [
-		42,
-		42
-	],
-	"downtown_strip_10": [
-		42,
-		42
-	],
-	"downtown_strip_11": [
-		42,
-		42
-	],
-	"downtown_strip_12": [
-		42,
-		42
-	],
-	"factory_01": [
-		100,
-		100
-	],
-	"factory_02": [
-		100,
-		100
-	],
-	"factory_03": [
-		60,
-		60
-	],
-	"farm_01": [
-		60,
-		60
-	],
-	"farm_02": [
-		60,
-		60
-	],
-	"farm_03": [
-		60,
-		60
-	],
-	"farm_04": [
-		60,
-		60
-	],
-	"farm_05": [
-		60,
-		60
-	],
-	"farm_06": [
-		60,
-		60
-	],
-	"farm_07": [
-		60,
-		60
-	],
-	"farm_08": [
-		60,
-		60
-	],
-	"farm_10": [
-		60,
-		60
-	],
-	"farm_11": [
-		60,
-		60
-	],
-	"farm_12": [
-		60,
-		60
-	],
-	"farm_13": [
-		100,
-		100
-	],
-	"farm_14": [
-		60,
-		60
-	],
-	"farm_15": [
-		60,
-		60
-	],
-	"farm_16": [
-		60,
-		60
-	],
-	"farm_17": [
-		60,
-		60
-	],
-	"farm_18": [
-		60,
-		60
-	],
-	"farm_19": [
-		60,
-		60
-	],
-	"farm_20": [
-		60,
-		60
-	],
-	"fastfood_01": [
-		42,
-		42
-	],
-	"fastfood_02": [
-		42,
-		42
-	],
-	"fastfood_03": [
-		42,
-		42
-	],
-	"fastfood_04": [
-		42,
-		42
-	],
-	"fastfood_05": [
-		42,
-		42
-	],
-	"fastfood_06": [
-		42,
-		42
-	],
-	"fastfood_07": [
-		42,
-		42
-	],
-	"field_concert_01": [
-		100,
-		100
-	],
-	"fire_station_01": [
-		42,
-		42
-	],
-	"fire_station_02": [
-		42,
-		42
-	],
-	"fire_station_03": [
-		42,
-		42
-	],
-	"fire_station_04": [
-		42,
-		42
-	],
-	"football_stadium": [
-		100,
-		100
-	],
-	"funeral_home_01": [
-		42,
-		42
-	],
-	"gas_station_01": [
-		42,
-		42
-	],
-	"gas_station_02": [
-		42,
-		42
-	],
-	"gas_station_03": [
-		42,
-		42
-	],
-	"gas_station_04": [
-		60,
-		60
-	],
-	"gas_station_05": [
-		60,
-		60
-	],
-	"gas_station_06": [
-		42,
-		42
-	],
-	"gas_station_07": [
-		60,
-		60
-	],
-	"gas_station_08": [
-		42,
-		42
-	],
-	"gas_station_09": [
-		60,
-		60
-	],
-	"gas_station_10": [
-		42,
-		42
-	],
-	"gas_station_11": [
-		42,
-		42
-	],
-	"gas_station_12": [
-		60,
-		60
-	],
-	"gravestowne_city_blk_01": [
-		103,
-		103
-	],
-	"gravestowne_city_blk_half": [
-		103,
-		25
-	],
-	"gravestowne_city_blk_quarter": [
-		25,
-		25
-	],
-	"gravestowne_street_crater_01": [
-		9,
-		9
-	],
-	"hospital_01": [
-		100,
-		100
-	],
-	"hotel_01": [
-		60,
-		60
-	],
-	"hotel_02": [
-		100,
-		100
-	],
-	"hotel_03": [
-		100,
-		100
-	],
-	"hotel_04": [
-		60,
-		60
-	],
-	"hotel_ostrich": [
-		60,
-		60
-	],
-	"house_burnt_01": [
-		42,
-		42
-	],
-	"house_burnt_02": [
-		42,
-		42
-	],
-	"house_burnt_03": [
-		42,
-		42
-	],
-	"house_burnt_04": [
-		42,
-		42
-	],
-	"house_burnt_05": [
-		42,
-		42
-	],
-	"house_burnt_06": [
-		42,
-		42
-	],
-	"house_construction_01": [
-		42,
-		42
-	],
-	"house_construction_02": [
-		42,
-		42
-	],
-	"house_construction_03": [
-		42,
-		42
-	],
-	"house_construction_04": [
-		60,
-		60
-	],
-	"house_construction_05": [
-		42,
-		42
-	],
-	"house_country_01": [
-		42,
-		42
-	],
-	"house_modern_01": [
-		42,
-		42
-	],
-	"house_modern_02": [
-		60,
-		60
-	],
-	"house_modern_03": [
-		42,
-		42
-	],
-	"house_modern_04": [
-		42,
-		42
-	],
-	"house_modern_05": [
-		60,
-		60
-	],
-	"house_modern_06": [
-		42,
-		42
-	],
-	"house_modern_07": [
-		42,
-		42
-	],
-	"house_modern_08": [
-		42,
-		42
-	],
-	"house_modern_09": [
-		42,
-		42
-	],
-	"house_modern_10": [
-		42,
-		42
-	],
-	"house_modern_11": [
-		42,
-		42
-	],
-	"house_modern_12": [
-		42,
-		42
-	],
-	"house_modern_13": [
-		42,
-		42
-	],
-	"house_modern_14": [
-		42,
-		42
-	],
-	"house_modern_15": [
-		42,
-		42
-	],
-	"house_modern_16": [
-		42,
-		42
-	],
-	"house_modern_17": [
-		42,
-		42
-	],
-	"house_modern_18": [
-		100,
-		100
-	],
-	"house_modern_19": [
-		42,
-		42
-	],
-	"house_modern_20": [
-		42,
-		42
-	],
-	"house_modern_21": [
-		42,
-		42
-	],
-	"house_modern_22": [
-		42,
-		42
-	],
-	"house_modern_23": [
-		42,
-		42
-	],
-	"house_modern_24": [
-		100,
-		100
-	],
-	"house_modern_25": [
-		42,
-		42
-	],
-	"house_modern_26": [
-		42,
-		42
-	],
-	"house_modern_27": [
-		42,
-		42
-	],
-	"house_modern_28": [
-		42,
-		42
-	],
-	"house_modern_29": [
-		42,
-		42
-	],
-	"house_modern_30": [
-		60,
-		60
-	],
-	"house_modern_31": [
-		60,
-		60
-	],
-	"house_modern_32": [
-		42,
-		42
-	],
-	"house_modern_33": [
-		42,
-		42
-	],
-	"house_modern_34": [
-		42,
-		42
-	],
-	"house_modern_35": [
-		42,
-		42
-	],
-	"house_old_bungalow_01": [
-		42,
-		42
-	],
-	"house_old_bungalow_02": [
-		42,
-		42
-	],
-	"house_old_bungalow_03": [
-		42,
-		42
-	],
-	"house_old_bungalow_04": [
-		42,
-		42
-	],
-	"house_old_bungalow_05": [
-		42,
-		42
-	],
-	"house_old_bungalow_06": [
-		42,
-		42
-	],
-	"house_old_bungalow_07": [
-		42,
-		42
-	],
-	"house_old_bungalow_08": [
-		42,
-		42
-	],
-	"house_old_bungalow_09": [
-		42,
-		42
-	],
-	"house_old_bungalow_10": [
-		42,
-		42
-	],
-	"house_old_bungalow_11": [
-		60,
-		60
-	],
-	"house_old_bungalow_12": [
-		42,
-		42
-	],
-	"house_old_cottage_01": [
-		42,
-		42
-	],
-	"house_old_cottage_01_detail": [
-		33,
-		38
-	],
-	"house_old_cottage_01_path": [
-		41,
-		42
-	],
-	"house_old_cottage_01_sleeper": [
-		33,
-		38
-	],
-	"house_old_gambrel_01": [
-		42,
-		42
-	],
-	"house_old_gambrel_02": [
-		42,
-		42
-	],
-	"house_old_gambrel_03": [
-		100,
-		100
-	],
-	"house_old_gambrel_04": [
-		42,
-		42
-	],
-	"house_old_mansard_01": [
-		42,
-		42
-	],
-	"house_old_mansard_02": [
-		60,
-		60
-	],
-	"house_old_mansard_03": [
-		42,
-		42
-	],
-	"house_old_mansard_04": [
-		42,
-		42
-	],
-	"house_old_mansard_05": [
-		42,
-		42
-	],
-	"house_old_mansard_06": [
-		100,
-		100
-	],
-	"house_old_mansard_07": [
-		60,
-		60
-	],
-	"house_old_modular_01": [
-		42,
-		42
-	],
-	"house_old_modular_02": [
-		42,
-		42
-	],
-	"house_old_modular_03": [
-		42,
-		42
-	],
-	"house_old_modular_04": [
-		42,
-		42
-	],
-	"house_old_modular_05": [
-		42,
-		42
-	],
-	"house_old_modular_06": [
-		42,
-		42
-	],
-	"house_old_modular_07": [
-		42,
-		42
-	],
-	"house_old_modular_08": [
-		42,
-		42
-	],
-	"house_old_pyramid_01": [
-		42,
-		42
-	],
-	"house_old_pyramid_02": [
-		42,
-		42
-	],
-	"house_old_pyramid_03": [
-		42,
-		42
-	],
-	"house_old_pyramid_04": [
-		42,
-		42
-	],
-	"house_old_pyramid_05": [
-		42,
-		42
-	],
-	"house_old_ranch_01": [
-		60,
-		60
-	],
-	"house_old_ranch_02": [
-		60,
-		60
-	],
-	"house_old_ranch_03": [
-		60,
-		60
-	],
-	"house_old_ranch_04": [
-		60,
-		60
-	],
-	"house_old_ranch_05": [
-		60,
-		60
-	],
-	"house_old_ranch_06": [
-		60,
-		60
-	],
-	"house_old_ranch_07": [
-		60,
-		60
-	],
-	"house_old_ranch_08": [
-		60,
-		60
-	],
-	"house_old_ranch_09": [
-		60,
-		60
-	],
-	"house_old_ranch_10": [
-		60,
-		60
-	],
-	"house_old_ranch_11": [
-		42,
-		42
-	],
-	"house_old_ranch_12": [
-		60,
-		60
-	],
-	"house_old_ranch_13": [
-		60,
-		60
-	],
-	"house_old_tudor_01": [
-		42,
-		42
-	],
-	"house_old_tudor_02": [
-		42,
-		42
-	],
-	"house_old_tudor_03": [
-		60,
-		60
-	],
-	"house_old_tudor_04": [
-		42,
-		42
-	],
-	"house_old_tudor_05": [
-		42,
-		42
-	],
-	"house_old_tudor_06": [
-		42,
-		42
-	],
-	"house_old_victorian_01": [
-		60,
-		60
-	],
-	"house_old_victorian_02": [
-		42,
-		42
-	],
-	"house_old_victorian_03": [
-		60,
-		60
-	],
-	"house_old_victorian_04": [
-		42,
-		42
-	],
-	"house_old_victorian_05": [
-		42,
-		42
-	],
-	"house_old_victorian_06": [
-		42,
-		42
-	],
-	"house_old_victorian_07": [
-		42,
-		42
-	],
-	"house_old_victorian_08": [
-		42,
-		42
-	],
-	"house_old_victorian_09": [
-		42,
-		42
-	],
-	"house_old_victorian_10": [
-		42,
-		42
-	],
-	"house_old_victorian_11": [
-		42,
-		42
-	],
-	"house_old_victorian_12": [
-		42,
-		42
-	],
-	"housing_development_01": [
-		100,
-		100
-	],
-	"hwy_overpass_sign_01": [
-		1,
-		17
-	],
-	"indian_burial_grounds_01": [
-		27,
-		27
-	],
-	"industrial_60_01": [
-		60,
-		60
-	],
-	"industrial_60_02": [
-		60,
-		60
-	],
-	"industrial_60_03": [
-		60,
-		60
-	],
-	"industrial_60_04": [
-		60,
-		60
-	],
-	"industrial_business_08": [
-		42,
-		42
-	],
-	"industrial_strip_01": [
-		42,
-		42
-	],
-	"industrial_strip_02": [
-		42,
-		42
-	],
-	"industrial_strip_03": [
-		42,
-		42
-	],
-	"industrial_strip_05": [
-		42,
-		42
-	],
-	"industrial_strip_06": [
-		42,
-		42
-	],
-	"industrial_strip_09": [
-		42,
-		42
-	],
-	"industrial_strip_10": [
-		42,
-		42
-	],
-	"industrial_strip_11": [
-		42,
-		42
-	],
-	"installation_red_mesa": [
-		72,
-		83
-	],
-	"junkyard_01": [
-		60,
-		60
-	],
-	"lodge_01": [
-		60,
-		60
-	],
-	"lot_country_01": [
-		42,
-		42
-	],
-	"lot_country_02": [
-		42,
-		42
-	],
-	"lot_countryres_01": [
-		25,
-		25
-	],
-	"lot_countryres_02": [
-		25,
-		25
-	],
-	"lot_countryres_07": [
-		25,
-		25
-	],
-	"lot_countryres_08": [
-		25,
-		25
-	],
-	"lot_countryres_09": [
-		25,
-		25
-	],
-	"lot_countryres_10": [
-		25,
-		25
-	],
-	"lot_countryres_11": [
-		25,
-		25
-	],
-	"lot_countryres_12": [
-		25,
-		25
-	],
-	"lot_countryres_13": [
-		25,
-		25
-	],
-	"lot_countryres_14": [
-		25,
-		25
-	],
-	"lot_countryres_15": [
-		25,
-		25
-	],
-	"lot_countryres_16": [
-		25,
-		25
-	],
-	"lot_countryres_17": [
-		25,
-		25
-	],
-	"lot_countryres_18": [
-		25,
-		25
-	],
-	"lot_countryres_20": [
-		25,
-		25
-	],
-	"lot_countrytown_01": [
-		25,
-		25
-	],
-	"lot_countrytown_02": [
-		25,
-		25
-	],
-	"lot_countrytown_05": [
-		25,
-		25
-	],
-	"lot_countrytown_06": [
-		25,
-		25
-	],
-	"lot_countrytown_07": [
-		25,
-		25
-	],
-	"lot_countrytown_08": [
-		25,
-		25
-	],
-	"lot_countrytown_10": [
-		25,
-		25
-	],
-	"lot_countrytown_12": [
-		25,
-		25
-	],
-	"lot_countrytown_13": [
-		25,
-		25
-	],
-	"lot_downtown_filler_01": [
-		25,
-		25
-	],
-	"lot_film_01": [
-		42,
-		42
-	],
-	"lot_industrial_01": [
-		25,
-		25
-	],
-	"lot_industrial_02": [
-		25,
-		25
-	],
-	"lot_industrial_03": [
-		25,
-		25
-	],
-	"lot_industrial_04": [
-		25,
-		25
-	],
-	"lot_industrial_05": [
-		25,
-		25
-	],
-	"lot_industrial_06": [
-		25,
-		25
-	],
-	"lot_industrial_07": [
-		25,
-		25
-	],
-	"lot_industrial_08": [
-		25,
-		25
-	],
-	"lot_industrial_09": [
-		25,
-		25
-	],
-	"lot_industrial_10": [
-		25,
-		25
-	],
-	"lot_industrial_11": [
-		25,
-		25
-	],
-	"lot_industrial_12": [
-		25,
-		25
-	],
-	"lot_industrial_13": [
-		25,
-		25
-	],
-	"lot_industrial_14": [
-		25,
-		25
-	],
-	"lot_industrial_15": [
-		25,
-		25
-	],
-	"lot_industrial_16": [
-		25,
-		25
-	],
-	"lot_industrial_17": [
-		25,
-		25
-	],
-	"lot_industrial_18": [
-		25,
-		25
-	],
-	"lot_industrial_19": [
-		25,
-		25
-	],
-	"lot_industrial_20": [
-		25,
-		25
-	],
-	"lot_industrial_21": [
-		25,
-		25
-	],
-	"lot_rural_filler_01": [
-		60,
-		60
-	],
-	"lot_rural_filler_02": [
-		60,
-		60
-	],
-	"lot_rural_filler_03": [
-		60,
-		60
-	],
-	"lot_rural_filler_04": [
-		60,
-		60
-	],
-	"lot_rural_filler_05": [
-		60,
-		60
-	],
-	"lot_rural_filler_06": [
-		60,
-		60
-	],
-	"lot_rural_filler_07": [
-		60,
-		60
-	],
-	"lot_rural_filler_08": [
-		60,
-		60
-	],
-	"lot_rural_filler_09": [
-		60,
-		60
-	],
-	"lot_rural_filler_10": [
-		60,
-		60
-	],
-	"lot_rural_filler_11": [
-		60,
-		60
-	],
-	"lot_rural_filler_12": [
-		60,
-		60
-	],
-	"lot_rural_filler_13": [
-		60,
-		60
-	],
-	"lot_rural_filler_14": [
-		60,
-		60
-	],
-	"lot_rural_filler_15": [
-		60,
-		60
-	],
-	"lot_rural_filler_16": [
-		60,
-		60
-	],
-	"lot_rural_filler_17": [
-		60,
-		60
-	],
-	"lot_rural_filler_18": [
-		60,
-		60
-	],
-	"lot_rural_filler_19": [
-		60,
-		60
-	],
-	"lot_rural_filler_20": [
-		60,
-		60
-	],
-	"lot_rural_filler_21": [
-		60,
-		60
-	],
-	"lot_rural_filler_22": [
-		60,
-		60
-	],
-	"lot_rural_filler_23": [
-		60,
-		60
-	],
-	"lot_rural_filler_24": [
-		60,
-		60
-	],
-	"lot_rural_filler_25": [
-		60,
-		60
-	],
-	"lot_rural_filler_26": [
-		60,
-		60
-	],
-	"lot_rural_filler_27": [
-		60,
-		60
-	],
-	"lot_rural_filler_28": [
-		60,
-		60
-	],
-	"lot_rural_filler_29": [
-		60,
-		60
-	],
-	"lot_rural_filler_30": [
-		60,
-		60
-	],
-	"lot_vacant_01": [
-		25,
-		25
-	],
-	"lot_vacant_02": [
-		25,
-		25
-	],
-	"lot_vacant_03": [
-		25,
-		25
-	],
-	"lot_vacant_04": [
-		25,
-		25
-	],
-	"lot_vacant_05": [
-		42,
-		42
-	],
-	"lot_vacant_06": [
-		25,
-		25
-	],
-	"lot_vacant_07": [
-		25,
-		25
-	],
-	"lot_vacant_08": [
-		25,
-		25
-	],
-	"lot_vacant_09": [
-		25,
-		25
-	],
-	"mine_01": [
-		100,
-		100
-	],
-	"motel_01": [
-		60,
-		60
-	],
-	"motel_02": [
-		42,
-		42
-	],
-	"motel_03": [
-		60,
-		60
-	],
-	"motel_04": [
-		60,
-		60
-	],
-	"motel_05": [
-		42,
-		42
-	],
-	"navezgane_waterfall_01": [
-		14,
-		3
-	],
-	"nursing_home_01": [
-		100,
-		100
-	],
-	"office_01": [
-		42,
-		42
-	],
-	"office_02": [
-		42,
-		42
-	],
-	"office_03": [
-		42,
-		42
-	],
-	"office_04": [
-		42,
-		42
-	],
-	"office_05": [
-		42,
-		42
-	],
-	"office_06": [
-		60,
-		60
-	],
-	"office_07": [
-		42,
-		42
-	],
-	"oldwest_business_01": [
-		25,
-		25
-	],
-	"oldwest_business_02": [
-		25,
-		25
-	],
-	"oldwest_business_03": [
-		50,
-		25
-	],
-	"oldwest_business_04": [
-		25,
-		25
-	],
-	"oldwest_business_05": [
-		25,
-		25
-	],
-	"oldwest_business_06": [
-		25,
-		25
-	],
-	"oldwest_business_07": [
-		25,
-		25
-	],
-	"oldwest_business_08": [
-		25,
-		25
-	],
-	"oldwest_business_09": [
-		25,
-		25
-	],
-	"oldwest_business_10": [
-		25,
-		25
-	],
-	"oldwest_business_11": [
-		25,
-		25
-	],
-	"oldwest_business_12": [
-		25,
-		25
-	],
-	"oldwest_business_13": [
-		25,
-		25
-	],
-	"oldwest_business_14": [
-		25,
-		25
-	],
-	"oldwest_church": [
-		42,
-		42
-	],
-	"oldwest_coal_factory": [
-		42,
-		42
-	],
-	"oldwest_gallows": [
-		25,
-		25
-	],
-	"oldwest_jail": [
-		25,
-		25
-	],
-	"oldwest_stables": [
-		25,
-		25
-	],
-	"oldwest_strip_01": [
-		50,
-		25
-	],
-	"oldwest_strip_02": [
-		50,
-		25
-	],
-	"oldwest_strip_03": [
-		50,
-		25
-	],
-	"oldwest_strip_04": [
-		50,
-		25
-	],
-	"oldwest_watertower": [
-		25,
-		25
-	],
-	"park_01": [
-		42,
-		42
-	],
-	"park_02": [
-		42,
-		42
-	],
-	"park_03": [
-		42,
-		42
-	],
-	"park_basketball": [
-		42,
-		42
-	],
-	"park_plaza_01": [
-		49,
-		47
-	],
-	"park_plaza_02": [
-		46,
-		46
-	],
-	"parking_garage_01": [
-		42,
-		42
-	],
-	"parking_garage_02": [
-		42,
-		42
-	],
-	"parking_garage_03": [
-		42,
-		42
-	],
-	"parking_garage_04": [
-		42,
-		42
-	],
-	"parking_lot_01": [
-		42,
-		42
-	],
-	"parking_lot_02": [
-		42,
-		42
-	],
-	"parking_lot_03": [
-		42,
-		42
-	],
-	"part_5m_water_tower": [
-		7,
-		8
-	],
-	"part_7m_tunnel": [
-		9,
-		21
-	],
-	"part_ambulance_01": [
-		5,
-		8
-	],
-	"part_appliance_pile_01": [
-		4,
-		4
-	],
-	"part_appliance_pile_02": [
-		4,
-		4
-	],
-	"part_arch_ramp": [
-		9,
-		9
-	],
-	"part_arched_window": [
-		4,
-		2
-	],
-	"part_armoire_setups": [
-		18,
-		33
-	],
-	"part_armytruck_01": [
-		5,
-		13
-	],
-	"part_asphalt_hole_01": [
-		16,
-		17
-	],
-	"part_atrium_19x19_octagon": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_01_1way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_01_2way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_01_3way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_01_4way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_02_1way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_02_2way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_02_3way": [
-		21,
-		21
-	],
-	"part_atrium_19x19_octagon_02_4way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_03_1way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_03_2way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_03_3way": [
-		19,
-		19
-	],
-	"part_atrium_19x19_octagon_03_4way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_ocatagon": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_01_1way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_01_2way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_01_3way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_01_4way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_02_1way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_02_2way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_02_3way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_02_4way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_03_1way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_03_2way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_03_3way": [
-		21,
-		21
-	],
-	"part_atrium_21x21_octagon_03_4way": [
-		21,
-		21
-	],
-	"part_bandit_sheets": [
-		17,
-		7
-	],
-	"part_billboard_beanthere": [
-		13,
-		4
-	],
-	"part_billboard_diagonal": [
-		9,
-		9
-	],
-	"part_billboard_digital": [
-		11,
-		3
-	],
-	"part_billboard_donate_blood": [
-		10,
-		4
-	],
-	"part_billboard_end_here": [
-		10,
-		4
-	],
-	"part_billboard_fizz": [
-		13,
-		4
-	],
-	"part_billboard_kripnews": [
-		13,
-		5
-	],
-	"part_billboard_luigi": [
-		13,
-		4
-	],
-	"part_billboard_mammapizza": [
-		13,
-		5
-	],
-	"part_billboard_meltdowns": [
-		13,
-		5
-	],
-	"part_billboard_mycell": [
-		13,
-		5
-	],
-	"part_billboard_pills": [
-		13,
-		4
-	],
-	"part_billboard_umove": [
-		13,
-		5
-	],
-	"part_brewing_equipment_01": [
-		4,
-		7
-	],
-	"part_bridge_10x10_end_01": [
-		10,
-		10
-	],
-	"part_bridge_10x10_tile_01": [
-		10,
-		10
-	],
-	"part_building_billboard": [
-		10,
-		4
-	],
-	"part_bunkbed_01": [
-		4,
-		2
-	],
-	"part_bunkbed_02": [
-		7,
-		3
-	],
-	"part_bunkbed_03": [
-		4,
-		3
-	],
-	"part_bus_stop_01": [
-		9,
-		4
-	],
-	"part_bus_stop_02": [
-		5,
-		10
-	],
-	"part_bus_stop_03": [
-		5,
-		11
-	],
-	"part_bus_stop_04": [
-		11,
-		5
-	],
-	"part_camp_utility_celltower_03": [
-		12,
-		8
-	],
-	"part_campsite_01": [
-		9,
-		12
-	],
-	"part_car_accident_01": [
-		8,
-		13
-	],
-	"part_car_accident_02": [
-		16,
-		16
-	],
-	"part_car_on_blocks_01": [
-		4,
-		4
-	],
-	"part_cave_supports": [
-		16,
-		5
-	],
-	"part_chain_link_fences": [
-		19,
-		24
-	],
-	"part_chicken_coup_01": [
-		7,
-		7
-	],
-	"part_chicken_coup_02": [
-		7,
-		7
-	],
-	"part_chicken_coup_03": [
-		7,
-		7
-	],
-	"part_chicken_coup_04": [
-		7,
-		7
-	],
-	"part_cinema_sign_21_59": [
-		5,
-		2
-	],
-	"part_cinema_sign_lone_wolf": [
-		5,
-		2
-	],
-	"part_cinema_sign_mamas_justice": [
-		5,
-		2
-	],
-	"part_cinema_sign_not_alive": [
-		5,
-		2
-	],
-	"part_cinema_sign_sexual_tension": [
-		5,
-		2
-	],
-	"part_citysign_fallen": [
-		13,
-		12
-	],
-	"part_citysign_noname": [
-		2,
-		13
-	],
-	"part_clocks": [
-		15,
-		1
-	],
-	"part_coffee_stand": [
-		11,
-		7
-	],
-	"part_concert_sign_01": [
-		7,
-		2
-	],
-	"part_concert_sign_02": [
-		7,
-		2
-	],
-	"part_concert_sign_03": [
-		7,
-		2
-	],
-	"part_concert_sign_04": [
-		7,
-		2
-	],
-	"part_container_mobile_crane": [
-		8,
-		11
-	],
-	"part_countryresidential_back_lot1": [
-		25,
-		17
-	],
-	"part_countryresidential_back_lot2": [
-		25,
-		17
-	],
-	"part_countryresidential_back_lot3": [
-		14,
-		6
-	],
-	"part_countryresidential_back_lot4": [
-		17,
-		47
-	],
-	"part_countryresidential_back_lot5": [
-		4,
-		12
-	],
-	"part_countryresidential_back_lot6": [
-		4,
-		10
-	],
-	"part_countryresidential_back_lot7": [
-		5,
-		11
-	],
-	"part_countryresidential_back_lot8": [
-		5,
-		11
-	],
-	"part_countrytown_junk": [
-		26,
-		25
-	],
-	"part_crane_rear": [
-		5,
-		3
-	],
-	"part_crane_tip": [
-		1,
-		6
-	],
-	"part_crosswalk": [
-		1,
-		1
-	],
-	"part_curtains_drapes": [
-		45,
-		3
-	],
-	"part_departure_sign_01": [
-		5,
-		2
-	],
-	"part_diersville_sign_01": [
-		5,
-		2
-	],
-	"part_display_armor_01": [
-		3,
-		3
-	],
-	"part_doorway_3x3_trimmed_sc": [
-		29,
-		13
-	],
-	"part_doorway_brick_3x3_trimmed_01": [
-		5,
-		1
-	],
-	"part_doorway_brick_3x3_trimmed_02": [
-		9,
-		1
-	],
-	"part_doorway_brick_3x3_trimmed_03": [
-		13,
-		1
-	],
-	"part_doorway_concrete_3x3_trimmed_01": [
-		5,
-		1
-	],
-	"part_doorway_concrete_3x3_trimmed_02": [
-		9,
-		1
-	],
-	"part_doorway_concrete_3x3_trimmed_03": [
-		13,
-		1
-	],
-	"part_doorway_glass_2x2_01_broken_left": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_01_broken_right": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_01_bulletproof_left": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_01_bulletproof_right": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_01_left": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_01_right": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_02": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_02_broken": [
-		2,
-		2
-	],
-	"part_doorway_glass_2x2_02_bulletproof": [
-		2,
-		2
-	],
-	"part_doorway_glass_3x3_01": [
-		3,
-		2
-	],
-	"part_doorway_glass_3x3_01_broken": [
-		3,
-		2
-	],
-	"part_doorway_glass_3x3_01_bulletproof": [
-		3,
-		2
-	],
-	"part_doorway_glass_4x3_01": [
-		4,
-		2
-	],
-	"part_doorway_glass_4x3_01_broken": [
-		4,
-		2
-	],
-	"part_doorway_glass_4x3_01_bulletproof": [
-		4,
-		2
-	],
-	"part_doorway_glass_5x3_01": [
-		5,
-		2
-	],
-	"part_doorway_glass_5x3_01_broken": [
-		5,
-		2
-	],
-	"part_doorway_glass_5x3_01_bulletproof": [
-		5,
-		2
-	],
-	"part_doorway_glass_6x3_01": [
-		6,
-		2
-	],
-	"part_doorway_glass_6x3_01_broken": [
-		6,
-		2
-	],
-	"part_doorway_glass_6x3_01_bulletproof": [
-		6,
-		2
-	],
-	"part_doorway_metal_3x3_trimmed_01": [
-		5,
-		1
-	],
-	"part_doorway_metal_3x3_trimmed_02": [
-		9,
-		1
-	],
-	"part_doorway_metal_3x3_trimmed_03": [
-		13,
-		1
-	],
-	"part_doorway_wood_3x3_trimmed_01": [
-		5,
-		1
-	],
-	"part_doorway_wood_3x3_trimmed_02": [
-		9,
-		1
-	],
-	"part_doorway_wood_3x3_trimmed_03": [
-		13,
-		1
-	],
-	"part_dormer_ramp_01": [
-		3,
-		6
-	],
-	"part_dormer_wedge_01": [
-		3,
-		7
-	],
-	"part_downtown_hotel_sign": [
-		7,
-		1
-	],
-	"part_downtown_road_construction": [
-		16,
-		35
-	],
-	"part_driveway_countryresidential_01": [
-		4,
-		1
-	],
-	"part_driveway_countryresidential_02": [
-		12,
-		1
-	],
-	"part_driveway_countryresidential_03": [
-		6,
-		1
-	],
-	"part_driveway_countryresidential_04": [
-		11,
-		1
-	],
-	"part_driveway_countryresidential_05": [
-		9,
-		1
-	],
-	"part_driveway_countryresidential_06": [
-		6,
-		1
-	],
-	"part_driveway_countryresidential_07": [
-		5,
-		1
-	],
-	"part_driveway_countryresidential_08": [
-		13,
-		1
-	],
-	"part_driveway_countryresidential_09": [
-		7,
-		1
-	],
-	"part_driveway_countryresidential_10": [
-		5,
-		1
-	],
-	"part_driveway_countryresidential_11": [
-		16,
-		1
-	],
-	"part_driveway_countryresidential_12": [
-		8,
-		1
-	],
-	"part_driveway_countryresidential_13": [
-		31,
-		1
-	],
-	"part_driveway_countryresidential_14": [
-		10,
-		1
-	],
-	"part_driveway_countryresidential_15": [
-		16,
-		1
-	],
-	"part_driveway_countryresidential_16": [
-		5,
-		1
-	],
-	"part_driveway_countrytown_01": [
-		12,
-		2
-	],
-	"part_driveway_countrytown_02": [
-		7,
-		2
-	],
-	"part_driveway_countrytown_03": [
-		6,
-		2
-	],
-	"part_driveway_countrytown_04": [
-		15,
-		2
-	],
-	"part_driveway_countrytown_05": [
-		6,
-		2
-	],
-	"part_driveway_countrytown_06": [
-		8,
-		2
-	],
-	"part_driveway_countrytown_07": [
-		9,
-		2
-	],
-	"part_driveway_countrytown_08": [
-		11,
-		2
-	],
-	"part_driveway_countrytown_09": [
-		14,
-		2
-	],
-	"part_driveway_countrytown_10": [
-		10,
-		2
-	],
-	"part_driveway_countrytown_11": [
-		7,
-		2
-	],
-	"part_driveway_countrytown_12": [
-		13,
-		2
-	],
-	"part_driveway_countrytown_13": [
-		5,
-		2
-	],
-	"part_driveway_countrytown_14": [
-		20,
-		2
-	],
-	"part_driveway_countrytown_15": [
-		23,
-		2
-	],
-	"part_driveway_countrytown_16": [
-		6,
-		2
-	],
-	"part_driveway_countrytown_17": [
-		6,
-		2
-	],
-	"part_driveway_countrytown_18": [
-		7,
-		2
-	],
-	"part_driveway_countrytown_19": [
-		10,
-		2
-	],
-	"part_driveway_countrytown_20": [
-		23,
-		2
-	],
-	"part_driveway_countrytown_21": [
-		41,
-		2
-	],
-	"part_driveway_countrytown_22": [
-		36,
-		2
-	],
-	"part_driveway_countrytown_23": [
-		44,
-		2
-	],
-	"part_driveway_countrytown_24": [
-		12,
-		2
-	],
-	"part_driveway_countrytown_25": [
-		24,
-		2
-	],
-	"part_driveway_countrytown_26": [
-		5,
-		2
-	],
-	"part_driveway_countrytown_asphalt_04": [
-		4,
-		2
-	],
-	"part_driveway_culdesac_01": [
-		6,
-		6
-	],
-	"part_driveway_culdesac_02": [
-		7,
-		7
-	],
-	"part_driveway_gateway_01": [
-		7,
-		2
-	],
-	"part_driveway_gateway_02": [
-		7,
-		2
-	],
-	"part_driveway_gateway_03": [
-		11,
-		2
-	],
-	"part_driveway_gateway_04": [
-		9,
-		2
-	],
-	"part_driveway_gateway_05": [
-		8,
-		2
-	],
-	"part_driveway_gateway_06": [
-		10,
-		2
-	],
-	"part_driveway_gateway_07": [
-		59,
-		2
-	],
-	"part_driveway_gateway_08": [
-		21,
-		2
-	],
-	"part_driveway_gateway_09": [
-		13,
-		2
-	],
-	"part_driveway_gateway_10": [
-		44,
-		2
-	],
-	"part_driveway_gateway_11": [
-		24,
-		2
-	],
-	"part_driveway_gateway_12": [
-		15,
-		2
-	],
-	"part_driveway_gateway_checkpoint_01": [
-		40,
-		19
-	],
-	"part_driveway_gateway_checkpoint_02": [
-		50,
-		19
-	],
-	"part_driveway_gateway_checkpoint_03": [
-		29,
-		18
-	],
-	"part_driveway_gateway_checkpoint_04": [
-		52,
-		19
-	],
-	"part_driveway_gateway_checkpoint_05": [
-		18,
-		29
-	],
-	"part_driveway_hospital_01_navezgane": [
-		100,
-		3
-	],
-	"part_driveway_industrial_01": [
-		7,
-		1
-	],
-	"part_driveway_industrial_02": [
-		13,
-		1
-	],
-	"part_driveway_industrial_03": [
-		6,
-		1
-	],
-	"part_driveway_industrial_04": [
-		10,
-		1
-	],
-	"part_driveway_industrial_05": [
-		20,
-		1
-	],
-	"part_driveway_industrial_06": [
-		23,
-		1
-	],
-	"part_driveway_industrial_07": [
-		40,
-		1
-	],
-	"part_driveway_industrial_08": [
-		9,
-		1
-	],
-	"part_driveway_industrial_09": [
-		17,
-		1
-	],
-	"part_driveway_industrial_10": [
-		8,
-		1
-	],
-	"part_driveway_industrial_11": [
-		14,
-		1
-	],
-	"part_driveway_industrial_12": [
-		15,
-		1
-	],
-	"part_driveway_industrial_13": [
-		18,
-		1
-	],
-	"part_driveway_industrial_14": [
-		33,
-		1
-	],
-	"part_driveway_residential_01": [
-		6,
-		5
-	],
-	"part_driveway_residential_02": [
-		8,
-		5
-	],
-	"part_driveway_residential_03": [
-		9,
-		5
-	],
-	"part_driveway_residential_04": [
-		7,
-		5
-	],
-	"part_driveway_residential_05": [
-		12,
-		5
-	],
-	"part_driveway_residential_06": [
-		6,
-		5
-	],
-	"part_driveway_residential_07": [
-		15,
-		5
-	],
-	"part_driveway_residential_08": [
-		18,
-		5
-	],
-	"part_driveway_residential_09": [
-		7,
-		5
-	],
-	"part_driveway_residential_10": [
-		10,
-		5
-	],
-	"part_driveway_residential_11": [
-		9,
-		5
-	],
-	"part_driveway_residential_12": [
-		5,
-		5
-	],
-	"part_driveway_residential_13": [
-		7,
-		5
-	],
-	"part_driveway_residential_14": [
-		11,
-		5
-	],
-	"part_driveway_residential_15": [
-		19,
-		5
-	],
-	"part_driveway_residential_back_01": [
-		7,
-		2
-	],
-	"part_driveway_residential_back_02": [
-		11,
-		2
-	],
-	"part_driveway_residential_back_03": [
-		7,
-		2
-	],
-	"part_driveway_residential_back_04": [
-		6,
-		2
-	],
-	"part_driveway_residential_back_05": [
-		40,
-		3
-	],
-	"part_driveway_rural_01": [
-		6,
-		3
-	],
-	"part_driveway_rural_02": [
-		5,
-		3
-	],
-	"part_driveway_rural_03": [
-		4,
-		3
-	],
-	"part_driveway_rural_04": [
-		19,
-		3
-	],
-	"part_driveway_rural_05": [
-		10,
-		3
-	],
-	"part_driveway_rural_06": [
-		8,
-		3
-	],
-	"part_driveway_rural_07": [
-		13,
-		3
-	],
-	"part_driveway_rural_08": [
-		7,
-		3
-	],
-	"part_driveway_rural_09": [
-		6,
-		3
-	],
-	"part_driveway_rural_10": [
-		9,
-		3
-	],
-	"part_driveway_rural_11": [
-		44,
-		3
-	],
-	"part_driveway_rural_12": [
-		7,
-		3
-	],
-	"part_driveway_rural_13": [
-		11,
-		3
-	],
-	"part_driveway_rural_14": [
-		41,
-		3
-	],
-	"part_driveway_rural_15": [
-		7,
-		3
-	],
-	"part_driveway_rural_16": [
-		15,
-		3
-	],
-	"part_driveway_rural_17": [
-		13,
-		3
-	],
-	"part_driveway_rural_18": [
-		16,
-		3
-	],
-	"part_driveway_rural_19": [
-		20,
-		3
-	],
-	"part_dumpster": [
-		4,
-		6
-	],
-	"part_electrical_tower_01": [
-		6,
-		4
-	],
-	"part_farm_field": [
-		59,
-		150
-	],
-	"part_farm_field_2": [
-		59,
-		87
-	],
-	"part_farm60_barn_01": [
-		17,
-		17
-	],
-	"part_farm60_barn_02": [
-		17,
-		17
-	],
-	"part_farm60_corncrib_01": [
-		7,
-		7
-	],
-	"part_farm60_corncrib_02": [
-		7,
-		7
-	],
-	"part_farm60_field_01": [
-		33,
-		33
-	],
-	"part_farm60_field_02": [
-		33,
-		33
-	],
-	"part_farm60_field_03": [
-		33,
-		33
-	],
-	"part_farm60_field_04": [
-		33,
-		33
-	],
-	"part_farm60_house_01": [
-		17,
-		17
-	],
-	"part_farm60_house_02": [
-		17,
-		17
-	],
-	"part_farm60_house_03": [
-		17,
-		17
-	],
-	"part_farm60_shed_01": [
-		7,
-		7
-	],
-	"part_farm60_shed_02": [
-		7,
-		7
-	],
-	"part_farm60_silo_01": [
-		7,
-		7
-	],
-	"part_farm60_silo_02": [
-		7,
-		7
-	],
-	"part_farm60_yard_01": [
-		16,
-		33
-	],
-	"part_farm60_yard_02": [
-		16,
-		33
-	],
-	"part_farm60_yard_03": [
-		16,
-		33
-	],
-	"part_farm60_yard_04": [
-		16,
-		33
-	],
-	"part_fence": [
-		46,
-		33
-	],
-	"part_fence_chainlink": [
-		6,
-		1
-	],
-	"part_fence_chainlink_door": [
-		6,
-		1
-	],
-	"part_fence_industrial": [
-		6,
-		2
-	],
-	"part_fence_industrial_broken": [
-		6,
-		2
-	],
-	"part_fence_industrial_ground": [
-		5,
-		3
-	],
-	"part_fence_neighborhood": [
-		7,
-		2
-	],
-	"part_fence_perishton_bungalow_05": [
-		45,
-		2
-	],
-	"part_fence_residential_back": [
-		42,
-		1
-	],
-	"part_fence_residential_connection_01": [
-		1,
-		2
-	],
-	"part_fence_residential_connection_02": [
-		1,
-		2
-	],
-	"part_fence_residential_POI": [
-		46,
-		44
-	],
-	"part_fence_residential_side_01": [
-		26,
-		1
-	],
-	"part_fence_residential_side_02": [
-		29,
-		1
-	],
-	"part_floor_trim_01": [
-		5,
-		5
-	],
-	"part_floor_trim_02": [
-		5,
-		5
-	],
-	"part_floor_trim_03": [
-		5,
-		5
-	],
-	"part_fortification_01": [
-		11,
-		5
-	],
-	"part_freezer_5x5_01": [
-		5,
-		5
-	],
-	"part_freezer_7x7_01": [
-		7,
-		7
-	],
-	"part_furnace_01": [
-		3,
-		3
-	],
-	"part_fusebox_01": [
-		1,
-		1
-	],
-	"part_garagedoor_rails_01": [
-		5,
-		2
-	],
-	"part_gas_contraption_01": [
-		3,
-		4
-	],
-	"part_gateway_broken_bridge": [
-		30,
-		26
-	],
-	"part_gateway_broken_bridge_01": [
-		22,
-		30
-	],
-	"part_gateway_broken_bridge_02": [
-		22,
-		30
-	],
-	"part_gateway_intersection_car_wreck": [
-		32,
-		48
-	],
-	"part_gazebo_roof_V1": [
-		7,
-		7
-	],
-	"part_generator_01": [
-		6,
-		4
-	],
-	"part_generator_02": [
-		5,
-		6
-	],
-	"part_gravestowne_sign_01": [
-		7,
-		2
-	],
-	"part_greeble_building_side_01": [
-		3,
-		1
-	],
-	"part_greeble_rooftop_01": [
-		5,
-		5
-	],
-	"part_greeble_rooftop_02": [
-		9,
-		4
-	],
-	"part_greeble_rooftop_03": [
-		4,
-		4
-	],
-	"part_greeble_rooftop_04": [
-		5,
-		5
-	],
-	"part_greeble_rooftop_05": [
-		5,
-		4
-	],
-	"part_greeble_rooftop_06": [
-		4,
-		6
-	],
-	"part_greeble_rooftop_07": [
-		4,
-		6
-	],
-	"part_greeble_rooftop_08": [
-		7,
-		7
-	],
-	"part_greeble_rooftop_09": [
-		5,
-		6
-	],
-	"part_guardrail_8m_incline": [
-		9,
-		10
-	],
-	"part_guardrail_9m": [
-		11,
-		1
-	],
-	"part_harverster": [
-		8,
-		11
-	],
-	"part_helipad_01": [
-		14,
-		14
-	],
-	"part_high_voltage_box_1": [
-		4,
-		3
-	],
-	"part_high_voltage_box_2": [
-		3,
-		3
-	],
-	"part_high_voltage_box_3": [
-		3,
-		1
-	],
-	"part_highway_overpass": [
-		18,
-		11
-	],
-	"part_highway_transition": [
-		18,
-		8
-	],
-	"part_horde_large": [
-		3,
-		3
-	],
-	"part_horde_medium": [
-		3,
-		3
-	],
-	"part_horde_small": [
-		3,
-		3
-	],
-	"part_industrial_01": [
-		10,
-		18
-	],
-	"part_industrial_02": [
-		10,
-		18
-	],
-	"part_industrial_03": [
-		10,
-		18
-	],
-	"part_industrial_04": [
-		10,
-		18
-	],
-	"part_industrial_05": [
-		11,
-		17
-	],
-	"part_industrial_06": [
-		13,
-		15
-	],
-	"part_industrial_07": [
-		9,
-		10
-	],
-	"part_industrial_08": [
-		9,
-		10
-	],
-	"part_industrial_09": [
-		10,
-		7
-	],
-	"part_industrial_10": [
-		10,
-		19
-	],
-	"part_industrial_11": [
-		9,
-		7
-	],
-	"part_industrial_12": [
-		9,
-		7
-	],
-	"part_industrial_greeble_01": [
-		6,
-		2
-	],
-	"part_industrial_tank_horizontal": [
-		8,
-		12
-	],
-	"part_industrial_tank_vertical": [
-		5,
-		4
-	],
-	"part_kiosk_01": [
-		6,
-		5
-	],
-	"part_kiosk_02": [
-		6,
-		5
-	],
-	"part_kiosk_foodtrailer_01": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_02": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_03": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_04": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_05": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_06": [
-		11,
-		7
-	],
-	"part_kiosk_foodtrailer_07": [
-		11,
-		7
-	],
-	"part_kiosk_sign_01": [
-		4,
-		2
-	],
-	"part_kiosk_sign_02": [
-		3,
-		2
-	],
-	"part_kiosk_sign_03": [
-		3,
-		2
-	],
-	"part_kiosk_sign_04": [
-		4,
-		2
-	],
-	"part_kiosk_sign_05": [
-		3,
-		2
-	],
-	"part_kiosk_sign_06": [
-		3,
-		2
-	],
-	"part_kiosk_sign_empty": [
-		3,
-		2
-	],
-	"part_kiosk_sign_empty_slim": [
-		3,
-		2
-	],
-	"part_kitchen_exhaust": [
-		2,
-		7
-	],
-	"part_lab_greeble_01": [
-		4,
-		2
-	],
-	"part_lab_greeble_02": [
-		4,
-		2
-	],
-	"part_lab_greeble_03": [
-		4,
-		2
-	],
-	"part_lab_greeble_04": [
-		3,
-		2
-	],
-	"part_lab_greeble_05": [
-		5,
-		4
-	],
-	"part_lab_greeble_06": [
-		5,
-		5
-	],
-	"part_lab_greeble_07": [
-		4,
-		2
-	],
-	"part_lab_greeble_08": [
-		4,
-		1
-	],
-	"part_lab_greeble_09": [
-		5,
-		4
-	],
-	"part_lab_greeble_10": [
-		3,
-		2
-	],
-	"part_lab_greeble_11": [
-		4,
-		1
-	],
-	"part_lab_greeble_12": [
-		4,
-		1
-	],
-	"part_lab_greeble_13": [
-		3,
-		2
-	],
-	"part_lab_greeble_14": [
-		2,
-		2
-	],
-	"part_lab_greeble_15": [
-		3,
-		1
-	],
-	"part_lab_greeble_16": [
-		3,
-		2
-	],
-	"part_lab_greeble_17": [
-		3,
-		2
-	],
-	"part_lab_greeble_18": [
-		3,
-		2
-	],
-	"part_lab_greeble_19": [
-		3,
-		2
-	],
-	"part_lab_greeble_20": [
-		3,
-		2
-	],
-	"part_lab_greeble_21": [
-		3,
-		2
-	],
-	"part_lake_01": [
-		42,
-		51
-	],
-	"part_lake_02": [
-		38,
-		79
-	],
-	"part_lake_03": [
-		90,
-		84
-	],
-	"part_lake_04": [
-		89,
-		49
-	],
-	"part_lake_05": [
-		74,
-		72
-	],
-	"part_lake_06": [
-		100,
-		150
-	],
-	"part_lake_07": [
-		69,
-		121
-	],
-	"part_lake_08": [
-		65,
-		55
-	],
-	"part_lake_09": [
-		63,
-		100
-	],
-	"part_lake_10": [
-		48,
-		45
-	],
-	"part_lake_11": [
-		100,
-		100
-	],
-	"part_lake_12": [
-		64,
-		102
-	],
-	"part_lake_13": [
-		60,
-		50
-	],
-	"part_lake_14": [
-		86,
-		83
-	],
-	"part_lake_15": [
-		98,
-		92
-	],
-	"part_lake_16": [
-		61,
-		64
-	],
-	"part_lake_boat": [
-		5,
-		10
-	],
-	"part_lake_dock": [
-		15,
-		23
-	],
-	"part_lake_drain": [
-		13,
-		20
-	],
-	"part_lake_raft": [
-		5,
-		6
-	],
-	"part_large_fusebox_01": [
-		1,
-		1
-	],
-	"part_library_01_deco_01": [
-		10,
-		2
-	],
-	"part_library_01_deco_02": [
-		9,
-		18
-	],
-	"part_library_01_deco_03": [
-		60,
-		6
-	],
-	"part_library_01_ducts_01": [
-		10,
-		4
-	],
-	"part_library_01_ducts_02": [
-		10,
-		4
-	],
-	"part_lift_01": [
-		6,
-		3
-	],
-	"part_lift_02": [
-		11,
-		5
-	],
-	"part_lift_03": [
-		6,
-		3
-	],
-	"part_logs_set": [
-		11,
-		11
-	],
-	"part_loot_t1": [
-		3,
-		2
-	],
-	"part_loot_t2": [
-		4,
-		2
-	],
-	"part_loot_t3": [
-		3,
-		3
-	],
-	"part_loot_t4": [
-		3,
-		3
-	],
-	"part_loot_t5": [
-		5,
-		4
-	],
-	"part_military_camp": [
-		18,
-		21
-	],
-	"part_mining_machine_01": [
-		12,
-		5
-	],
-	"part_mining_machine_02": [
-		12,
-		7
-	],
-	"part_mobile_office_trailer": [
-		11,
-		5
-	],
-	"part_mountain100_01": [
-		100,
-		100
-	],
-	"part_mountain42_01": [
-		42,
-		42
-	],
-	"part_mountain42_02": [
-		42,
-		42
-	],
-	"part_mountain60_01": [
-		60,
-		60
-	],
-	"part_mountain60_02": [
-		60,
-		60
-	],
-	"part_neighborhood_back_driveway": [
-		7,
-		2
-	],
-	"part_neighborhood_driveway": [
-		11,
-		6
-	],
-	"part_office_06_commercial_entrance": [
-		20,
-		11
-	],
-	"part_office_06_commercial_entrance_02": [
-		26,
-		17
-	],
-	"part_office_06_sign_1": [
-		39,
-		2
-	],
-	"part_office_06_sign_2": [
-		39,
-		2
-	],
-	"part_park_02_to_04_path": [
-		20,
-		15
-	],
-	"part_parking_lot_spaces": [
-		6,
-		13
-	],
-	"part_pedestrian_bridge": [
-		6,
-		28
-	],
-	"part_pedestrian_bridge_perishton": [
-		7,
-		38
-	],
-	"part_perishton_sign_01": [
-		5,
-		2
-	],
-	"part_pipestack_01": [
-		7,
-		3
-	],
-	"part_porta_potty_sleepers": [
-		21,
-		3
-	],
-	"part_quonset_large": [
-		11,
-		11
-	],
-	"part_quonset_small": [
-		7,
-		9
-	],
-	"part_remnant_hospital_01_driveway_01": [
-		9,
-		14
-	],
-	"part_remnant_industrial_large_02": [
-		17,
-		7
-	],
-	"part_remnant_skyscraper_01": [
-		5,
-		4
-	],
-	"part_remnant_skyscraper_02": [
-		5,
-		4
-	],
-	"part_remnant_skyscraper_03": [
-		5,
-		4
-	],
-	"part_remnant_skyscraper_04": [
-		5,
-		4
-	],
-	"part_road_bend_s_1": [
-		149,
-		148
-	],
-	"part_road_bend_s_2": [
-		150,
-		148
-	],
-	"part_road_bend_s_raised_1": [
-		149,
-		148
-	],
-	"part_road_bend_s_raised_2": [
-		149,
-		148
-	],
-	"part_road_bend_s_raised_3": [
-		149,
-		148
-	],
-	"part_road_bend_s_raised_4": [
-		150,
-		148
-	],
-	"part_road_construction_01": [
-		21,
-		32
-	],
-	"part_road_corner": [
-		15,
-		15
-	],
-	"part_road_corner_smooth": [
-		15,
-		15
-	],
-	"part_road_corner_tile": [
-		150,
-		150
-	],
-	"part_road_drainage": [
-		32,
-		13
-	],
-	"part_road_ramp_perishton_sw": [
-		13,
-		98
-	],
-	"part_road_shoulder_01": [
-		42,
-		8
-	],
-	"part_road_t_raised": [
-		150,
-		150
-	],
-	"part_road_traffic_circle": [
-		30,
-		30
-	],
-	"part_roadside_fruit_stand_01": [
-		10,
-		9
-	],
-	"part_roadside_fruit_stand_02": [
-		9,
-		7
-	],
-	"part_roof_wood_wedge_11x11": [
-		13,
-		13
-	],
-	"part_roof_wood_wedge_7x7": [
-		9,
-		9
-	],
-	"part_rural_intersection_02_01": [
-		32,
-		34
-	],
-	"part_rural_intersection_02_02": [
-		39,
-		35
-	],
-	"part_scaffolding": [
-		6,
-		7
-	],
-	"part_sculpture_01": [
-		3,
-		3
-	],
-	"part_sculpture_02": [
-		3,
-		3
-	],
-	"part_semi_truck": [
-		5,
-		17
-	],
-	"part_shed_01": [
-		5,
-		5
-	],
-	"part_shed_02": [
-		7,
-		6
-	],
-	"part_shed_03": [
-		5,
-		5
-	],
-	"part_shed_04": [
-		5,
-		5
-	],
-	"part_shed_05": [
-		5,
-		5
-	],
-	"part_shelf_01": [
-		2,
-		5
-	],
-	"part_shipping_container_01": [
-		5,
-		11
-	],
-	"part_shipping_container_02": [
-		5,
-		11
-	],
-	"part_shipping_container_03": [
-		5,
-		14
-	],
-	"part_shipping_container_04": [
-		5,
-		8
-	],
-	"part_shipping_container_05": [
-		5,
-		11
-	],
-	"part_shipping_container_06": [
-		5,
-		11
-	],
-	"part_sidewalk_round_13m": [
-		13,
-		13
-	],
-	"part_sign_cross_walk": [
-		1,
-		1
-	],
-	"part_sign_slow": [
-		1,
-		1
-	],
-	"part_spawner_01": [
-		3,
-		3
-	],
-	"part_spawner_02": [
-		3,
-		3
-	],
-	"part_spawner_03": [
-		3,
-		4
-	],
-	"part_spawner_04": [
-		3,
-		3
-	],
-	"part_spawner_05": [
-		3,
-		3
-	],
-	"part_spawner_06": [
-		3,
-		2
-	],
-	"part_stair_2w5h_left_hollow": [
-		2,
-		5
-	],
-	"part_stair_2w5h_right_hollow": [
-		2,
-		5
-	],
-	"part_stair_left_2W5H": [
-		4,
-		4
-	],
-	"part_stair_left_2W6H": [
-		4,
-		5
-	],
-	"part_stair_right_2W5H": [
-		4,
-		4
-	],
-	"part_stair_right_2W6H": [
-		4,
-		5
-	],
-	"part_store_hardware_01_navsidewalk": [
-		33,
-		1
-	],
-	"part_street_clock": [
-		3,
-		3
-	],
-	"part_streetlight": [
-		1,
-		1
-	],
-	"part_streetlight_broken": [
-		1,
-		1
-	],
-	"part_streetlight_broken2": [
-		1,
-		1
-	],
-	"part_streetlight_double": [
-		1,
-		1
-	],
-	"part_streetlight_quad": [
-		1,
-		1
-	],
-	"part_streetlight_single": [
-		1,
-		1
-	],
-	"part_streetlight_single_diagonal": [
-		1,
-		1
-	],
-	"part_streetlight_tripple": [
-		1,
-		1
-	],
-	"part_survivor_camp_01": [
-		12,
-		13
-	],
-	"part_survivor_camp_02": [
-		12,
-		13
-	],
-	"part_survivor_camp_03": [
-		12,
-		13
-	],
-	"part_tank_propane_01": [
-		5,
-		1
-	],
-	"part_terrain_greeble_10W2H": [
-		16,
-		10
-	],
-	"part_terrain_greeble_12W2H": [
-		14,
-		12
-	],
-	"part_terrain_greeble_12W3H": [
-		12,
-		12
-	],
-	"part_terrain_greeble_13W1H": [
-		16,
-		13
-	],
-	"part_terrain_greeble_13W1W": [
-		14,
-		13
-	],
-	"part_terrain_greeble_13W2H": [
-		15,
-		13
-	],
-	"part_terrain_greeble_13W3H": [
-		15,
-		13
-	],
-	"part_terrain_greeble_9W4H": [
-		16,
-		9
-	],
-	"part_terrain_greeble_9W5H": [
-		15,
-		9
-	],
-	"part_theme_house": [
-		104,
-		58
-	],
-	"part_theme_military": [
-		120,
-		91
-	],
-	"part_tile_rural_t_04_01a": [
-		9,
-		10
-	],
-	"part_tile_rural_t_04_01b": [
-		10,
-		10
-	],
-	"part_tile_rural_t_04_02a": [
-		8,
-		8
-	],
-	"part_tile_rural_t_04_02b": [
-		8,
-		9
-	],
-	"part_tower_guard_modern_01": [
-		11,
-		9
-	],
-	"part_tower_water_01": [
-		6,
-		5
-	],
-	"part_tower_water_02": [
-		6,
-		6
-	],
-	"part_trafficlight": [
-		2,
-		10
-	],
-	"part_trafficlight_intersection": [
-		8,
-		2
-	],
-	"part_trafficlight_single": [
-		1,
-		1
-	],
-	"part_trailer_bodybags": [
-		11,
-		5
-	],
-	"part_trailer_bodybags_02": [
-		11,
-		5
-	],
-	"part_trailer_car": [
-		11,
-		5
-	],
-	"part_trailer_empty": [
-		11,
-		5
-	],
-	"part_trailer_sleepers": [
-		14,
-		5
-	],
-	"part_tunnel_corner": [
-		5,
-		5
-	],
-	"part_tunnel_corner_01": [
-		87,
-		87
-	],
-	"part_tunnel_corner_02": [
-		87,
-		87
-	],
-	"part_tunnel_cross": [
-		5,
-		5
-	],
-	"part_tunnel_industrial_corner_01": [
-		8,
-		8
-	],
-	"part_tunnel_industrial_straight_01": [
-		9,
-		13
-	],
-	"part_tunnel_industrial_straight_02": [
-		9,
-		13
-	],
-	"part_tunnel_industrial_t_01": [
-		7,
-		10
-	],
-	"part_tunnel_tee": [
-		5,
-		5
-	],
-	"part_tunnel_vertical_corner": [
-		5,
-		5
-	],
-	"part_utility_pole": [
-		3,
-		2
-	],
-	"part_utility_pole_large": [
-		5,
-		2
-	],
-	"part_vehicle_forklift_01": [
-		10,
-		5
-	],
-	"part_vehicle_w_trailer": [
-		5,
-		18
-	],
-	"part_walkway_01": [
-		1,
-		3
-	],
-	"part_walkway_02": [
-		2,
-		3
-	],
-	"part_walkway_03": [
-		3,
-		3
-	],
-	"part_walkway_04": [
-		4,
-		3
-	],
-	"part_walkway_05": [
-		5,
-		3
-	],
-	"part_walkway_house_old_gambrel_04": [
-		15,
-		5
-	],
-	"part_water_tower_03": [
-		8,
-		8
-	],
-	"part_waterheater_01": [
-		1,
-		1
-	],
-	"part_waterheater_02": [
-		2,
-		1
-	],
-	"part_well_01": [
-		3,
-		5
-	],
-	"part_wilderness_filler_02_tent_01": [
-		7,
-		10
-	],
-	"part_yacht_trailer_01": [
-		25,
-		5
-	],
-	"perishton_bridge": [
-		33,
-		13
-	],
-	"perishton_church_parking": [
-		60,
-		23
-	],
-	"perishton_city_blk_01": [
-		114,
-		114
-	],
-	"perishton_city_blk_02": [
-		121,
-		114
-	],
-	"perishton_city_blk_03": [
-		114,
-		114
-	],
-	"perishton_city_blk_04": [
-		114,
-		114
-	],
-	"perishton_city_blk_05": [
-		114,
-		114
-	],
-	"perishton_city_blk_06": [
-		132,
-		127
-	],
-	"perishton_city_blk_plaza": [
-		121,
-		114
-	],
-	"perishton_fence": [
-		60,
-		60
-	],
-	"perishton_median_01": [
-		103,
-		23
-	],
-	"perishton_median_02": [
-		103,
-		23
-	],
-	"perishton_median_03": [
-		103,
-		23
-	],
-	"perishton_outlet": [
-		20,
-		7
-	],
-	"perishton_riverdock": [
-		7,
-		19
-	],
-	"perishton_tile_downtown_straight": [
-		150,
-		150
-	],
-	"perishton_tunnel_01": [
-		28,
-		95
-	],
-	"perishton_tunnel_02": [
-		28,
-		94
-	],
-	"player_start1": [
-		6,
-		2
-	],
-	"player_start2": [
-		3,
-		8
-	],
-	"player_start3": [
-		6,
-		5
-	],
-	"player_start4": [
-		5,
-		7
-	],
-	"player_start5": [
-		6,
-		7
-	],
-	"player_start6": [
-		6,
-		6
-	],
-	"police_station_03": [
-		60,
-		60
-	],
-	"post_office_01": [
-		25,
-		25
-	],
-	"post_office_02": [
-		42,
-		42
-	],
-	"potatofield_sm": [
-		12,
-		12
-	],
-	"prison_01": [
-		100,
-		100
-	],
-	"prison_02": [
-		100,
-		100
-	],
-	"quarry_02": [
-		100,
-		100
-	],
-	"radio_station_01": [
-		60,
-		60
-	],
-	"radio_station_02": [
-		60,
-		60
-	],
-	"radio_station_03": [
-		42,
-		42
-	],
-	"ranger_station_01": [
-		42,
-		42
-	],
-	"ranger_station_02": [
-		42,
-		42
-	],
-	"ranger_station_03": [
-		42,
-		42
-	],
-	"ranger_station_04": [
-		42,
-		42
-	],
-	"ranger_station_05": [
-		42,
-		42
-	],
-	"ranger_station_06": [
-		60,
-		60
-	],
-	"ranger_station_07": [
-		60,
-		60
-	],
-	"remnant_burnt_01": [
-		42,
-		42
-	],
-	"remnant_burnt_02": [
-		42,
-		42
-	],
-	"remnant_burnt_03": [
-		45,
-		42
-	],
-	"remnant_burnt_04": [
-		25,
-		25
-	],
-	"remnant_burnt_05": [
-		42,
-		42
-	],
-	"remnant_burnt_06": [
-		42,
-		42
-	],
-	"remnant_burnt_07": [
-		25,
-		25
-	],
-	"remnant_burnt_08": [
-		42,
-		42
-	],
-	"remnant_burnt_09": [
-		42,
-		42
-	],
-	"remnant_burnt_10": [
-		42,
-		42
-	],
-	"remnant_business_01": [
-		60,
-		60
-	],
-	"remnant_business_02": [
-		60,
-		60
-	],
-	"remnant_business_03": [
-		42,
-		42
-	],
-	"remnant_business_04": [
-		42,
-		42
-	],
-	"remnant_business_05": [
-		42,
-		42
-	],
-	"remnant_business_06": [
-		25,
-		25
-	],
-	"remnant_carwash_01": [
-		42,
-		42
-	],
-	"remnant_carwash_02": [
-		42,
-		42
-	],
-	"remnant_church_01": [
-		60,
-		60
-	],
-	"remnant_coffee_shop_01": [
-		25,
-		25
-	],
-	"remnant_coffee_shop_02": [
-		25,
-		25
-	],
-	"remnant_coffee_shop_03": [
-		25,
-		25
-	],
-	"remnant_commercial_large_02": [
-		100,
-		100
-	],
-	"remnant_commercial_strip_03": [
-		42,
-		42
-	],
-	"remnant_commercial_strip_04": [
-		42,
-		42
-	],
-	"remnant_commercial_strip_05": [
-		42,
-		42
-	],
-	"remnant_commercial_strip_06": [
-		42,
-		42
-	],
-	"remnant_downtown_filler_01": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_02": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_03": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_04": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_05": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_06": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_07": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_08": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_09": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_10": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_11": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_12": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_13": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_14": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_15": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_16": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_17": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_18": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_19": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_20": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_21": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_22": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_23": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_24": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_25": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_26": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_27": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_28": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_29": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_30": [
-		25,
-		25
-	],
-	"remnant_downtown_filler_31": [
-		25,
-		25
-	],
-	"remnant_downtown_strip_01": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_02": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_03": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_04": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_05": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_06": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_07": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_08": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_09": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_11": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_12": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_13": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_14": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_15": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_16": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_17": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_18": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_19": [
-		42,
-		42
-	],
-	"remnant_downtown_strip_20": [
-		42,
-		42
-	],
-	"remnant_farm_01": [
-		60,
-		60
-	],
-	"remnant_farm_02": [
-		60,
-		60
-	],
-	"remnant_farm_03": [
-		60,
-		60
-	],
-	"remnant_farm_05": [
-		60,
-		60
-	],
-	"remnant_gas_station_01": [
-		42,
-		42
-	],
-	"remnant_hospital_01": [
-		60,
-		60
-	],
-	"remnant_hotel_01": [
-		100,
-		100
-	],
-	"remnant_house_01": [
-		42,
-		42
-	],
-	"remnant_house_02": [
-		42,
-		42
-	],
-	"remnant_house_03": [
-		42,
-		42
-	],
-	"remnant_house_04": [
-		42,
-		42
-	],
-	"remnant_house_05": [
-		42,
-		42
-	],
-	"remnant_house_06": [
-		42,
-		42
-	],
-	"remnant_house_07": [
-		42,
-		42
-	],
-	"remnant_house_08": [
-		42,
-		42
-	],
-	"remnant_house_09": [
-		42,
-		42
-	],
-	"remnant_house_10": [
-		42,
-		42
-	],
-	"remnant_house_11": [
-		42,
-		42
-	],
-	"remnant_house_12": [
-		42,
-		42
-	],
-	"remnant_house_13": [
-		42,
-		42
-	],
-	"remnant_house_14": [
-		42,
-		42
-	],
-	"remnant_house_15": [
-		42,
-		42
-	],
-	"remnant_house_16": [
-		42,
-		42
-	],
-	"remnant_house_17": [
-		42,
-		42
-	],
-	"remnant_house_18": [
-		42,
-		42
-	],
-	"remnant_house_19": [
-		60,
-		60
-	],
-	"remnant_house_20": [
-		60,
-		60
-	],
-	"remnant_house_modern_01": [
-		42,
-		42
-	],
-	"remnant_house_modern_02": [
-		42,
-		42
-	],
-	"remnant_house_modern_03": [
-		42,
-		42
-	],
-	"remnant_house_modern_04": [
-		42,
-		42
-	],
-	"remnant_industrial_01": [
-		16,
-		14
-	],
-	"remnant_industrial_02": [
-		16,
-		14
-	],
-	"remnant_industrial_03": [
-		11,
-		12
-	],
-	"remnant_industrial_04": [
-		36,
-		35
-	],
-	"remnant_industrial_large_01": [
-		100,
-		100
-	],
-	"remnant_industrial_large_02": [
-		100,
-		100
-	],
-	"remnant_industrial_strip_07": [
-		42,
-		42
-	],
-	"remnant_industrial_strip_08": [
-		42,
-		42
-	],
-	"remnant_industrial_strip_09": [
-		42,
-		42
-	],
-	"remnant_industrial_strip_10": [
-		42,
-		42
-	],
-	"remnant_industrial_strip_11": [
-		42,
-		42
-	],
-	"remnant_industrial_strip_12": [
-		42,
-		42
-	],
-	"remnant_library_01": [
-		60,
-		60
-	],
-	"remnant_library_02": [
-		60,
-		60
-	],
-	"remnant_mill_01": [
-		60,
-		60
-	],
-	"remnant_oldwest_01": [
-		25,
-		25
-	],
-	"remnant_oldwest_02": [
-		10,
-		10
-	],
-	"remnant_oldwest_03": [
-		8,
-		8
-	],
-	"remnant_oldwest_04": [
-		25,
-		25
-	],
-	"remnant_oldwest_05": [
-		25,
-		25
-	],
-	"remnant_oldwest_06": [
-		25,
-		25
-	],
-	"remnant_oldwest_07": [
-		25,
-		25
-	],
-	"remnant_oldwest_08": [
-		25,
-		25
-	],
-	"remnant_oldwest_09": [
-		25,
-		25
-	],
-	"remnant_quicklube_01": [
-		42,
-		42
-	],
-	"remnant_school_01": [
-		60,
-		60
-	],
-	"remnant_selfstorage_01": [
-		42,
-		42
-	],
-	"remnant_selfstorage_02": [
-		42,
-		42
-	],
-	"remnant_skyscraper_01": [
-		60,
-		60
-	],
-	"remnant_skyscraper_02": [
-		60,
-		60
-	],
-	"remnant_skyscraper_03": [
-		60,
-		60
-	],
-	"remnant_skyscraper_04": [
-		60,
-		60
-	],
-	"remnant_skyscraper_05": [
-		60,
-		60
-	],
-	"remnant_sports_center_01": [
-		100,
-		100
-	],
-	"remnant_waste_01": [
-		42,
-		42
-	],
-	"remnant_waste_02": [
-		42,
-		42
-	],
-	"remnant_waste_03": [
-		42,
-		42
-	],
-	"remnant_waste_04": [
-		42,
-		42
-	],
-	"remnant_waste_05": [
-		42,
-		42
-	],
-	"remnant_waste_06": [
-		42,
-		42
-	],
-	"remnant_waste_08": [
-		42,
-		42
-	],
-	"remnant_waste_15": [
-		60,
-		60
-	],
-	"remnant_waste_16": [
-		60,
-		60
-	],
-	"remnant_waste_17": [
-		42,
-		42
-	],
-	"remnant_waste_18": [
-		60,
-		60
-	],
-	"remnant_waste_19": [
-		42,
-		42
-	],
-	"rest_area_01": [
-		60,
-		60
-	],
-	"rest_area_02": [
-		60,
-		60
-	],
-	"rest_area_03": [
-		60,
-		60
-	],
-	"rest_area_04": [
-		60,
-		60
-	],
-	"rest_area_05": [
-		60,
-		60
-	],
-	"restaurant_01": [
-		42,
-		42
-	],
-	"restaurant_02": [
-		42,
-		42
-	],
-	"road_railing_long_filled_01": [
-		24,
-		9
-	],
-	"roadblock_01": [
-		9,
-		3
-	],
-	"roadside_checkpoint_01": [
-		60,
-		60
-	],
-	"roadside_checkpoint_02": [
-		60,
-		60
-	],
-	"roadside_checkpoint_03": [
-		60,
-		60
-	],
-	"roadside_checkpoint_04": [
-		60,
-		60
-	],
-	"roadside_checkpoint_05": [
-		60,
-		60
-	],
-	"roadside_park_01": [
-		60,
-		60
-	],
-	"roadside_park_02": [
-		60,
-		60
-	],
-	"roadside_restaurant_01": [
-		60,
-		60
-	],
-	"roadside_strip_01": [
-		60,
-		60
-	],
-	"roadside_truckstop_01": [
-		60,
-		60
-	],
-	"rock_form01": [
-		6,
-		8
-	],
-	"rock_form02": [
-		11,
-		12
-	],
-	"rock_form03": [
-		3,
-		3
-	],
-	"rock_form04": [
-		3,
-		3
-	],
-	"rock_form05": [
-		3,
-		3
-	],
-	"rubble_burnt_filler_01": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_02": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_03": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_04": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_05": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_06": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_08": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_09": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_10": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_11": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_12": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_13": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_14": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_15": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_16": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_17": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_18": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_19": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_20": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_21": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_22": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_23": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_24": [
-		25,
-		25
-	],
-	"rubble_burnt_filler_25": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_01": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_02": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_03": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_04": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_05": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_11": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_12": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_13": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_14": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_15": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_16": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_17": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_18": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_19": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_20": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_21": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_22": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_23": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_24": [
-		25,
-		25
-	],
-	"rubble_downtown_filler_25": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_01": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_02": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_03": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_04": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_05": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_06": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_07": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_09": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_10": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_11": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_12": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_13": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_14": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_15": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_16": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_17": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_18": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_19": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_20": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_21": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_22": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_23": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_24": [
-		25,
-		25
-	],
-	"rubble_wasteland_filler_25": [
-		25,
-		25
-	],
-	"rural_church_01": [
-		60,
-		60
-	],
-	"rural_church_02": [
-		60,
-		60
-	],
-	"rural_drive_in_01": [
-		100,
-		100
-	],
-	"rural_outdoor_wedding_01": [
-		100,
-		100
-	],
-	"rwg_bridge_end_01": [
-		14,
-		9
-	],
-	"rwg_bridge_tile_01": [
-		14,
-		9
-	],
-	"rwg_tile_commercial_cap": [
-		150,
-		150
-	],
-	"rwg_tile_commercial_corner": [
-		150,
-		150
-	],
-	"rwg_tile_commercial_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_commercial_straight": [
-		150,
-		150
-	],
-	"rwg_tile_commercial_t": [
-		150,
-		150
-	],
-	"rwg_tile_commercial_t_03": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_cap": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_corner": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_straight": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_straight_03": [
-		150,
-		150
-	],
-	"rwg_tile_countryresidential_t": [
-		150,
-		150
-	],
-	"rwg_tile_countrytown_cap": [
-		150,
-		150
-	],
-	"rwg_tile_countrytown_corner": [
-		150,
-		150
-	],
-	"rwg_tile_countrytown_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_countrytown_straight": [
-		150,
-		150
-	],
-	"rwg_tile_countrytown_t": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_cap": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_corner": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_intersection_02": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_straight": [
-		150,
-		150
-	],
-	"rwg_tile_downtown_t": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_intersection2": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight2": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight3": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight3a": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight3b": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_straight4": [
-		150,
-		150
-	],
-	"rwg_tile_gateway_t": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_cap": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_corner": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_straight": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_t": [
-		150,
-		150
-	],
-	"rwg_tile_industrial_t_03": [
-		150,
-		150
-	],
-	"rwg_tile_oldwest_cap": [
-		150,
-		150
-	],
-	"rwg_tile_oldwest_corner": [
-		150,
-		150
-	],
-	"rwg_tile_oldwest_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_oldwest_straight": [
-		150,
-		150
-	],
-	"rwg_tile_oldwest_t": [
-		150,
-		150
-	],
-	"rwg_tile_residential_cap": [
-		150,
-		150
-	],
-	"rwg_tile_residential_corner": [
-		150,
-		150
-	],
-	"rwg_tile_residential_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_residential_straight": [
-		150,
-		150
-	],
-	"rwg_tile_residential_t": [
-		150,
-		150
-	],
-	"rwg_tile_rural_cap": [
-		150,
-		150
-	],
-	"rwg_tile_rural_corner": [
-		150,
-		150
-	],
-	"rwg_tile_rural_corner_02": [
-		150,
-		150
-	],
-	"rwg_tile_rural_corner_03": [
-		150,
-		150
-	],
-	"rwg_tile_rural_intersection": [
-		150,
-		150
-	],
-	"rwg_tile_rural_intersection_02": [
-		150,
-		150
-	],
-	"rwg_tile_rural_straight": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t_02": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t_03": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t_04": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t_05": [
-		150,
-		150
-	],
-	"rwg_tile_rural_t_06": [
-		150,
-		150
-	],
-	"sawmill_01": [
-		100,
-		100
-	],
-	"school_01": [
-		100,
-		100
-	],
-	"school_02": [
-		100,
-		100
-	],
-	"school_03": [
-		100,
-		100
-	],
-	"school_daycare_01": [
-		42,
-		42
-	],
-	"school_daycare_02": [
-		42,
-		42
-	],
-	"school_daycare_03": [
-		42,
-		42
-	],
-	"sign_260_east_speed_65": [
-		1,
-		1
-	],
-	"sign_260_west_speed_65": [
-		1,
-		1
-	],
-	"sign_73_north": [
-		1,
-		1
-	],
-	"sign_73_south": [
-		1,
-		1
-	],
-	"sign_albuquerque": [
-		1,
-		2
-	],
-	"sign_ansel_adams_river": [
-		1,
-		1
-	],
-	"sign_arrowhead_apache": [
-		1,
-		1
-	],
-	"sign_camp_fish": [
-		1,
-		1
-	],
-	"sign_caution": [
-		1,
-		1
-	],
-	"sign_hazardous_waste": [
-		1,
-		1
-	],
-	"sign_info_center1": [
-		1,
-		1
-	],
-	"sign_navezgane_natl_forest": [
-		3,
-		3
-	],
-	"sign_phoenix": [
-		1,
-		2
-	],
-	"sign_road_work": [
-		1,
-		1
-	],
-	"sign_school_25": [
-		1,
-		1
-	],
-	"sign_slow": [
-		1,
-		1
-	],
-	"sign_speed_25": [
-		1,
-		1
-	],
-	"sign_speed_35": [
-		1,
-		1
-	],
-	"sign_speed_45": [
-		1,
-		1
-	],
-	"sign_speed_55": [
-		1,
-		1
-	],
-	"sign_spillway_lake": [
-		1,
-		1
-	],
-	"sign_stop": [
-		1,
-		1
-	],
-	"sign_stop_4way": [
-		1,
-		1
-	],
-	"site_camp_01": [
-		25,
-		25
-	],
-	"site_camp_02": [
-		25,
-		25
-	],
-	"site_camp_03": [
-		25,
-		25
-	],
-	"site_camp_04": [
-		25,
-		25
-	],
-	"site_camp_05": [
-		25,
-		25
-	],
-	"site_camp_06": [
-		25,
-		25
-	],
-	"site_camp_07": [
-		25,
-		25
-	],
-	"site_camp_08": [
-		25,
-		25
-	],
-	"site_camp_09": [
-		25,
-		25
-	],
-	"site_camp_10": [
-		25,
-		25
-	],
-	"site_camp_11": [
-		25,
-		25
-	],
-	"site_grave_01": [
-		25,
-		25
-	],
-	"site_grave_02": [
-		25,
-		25
-	],
-	"site_grave_03": [
-		25,
-		25
-	],
-	"site_grave_04": [
-		25,
-		25
-	],
-	"site_grave_05": [
-		25,
-		25
-	],
-	"site_grave_06": [
-		25,
-		25
-	],
-	"site_grave_07": [
-		25,
-		25
-	],
-	"site_grave_08": [
-		25,
-		25
-	],
-	"site_grave_09": [
-		25,
-		25
-	],
-	"site_grave_10": [
-		25,
-		25
-	],
-	"site_shack_01": [
-		25,
-		25
-	],
-	"site_shack_02": [
-		25,
-		25
-	],
-	"site_shack_04": [
-		25,
-		25
-	],
-	"site_shack_05": [
-		25,
-		25
-	],
-	"site_shack_06": [
-		25,
-		25
-	],
-	"site_shack_07": [
-		25,
-		25
-	],
-	"site_shack_08": [
-		25,
-		25
-	],
-	"site_shack_09": [
-		25,
-		25
-	],
-	"site_shack_10": [
-		25,
-		25
-	],
-	"site_utility_01": [
-		25,
-		25
-	],
-	"site_utility_02": [
-		25,
-		25
-	],
-	"site_utility_03": [
-		25,
-		25
-	],
-	"site_utility_04": [
-		25,
-		25
-	],
-	"site_utility_05": [
-		25,
-		25
-	],
-	"site_utility_06": [
-		25,
-		25
-	],
-	"site_utility_07": [
-		25,
-		25
-	],
-	"site_utility_09": [
-		25,
-		25
-	],
-	"site_vendor_01": [
-		25,
-		25
-	],
-	"site_vendor_02": [
-		25,
-		25
-	],
-	"site_vendor_03": [
-		25,
-		25
-	],
-	"site_vendor_04": [
-		25,
-		25
-	],
-	"site_vendor_05": [
-		25,
-		25
-	],
-	"site_vendor_06": [
-		25,
-		25
-	],
-	"site_vendor_07": [
-		25,
-		25
-	],
-	"site_vendor_08": [
-		25,
-		25
-	],
-	"site_vendor_09": [
-		25,
-		25
-	],
-	"site_vendor_10": [
-		25,
-		25
-	],
-	"skyscraper_01": [
-		60,
-		60
-	],
-	"skyscraper_02": [
-		42,
-		42
-	],
-	"skyscraper_03": [
-		60,
-		60
-	],
-	"skyscraper_04": [
-		60,
-		60
-	],
-	"soccer_stadium_01": [
-		100,
-		100
-	],
-	"spacercise_01": [
-		87,
-		42
-	],
-	"spacercise_01_allan": [
-		42,
-		42
-	],
-	"spacercise_01_earl": [
-		90,
-		42
-	],
-	"spacercise_01_hernan": [
-		42,
-		42
-	],
-	"spacercise_01_nick": [
-		42,
-		42
-	],
-	"spacercise_01_tim": [
-		42,
-		42
-	],
-	"store_autoparts_01": [
-		60,
-		60
-	],
-	"store_bakery_01": [
-		42,
-		42
-	],
-	"store_book_01": [
-		60,
-		60
-	],
-	"store_book_02": [
-		60,
-		60
-	],
-	"store_book_03": [
-		44,
-		44
-	],
-	"store_book_04": [
-		42,
-		42
-	],
-	"store_clothing_01": [
-		60,
-		60
-	],
-	"store_clothing_02": [
-		60,
-		60
-	],
-	"store_discount_01": [
-		42,
-		42
-	],
-	"store_electronics_01": [
-		42,
-		42
-	],
-	"store_electronics_02": [
-		60,
-		60
-	],
-	"store_grocery_01": [
-		60,
-		60
-	],
-	"store_grocery_02": [
-		100,
-		100
-	],
-	"store_grocery_03": [
-		42,
-		42
-	],
-	"store_grocery_04": [
-		60,
-		60
-	],
-	"store_grocery_05": [
-		60,
-		60
-	],
-	"store_grocery_06": [
-		60,
-		60
-	],
-	"store_gun_01": [
-		100,
-		100
-	],
-	"store_gun_02": [
-		100,
-		100
-	],
-	"store_hardware_01": [
-		60,
-		60
-	],
-	"store_hardware_02": [
-		60,
-		60
-	],
-	"store_hardware_03": [
-		100,
-		100
-	],
-	"store_laundry_01": [
-		42,
-		42
-	],
-	"store_pharmacy_01": [
-		42,
-		42
-	],
-	"store_pharmacy_02": [
-		60,
-		60
-	],
-	"street_apache": [
-		1,
-		1
-	],
-	"street_bell_courtland": [
-		1,
-		1
-	],
-	"street_coronado": [
-		1,
-		1
-	],
-	"street_courtland_apache": [
-		1,
-		1
-	],
-	"street_courtland_coronado": [
-		1,
-		1
-	],
-	"street_courtland_east_260": [
-		1,
-		1
-	],
-	"street_davis": [
-		1,
-		1
-	],
-	"street_huenink_courtland": [
-		1,
-		1
-	],
-	"street_lake_bell": [
-		1,
-		1
-	],
-	"street_light_01": [
-		1,
-		1
-	],
-	"street_light_02": [
-		1,
-		1
-	],
-	"street_maple": [
-		1,
-		1
-	],
-	"street_maple_courtland": [
-		1,
-		1
-	],
-	"street_private": [
-		1,
-		1
-	],
-	"street_tran_courtland": [
-		1,
-		1
-	],
-	"streets_essag": [
-		1,
-		1
-	],
-	"streets_tran_and_lang": [
-		1,
-		1
-	],
-	"survivor_camp_01": [
-		60,
-		60
-	],
-	"survivor_camp_02": [
-		60,
-		60
-	],
-	"survivor_camp_03": [
-		60,
-		60
-	],
-	"survivor_site_01": [
-		25,
-		25
-	],
-	"survivor_site_02": [
-		25,
-		25
-	],
-	"survivor_site_03": [
-		25,
-		25
-	],
-	"survivor_site_04": [
-		25,
-		25
-	],
-	"survivor_site_05": [
-		25,
-		25
-	],
-	"survivor_site_06": [
-		25,
-		25
-	],
-	"survivor_site_07": [
-		25,
-		25
-	],
-	"survivor_site_08": [
-		25,
-		25
-	],
-	"survivor_site_09": [
-		25,
-		25
-	],
-	"survivor_site_10": [
-		25,
-		25
-	],
-	"survivor_site_11": [
-		25,
-		25
-	],
-	"theater_stage_01": [
-		60,
-		60
-	],
-	"trader_bob": [
-		60,
-		60
-	],
-	"trader_hugh": [
-		60,
-		60
-	],
-	"trader_jen": [
-		60,
-		60
-	],
-	"trader_joel": [
-		60,
-		60
-	],
-	"trader_rekt": [
-		60,
-		60
-	],
-	"trailer_01": [
-		25,
-		25
-	],
-	"trailer_02": [
-		25,
-		25
-	],
-	"trailer_03": [
-		25,
-		25
-	],
-	"trailer_04": [
-		25,
-		25
-	],
-	"trailer_05": [
-		25,
-		25
-	],
-	"trailer_06": [
-		25,
-		25
-	],
-	"trailer_07": [
-		25,
-		25
-	],
-	"trailer_08": [
-		25,
-		25
-	],
-	"trailer_09": [
-		25,
-		25
-	],
-	"trailer_10": [
-		25,
-		25
-	],
-	"trailer_11": [
-		25,
-		25
-	],
-	"trailer_12": [
-		25,
-		25
-	],
-	"trailer_13": [
-		25,
-		25
-	],
-	"trailer_park_01": [
-		42,
-		42
-	],
-	"utility_celltower_01": [
-		25,
-		25
-	],
-	"utility_celltower_02": [
-		25,
-		25
-	],
-	"utility_celltower_03": [
-		25,
-		25
-	],
-	"utility_electric_co_01": [
-		42,
-		42
-	],
-	"utility_electric_co_02": [
-		60,
-		60
-	],
-	"utility_refinery_01": [
-		42,
-		42
-	],
-	"utility_refinery_02": [
-		100,
-		100
-	],
-	"utility_substation_01": [
-		60,
-		60
-	],
-	"utility_substation_02": [
-		60,
-		60
-	],
-	"utility_substation_03": [
-		60,
-		60
-	],
-	"utility_waterworks_01": [
-		60,
-		60
-	],
-	"warehouse_01": [
-		100,
-		100
-	],
-	"warehouse_02": [
-		60,
-		60
-	],
-	"warehouse_03": [
-		60,
-		60
-	],
-	"warehouse_04": [
-		42,
-		42
-	],
-	"warehouse_05": [
-		42,
-		42
-	],
-	"warehouse_06": [
-		42,
-		42
-	],
-	"warehouse_07": [
-		42,
-		42
-	],
-	"warehouse_08": [
-		42,
-		42
-	],
-	"water_tower_01": [
-		25,
-		25
-	],
-	"water_tower_02": [
-		25,
-		25
-	],
-	"water_tower_03": [
-		25,
-		25
-	],
-	"water_tower_04": [
-		25,
-		25
-	],
-	"weigh_station_01": [
-		60,
-		60
-	],
-	"wilderness_filler_01": [
-		25,
-		25
-	],
-	"wilderness_filler_02": [
-		25,
-		25
-	],
-	"wilderness_filler_03": [
-		25,
-		25
-	],
-	"wilderness_filler_04": [
-		25,
-		25
-	],
-	"wilderness_filler_05": [
-		25,
-		25
-	],
-	"wilderness_filler_06": [
-		25,
-		25
-	],
-	"wilderness_filler_07": [
-		25,
-		25
-	],
-	"wilderness_filler_08": [
-		25,
-		25
-	],
-	"wilderness_filler_09": [
-		25,
-		25
-	],
-	"wilderness_filler_10": [
-		25,
-		25
-	],
-	"wilderness_filler_11": [
-		25,
-		25
-	],
-	"wilderness_filler_12": [
-		25,
-		25
-	],
-	"wilderness_filler_13": [
-		25,
-		25
-	],
-	"wilderness_filler_14": [
-		25,
-		25
-	],
-	"wilderness_filler_15": [
-		25,
-		25
-	],
-	"wilderness_filler_16": [
-		25,
-		25
-	],
-	"wilderness_filler_17": [
-		25,
-		25
-	],
-	"wilderness_filler_18": [
-		25,
-		25
-	],
-	"wilderness_filler_19": [
-		25,
-		25
-	],
-	"wilderness_filler_20": [
-		25,
-		25
-	],
-	"wilderness_filler_21": [
-		25,
-		25
-	],
-	"wilderness_filler_22": [
-		60,
-		60
-	]
+	"000_Terrain_Textures": [6, 4],
+	"000_Tree_Compare": [150, 150],
+	"aaa_5m_round_test": [54, 76],
+	"aaa_all_foliage_plants": [42, 42],
+	"aaa_all_glass": [181, 86],
+	"aaa_all_loot_test": [170, 133],
+	"aaa_all_zombies": [92, 11],
+	"aaa_anim_test": [43, 38],
+	"aaa_arizona_downtown_01": [173, 204],
+	"aaa_armor_testing": [25, 25],
+	"aaa_bandit_platforms_test": [43, 28],
+	"aaa_bandits": [76, 122],
+	"aaa_barriers": [13, 22],
+	"aaa_base_cheese": [25, 25],
+	"aaa_bathroom_stalls": [5, 5],
+	"aaa_billboards": [121, 26],
+	"aaa_bleachers": [26, 25],
+	"aaa_block_event_test": [176, 138],
+	"aaa_block_props": [141, 174],
+	"aaa_block_shapes": [57, 199],
+	"aaa_block_textures": [173, 167],
+	"aaa_boats": [98, 86],
+	"aaa_bookshelf_test": [24, 63],
+	"aaa_cars": [156, 72],
+	"aaa_cathedral": [60, 60],
+	"aaa_catwalk_test": [36, 47],
+	"aaa_cheebscoblock": [25, 25],
+	"aaa_chemical_lot": [25, 25],
+	"aaa_city_kiosks": [56, 19],
+	"aaa_city_props": [16, 60],
+	"aaa_citycenter": [61, 132],
+	"aaa_clear_quest_01": [18, 27],
+	"aaa_crater_01": [25, 23],
+	"aaa_creepy_env_01": [44, 29],
+	"aaa_crown_test": [38, 15],
+	"aaa_defense_test": [32, 31],
+	"aaa_demolition": [88, 68],
+	"aaa_destruction": [53, 75],
+	"aaa_dms_test": [67, 40],
+	"aaa_doors_test": [179, 61],
+	"aaa_enemy_breakouts_01": [110, 76],
+	"aaa_envkeys_elevator": [46, 62],
+	"aaa_envkeys_office": [25, 32],
+	"aaa_faces_test": [38, 21],
+	"aaa_hazards_test": [78, 44],
+	"aaa_horde_base": [25, 25],
+	"aaa_hotel_01_alt": [146, 57],
+	"AAA_light_test": [90, 123],
+	"aaa_materials_particle_test": [27, 73],
+	"aaa_multiblock_terrain_density_bug": [10, 12],
+	"aaa_pathing_test_01": [134, 101],
+	"aaa_plate_cladding": [44, 22],
+	"aaa_poi_loot_01": [41, 79],
+	"aaa_police_station_02": [60, 60],
+	"aaa_restore_power": [38, 42],
+	"aaa_roof_intersections": [114, 59],
+	"aaa_rwg_tile_cap": [150, 150],
+	"aaa_rwg_tile_corner": [150, 150],
+	"aaa_rwg_tile_intersection": [150, 150],
+	"aaa_rwg_tile_neighborhood_cap_01": [150, 150],
+	"aaa_rwg_tile_straight": [150, 150],
+	"aaa_rwg_tile_t": [150, 150],
+	"aaa_script_entrances": [88, 25],
+	"aaa_script_test": [68, 116],
+	"aaa_shipping_containers": [51, 39],
+	"aaa_sleeper_animal_test": [154, 25],
+	"aaa_sleeper_boss_test": [24, 45],
+	"aaa_sleeper_examples": [60, 60],
+	"aaa_sleeper_spawntimeloctest_1": [20, 24],
+	"aaa_sleeper_test": [154, 25],
+	"aaa_sleeper_volume_groups_01": [20, 31],
+	"AAA_stained_glass_tiling": [86, 100],
+	"aaa_store_clothing_facades_01": [127, 30],
+	"aaa_store_electronics_facades_01": [246, 31],
+	"aaa_tent_test": [109, 80],
+	"aaa_texture_room": [8, 7],
+	"aaa_tier_1_quest": [25, 25],
+	"aaa_tier_2_quest": [25, 25],
+	"aaa_tier_3_quest": [25, 25],
+	"aaa_tier_4_quest": [25, 25],
+	"aaa_tier_5_quest": [25, 25],
+	"aaa_trailers": [98, 65],
+	"aaa_trigger_test": [77, 92],
+	"aaa_trims_test": [66, 42],
+	"aaa_truck_trailers": [25, 52],
+	"AAA_utility_waterworks": [25, 25],
+	"aaa_vents_test": [31, 30],
+	"aaa_water_sim_test": [57, 60],
+	"aaa_wedge60_slope_set": [42, 42],
+	"abandoned_house_01": [42, 42],
+	"abandoned_house_02": [42, 42],
+	"abandoned_house_03": [42, 42],
+	"abandoned_house_04": [42, 42],
+	"abandoned_house_05": [42, 42],
+	"abandoned_house_06": [42, 42],
+	"abandoned_house_07": [42, 42],
+	"abandoned_house_08": [42, 42],
+	"abandoned_house_09": [42, 42],
+	"abandoned_house_10": [42, 42],
+	"apartments_01": [42, 42],
+	"apartments_02": [60, 60],
+	"apartments_03": [42, 42],
+	"apartments_04": [42, 42],
+	"apartments_05": [42, 42],
+	"apartments_06": [100, 100],
+	"army_camp_01": [53, 61],
+	"army_camp_02": [54, 60],
+	"army_camp_03": [60, 60],
+	"army_camp_04": [60, 60],
+	"army_camp_05": [60, 60],
+	"army_camp_06": [60, 60],
+	"army_camp_07": [60, 60],
+	"army_camp_08": [60, 60],
+	"army_camp_09": [60, 60],
+	"army_camp_10": [60, 60],
+	"auto_mechanic_01": [60, 60],
+	"bank_01": [42, 42],
+	"bank_02": [25, 25],
+	"bar_01": [42, 42],
+	"barn_01": [60, 60],
+	"barn_02": [60, 60],
+	"barn_03": [60, 60],
+	"base_military_01": [100, 100],
+	"base_survivor_02": [60, 60],
+	"blueberryfield_sm": [12, 12],
+	"bluff01": [15, 19],
+	"body_shop_01": [42, 42],
+	"bombshelter_01": [42, 42],
+	"bombshelter_02": [60, 60],
+	"bombshelter_03": [25, 25],
+	"bombshelter_04": [25, 25],
+	"bombshelter_05": [25, 25],
+	"bombshelter_06": [25, 25],
+	"bombshelter_07": [25, 25],
+	"bombshelter_08": [25, 25],
+	"bombshelter_09": [25, 25],
+	"bombshelter_10": [25, 25],
+	"bombshelter_11": [25, 25],
+	"bowling_alley_01": [60, 60],
+	"bowling_alley_02": [42, 42],
+	"bridge_asphalt_broken": [15, 47],
+	"bridge_asphalt1": [15, 43],
+	"bridge_concrete_1": [13, 39],
+	"bridge_concrete_2": [45, 17],
+	"bridge_concrete1": [39, 11],
+	"bridge_wood1": [39, 11],
+	"bridge_wood2": [31, 9],
+	"bunker_00": [100, 100],
+	"bus_stop_01": [29, 9],
+	"bus_wreck_01": [27, 7],
+	"business_burnt_01": [42, 42],
+	"business_burnt_02": [42, 42],
+	"cabin_01": [42, 42],
+	"cabin_02": [42, 42],
+	"cabin_03": [60, 60],
+	"cabin_04": [42, 42],
+	"cabin_05": [42, 42],
+	"cabin_06": [39, 32],
+	"cabin_07": [42, 42],
+	"cabin_08": [42, 42],
+	"cabin_09": [60, 60],
+	"cabin_10": [30, 52],
+	"cabin_11": [42, 42],
+	"cabin_12": [42, 42],
+	"cabin_13": [60, 60],
+	"cabin_14": [42, 42],
+	"cabin_15": [40, 48],
+	"cabin_16": [42, 42],
+	"cabin_17": [60, 60],
+	"cabin_18": [60, 60],
+	"cabin_20": [60, 60],
+	"canyon_car_wreck": [29, 19],
+	"canyon_cliff_dwellings": [48, 77],
+	"canyon_gift_shop": [56, 50],
+	"canyon_gift_shop_parking": [36, 40],
+	"canyon_gift_shop_sign": [4, 10],
+	"canyon_mine": [64, 44],
+	"carlot_01": [42, 42],
+	"carlot_02": [42, 42],
+	"cave_01": [33, 54],
+	"cave_02": [33, 54],
+	"cave_03": [44, 54],
+	"cave_04": [33, 54],
+	"cave_05": [26, 61],
+	"cave_06": [25, 25],
+	"cave_07": [60, 60],
+	"cave_09": [100, 100],
+	"cave_10": [25, 25],
+	"cave_11": [25, 25],
+	"cave_12": [25, 25],
+	"cave_13": [25, 25],
+	"cave_14": [25, 25],
+	"cave_16": [25, 25],
+	"cave_17": [25, 25],
+	"cave_18": [25, 25],
+	"cave_19": [25, 25],
+	"cave_20": [25, 25],
+	"cemetery_01": [42, 42],
+	"cemetery_02": [42, 42],
+	"church_01": [60, 60],
+	"church_02": [42, 42],
+	"church_sm_01": [42, 42],
+	"city_center_01": [60, 60],
+	"commercial_site_01": [42, 42],
+	"commercial_site_02": [42, 42],
+	"commercial_strip_01": [42, 42],
+	"commercial_strip_02": [42, 42],
+	"commercial_strip_03": [60, 60],
+	"commercial_strip_04": [42, 42],
+	"commercial_strip_05": [60, 60],
+	"commercial_strip_07": [42, 42],
+	"commercial_strip_08": [42, 42],
+	"commercial_strip_09": [42, 42],
+	"commercial_strip_10": [42, 42],
+	"cornfield_lg": [48, 48],
+	"cornfield_med": [24, 24],
+	"cornfield_sm": [12, 12],
+	"country_junkyard_01": [42, 42],
+	"country_junkyard_02": [60, 60],
+	"countrytown_business_01": [42, 42],
+	"countrytown_business_02": [42, 42],
+	"countrytown_business_03": [42, 42],
+	"countrytown_business_04": [42, 42],
+	"countrytown_business_05": [42, 42],
+	"countrytown_business_06": [42, 42],
+	"countrytown_business_07": [42, 42],
+	"countrytown_business_08": [42, 42],
+	"countrytown_business_09": [42, 42],
+	"countrytown_business_10": [42, 42],
+	"countrytown_business_11": [42, 42],
+	"countrytown_business_12": [42, 42],
+	"countrytown_business_13": [42, 42],
+	"countrytown_business_14": [42, 42],
+	"countrytown_business_15": [60, 60],
+	"countrytown_business_16": [42, 42],
+	"countrytown_business_17": [42, 42],
+	"countrytown_church_02": [42, 42],
+	"courthouse_med_01": [60, 60],
+	"crater_deco_01": [25, 25],
+	"crater_deco_02": [25, 25],
+	"crater_deco_03": [25, 25],
+	"culvert_01": [21, 45],
+	"deco_coal_vein": [2, 2],
+	"deco_foilage_01": [7, 7],
+	"deco_foilage_02": [7, 7],
+	"deco_foilage_03": [7, 7],
+	"deco_foilage_04": [7, 7],
+	"deco_foilage_05": [7, 7],
+	"deco_iron_vein": [2, 2],
+	"deco_lead_vein": [2, 2],
+	"deco_nitrate_vein": [2, 2],
+	"deco_remnant_stone_01": [8, 8],
+	"deco_remnant_stone_02": [9, 8],
+	"deco_remnant_stone_03": [9, 9],
+	"deco_remnant_stone_04": [9, 9],
+	"deco_remnant_stone_05": [9, 9],
+	"deco_remnant_wood_01": [8, 8],
+	"deco_remnant_wood_02": [6, 7],
+	"deco_rubble_brick_01": [5, 5],
+	"deco_rubble_brick_02": [5, 5],
+	"deco_rubble_brick_03": [5, 5],
+	"deco_rubble_stone_01": [5, 5],
+	"deco_rubble_stone_02": [7, 7],
+	"deco_rubble_stone_03": [4, 4],
+	"deco_rubble_stone_04": [7, 7],
+	"deco_rubble_stone_05": [9, 9],
+	"deco_rubble_stone_06": [5, 5],
+	"deco_rubble_stone_07": [5, 5],
+	"deco_rubble_stone_08": [7, 7],
+	"deco_rubble_stone_09": [9, 9],
+	"deco_rubble_stone_10": [4, 4],
+	"deco_rubble_stone_11": [7, 7],
+	"deco_rubble_stone_12": [7, 7],
+	"deco_rubble_stone_13": [7, 7],
+	"deco_rubble_stone_14": [7, 7],
+	"deco_rubble_stone_15": [7, 7],
+	"deco_rubble_stone_16": [7, 7],
+	"deco_rubble_wood_01": [7, 7],
+	"deco_rubble_wood_02": [5, 5],
+	"deco_shale_vein": [2, 2],
+	"departure_bridge_01": [32, 11],
+	"departure_bridge_02": [16, 11],
+	"departure_bridge_1": [146, 17],
+	"departure_bridge_2": [176, 19],
+	"departure_city_blk_01": [103, 103],
+	"departure_city_blk_plaza": [103, 103],
+	"desert_arch": [24, 8],
+	"desert_form01": [26, 29],
+	"desert_form02": [9, 10],
+	"desert_town_blk_01": [150, 161],
+	"desert_town_blk_02": [150, 100],
+	"diersville_city_blk_01": [135, 115],
+	"diersville_city_blk_02": [135, 115],
+	"diner_01": [42, 42],
+	"diner_02": [42, 42],
+	"diner_03": [42, 42],
+	"diner_04": [42, 42],
+	"diner_07": [60, 60],
+	"docks_01": [27, 27],
+	"docks_02": [44, 58],
+	"docks_03": [53, 54],
+	"docks_04": [12, 25],
+	"docks_05": [25, 25],
+	"downtown_building_01": [42, 42],
+	"downtown_building_02": [42, 42],
+	"downtown_building_03": [60, 60],
+	"downtown_building_04": [42, 42],
+	"downtown_building_05": [42, 42],
+	"downtown_business_06": [42, 42],
+	"downtown_business_07": [42, 42],
+	"downtown_filler_01": [25, 25],
+	"downtown_filler_02": [25, 25],
+	"downtown_filler_03": [25, 25],
+	"downtown_filler_04": [25, 25],
+	"downtown_filler_05": [25, 25],
+	"downtown_filler_06": [25, 25],
+	"downtown_filler_07": [25, 25],
+	"downtown_filler_08": [25, 25],
+	"downtown_filler_09": [25, 25],
+	"downtown_filler_11": [25, 25],
+	"downtown_filler_12": [25, 25],
+	"downtown_filler_13": [25, 25],
+	"downtown_filler_14": [25, 25],
+	"downtown_filler_15": [25, 25],
+	"downtown_filler_21": [25, 25],
+	"downtown_filler_22": [25, 25],
+	"downtown_filler_23": [25, 25],
+	"downtown_filler_24": [25, 25],
+	"downtown_filler_25": [25, 25],
+	"downtown_filler_26": [25, 25],
+	"downtown_filler_27": [25, 25],
+	"downtown_filler_29": [25, 25],
+	"downtown_filler_30": [25, 25],
+	"downtown_filler_31": [25, 25],
+	"downtown_filler_park_01": [25, 25],
+	"downtown_filler_park_02": [25, 25],
+	"downtown_filler_park_03": [25, 25],
+	"downtown_filler_park_04": [25, 25],
+	"downtown_filler_park_05": [25, 25],
+	"downtown_filler_plaza_01": [25, 25],
+	"downtown_filler_plaza_02": [25, 25],
+	"downtown_filler_plaza_03": [25, 25],
+	"downtown_filler_plaza_04": [25, 25],
+	"downtown_filler_plaza_05": [25, 25],
+	"downtown_park_01": [60, 60],
+	"downtown_park_02": [60, 60],
+	"downtown_park_03": [60, 60],
+	"downtown_parking_lot_01": [42, 42],
+	"downtown_strip_01": [42, 42],
+	"downtown_strip_02": [42, 42],
+	"downtown_strip_03": [42, 42],
+	"downtown_strip_04": [42, 42],
+	"downtown_strip_05": [42, 42],
+	"downtown_strip_06": [42, 42],
+	"downtown_strip_07": [42, 42],
+	"downtown_strip_08": [42, 25],
+	"downtown_strip_09": [42, 42],
+	"downtown_strip_10": [42, 42],
+	"downtown_strip_11": [42, 42],
+	"downtown_strip_12": [42, 42],
+	"factory_01": [100, 100],
+	"factory_02": [100, 100],
+	"factory_03": [60, 60],
+	"farm_01": [60, 60],
+	"farm_02": [60, 60],
+	"farm_03": [60, 60],
+	"farm_04": [60, 60],
+	"farm_05": [60, 60],
+	"farm_06": [60, 60],
+	"farm_07": [60, 60],
+	"farm_08": [60, 60],
+	"farm_10": [60, 60],
+	"farm_11": [60, 60],
+	"farm_12": [60, 60],
+	"farm_13": [100, 100],
+	"farm_14": [60, 60],
+	"farm_15": [60, 60],
+	"farm_16": [60, 60],
+	"farm_17": [60, 60],
+	"farm_18": [60, 60],
+	"farm_19": [60, 60],
+	"farm_20": [60, 60],
+	"fastfood_01": [42, 42],
+	"fastfood_02": [42, 42],
+	"fastfood_03": [42, 42],
+	"fastfood_04": [42, 42],
+	"fastfood_05": [42, 42],
+	"fastfood_06": [42, 42],
+	"fastfood_07": [42, 42],
+	"field_concert_01": [100, 100],
+	"fire_station_01": [42, 42],
+	"fire_station_02": [42, 42],
+	"fire_station_03": [42, 42],
+	"fire_station_04": [42, 42],
+	"football_stadium": [100, 100],
+	"funeral_home_01": [42, 42],
+	"gas_station_01": [42, 42],
+	"gas_station_02": [42, 42],
+	"gas_station_03": [42, 42],
+	"gas_station_04": [60, 60],
+	"gas_station_05": [60, 60],
+	"gas_station_06": [42, 42],
+	"gas_station_07": [60, 60],
+	"gas_station_08": [42, 42],
+	"gas_station_09": [60, 60],
+	"gas_station_10": [42, 42],
+	"gas_station_11": [42, 42],
+	"gas_station_12": [60, 60],
+	"gravestowne_city_blk_01": [103, 103],
+	"gravestowne_city_blk_half": [103, 25],
+	"gravestowne_city_blk_quarter": [25, 25],
+	"gravestowne_street_crater_01": [9, 9],
+	"hospital_01": [100, 100],
+	"hotel_01": [60, 60],
+	"hotel_02": [100, 100],
+	"hotel_03": [100, 100],
+	"hotel_04": [60, 60],
+	"hotel_ostrich": [60, 60],
+	"house_burnt_01": [42, 42],
+	"house_burnt_02": [42, 42],
+	"house_burnt_03": [42, 42],
+	"house_burnt_04": [42, 42],
+	"house_burnt_05": [42, 42],
+	"house_burnt_06": [42, 42],
+	"house_construction_01": [42, 42],
+	"house_construction_02": [42, 42],
+	"house_construction_03": [42, 42],
+	"house_construction_04": [60, 60],
+	"house_construction_05": [42, 42],
+	"house_country_01": [42, 42],
+	"house_modern_01": [42, 42],
+	"house_modern_02": [60, 60],
+	"house_modern_03": [42, 42],
+	"house_modern_04": [42, 42],
+	"house_modern_05": [60, 60],
+	"house_modern_06": [42, 42],
+	"house_modern_07": [42, 42],
+	"house_modern_08": [42, 42],
+	"house_modern_09": [42, 42],
+	"house_modern_10": [42, 42],
+	"house_modern_11": [42, 42],
+	"house_modern_12": [42, 42],
+	"house_modern_13": [42, 42],
+	"house_modern_14": [42, 42],
+	"house_modern_15": [42, 42],
+	"house_modern_16": [42, 42],
+	"house_modern_17": [42, 42],
+	"house_modern_18": [100, 100],
+	"house_modern_19": [42, 42],
+	"house_modern_20": [42, 42],
+	"house_modern_21": [42, 42],
+	"house_modern_22": [42, 42],
+	"house_modern_23": [42, 42],
+	"house_modern_24": [100, 100],
+	"house_modern_25": [42, 42],
+	"house_modern_26": [42, 42],
+	"house_modern_27": [42, 42],
+	"house_modern_28": [42, 42],
+	"house_modern_29": [42, 42],
+	"house_modern_30": [60, 60],
+	"house_modern_31": [60, 60],
+	"house_modern_32": [42, 42],
+	"house_modern_33": [42, 42],
+	"house_modern_34": [42, 42],
+	"house_modern_35": [42, 42],
+	"house_old_bungalow_01": [42, 42],
+	"house_old_bungalow_02": [42, 42],
+	"house_old_bungalow_03": [42, 42],
+	"house_old_bungalow_04": [42, 42],
+	"house_old_bungalow_05": [42, 42],
+	"house_old_bungalow_06": [42, 42],
+	"house_old_bungalow_07": [42, 42],
+	"house_old_bungalow_08": [42, 42],
+	"house_old_bungalow_09": [42, 42],
+	"house_old_bungalow_10": [42, 42],
+	"house_old_bungalow_11": [60, 60],
+	"house_old_bungalow_12": [42, 42],
+	"house_old_cottage_01": [42, 42],
+	"house_old_cottage_01_detail": [33, 38],
+	"house_old_cottage_01_path": [41, 42],
+	"house_old_cottage_01_sleeper": [33, 38],
+	"house_old_gambrel_01": [42, 42],
+	"house_old_gambrel_02": [42, 42],
+	"house_old_gambrel_03": [100, 100],
+	"house_old_gambrel_04": [42, 42],
+	"house_old_mansard_01": [42, 42],
+	"house_old_mansard_02": [60, 60],
+	"house_old_mansard_03": [42, 42],
+	"house_old_mansard_04": [42, 42],
+	"house_old_mansard_05": [42, 42],
+	"house_old_mansard_06": [100, 100],
+	"house_old_mansard_07": [60, 60],
+	"house_old_modular_01": [42, 42],
+	"house_old_modular_02": [42, 42],
+	"house_old_modular_03": [42, 42],
+	"house_old_modular_04": [42, 42],
+	"house_old_modular_05": [42, 42],
+	"house_old_modular_06": [42, 42],
+	"house_old_modular_07": [42, 42],
+	"house_old_modular_08": [42, 42],
+	"house_old_pyramid_01": [42, 42],
+	"house_old_pyramid_02": [42, 42],
+	"house_old_pyramid_03": [42, 42],
+	"house_old_pyramid_04": [42, 42],
+	"house_old_pyramid_05": [42, 42],
+	"house_old_ranch_01": [60, 60],
+	"house_old_ranch_02": [60, 60],
+	"house_old_ranch_03": [60, 60],
+	"house_old_ranch_04": [60, 60],
+	"house_old_ranch_05": [60, 60],
+	"house_old_ranch_06": [60, 60],
+	"house_old_ranch_07": [60, 60],
+	"house_old_ranch_08": [60, 60],
+	"house_old_ranch_09": [60, 60],
+	"house_old_ranch_10": [60, 60],
+	"house_old_ranch_11": [42, 42],
+	"house_old_ranch_12": [60, 60],
+	"house_old_ranch_13": [60, 60],
+	"house_old_tudor_01": [42, 42],
+	"house_old_tudor_02": [42, 42],
+	"house_old_tudor_03": [60, 60],
+	"house_old_tudor_04": [42, 42],
+	"house_old_tudor_05": [42, 42],
+	"house_old_tudor_06": [42, 42],
+	"house_old_victorian_01": [60, 60],
+	"house_old_victorian_02": [42, 42],
+	"house_old_victorian_03": [60, 60],
+	"house_old_victorian_04": [42, 42],
+	"house_old_victorian_05": [42, 42],
+	"house_old_victorian_06": [42, 42],
+	"house_old_victorian_07": [42, 42],
+	"house_old_victorian_08": [42, 42],
+	"house_old_victorian_09": [42, 42],
+	"house_old_victorian_10": [42, 42],
+	"house_old_victorian_11": [42, 42],
+	"house_old_victorian_12": [42, 42],
+	"housing_development_01": [100, 100],
+	"hwy_overpass_sign_01": [1, 17],
+	"indian_burial_grounds_01": [27, 27],
+	"industrial_60_01": [60, 60],
+	"industrial_60_02": [60, 60],
+	"industrial_60_03": [60, 60],
+	"industrial_60_04": [60, 60],
+	"industrial_business_08": [42, 42],
+	"industrial_strip_01": [42, 42],
+	"industrial_strip_02": [42, 42],
+	"industrial_strip_03": [42, 42],
+	"industrial_strip_05": [42, 42],
+	"industrial_strip_06": [42, 42],
+	"industrial_strip_09": [42, 42],
+	"industrial_strip_10": [42, 42],
+	"industrial_strip_11": [42, 42],
+	"installation_red_mesa": [72, 83],
+	"junkyard_01": [60, 60],
+	"lodge_01": [60, 60],
+	"lot_country_01": [42, 42],
+	"lot_country_02": [42, 42],
+	"lot_countryres_01": [25, 25],
+	"lot_countryres_02": [25, 25],
+	"lot_countryres_07": [25, 25],
+	"lot_countryres_08": [25, 25],
+	"lot_countryres_09": [25, 25],
+	"lot_countryres_10": [25, 25],
+	"lot_countryres_11": [25, 25],
+	"lot_countryres_12": [25, 25],
+	"lot_countryres_13": [25, 25],
+	"lot_countryres_14": [25, 25],
+	"lot_countryres_15": [25, 25],
+	"lot_countryres_16": [25, 25],
+	"lot_countryres_17": [25, 25],
+	"lot_countryres_18": [25, 25],
+	"lot_countryres_20": [25, 25],
+	"lot_countrytown_01": [25, 25],
+	"lot_countrytown_02": [25, 25],
+	"lot_countrytown_05": [25, 25],
+	"lot_countrytown_06": [25, 25],
+	"lot_countrytown_07": [25, 25],
+	"lot_countrytown_08": [25, 25],
+	"lot_countrytown_10": [25, 25],
+	"lot_countrytown_12": [25, 25],
+	"lot_countrytown_13": [25, 25],
+	"lot_downtown_filler_01": [25, 25],
+	"lot_film_01": [42, 42],
+	"lot_industrial_01": [25, 25],
+	"lot_industrial_02": [25, 25],
+	"lot_industrial_03": [25, 25],
+	"lot_industrial_04": [25, 25],
+	"lot_industrial_05": [25, 25],
+	"lot_industrial_06": [25, 25],
+	"lot_industrial_07": [25, 25],
+	"lot_industrial_08": [25, 25],
+	"lot_industrial_09": [25, 25],
+	"lot_industrial_10": [25, 25],
+	"lot_industrial_11": [25, 25],
+	"lot_industrial_12": [25, 25],
+	"lot_industrial_13": [25, 25],
+	"lot_industrial_14": [25, 25],
+	"lot_industrial_15": [25, 25],
+	"lot_industrial_16": [25, 25],
+	"lot_industrial_17": [25, 25],
+	"lot_industrial_18": [25, 25],
+	"lot_industrial_19": [25, 25],
+	"lot_industrial_20": [25, 25],
+	"lot_industrial_21": [25, 25],
+	"lot_rural_filler_01": [60, 60],
+	"lot_rural_filler_02": [60, 60],
+	"lot_rural_filler_03": [60, 60],
+	"lot_rural_filler_04": [60, 60],
+	"lot_rural_filler_05": [60, 60],
+	"lot_rural_filler_06": [60, 60],
+	"lot_rural_filler_07": [60, 60],
+	"lot_rural_filler_08": [60, 60],
+	"lot_rural_filler_09": [60, 60],
+	"lot_rural_filler_10": [60, 60],
+	"lot_rural_filler_11": [60, 60],
+	"lot_rural_filler_12": [60, 60],
+	"lot_rural_filler_13": [60, 60],
+	"lot_rural_filler_14": [60, 60],
+	"lot_rural_filler_15": [60, 60],
+	"lot_rural_filler_16": [60, 60],
+	"lot_rural_filler_17": [60, 60],
+	"lot_rural_filler_18": [60, 60],
+	"lot_rural_filler_19": [60, 60],
+	"lot_rural_filler_20": [60, 60],
+	"lot_rural_filler_21": [60, 60],
+	"lot_rural_filler_22": [60, 60],
+	"lot_rural_filler_23": [60, 60],
+	"lot_rural_filler_24": [60, 60],
+	"lot_rural_filler_25": [60, 60],
+	"lot_rural_filler_26": [60, 60],
+	"lot_rural_filler_27": [60, 60],
+	"lot_rural_filler_28": [60, 60],
+	"lot_rural_filler_29": [60, 60],
+	"lot_rural_filler_30": [60, 60],
+	"lot_vacant_01": [25, 25],
+	"lot_vacant_02": [25, 25],
+	"lot_vacant_03": [25, 25],
+	"lot_vacant_04": [25, 25],
+	"lot_vacant_05": [42, 42],
+	"lot_vacant_06": [25, 25],
+	"lot_vacant_07": [25, 25],
+	"lot_vacant_08": [25, 25],
+	"lot_vacant_09": [25, 25],
+	"mine_01": [100, 100],
+	"motel_01": [60, 60],
+	"motel_02": [42, 42],
+	"motel_03": [60, 60],
+	"motel_04": [60, 60],
+	"motel_05": [42, 42],
+	"navezgane_waterfall_01": [14, 3],
+	"nursing_home_01": [100, 100],
+	"office_01": [42, 42],
+	"office_02": [42, 42],
+	"office_03": [42, 42],
+	"office_04": [42, 42],
+	"office_05": [42, 42],
+	"office_06": [60, 60],
+	"office_07": [42, 42],
+	"oldwest_business_01": [25, 25],
+	"oldwest_business_02": [25, 25],
+	"oldwest_business_03": [50, 25],
+	"oldwest_business_04": [25, 25],
+	"oldwest_business_05": [25, 25],
+	"oldwest_business_06": [25, 25],
+	"oldwest_business_07": [25, 25],
+	"oldwest_business_08": [25, 25],
+	"oldwest_business_09": [25, 25],
+	"oldwest_business_10": [25, 25],
+	"oldwest_business_11": [25, 25],
+	"oldwest_business_12": [25, 25],
+	"oldwest_business_13": [25, 25],
+	"oldwest_business_14": [25, 25],
+	"oldwest_church": [42, 42],
+	"oldwest_coal_factory": [42, 42],
+	"oldwest_gallows": [25, 25],
+	"oldwest_jail": [25, 25],
+	"oldwest_stables": [25, 25],
+	"oldwest_strip_01": [50, 25],
+	"oldwest_strip_02": [50, 25],
+	"oldwest_strip_03": [50, 25],
+	"oldwest_strip_04": [50, 25],
+	"oldwest_watertower": [25, 25],
+	"park_01": [42, 42],
+	"park_02": [42, 42],
+	"park_03": [42, 42],
+	"park_basketball": [42, 42],
+	"park_plaza_01": [49, 47],
+	"park_plaza_02": [46, 46],
+	"parking_garage_01": [42, 42],
+	"parking_garage_02": [42, 42],
+	"parking_garage_03": [42, 42],
+	"parking_garage_04": [42, 42],
+	"parking_lot_01": [42, 42],
+	"parking_lot_02": [42, 42],
+	"parking_lot_03": [42, 42],
+	"part_5m_water_tower": [7, 8],
+	"part_7m_tunnel": [9, 21],
+	"part_ambulance_01": [5, 8],
+	"part_appliance_pile_01": [4, 4],
+	"part_appliance_pile_02": [4, 4],
+	"part_arch_ramp": [9, 9],
+	"part_arched_window": [4, 2],
+	"part_armoire_setups": [18, 33],
+	"part_armytruck_01": [5, 13],
+	"part_asphalt_hole_01": [16, 17],
+	"part_atrium_19x19_octagon": [19, 19],
+	"part_atrium_19x19_octagon_01_1way": [19, 19],
+	"part_atrium_19x19_octagon_01_2way": [19, 19],
+	"part_atrium_19x19_octagon_01_3way": [19, 19],
+	"part_atrium_19x19_octagon_01_4way": [19, 19],
+	"part_atrium_19x19_octagon_02_1way": [19, 19],
+	"part_atrium_19x19_octagon_02_2way": [19, 19],
+	"part_atrium_19x19_octagon_02_3way": [21, 21],
+	"part_atrium_19x19_octagon_02_4way": [19, 19],
+	"part_atrium_19x19_octagon_03_1way": [19, 19],
+	"part_atrium_19x19_octagon_03_2way": [19, 19],
+	"part_atrium_19x19_octagon_03_3way": [19, 19],
+	"part_atrium_19x19_octagon_03_4way": [21, 21],
+	"part_atrium_21x21_ocatagon": [21, 21],
+	"part_atrium_21x21_octagon_01_1way": [21, 21],
+	"part_atrium_21x21_octagon_01_2way": [21, 21],
+	"part_atrium_21x21_octagon_01_3way": [21, 21],
+	"part_atrium_21x21_octagon_01_4way": [21, 21],
+	"part_atrium_21x21_octagon_02_1way": [21, 21],
+	"part_atrium_21x21_octagon_02_2way": [21, 21],
+	"part_atrium_21x21_octagon_02_3way": [21, 21],
+	"part_atrium_21x21_octagon_02_4way": [21, 21],
+	"part_atrium_21x21_octagon_03_1way": [21, 21],
+	"part_atrium_21x21_octagon_03_2way": [21, 21],
+	"part_atrium_21x21_octagon_03_3way": [21, 21],
+	"part_atrium_21x21_octagon_03_4way": [21, 21],
+	"part_bandit_sheets": [17, 7],
+	"part_billboard_beanthere": [13, 4],
+	"part_billboard_diagonal": [9, 9],
+	"part_billboard_digital": [11, 3],
+	"part_billboard_donate_blood": [10, 4],
+	"part_billboard_end_here": [10, 4],
+	"part_billboard_fizz": [13, 4],
+	"part_billboard_kripnews": [13, 5],
+	"part_billboard_luigi": [13, 4],
+	"part_billboard_mammapizza": [13, 5],
+	"part_billboard_meltdowns": [13, 5],
+	"part_billboard_mycell": [13, 5],
+	"part_billboard_pills": [13, 4],
+	"part_billboard_umove": [13, 5],
+	"part_brewing_equipment_01": [4, 7],
+	"part_bridge_10x10_end_01": [10, 10],
+	"part_bridge_10x10_tile_01": [10, 10],
+	"part_building_billboard": [10, 4],
+	"part_bunkbed_01": [4, 2],
+	"part_bunkbed_02": [7, 3],
+	"part_bunkbed_03": [4, 3],
+	"part_bus_stop_01": [9, 4],
+	"part_bus_stop_02": [5, 10],
+	"part_bus_stop_03": [5, 11],
+	"part_bus_stop_04": [11, 5],
+	"part_camp_utility_celltower_03": [12, 8],
+	"part_campsite_01": [9, 12],
+	"part_car_accident_01": [8, 13],
+	"part_car_accident_02": [16, 16],
+	"part_car_on_blocks_01": [4, 4],
+	"part_cave_supports": [16, 5],
+	"part_chain_link_fences": [19, 24],
+	"part_chicken_coup_01": [7, 7],
+	"part_chicken_coup_02": [7, 7],
+	"part_chicken_coup_03": [7, 7],
+	"part_chicken_coup_04": [7, 7],
+	"part_cinema_sign_21_59": [5, 2],
+	"part_cinema_sign_lone_wolf": [5, 2],
+	"part_cinema_sign_mamas_justice": [5, 2],
+	"part_cinema_sign_not_alive": [5, 2],
+	"part_cinema_sign_sexual_tension": [5, 2],
+	"part_citysign_fallen": [13, 12],
+	"part_citysign_noname": [2, 13],
+	"part_clocks": [15, 1],
+	"part_coffee_stand": [11, 7],
+	"part_concert_sign_01": [7, 2],
+	"part_concert_sign_02": [7, 2],
+	"part_concert_sign_03": [7, 2],
+	"part_concert_sign_04": [7, 2],
+	"part_container_mobile_crane": [8, 11],
+	"part_countryresidential_back_lot1": [25, 17],
+	"part_countryresidential_back_lot2": [25, 17],
+	"part_countryresidential_back_lot3": [14, 6],
+	"part_countryresidential_back_lot4": [17, 47],
+	"part_countryresidential_back_lot5": [4, 12],
+	"part_countryresidential_back_lot6": [4, 10],
+	"part_countryresidential_back_lot7": [5, 11],
+	"part_countryresidential_back_lot8": [5, 11],
+	"part_countrytown_junk": [26, 25],
+	"part_crane_rear": [5, 3],
+	"part_crane_tip": [1, 6],
+	"part_crosswalk": [1, 1],
+	"part_curtains_drapes": [45, 3],
+	"part_departure_sign_01": [5, 2],
+	"part_diersville_sign_01": [5, 2],
+	"part_display_armor_01": [3, 3],
+	"part_doorway_3x3_trimmed_sc": [29, 13],
+	"part_doorway_brick_3x3_trimmed_01": [5, 1],
+	"part_doorway_brick_3x3_trimmed_02": [9, 1],
+	"part_doorway_brick_3x3_trimmed_03": [13, 1],
+	"part_doorway_concrete_3x3_trimmed_01": [5, 1],
+	"part_doorway_concrete_3x3_trimmed_02": [9, 1],
+	"part_doorway_concrete_3x3_trimmed_03": [13, 1],
+	"part_doorway_glass_2x2_01_broken_left": [2, 2],
+	"part_doorway_glass_2x2_01_broken_right": [2, 2],
+	"part_doorway_glass_2x2_01_bulletproof_left": [2, 2],
+	"part_doorway_glass_2x2_01_bulletproof_right": [2, 2],
+	"part_doorway_glass_2x2_01_left": [2, 2],
+	"part_doorway_glass_2x2_01_right": [2, 2],
+	"part_doorway_glass_2x2_02": [2, 2],
+	"part_doorway_glass_2x2_02_broken": [2, 2],
+	"part_doorway_glass_2x2_02_bulletproof": [2, 2],
+	"part_doorway_glass_3x3_01": [3, 2],
+	"part_doorway_glass_3x3_01_broken": [3, 2],
+	"part_doorway_glass_3x3_01_bulletproof": [3, 2],
+	"part_doorway_glass_4x3_01": [4, 2],
+	"part_doorway_glass_4x3_01_broken": [4, 2],
+	"part_doorway_glass_4x3_01_bulletproof": [4, 2],
+	"part_doorway_glass_5x3_01": [5, 2],
+	"part_doorway_glass_5x3_01_broken": [5, 2],
+	"part_doorway_glass_5x3_01_bulletproof": [5, 2],
+	"part_doorway_glass_6x3_01": [6, 2],
+	"part_doorway_glass_6x3_01_broken": [6, 2],
+	"part_doorway_glass_6x3_01_bulletproof": [6, 2],
+	"part_doorway_metal_3x3_trimmed_01": [5, 1],
+	"part_doorway_metal_3x3_trimmed_02": [9, 1],
+	"part_doorway_metal_3x3_trimmed_03": [13, 1],
+	"part_doorway_wood_3x3_trimmed_01": [5, 1],
+	"part_doorway_wood_3x3_trimmed_02": [9, 1],
+	"part_doorway_wood_3x3_trimmed_03": [13, 1],
+	"part_dormer_ramp_01": [3, 6],
+	"part_dormer_wedge_01": [3, 7],
+	"part_downtown_hotel_sign": [7, 1],
+	"part_downtown_road_construction": [16, 35],
+	"part_driveway_countryresidential_01": [4, 1],
+	"part_driveway_countryresidential_02": [12, 1],
+	"part_driveway_countryresidential_03": [6, 1],
+	"part_driveway_countryresidential_04": [11, 1],
+	"part_driveway_countryresidential_05": [9, 1],
+	"part_driveway_countryresidential_06": [6, 1],
+	"part_driveway_countryresidential_07": [5, 1],
+	"part_driveway_countryresidential_08": [13, 1],
+	"part_driveway_countryresidential_09": [7, 1],
+	"part_driveway_countryresidential_10": [5, 1],
+	"part_driveway_countryresidential_11": [16, 1],
+	"part_driveway_countryresidential_12": [8, 1],
+	"part_driveway_countryresidential_13": [31, 1],
+	"part_driveway_countryresidential_14": [10, 1],
+	"part_driveway_countryresidential_15": [16, 1],
+	"part_driveway_countryresidential_16": [5, 1],
+	"part_driveway_countrytown_01": [12, 2],
+	"part_driveway_countrytown_02": [7, 2],
+	"part_driveway_countrytown_03": [6, 2],
+	"part_driveway_countrytown_04": [15, 2],
+	"part_driveway_countrytown_05": [6, 2],
+	"part_driveway_countrytown_06": [8, 2],
+	"part_driveway_countrytown_07": [9, 2],
+	"part_driveway_countrytown_08": [11, 2],
+	"part_driveway_countrytown_09": [14, 2],
+	"part_driveway_countrytown_10": [10, 2],
+	"part_driveway_countrytown_11": [7, 2],
+	"part_driveway_countrytown_12": [13, 2],
+	"part_driveway_countrytown_13": [5, 2],
+	"part_driveway_countrytown_14": [20, 2],
+	"part_driveway_countrytown_15": [23, 2],
+	"part_driveway_countrytown_16": [6, 2],
+	"part_driveway_countrytown_17": [6, 2],
+	"part_driveway_countrytown_18": [7, 2],
+	"part_driveway_countrytown_19": [10, 2],
+	"part_driveway_countrytown_20": [23, 2],
+	"part_driveway_countrytown_21": [41, 2],
+	"part_driveway_countrytown_22": [36, 2],
+	"part_driveway_countrytown_23": [44, 2],
+	"part_driveway_countrytown_24": [12, 2],
+	"part_driveway_countrytown_25": [24, 2],
+	"part_driveway_countrytown_26": [5, 2],
+	"part_driveway_countrytown_asphalt_04": [4, 2],
+	"part_driveway_culdesac_01": [6, 6],
+	"part_driveway_culdesac_02": [7, 7],
+	"part_driveway_gateway_01": [7, 2],
+	"part_driveway_gateway_02": [7, 2],
+	"part_driveway_gateway_03": [11, 2],
+	"part_driveway_gateway_04": [9, 2],
+	"part_driveway_gateway_05": [8, 2],
+	"part_driveway_gateway_06": [10, 2],
+	"part_driveway_gateway_07": [59, 2],
+	"part_driveway_gateway_08": [21, 2],
+	"part_driveway_gateway_09": [13, 2],
+	"part_driveway_gateway_10": [44, 2],
+	"part_driveway_gateway_11": [24, 2],
+	"part_driveway_gateway_12": [15, 2],
+	"part_driveway_gateway_checkpoint_01": [40, 19],
+	"part_driveway_gateway_checkpoint_02": [50, 19],
+	"part_driveway_gateway_checkpoint_03": [29, 18],
+	"part_driveway_gateway_checkpoint_04": [52, 19],
+	"part_driveway_gateway_checkpoint_05": [18, 29],
+	"part_driveway_hospital_01_navezgane": [100, 3],
+	"part_driveway_industrial_01": [7, 1],
+	"part_driveway_industrial_02": [13, 1],
+	"part_driveway_industrial_03": [6, 1],
+	"part_driveway_industrial_04": [10, 1],
+	"part_driveway_industrial_05": [20, 1],
+	"part_driveway_industrial_06": [23, 1],
+	"part_driveway_industrial_07": [40, 1],
+	"part_driveway_industrial_08": [9, 1],
+	"part_driveway_industrial_09": [17, 1],
+	"part_driveway_industrial_10": [8, 1],
+	"part_driveway_industrial_11": [14, 1],
+	"part_driveway_industrial_12": [15, 1],
+	"part_driveway_industrial_13": [18, 1],
+	"part_driveway_industrial_14": [33, 1],
+	"part_driveway_residential_01": [6, 5],
+	"part_driveway_residential_02": [8, 5],
+	"part_driveway_residential_03": [9, 5],
+	"part_driveway_residential_04": [7, 5],
+	"part_driveway_residential_05": [12, 5],
+	"part_driveway_residential_06": [6, 5],
+	"part_driveway_residential_07": [15, 5],
+	"part_driveway_residential_08": [18, 5],
+	"part_driveway_residential_09": [7, 5],
+	"part_driveway_residential_10": [10, 5],
+	"part_driveway_residential_11": [9, 5],
+	"part_driveway_residential_12": [5, 5],
+	"part_driveway_residential_13": [7, 5],
+	"part_driveway_residential_14": [11, 5],
+	"part_driveway_residential_15": [19, 5],
+	"part_driveway_residential_back_01": [7, 2],
+	"part_driveway_residential_back_02": [11, 2],
+	"part_driveway_residential_back_03": [7, 2],
+	"part_driveway_residential_back_04": [6, 2],
+	"part_driveway_residential_back_05": [40, 3],
+	"part_driveway_rural_01": [6, 3],
+	"part_driveway_rural_02": [5, 3],
+	"part_driveway_rural_03": [4, 3],
+	"part_driveway_rural_04": [19, 3],
+	"part_driveway_rural_05": [10, 3],
+	"part_driveway_rural_06": [8, 3],
+	"part_driveway_rural_07": [13, 3],
+	"part_driveway_rural_08": [7, 3],
+	"part_driveway_rural_09": [6, 3],
+	"part_driveway_rural_10": [9, 3],
+	"part_driveway_rural_11": [44, 3],
+	"part_driveway_rural_12": [7, 3],
+	"part_driveway_rural_13": [11, 3],
+	"part_driveway_rural_14": [41, 3],
+	"part_driveway_rural_15": [7, 3],
+	"part_driveway_rural_16": [15, 3],
+	"part_driveway_rural_17": [13, 3],
+	"part_driveway_rural_18": [16, 3],
+	"part_driveway_rural_19": [20, 3],
+	"part_dumpster": [4, 6],
+	"part_electrical_tower_01": [6, 4],
+	"part_farm_field": [59, 150],
+	"part_farm_field_2": [59, 87],
+	"part_farm60_barn_01": [17, 17],
+	"part_farm60_barn_02": [17, 17],
+	"part_farm60_corncrib_01": [7, 7],
+	"part_farm60_corncrib_02": [7, 7],
+	"part_farm60_field_01": [33, 33],
+	"part_farm60_field_02": [33, 33],
+	"part_farm60_field_03": [33, 33],
+	"part_farm60_field_04": [33, 33],
+	"part_farm60_house_01": [17, 17],
+	"part_farm60_house_02": [17, 17],
+	"part_farm60_house_03": [17, 17],
+	"part_farm60_shed_01": [7, 7],
+	"part_farm60_shed_02": [7, 7],
+	"part_farm60_silo_01": [7, 7],
+	"part_farm60_silo_02": [7, 7],
+	"part_farm60_yard_01": [16, 33],
+	"part_farm60_yard_02": [16, 33],
+	"part_farm60_yard_03": [16, 33],
+	"part_farm60_yard_04": [16, 33],
+	"part_fence": [46, 33],
+	"part_fence_chainlink": [6, 1],
+	"part_fence_chainlink_door": [6, 1],
+	"part_fence_industrial": [6, 2],
+	"part_fence_industrial_broken": [6, 2],
+	"part_fence_industrial_ground": [5, 3],
+	"part_fence_neighborhood": [7, 2],
+	"part_fence_perishton_bungalow_05": [45, 2],
+	"part_fence_residential_back": [42, 1],
+	"part_fence_residential_connection_01": [1, 2],
+	"part_fence_residential_connection_02": [1, 2],
+	"part_fence_residential_POI": [46, 44],
+	"part_fence_residential_side_01": [26, 1],
+	"part_fence_residential_side_02": [29, 1],
+	"part_floor_trim_01": [5, 5],
+	"part_floor_trim_02": [5, 5],
+	"part_floor_trim_03": [5, 5],
+	"part_fortification_01": [11, 5],
+	"part_freezer_5x5_01": [5, 5],
+	"part_freezer_7x7_01": [7, 7],
+	"part_furnace_01": [3, 3],
+	"part_fusebox_01": [1, 1],
+	"part_garagedoor_rails_01": [5, 2],
+	"part_gas_contraption_01": [3, 4],
+	"part_gateway_broken_bridge": [30, 26],
+	"part_gateway_broken_bridge_01": [22, 30],
+	"part_gateway_broken_bridge_02": [22, 30],
+	"part_gateway_intersection_car_wreck": [32, 48],
+	"part_gazebo_roof_V1": [7, 7],
+	"part_generator_01": [6, 4],
+	"part_generator_02": [5, 6],
+	"part_gravestowne_sign_01": [7, 2],
+	"part_greeble_building_side_01": [3, 1],
+	"part_greeble_rooftop_01": [5, 5],
+	"part_greeble_rooftop_02": [9, 4],
+	"part_greeble_rooftop_03": [4, 4],
+	"part_greeble_rooftop_04": [5, 5],
+	"part_greeble_rooftop_05": [5, 4],
+	"part_greeble_rooftop_06": [4, 6],
+	"part_greeble_rooftop_07": [4, 6],
+	"part_greeble_rooftop_08": [7, 7],
+	"part_greeble_rooftop_09": [5, 6],
+	"part_guardrail_8m_incline": [9, 10],
+	"part_guardrail_9m": [11, 1],
+	"part_harverster": [8, 11],
+	"part_helipad_01": [14, 14],
+	"part_high_voltage_box_1": [4, 3],
+	"part_high_voltage_box_2": [3, 3],
+	"part_high_voltage_box_3": [3, 1],
+	"part_highway_overpass": [18, 11],
+	"part_highway_transition": [18, 8],
+	"part_horde_large": [3, 3],
+	"part_horde_medium": [3, 3],
+	"part_horde_small": [3, 3],
+	"part_industrial_01": [10, 18],
+	"part_industrial_02": [10, 18],
+	"part_industrial_03": [10, 18],
+	"part_industrial_04": [10, 18],
+	"part_industrial_05": [11, 17],
+	"part_industrial_06": [13, 15],
+	"part_industrial_07": [9, 10],
+	"part_industrial_08": [9, 10],
+	"part_industrial_09": [10, 7],
+	"part_industrial_10": [10, 19],
+	"part_industrial_11": [9, 7],
+	"part_industrial_12": [9, 7],
+	"part_industrial_greeble_01": [6, 2],
+	"part_industrial_tank_horizontal": [8, 12],
+	"part_industrial_tank_vertical": [5, 4],
+	"part_kiosk_01": [6, 5],
+	"part_kiosk_02": [6, 5],
+	"part_kiosk_foodtrailer_01": [11, 7],
+	"part_kiosk_foodtrailer_02": [11, 7],
+	"part_kiosk_foodtrailer_03": [11, 7],
+	"part_kiosk_foodtrailer_04": [11, 7],
+	"part_kiosk_foodtrailer_05": [11, 7],
+	"part_kiosk_foodtrailer_06": [11, 7],
+	"part_kiosk_foodtrailer_07": [11, 7],
+	"part_kiosk_sign_01": [4, 2],
+	"part_kiosk_sign_02": [3, 2],
+	"part_kiosk_sign_03": [3, 2],
+	"part_kiosk_sign_04": [4, 2],
+	"part_kiosk_sign_05": [3, 2],
+	"part_kiosk_sign_06": [3, 2],
+	"part_kiosk_sign_empty": [3, 2],
+	"part_kiosk_sign_empty_slim": [3, 2],
+	"part_kitchen_exhaust": [2, 7],
+	"part_lab_greeble_01": [4, 2],
+	"part_lab_greeble_02": [4, 2],
+	"part_lab_greeble_03": [4, 2],
+	"part_lab_greeble_04": [3, 2],
+	"part_lab_greeble_05": [5, 4],
+	"part_lab_greeble_06": [5, 5],
+	"part_lab_greeble_07": [4, 2],
+	"part_lab_greeble_08": [4, 1],
+	"part_lab_greeble_09": [5, 4],
+	"part_lab_greeble_10": [3, 2],
+	"part_lab_greeble_11": [4, 1],
+	"part_lab_greeble_12": [4, 1],
+	"part_lab_greeble_13": [3, 2],
+	"part_lab_greeble_14": [2, 2],
+	"part_lab_greeble_15": [3, 1],
+	"part_lab_greeble_16": [3, 2],
+	"part_lab_greeble_17": [3, 2],
+	"part_lab_greeble_18": [3, 2],
+	"part_lab_greeble_19": [3, 2],
+	"part_lab_greeble_20": [3, 2],
+	"part_lab_greeble_21": [3, 2],
+	"part_lake_01": [42, 51],
+	"part_lake_02": [38, 79],
+	"part_lake_03": [90, 84],
+	"part_lake_04": [89, 49],
+	"part_lake_05": [74, 72],
+	"part_lake_06": [100, 150],
+	"part_lake_07": [69, 121],
+	"part_lake_08": [65, 55],
+	"part_lake_09": [63, 100],
+	"part_lake_10": [48, 45],
+	"part_lake_11": [100, 100],
+	"part_lake_12": [64, 102],
+	"part_lake_13": [60, 50],
+	"part_lake_14": [86, 83],
+	"part_lake_15": [98, 92],
+	"part_lake_16": [61, 64],
+	"part_lake_boat": [5, 10],
+	"part_lake_dock": [15, 23],
+	"part_lake_drain": [13, 20],
+	"part_lake_raft": [5, 6],
+	"part_large_fusebox_01": [1, 1],
+	"part_library_01_deco_01": [10, 2],
+	"part_library_01_deco_02": [9, 18],
+	"part_library_01_deco_03": [60, 6],
+	"part_library_01_ducts_01": [10, 4],
+	"part_library_01_ducts_02": [10, 4],
+	"part_lift_01": [6, 3],
+	"part_lift_02": [11, 5],
+	"part_lift_03": [6, 3],
+	"part_logs_set": [11, 11],
+	"part_loot_t1": [3, 2],
+	"part_loot_t2": [4, 2],
+	"part_loot_t3": [3, 3],
+	"part_loot_t4": [3, 3],
+	"part_loot_t5": [5, 4],
+	"part_military_camp": [18, 21],
+	"part_mining_machine_01": [12, 5],
+	"part_mining_machine_02": [12, 7],
+	"part_mobile_office_trailer": [11, 5],
+	"part_mountain100_01": [100, 100],
+	"part_mountain42_01": [42, 42],
+	"part_mountain42_02": [42, 42],
+	"part_mountain60_01": [60, 60],
+	"part_mountain60_02": [60, 60],
+	"part_neighborhood_back_driveway": [7, 2],
+	"part_neighborhood_driveway": [11, 6],
+	"part_office_06_commercial_entrance": [20, 11],
+	"part_office_06_commercial_entrance_02": [26, 17],
+	"part_office_06_sign_1": [39, 2],
+	"part_office_06_sign_2": [39, 2],
+	"part_park_02_to_04_path": [20, 15],
+	"part_parking_lot_spaces": [6, 13],
+	"part_pedestrian_bridge": [6, 28],
+	"part_pedestrian_bridge_perishton": [7, 38],
+	"part_perishton_sign_01": [5, 2],
+	"part_pipestack_01": [7, 3],
+	"part_porta_potty_sleepers": [21, 3],
+	"part_quonset_large": [11, 11],
+	"part_quonset_small": [7, 9],
+	"part_remnant_hospital_01_driveway_01": [9, 14],
+	"part_remnant_industrial_large_02": [17, 7],
+	"part_remnant_skyscraper_01": [5, 4],
+	"part_remnant_skyscraper_02": [5, 4],
+	"part_remnant_skyscraper_03": [5, 4],
+	"part_remnant_skyscraper_04": [5, 4],
+	"part_road_bend_s_1": [149, 148],
+	"part_road_bend_s_2": [150, 148],
+	"part_road_bend_s_raised_1": [149, 148],
+	"part_road_bend_s_raised_2": [149, 148],
+	"part_road_bend_s_raised_3": [149, 148],
+	"part_road_bend_s_raised_4": [150, 148],
+	"part_road_construction_01": [21, 32],
+	"part_road_corner": [15, 15],
+	"part_road_corner_smooth": [15, 15],
+	"part_road_corner_tile": [150, 150],
+	"part_road_drainage": [32, 13],
+	"part_road_ramp_perishton_sw": [13, 98],
+	"part_road_shoulder_01": [42, 8],
+	"part_road_t_raised": [150, 150],
+	"part_road_traffic_circle": [30, 30],
+	"part_roadside_fruit_stand_01": [10, 9],
+	"part_roadside_fruit_stand_02": [9, 7],
+	"part_roof_wood_wedge_11x11": [13, 13],
+	"part_roof_wood_wedge_7x7": [9, 9],
+	"part_rural_intersection_02_01": [32, 34],
+	"part_rural_intersection_02_02": [39, 35],
+	"part_scaffolding": [6, 7],
+	"part_sculpture_01": [3, 3],
+	"part_sculpture_02": [3, 3],
+	"part_semi_truck": [5, 17],
+	"part_shed_01": [5, 5],
+	"part_shed_02": [7, 6],
+	"part_shed_03": [5, 5],
+	"part_shed_04": [5, 5],
+	"part_shed_05": [5, 5],
+	"part_shelf_01": [2, 5],
+	"part_shipping_container_01": [5, 11],
+	"part_shipping_container_02": [5, 11],
+	"part_shipping_container_03": [5, 14],
+	"part_shipping_container_04": [5, 8],
+	"part_shipping_container_05": [5, 11],
+	"part_shipping_container_06": [5, 11],
+	"part_sidewalk_round_13m": [13, 13],
+	"part_sign_cross_walk": [1, 1],
+	"part_sign_slow": [1, 1],
+	"part_spawner_01": [3, 3],
+	"part_spawner_02": [3, 3],
+	"part_spawner_03": [3, 4],
+	"part_spawner_04": [3, 3],
+	"part_spawner_05": [3, 3],
+	"part_spawner_06": [3, 2],
+	"part_stair_2w5h_left_hollow": [2, 5],
+	"part_stair_2w5h_right_hollow": [2, 5],
+	"part_stair_left_2W5H": [4, 4],
+	"part_stair_left_2W6H": [4, 5],
+	"part_stair_right_2W5H": [4, 4],
+	"part_stair_right_2W6H": [4, 5],
+	"part_store_hardware_01_navsidewalk": [33, 1],
+	"part_street_clock": [3, 3],
+	"part_streetlight": [1, 1],
+	"part_streetlight_broken": [1, 1],
+	"part_streetlight_broken2": [1, 1],
+	"part_streetlight_double": [1, 1],
+	"part_streetlight_quad": [1, 1],
+	"part_streetlight_single": [1, 1],
+	"part_streetlight_single_diagonal": [1, 1],
+	"part_streetlight_tripple": [1, 1],
+	"part_survivor_camp_01": [12, 13],
+	"part_survivor_camp_02": [12, 13],
+	"part_survivor_camp_03": [12, 13],
+	"part_tank_propane_01": [5, 1],
+	"part_terrain_greeble_10W2H": [16, 10],
+	"part_terrain_greeble_12W2H": [14, 12],
+	"part_terrain_greeble_12W3H": [12, 12],
+	"part_terrain_greeble_13W1H": [16, 13],
+	"part_terrain_greeble_13W1W": [14, 13],
+	"part_terrain_greeble_13W2H": [15, 13],
+	"part_terrain_greeble_13W3H": [15, 13],
+	"part_terrain_greeble_9W4H": [16, 9],
+	"part_terrain_greeble_9W5H": [15, 9],
+	"part_theme_house": [104, 58],
+	"part_theme_military": [120, 91],
+	"part_tile_rural_t_04_01a": [9, 10],
+	"part_tile_rural_t_04_01b": [10, 10],
+	"part_tile_rural_t_04_02a": [8, 8],
+	"part_tile_rural_t_04_02b": [8, 9],
+	"part_tower_guard_modern_01": [11, 9],
+	"part_tower_water_01": [6, 5],
+	"part_tower_water_02": [6, 6],
+	"part_trafficlight": [2, 10],
+	"part_trafficlight_intersection": [8, 2],
+	"part_trafficlight_single": [1, 1],
+	"part_trailer_bodybags": [11, 5],
+	"part_trailer_bodybags_02": [11, 5],
+	"part_trailer_car": [11, 5],
+	"part_trailer_empty": [11, 5],
+	"part_trailer_sleepers": [14, 5],
+	"part_tunnel_corner": [5, 5],
+	"part_tunnel_corner_01": [87, 87],
+	"part_tunnel_corner_02": [87, 87],
+	"part_tunnel_cross": [5, 5],
+	"part_tunnel_industrial_corner_01": [8, 8],
+	"part_tunnel_industrial_straight_01": [9, 13],
+	"part_tunnel_industrial_straight_02": [9, 13],
+	"part_tunnel_industrial_t_01": [7, 10],
+	"part_tunnel_tee": [5, 5],
+	"part_tunnel_vertical_corner": [5, 5],
+	"part_utility_pole": [3, 2],
+	"part_utility_pole_large": [5, 2],
+	"part_vehicle_forklift_01": [10, 5],
+	"part_vehicle_w_trailer": [5, 18],
+	"part_walkway_01": [1, 3],
+	"part_walkway_02": [2, 3],
+	"part_walkway_03": [3, 3],
+	"part_walkway_04": [4, 3],
+	"part_walkway_05": [5, 3],
+	"part_walkway_house_old_gambrel_04": [15, 5],
+	"part_water_tower_03": [8, 8],
+	"part_waterheater_01": [1, 1],
+	"part_waterheater_02": [2, 1],
+	"part_well_01": [3, 5],
+	"part_wilderness_filler_02_tent_01": [7, 10],
+	"part_yacht_trailer_01": [25, 5],
+	"perishton_bridge": [33, 13],
+	"perishton_church_parking": [60, 23],
+	"perishton_city_blk_01": [114, 114],
+	"perishton_city_blk_02": [121, 114],
+	"perishton_city_blk_03": [114, 114],
+	"perishton_city_blk_04": [114, 114],
+	"perishton_city_blk_05": [114, 114],
+	"perishton_city_blk_06": [132, 127],
+	"perishton_city_blk_plaza": [121, 114],
+	"perishton_fence": [60, 60],
+	"perishton_median_01": [103, 23],
+	"perishton_median_02": [103, 23],
+	"perishton_median_03": [103, 23],
+	"perishton_outlet": [20, 7],
+	"perishton_riverdock": [7, 19],
+	"perishton_tile_downtown_straight": [150, 150],
+	"perishton_tunnel_01": [28, 95],
+	"perishton_tunnel_02": [28, 94],
+	"player_start1": [6, 2],
+	"player_start2": [3, 8],
+	"player_start3": [6, 5],
+	"player_start4": [5, 7],
+	"player_start5": [6, 7],
+	"player_start6": [6, 6],
+	"police_station_03": [60, 60],
+	"post_office_01": [25, 25],
+	"post_office_02": [42, 42],
+	"potatofield_sm": [12, 12],
+	"prison_01": [100, 100],
+	"prison_02": [100, 100],
+	"quarry_02": [100, 100],
+	"radio_station_01": [60, 60],
+	"radio_station_02": [60, 60],
+	"radio_station_03": [42, 42],
+	"ranger_station_01": [42, 42],
+	"ranger_station_02": [42, 42],
+	"ranger_station_03": [42, 42],
+	"ranger_station_04": [42, 42],
+	"ranger_station_05": [42, 42],
+	"ranger_station_06": [60, 60],
+	"ranger_station_07": [60, 60],
+	"remnant_burnt_01": [42, 42],
+	"remnant_burnt_02": [42, 42],
+	"remnant_burnt_03": [45, 42],
+	"remnant_burnt_04": [25, 25],
+	"remnant_burnt_05": [42, 42],
+	"remnant_burnt_06": [42, 42],
+	"remnant_burnt_07": [25, 25],
+	"remnant_burnt_08": [42, 42],
+	"remnant_burnt_09": [42, 42],
+	"remnant_burnt_10": [42, 42],
+	"remnant_business_01": [60, 60],
+	"remnant_business_02": [60, 60],
+	"remnant_business_03": [42, 42],
+	"remnant_business_04": [42, 42],
+	"remnant_business_05": [42, 42],
+	"remnant_business_06": [25, 25],
+	"remnant_carwash_01": [42, 42],
+	"remnant_carwash_02": [42, 42],
+	"remnant_church_01": [60, 60],
+	"remnant_coffee_shop_01": [25, 25],
+	"remnant_coffee_shop_02": [25, 25],
+	"remnant_coffee_shop_03": [25, 25],
+	"remnant_commercial_large_02": [100, 100],
+	"remnant_commercial_strip_03": [42, 42],
+	"remnant_commercial_strip_04": [42, 42],
+	"remnant_commercial_strip_05": [42, 42],
+	"remnant_commercial_strip_06": [42, 42],
+	"remnant_downtown_filler_01": [25, 25],
+	"remnant_downtown_filler_02": [25, 25],
+	"remnant_downtown_filler_03": [25, 25],
+	"remnant_downtown_filler_04": [25, 25],
+	"remnant_downtown_filler_05": [25, 25],
+	"remnant_downtown_filler_06": [25, 25],
+	"remnant_downtown_filler_07": [25, 25],
+	"remnant_downtown_filler_08": [25, 25],
+	"remnant_downtown_filler_09": [25, 25],
+	"remnant_downtown_filler_10": [25, 25],
+	"remnant_downtown_filler_11": [25, 25],
+	"remnant_downtown_filler_12": [25, 25],
+	"remnant_downtown_filler_13": [25, 25],
+	"remnant_downtown_filler_14": [25, 25],
+	"remnant_downtown_filler_15": [25, 25],
+	"remnant_downtown_filler_16": [25, 25],
+	"remnant_downtown_filler_17": [25, 25],
+	"remnant_downtown_filler_18": [25, 25],
+	"remnant_downtown_filler_19": [25, 25],
+	"remnant_downtown_filler_20": [25, 25],
+	"remnant_downtown_filler_21": [25, 25],
+	"remnant_downtown_filler_22": [25, 25],
+	"remnant_downtown_filler_23": [25, 25],
+	"remnant_downtown_filler_24": [25, 25],
+	"remnant_downtown_filler_25": [25, 25],
+	"remnant_downtown_filler_26": [25, 25],
+	"remnant_downtown_filler_27": [25, 25],
+	"remnant_downtown_filler_28": [25, 25],
+	"remnant_downtown_filler_29": [25, 25],
+	"remnant_downtown_filler_30": [25, 25],
+	"remnant_downtown_filler_31": [25, 25],
+	"remnant_downtown_strip_01": [42, 42],
+	"remnant_downtown_strip_02": [42, 42],
+	"remnant_downtown_strip_03": [42, 42],
+	"remnant_downtown_strip_04": [42, 42],
+	"remnant_downtown_strip_05": [42, 42],
+	"remnant_downtown_strip_06": [42, 42],
+	"remnant_downtown_strip_07": [42, 42],
+	"remnant_downtown_strip_08": [42, 42],
+	"remnant_downtown_strip_09": [42, 42],
+	"remnant_downtown_strip_11": [42, 42],
+	"remnant_downtown_strip_12": [42, 42],
+	"remnant_downtown_strip_13": [42, 42],
+	"remnant_downtown_strip_14": [42, 42],
+	"remnant_downtown_strip_15": [42, 42],
+	"remnant_downtown_strip_16": [42, 42],
+	"remnant_downtown_strip_17": [42, 42],
+	"remnant_downtown_strip_18": [42, 42],
+	"remnant_downtown_strip_19": [42, 42],
+	"remnant_downtown_strip_20": [42, 42],
+	"remnant_farm_01": [60, 60],
+	"remnant_farm_02": [60, 60],
+	"remnant_farm_03": [60, 60],
+	"remnant_farm_05": [60, 60],
+	"remnant_gas_station_01": [42, 42],
+	"remnant_hospital_01": [60, 60],
+	"remnant_hotel_01": [100, 100],
+	"remnant_house_01": [42, 42],
+	"remnant_house_02": [42, 42],
+	"remnant_house_03": [42, 42],
+	"remnant_house_04": [42, 42],
+	"remnant_house_05": [42, 42],
+	"remnant_house_06": [42, 42],
+	"remnant_house_07": [42, 42],
+	"remnant_house_08": [42, 42],
+	"remnant_house_09": [42, 42],
+	"remnant_house_10": [42, 42],
+	"remnant_house_11": [42, 42],
+	"remnant_house_12": [42, 42],
+	"remnant_house_13": [42, 42],
+	"remnant_house_14": [42, 42],
+	"remnant_house_15": [42, 42],
+	"remnant_house_16": [42, 42],
+	"remnant_house_17": [42, 42],
+	"remnant_house_18": [42, 42],
+	"remnant_house_19": [60, 60],
+	"remnant_house_20": [60, 60],
+	"remnant_house_modern_01": [42, 42],
+	"remnant_house_modern_02": [42, 42],
+	"remnant_house_modern_03": [42, 42],
+	"remnant_house_modern_04": [42, 42],
+	"remnant_industrial_01": [16, 14],
+	"remnant_industrial_02": [16, 14],
+	"remnant_industrial_03": [11, 12],
+	"remnant_industrial_04": [36, 35],
+	"remnant_industrial_large_01": [100, 100],
+	"remnant_industrial_large_02": [100, 100],
+	"remnant_industrial_strip_07": [42, 42],
+	"remnant_industrial_strip_08": [42, 42],
+	"remnant_industrial_strip_09": [42, 42],
+	"remnant_industrial_strip_10": [42, 42],
+	"remnant_industrial_strip_11": [42, 42],
+	"remnant_industrial_strip_12": [42, 42],
+	"remnant_library_01": [60, 60],
+	"remnant_library_02": [60, 60],
+	"remnant_mill_01": [60, 60],
+	"remnant_oldwest_01": [25, 25],
+	"remnant_oldwest_02": [10, 10],
+	"remnant_oldwest_03": [8, 8],
+	"remnant_oldwest_04": [25, 25],
+	"remnant_oldwest_05": [25, 25],
+	"remnant_oldwest_06": [25, 25],
+	"remnant_oldwest_07": [25, 25],
+	"remnant_oldwest_08": [25, 25],
+	"remnant_oldwest_09": [25, 25],
+	"remnant_quicklube_01": [42, 42],
+	"remnant_school_01": [60, 60],
+	"remnant_selfstorage_01": [42, 42],
+	"remnant_selfstorage_02": [42, 42],
+	"remnant_skyscraper_01": [60, 60],
+	"remnant_skyscraper_02": [60, 60],
+	"remnant_skyscraper_03": [60, 60],
+	"remnant_skyscraper_04": [60, 60],
+	"remnant_skyscraper_05": [60, 60],
+	"remnant_sports_center_01": [100, 100],
+	"remnant_waste_01": [42, 42],
+	"remnant_waste_02": [42, 42],
+	"remnant_waste_03": [42, 42],
+	"remnant_waste_04": [42, 42],
+	"remnant_waste_05": [42, 42],
+	"remnant_waste_06": [42, 42],
+	"remnant_waste_08": [42, 42],
+	"remnant_waste_15": [60, 60],
+	"remnant_waste_16": [60, 60],
+	"remnant_waste_17": [42, 42],
+	"remnant_waste_18": [60, 60],
+	"remnant_waste_19": [42, 42],
+	"rest_area_01": [60, 60],
+	"rest_area_02": [60, 60],
+	"rest_area_03": [60, 60],
+	"rest_area_04": [60, 60],
+	"rest_area_05": [60, 60],
+	"restaurant_01": [42, 42],
+	"restaurant_02": [42, 42],
+	"road_railing_long_filled_01": [24, 9],
+	"roadblock_01": [9, 3],
+	"roadside_checkpoint_01": [60, 60],
+	"roadside_checkpoint_02": [60, 60],
+	"roadside_checkpoint_03": [60, 60],
+	"roadside_checkpoint_04": [60, 60],
+	"roadside_checkpoint_05": [60, 60],
+	"roadside_park_01": [60, 60],
+	"roadside_park_02": [60, 60],
+	"roadside_restaurant_01": [60, 60],
+	"roadside_strip_01": [60, 60],
+	"roadside_truckstop_01": [60, 60],
+	"rock_form01": [6, 8],
+	"rock_form02": [11, 12],
+	"rock_form03": [3, 3],
+	"rock_form04": [3, 3],
+	"rock_form05": [3, 3],
+	"rubble_burnt_filler_01": [25, 25],
+	"rubble_burnt_filler_02": [25, 25],
+	"rubble_burnt_filler_03": [25, 25],
+	"rubble_burnt_filler_04": [25, 25],
+	"rubble_burnt_filler_05": [25, 25],
+	"rubble_burnt_filler_06": [25, 25],
+	"rubble_burnt_filler_08": [25, 25],
+	"rubble_burnt_filler_09": [25, 25],
+	"rubble_burnt_filler_10": [25, 25],
+	"rubble_burnt_filler_11": [25, 25],
+	"rubble_burnt_filler_12": [25, 25],
+	"rubble_burnt_filler_13": [25, 25],
+	"rubble_burnt_filler_14": [25, 25],
+	"rubble_burnt_filler_15": [25, 25],
+	"rubble_burnt_filler_16": [25, 25],
+	"rubble_burnt_filler_17": [25, 25],
+	"rubble_burnt_filler_18": [25, 25],
+	"rubble_burnt_filler_19": [25, 25],
+	"rubble_burnt_filler_20": [25, 25],
+	"rubble_burnt_filler_21": [25, 25],
+	"rubble_burnt_filler_22": [25, 25],
+	"rubble_burnt_filler_23": [25, 25],
+	"rubble_burnt_filler_24": [25, 25],
+	"rubble_burnt_filler_25": [25, 25],
+	"rubble_downtown_filler_01": [25, 25],
+	"rubble_downtown_filler_02": [25, 25],
+	"rubble_downtown_filler_03": [25, 25],
+	"rubble_downtown_filler_04": [25, 25],
+	"rubble_downtown_filler_05": [25, 25],
+	"rubble_downtown_filler_11": [25, 25],
+	"rubble_downtown_filler_12": [25, 25],
+	"rubble_downtown_filler_13": [25, 25],
+	"rubble_downtown_filler_14": [25, 25],
+	"rubble_downtown_filler_15": [25, 25],
+	"rubble_downtown_filler_16": [25, 25],
+	"rubble_downtown_filler_17": [25, 25],
+	"rubble_downtown_filler_18": [25, 25],
+	"rubble_downtown_filler_19": [25, 25],
+	"rubble_downtown_filler_20": [25, 25],
+	"rubble_downtown_filler_21": [25, 25],
+	"rubble_downtown_filler_22": [25, 25],
+	"rubble_downtown_filler_23": [25, 25],
+	"rubble_downtown_filler_24": [25, 25],
+	"rubble_downtown_filler_25": [25, 25],
+	"rubble_wasteland_filler_01": [25, 25],
+	"rubble_wasteland_filler_02": [25, 25],
+	"rubble_wasteland_filler_03": [25, 25],
+	"rubble_wasteland_filler_04": [25, 25],
+	"rubble_wasteland_filler_05": [25, 25],
+	"rubble_wasteland_filler_06": [25, 25],
+	"rubble_wasteland_filler_07": [25, 25],
+	"rubble_wasteland_filler_09": [25, 25],
+	"rubble_wasteland_filler_10": [25, 25],
+	"rubble_wasteland_filler_11": [25, 25],
+	"rubble_wasteland_filler_12": [25, 25],
+	"rubble_wasteland_filler_13": [25, 25],
+	"rubble_wasteland_filler_14": [25, 25],
+	"rubble_wasteland_filler_15": [25, 25],
+	"rubble_wasteland_filler_16": [25, 25],
+	"rubble_wasteland_filler_17": [25, 25],
+	"rubble_wasteland_filler_18": [25, 25],
+	"rubble_wasteland_filler_19": [25, 25],
+	"rubble_wasteland_filler_20": [25, 25],
+	"rubble_wasteland_filler_21": [25, 25],
+	"rubble_wasteland_filler_22": [25, 25],
+	"rubble_wasteland_filler_23": [25, 25],
+	"rubble_wasteland_filler_24": [25, 25],
+	"rubble_wasteland_filler_25": [25, 25],
+	"rural_church_01": [60, 60],
+	"rural_church_02": [60, 60],
+	"rural_drive_in_01": [100, 100],
+	"rural_outdoor_wedding_01": [100, 100],
+	"rwg_bridge_end_01": [14, 9],
+	"rwg_bridge_tile_01": [14, 9],
+	"rwg_tile_commercial_cap": [150, 150],
+	"rwg_tile_commercial_corner": [150, 150],
+	"rwg_tile_commercial_intersection": [150, 150],
+	"rwg_tile_commercial_straight": [150, 150],
+	"rwg_tile_commercial_t": [150, 150],
+	"rwg_tile_commercial_t_03": [150, 150],
+	"rwg_tile_countryresidential_cap": [150, 150],
+	"rwg_tile_countryresidential_corner": [150, 150],
+	"rwg_tile_countryresidential_intersection": [150, 150],
+	"rwg_tile_countryresidential_straight": [150, 150],
+	"rwg_tile_countryresidential_straight_03": [150, 150],
+	"rwg_tile_countryresidential_t": [150, 150],
+	"rwg_tile_countrytown_cap": [150, 150],
+	"rwg_tile_countrytown_corner": [150, 150],
+	"rwg_tile_countrytown_intersection": [150, 150],
+	"rwg_tile_countrytown_straight": [150, 150],
+	"rwg_tile_countrytown_t": [150, 150],
+	"rwg_tile_downtown_cap": [150, 150],
+	"rwg_tile_downtown_corner": [150, 150],
+	"rwg_tile_downtown_intersection": [150, 150],
+	"rwg_tile_downtown_intersection_02": [150, 150],
+	"rwg_tile_downtown_straight": [150, 150],
+	"rwg_tile_downtown_t": [150, 150],
+	"rwg_tile_gateway_intersection": [150, 150],
+	"rwg_tile_gateway_intersection2": [150, 150],
+	"rwg_tile_gateway_straight": [150, 150],
+	"rwg_tile_gateway_straight2": [150, 150],
+	"rwg_tile_gateway_straight3": [150, 150],
+	"rwg_tile_gateway_straight3a": [150, 150],
+	"rwg_tile_gateway_straight3b": [150, 150],
+	"rwg_tile_gateway_straight4": [150, 150],
+	"rwg_tile_gateway_t": [150, 150],
+	"rwg_tile_industrial_cap": [150, 150],
+	"rwg_tile_industrial_corner": [150, 150],
+	"rwg_tile_industrial_intersection": [150, 150],
+	"rwg_tile_industrial_straight": [150, 150],
+	"rwg_tile_industrial_t": [150, 150],
+	"rwg_tile_industrial_t_03": [150, 150],
+	"rwg_tile_oldwest_cap": [150, 150],
+	"rwg_tile_oldwest_corner": [150, 150],
+	"rwg_tile_oldwest_intersection": [150, 150],
+	"rwg_tile_oldwest_straight": [150, 150],
+	"rwg_tile_oldwest_t": [150, 150],
+	"rwg_tile_residential_cap": [150, 150],
+	"rwg_tile_residential_corner": [150, 150],
+	"rwg_tile_residential_intersection": [150, 150],
+	"rwg_tile_residential_straight": [150, 150],
+	"rwg_tile_residential_t": [150, 150],
+	"rwg_tile_rural_cap": [150, 150],
+	"rwg_tile_rural_corner": [150, 150],
+	"rwg_tile_rural_corner_02": [150, 150],
+	"rwg_tile_rural_corner_03": [150, 150],
+	"rwg_tile_rural_intersection": [150, 150],
+	"rwg_tile_rural_intersection_02": [150, 150],
+	"rwg_tile_rural_straight": [150, 150],
+	"rwg_tile_rural_t": [150, 150],
+	"rwg_tile_rural_t_02": [150, 150],
+	"rwg_tile_rural_t_03": [150, 150],
+	"rwg_tile_rural_t_04": [150, 150],
+	"rwg_tile_rural_t_05": [150, 150],
+	"rwg_tile_rural_t_06": [150, 150],
+	"sawmill_01": [100, 100],
+	"school_01": [100, 100],
+	"school_02": [100, 100],
+	"school_03": [100, 100],
+	"school_daycare_01": [42, 42],
+	"school_daycare_02": [42, 42],
+	"school_daycare_03": [42, 42],
+	"sign_260_east_speed_65": [1, 1],
+	"sign_260_west_speed_65": [1, 1],
+	"sign_73_north": [1, 1],
+	"sign_73_south": [1, 1],
+	"sign_albuquerque": [1, 2],
+	"sign_ansel_adams_river": [1, 1],
+	"sign_arrowhead_apache": [1, 1],
+	"sign_camp_fish": [1, 1],
+	"sign_caution": [1, 1],
+	"sign_hazardous_waste": [1, 1],
+	"sign_info_center1": [1, 1],
+	"sign_navezgane_natl_forest": [3, 3],
+	"sign_phoenix": [1, 2],
+	"sign_road_work": [1, 1],
+	"sign_school_25": [1, 1],
+	"sign_slow": [1, 1],
+	"sign_speed_25": [1, 1],
+	"sign_speed_35": [1, 1],
+	"sign_speed_45": [1, 1],
+	"sign_speed_55": [1, 1],
+	"sign_spillway_lake": [1, 1],
+	"sign_stop": [1, 1],
+	"sign_stop_4way": [1, 1],
+	"site_camp_01": [25, 25],
+	"site_camp_02": [25, 25],
+	"site_camp_03": [25, 25],
+	"site_camp_04": [25, 25],
+	"site_camp_05": [25, 25],
+	"site_camp_06": [25, 25],
+	"site_camp_07": [25, 25],
+	"site_camp_08": [25, 25],
+	"site_camp_09": [25, 25],
+	"site_camp_10": [25, 25],
+	"site_camp_11": [25, 25],
+	"site_grave_01": [25, 25],
+	"site_grave_02": [25, 25],
+	"site_grave_03": [25, 25],
+	"site_grave_04": [25, 25],
+	"site_grave_05": [25, 25],
+	"site_grave_06": [25, 25],
+	"site_grave_07": [25, 25],
+	"site_grave_08": [25, 25],
+	"site_grave_09": [25, 25],
+	"site_grave_10": [25, 25],
+	"site_shack_01": [25, 25],
+	"site_shack_02": [25, 25],
+	"site_shack_04": [25, 25],
+	"site_shack_05": [25, 25],
+	"site_shack_06": [25, 25],
+	"site_shack_07": [25, 25],
+	"site_shack_08": [25, 25],
+	"site_shack_09": [25, 25],
+	"site_shack_10": [25, 25],
+	"site_utility_01": [25, 25],
+	"site_utility_02": [25, 25],
+	"site_utility_03": [25, 25],
+	"site_utility_04": [25, 25],
+	"site_utility_05": [25, 25],
+	"site_utility_06": [25, 25],
+	"site_utility_07": [25, 25],
+	"site_utility_09": [25, 25],
+	"site_vendor_01": [25, 25],
+	"site_vendor_02": [25, 25],
+	"site_vendor_03": [25, 25],
+	"site_vendor_04": [25, 25],
+	"site_vendor_05": [25, 25],
+	"site_vendor_06": [25, 25],
+	"site_vendor_07": [25, 25],
+	"site_vendor_08": [25, 25],
+	"site_vendor_09": [25, 25],
+	"site_vendor_10": [25, 25],
+	"skyscraper_01": [60, 60],
+	"skyscraper_02": [42, 42],
+	"skyscraper_03": [60, 60],
+	"skyscraper_04": [60, 60],
+	"soccer_stadium_01": [100, 100],
+	"spacercise_01": [87, 42],
+	"spacercise_01_allan": [42, 42],
+	"spacercise_01_earl": [90, 42],
+	"spacercise_01_hernan": [42, 42],
+	"spacercise_01_nick": [42, 42],
+	"spacercise_01_tim": [42, 42],
+	"store_autoparts_01": [60, 60],
+	"store_bakery_01": [42, 42],
+	"store_book_01": [60, 60],
+	"store_book_02": [60, 60],
+	"store_book_03": [44, 44],
+	"store_book_04": [42, 42],
+	"store_clothing_01": [60, 60],
+	"store_clothing_02": [60, 60],
+	"store_discount_01": [42, 42],
+	"store_electronics_01": [42, 42],
+	"store_electronics_02": [60, 60],
+	"store_grocery_01": [60, 60],
+	"store_grocery_02": [100, 100],
+	"store_grocery_03": [42, 42],
+	"store_grocery_04": [60, 60],
+	"store_grocery_05": [60, 60],
+	"store_grocery_06": [60, 60],
+	"store_gun_01": [100, 100],
+	"store_gun_02": [100, 100],
+	"store_hardware_01": [60, 60],
+	"store_hardware_02": [60, 60],
+	"store_hardware_03": [100, 100],
+	"store_laundry_01": [42, 42],
+	"store_pharmacy_01": [42, 42],
+	"store_pharmacy_02": [60, 60],
+	"street_apache": [1, 1],
+	"street_bell_courtland": [1, 1],
+	"street_coronado": [1, 1],
+	"street_courtland_apache": [1, 1],
+	"street_courtland_coronado": [1, 1],
+	"street_courtland_east_260": [1, 1],
+	"street_davis": [1, 1],
+	"street_huenink_courtland": [1, 1],
+	"street_lake_bell": [1, 1],
+	"street_light_01": [1, 1],
+	"street_light_02": [1, 1],
+	"street_maple": [1, 1],
+	"street_maple_courtland": [1, 1],
+	"street_private": [1, 1],
+	"street_tran_courtland": [1, 1],
+	"streets_essag": [1, 1],
+	"streets_tran_and_lang": [1, 1],
+	"survivor_camp_01": [60, 60],
+	"survivor_camp_02": [60, 60],
+	"survivor_camp_03": [60, 60],
+	"survivor_site_01": [25, 25],
+	"survivor_site_02": [25, 25],
+	"survivor_site_03": [25, 25],
+	"survivor_site_04": [25, 25],
+	"survivor_site_05": [25, 25],
+	"survivor_site_06": [25, 25],
+	"survivor_site_07": [25, 25],
+	"survivor_site_08": [25, 25],
+	"survivor_site_09": [25, 25],
+	"survivor_site_10": [25, 25],
+	"survivor_site_11": [25, 25],
+	"theater_stage_01": [60, 60],
+	"trader_bob": [60, 60],
+	"trader_hugh": [60, 60],
+	"trader_jen": [60, 60],
+	"trader_joel": [60, 60],
+	"trader_rekt": [60, 60],
+	"trailer_01": [25, 25],
+	"trailer_02": [25, 25],
+	"trailer_03": [25, 25],
+	"trailer_04": [25, 25],
+	"trailer_05": [25, 25],
+	"trailer_06": [25, 25],
+	"trailer_07": [25, 25],
+	"trailer_08": [25, 25],
+	"trailer_09": [25, 25],
+	"trailer_10": [25, 25],
+	"trailer_11": [25, 25],
+	"trailer_12": [25, 25],
+	"trailer_13": [25, 25],
+	"trailer_park_01": [42, 42],
+	"utility_celltower_01": [25, 25],
+	"utility_celltower_02": [25, 25],
+	"utility_celltower_03": [25, 25],
+	"utility_electric_co_01": [42, 42],
+	"utility_electric_co_02": [60, 60],
+	"utility_refinery_01": [42, 42],
+	"utility_refinery_02": [100, 100],
+	"utility_substation_01": [60, 60],
+	"utility_substation_02": [60, 60],
+	"utility_substation_03": [60, 60],
+	"utility_waterworks_01": [60, 60],
+	"warehouse_01": [100, 100],
+	"warehouse_02": [60, 60],
+	"warehouse_03": [60, 60],
+	"warehouse_04": [42, 42],
+	"warehouse_05": [42, 42],
+	"warehouse_06": [42, 42],
+	"warehouse_07": [42, 42],
+	"warehouse_08": [42, 42],
+	"water_tower_01": [25, 25],
+	"water_tower_02": [25, 25],
+	"water_tower_03": [25, 25],
+	"water_tower_04": [25, 25],
+	"weigh_station_01": [60, 60],
+	"wilderness_filler_01": [25, 25],
+	"wilderness_filler_02": [25, 25],
+	"wilderness_filler_03": [25, 25],
+	"wilderness_filler_04": [25, 25],
+	"wilderness_filler_05": [25, 25],
+	"wilderness_filler_06": [25, 25],
+	"wilderness_filler_07": [25, 25],
+	"wilderness_filler_08": [25, 25],
+	"wilderness_filler_09": [25, 25],
+	"wilderness_filler_10": [25, 25],
+	"wilderness_filler_11": [25, 25],
+	"wilderness_filler_12": [25, 25],
+	"wilderness_filler_13": [25, 25],
+	"wilderness_filler_14": [25, 25],
+	"wilderness_filler_15": [25, 25],
+	"wilderness_filler_16": [25, 25],
+	"wilderness_filler_17": [25, 25],
+	"wilderness_filler_18": [25, 25],
+	"wilderness_filler_19": [25, 25],
+	"wilderness_filler_20": [25, 25],
+	"wilderness_filler_21": [25, 25],
+	"wilderness_filler_22": [60, 60]
 }
