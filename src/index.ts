@@ -131,7 +131,8 @@ function main() {
     markerHandler,
     fileHandler,
     () => fetchJson("prefab-mesh-sizes.json"),
-    () => fetchJson("prefab-footprint-colors.json"),
+    () => fetchJson("prefab-density-scores.json"),
+    () => fetchJson("district-colors.json"),
   );
   new TerrainViewer(
     {

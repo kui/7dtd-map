@@ -1,6 +1,7 @@
 import type { MapRendererInputMessage } from "../worker/types.ts";
 import type {
-  PrefabFootprintColors,
+  DistrictColors,
+  PrefabDensityScores,
   PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
@@ -47,7 +48,8 @@ export class MapCanvasHandler {
     markerHandler: MarkerHandler,
     fileHandler: FileHandler,
     fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
-    fetchPrefabFootprintColors: () => Promise<PrefabFootprintColors>,
+    fetchPrefabDensityScores: () => Promise<PrefabDensityScores>,
+    fetchDistrictColors: () => Promise<DistrictColors>,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
     worker.postMessage(
@@ -73,9 +75,13 @@ export class MapCanvasHandler {
       (prefabMeshSizes) => worker.postMessage({ prefabMeshSizes }),
       (e: unknown) => console.warn("Failed to load prefab mesh sizes", e),
     );
-    fetchPrefabFootprintColors().then(
-      (prefabFootprintColors) => worker.postMessage({ prefabFootprintColors }),
-      (e: unknown) => console.warn("Failed to load prefab footprint colors", e),
+    fetchPrefabDensityScores().then(
+      (prefabDensityScores) => worker.postMessage({ prefabDensityScores }),
+      (e: unknown) => console.warn("Failed to load prefab density scores", e),
+    );
+    fetchDistrictColors().then(
+      (districtColors) => worker.postMessage({ districtColors }),
+      (e: unknown) => console.warn("Failed to load district colors", e),
     );
 
     doms.prefabDimAlpha.addEventListener("input", () => {

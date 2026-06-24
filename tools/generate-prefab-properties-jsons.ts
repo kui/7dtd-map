@@ -1,7 +1,8 @@
 import * as path from "node:path";
 import {
+  type ParsedPrefabClass,
   type ParsedPrefabProperty,
-  parsePrefabXml,
+  parsePrefabXmlWithClasses,
 } from "./lib/xmls/prefab-xml.ts";
 import { type District, parseRwgmixerXml } from "./lib/xmls/rwgmixer-xml.ts";
 import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
@@ -16,7 +17,17 @@ import {
 const DOCS_DIR = publishDir();
 const DIFFICULTY_FILE = "prefab-difficulties.json";
 const MESH_SIZE_FILE = "prefab-mesh-sizes.json";
-const FOOTPRINT_COLOR_FILE = "prefab-footprint-colors.json";
+const DENSITY_FILE = "prefab-density-scores.json";
+const DISTRICT_COLOR_FILE = "district-colors.json";
+
+interface PrefabXml {
+  values: ParsedPrefabProperty[];
+  classes: ParsedPrefabClass[];
+}
+
+interface PrefabXmls {
+  [prefabName: string]: PrefabXml;
+}
 
 async function main() {
   const prefabXmlFiles = await listPrefabXmlPaths();
@@ -37,8 +48,12 @@ async function main() {
       extractMeshSizes(prefabXmls),
     ),
     writeJsonFile(
-      path.join(DOCS_DIR, FOOTPRINT_COLOR_FILE),
-      extractFootprintColors(prefabXmls, districts),
+      path.join(DOCS_DIR, DENSITY_FILE),
+      extractDensityScores(prefabXmls),
+    ),
+    writeJsonFile(
+      path.join(DOCS_DIR, DISTRICT_COLOR_FILE),
+      extractDistrictColors(districts),
     ),
   ]);
   return 0;
@@ -47,9 +62,9 @@ async function main() {
 function extractDifficulties(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, number]>(([prefabName, props]) => {
+      .flatMap<[string, number]>(([prefabName, { values }]) => {
         const difficulty = parseInt(
-          props.find((p) => p.name === "DifficultyTier")?.value ?? "0",
+          values.find((p) => p.name === "DifficultyTier")?.value ?? "0",
           10,
         );
         if (difficulty > 0) return [[prefabName, difficulty]];
@@ -65,8 +80,8 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
 function extractMeshSizes(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, [number, number]]>(([prefabName, props]) => {
-        const raw = props.find((p) => p.name === "PrefabSize")?.value;
+      .flatMap<[string, [number, number]]>(([prefabName, { values }]) => {
+        const raw = values.find((p) => p.name === "PrefabSize")?.value;
         if (!raw) return [];
         const parts = raw.split(",").map((s) => parseInt(s.trim(), 10));
         if (parts.length < 3) return [];
@@ -79,13 +94,28 @@ function extractMeshSizes(prefabXmls: PrefabXmls) {
   );
 }
 
-// `Tags` is a comma-separated list. Some entries are district selectors
-// (matching <district name=…> in rwgmixer.xml), others are placement hints
-// (`diagonal`, `streettile`, …). Splitting trims whitespace and drops empties.
-function extractTags(props: ParsedPrefabProperty[]): string[] {
-  const raw = props.find((p) => p.name === "Tags")?.value;
-  if (!raw) return [];
-  return raw.split(",").map((s) => s.trim()).filter((s) => s.length > 0);
+// Mirrors PrefabData.Init: DensityScore = (TotalVertices + 50000) / 100000
+// using C# integer division, so the result is always an int. Prefabs without
+// a Stats block (or TotalVertices=0) get 0 and become "low density" which the
+// renderer treats as ×0.4 brightness, matching the game preview.
+function extractDensityScores(prefabXmls: PrefabXmls) {
+  return Object.fromEntries(
+    Object.entries(prefabXmls)
+      .flatMap<[string, number]>(([prefabName, { classes }]) => {
+        const stats = classes.find((c) => c.className === "Stats");
+        const totalVertices = parseInt(
+          stats?.properties.find((p) => p.name === "TotalVertices")?.value ??
+            "0",
+          10,
+        );
+        const score = Math.trunc(
+          ((Number.isFinite(totalVertices) ? totalVertices : 0) + 50000) /
+            100000,
+        );
+        return [[prefabName, score]];
+      })
+      .toSorted((a, b) => a[0].localeCompare(b[0])),
+  );
 }
 
 function rgbFloatToHex([r, g, b]: [number, number, number]): string {
@@ -94,46 +124,29 @@ function rgbFloatToHex([r, g, b]: [number, number, number]): string {
   return `#${hex(r)}${hex(g)}${hex(b)}`;
 }
 
-// Maps each prefab to its district's preview_color by matching the prefab's
-// Tags against district names declared in rwgmixer.xml. The first tag that
-// resolves to a known district wins; prefabs with no matching tag are omitted
-// so the renderer can fall back to its default colour.
-function extractFootprintColors(
-  prefabXmls: PrefabXmls,
-  districts: District[],
-) {
-  const colorByDistrict = new Map<string, [number, number, number]>();
-  for (const d of districts) {
-    if (d.previewColor) colorByDistrict.set(d.name, d.previewColor);
-  }
+// District preview_color lookup table consumed by the renderer at draw time.
+// Districts without a preview_color are dropped so the renderer can fall back
+// to the wilderness default.
+function extractDistrictColors(districts: District[]) {
   return Object.fromEntries(
-    Object.entries(prefabXmls)
-      .flatMap<[string, string]>(([prefabName, props]) => {
-        const tags = extractTags(props);
-        for (const tag of tags) {
-          const color = colorByDistrict.get(tag);
-          if (color) return [[prefabName, rgbFloatToHex(color)]];
-        }
-        return [];
-      })
+    districts
+      .flatMap<[string, string]>((d) =>
+        d.previewColor ? [[d.name, rgbFloatToHex(d.previewColor)]] : []
+      )
       .toSorted((a, b) => a[0].localeCompare(b[0])),
   );
-}
-
-interface PrefabXmls {
-  [prefabName: string]: ParsedPrefabProperty[];
 }
 
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;
   const xmlTasks = xmlFiles.map(
-    (prefabXmlFile) => async (): Promise<[string, ParsedPrefabProperty[]]> => {
+    (prefabXmlFile) => async (): Promise<[string, PrefabXml]> => {
       const { name } = prefabSiblingFiles(prefabXmlFile);
-      const props = await parsePrefabXml(prefabXmlFile);
+      const parsed = await parsePrefabXmlWithClasses(prefabXmlFile);
       if (++completed % 50 === 0) {
         console.log("Read xmls: %d / %d", completed, xmlFiles.length);
       }
-      return [name, props];
+      return [name, parsed];
     },
   );
 

@@ -1,9 +1,10 @@
 import type {
+  DistrictColors,
   GameCoords,
   GameMapSize,
   HighlightedPrefab,
   Prefab,
-  PrefabFootprintColors,
+  PrefabDensityScores,
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
@@ -13,6 +14,15 @@ import * as mapFiles from "../../../lib/map-files.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
+// Edge length of an `rwg_tile_*` prefab in game blocks.
+const TILE_SIZE = 150;
+
+interface TileIndex {
+  offsetX: number;
+  offsetZ: number;
+  // Key: `${gridX},${gridZ}` → district name (extracted from tile filename).
+  cells: Map<string, string>;
+}
 
 interface FontFamilies {
   [SIGN_CHAR]: string;
@@ -27,7 +37,11 @@ export default class MapRenderer {
   prefabs: HighlightedPrefab[] = [];
   allPrefabs: Prefab[] = [];
   prefabMeshSizes: PrefabMeshSizes = {};
-  prefabFootprintColors: PrefabFootprintColors = {};
+  prefabDensityScores: PrefabDensityScores = {};
+  districtColors: DistrictColors = {};
+  // Cache of the tile index keyed by the most recent `allPrefabs` reference,
+  // so the index is rebuilt only when the upstream array changes.
+  #tileIndex: { source: Prefab[]; index: TileIndex } | null = null;
   signSize = 200;
   signAlpha = 1;
   prefabDimAlpha = 1;
@@ -122,10 +136,11 @@ export default class MapRenderer {
   }
 
   // Draw each prefab as a rotated rectangle sized by PrefabSize. Drawn under
-  // the ✘ marker so the filter highlight remains visible on top.
-  // `rwg_tile_` and `part_` are sub-pieces composed by the world generator
-  // (street tiles, building parts); their footprints overlap the parent POIs
-  // and create visual noise so they are skipped.
+  // the ✘ marker so the filter highlight remains visible on top. Mirrors the
+  // game's PrefabPreviewManager: skip `rwg_tile*` (the placement framework
+  // itself) and `part_driveway*` (sub-parts that overlap their parent POI).
+  // Per-POI colour matches the in-game preview: it comes from the tile that
+  // contains the POI, with name- and DensityScore-based modifiers applied.
   #drawPrefabDimensions(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
@@ -140,10 +155,12 @@ export default class MapRenderer {
 
     context.lineWidth = stroke;
 
+    const tileIndex = this.#getTileIndex();
+
     for (const prefab of this.allPrefabs) {
       if (
-        prefab.name.startsWith("rwg_tile_") ||
-        prefab.name.startsWith("part_")
+        prefab.name.includes("rwg_tile") ||
+        prefab.name.includes("part_driveway")
       ) continue;
       const size = this.prefabMeshSizes[prefab.name];
       if (!size) continue;
@@ -159,7 +176,7 @@ export default class MapRenderer {
       // prefab vertical positions are inverted for canvas coordinates
       const cy = offsetY - prefab.z;
 
-      const color = this.prefabFootprintColors[prefab.name] ?? "#ffff00";
+      const color = this.#footprintColor(prefab, tileIndex);
       context.strokeStyle = color;
       context.fillStyle = withAlpha(color, 0.35);
       context.beginPath();
@@ -167,6 +184,65 @@ export default class MapRenderer {
       context.fill();
       context.stroke();
     }
+  }
+
+  // Tile prefabs are 150×150 axis-aligned blocks named `rwg_tile_<district>_*`
+  // and their positions form a regular grid. The index keys each tile by its
+  // grid cell so footprint lookups are O(1).
+  #getTileIndex(): TileIndex {
+    if (this.#tileIndex && this.#tileIndex.source === this.allPrefabs) {
+      return this.#tileIndex.index;
+    }
+    const tiles: { x: number; z: number; district: string }[] = [];
+    for (const p of this.allPrefabs) {
+      const m = /^rwg_tile_([^_]+)_/.exec(p.name);
+      if (!m) continue;
+      tiles.push({ x: p.x, z: p.z, district: m[1] });
+    }
+    // Tiles align on a 150-block lattice but the lattice origin is the world
+    // centre offset, not a multiple of 150 in world coords. Pick any tile to
+    // derive the offset (mod 150 normalised to [0, 150)).
+    const mod = (n: number) => ((n % TILE_SIZE) + TILE_SIZE) % TILE_SIZE;
+    const offsetX = tiles.length > 0 ? mod(tiles[0].x) : 0;
+    const offsetZ = tiles.length > 0 ? mod(tiles[0].z) : 0;
+    const cells = new Map<string, string>();
+    for (const t of tiles) {
+      const gx = Math.floor((t.x - offsetX) / TILE_SIZE);
+      const gz = Math.floor((t.z - offsetZ) / TILE_SIZE);
+      cells.set(`${gx.toString()},${gz.toString()}`, t.district);
+    }
+    const index: TileIndex = { offsetX, offsetZ, cells };
+    this.#tileIndex = { source: this.allPrefabs, index };
+    return index;
+  }
+
+  #footprintColor(prefab: Prefab, tileIndex: TileIndex): string {
+    const gx = Math.floor((prefab.x - tileIndex.offsetX) / TILE_SIZE);
+    const gz = Math.floor((prefab.z - tileIndex.offsetZ) / TILE_SIZE);
+    const district = tileIndex.cells.get(
+      `${gx.toString()},${gz.toString()}`,
+    );
+    // Mirrors WorldGenerationEngineFinal.StreetTile.SpawnMarkerPartsAndPrefabs:
+    //   remnant/abandoned ×0.75, low-density ×0.4, trader override #994d4d.
+    // Wilderness POIs (no containing tile) keep the in-game default of white.
+    let color: [number, number, number];
+    if (district === undefined) {
+      color = [1, 1, 1];
+    } else {
+      const hex = this.districtColors[district];
+      color = hex ? hexToRgbFloat(hex) : [1, 1, 1];
+    }
+    if (
+      prefab.name.startsWith("remnant_") ||
+      prefab.name.startsWith("abandoned_")
+    ) {
+      color = [color[0] * 0.75, color[1] * 0.75, color[2] * 0.75];
+    } else if ((this.prefabDensityScores[prefab.name] ?? 0) < 1) {
+      color = [color[0] * 0.4, color[1] * 0.4, color[2] * 0.4];
+    } else if (prefab.name.startsWith("trader_")) {
+      color = [0.6, 0.3, 0.3];
+    }
+    return rgbFloatToHex(color);
   }
 
   /**
@@ -357,6 +433,22 @@ function withAlpha(hex: string, alpha: number): string {
   const g = parseInt(m[2], 16);
   const b = parseInt(m[3], 16);
   return `rgba(${r.toString()}, ${g.toString()}, ${b.toString()}, ${alpha.toString()})`;
+}
+
+function hexToRgbFloat(hex: string): [number, number, number] {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return [1, 1, 1];
+  return [
+    parseInt(m[1], 16) / 255,
+    parseInt(m[2], 16) / 255,
+    parseInt(m[3], 16) / 255,
+  ];
+}
+
+function rgbFloatToHex([r, g, b]: [number, number, number]): string {
+  const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n * 255)));
+  const hex = (n: number) => clamp(n).toString(16).padStart(2, "0");
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
 }
 
 function mapSize(

@@ -13,9 +13,14 @@ export interface PrefabMeshSizes {
   [prefabName: string]: [number, number];
 }
 
-export interface PrefabFootprintColors {
-  // CSS hex string (e.g. "#0000ff") derived from rwgmixer district preview_color.
-  [prefabName: string]: string;
+export interface DistrictColors {
+  // CSS hex (`#rrggbb`) from rwgmixer.xml `<district>` preview_color.
+  [districtName: string]: string;
+}
+
+export interface PrefabDensityScores {
+  // Integer score from PrefabData.Init: floor((TotalVertices + 50000) / 100000).
+  [prefabName: string]: number;
 }
 
 export interface HighlightedPrefab extends Prefab {

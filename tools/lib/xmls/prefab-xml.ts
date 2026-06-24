@@ -25,6 +25,11 @@ export interface ParsedPrefabProperty {
   value: string;
 }
 
+export interface ParsedPrefabClass {
+  className: string;
+  properties: ParsedPrefabProperty[];
+}
+
 function isRawPrefabPropertyValue(
   p: RawPrefabProperty,
 ): p is RawPrefabPropertyValue {
@@ -62,4 +67,33 @@ export async function parsePrefabXml(
       return [];
     }
   });
+}
+
+// Variant that also returns nested `<property class="X">…</property>` blocks
+// so callers can read e.g. the Stats class for DensityScore calculation.
+export async function parsePrefabXmlWithClasses(
+  fileName: string,
+): Promise<{ values: ParsedPrefabProperty[]; classes: ParsedPrefabClass[] }> {
+  const parsed = parseXml(await Deno.readTextFile(fileName));
+  if (!isRawPrefabXml(parsed)) {
+    throw new Error(`Unexpected structure in ${fileName}`);
+  }
+  const rawProps = parsed.prefab.property;
+  const properties = Array.isArray(rawProps) ? rawProps : [rawProps];
+  const values: ParsedPrefabProperty[] = [];
+  const classes: ParsedPrefabClass[] = [];
+  for (const p of properties) {
+    if (isRawPrefabPropertyValue(p)) {
+      values.push({ name: p["@name"], value: p["@value"] });
+    } else {
+      const inner = Array.isArray(p.property) ? p.property : [p.property];
+      classes.push({
+        className: p["@class"],
+        properties: inner.flatMap((c) =>
+          c && "@name" in c ? [{ name: c["@name"], value: c["@value"] }] : []
+        ),
+      });
+    }
+  }
+  return { values, classes };
 }
