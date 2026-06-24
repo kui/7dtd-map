@@ -104,7 +104,6 @@ function main() {
     labelHandler,
     fileHandler,
     () => fetchJson("prefab-difficulties.json"),
-    () => fetchJson("prefab-mesh-sizes.json"),
   );
   new MapInfoHandler(
     {
@@ -131,9 +130,6 @@ function main() {
     prefabsHandler,
     markerHandler,
     fileHandler,
-    () => fetchJson("prefab-mesh-sizes.json"),
-    () => fetchJson("prefab-density-scores.json"),
-    () => fetchJson("district-colors.json"),
   );
   new TerrainViewer(
     {

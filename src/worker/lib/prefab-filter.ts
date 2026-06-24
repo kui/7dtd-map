@@ -21,6 +21,7 @@ export interface EventMessage {
 export class PrefabFilter {
   #labelHolder: LabelHolder;
   #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
+  #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
 
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
@@ -31,7 +32,6 @@ export class PrefabFilter {
   #blockFilterInvalid = false;
 
   all: Prefab[] = [];
-  prefabMeshSizes: PrefabMeshSizes = {};
   markCoords: GameCoords | null = null;
   difficulty: NumberRange = { start: 0, end: 5 };
   prefabFilterRegexp = "";
@@ -41,14 +41,15 @@ export class PrefabFilter {
     labelsBaseUrl: string,
     navigatorLanguages: readonly string[],
     fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
+    fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
   ) {
+    const noop = () => {};
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
     this.#blockPrefabCountsHolder = new CacheHolder(
       fetchPrefabBlockCounts,
-      () => {
-        /* do nothing */
-      },
+      noop,
     );
+    this.#meshSizesHolder = new CacheHolder(fetchPrefabMeshSizes, noop);
   }
 
   set language(lang: Language) {
@@ -70,7 +71,7 @@ export class PrefabFilter {
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
     this.#updateStatus();
-    this.#updateDistance();
+    await this.#updateDistance();
     this.#sort();
     await this.#listeners.dispatch({
       update: { status: this.#status, prefabs: this.#filtered },
@@ -224,14 +225,15 @@ export class PrefabFilter {
     return matchedPrefabNames;
   }
 
-  #updateDistance() {
+  async #updateDistance() {
     if (this.markCoords) {
       const { markCoords } = this;
+      const meshSizes = await this.#meshSizesHolder.get();
       this.#filtered.forEach((p) => {
         // decoration.position is the SW corner of the rotated AABB, so add the
         // rotation-aware half-extents to compare against the flag from the
         // prefab's centre instead of its corner.
-        const c = this.#prefabCenter(p);
+        const c = prefabCenter(p, meshSizes);
         p.distance = [
           computeDirection(c, markCoords),
           computeDistance(c, markCoords),
@@ -240,15 +242,6 @@ export class PrefabFilter {
     } else {
       this.#filtered.forEach((p) => (p.distance = null));
     }
-  }
-
-  #prefabCenter(p: Prefab): GameCoords {
-    const size = this.prefabMeshSizes[p.name];
-    if (!size) return { type: "game", x: p.x, z: p.z };
-    const odd = ((p.rotation ?? 0) & 1) === 1;
-    const halfW = (odd ? size[1] : size[0]) / 2;
-    const halfD = (odd ? size[0] : size[1]) / 2;
-    return { type: "game", x: p.x + halfW, z: p.z + halfD };
   }
 
   #sort() {
@@ -294,6 +287,15 @@ function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
     return nameSorter(a, b);
   }
   return a.distance[1] - b.distance[1];
+}
+
+function prefabCenter(p: Prefab, meshSizes: PrefabMeshSizes): GameCoords {
+  const size = meshSizes[p.name];
+  if (!size) return { type: "game", x: p.x, z: p.z };
+  const odd = ((p.rotation ?? 0) & 1) === 1;
+  const halfW = (odd ? size[1] : size[0]) / 2;
+  const halfD = (odd ? size[0] : size[1]) / 2;
+  return { type: "game", x: p.x + halfW, z: p.z + halfD };
 }
 
 function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {

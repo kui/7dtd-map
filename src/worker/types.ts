@@ -30,9 +30,6 @@ export type MapRendererInputMessage = Partial<
     | "prefabDimAlpha"
     | "prefabs"
     | "allPrefabs"
-    | "prefabMeshSizes"
-    | "prefabDensityScores"
-    | "districtColors"
     | "markerCoords"
     | "invalidate"
   >
@@ -46,7 +43,6 @@ export type PrefabsFilterInputMessage = Partial<
   Pick<
     PrefabFilter,
     | "all"
-    | "prefabMeshSizes"
     | "difficulty"
     | "prefabFilterRegexp"
     | "blockFilterRegexp"

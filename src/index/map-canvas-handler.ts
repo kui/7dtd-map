@@ -1,9 +1,4 @@
 import type { MapRendererInputMessage } from "../worker/types.ts";
-import type {
-  DistrictColors,
-  PrefabDensityScores,
-  PrefabMeshSizes,
-} from "../types/7dtdmap.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
@@ -47,9 +42,6 @@ export class MapCanvasHandler {
     prefabsHandler: PrefabsHandler,
     markerHandler: MarkerHandler,
     fileHandler: FileHandler,
-    fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
-    fetchPrefabDensityScores: () => Promise<PrefabDensityScores>,
-    fetchDistrictColors: () => Promise<DistrictColors>,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
     worker.postMessage(
@@ -66,22 +58,6 @@ export class MapCanvasHandler {
         scale: doms.scale.valueAsNumber,
       },
       [canvas],
-    );
-
-    // The mesh-size table is static so it is loaded once and pushed to the
-    // worker as soon as it resolves. Failures are non-fatal — prefabs without
-    // an entry are simply skipped by the footprint renderer.
-    fetchPrefabMeshSizes().then(
-      (prefabMeshSizes) => worker.postMessage({ prefabMeshSizes }),
-      (e: unknown) => console.warn("Failed to load prefab mesh sizes", e),
-    );
-    fetchPrefabDensityScores().then(
-      (prefabDensityScores) => worker.postMessage({ prefabDensityScores }),
-      (e: unknown) => console.warn("Failed to load prefab density scores", e),
-    );
-    fetchDistrictColors().then(
-      (districtColors) => worker.postMessage({ districtColors }),
-      (e: unknown) => console.warn("Failed to load district colors", e),
     );
 
     doms.prefabDimAlpha.addEventListener("input", () => {

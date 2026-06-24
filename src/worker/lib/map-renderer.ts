@@ -9,6 +9,7 @@ import type {
 } from "../../types/7dtdmap.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
+import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
 
@@ -36,12 +37,12 @@ export default class MapRenderer {
   showPrefabs = true;
   prefabs: HighlightedPrefab[] = [];
   allPrefabs: Prefab[] = [];
-  prefabMeshSizes: PrefabMeshSizes = {};
-  prefabDensityScores: PrefabDensityScores = {};
-  districtColors: DistrictColors = {};
   // Cache of the tile index keyed by the most recent `allPrefabs` reference,
   // so the index is rebuilt only when the upstream array changes.
   #tileIndex: { source: Prefab[]; index: TileIndex } | null = null;
+  #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
+  #densityScoresHolder: CacheHolder<PrefabDensityScores>;
+  #districtColorsHolder: CacheHolder<DistrictColors>;
   signSize = 200;
   signAlpha = 1;
   prefabDimAlpha = 1;
@@ -66,9 +67,22 @@ export default class MapRenderer {
   // Bumped whenever a source image is invalidated, to invalidate the composite.
   #generation = 0;
 
-  constructor(canvas: OffscreenCanvas, fontFamilies: FontFamilies) {
+  constructor(
+    canvas: OffscreenCanvas,
+    fontFamilies: FontFamilies,
+    fetchMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchDensityScores: () => Promise<PrefabDensityScores>,
+    fetchDistrictColors: () => Promise<DistrictColors>,
+  ) {
     this.canvas = canvas;
     this.#fontFamilies = fontFamilies;
+    // Static tables fetched on demand inside the worker, mirroring the
+    // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
+    // because nothing here owns external resources.
+    const noop = () => {};
+    this.#meshSizesHolder = new CacheHolder(fetchMeshSizes, noop);
+    this.#densityScoresHolder = new CacheHolder(fetchDensityScores, noop);
+    this.#districtColorsHolder = new CacheHolder(fetchDistrictColors, noop);
   }
 
   set invalidate(
@@ -116,6 +130,16 @@ export default class MapRenderer {
     context.imageSmoothingEnabled = false;
     if (base) context.drawImage(base, 0, 0);
 
+    // Static lookup tables are fetched lazily inside the worker. They are
+    // resolved here in parallel with the base-map composition; the renderer
+    // can defer the overlay until they're ready without blocking the
+    // background layers.
+    const [meshSizes, districtColors, densityScores] = await Promise.all([
+      this.#meshSizesHolder.get(),
+      this.#districtColorsHolder.get(),
+      this.#densityScoresHolder.get(),
+    ]);
+
     // Overlays are drawn in native map coordinates, scaled down to the canvas.
     context.save();
     context.scale(this.scale, this.scale);
@@ -123,11 +147,18 @@ export default class MapRenderer {
     // the sign markers for filtered prefabs sit on top of them.
     if (this.prefabDimAlpha > 0) {
       context.globalAlpha = this.prefabDimAlpha;
-      this.#drawPrefabDimensions(context, width, height);
+      this.#drawPrefabDimensions(
+        context,
+        width,
+        height,
+        meshSizes,
+        densityScores,
+        districtColors,
+      );
     }
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
-      this.#drawPrefabs(context, width, height);
+      this.#drawPrefabs(context, width, height, meshSizes);
     }
     if (this.markerCoords) {
       this.#drawMark(context, width, height);
@@ -145,6 +176,9 @@ export default class MapRenderer {
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
+    meshSizes: PrefabMeshSizes,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
   ) {
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -162,7 +196,7 @@ export default class MapRenderer {
         prefab.name.includes("rwg_tile") ||
         prefab.name.includes("part_driveway")
       ) continue;
-      const size = this.prefabMeshSizes[prefab.name];
+      const size = meshSizes[prefab.name];
       if (!size) continue;
       const [sx, sz] = size;
       // decoration.position is the SW corner of the rotated AABB, so for
@@ -176,7 +210,12 @@ export default class MapRenderer {
       // prefab vertical positions are inverted for canvas coordinates
       const cy = offsetY - prefab.z;
 
-      const color = this.#footprintColor(prefab, tileIndex);
+      const color = this.#footprintColor(
+        prefab,
+        tileIndex,
+        densityScores,
+        districtColors,
+      );
       context.strokeStyle = color;
       context.fillStyle = withAlpha(color, 0.35);
       context.beginPath();
@@ -216,7 +255,12 @@ export default class MapRenderer {
     return index;
   }
 
-  #footprintColor(prefab: Prefab, tileIndex: TileIndex): string {
+  #footprintColor(
+    prefab: Prefab,
+    tileIndex: TileIndex,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
+  ): string {
     const gx = Math.floor((prefab.x - tileIndex.offsetX) / TILE_SIZE);
     const gz = Math.floor((prefab.z - tileIndex.offsetZ) / TILE_SIZE);
     const district = tileIndex.cells.get(
@@ -229,7 +273,7 @@ export default class MapRenderer {
     if (district === undefined) {
       color = [1, 1, 1];
     } else {
-      const hex = this.districtColors[district];
+      const hex = districtColors[district];
       color = hex ? hexToRgbFloat(hex) : [1, 1, 1];
     }
     if (
@@ -237,7 +281,7 @@ export default class MapRenderer {
       prefab.name.startsWith("abandoned_")
     ) {
       color = [color[0] * 0.75, color[1] * 0.75, color[2] * 0.75];
-    } else if ((this.prefabDensityScores[prefab.name] ?? 0) < 1) {
+    } else if ((densityScores[prefab.name] ?? 0) < 1) {
       color = [color[0] * 0.4, color[1] * 0.4, color[2] * 0.4];
     } else if (prefab.name.startsWith("trader_")) {
       color = [0.6, 0.3, 0.3];
@@ -319,6 +363,7 @@ export default class MapRenderer {
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
+    meshSizes: PrefabMeshSizes,
   ) {
     context.font = `${this.signSize.toString()}px '${
       this.#fontFamilies[SIGN_CHAR]
@@ -338,7 +383,7 @@ export default class MapRenderer {
       // decoration.position is the SW corner of the rotated AABB; shift to
       // the centre so the ✘ marks the middle of the footprint. Falls back to
       // a zero-size offset when the mesh size is unknown.
-      const size = this.prefabMeshSizes[prefab.name];
+      const size = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
       const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;

@@ -3,6 +3,7 @@ import type {
   BlockPrefabCounts,
   HighlightedPrefab,
   Prefab,
+  PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 import { PrefabFilter } from "../worker/lib/prefab-filter.ts";
 import { expect } from "@std/expect";
@@ -37,11 +38,13 @@ function stubFetch(map: Record<string, unknown>) {
 
 function build(
   blockCounts: BlockPrefabCounts = {},
+  meshSizes: PrefabMeshSizes = {},
 ): PrefabFilter {
   return new PrefabFilter(
     "/labels",
     ["en"],
     () => Promise.resolve(blockCounts),
+    () => Promise.resolve(meshSizes),
   );
 }
 
