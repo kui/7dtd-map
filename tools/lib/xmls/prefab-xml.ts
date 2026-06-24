@@ -8,31 +8,37 @@ interface RawPrefabXml {
   };
 }
 
-type RawPrefabProperty = RawPrefabPropertyValue | RawPrefabClassProperty;
+type RawPrefabProperty = RawPrefabPropertyValue | RawPrefabPropertyClass;
 
 interface RawPrefabPropertyValue {
   "@name": string;
   "@value": string;
 }
 
-interface RawPrefabClassProperty {
+// Class containers may nest other classes (e.g. `Stats > BlockEntities`), so
+// the child `property` field carries the same recursive shape.
+interface RawPrefabPropertyClass {
   "@class": string;
-  property: { "@name": string; "@value": string }[];
+  property?: RawPrefabProperty | RawPrefabProperty[];
 }
 
-export interface ParsedPrefabProperty {
+export interface ParsedPrefabPropertyValue {
   name: string;
   value: string;
 }
 
-export interface ParsedPrefabClass {
+export interface ParsedPrefabPropertyClass {
   className: string;
   properties: ParsedPrefabProperty[];
 }
 
-function isRawPrefabPropertyValue(
-  p: RawPrefabProperty,
-): p is RawPrefabPropertyValue {
+// A single `<property>` element from a prefab xml — either a `name`/`value`
+// pair or a class container whose body holds more entries of the same shape.
+export type ParsedPrefabProperty =
+  | ParsedPrefabPropertyValue
+  | ParsedPrefabPropertyClass;
+
+function isRawValue(p: RawPrefabProperty): p is RawPrefabPropertyValue {
   return "@name" in p;
 }
 
@@ -51,6 +57,20 @@ function isRawPrefabXml(value: unknown): value is RawPrefabXml {
   return looksLikeRawPrefabProperty(property);
 }
 
+function toEntry(raw: RawPrefabProperty): ParsedPrefabProperty {
+  if (isRawValue(raw)) return { name: raw["@name"], value: raw["@value"] };
+  const inner = raw.property;
+  const list = inner === undefined
+    ? []
+    : Array.isArray(inner)
+    ? inner
+    : [inner];
+  return {
+    className: raw["@class"],
+    properties: list.filter(looksLikeRawPrefabProperty).map(toEntry),
+  };
+}
+
 export async function parsePrefabXml(
   fileName: string,
 ): Promise<ParsedPrefabProperty[]> {
@@ -58,42 +78,21 @@ export async function parsePrefabXml(
   if (!isRawPrefabXml(parsed)) {
     throw new Error(`Unexpected structure in ${fileName}`);
   }
-  const rawProps = parsed.prefab.property;
-  const properties = Array.isArray(rawProps) ? rawProps : [rawProps];
-  return properties.flatMap((p) => {
-    if (isRawPrefabPropertyValue(p)) {
-      return { name: p["@name"], value: p["@value"] };
-    } else {
-      return [];
-    }
-  });
+  const raw = parsed.prefab.property;
+  const list = Array.isArray(raw) ? raw : [raw];
+  return list.map(toEntry);
 }
 
-// Variant that also returns nested `<property class="X">…</property>` blocks
-// so callers can read e.g. the Stats class for DensityScore calculation.
-export async function parsePrefabXmlWithClasses(
-  fileName: string,
-): Promise<{ values: ParsedPrefabProperty[]; classes: ParsedPrefabClass[] }> {
-  const parsed = parseXml(await Deno.readTextFile(fileName));
-  if (!isRawPrefabXml(parsed)) {
-    throw new Error(`Unexpected structure in ${fileName}`);
-  }
-  const rawProps = parsed.prefab.property;
-  const properties = Array.isArray(rawProps) ? rawProps : [rawProps];
-  const values: ParsedPrefabProperty[] = [];
-  const classes: ParsedPrefabClass[] = [];
-  for (const p of properties) {
-    if (isRawPrefabPropertyValue(p)) {
-      values.push({ name: p["@name"], value: p["@value"] });
-    } else {
-      const inner = Array.isArray(p.property) ? p.property : [p.property];
-      classes.push({
-        className: p["@class"],
-        properties: inner.flatMap((c) =>
-          c && "@name" in c ? [{ name: c["@name"], value: c["@value"] }] : []
-        ),
-      });
-    }
-  }
-  return { values, classes };
+// Narrowing helpers — exported so call sites can drop into the value variant
+// without spelling the type guard each time.
+export function isPrefabPropertyValue(
+  p: ParsedPrefabProperty,
+): p is ParsedPrefabPropertyValue {
+  return "name" in p;
+}
+
+export function isPrefabPropertyClass(
+  p: ParsedPrefabProperty,
+): p is ParsedPrefabPropertyClass {
+  return "className" in p;
 }

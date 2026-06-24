@@ -1,8 +1,10 @@
 import * as path from "node:path";
 import {
-  type ParsedPrefabClass,
+  isPrefabPropertyClass,
+  isPrefabPropertyValue,
   type ParsedPrefabProperty,
-  parsePrefabXmlWithClasses,
+  type ParsedPrefabPropertyValue,
+  parsePrefabXml,
 } from "./lib/xmls/prefab-xml.ts";
 import { type District, parseRwgmixerXml } from "./lib/xmls/rwgmixer-xml.ts";
 import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
@@ -20,13 +22,8 @@ const MESH_SIZE_FILE = "prefab-mesh-sizes.json";
 const DENSITY_FILE = "prefab-density-scores.json";
 const DISTRICT_COLOR_FILE = "district-colors.json";
 
-interface PrefabXml {
-  values: ParsedPrefabProperty[];
-  classes: ParsedPrefabClass[];
-}
-
 interface PrefabXmls {
-  [prefabName: string]: PrefabXml;
+  [prefabName: string]: ParsedPrefabProperty[];
 }
 
 async function main() {
@@ -60,12 +57,34 @@ async function main() {
   return 0;
 }
 
+function findValueEntry(
+  entries: ParsedPrefabProperty[],
+  name: string,
+): ParsedPrefabPropertyValue | undefined {
+  for (const e of entries) {
+    if (isPrefabPropertyValue(e) && e.name === name) return e;
+  }
+  return undefined;
+}
+
+function findClassEntries(
+  entries: ParsedPrefabProperty[],
+  className: string,
+): ParsedPrefabProperty[] | undefined {
+  for (const e of entries) {
+    if (isPrefabPropertyClass(e) && e.className === className) {
+      return e.properties;
+    }
+  }
+  return undefined;
+}
+
 function extractDifficulties(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, number]>(([prefabName, { values }]) => {
+      .flatMap<[string, number]>(([prefabName, entries]) => {
         const difficulty = parseInt(
-          values.find((p) => p.name === "DifficultyTier")?.value ?? "0",
+          findValueEntry(entries, "DifficultyTier")?.value ?? "0",
           10,
         );
         if (difficulty > 0) return [[prefabName, difficulty]];
@@ -81,8 +100,8 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
 function extractMeshSizes(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, [number, number]]>(([prefabName, { values }]) => {
-        const raw = values.find((p) => p.name === "PrefabSize")?.value;
+      .flatMap<[string, [number, number]]>(([prefabName, entries]) => {
+        const raw = findValueEntry(entries, "PrefabSize")?.value;
         if (!raw) return [];
         const parts = raw.split(",").map((s) => parseInt(s.trim(), 10));
         if (parts.length < 3) return [];
@@ -102,11 +121,10 @@ function extractMeshSizes(prefabXmls: PrefabXmls) {
 function extractDensityScores(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, number]>(([prefabName, { classes }]) => {
-        const stats = classes.find((c) => c.className === "Stats");
+      .flatMap<[string, number]>(([prefabName, entries]) => {
+        const stats = findClassEntries(entries, "Stats");
         const totalVertices = parseInt(
-          stats?.properties.find((p) => p.name === "TotalVertices")?.value ??
-            "0",
+          (stats && findValueEntry(stats, "TotalVertices")?.value) ?? "0",
           10,
         );
         const score = Math.trunc(
@@ -141,13 +159,13 @@ function extractDistrictColors(districts: District[]) {
 async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   let completed = 0;
   const xmlTasks = xmlFiles.map(
-    (prefabXmlFile) => async (): Promise<[string, PrefabXml]> => {
+    (prefabXmlFile) => async (): Promise<[string, ParsedPrefabProperty[]]> => {
       const { name } = prefabSiblingFiles(prefabXmlFile);
-      const parsed = await parsePrefabXmlWithClasses(prefabXmlFile);
+      const entries = await parsePrefabXml(prefabXmlFile);
       if (++completed % 50 === 0) {
         console.log("Read xmls: %d / %d", completed, xmlFiles.length);
       }
-      return [name, parsed];
+      return [name, entries];
     },
   );
 
