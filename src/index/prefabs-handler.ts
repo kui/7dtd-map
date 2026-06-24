@@ -6,6 +6,7 @@ import type {
   HighlightedPrefab,
   Prefab,
   PrefabDifficulties,
+  PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 
 import * as events from "../lib/events.ts";
@@ -40,6 +41,7 @@ export class PrefabsHandler {
     labelHandler: LabelHandler,
     fileHandler: FileHandler,
     fetchDifficulties: () => Promise<PrefabDifficulties>,
+    fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
   ) {
     worker.addEventListener(
       "message",
@@ -54,6 +56,13 @@ export class PrefabsHandler {
 
     bindPrefabsFilterControls(doms, worker, labelHandler);
     worker.postMessage({ preExcludes: readPreExcludes(doms) });
+
+    // Mesh sizes are needed so distance/direction are measured from the
+    // prefab centre rather than `decoration.position` (its SW corner).
+    fetchPrefabMeshSizes().then(
+      (prefabMeshSizes) => worker.postMessage({ prefabMeshSizes }),
+      (e: unknown) => console.warn("Failed to load prefab mesh sizes", e),
+    );
 
     markerHandler.addListener((m) => {
       worker.postMessage({ markCoords: m.update.coords });

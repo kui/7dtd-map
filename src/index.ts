@@ -104,6 +104,7 @@ function main() {
     labelHandler,
     fileHandler,
     () => fetchJson("prefab-difficulties.json"),
+    () => fetchJson("prefab-mesh-sizes.json"),
   );
   new MapInfoHandler(
     {

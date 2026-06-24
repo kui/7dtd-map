@@ -5,6 +5,7 @@ import type {
   HighlightedBlock,
   HighlightedPrefab,
   Prefab,
+  PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
@@ -30,6 +31,7 @@ export class PrefabFilter {
   #blockFilterInvalid = false;
 
   all: Prefab[] = [];
+  prefabMeshSizes: PrefabMeshSizes = {};
   markCoords: GameCoords | null = null;
   difficulty: NumberRange = { start: 0, end: 5 };
   prefabFilterRegexp = "";
@@ -225,15 +227,28 @@ export class PrefabFilter {
   #updateDistance() {
     if (this.markCoords) {
       const { markCoords } = this;
-      this.#filtered.forEach((
-        p,
-      ) => (p.distance = [
-        computeDirection(p, markCoords),
-        computeDistance(p, markCoords),
-      ]));
+      this.#filtered.forEach((p) => {
+        // decoration.position is the SW corner of the rotated AABB, so add the
+        // rotation-aware half-extents to compare against the flag from the
+        // prefab's centre instead of its corner.
+        const c = this.#prefabCenter(p);
+        p.distance = [
+          computeDirection(c, markCoords),
+          computeDistance(c, markCoords),
+        ];
+      });
     } else {
       this.#filtered.forEach((p) => (p.distance = null));
     }
+  }
+
+  #prefabCenter(p: Prefab): { x: number; z: number } {
+    const size = this.prefabMeshSizes[p.name];
+    if (!size) return { x: p.x, z: p.z };
+    const odd = ((p.rotation ?? 0) & 1) === 1;
+    const halfW = (odd ? size[1] : size[0]) / 2;
+    const halfD = (odd ? size[0] : size[1]) / 2;
+    return { x: p.x + halfW, z: p.z + halfD };
   }
 
   #sort() {
@@ -281,7 +296,10 @@ function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
   return a.distance[1] - b.distance[1];
 }
 
-function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
+function computeDistance(
+  targetCoords: { x: number; z: number },
+  baseCoords: { x: number; z: number },
+) {
   return Math.round(
     Math.sqrt(
       (targetCoords.x - baseCoords.x) ** 2 +
@@ -291,8 +309,8 @@ function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
 }
 
 function computeDirection(
-  targetCoords: GameCoords,
-  baseCoords: GameCoords,
+  targetCoords: { x: number; z: number },
+  baseCoords: { x: number; z: number },
 ): Direction | null {
   const dx = targetCoords.x - baseCoords.x;
   const dz = targetCoords.z - baseCoords.z;

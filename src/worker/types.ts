@@ -46,6 +46,7 @@ export type PrefabsFilterInputMessage = Partial<
   Pick<
     PrefabFilter,
     | "all"
+    | "prefabMeshSizes"
     | "difficulty"
     | "prefabFilterRegexp"
     | "blockFilterRegexp"
