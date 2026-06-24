@@ -3,6 +3,7 @@ import type {
   GameMapSize,
   HighlightedPrefab,
   Prefab,
+  PrefabFootprintColors,
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
@@ -26,6 +27,7 @@ export default class MapRenderer {
   prefabs: HighlightedPrefab[] = [];
   allPrefabs: Prefab[] = [];
   prefabMeshSizes: PrefabMeshSizes = {};
+  prefabFootprintColors: PrefabFootprintColors = {};
   signSize = 200;
   signAlpha = 1;
   prefabDimAlpha = 1;
@@ -137,8 +139,6 @@ export default class MapRenderer {
     const stroke = 2;
 
     context.lineWidth = stroke;
-    context.strokeStyle = "yellow";
-    context.fillStyle = "rgba(255, 255, 0, 0.15)";
 
     for (const prefab of this.allPrefabs) {
       if (
@@ -159,6 +159,9 @@ export default class MapRenderer {
       // prefab vertical positions are inverted for canvas coordinates
       const cy = offsetY - prefab.z;
 
+      const color = this.prefabFootprintColors[prefab.name] ?? "#ffff00";
+      context.strokeStyle = color;
+      context.fillStyle = withAlpha(color, 0.35);
       context.beginPath();
       context.rect(cx, cy - d, w, d);
       context.fill();
@@ -342,6 +345,18 @@ export default class MapRenderer {
   size(): GameMapSize {
     return this.#mapSize;
   }
+}
+
+// Build an `rgba(r, g, b, a)` string from a `#rrggbb` colour. Falls back to
+// the input when the hex format is unrecognised so the renderer still gets a
+// valid CSS colour for the stroke pass.
+function withAlpha(hex: string, alpha: number): string {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const r = parseInt(m[1], 16);
+  const g = parseInt(m[2], 16);
+  const b = parseInt(m[3], 16);
+  return `rgba(${r.toString()}, ${g.toString()}, ${b.toString()}, ${alpha.toString()})`;
 }
 
 function mapSize(

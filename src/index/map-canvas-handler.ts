@@ -1,5 +1,8 @@
 import type { MapRendererInputMessage } from "../worker/types.ts";
-import type { PrefabMeshSizes } from "../types/7dtdmap.ts";
+import type {
+  PrefabFootprintColors,
+  PrefabMeshSizes,
+} from "../types/7dtdmap.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
@@ -44,6 +47,7 @@ export class MapCanvasHandler {
     markerHandler: MarkerHandler,
     fileHandler: FileHandler,
     fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchPrefabFootprintColors: () => Promise<PrefabFootprintColors>,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
     worker.postMessage(
@@ -68,6 +72,10 @@ export class MapCanvasHandler {
     fetchPrefabMeshSizes().then(
       (prefabMeshSizes) => worker.postMessage({ prefabMeshSizes }),
       (e: unknown) => console.warn("Failed to load prefab mesh sizes", e),
+    );
+    fetchPrefabFootprintColors().then(
+      (prefabFootprintColors) => worker.postMessage({ prefabFootprintColors }),
+      (e: unknown) => console.warn("Failed to load prefab footprint colors", e),
     );
 
     doms.prefabDimAlpha.addEventListener("input", () => {

@@ -31,6 +31,7 @@ export type MapRendererInputMessage = Partial<
     | "prefabs"
     | "allPrefabs"
     | "prefabMeshSizes"
+    | "prefabFootprintColors"
     | "markerCoords"
     | "invalidate"
   >

@@ -13,6 +13,11 @@ export interface PrefabMeshSizes {
   [prefabName: string]: [number, number];
 }
 
+export interface PrefabFootprintColors {
+  // CSS hex string (e.g. "#0000ff") derived from rwgmixer district preview_color.
+  [prefabName: string]: string;
+}
+
 export interface HighlightedPrefab extends Prefab {
   highlightedName?: string;
   highlightedLabel?: string;
