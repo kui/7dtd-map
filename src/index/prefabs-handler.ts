@@ -22,17 +22,23 @@ interface Doms extends PrefabsFilterControlsDoms {
   status: HTMLElement;
 }
 
-interface EventMessage {
+interface FilteredPrefabsEventMessage {
   update: { prefabs: HighlightedPrefab[] };
 }
 
-interface AllEventMessage {
+interface AllPrefabsEventMessage {
   update: { all: Prefab[] };
 }
 
 export class PrefabsHandler {
-  #listeners = new events.ListenerManager<"update", EventMessage>();
-  #allListeners = new events.ListenerManager<"update", AllEventMessage>();
+  #filteredPrefabsListeners = new events.ListenerManager<
+    "update",
+    FilteredPrefabsEventMessage
+  >();
+  #allPrefabsListeners = new events.ListenerManager<
+    "update",
+    AllPrefabsEventMessage
+  >();
 
   constructor(
     doms: Doms,
@@ -50,7 +56,9 @@ export class PrefabsHandler {
           update: { prefabs, status },
         } = event.data;
         doms.status.textContent = status;
-        this.#listeners.dispatchNoAwait({ update: { prefabs } });
+        this.#filteredPrefabsListeners.dispatchNoAwait({
+          update: { prefabs },
+        });
       },
     );
 
@@ -71,19 +79,22 @@ export class PrefabsHandler {
       if (fileNames.includes("prefabs.xml")) {
         const all = await loadPrefabsXml(fetchDifficulties);
         worker.postMessage({ all });
-        this.#allListeners.dispatchNoAwait({ update: { all } });
+        this.#allPrefabsListeners.dispatchNoAwait({ update: { all } });
       }
     });
   }
 
-  addListener(fn: (m: EventMessage) => unknown) {
-    this.#listeners.addListener(fn);
+  // Filter pipeline output: emitted whenever the user-facing filter
+  // (search box, difficulty range, …) re-evaluates, carrying the highlighted
+  // subset that should appear in the prefab list and as ✘ map markers.
+  addFilteredPrefabsListener(fn: (m: FilteredPrefabsEventMessage) => unknown) {
+    this.#filteredPrefabsListeners.addListener(fn);
   }
 
-  // Emits the full, unfiltered prefab list (with rotation) loaded from
-  // prefabs.xml. Used by the map renderer to draw prefab footprints
-  // independently of the active filter.
-  addAllListener(fn: (m: AllEventMessage) => unknown) {
-    this.#allListeners.addListener(fn);
+  // Raw load output: emitted once per prefabs.xml load with the full,
+  // unfiltered prefab list (with rotation). Used by the map renderer to
+  // draw prefab footprints independently of the active filter.
+  addAllPrefabsListener(fn: (m: AllPrefabsEventMessage) => unknown) {
+    this.#allPrefabsListeners.addListener(fn);
   }
 }

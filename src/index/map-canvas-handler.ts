@@ -116,10 +116,10 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
-    prefabsHandler.addListener(({ update: { prefabs } }) => {
+    prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
       worker.postMessage({ prefabs });
     });
-    prefabsHandler.addAllListener(({ update: { all } }) => {
+    prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
       worker.postMessage({ allPrefabs: all });
     });
     markerHandler.addListener(({ update: { coords } }) => {
