@@ -2,6 +2,8 @@ import type {
   GameCoords,
   GameMapSize,
   HighlightedPrefab,
+  Prefab,
+  PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
@@ -22,8 +24,11 @@ export default class MapRenderer {
   scale = 0.1;
   showPrefabs = true;
   prefabs: HighlightedPrefab[] = [];
+  allPrefabs: Prefab[] = [];
+  prefabMeshSizes: PrefabMeshSizes = {};
   signSize = 200;
   signAlpha = 1;
+  prefabDimAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
   splat4Alpha = 1;
@@ -98,6 +103,12 @@ export default class MapRenderer {
     // Overlays are drawn in native map coordinates, scaled down to the canvas.
     context.save();
     context.scale(this.scale, this.scale);
+    // Prefab footprints (independent of the active filter) are drawn first so
+    // the sign markers for filtered prefabs sit on top of them.
+    if (this.prefabDimAlpha > 0) {
+      context.globalAlpha = this.prefabDimAlpha;
+      this.#drawPrefabDimensions(context, width, height);
+    }
     context.globalAlpha = this.signAlpha;
     if (this.showPrefabs) {
       this.#drawPrefabs(context, width, height);
@@ -106,6 +117,53 @@ export default class MapRenderer {
       this.#drawMark(context, width, height);
     }
     context.restore();
+  }
+
+  // Draw each prefab as a rotated rectangle sized by PrefabSize. Drawn under
+  // the ✘ marker so the filter highlight remains visible on top.
+  // `rwg_tile_` and `part_` are sub-pieces composed by the world generator
+  // (street tiles, building parts); their footprints overlap the parent POIs
+  // and create visual noise so they are skipped.
+  #drawPrefabDimensions(
+    context: OffscreenCanvasRenderingContext2D,
+    width: number,
+    height: number,
+  ) {
+    const offsetX = width / 2;
+    const offsetY = height / 2;
+    // Stroke widths are in game-block units (the renderer's current transform
+    // scales them down to canvas pixels). 1 block ≈ 1 unit, so ~2 blocks of
+    // stroke renders cleanly even at small zoom.
+    const stroke = 2;
+
+    context.lineWidth = stroke;
+    context.strokeStyle = "yellow";
+    context.fillStyle = "rgba(255, 255, 0, 0.15)";
+
+    for (const prefab of this.allPrefabs) {
+      if (
+        prefab.name.startsWith("rwg_tile_") ||
+        prefab.name.startsWith("part_")
+      ) continue;
+      const size = this.prefabMeshSizes[prefab.name];
+      if (!size) continue;
+      const [sx, sz] = size;
+      // decoration.position is the SW corner of the rotated AABB, so for
+      // 90°/270° rotations the world-aligned width/depth swap. No canvas
+      // rotation is needed because the bounding box stays axis-aligned.
+      const odd = ((prefab.rotation ?? 0) & 1) === 1;
+      const w = odd ? sz : sx;
+      const d = odd ? sx : sz;
+
+      const cx = offsetX + prefab.x;
+      // prefab vertical positions are inverted for canvas coordinates
+      const cy = offsetY - prefab.z;
+
+      context.beginPath();
+      context.rect(cx, cy - d, w, d);
+      context.fill();
+      context.stroke();
+    }
   }
 
   /**
@@ -198,9 +256,16 @@ export default class MapRenderer {
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (const prefab of this.prefabs.toReversed()) {
-      const x = offsetX + prefab.x + charOffsetX;
+      // decoration.position is the SW corner of the rotated AABB; shift to
+      // the centre so the ✘ marks the middle of the footprint. Falls back to
+      // a zero-size offset when the mesh size is unknown.
+      const size = this.prefabMeshSizes[prefab.name];
+      const odd = ((prefab.rotation ?? 0) & 1) === 1;
+      const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
+      const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
+      const x = offsetX + prefab.x + halfW + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
-      const z = offsetY - prefab.z + charOffsetY;
+      const z = offsetY - prefab.z - halfD + charOffsetY;
       putText(context, { text: SIGN_CHAR, x, z, size: this.signSize });
     }
   }

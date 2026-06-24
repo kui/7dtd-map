@@ -1,4 +1,5 @@
 import type { MapRendererInputMessage } from "../worker/types.ts";
+import type { PrefabMeshSizes } from "../types/7dtdmap.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
@@ -11,6 +12,7 @@ interface Doms {
   radAlpha: HTMLInputElement;
   signSize: HTMLInputElement;
   signAlpha: HTMLInputElement;
+  prefabDimAlpha: HTMLInputElement;
   brightness: HTMLInputElement;
   scale: HTMLInputElement;
 }
@@ -41,6 +43,7 @@ export class MapCanvasHandler {
     prefabsHandler: PrefabsHandler,
     markerHandler: MarkerHandler,
     fileHandler: FileHandler,
+    fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
     worker.postMessage(
@@ -53,10 +56,25 @@ export class MapCanvasHandler {
         brightness: `${doms.brightness.valueAsNumber.toString()}%`,
         signSize: doms.signSize.valueAsNumber,
         signAlpha: doms.signAlpha.valueAsNumber,
+        prefabDimAlpha: doms.prefabDimAlpha.valueAsNumber,
         scale: doms.scale.valueAsNumber,
       },
       [canvas],
     );
+
+    // The mesh-size table is static so it is loaded once and pushed to the
+    // worker as soon as it resolves. Failures are non-fatal — prefabs without
+    // an entry are simply skipped by the footprint renderer.
+    fetchPrefabMeshSizes().then(
+      (prefabMeshSizes) => worker.postMessage({ prefabMeshSizes }),
+      (e: unknown) => console.warn("Failed to load prefab mesh sizes", e),
+    );
+
+    doms.prefabDimAlpha.addEventListener("input", () => {
+      worker.postMessage({
+        prefabDimAlpha: doms.prefabDimAlpha.valueAsNumber,
+      });
+    });
 
     doms.biomesAlpha.addEventListener("input", () => {
       worker.postMessage({ biomesAlpha: doms.biomesAlpha.valueAsNumber });
@@ -86,6 +104,9 @@ export class MapCanvasHandler {
     });
     prefabsHandler.addListener(({ update: { prefabs } }) => {
       worker.postMessage({ prefabs });
+    });
+    prefabsHandler.addAllListener(({ update: { all } }) => {
+      worker.postMessage({ allPrefabs: all });
     });
     markerHandler.addListener(({ update: { coords } }) => {
       worker.postMessage({ markerCoords: coords });

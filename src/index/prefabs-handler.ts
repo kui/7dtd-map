@@ -4,6 +4,7 @@ import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
 import type {
   HighlightedPrefab,
+  Prefab,
   PrefabDifficulties,
 } from "../types/7dtdmap.ts";
 
@@ -24,8 +25,13 @@ interface EventMessage {
   update: { prefabs: HighlightedPrefab[] };
 }
 
+interface AllEventMessage {
+  update: { all: Prefab[] };
+}
+
 export class PrefabsHandler {
   #listeners = new events.ListenerManager<"update", EventMessage>();
+  #allListeners = new events.ListenerManager<"update", AllEventMessage>();
 
   constructor(
     doms: Doms,
@@ -54,12 +60,21 @@ export class PrefabsHandler {
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
       if (fileNames.includes("prefabs.xml")) {
-        worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties) });
+        const all = await loadPrefabsXml(fetchDifficulties);
+        worker.postMessage({ all });
+        this.#allListeners.dispatchNoAwait({ update: { all } });
       }
     });
   }
 
   addListener(fn: (m: EventMessage) => unknown) {
     this.#listeners.addListener(fn);
+  }
+
+  // Emits the full, unfiltered prefab list (with rotation) loaded from
+  // prefabs.xml. Used by the map renderer to draw prefab footprints
+  // independently of the active filter.
+  addAllListener(fn: (m: AllEventMessage) => unknown) {
+    this.#allListeners.addListener(fn);
   }
 }

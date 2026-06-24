@@ -3,6 +3,14 @@ export interface Prefab {
   x: number;
   z: number;
   difficulty?: number;
+  // Placed rotation from prefabs.xml `decoration.rotation`, 0..3 = 0/90/180/270
+  // degrees clockwise applied at placement time.
+  rotation?: number;
+}
+
+export interface PrefabMeshSizes {
+  // [width (X), depth (Z)] in game blocks
+  [prefabName: string]: [number, number];
 }
 
 export interface HighlightedPrefab extends Prefab {

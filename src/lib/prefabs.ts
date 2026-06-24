@@ -40,6 +40,8 @@ function parseXml(
     if (!x || !z) return [];
     const name = e.getAttribute("name");
     if (!name) return [];
+    const rotationAttr = e.getAttribute("rotation");
+    const rotation = rotationAttr == null ? 0 : parseInt(rotationAttr, 10);
     return {
       name,
       x: parseInt(x),
@@ -47,6 +49,7 @@ function parseXml(
       // TODO Separate these types whether these have a difficulty or not.
       // Like `Prefab` and `PrefabWithDifficulty`.
       difficulty: difficulties?.[name] ?? 0,
+      rotation: Number.isFinite(rotation) ? rotation & 3 : 0,
     };
   });
 }
