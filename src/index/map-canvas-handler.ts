@@ -93,7 +93,7 @@ export class MapCanvasHandler {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
     prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
-      worker.postMessage({ prefabs });
+      worker.postMessage({ filteredPrefabs: prefabs });
     });
     prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
       worker.postMessage({ allPrefabs: all });

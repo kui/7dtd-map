@@ -34,8 +34,12 @@ export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
-  showPrefabs = true;
-  prefabs: HighlightedPrefab[] = [];
+  showFilteredPrefabs = true;
+  // Filtered subset emitted by the prefabs-filter worker — drives the ✘
+  // sign overlay and reflects the user's active search/difficulty filter.
+  filteredPrefabs: HighlightedPrefab[] = [];
+  // Full decoration list straight from prefabs.xml — drives the footprint
+  // overlay and tile-district lookup regardless of the filter state.
   allPrefabs: Prefab[] = [];
   // Cache of the tile index keyed by the most recent `allPrefabs` reference,
   // so the index is rebuilt only when the upstream array changes.
@@ -157,7 +161,7 @@ export default class MapRenderer {
       );
     }
     context.globalAlpha = this.signAlpha;
-    if (this.showPrefabs) {
+    if (this.showFilteredPrefabs) {
       this.#drawPrefabs(context, width, height, meshSizes);
     }
     if (this.markerCoords) {
@@ -379,7 +383,7 @@ export default class MapRenderer {
     const charOffsetY = Math.round(this.signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
-    for (const prefab of this.prefabs.toReversed()) {
+    for (const prefab of this.filteredPrefabs.toReversed()) {
       // decoration.position is the SW corner of the rotated AABB; shift to
       // the centre so the ✘ marks the middle of the footprint. Falls back to
       // a zero-size offset when the mesh size is unknown.
