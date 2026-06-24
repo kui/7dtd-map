@@ -38,13 +38,12 @@ export type ParsedPrefabProperty =
   | ParsedPrefabPropertyValue
   | ParsedPrefabPropertyClass;
 
-function isRawValue(p: RawPrefabProperty): p is RawPrefabPropertyValue {
-  return "@name" in p;
+function isRawValue(p: unknown): p is RawPrefabPropertyValue {
+  return typeof p === "object" && p !== null && "@name" in p && "@value" in p;
 }
 
-function looksLikeRawPrefabProperty(value: unknown): boolean {
-  if (typeof value !== "object" || value === null) return false;
-  return "@name" in value || "@class" in value;
+function isRawClass(p: unknown): p is RawPrefabPropertyClass {
+  return typeof p === "object" && p !== null && "@class" in p;
 }
 
 function isRawPrefabXml(value: unknown): value is RawPrefabXml {
@@ -54,21 +53,28 @@ function isRawPrefabXml(value: unknown): value is RawPrefabXml {
   if (typeof prefab !== "object" || prefab === null) return false;
   const property = (prefab as Record<string, unknown>)["property"];
   if (Array.isArray(property)) return true;
-  return looksLikeRawPrefabProperty(property);
+  return isRawValue(property) || isRawClass(property);
 }
 
-function toEntry(raw: RawPrefabProperty): ParsedPrefabProperty {
+function toEntry(raw: unknown): ParsedPrefabProperty {
   if (isRawValue(raw)) return { name: raw["@name"], value: raw["@value"] };
-  const inner = raw.property;
-  const list = inner === undefined
-    ? []
-    : Array.isArray(inner)
-    ? inner
-    : [inner];
-  return {
-    className: raw["@class"],
-    properties: list.filter(looksLikeRawPrefabProperty).map(toEntry),
-  };
+  if (isRawClass(raw)) {
+    const inner = raw.property;
+    const list = inner === undefined
+      ? []
+      : Array.isArray(inner)
+      ? inner
+      : [inner];
+    return {
+      className: raw["@class"],
+      properties: list.map(toEntry),
+    };
+  }
+  // Fail fast on anything that is neither a name/value property nor a class
+  // container: silently dropping would hide schema drift in the source XML.
+  throw new Error(
+    `Unexpected <property> entry: ${JSON.stringify(raw)}`,
+  );
 }
 
 export async function parsePrefabXml(

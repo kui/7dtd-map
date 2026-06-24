@@ -40,6 +40,17 @@ describe("parsePrefabXml", () => {
     ]);
   });
 
+  it("throws when a <property> is neither a value nor a class", async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<prefab>
+  <property name="DifficultyTier" value="3" />
+  <property foo="bar" />
+</prefab>`;
+    await expect(withTempXml(xml, parsePrefabXml)).rejects.toThrow(
+      /Unexpected <property> entry/,
+    );
+  });
+
   it("parses nested <property class=…> containers recursively", async () => {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <prefab>
