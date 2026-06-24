@@ -242,13 +242,13 @@ export class PrefabFilter {
     }
   }
 
-  #prefabCenter(p: Prefab): { x: number; z: number } {
+  #prefabCenter(p: Prefab): GameCoords {
     const size = this.prefabMeshSizes[p.name];
-    if (!size) return { x: p.x, z: p.z };
+    if (!size) return { type: "game", x: p.x, z: p.z };
     const odd = ((p.rotation ?? 0) & 1) === 1;
     const halfW = (odd ? size[1] : size[0]) / 2;
     const halfD = (odd ? size[0] : size[1]) / 2;
-    return { x: p.x + halfW, z: p.z + halfD };
+    return { type: "game", x: p.x + halfW, z: p.z + halfD };
   }
 
   #sort() {
@@ -296,10 +296,7 @@ function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
   return a.distance[1] - b.distance[1];
 }
 
-function computeDistance(
-  targetCoords: { x: number; z: number },
-  baseCoords: { x: number; z: number },
-) {
+function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {
   return Math.round(
     Math.sqrt(
       (targetCoords.x - baseCoords.x) ** 2 +
@@ -309,8 +306,8 @@ function computeDistance(
 }
 
 function computeDirection(
-  targetCoords: { x: number; z: number },
-  baseCoords: { x: number; z: number },
+  targetCoords: GameCoords,
+  baseCoords: GameCoords,
 ): Direction | null {
   const dx = targetCoords.x - baseCoords.x;
   const dz = targetCoords.z - baseCoords.z;
