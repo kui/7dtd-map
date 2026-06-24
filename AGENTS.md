@@ -17,8 +17,8 @@ repository. Agents must read and follow these rules closely.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data files (prefab xmls,
-     rwgmixer.xml, .tts/.nim blobs, etc.). When the schema drifts in a
-     future game version, we want the build to break loudly.
+     rwgmixer.xml, .tts/.nim blobs, etc.). When the schema drifts in a future
+     game version, we want the build to break loudly.
    - **Throw on unknown data shapes; never silently drop or coerce.** Prefer
      explicit type guards that reject unrecognised entries with a descriptive
      `Error`, not lenient fall-through that returns an empty/default value.
@@ -26,5 +26,5 @@ repository. Agents must read and follow these rules closely.
      property, an unexpected XML element, or an unknown variant tag should
      surface as an exception that names the offending file/value, not as a
      hidden gap in the generated JSON.
-   - This rule applies to `tools/` specifically. Runtime code under `src/`
-     can still degrade gracefully where appropriate (e.g. UI fallbacks).
+   - This rule applies to `tools/` specifically. Runtime code under `src/` can
+     still degrade gracefully where appropriate (e.g. UI fallbacks).
