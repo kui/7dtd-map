@@ -5,7 +5,11 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
-import type { HighlightedPrefab } from "./types/7dtdmap.ts";
+import type {
+  HighlightedPrefab,
+  PrefabDifficulties,
+  PrefabMeshSizes,
+} from "./types/7dtdmap.ts";
 import { component, downloadCanvasPng } from "./lib/dom-utils.ts";
 import {
   escapeHtml,
@@ -18,7 +22,9 @@ import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
 import { PrefabsHandler } from "./index/prefabs-handler.ts";
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
-import { CursorCoodsHandler } from "./index/cursor-coods-handler.ts";
+import { CursorHandler } from "./index/cursor-handler.ts";
+import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
+import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
@@ -29,6 +35,17 @@ import { MapInfoHandler } from "./index/map-info-handler.ts";
 
 import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
+
+// Static JSONs fetched once and shared across handlers via Promise rather
+// than per-handler fetch thunks: both PrefabInspectorHandler and
+// PrefabTooltipHandler need difficulties, and any future feature can await
+// the same in-flight request instead of issuing a duplicate.
+const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
+  "prefab-mesh-sizes.json",
+);
+const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
+  "prefab-difficulties.json",
+);
 
 function main() {
   initMapStorage();
@@ -153,12 +170,22 @@ function main() {
   prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
     prefabListRenderer.iterator = prefabs;
   });
-  new CursorCoodsHandler(
-    {
-      canvas: component("map", HTMLCanvasElement),
-      output: component("cursor_coods", HTMLElement),
-    },
+  const cursorHandler = new CursorHandler(
+    { canvas: component("map", HTMLCanvasElement) },
     dtmHandler,
+  );
+  new CursorCoordsDisplayHandler(
+    { output: component("cursor_coods", HTMLElement) },
+    cursorHandler,
+    dtmHandler,
+  );
+  new PrefabTooltipHandler(
+    { tooltip: component("prefab_tooltip", HTMLElement) },
+    cursorHandler,
+    prefabsHandler,
+    labelHandler,
+    prefabMeshSizes,
+    prefabDifficulties,
   );
   new PrefabInspectorHandler(
     {
@@ -198,7 +225,7 @@ function main() {
       missings: component("prefab-inspector-missings", HTMLOListElement),
     },
     labelHandler,
-    () => fetchJson("prefab-difficulties.json"),
+    prefabDifficulties,
     () => fetchJson("prefabs/index.json"),
   );
 
