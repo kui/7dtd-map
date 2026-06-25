@@ -9,8 +9,8 @@ interface Doms {
   splat3Alpha: HTMLInputElement;
   splat4Alpha: HTMLInputElement;
   radAlpha: HTMLInputElement;
-  signSize: HTMLInputElement;
-  signAlpha: HTMLInputElement;
+  prefabSignSize: HTMLInputElement;
+  prefabSignAlpha: HTMLInputElement;
   prefabFootprintAlpha: HTMLInputElement;
   brightness: HTMLInputElement;
   scale: HTMLInputElement;
@@ -52,8 +52,8 @@ export class MapCanvasHandler {
         splat4Alpha: doms.splat4Alpha.valueAsNumber,
         radAlpha: doms.radAlpha.valueAsNumber,
         brightness: `${doms.brightness.valueAsNumber.toString()}%`,
-        signSize: doms.signSize.valueAsNumber,
-        signAlpha: doms.signAlpha.valueAsNumber,
+        prefabSignSize: doms.prefabSignSize.valueAsNumber,
+        prefabSignAlpha: doms.prefabSignAlpha.valueAsNumber,
         prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
         scale: doms.scale.valueAsNumber,
       },
@@ -78,11 +78,13 @@ export class MapCanvasHandler {
     doms.radAlpha.addEventListener("input", () => {
       worker.postMessage({ radAlpha: doms.radAlpha.valueAsNumber });
     });
-    doms.signSize.addEventListener("input", () => {
-      worker.postMessage({ signSize: doms.signSize.valueAsNumber });
+    doms.prefabSignSize.addEventListener("input", () => {
+      worker.postMessage({ prefabSignSize: doms.prefabSignSize.valueAsNumber });
     });
-    doms.signAlpha.addEventListener("input", () => {
-      worker.postMessage({ signAlpha: doms.signAlpha.valueAsNumber });
+    doms.prefabSignAlpha.addEventListener("input", () => {
+      worker.postMessage({
+        prefabSignAlpha: doms.prefabSignAlpha.valueAsNumber,
+      });
     });
     doms.brightness.addEventListener("input", () => {
       worker.postMessage({

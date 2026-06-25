@@ -46,8 +46,8 @@ export default class MapRenderer {
   #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
   #densityScoresHolder: CacheHolder<PrefabDensityScores>;
   #districtColorsHolder: CacheHolder<DistrictColors>;
-  signSize = 200;
-  signAlpha = 1;
+  prefabSignSize = 200;
+  prefabSignAlpha = 1;
   prefabFootprintAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
@@ -147,7 +147,8 @@ export default class MapRenderer {
     context.save();
     context.scale(this.scale, this.scale);
     // Prefab footprints (independent of the active filter) are drawn first so
-    // the sign markers for filtered prefabs sit on top of them.
+    // the sign markers for filtered prefabs sit on top of them. Alpha 0 is a
+    // fully-transparent no-op, so skip the geometry work entirely.
     if (this.prefabFootprintAlpha > 0) {
       context.globalAlpha = this.prefabFootprintAlpha;
       this.#drawPrefabFootprints(
@@ -159,8 +160,10 @@ export default class MapRenderer {
         districtColors,
       );
     }
-    context.globalAlpha = this.signAlpha;
-    this.#drawPrefabs(context, width, height, meshSizes);
+    if (this.prefabSignAlpha > 0) {
+      context.globalAlpha = this.prefabSignAlpha;
+      this.#drawPrefabSigns(context, width, height, meshSizes);
+    }
     if (this.markerCoords) {
       this.#drawMark(context, width, height);
     }
@@ -360,13 +363,13 @@ export default class MapRenderer {
     return canvas;
   }
 
-  #drawPrefabs(
+  #drawPrefabSigns(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
     meshSizes: PrefabMeshSizes,
   ) {
-    context.font = `${this.signSize.toString()}px '${
+    context.font = `${this.prefabSignSize.toString()}px '${
       this.#fontFamilies[SIGN_CHAR]
     }'`;
     context.fillStyle = "red";
@@ -376,8 +379,8 @@ export default class MapRenderer {
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(this.signSize * 0.01);
-    const charOffsetY = Math.round(this.signSize * 0.05);
+    const charOffsetX = Math.round(this.prefabSignSize * 0.01);
+    const charOffsetY = Math.round(this.prefabSignSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (const prefab of this.filteredPrefabs.toReversed()) {
@@ -391,7 +394,7 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + halfW + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
       const z = offsetY - prefab.z - halfD + charOffsetY;
-      putText(context, { text: SIGN_CHAR, x, z, size: this.signSize });
+      putText(context, { text: SIGN_CHAR, x, z, size: this.prefabSignSize });
     }
   }
 
@@ -402,7 +405,7 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    context.font = `${this.signSize.toString()}px '${
+    context.font = `${this.prefabSignSize.toString()}px '${
       this.#fontFamilies[MARK_CHAR]
     }'`;
     context.fillStyle = "red";
@@ -411,13 +414,13 @@ export default class MapRenderer {
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.signSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.signSize * 0.1);
+    const charOffsetX = -1 * Math.round(this.prefabSignSize * 0.32);
+    const charOffsetY = -1 * Math.round(this.prefabSignSize * 0.1);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
+    putText(context, { text: MARK_CHAR, x, z, size: this.prefabSignSize });
   }
 
   async #nativeSize(

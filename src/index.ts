@@ -119,8 +119,8 @@ function main() {
       splat3Alpha: component("splat3_alpha", HTMLInputElement),
       splat4Alpha: component("splat4_alpha", HTMLInputElement),
       radAlpha: component("rad_alpha", HTMLInputElement),
-      signSize: component("sign_size", HTMLInputElement),
-      signAlpha: component("sign_alpha", HTMLInputElement),
+      prefabSignSize: component("prefab_sign_size", HTMLInputElement),
+      prefabSignAlpha: component("prefab_sign_alpha", HTMLInputElement),
       prefabFootprintAlpha: component(
         "prefab_footprint_alpha",
         HTMLInputElement,
