@@ -1,15 +1,29 @@
 import type {
+  DistrictColors,
   GameCoords,
   GameMapSize,
   HighlightedPrefab,
+  Prefab,
+  PrefabDensityScores,
+  PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { gameMapSize } from "../../lib/utils.ts";
+import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
 
 const SIGN_CHAR = "✘";
 const MARK_CHAR = "🚩";
+// Edge length of an `rwg_tile_*` prefab in game blocks.
+const TILE_SIZE = 150;
+
+interface TileIndex {
+  offsetX: number;
+  offsetZ: number;
+  // Key: `${gridX},${gridZ}` → district name (extracted from tile filename).
+  cells: Map<string, string>;
+}
 
 interface FontFamilies {
   [SIGN_CHAR]: string;
@@ -20,10 +34,21 @@ export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
-  showPrefabs = true;
-  prefabs: HighlightedPrefab[] = [];
-  signSize = 200;
-  signAlpha = 1;
+  // Filtered subset emitted by the prefabs-filter worker — drives the ✘
+  // sign overlay and reflects the user's active search/difficulty filter.
+  filteredPrefabs: HighlightedPrefab[] = [];
+  // Full decoration list straight from prefabs.xml — drives the footprint
+  // overlay and tile-district lookup regardless of the filter state.
+  allPrefabs: Prefab[] = [];
+  // Cache of the tile index keyed by the most recent `allPrefabs` reference,
+  // so the index is rebuilt only when the upstream array changes.
+  #tileIndex: { source: Prefab[]; index: TileIndex } | null = null;
+  #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
+  #densityScoresHolder: CacheHolder<PrefabDensityScores>;
+  #districtColorsHolder: CacheHolder<DistrictColors>;
+  prefabSignSize = 200;
+  prefabSignAlpha = 1;
+  prefabFootprintAlpha = 1;
   biomesAlpha = 1;
   splat3Alpha = 1;
   splat4Alpha = 1;
@@ -38,16 +63,32 @@ export default class MapRenderer {
     { width: number; height: number }
   >();
 
-  // Composited base map (layers + brightness + per-layer alpha) cached so that
-  // prefab/marker-only updates can skip recompositing.
+  // Composited base map (layers + brightness + per-layer alpha + footprint
+  // overlay) cached so that sign/marker-only updates can skip recompositing.
   #composite: OffscreenCanvas | null = null;
   #compositeKey: string | null = null;
+  // Reference identity of the `allPrefabs` array that produced the cached
+  // composite; bumped implicitly when the upstream array is replaced.
+  #compositeAllPrefabs: Prefab[] | null = null;
   // Bumped whenever a source image is invalidated, to invalidate the composite.
   #generation = 0;
 
-  constructor(canvas: OffscreenCanvas, fontFamilies: FontFamilies) {
+  constructor(
+    canvas: OffscreenCanvas,
+    fontFamilies: FontFamilies,
+    fetchMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchDensityScores: () => Promise<PrefabDensityScores>,
+    fetchDistrictColors: () => Promise<DistrictColors>,
+  ) {
     this.canvas = canvas;
     this.#fontFamilies = fontFamilies;
+    // Static tables fetched on demand inside the worker, mirroring the
+    // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
+    // because nothing here owns external resources.
+    const noop = () => {};
+    this.#meshSizesHolder = new CacheHolder(fetchMeshSizes, noop);
+    this.#densityScoresHolder = new CacheHolder(fetchDensityScores, noop);
+    this.#districtColorsHolder = new CacheHolder(fetchDistrictColors, noop);
   }
 
   set invalidate(
@@ -85,22 +126,41 @@ export default class MapRenderer {
     const context = this.canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
 
-    // Compose the base map (which may re-decode at the new size) before
-    // touching the visible canvas. Resizing the canvas clears it, so doing it
-    // ahead of an await would expose a blank canvas and cause a flash while
-    // scaling; instead we resize and redraw in one synchronous pass below.
-    const base = await this.#composeBase(canvasWidth, canvasHeight);
+    // Static lookup tables are fetched lazily inside the worker. Their values
+    // never change between map loads so they are cheap to re-fetch (the
+    // CacheHolder amortises to a no-op after the first call).
+    const [meshSizes, districtColors, densityScores] = await Promise.all([
+      this.#meshSizesHolder.get(),
+      this.#districtColorsHolder.get(),
+      this.#densityScoresHolder.get(),
+    ]);
+
+    // Compose the base map + footprint overlay (which may re-decode at the
+    // new size) before touching the visible canvas. Resizing the canvas
+    // clears it, so doing it ahead of an await would expose a blank canvas
+    // and cause a flash while scaling; instead we resize and redraw in one
+    // synchronous pass below.
+    const base = await this.#composeBase(
+      canvasWidth,
+      canvasHeight,
+      width,
+      height,
+      meshSizes,
+      densityScores,
+      districtColors,
+    );
     this.canvas.width = canvasWidth;
     this.canvas.height = canvasHeight;
     context.imageSmoothingEnabled = false;
     if (base) context.drawImage(base, 0, 0);
 
-    // Overlays are drawn in native map coordinates, scaled down to the canvas.
+    // Sign + marker overlays sit on top of the cached composite and are
+    // redrawn every paint so filter / flag interactions stay responsive.
     context.save();
     context.scale(this.scale, this.scale);
-    context.globalAlpha = this.signAlpha;
-    if (this.showPrefabs) {
-      this.#drawPrefabs(context, width, height);
+    if (this.prefabSignAlpha > 0) {
+      context.globalAlpha = this.prefabSignAlpha;
+      this.#drawPrefabSigns(context, width, height, meshSizes);
     }
     if (this.markerCoords) {
       this.#drawMark(context, width, height);
@@ -108,15 +168,154 @@ export default class MapRenderer {
     context.restore();
   }
 
+  // Draw each prefab as a rotated rectangle sized by PrefabSize. Drawn under
+  // the ✘ marker so the filter highlight remains visible on top. Mirrors the
+  // game's PrefabPreviewManager: skip `rwg_tile*` (the placement framework
+  // itself) and `part_driveway*` (sub-parts that overlap their parent POI).
+  // Per-POI colour matches the in-game preview: it comes from the tile that
+  // contains the POI, with name- and DensityScore-based modifiers applied.
+  #drawPrefabFootprints(
+    context: OffscreenCanvasRenderingContext2D,
+    width: number,
+    height: number,
+    meshSizes: PrefabMeshSizes,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
+  ) {
+    const offsetX = width / 2;
+    const offsetY = height / 2;
+    // Outline thickness in game-block units (the renderer's current transform
+    // scales it down to canvas pixels). Drawn inset by `stroke / 2` further
+    // below so two neighbours sharing an edge never double-stroke.
+    const stroke = 8;
+    context.lineWidth = stroke;
+
+    const tileIndex = this.#getTileIndex();
+
+    for (const prefab of this.allPrefabs) {
+      if (
+        prefab.name.includes("rwg_tile") ||
+        prefab.name.includes("part_driveway")
+      ) continue;
+      const size = meshSizes[prefab.name];
+      if (!size) continue;
+      const [sx, sz] = size;
+      // decoration.position is the SW corner of the rotated AABB, so for
+      // 90°/270° rotations the world-aligned width/depth swap. No canvas
+      // rotation is needed because the bounding box stays axis-aligned.
+      const odd = ((prefab.rotation ?? 0) & 1) === 1;
+      const w = odd ? sz : sx;
+      const d = odd ? sx : sz;
+
+      const cx = offsetX + prefab.x;
+      // prefab vertical positions are inverted for canvas coordinates
+      const cy = offsetY - prefab.z;
+
+      const color = this.#footprintColor(
+        prefab,
+        tileIndex,
+        densityScores,
+        districtColors,
+      );
+      context.fillStyle = withAlpha(color, 0.5);
+      context.beginPath();
+      context.rect(cx, cy - d, w, d);
+      context.fill();
+
+      // Canvas strokes straddle the path, so an N-block outline would spill
+      // N/2 blocks past the prefab edge and double-up where neighbours share
+      // a boundary. Inset by half the stroke so the outer edge sits exactly
+      // on the prefab boundary, then clamp negatives for prefabs smaller
+      // than the stroke (very rare; they collapse to a point).
+      const half = stroke / 2;
+      const iw = Math.max(0, w - stroke);
+      const id = Math.max(0, d - stroke);
+      context.strokeStyle = color;
+      context.beginPath();
+      context.rect(cx + half, cy - d + half, iw, id);
+      context.stroke();
+    }
+  }
+
+  // Tile prefabs are 150×150 axis-aligned blocks named `rwg_tile_<district>_*`
+  // and their positions form a regular grid. The index keys each tile by its
+  // grid cell so footprint lookups are O(1).
+  #getTileIndex(): TileIndex {
+    if (this.#tileIndex && this.#tileIndex.source === this.allPrefabs) {
+      return this.#tileIndex.index;
+    }
+    const tiles: { x: number; z: number; district: string }[] = [];
+    for (const p of this.allPrefabs) {
+      const m = /^rwg_tile_([^_]+)_/.exec(p.name);
+      if (!m) continue;
+      tiles.push({ x: p.x, z: p.z, district: m[1] });
+    }
+    // Tiles align on a 150-block lattice but the lattice origin is the world
+    // centre offset, not a multiple of 150 in world coords. Pick any tile to
+    // derive the offset (mod 150 normalised to [0, 150)).
+    const mod = (n: number) => ((n % TILE_SIZE) + TILE_SIZE) % TILE_SIZE;
+    const offsetX = tiles.length > 0 ? mod(tiles[0].x) : 0;
+    const offsetZ = tiles.length > 0 ? mod(tiles[0].z) : 0;
+    const cells = new Map<string, string>();
+    for (const t of tiles) {
+      const gx = Math.floor((t.x - offsetX) / TILE_SIZE);
+      const gz = Math.floor((t.z - offsetZ) / TILE_SIZE);
+      cells.set(`${gx.toString()},${gz.toString()}`, t.district);
+    }
+    const index: TileIndex = { offsetX, offsetZ, cells };
+    this.#tileIndex = { source: this.allPrefabs, index };
+    return index;
+  }
+
+  #footprintColor(
+    prefab: Prefab,
+    tileIndex: TileIndex,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
+  ): string {
+    const gx = Math.floor((prefab.x - tileIndex.offsetX) / TILE_SIZE);
+    const gz = Math.floor((prefab.z - tileIndex.offsetZ) / TILE_SIZE);
+    const district = tileIndex.cells.get(
+      `${gx.toString()},${gz.toString()}`,
+    );
+    // Mirrors WorldGenerationEngineFinal.StreetTile.SpawnMarkerPartsAndPrefabs:
+    //   remnant/abandoned ×0.75, low-density ×0.4, trader override #994d4d.
+    // Wilderness POIs (no containing tile) keep the in-game default of white.
+    let color: [number, number, number];
+    if (district === undefined) {
+      color = [1, 1, 1];
+    } else {
+      const hex = districtColors[district];
+      color = hex ? hexToRgbFloat(hex) : [1, 1, 1];
+    }
+    if (
+      prefab.name.startsWith("remnant_") ||
+      prefab.name.startsWith("abandoned_")
+    ) {
+      color = [color[0] * 0.75, color[1] * 0.75, color[2] * 0.75];
+    } else if ((densityScores[prefab.name] ?? 0) < 1) {
+      color = [color[0] * 0.4, color[1] * 0.4, color[2] * 0.4];
+    } else if (prefab.name.startsWith("trader_")) {
+      color = [0.6, 0.3, 0.3];
+    }
+    return rgbFloatToHex(color);
+  }
+
   /**
-   * Composite the base layers (with brightness and per-layer alpha) onto a
-   * cached offscreen canvas at the current display resolution. The cache is
-   * reused as long as the display size, brightness, alphas, and source images
-   * are unchanged, so prefab/marker-only updates avoid re-decoding/compositing.
+   * Composite the base layers (with brightness and per-layer alpha) and the
+   * footprint overlay onto a cached offscreen canvas at the current display
+   * resolution. The cache is reused as long as the display size, brightness,
+   * alphas, source images, and footprint inputs are unchanged, so
+   * sign/marker-only updates avoid re-decoding/compositing.
    */
   async #composeBase(
     width: number,
     height: number,
+    nativeWidth: number,
+    nativeHeight: number,
+    meshSizes: PrefabMeshSizes,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
   ): Promise<OffscreenCanvas | null> {
     const key = [
       width,
@@ -126,13 +325,18 @@ export default class MapRenderer {
       this.splat3Alpha,
       this.splat4Alpha,
       this.radAlpha,
+      this.prefabFootprintAlpha,
       this.#generation,
     ].join(":");
+    // The static lookup tables are pinned for the lifetime of the worker, so
+    // their reference identity is enough; allPrefabs is replaced on every
+    // prefabs.xml load and is the only input that escapes the key string.
     if (
       this.#composite &&
       this.#compositeKey === key &&
       this.#composite.width === width &&
-      this.#composite.height === height
+      this.#composite.height === height &&
+      this.#compositeAllPrefabs === this.allPrefabs
     ) {
       return this.#composite;
     }
@@ -163,10 +367,30 @@ export default class MapRenderer {
         context.globalAlpha = this.splat4Alpha;
         context.drawImage(splat4, 0, 0);
       }
-      context.filter = "none";
       if (rad && this.radAlpha !== 0) {
+        // Radiation is intentionally drawn at full brightness so its tint
+        // stays readable on dimmed maps.
+        context.filter = "none";
         context.globalAlpha = this.radAlpha;
         context.drawImage(rad, 0, 0);
+      }
+      // Footprints go inside the cached composite so the brightness filter
+      // applies the same way it does to the biomes/splat layers, and so
+      // sign-only re-renders don't have to recompute them.
+      if (this.prefabFootprintAlpha > 0) {
+        context.save();
+        context.filter = `brightness(${this.brightness})`;
+        context.scale(this.scale, this.scale);
+        context.globalAlpha = this.prefabFootprintAlpha;
+        this.#drawPrefabFootprints(
+          context,
+          nativeWidth,
+          nativeHeight,
+          meshSizes,
+          densityScores,
+          districtColors,
+        );
+        context.restore();
       }
     } finally {
       // Only the composite is cached; release the per-layer bitmaps.
@@ -175,15 +399,17 @@ export default class MapRenderer {
 
     this.#composite = canvas;
     this.#compositeKey = key;
+    this.#compositeAllPrefabs = this.allPrefabs;
     return canvas;
   }
 
-  #drawPrefabs(
+  #drawPrefabSigns(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
     height: number,
+    meshSizes: PrefabMeshSizes,
   ) {
-    context.font = `${this.signSize.toString()}px '${
+    context.font = `${this.prefabSignSize.toString()}px '${
       this.#fontFamilies[SIGN_CHAR]
     }'`;
     context.fillStyle = "red";
@@ -193,15 +419,22 @@ export default class MapRenderer {
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(this.signSize * 0.01);
-    const charOffsetY = Math.round(this.signSize * 0.05);
+    const charOffsetX = Math.round(this.prefabSignSize * 0.01);
+    const charOffsetY = Math.round(this.prefabSignSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
-    for (const prefab of this.prefabs.toReversed()) {
-      const x = offsetX + prefab.x + charOffsetX;
+    for (const prefab of this.filteredPrefabs.toReversed()) {
+      // decoration.position is the SW corner of the rotated AABB; shift to
+      // the centre so the ✘ marks the middle of the footprint. Falls back to
+      // a zero-size offset when the mesh size is unknown.
+      const size = meshSizes[prefab.name];
+      const odd = ((prefab.rotation ?? 0) & 1) === 1;
+      const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
+      const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
+      const x = offsetX + prefab.x + halfW + charOffsetX;
       // prefab vertical positions are inverted for canvas coodinates
-      const z = offsetY - prefab.z + charOffsetY;
-      putText(context, { text: SIGN_CHAR, x, z, size: this.signSize });
+      const z = offsetY - prefab.z - halfD + charOffsetY;
+      putText(context, { text: SIGN_CHAR, x, z, size: this.prefabSignSize });
     }
   }
 
@@ -212,7 +445,7 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    context.font = `${this.signSize.toString()}px '${
+    context.font = `${this.prefabSignSize.toString()}px '${
       this.#fontFamilies[MARK_CHAR]
     }'`;
     context.fillStyle = "red";
@@ -221,13 +454,13 @@ export default class MapRenderer {
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.signSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.signSize * 0.1);
+    const charOffsetX = -1 * Math.round(this.prefabSignSize * 0.32);
+    const charOffsetY = -1 * Math.round(this.prefabSignSize * 0.1);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(context, { text: MARK_CHAR, x, z, size: this.signSize });
+    putText(context, { text: MARK_CHAR, x, z, size: this.prefabSignSize });
   }
 
   async #nativeSize(
@@ -277,6 +510,34 @@ export default class MapRenderer {
   size(): GameMapSize {
     return this.#mapSize;
   }
+}
+
+// Build an `rgba(r, g, b, a)` string from a `#rrggbb` colour. Falls back to
+// the input when the hex format is unrecognised so the renderer still gets a
+// valid CSS colour for the stroke pass.
+function withAlpha(hex: string, alpha: number): string {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const r = parseInt(m[1], 16);
+  const g = parseInt(m[2], 16);
+  const b = parseInt(m[3], 16);
+  return `rgba(${r.toString()}, ${g.toString()}, ${b.toString()}, ${alpha.toString()})`;
+}
+
+function hexToRgbFloat(hex: string): [number, number, number] {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return [1, 1, 1];
+  return [
+    parseInt(m[1], 16) / 255,
+    parseInt(m[2], 16) / 255,
+    parseInt(m[3], 16) / 255,
+  ];
+}
+
+function rgbFloatToHex([r, g, b]: [number, number, number]): string {
+  const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n * 255)));
+  const hex = (n: number) => clamp(n).toString(16).padStart(2, "0");
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
 }
 
 function mapSize(

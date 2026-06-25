@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import { parseNim } from "./nim-parser.ts";
 import { parseTts } from "./tts-parser.ts";
-import { parsePrefabXml } from "./xmls/prefab-xml.ts";
+import { isPrefabPropertyValue, parsePrefabXml } from "./xmls/prefab-xml.ts";
 import { Label, LabelId } from "./label-parser.ts";
 import { requireNonnull } from "./utils.ts";
 
@@ -175,9 +175,12 @@ export async function prefabHtml(
       count: blockNums.get(id) ?? 0,
     }))
     .toSorted((a, b) => a.name.localeCompare(b.name));
-  const properties = rawProperties.toSorted((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+  // The HTML page only renders flat name/value properties; nested class
+  // containers (e.g. Stats) are intentionally dropped to keep the existing
+  // output stable.
+  const properties = rawProperties
+    .filter(isPrefabPropertyValue)
+    .toSorted((a, b) => a.name.localeCompare(b.name));
 
   // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));

@@ -199,16 +199,16 @@
           </td>
         </tr>
         <tr>
-          <th><span class="logo">✘</span> Sign</th>
+          <th><span class="logo">✘</span> Prefab Sign</th>
           <td>
             <table class="inner-table">
               <tr>
-                <th><label for="sign_size">Size:</label></th>
+                <th><label for="prefab_sign_size">Size:</label></th>
                 <td>
                   <label>
-                    <output data-sync-for="sign_size">200</output>px
+                    <output data-sync-for="prefab_sign_size">200</output>px
                     <input
-                      id="sign_size"
+                      id="prefab_sign_size"
                       type="range"
                       max="500"
                       min="20"
@@ -219,17 +219,41 @@
                 </td>
               </tr>
               <tr>
-                <th><label for="sign_alpha">Alpha:</label></th>
+                <th><label for="prefab_sign_alpha">Alpha:</label></th>
                 <td>
                   <label>
-                    <output data-sync-for="sign_alpha">1</output>
+                    <output data-sync-for="prefab_sign_alpha">1</output>
                     <input
-                      id="sign_alpha"
+                      id="prefab_sign_alpha"
                       type="range"
                       value="1"
                       step="0.1"
                       min="0"
                       max="1"
+                    />
+                  </label>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th>🏠 Prefab Footprint</th>
+          <td>
+            <table class="inner-table">
+              <tr>
+                <th><label for="prefab_footprint_alpha">Alpha:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="prefab_footprint_alpha">1</output>
+                    <input
+                      id="prefab_footprint_alpha"
+                      type="range"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                      data-remember-value
                     />
                   </label>
                 </td>
@@ -335,9 +359,9 @@
                 <li>
                   <label><input
                       type="checkbox"
-                      value="^part_"
+                      value="^part_driveway_"
                       checked
-                    />Parts</label>
+                    />Driveways</label>
                 </li>
               </ul>
             </details>

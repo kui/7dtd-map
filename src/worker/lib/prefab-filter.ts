@@ -5,6 +5,8 @@ import type {
   HighlightedBlock,
   HighlightedPrefab,
   Prefab,
+  PrefabDifficulties,
+  PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
@@ -20,6 +22,8 @@ export interface EventMessage {
 export class PrefabFilter {
   #labelHolder: LabelHolder;
   #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
+  #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
+  #difficultiesHolder: CacheHolder<PrefabDifficulties>;
 
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
@@ -39,14 +43,17 @@ export class PrefabFilter {
     labelsBaseUrl: string,
     navigatorLanguages: readonly string[],
     fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
+    fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchPrefabDifficulties: () => Promise<PrefabDifficulties>,
   ) {
+    const noop = () => {};
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
     this.#blockPrefabCountsHolder = new CacheHolder(
       fetchPrefabBlockCounts,
-      () => {
-        /* do nothing */
-      },
+      noop,
     );
+    this.#meshSizesHolder = new CacheHolder(fetchPrefabMeshSizes, noop);
+    this.#difficultiesHolder = new CacheHolder(fetchPrefabDifficulties, noop);
   }
 
   set language(lang: Language) {
@@ -68,7 +75,7 @@ export class PrefabFilter {
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
     this.#updateStatus();
-    this.#updateDistance();
+    await this.#updateDistance();
     this.#sort();
     await this.#listeners.dispatch({
       update: { status: this.#status, prefabs: this.#filtered },
@@ -109,9 +116,10 @@ export class PrefabFilter {
   async #applyFilter() {
     this.#prefabFilterInvalid = false;
     this.#blockFilterInvalid = false;
+    const difficulties = await this.#difficultiesHolder.get();
     this.#preFiltereds = this.#preMatch(this.all);
-    let result = this.#matchByDifficulty(this.#preFiltereds);
-    result = await this.#matchByPrefabName(result);
+    let result = this.#matchByDifficulty(this.#preFiltereds, difficulties);
+    result = await this.#matchByPrefabName(result, difficulties);
     result = await this.#matchByBlockName(result);
     if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
       this.#filtered = [];
@@ -129,14 +137,20 @@ export class PrefabFilter {
     });
   }
 
-  #matchByDifficulty(prefabs: Prefab[]): Prefab[] {
+  #matchByDifficulty(
+    prefabs: Prefab[],
+    difficulties: PrefabDifficulties,
+  ): Prefab[] {
     return prefabs.filter((p) => {
-      const d = p.difficulty ?? 0;
+      const d = difficulties[p.name] ?? 0;
       return d >= this.difficulty.start && d <= this.difficulty.end;
     });
   }
 
-  async #matchByPrefabName(prefabs: Prefab[]): Promise<HighlightedPrefab[]> {
+  async #matchByPrefabName(
+    prefabs: Prefab[],
+    difficulties: PrefabDifficulties,
+  ): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
     const pattern = this.prefabFilterRegexp.length === 0
       ? new RegExp("", "i")
@@ -150,9 +164,11 @@ export class PrefabFilter {
     }
     return prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const label = labels.get(prefab.name);
+      const difficulty = difficulties[prefab.name] ?? 0;
       if (this.prefabFilterRegexp.length === 0) {
         return {
           ...prefab,
+          difficulty,
           highlightedName: prefab.name,
           highlightedLabel: label ?? "-",
         };
@@ -164,6 +180,7 @@ export class PrefabFilter {
       if (highlightedName !== null || highlightedLabel !== null) {
         return {
           ...prefab,
+          difficulty,
           highlightedName: highlightedName ?? prefab.name,
           highlightedLabel: highlightedLabel ?? label ?? "-",
         };
@@ -222,15 +239,20 @@ export class PrefabFilter {
     return matchedPrefabNames;
   }
 
-  #updateDistance() {
+  async #updateDistance() {
     if (this.markCoords) {
       const { markCoords } = this;
-      this.#filtered.forEach((
-        p,
-      ) => (p.distance = [
-        computeDirection(p, markCoords),
-        computeDistance(p, markCoords),
-      ]));
+      const meshSizes = await this.#meshSizesHolder.get();
+      this.#filtered.forEach((p) => {
+        // decoration.position is the SW corner of the rotated AABB, so add the
+        // rotation-aware half-extents to compare against the flag from the
+        // prefab's centre instead of its corner.
+        const c = prefabCenter(p, meshSizes);
+        p.distance = [
+          computeDirection(c, markCoords),
+          computeDistance(c, markCoords),
+        ];
+      });
     } else {
       this.#filtered.forEach((p) => (p.distance = null));
     }
@@ -279,6 +301,15 @@ function distSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
     return nameSorter(a, b);
   }
   return a.distance[1] - b.distance[1];
+}
+
+function prefabCenter(p: Prefab, meshSizes: PrefabMeshSizes): GameCoords {
+  const size = meshSizes[p.name];
+  if (!size) return { type: "game", x: p.x, z: p.z };
+  const odd = ((p.rotation ?? 0) & 1) === 1;
+  const halfW = (odd ? size[1] : size[0]) / 2;
+  const halfD = (odd ? size[0] : size[1]) / 2;
+  return { type: "game", x: p.x + halfW, z: p.z + halfD };
 }
 
 function computeDistance(targetCoords: GameCoords, baseCoords: GameCoords) {

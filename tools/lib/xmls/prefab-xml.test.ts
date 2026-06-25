@@ -39,4 +39,42 @@ describe("parsePrefabXml", () => {
       { name: "Zoning", value: "commercial" },
     ]);
   });
+
+  it("throws when a <property> is neither a value nor a class", async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<prefab>
+  <property name="DifficultyTier" value="3" />
+  <property foo="bar" />
+</prefab>`;
+    await expect(withTempXml(xml, parsePrefabXml)).rejects.toThrow(
+      /Unexpected <property> entry/,
+    );
+  });
+
+  it("parses nested <property class=…> containers recursively", async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<prefab>
+  <property name="DifficultyTier" value="3" />
+  <property class="Stats">
+    <property name="TotalVertices" value="280910" />
+    <property class="BlockEntities">
+      <property name="Vertices" value="231271" />
+    </property>
+  </property>
+</prefab>`;
+    const props = await withTempXml(xml, parsePrefabXml);
+    expect(props).toEqual([
+      { name: "DifficultyTier", value: "3" },
+      {
+        className: "Stats",
+        properties: [
+          { name: "TotalVertices", value: "280910" },
+          {
+            className: "BlockEntities",
+            properties: [{ name: "Vertices", value: "231271" }],
+          },
+        ],
+      },
+    ]);
+  });
 });

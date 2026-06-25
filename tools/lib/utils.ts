@@ -49,9 +49,32 @@ export function handleMain(main: Promise<number>): void {
     });
 }
 
-export async function writeJsonFile(file: string, json: unknown) {
-  await fs.promises.writeFile(file, JSON.stringify(json, null, "\t"));
+export async function writeJsonFile(
+  file: string,
+  json: unknown,
+  options: { collapseLeafArrays?: boolean } = {},
+) {
+  let body = JSON.stringify(json, null, "\t");
+  if (options.collapseLeafArrays) body = collapseLeafArrays(body);
+  await fs.promises.writeFile(file, body);
   console.log("Write %s", file);
+}
+
+// Folds tab-indented arrays of primitives onto a single line so callers like
+// the mesh-sizes table render as `"name": [w, d]` instead of spanning four
+// lines. Only matches JSON primitives (numbers / strings / booleans / null),
+// so structured elements stay pretty-printed.
+function collapseLeafArrays(body: string): string {
+  const primitive =
+    `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;
+  const re = new RegExp(
+    `\\[\\n\\s*(${primitive}(?:,\\n\\s*${primitive})*)\\n\\s*\\]`,
+    "g",
+  );
+  return body.replace(
+    re,
+    (_, inner: string) => `[${inner.split(/,\s*\n\s*/).join(", ")}]`,
+  );
 }
 
 export function program() {

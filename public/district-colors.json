@@ -1,0 +1,13 @@
+{
+	"commercial": "#0000ff",
+	"countryresidential": "#66ff00",
+	"countrytown": "#6600ff",
+	"downtown": "#808080",
+	"forest_rural": "#00ffff",
+	"gateway": "#bfbfbf",
+	"industrial": "#ff8000",
+	"oldwest": "#80801a",
+	"residential": "#00ff00",
+	"rural": "#00ffff",
+	"wilderness": "#404040"
+}

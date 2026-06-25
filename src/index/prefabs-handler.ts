@@ -2,10 +2,7 @@ import type { PrefabsFilterOutputMessage } from "../worker/types.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
-import type {
-  HighlightedPrefab,
-  PrefabDifficulties,
-} from "../types/7dtdmap.ts";
+import type { HighlightedPrefab, Prefab } from "../types/7dtdmap.ts";
 
 import * as events from "../lib/events.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
@@ -20,12 +17,23 @@ interface Doms extends PrefabsFilterControlsDoms {
   status: HTMLElement;
 }
 
-interface EventMessage {
+interface FilteredPrefabsEventMessage {
   update: { prefabs: HighlightedPrefab[] };
 }
 
+interface AllPrefabsEventMessage {
+  update: { all: Prefab[] };
+}
+
 export class PrefabsHandler {
-  #listeners = new events.ListenerManager<"update", EventMessage>();
+  #filteredPrefabsListeners = new events.ListenerManager<
+    "update",
+    FilteredPrefabsEventMessage
+  >();
+  #allPrefabsListeners = new events.ListenerManager<
+    "update",
+    AllPrefabsEventMessage
+  >();
 
   constructor(
     doms: Doms,
@@ -33,7 +41,6 @@ export class PrefabsHandler {
     markerHandler: MarkerHandler,
     labelHandler: LabelHandler,
     fileHandler: FileHandler,
-    fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
     worker.addEventListener(
       "message",
@@ -42,7 +49,9 @@ export class PrefabsHandler {
           update: { prefabs, status },
         } = event.data;
         doms.status.textContent = status;
-        this.#listeners.dispatchNoAwait({ update: { prefabs } });
+        this.#filteredPrefabsListeners.dispatchNoAwait({
+          update: { prefabs },
+        });
       },
     );
 
@@ -54,12 +63,24 @@ export class PrefabsHandler {
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
       if (fileNames.includes("prefabs.xml")) {
-        worker.postMessage({ all: await loadPrefabsXml(fetchDifficulties) });
+        const all = await loadPrefabsXml();
+        worker.postMessage({ all });
+        this.#allPrefabsListeners.dispatchNoAwait({ update: { all } });
       }
     });
   }
 
-  addListener(fn: (m: EventMessage) => unknown) {
-    this.#listeners.addListener(fn);
+  // Filter pipeline output: emitted whenever the user-facing filter
+  // (search box, difficulty range, …) re-evaluates, carrying the highlighted
+  // subset that should appear in the prefab list and as ✘ map markers.
+  addFilteredPrefabsListener(fn: (m: FilteredPrefabsEventMessage) => unknown) {
+    this.#filteredPrefabsListeners.addListener(fn);
+  }
+
+  // Raw load output: emitted once per prefabs.xml load with the full,
+  // unfiltered prefab list (with rotation). Used by the map renderer to
+  // draw prefab footprints independently of the active filter.
+  addAllPrefabsListener(fn: (m: AllPrefabsEventMessage) => unknown) {
+    this.#allPrefabsListeners.addListener(fn);
   }
 }

@@ -1,6 +1,11 @@
 import MapRenderer from "./lib/map-renderer.ts";
-import { printError } from "../lib/utils.ts";
+import { fetchJson, printError } from "../lib/utils.ts";
 import type { MapRendererInputMessage } from "./types.ts";
+import type {
+  DistrictColors,
+  PrefabDensityScores,
+  PrefabMeshSizes,
+} from "../types/7dtdmap.ts";
 
 let map: MapRenderer | null = null;
 
@@ -41,7 +46,13 @@ onmessage = async (
   await fontsReady;
   if (!map) {
     if (message.canvas) {
-      map = new MapRenderer(message.canvas, mapFonts);
+      map = new MapRenderer(
+        message.canvas,
+        mapFonts,
+        () => fetchJson<PrefabMeshSizes>("../prefab-mesh-sizes.json"),
+        () => fetchJson<PrefabDensityScores>("../prefab-density-scores.json"),
+        () => fetchJson<DistrictColors>("../district-colors.json"),
+      );
     } else {
       throw Error("Unexpected state");
     }
