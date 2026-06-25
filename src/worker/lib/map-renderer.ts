@@ -447,6 +447,7 @@ export default class MapRenderer {
     const sc = sprite.getContext("2d");
     if (sc) {
       sc.font = `${signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
+      sc.fillStyle = "red";
       sc.textAlign = "center";
       sc.textBaseline = "middle";
       putText(sc, {
