@@ -49,6 +49,9 @@ export default class MapRenderer {
   prefabSignSize = 200;
   prefabSignAlpha = 1;
   prefabFootprintAlpha = 1;
+  // Outline width of footprint rectangles in game blocks. Drawn inset so two
+  // neighbours sharing an edge never double-stroke each other.
+  prefabFootprintStroke = 4;
   biomesAlpha = 1;
   splat3Alpha = 1;
   splat4Alpha = 1;
@@ -186,12 +189,11 @@ export default class MapRenderer {
   ) {
     const offsetX = width / 2;
     const offsetY = height / 2;
-    // Stroke widths are in game-block units (the renderer's current transform
-    // scales them down to canvas pixels). 1 block ≈ 1 unit, so ~2 blocks of
-    // stroke renders cleanly even at small zoom.
-    const stroke = 2;
-
-    context.lineWidth = stroke;
+    // Stroke width is in game-block units (the renderer's current transform
+    // scales it down to canvas pixels). 0 hides the outline entirely.
+    const stroke = this.prefabFootprintStroke;
+    const drawStroke = stroke > 0;
+    if (drawStroke) context.lineWidth = stroke;
 
     const tileIndex = this.#getTileIndex();
 
@@ -220,12 +222,25 @@ export default class MapRenderer {
         densityScores,
         districtColors,
       );
-      context.strokeStyle = color;
       context.fillStyle = withAlpha(color, 0.35);
       context.beginPath();
       context.rect(cx, cy - d, w, d);
       context.fill();
-      context.stroke();
+
+      if (drawStroke) {
+        // Canvas strokes straddle the path, so an N-block outline would spill
+        // N/2 blocks past the prefab edge and double-up where neighbours share
+        // a boundary. Inset by half the stroke so the outer edge sits exactly
+        // on the prefab boundary, then clamp negatives for prefabs smaller
+        // than the stroke (very rare; they collapse to a point).
+        const half = stroke / 2;
+        const iw = Math.max(0, w - stroke);
+        const id = Math.max(0, d - stroke);
+        context.strokeStyle = color;
+        context.beginPath();
+        context.rect(cx + half, cy - d + half, iw, id);
+        context.stroke();
+      }
     }
   }
 

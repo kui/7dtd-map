@@ -27,6 +27,7 @@ export type MapRendererInputMessage = Partial<
     | "prefabSignSize"
     | "prefabSignAlpha"
     | "prefabFootprintAlpha"
+    | "prefabFootprintStroke"
     | "filteredPrefabs"
     | "allPrefabs"
     | "markerCoords"

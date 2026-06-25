@@ -12,6 +12,7 @@ interface Doms {
   prefabSignSize: HTMLInputElement;
   prefabSignAlpha: HTMLInputElement;
   prefabFootprintAlpha: HTMLInputElement;
+  prefabFootprintStroke: HTMLInputElement;
   brightness: HTMLInputElement;
   scale: HTMLInputElement;
 }
@@ -55,6 +56,7 @@ export class MapCanvasHandler {
         prefabSignSize: doms.prefabSignSize.valueAsNumber,
         prefabSignAlpha: doms.prefabSignAlpha.valueAsNumber,
         prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
+        prefabFootprintStroke: doms.prefabFootprintStroke.valueAsNumber,
         scale: doms.scale.valueAsNumber,
       },
       [canvas],
@@ -63,6 +65,11 @@ export class MapCanvasHandler {
     doms.prefabFootprintAlpha.addEventListener("input", () => {
       worker.postMessage({
         prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
+      });
+    });
+    doms.prefabFootprintStroke.addEventListener("input", () => {
+      worker.postMessage({
+        prefabFootprintStroke: doms.prefabFootprintStroke.valueAsNumber,
       });
     });
 
