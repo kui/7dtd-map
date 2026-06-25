@@ -476,7 +476,11 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + halfW + charOffsetX;
       // prefab vertical positions are inverted for canvas coordinates
       const z = offsetY - prefab.z - halfD + charOffsetY;
-      context.drawImage(sprite, x - spriteCX, z - spriteCY);
+      context.drawImage(
+        sprite,
+        Math.round(x - spriteCX),
+        Math.round(z - spriteCY),
+      );
     }
   }
 
