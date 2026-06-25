@@ -26,13 +26,13 @@ export class MarkerHandler {
     this.#dtmHandler = dtmHandler;
 
     doms.canvas.addEventListener("click", (e) => {
-      // Ctrl/Cmd+Click is reserved for prefab page navigation in
+      // Shift+Click is reserved for prefab page navigation in
       // PrefabTooltipHandler; the two click roles are mutually exclusive.
-      if (e.ctrlKey || e.metaKey) return;
+      if (e.shiftKey) return;
       this.#update(e).catch(printError);
     });
     doms.canvas.addEventListener("dblclick", (e) => {
-      if (e.ctrlKey || e.metaKey) return;
+      if (e.shiftKey) return;
       this.#update(null).catch(printError);
     });
     doms.resetMarker.addEventListener("click", () => {

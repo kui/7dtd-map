@@ -56,9 +56,9 @@
     opacity: 0.55;
     transition: opacity 0.1s, font-weight 0.1s;
   }
-  &:not(.ctrl-active) .hint.click,
-  &:not(.ctrl-active) .hint.dblclick,
-  &.ctrl-active .hint.ctrl-click {
+  &:not(.shift-active) .hint.click,
+  &:not(.shift-active) .hint.dblclick,
+  &.shift-active .hint.shift-click {
     opacity: 1;
     font-weight: bold;
   }
