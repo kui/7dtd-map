@@ -6,7 +6,13 @@ repository. Agents must read and follow these rules closely.
 ## Critical Rules
 
 1. **Language**
-   - **All generated comments and documentation must be written in English.**
+   - **All generated artifacts written into the repository or GitHub must be in
+     English.** This includes, but is not limited to: code comments,
+     documentation (Markdown, JSDoc, etc.), commit messages, pull request
+     titles/descriptions, GitHub issue titles/bodies, and review comments.
+   - This rule applies regardless of the language used in the chat/prompt. For
+     example, when an agent is instructed in Japanese to "open an issue", the
+     issue itself must still be filed in English.
 
 2. **Deno Version Management**
    - **Never run `deno upgrade`** in this project.
