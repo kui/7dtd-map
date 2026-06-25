@@ -34,8 +34,8 @@ const fontsReady: Promise<unknown> = Promise.all(
 ).catch(printError);
 
 const mapFonts = {
-  "✘": fontFaces["Noto Sans Symbols 2"].family,
-  "🚩": fontFaces["Noto Emoji Old"].family,
+  "✘": "Noto Sans Symbols 2",
+  "🚩": "Noto Emoji Old",
 };
 
 // Apply incoming field updates immediately and fire-and-forget the render.

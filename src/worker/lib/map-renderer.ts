@@ -185,9 +185,17 @@ export default class MapRenderer {
     // scales it down to canvas pixels). Drawn inset by `stroke / 2` further
     // below so two neighbours sharing an edge never double-stroke.
     const stroke = 8;
-    context.lineWidth = stroke;
+    const half = stroke / 2;
 
     const tileIndex = this.#getTileIndex();
+
+    // Batch fill and stroke rects by color into Path2D objects so each unique
+    // color requires only two GPU draw calls (fill + stroke) instead of one
+    // pair per prefab. A Chrome trace showed CrGpuMain tasks of 300–865 ms
+    // during footprint redraws (~10 k ops for 1000 prefabs), stalling the
+    // compositor and causing visible slider stutter.
+    const fillPaths = new Map<string, Path2D>();
+    const strokePaths = new Map<string, Path2D>();
 
     for (const prefab of this.allPrefabs) {
       if (
@@ -214,23 +222,39 @@ export default class MapRenderer {
         densityScores,
         districtColors,
       );
-      context.fillStyle = withAlpha(color, 0.5);
-      context.beginPath();
-      context.rect(cx, cy - d, w, d);
-      context.fill();
+
+      const fillColor = withAlpha(color, 0.5);
+      let fp = fillPaths.get(fillColor);
+      if (!fp) {
+        fp = new Path2D();
+        fillPaths.set(fillColor, fp);
+      }
+      fp.rect(cx, cy - d, w, d);
 
       // Canvas strokes straddle the path, so an N-block outline would spill
       // N/2 blocks past the prefab edge and double-up where neighbours share
       // a boundary. Inset by half the stroke so the outer edge sits exactly
       // on the prefab boundary, then clamp negatives for prefabs smaller
       // than the stroke (very rare; they collapse to a point).
-      const half = stroke / 2;
       const iw = Math.max(0, w - stroke);
       const id = Math.max(0, d - stroke);
-      context.strokeStyle = color;
-      context.beginPath();
-      context.rect(cx + half, cy - d + half, iw, id);
-      context.stroke();
+      let sp = strokePaths.get(color);
+      if (!sp) {
+        sp = new Path2D();
+        strokePaths.set(color, sp);
+      }
+      sp.rect(cx + half, cy - d + half, iw, id);
+    }
+
+    for (const [fillColor, path] of fillPaths) {
+      context.fillStyle = fillColor;
+      context.fill(path);
+    }
+
+    context.lineWidth = stroke;
+    for (const [strokeColor, path] of strokePaths) {
+      context.strokeStyle = strokeColor;
+      context.stroke(path);
     }
   }
 
@@ -406,33 +430,62 @@ export default class MapRenderer {
     height: number,
     meshSizes: PrefabMeshSizes,
   ) {
-    context.font = `${this.prefabSignSize.toString()}px '${
-      this.#fontFamilies[SIGN_CHAR]
-    }'`;
-    context.fillStyle = "red";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
+    const signSize = this.prefabSignSize;
+    const scale = this.scale;
+
+    const pixelSize = Math.max(1, Math.round(signSize * scale));
+    const spriteW = pixelSize * 2;
+    const spriteH = pixelSize * 2;
+    const spriteCX = spriteW / 2;
+    const spriteCY = spriteH / 2;
+    const sprite = new OffscreenCanvas(spriteW, spriteH);
+    const sc = sprite.getContext("2d");
+    if (sc) {
+      sc.font = `${pixelSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
+      sc.textAlign = "center";
+      sc.textBaseline = "middle";
+      sc.lineJoin = "round";
+      sc.lineCap = "round";
+      putText(sc, {
+        text: SIGN_CHAR,
+        x: spriteCX,
+        z: spriteCY,
+        size: pixelSize,
+      });
+    }
 
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(this.prefabSignSize * 0.01);
-    const charOffsetY = Math.round(this.prefabSignSize * 0.05);
+    const charOffsetX = Math.round(signSize * 0.01);
+    const charOffsetY = Math.round(signSize * 0.05);
+
+    // Remove the active scale transform so the sprite stamps 1:1 on output
+    // pixels. globalAlpha set by the caller is unaffected by resetTransform.
+    context.save();
+    context.resetTransform();
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (const prefab of this.filteredPrefabs.toReversed()) {
       // decoration.position is the SW corner of the rotated AABB; shift to
       // the centre so the ✘ marks the middle of the footprint. Falls back to
       // a zero-size offset when the mesh size is unknown.
-      const size = meshSizes[prefab.name];
+      const meshSize = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
-      const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
-      const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
+      const halfW = meshSize ? (odd ? meshSize[1] : meshSize[0]) / 2 : 0;
+      const halfD = meshSize ? (odd ? meshSize[0] : meshSize[1]) / 2 : 0;
       const x = offsetX + prefab.x + halfW + charOffsetX;
-      // prefab vertical positions are inverted for canvas coodinates
+      // prefab vertical positions are inverted for canvas coordinates
       const z = offsetY - prefab.z - halfD + charOffsetY;
-      putText(context, { text: SIGN_CHAR, x, z, size: this.prefabSignSize });
+      // Multiply by scale to convert game-world coords to canvas pixels.
+      context.drawImage(
+        sprite,
+        Math.round(x * scale - spriteCX),
+        Math.round(z * scale - spriteCY),
+      );
     }
+
+    context.restore();
   }
 
   #drawMark(
@@ -553,15 +606,26 @@ function putText(
   context: OffscreenCanvasRenderingContext2D,
   { text, x, z, size }: MapSign,
 ) {
-  context.lineWidth = Math.round(size * 0.2);
-  context.strokeStyle = "rgba(0, 0, 0, 0.8)";
+  // Pass 1: fill + stroke both black — mirrors SVG's first <text fill=black
+  // stroke=black stroke-width=…>. The fill makes the interior solid so the
+  // outer stroke extends the silhouette outward without creating voids, and
+  // round line caps/joins (set by caller) avoid spiky tips on the ✘ arms.
+  context.lineWidth = Math.round(size * 0.12);
+  context.strokeStyle = "black";
+  context.fillStyle = "black";
   context.strokeText(text, x, z);
+  context.fillText(text, x, z);
 
-  context.lineWidth = Math.round(size * 0.1);
+  // Pass 2: red fill covers the black interior — mirrors SVG's second <text
+  // fill=red>. The outer black strip remains because the fill only covers
+  // the original glyph interior, not the outward stroke extension.
+  context.fillStyle = "red";
+  context.fillText(text, x, z);
+
+  // Pass 3: thin white stroke at the glyph edge — mirrors SVG's stroke=white.
+  context.lineWidth = Math.round(size * 0.04);
   context.strokeStyle = "white";
   context.strokeText(text, x, z);
-
-  context.fillText(text, x, z);
 }
 
 /**
