@@ -431,22 +431,26 @@ export default class MapRenderer {
     meshSizes: PrefabMeshSizes,
   ) {
     const signSize = this.prefabSignSize;
+    const scale = this.scale;
 
-    // Pre-render a single sign character into a sprite canvas and stamp copies
-    // via drawImage. This replaces 3 text draw calls per prefab (strokeText ×2
-    // + fillText) with 1 blit per prefab. Text rendering involves glyph lookup
-    // and shaping on each call; blitting a pre-composited bitmap is cheaper.
-    // Visual output is identical to the per-sign putText approach because each
-    // stamp is the fully composited character, so overlapping signs overwrite
-    // in the same iteration order as before.
-    const spriteW = signSize * 2;
-    const spriteH = signSize * 2;
+    // Pre-render the sign character at the final output pixel size so no
+    // rescaling occurs at stamp time. The context already has scale(this.scale)
+    // applied when this method is called; if we rendered the sprite at signSize
+    // and let drawImage inherit that transform, the bitmap would be bilinearly
+    // downscaled (signSize → signSize*scale pixels), which bypasses the font
+    // renderer's own hinting and produces visible pixelation. Rendering the
+    // sprite at signSize*scale pixels and drawing it with the transform reset
+    // to identity gives the same output size but lets the font renderer
+    // rasterise directly at the target resolution.
+    const pixelSize = Math.max(1, Math.round(signSize * scale));
+    const spriteW = pixelSize * 2;
+    const spriteH = pixelSize * 2;
     const spriteCX = spriteW / 2;
     const spriteCY = spriteH / 2;
     const sprite = new OffscreenCanvas(spriteW, spriteH);
     const sc = sprite.getContext("2d");
     if (sc) {
-      sc.font = `${signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
+      sc.font = `${pixelSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
       sc.fillStyle = "red";
       sc.textAlign = "center";
       sc.textBaseline = "middle";
@@ -454,7 +458,7 @@ export default class MapRenderer {
         text: SIGN_CHAR,
         x: spriteCX,
         z: spriteCY,
-        size: signSize,
+        size: pixelSize,
       });
     }
 
@@ -463,6 +467,11 @@ export default class MapRenderer {
 
     const charOffsetX = Math.round(signSize * 0.01);
     const charOffsetY = Math.round(signSize * 0.05);
+
+    // Remove the active scale transform so the sprite stamps 1:1 on output
+    // pixels. globalAlpha set by the caller is unaffected by resetTransform.
+    context.save();
+    context.resetTransform();
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (const prefab of this.filteredPrefabs.toReversed()) {
@@ -476,12 +485,15 @@ export default class MapRenderer {
       const x = offsetX + prefab.x + halfW + charOffsetX;
       // prefab vertical positions are inverted for canvas coordinates
       const z = offsetY - prefab.z - halfD + charOffsetY;
+      // Multiply by scale to convert game-world coords to canvas pixels.
       context.drawImage(
         sprite,
-        Math.round(x - spriteCX),
-        Math.round(z - spriteCY),
+        Math.round(x * scale - spriteCX),
+        Math.round(z * scale - spriteCY),
       );
     }
+
+    context.restore();
   }
 
   #drawMark(
