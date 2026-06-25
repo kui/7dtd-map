@@ -430,32 +430,52 @@ export default class MapRenderer {
     height: number,
     meshSizes: PrefabMeshSizes,
   ) {
-    context.font = `${this.prefabSignSize.toString()}px '${
-      this.#fontFamilies[SIGN_CHAR]
-    }'`;
-    context.fillStyle = "red";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
+    const signSize = this.prefabSignSize;
+
+    // Pre-render a single sign character into a sprite canvas and stamp copies
+    // via drawImage. This replaces 3 text draw calls per prefab (strokeText ×2
+    // + fillText) with 1 blit per prefab. Text rendering involves glyph lookup
+    // and shaping on each call; blitting a pre-composited bitmap is cheaper.
+    // Visual output is identical to the per-sign putText approach because each
+    // stamp is the fully composited character, so overlapping signs overwrite
+    // in the same iteration order as before.
+    const spriteW = signSize * 2;
+    const spriteH = signSize * 2;
+    const spriteCX = spriteW / 2;
+    const spriteCY = spriteH / 2;
+    const sprite = new OffscreenCanvas(spriteW, spriteH);
+    const sc = sprite.getContext("2d");
+    if (sc) {
+      sc.font = `${signSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
+      sc.textAlign = "center";
+      sc.textBaseline = "middle";
+      putText(sc, {
+        text: SIGN_CHAR,
+        x: spriteCX,
+        z: spriteCY,
+        size: signSize,
+      });
+    }
 
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(this.prefabSignSize * 0.01);
-    const charOffsetY = Math.round(this.prefabSignSize * 0.05);
+    const charOffsetX = Math.round(signSize * 0.01);
+    const charOffsetY = Math.round(signSize * 0.05);
 
     // Inverted iteration to overwrite signs by higher order prefabs
     for (const prefab of this.filteredPrefabs.toReversed()) {
       // decoration.position is the SW corner of the rotated AABB; shift to
       // the centre so the ✘ marks the middle of the footprint. Falls back to
       // a zero-size offset when the mesh size is unknown.
-      const size = meshSizes[prefab.name];
+      const meshSize = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
-      const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
-      const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
+      const halfW = meshSize ? (odd ? meshSize[1] : meshSize[0]) / 2 : 0;
+      const halfD = meshSize ? (odd ? meshSize[0] : meshSize[1]) / 2 : 0;
       const x = offsetX + prefab.x + halfW + charOffsetX;
-      // prefab vertical positions are inverted for canvas coodinates
+      // prefab vertical positions are inverted for canvas coordinates
       const z = offsetY - prefab.z - halfD + charOffsetY;
-      putText(context, { text: SIGN_CHAR, x, z, size: this.prefabSignSize });
+      context.drawImage(sprite, x - spriteCX, z - spriteCY);
     }
   }
 
