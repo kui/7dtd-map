@@ -433,15 +433,6 @@ export default class MapRenderer {
     const signSize = this.prefabSignSize;
     const scale = this.scale;
 
-    // Pre-render the sign character at the final output pixel size so no
-    // rescaling occurs at stamp time. The context already has scale(this.scale)
-    // applied when this method is called; if we rendered the sprite at signSize
-    // and let drawImage inherit that transform, the bitmap would be bilinearly
-    // downscaled (signSize → signSize*scale pixels), which bypasses the font
-    // renderer's own hinting and produces visible pixelation. Rendering the
-    // sprite at signSize*scale pixels and drawing it with the transform reset
-    // to identity gives the same output size but lets the font renderer
-    // rasterise directly at the target resolution.
     const pixelSize = Math.max(1, Math.round(signSize * scale));
     const spriteW = pixelSize * 2;
     const spriteH = pixelSize * 2;
@@ -451,9 +442,10 @@ export default class MapRenderer {
     const sc = sprite.getContext("2d");
     if (sc) {
       sc.font = `${pixelSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
-      sc.fillStyle = "red";
       sc.textAlign = "center";
       sc.textBaseline = "middle";
+      sc.lineJoin = "round";
+      sc.lineCap = "round";
       putText(sc, {
         text: SIGN_CHAR,
         x: spriteCX,
@@ -614,15 +606,26 @@ function putText(
   context: OffscreenCanvasRenderingContext2D,
   { text, x, z, size }: MapSign,
 ) {
-  context.lineWidth = Math.round(size * 0.2);
-  context.strokeStyle = "rgba(0, 0, 0, 0.8)";
+  // Pass 1: fill + stroke both black — mirrors SVG's first <text fill=black
+  // stroke=black stroke-width=…>. The fill makes the interior solid so the
+  // outer stroke extends the silhouette outward without creating voids, and
+  // round line caps/joins (set by caller) avoid spiky tips on the ✘ arms.
+  context.lineWidth = Math.round(size * 0.12);
+  context.strokeStyle = "black";
+  context.fillStyle = "black";
   context.strokeText(text, x, z);
+  context.fillText(text, x, z);
 
-  context.lineWidth = Math.round(size * 0.1);
+  // Pass 2: red fill covers the black interior — mirrors SVG's second <text
+  // fill=red>. The outer black strip remains because the fill only covers
+  // the original glyph interior, not the outward stroke extension.
+  context.fillStyle = "red";
+  context.fillText(text, x, z);
+
+  // Pass 3: thin white stroke at the glyph edge — mirrors SVG's stroke=white.
+  context.lineWidth = Math.round(size * 0.04);
   context.strokeStyle = "white";
   context.strokeText(text, x, z);
-
-  context.fillText(text, x, z);
 }
 
 /**
