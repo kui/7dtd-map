@@ -28,10 +28,8 @@ const CURSOR_OFFSET = 16;
 export class PrefabTooltipHandler {
   #doms: Doms;
   #labelHandler: LabelHandler;
-  #fetchMeshSizes: () => Promise<PrefabMeshSizes>;
-  #fetchDifficulties: () => Promise<PrefabDifficulties>;
-  #meshSizesPromise: Promise<PrefabMeshSizes> | null = null;
-  #difficultiesPromise: Promise<PrefabDifficulties> | null = null;
+  #meshSizes: Promise<PrefabMeshSizes>;
+  #difficulties: Promise<PrefabDifficulties>;
   #allPrefabs: Prefab[] = [];
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
@@ -42,13 +40,13 @@ export class PrefabTooltipHandler {
     cursor: CursorHandler,
     prefabsHandler: PrefabsHandler,
     labelHandler: LabelHandler,
-    fetchMeshSizes: () => Promise<PrefabMeshSizes>,
-    fetchDifficulties: () => Promise<PrefabDifficulties>,
+    meshSizes: Promise<PrefabMeshSizes>,
+    difficulties: Promise<PrefabDifficulties>,
   ) {
     this.#doms = doms;
     this.#labelHandler = labelHandler;
-    this.#fetchMeshSizes = fetchMeshSizes;
-    this.#fetchDifficulties = fetchDifficulties;
+    this.#meshSizes = meshSizes;
+    this.#difficulties = difficulties;
 
     prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
       this.#allPrefabs = all;
@@ -61,14 +59,6 @@ export class PrefabTooltipHandler {
     });
   }
 
-  #meshSizes(): Promise<PrefabMeshSizes> {
-    return (this.#meshSizesPromise ??= this.#fetchMeshSizes());
-  }
-
-  #difficulties(): Promise<PrefabDifficulties> {
-    return (this.#difficultiesPromise ??= this.#fetchDifficulties());
-  }
-
   #update = throttledInvoker(() => this.#updateImmediately(), 50);
 
   async #updateImmediately() {
@@ -79,9 +69,9 @@ export class PrefabTooltipHandler {
       return;
     }
     const [meshSizes, labels, difficulties] = await Promise.all([
-      this.#meshSizes(),
+      this.#meshSizes,
       this.#labelHandler.holder.get("prefabs"),
-      this.#difficulties(),
+      this.#difficulties,
     ]);
     const hit = findPrefabAt(coords, this.#allPrefabs, meshSizes);
     if (!hit) {

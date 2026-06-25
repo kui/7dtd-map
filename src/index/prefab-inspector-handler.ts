@@ -38,18 +38,18 @@ const EXCLUDE_PREFAB_REGEXPS = [
 export class PrefabInspectorHandler {
   #doms: Doms;
   #labelHandler: LabelHandler;
-  #fetchDifficulties: () => Promise<PrefabDifficulties>;
+  #difficulties: Promise<PrefabDifficulties>;
   #fetchPrefabIndex: () => Promise<string[]>;
 
   constructor(
     doms: Doms,
     labelHandler: LabelHandler,
-    fetchDifficulties: () => Promise<PrefabDifficulties>,
+    difficulties: Promise<PrefabDifficulties>,
     fetchPrefabIndex: () => Promise<string[]>,
   ) {
     this.#doms = doms;
     this.#labelHandler = labelHandler;
-    this.#fetchDifficulties = fetchDifficulties;
+    this.#difficulties = difficulties;
     this.#fetchPrefabIndex = fetchPrefabIndex;
 
     document.addEventListener("click", (event) => {
@@ -63,7 +63,7 @@ export class PrefabInspectorHandler {
   async inspect() {
     const [prefabs, difficulties, rawPrefabIndex] = await Promise.all([
       loadPrefabsXml(),
-      this.#fetchDifficulties(),
+      this.#difficulties,
       this.#fetchPrefabIndex(),
     ]);
     const prefabNames = prefabs.flatMap((

@@ -5,7 +5,11 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
-import type { HighlightedPrefab } from "./types/7dtdmap.ts";
+import type {
+  HighlightedPrefab,
+  PrefabDifficulties,
+  PrefabMeshSizes,
+} from "./types/7dtdmap.ts";
 import { component, downloadCanvasPng } from "./lib/dom-utils.ts";
 import {
   escapeHtml,
@@ -31,6 +35,17 @@ import { MapInfoHandler } from "./index/map-info-handler.ts";
 
 import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
+
+// Static JSONs fetched once and shared across handlers via Promise rather
+// than per-handler fetch thunks: both PrefabInspectorHandler and
+// PrefabTooltipHandler need difficulties, and any future feature can await
+// the same in-flight request instead of issuing a duplicate.
+const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
+  "prefab-mesh-sizes.json",
+);
+const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
+  "prefab-difficulties.json",
+);
 
 function main() {
   initMapStorage();
@@ -169,8 +184,8 @@ function main() {
     cursorHandler,
     prefabsHandler,
     labelHandler,
-    () => fetchJson("prefab-mesh-sizes.json"),
-    () => fetchJson("prefab-difficulties.json"),
+    prefabMeshSizes,
+    prefabDifficulties,
   );
   new PrefabInspectorHandler(
     {
@@ -210,7 +225,7 @@ function main() {
       missings: component("prefab-inspector-missings", HTMLOListElement),
     },
     labelHandler,
-    () => fetchJson("prefab-difficulties.json"),
+    prefabDifficulties,
     () => fetchJson("prefabs/index.json"),
   );
 
