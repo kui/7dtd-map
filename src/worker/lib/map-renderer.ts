@@ -185,9 +185,17 @@ export default class MapRenderer {
     // scales it down to canvas pixels). Drawn inset by `stroke / 2` further
     // below so two neighbours sharing an edge never double-stroke.
     const stroke = 8;
-    context.lineWidth = stroke;
+    const half = stroke / 2;
 
     const tileIndex = this.#getTileIndex();
+
+    // Batch fill and stroke rects by color into Path2D objects so each unique
+    // color requires only two GPU draw calls (fill + stroke) instead of one
+    // pair per prefab. A Chrome trace showed CrGpuMain tasks of 300–865 ms
+    // during footprint redraws (~10 k ops for 1000 prefabs), stalling the
+    // compositor and causing visible slider stutter.
+    const fillPaths = new Map<string, Path2D>();
+    const strokePaths = new Map<string, Path2D>();
 
     for (const prefab of this.allPrefabs) {
       if (
@@ -214,23 +222,39 @@ export default class MapRenderer {
         densityScores,
         districtColors,
       );
-      context.fillStyle = withAlpha(color, 0.5);
-      context.beginPath();
-      context.rect(cx, cy - d, w, d);
-      context.fill();
+
+      const fillColor = withAlpha(color, 0.5);
+      let fp = fillPaths.get(fillColor);
+      if (!fp) {
+        fp = new Path2D();
+        fillPaths.set(fillColor, fp);
+      }
+      fp.rect(cx, cy - d, w, d);
 
       // Canvas strokes straddle the path, so an N-block outline would spill
       // N/2 blocks past the prefab edge and double-up where neighbours share
       // a boundary. Inset by half the stroke so the outer edge sits exactly
       // on the prefab boundary, then clamp negatives for prefabs smaller
       // than the stroke (very rare; they collapse to a point).
-      const half = stroke / 2;
       const iw = Math.max(0, w - stroke);
       const id = Math.max(0, d - stroke);
-      context.strokeStyle = color;
-      context.beginPath();
-      context.rect(cx + half, cy - d + half, iw, id);
-      context.stroke();
+      let sp = strokePaths.get(color);
+      if (!sp) {
+        sp = new Path2D();
+        strokePaths.set(color, sp);
+      }
+      sp.rect(cx + half, cy - d + half, iw, id);
+    }
+
+    for (const [fillColor, path] of fillPaths) {
+      context.fillStyle = fillColor;
+      context.fill(path);
+    }
+
+    context.lineWidth = stroke;
+    for (const [strokeColor, path] of strokePaths) {
+      context.strokeStyle = strokeColor;
+      context.stroke(path);
     }
   }
 
