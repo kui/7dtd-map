@@ -18,7 +18,9 @@ import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
 import { PrefabsHandler } from "./index/prefabs-handler.ts";
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
-import { CursorCoodsHandler } from "./index/cursor-coods-handler.ts";
+import { CursorHandler } from "./index/cursor-handler.ts";
+import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
+import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
@@ -153,12 +155,21 @@ function main() {
   prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
     prefabListRenderer.iterator = prefabs;
   });
-  new CursorCoodsHandler(
-    {
-      canvas: component("map", HTMLCanvasElement),
-      output: component("cursor_coods", HTMLElement),
-    },
+  const cursorHandler = new CursorHandler(
+    { canvas: component("map", HTMLCanvasElement) },
     dtmHandler,
+  );
+  new CursorCoordsDisplayHandler(
+    { output: component("cursor_coods", HTMLElement) },
+    cursorHandler,
+    dtmHandler,
+  );
+  new PrefabTooltipHandler(
+    { tooltip: component("prefab_tooltip", HTMLElement) },
+    cursorHandler,
+    prefabsHandler,
+    labelHandler,
+    () => fetchJson("prefab-mesh-sizes.json"),
   );
   new PrefabInspectorHandler(
     {
