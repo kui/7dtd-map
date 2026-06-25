@@ -31,6 +31,10 @@ export class MarkerHandler {
       if (e.ctrlKey || e.metaKey) return;
       this.#update(e).catch(printError);
     });
+    doms.canvas.addEventListener("dblclick", (e) => {
+      if (e.ctrlKey || e.metaKey) return;
+      this.#update(null).catch(printError);
+    });
     doms.resetMarker.addEventListener("click", () => {
       this.#update(null).catch(printError);
     });

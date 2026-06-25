@@ -153,6 +153,7 @@ export class PrefabTooltipHandler {
         `<div class="name">${safeLabel} / <small>${safeName}</small></div>` +
         `<div class="hints">` +
         `<div class="hint click">🚩 Click: Set flag</div>` +
+        `<div class="hint dblclick">❌ Double-click: Reset flag</div>` +
         `<div class="hint ctrl-click">🔗 Ctrl+Click: Open prefab page</div>` +
         `</div>` +
         `</div>`;
