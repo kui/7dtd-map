@@ -1,4 +1,5 @@
 import type { DtmHandler } from "./dtm-handler.ts";
+import type { FileHandler } from "./file-handler.ts";
 import type { GameCoords } from "../types/7dtdmap.ts";
 
 import { canvasEventToGameCoords, formatCoords } from "../lib/dom-utils.ts";
@@ -20,7 +21,7 @@ export class MarkerHandler {
   #dtmHandler: DtmHandler;
   #listeners = new events.ListenerManager<"update", EventMessage>();
 
-  constructor(doms: Doms, dtmHandler: DtmHandler) {
+  constructor(doms: Doms, dtmHandler: DtmHandler, fileHandler: FileHandler) {
     this.#doms = doms;
     this.#dtmHandler = dtmHandler;
 
@@ -30,6 +31,7 @@ export class MarkerHandler {
     doms.resetMarker.addEventListener("click", () => {
       this.#update(null).catch(printError);
     });
+    fileHandler.addListener(() => this.#update(null));
   }
 
   async #update(event: MouseEvent | null) {
