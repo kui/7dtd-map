@@ -85,6 +85,7 @@ function main() {
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
     dtmHandler,
+    fileHandler,
   );
   const prefabsHandler = new PrefabsHandler(
     {
