@@ -34,7 +34,6 @@ export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
-  showFilteredPrefabs = true;
   // Filtered subset emitted by the prefabs-filter worker — drives the ✘
   // sign overlay and reflects the user's active search/difficulty filter.
   filteredPrefabs: HighlightedPrefab[] = [];
@@ -161,9 +160,7 @@ export default class MapRenderer {
       );
     }
     context.globalAlpha = this.signAlpha;
-    if (this.showFilteredPrefabs) {
-      this.#drawPrefabs(context, width, height, meshSizes);
-    }
+    this.#drawPrefabs(context, width, height, meshSizes);
     if (this.markerCoords) {
       this.#drawMark(context, width, height);
     }

@@ -22,7 +22,6 @@ export type MapRendererInputMessage = Partial<
     | "splat3Alpha"
     | "splat4Alpha"
     | "radAlpha"
-    | "showFilteredPrefabs"
     | "brightness"
     | "scale"
     | "signSize"
