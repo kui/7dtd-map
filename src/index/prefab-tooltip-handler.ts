@@ -37,7 +37,7 @@ export class PrefabTooltipHandler {
   #lastCoords: GameCoords | null = null;
   #shownPrefabName: string | null = null;
   #currentHit: Prefab | null = null;
-  #ctrlActive = false;
+  #shiftActive = false;
 
   constructor(
     doms: Doms,
@@ -62,35 +62,39 @@ export class PrefabTooltipHandler {
     cursor.addListener(({ update: { event, coords } }) => {
       this.#lastEvent = event;
       this.#lastCoords = coords;
-      if (event) this.#setCtrlActive(event.ctrlKey || event.metaKey);
+      if (event) this.#setShiftActive(event.shiftKey);
       this.#update().catch(printError);
     });
 
     doms.canvas.addEventListener("click", (e) => {
-      if (!(e.ctrlKey || e.metaKey)) return;
+      if (!e.shiftKey) return;
       const hit = this.#currentHit;
       if (!hit) return;
       e.preventDefault();
-      // Navigate to the per-prefab page. Same-tab navigation matches the
-      // existing prefab-list links elsewhere in the app.
-      globalThis.location.href = `prefabs/${encodeURIComponent(hit.name)}.html`;
+      // Shift is not a "background tab" modifier for browsers, so a plain
+      // window.open() opens the new tab in the foreground.
+      globalThis.open(
+        `prefabs/${encodeURIComponent(hit.name)}.html`,
+        "_blank",
+        "noopener",
+      );
     });
 
-    // Track Ctrl/Cmd state without requiring cursor movement so the hint
+    // Track Shift state without requiring cursor movement so the hint
     // highlight flips the moment the user presses or releases the modifier.
     globalThis.addEventListener("keydown", (e) => {
-      if (e.key === "Control" || e.key === "Meta") this.#setCtrlActive(true);
+      if (e.key === "Shift") this.#setShiftActive(true);
     });
     globalThis.addEventListener("keyup", (e) => {
-      if (e.key === "Control" || e.key === "Meta") this.#setCtrlActive(false);
+      if (e.key === "Shift") this.#setShiftActive(false);
     });
-    globalThis.addEventListener("blur", () => this.#setCtrlActive(false));
+    globalThis.addEventListener("blur", () => this.#setShiftActive(false));
   }
 
-  #setCtrlActive(active: boolean) {
-    if (this.#ctrlActive === active) return;
-    this.#ctrlActive = active;
-    this.#doms.tooltip.classList.toggle("ctrl-active", active);
+  #setShiftActive(active: boolean) {
+    if (this.#shiftActive === active) return;
+    this.#shiftActive = active;
+    this.#doms.tooltip.classList.toggle("shift-active", active);
   }
 
   async #getIndex(): Promise<PrefabHitIndex | null> {
@@ -154,7 +158,7 @@ export class PrefabTooltipHandler {
         `<div class="hints">` +
         `<div class="hint click">🚩 Click: Set flag</div>` +
         `<div class="hint dblclick">❌ Double-click: Reset flag</div>` +
-        `<div class="hint ctrl-click">🔗 Ctrl+Click: Open prefab page</div>` +
+        `<div class="hint shift-click">🔗 Shift+Click: Open prefab page</div>` +
         `</div>` +
         `</div>`;
       this.#shownPrefabName = prefab.name;
