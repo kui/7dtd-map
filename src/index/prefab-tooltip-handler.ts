@@ -31,6 +31,7 @@ export class PrefabTooltipHandler {
   #meshSizes: Promise<PrefabMeshSizes>;
   #difficulties: Promise<PrefabDifficulties>;
   #allPrefabs: Prefab[] = [];
+  #index: PrefabHitIndex | null = null;
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
   #shownPrefabName: string | null = null;
@@ -50,6 +51,9 @@ export class PrefabTooltipHandler {
 
     prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
       this.#allPrefabs = all;
+      // Drop the cached index; a fresh one will be built lazily on the next
+      // cursor sample once meshSizes is awaited.
+      this.#index = null;
     });
 
     cursor.addListener(({ update: { event, coords } }) => {
@@ -59,25 +63,43 @@ export class PrefabTooltipHandler {
     });
   }
 
+  async #getIndex(): Promise<PrefabHitIndex | null> {
+    if (this.#index && this.#index.source === this.#allPrefabs) {
+      return this.#index;
+    }
+    if (this.#allPrefabs.length === 0) return null;
+    const meshSizes = await this.#meshSizes;
+    // allPrefabs may have changed during the await; re-check before reusing.
+    if (this.#index && this.#index.source === this.#allPrefabs) {
+      return this.#index;
+    }
+    this.#index = new PrefabHitIndex(this.#allPrefabs, meshSizes);
+    return this.#index;
+  }
+
   #update = throttledInvoker(() => this.#updateImmediately(), 50);
 
   async #updateImmediately() {
     const event = this.#lastEvent;
     const coords = this.#lastCoords;
-    if (!event || !coords || this.#allPrefabs.length === 0) {
+    if (!event || !coords) {
       this.#hide();
       return;
     }
-    const [meshSizes, labels, difficulties] = await Promise.all([
-      this.#meshSizes,
-      this.#labelHandler.holder.get("prefabs"),
-      this.#difficulties,
-    ]);
-    const hit = findPrefabAt(coords, this.#allPrefabs, meshSizes);
+    const index = await this.#getIndex();
+    if (!index) {
+      this.#hide();
+      return;
+    }
+    const hit = index.find(coords);
     if (!hit) {
       this.#hide();
       return;
     }
+    const [labels, difficulties] = await Promise.all([
+      this.#labelHandler.holder.get("prefabs"),
+      this.#difficulties,
+    ]);
     const label = labels.get(hit.name) ?? "-";
     const difficulty = difficulties[hit.name] ?? 0;
     this.#show(event, hit, label, difficulty);
@@ -116,33 +138,78 @@ export class PrefabTooltipHandler {
   }
 }
 
-// Returns the smallest-footprint prefab whose AABB contains `coords`, or null
-// if nothing matches. Smallest-area wins when multiple footprints overlap so
-// the more specific POI is preferred over a containing structure.
-function findPrefabAt(
-  coords: GameCoords,
-  prefabs: Prefab[],
-  meshSizes: PrefabMeshSizes,
-): Prefab | null {
-  let best: { prefab: Prefab; area: number } | null = null;
-  for (const p of prefabs) {
-    if (EXCLUDED_NAME_FRAGMENTS.some((frag) => p.name.includes(frag))) continue;
-    const size = meshSizes[p.name];
-    if (!size) continue;
-    const [sx, sz] = size;
-    // decoration.position is the SW corner of the rotated AABB; 90°/270°
-    // rotations swap world-aligned width/depth. Matches the renderer's
-    // footprint formula in src/worker/lib/map-renderer.ts.
-    const odd = ((p.rotation ?? 0) & 1) === 1;
-    const w = odd ? sz : sx;
-    const d = odd ? sx : sz;
-    if (
-      coords.x >= p.x && coords.x < p.x + w &&
-      coords.z >= p.z && coords.z < p.z + d
-    ) {
-      const area = w * d;
-      if (!best || area < best.area) best = { prefab: p, area };
+// Pre-built hit-test index over the current allPrefabs snapshot. Holds the
+// AABB in four parallel Int32Arrays so the hot loop only does integer
+// compares (no string `.includes`, no PrefabMeshSizes lookup, no rotation
+// parity per sample). Rows are sorted ascending by footprint area so that
+// `find` can return at the first hit and naturally prefer the smaller, more
+// specific POI on overlapping footprints.
+class PrefabHitIndex {
+  readonly source: Prefab[];
+  readonly prefabs: Prefab[];
+  readonly x0: Int32Array;
+  readonly z0: Int32Array;
+  readonly w: Int32Array;
+  readonly d: Int32Array;
+
+  constructor(all: Prefab[], meshSizes: PrefabMeshSizes) {
+    const tmp: {
+      prefab: Prefab;
+      x0: number;
+      z0: number;
+      w: number;
+      d: number;
+      area: number;
+    }[] = [];
+    for (const p of all) {
+      if (EXCLUDED_NAME_FRAGMENTS.some((frag) => p.name.includes(frag))) {
+        continue;
+      }
+      const size = meshSizes[p.name];
+      if (!size) continue;
+      const [sx, sz] = size;
+      // decoration.position is the SW corner of the rotated AABB; 90°/270°
+      // rotations swap world-aligned width/depth. Matches the renderer's
+      // footprint formula in src/worker/lib/map-renderer.ts.
+      const odd = ((p.rotation ?? 0) & 1) === 1;
+      const w = odd ? sz : sx;
+      const d = odd ? sx : sz;
+      tmp.push({ prefab: p, x0: p.x, z0: p.z, w, d, area: w * d });
+    }
+    tmp.sort((a, b) => a.area - b.area);
+
+    const n = tmp.length;
+    this.source = all;
+    this.prefabs = new Array<Prefab>(n);
+    this.x0 = new Int32Array(n);
+    this.z0 = new Int32Array(n);
+    this.w = new Int32Array(n);
+    this.d = new Int32Array(n);
+    for (let i = 0; i < n; i++) {
+      // deno-lint-ignore no-non-null-assertion
+      const e = tmp[i]!;
+      this.prefabs[i] = e.prefab;
+      this.x0[i] = e.x0;
+      this.z0[i] = e.z0;
+      this.w[i] = e.w;
+      this.d[i] = e.d;
     }
   }
-  return best?.prefab ?? null;
+
+  // Returns the smallest-area prefab whose AABB contains `coords`, or null.
+  // Rows are area-ascending so the first hit is the smallest by construction.
+  find(coords: GameCoords): Prefab | null {
+    const { x, z } = coords;
+    const { x0, z0, w, d, prefabs } = this;
+    const n = prefabs.length;
+    for (let i = 0; i < n; i++) {
+      const xi = x0[i];
+      if (x < xi || x >= xi + w[i]) continue;
+      const zi = z0[i];
+      if (z < zi || z >= zi + d[i]) continue;
+      // deno-lint-ignore no-non-null-assertion
+      return prefabs[i]!;
+    }
+    return null;
+  }
 }
