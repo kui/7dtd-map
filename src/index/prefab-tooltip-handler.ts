@@ -13,6 +13,7 @@ import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface Doms {
   tooltip: HTMLElement;
+  canvas: HTMLCanvasElement;
 }
 
 // Mirrors the exclusions in map-renderer's footprint draw so that the tooltip
@@ -35,6 +36,8 @@ export class PrefabTooltipHandler {
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
   #shownPrefabName: string | null = null;
+  #currentHit: Prefab | null = null;
+  #ctrlActive = false;
 
   constructor(
     doms: Doms,
@@ -59,8 +62,35 @@ export class PrefabTooltipHandler {
     cursor.addListener(({ update: { event, coords } }) => {
       this.#lastEvent = event;
       this.#lastCoords = coords;
+      if (event) this.#setCtrlActive(event.ctrlKey || event.metaKey);
       this.#update().catch(printError);
     });
+
+    doms.canvas.addEventListener("click", (e) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const hit = this.#currentHit;
+      if (!hit) return;
+      e.preventDefault();
+      // Navigate to the per-prefab page. Same-tab navigation matches the
+      // existing prefab-list links elsewhere in the app.
+      globalThis.location.href = `prefabs/${encodeURIComponent(hit.name)}.html`;
+    });
+
+    // Track Ctrl/Cmd state without requiring cursor movement so the hint
+    // highlight flips the moment the user presses or releases the modifier.
+    globalThis.addEventListener("keydown", (e) => {
+      if (e.key === "Control" || e.key === "Meta") this.#setCtrlActive(true);
+    });
+    globalThis.addEventListener("keyup", (e) => {
+      if (e.key === "Control" || e.key === "Meta") this.#setCtrlActive(false);
+    });
+    globalThis.addEventListener("blur", () => this.#setCtrlActive(false));
+  }
+
+  #setCtrlActive(active: boolean) {
+    if (this.#ctrlActive === active) return;
+    this.#ctrlActive = active;
+    this.#doms.tooltip.classList.toggle("ctrl-active", active);
   }
 
   async #getIndex(): Promise<PrefabHitIndex | null> {
@@ -106,6 +136,7 @@ export class PrefabTooltipHandler {
   }
 
   #show(event: MouseEvent, prefab: Prefab, label: string, difficulty: number) {
+    this.#currentHit = prefab;
     // Rebuild the inner HTML only when the prefab changes so we don't trigger
     // a new <img> request (and the flash that comes with it) on every
     // mousemove sample while hovering the same POI.
@@ -120,6 +151,10 @@ export class PrefabTooltipHandler {
         `<div class="text">` +
         tierLine +
         `<div class="name">${safeLabel} / <small>${safeName}</small></div>` +
+        `<div class="hints">` +
+        `<div class="hint click">🚩 Click: Set flag</div>` +
+        `<div class="hint ctrl-click">🔗 Ctrl+Click: Open prefab page</div>` +
+        `</div>` +
         `</div>`;
       this.#shownPrefabName = prefab.name;
     }
@@ -135,6 +170,7 @@ export class PrefabTooltipHandler {
   #hide() {
     this.#doms.tooltip.style.display = "none";
     this.#shownPrefabName = null;
+    this.#currentHit = null;
   }
 }
 

@@ -43,6 +43,24 @@
   & small {
     opacity: 0.75;
   }
+  & .hints {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  & .hint {
+    opacity: 0.55;
+    transition: opacity 0.1s, font-weight 0.1s;
+  }
+  &:not(.ctrl-active) .hint.click,
+  &.ctrl-active .hint.ctrl-click {
+    opacity: 1;
+    font-weight: bold;
+  }
 }
 
 #controller {

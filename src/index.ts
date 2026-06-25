@@ -180,7 +180,10 @@ function main() {
     dtmHandler,
   );
   new PrefabTooltipHandler(
-    { tooltip: component("prefab_tooltip", HTMLElement) },
+    {
+      tooltip: component("prefab_tooltip", HTMLElement),
+      canvas: component("map", HTMLCanvasElement),
+    },
     cursorHandler,
     prefabsHandler,
     labelHandler,
