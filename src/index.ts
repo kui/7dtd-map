@@ -170,6 +170,7 @@ function main() {
     prefabsHandler,
     labelHandler,
     () => fetchJson("prefab-mesh-sizes.json"),
+    () => fetchJson("prefab-difficulties.json"),
   );
   new PrefabInspectorHandler(
     {

@@ -1,7 +1,12 @@
 import type { CursorHandler } from "./cursor-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
-import type { GameCoords, Prefab, PrefabMeshSizes } from "../types/7dtdmap.ts";
+import type {
+  GameCoords,
+  Prefab,
+  PrefabDifficulties,
+  PrefabMeshSizes,
+} from "../types/7dtdmap.ts";
 
 import { throttledInvoker } from "../lib/throttled-invoker.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
@@ -24,10 +29,13 @@ export class PrefabTooltipHandler {
   #doms: Doms;
   #labelHandler: LabelHandler;
   #fetchMeshSizes: () => Promise<PrefabMeshSizes>;
+  #fetchDifficulties: () => Promise<PrefabDifficulties>;
   #meshSizesPromise: Promise<PrefabMeshSizes> | null = null;
+  #difficultiesPromise: Promise<PrefabDifficulties> | null = null;
   #allPrefabs: Prefab[] = [];
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
+  #shownPrefabName: string | null = null;
 
   constructor(
     doms: Doms,
@@ -35,10 +43,12 @@ export class PrefabTooltipHandler {
     prefabsHandler: PrefabsHandler,
     labelHandler: LabelHandler,
     fetchMeshSizes: () => Promise<PrefabMeshSizes>,
+    fetchDifficulties: () => Promise<PrefabDifficulties>,
   ) {
     this.#doms = doms;
     this.#labelHandler = labelHandler;
     this.#fetchMeshSizes = fetchMeshSizes;
+    this.#fetchDifficulties = fetchDifficulties;
 
     prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
       this.#allPrefabs = all;
@@ -55,6 +65,10 @@ export class PrefabTooltipHandler {
     return (this.#meshSizesPromise ??= this.#fetchMeshSizes());
   }
 
+  #difficulties(): Promise<PrefabDifficulties> {
+    return (this.#difficultiesPromise ??= this.#fetchDifficulties());
+  }
+
   #update = throttledInvoker(() => this.#updateImmediately(), 50);
 
   async #updateImmediately() {
@@ -64,9 +78,10 @@ export class PrefabTooltipHandler {
       this.#hide();
       return;
     }
-    const [meshSizes, labels] = await Promise.all([
+    const [meshSizes, labels, difficulties] = await Promise.all([
       this.#meshSizes(),
       this.#labelHandler.holder.get("prefabs"),
+      this.#difficulties(),
     ]);
     const hit = findPrefabAt(coords, this.#allPrefabs, meshSizes);
     if (!hit) {
@@ -74,24 +89,40 @@ export class PrefabTooltipHandler {
       return;
     }
     const label = labels.get(hit.name) ?? "-";
-    this.#show(event, hit, label);
+    const difficulty = difficulties[hit.name] ?? 0;
+    this.#show(event, hit, label, difficulty);
   }
 
-  #show(event: MouseEvent, prefab: Prefab, label: string) {
-    const safeName = escapeHtml(prefab.name);
-    const safeLabel = escapeHtml(label);
-    this.#doms.tooltip.innerHTML = `${safeLabel} / <small>${safeName}</small>`;
+  #show(event: MouseEvent, prefab: Prefab, label: string, difficulty: number) {
+    // Rebuild the inner HTML only when the prefab changes so we don't trigger
+    // a new <img> request (and the flash that comes with it) on every
+    // mousemove sample while hovering the same POI.
+    if (this.#shownPrefabName !== prefab.name) {
+      const safeName = escapeHtml(prefab.name);
+      const safeLabel = escapeHtml(label);
+      const tierLine = difficulty > 0
+        ? `<div class="tier prefab_difficulty_${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</div>`
+        : "";
+      this.#doms.tooltip.innerHTML =
+        `<img src="prefabs/${safeName}.jpg" alt="" loading="lazy">` +
+        `<div class="text">` +
+        tierLine +
+        `<div class="name">${safeLabel} / <small>${safeName}</small></div>` +
+        `</div>`;
+      this.#shownPrefabName = prefab.name;
+    }
     this.#doms.tooltip.style.left = `${
       (event.clientX + CURSOR_OFFSET).toString()
     }px`;
     this.#doms.tooltip.style.top = `${
       (event.clientY + CURSOR_OFFSET).toString()
     }px`;
-    this.#doms.tooltip.style.display = "block";
+    this.#doms.tooltip.style.display = "flex";
   }
 
   #hide() {
     this.#doms.tooltip.style.display = "none";
+    this.#shownPrefabName = null;
   }
 }
 
