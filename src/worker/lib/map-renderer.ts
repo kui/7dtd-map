@@ -55,7 +55,6 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  #mapSize = gameMapSize({ width: 0, height: 0 });
   #fontFamilies: FontFamilies;
 
   #nativeSizes = new Map<
@@ -112,8 +111,6 @@ export default class MapRenderer {
       mapFiles.MAP_IMAGE_FILE_NAMES.map((f) => this.#nativeSize(f)),
     );
     const { width, height } = mapSize(...sizes);
-    this.#mapSize.width = width;
-    this.#mapSize.height = height;
     if (width === 0 || height === 0) {
       this.canvas.width = 1;
       this.canvas.height = 1;
@@ -505,10 +502,6 @@ export default class MapRenderer {
   async #getFile(fileName: mapFiles.MapFileName): Promise<File | null> {
     const workspace = await storage.workspaceDir();
     return workspace.get(fileName);
-  }
-
-  size(): GameMapSize {
-    return this.#mapSize;
   }
 }
 

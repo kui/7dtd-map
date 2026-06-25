@@ -1,7 +1,6 @@
 import type * as mapFiles from "../../lib/map-files.ts";
 import type MapRendererClass from "./lib/map-renderer.ts";
 import type { EventMessage, PrefabFilter } from "./lib/prefab-filter.ts";
-import type { GameMapSize } from "../types/7dtdmap.ts";
 
 export type DtmOutputMessage = null | Uint8Array;
 
@@ -33,10 +32,6 @@ export type MapRendererInputMessage = Partial<
     | "invalidate"
   >
 >;
-
-export interface MapRendererOutputMessage {
-  mapSize: GameMapSize;
-}
 
 export type PrefabsFilterInputMessage = Partial<
   Pick<

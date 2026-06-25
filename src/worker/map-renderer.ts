@@ -38,11 +38,15 @@ const mapFonts = {
   "🚩": fontFaces["Noto Emoji Old"].family,
 };
 
+// Apply incoming field updates immediately and fire-and-forget the render.
+// throttledInvoker inside MapRenderer.update coalesces concurrent calls, so
+// awaiting it here would just queue onmessage handlers behind the throttle and
+// release them in bursts on every tick. Returning synchronously keeps the
+// worker's message queue drained and the main thread free of reply bursts.
 onmessage = async (
   event: MessageEvent<MapRendererInputMessage>,
 ) => {
   const message = event.data;
-  console.log("map-renderer: received %o", message);
   await fontsReady;
   if (!map) {
     if (message.canvas) {
@@ -61,8 +65,6 @@ onmessage = async (
     // replaced by later messages; drop any stray `canvas` field defensively.
     delete message.canvas;
   }
-  await Object.assign(map, message).update();
-  const out = { mapSize: map.size() };
-  console.log("map-renderer: sending %o", out);
-  postMessage(out);
+  Object.assign(map, message);
+  map.update().catch(printError);
 };
