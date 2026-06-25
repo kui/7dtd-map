@@ -63,10 +63,13 @@ export default class MapRenderer {
     { width: number; height: number }
   >();
 
-  // Composited base map (layers + brightness + per-layer alpha) cached so that
-  // prefab/marker-only updates can skip recompositing.
+  // Composited base map (layers + brightness + per-layer alpha + footprint
+  // overlay) cached so that sign/marker-only updates can skip recompositing.
   #composite: OffscreenCanvas | null = null;
   #compositeKey: string | null = null;
+  // Reference identity of the `allPrefabs` array that produced the cached
+  // composite; bumped implicitly when the upstream array is replaced.
+  #compositeAllPrefabs: Prefab[] | null = null;
   // Bumped whenever a source image is invalidated, to invalidate the composite.
   #generation = 0;
 
@@ -123,43 +126,38 @@ export default class MapRenderer {
     const context = this.canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
 
-    // Compose the base map (which may re-decode at the new size) before
-    // touching the visible canvas. Resizing the canvas clears it, so doing it
-    // ahead of an await would expose a blank canvas and cause a flash while
-    // scaling; instead we resize and redraw in one synchronous pass below.
-    const base = await this.#composeBase(canvasWidth, canvasHeight);
-    this.canvas.width = canvasWidth;
-    this.canvas.height = canvasHeight;
-    context.imageSmoothingEnabled = false;
-    if (base) context.drawImage(base, 0, 0);
-
-    // Static lookup tables are fetched lazily inside the worker. They are
-    // resolved here in parallel with the base-map composition; the renderer
-    // can defer the overlay until they're ready without blocking the
-    // background layers.
+    // Static lookup tables are fetched lazily inside the worker. Their values
+    // never change between map loads so they are cheap to re-fetch (the
+    // CacheHolder amortises to a no-op after the first call).
     const [meshSizes, districtColors, densityScores] = await Promise.all([
       this.#meshSizesHolder.get(),
       this.#districtColorsHolder.get(),
       this.#densityScoresHolder.get(),
     ]);
 
-    // Overlays are drawn in native map coordinates, scaled down to the canvas.
+    // Compose the base map + footprint overlay (which may re-decode at the
+    // new size) before touching the visible canvas. Resizing the canvas
+    // clears it, so doing it ahead of an await would expose a blank canvas
+    // and cause a flash while scaling; instead we resize and redraw in one
+    // synchronous pass below.
+    const base = await this.#composeBase(
+      canvasWidth,
+      canvasHeight,
+      width,
+      height,
+      meshSizes,
+      densityScores,
+      districtColors,
+    );
+    this.canvas.width = canvasWidth;
+    this.canvas.height = canvasHeight;
+    context.imageSmoothingEnabled = false;
+    if (base) context.drawImage(base, 0, 0);
+
+    // Sign + marker overlays sit on top of the cached composite and are
+    // redrawn every paint so filter / flag interactions stay responsive.
     context.save();
     context.scale(this.scale, this.scale);
-    // Prefab footprints (independent of the active filter) are drawn first so
-    // the sign markers for filtered prefabs sit on top of them. Alpha 0 is a
-    // fully-transparent no-op, so skip the geometry work entirely.
-    if (this.prefabFootprintAlpha > 0) {
-      context.globalAlpha = this.prefabFootprintAlpha;
-      this.#drawPrefabFootprints(
-        context,
-        width,
-        height,
-        meshSizes,
-        densityScores,
-        districtColors,
-      );
-    }
     if (this.prefabSignAlpha > 0) {
       context.globalAlpha = this.prefabSignAlpha;
       this.#drawPrefabSigns(context, width, height, meshSizes);
@@ -189,7 +187,7 @@ export default class MapRenderer {
     // Outline thickness in game-block units (the renderer's current transform
     // scales it down to canvas pixels). Drawn inset by `stroke / 2` further
     // below so two neighbours sharing an edge never double-stroke.
-    const stroke = 4;
+    const stroke = 8;
     context.lineWidth = stroke;
 
     const tileIndex = this.#getTileIndex();
@@ -219,7 +217,7 @@ export default class MapRenderer {
         densityScores,
         districtColors,
       );
-      context.fillStyle = withAlpha(color, 0.35);
+      context.fillStyle = withAlpha(color, 0.5);
       context.beginPath();
       context.rect(cx, cy - d, w, d);
       context.fill();
@@ -304,14 +302,20 @@ export default class MapRenderer {
   }
 
   /**
-   * Composite the base layers (with brightness and per-layer alpha) onto a
-   * cached offscreen canvas at the current display resolution. The cache is
-   * reused as long as the display size, brightness, alphas, and source images
-   * are unchanged, so prefab/marker-only updates avoid re-decoding/compositing.
+   * Composite the base layers (with brightness and per-layer alpha) and the
+   * footprint overlay onto a cached offscreen canvas at the current display
+   * resolution. The cache is reused as long as the display size, brightness,
+   * alphas, source images, and footprint inputs are unchanged, so
+   * sign/marker-only updates avoid re-decoding/compositing.
    */
   async #composeBase(
     width: number,
     height: number,
+    nativeWidth: number,
+    nativeHeight: number,
+    meshSizes: PrefabMeshSizes,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
   ): Promise<OffscreenCanvas | null> {
     const key = [
       width,
@@ -321,13 +325,18 @@ export default class MapRenderer {
       this.splat3Alpha,
       this.splat4Alpha,
       this.radAlpha,
+      this.prefabFootprintAlpha,
       this.#generation,
     ].join(":");
+    // The static lookup tables are pinned for the lifetime of the worker, so
+    // their reference identity is enough; allPrefabs is replaced on every
+    // prefabs.xml load and is the only input that escapes the key string.
     if (
       this.#composite &&
       this.#compositeKey === key &&
       this.#composite.width === width &&
-      this.#composite.height === height
+      this.#composite.height === height &&
+      this.#compositeAllPrefabs === this.allPrefabs
     ) {
       return this.#composite;
     }
@@ -358,10 +367,30 @@ export default class MapRenderer {
         context.globalAlpha = this.splat4Alpha;
         context.drawImage(splat4, 0, 0);
       }
-      context.filter = "none";
       if (rad && this.radAlpha !== 0) {
+        // Radiation is intentionally drawn at full brightness so its tint
+        // stays readable on dimmed maps.
+        context.filter = "none";
         context.globalAlpha = this.radAlpha;
         context.drawImage(rad, 0, 0);
+      }
+      // Footprints go inside the cached composite so the brightness filter
+      // applies the same way it does to the biomes/splat layers, and so
+      // sign-only re-renders don't have to recompute them.
+      if (this.prefabFootprintAlpha > 0) {
+        context.save();
+        context.filter = `brightness(${this.brightness})`;
+        context.scale(this.scale, this.scale);
+        context.globalAlpha = this.prefabFootprintAlpha;
+        this.#drawPrefabFootprints(
+          context,
+          nativeWidth,
+          nativeHeight,
+          meshSizes,
+          densityScores,
+          districtColors,
+        );
+        context.restore();
       }
     } finally {
       // Only the composite is cached; release the per-layer bitmaps.
@@ -370,6 +399,7 @@ export default class MapRenderer {
 
     this.#composite = canvas;
     this.#compositeKey = key;
+    this.#compositeAllPrefabs = this.allPrefabs;
     return canvas;
   }
 
