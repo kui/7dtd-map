@@ -125,10 +125,6 @@ function main() {
         "prefab_footprint_alpha",
         HTMLInputElement,
       ),
-      prefabFootprintStroke: component(
-        "prefab_footprint_stroke",
-        HTMLInputElement,
-      ),
       brightness: component("brightness", HTMLInputElement),
       scale: component("scale", HTMLInputElement),
     },
