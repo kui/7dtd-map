@@ -80,7 +80,9 @@
         "jsr:@std/assert",
         "jsr:@std/async",
         "jsr:@std/data-structures",
-        "jsr:@std/internal@^1.0.14"
+        "jsr:@std/fs",
+        "jsr:@std/internal@^1.0.14",
+        "jsr:@std/path@^1.1.5"
       ]
     }
   },
