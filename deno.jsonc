@@ -68,12 +68,18 @@
     "@std/testing/time": "jsr:@std/testing@^1.0.19/time",
     "@playwright/test": "npm:@playwright/test@^1.49.0"
   },
-  // Top-level exclude keeps deno fmt/lint/check away from Playwright sources.
+  // Top-level exclude keeps deno fmt/lint/check away from Playwright sources
+  // and from Claude Code's working area (worktrees, job scratch). Without the
+  // latter, `deno check` recurses into `.claude/worktrees/<wt>/src/...` and
+  // type-checks those files as standalone — they fall outside the workspace
+  // members, so per-member compilerOptions (e.g. the worker `lib`) no longer
+  // apply and worker globals fail to resolve.
   "exclude": [
     "./e2e",
     "./playwright.config.ts",
     "./playwright-report",
-    "./test-results"
+    "./test-results",
+    "./.claude"
   ],
   "lint": {
     "exclude": ["./public"],
