@@ -12,7 +12,7 @@ async function main() {
   }
 
   const blocks = await loadBlocks(
-    await vanillaDir("Data", "Config", "blocks.xml"),
+    vanillaDir("Data", "Config", "blocks.xml"),
   );
   const pattern = new RegExp(patternString);
   for (const block of blocks.find((b) => pattern.test(b.name))) {

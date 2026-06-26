@@ -92,7 +92,7 @@ export async function loadBlocks(
   blocksXmlFileName?: string,
 ): Promise<Blocks> {
   const fileName = blocksXmlFileName ??
-    await vanillaDir("Data", "Config", "blocks.xml");
+    vanillaDir("Data", "Config", "blocks.xml");
   const parsed = parseXml(await Deno.readTextFile(fileName));
   if (!isRawBlocksXml(parsed)) {
     throw new Error(`Unexpected structure in ${fileName}`);

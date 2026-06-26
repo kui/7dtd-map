@@ -12,22 +12,14 @@ export function publishDir(...pathList: string[]): string {
   return projectRoot("public", ...pathList);
 }
 
-export interface LocalJson {
-  vanillaDir: string;
-}
-
-let localJsonCache: LocalJson | undefined;
-
-export async function localJson(): Promise<LocalJson> {
-  if (localJsonCache === undefined) {
-    const buffer = await fs.promises.readFile(projectRoot("local.json"));
-    localJsonCache = JSON.parse(buffer.toString()) as LocalJson;
-  }
-  return localJsonCache;
-}
-
-export async function vanillaDir(...pathList: string[]): Promise<string> {
-  return path.join((await localJson()).vanillaDir, ...pathList);
+// The vanilla game directory is exposed to the build pipeline through a
+// project-local symlink/junction at `tools/vanilla`. Keeping the path
+// static (rather than reading it from a runtime config file) is what lets
+// `deno task` declare game-data inputs in its `files` field for
+// input-based caching — those globs cannot be templated from environment
+// variables or external config.
+export function vanillaDir(...pathList: string[]): string {
+  return projectRoot("tools", "vanilla", ...pathList);
 }
 
 export function requireNonnull<T>(

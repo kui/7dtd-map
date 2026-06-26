@@ -10,7 +10,7 @@ import {
   writeJsonFile,
 } from "./lib/utils.ts";
 
-const WORLDS_DIR = await vanillaDir("Data", "Worlds");
+const WORLDS_DIR = vanillaDir("Data", "Worlds");
 const DST_DIR = publishDir("maps");
 
 // Concurrency for top-level world processing. Each world fans out into

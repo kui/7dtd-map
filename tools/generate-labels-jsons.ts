@@ -15,7 +15,7 @@ const LANG_CONCURRENCY = 8;
 
 async function main() {
   const labels = await parseLabel(
-    await vanillaDir("Data", "Config", "Localization.csv"),
+    vanillaDir("Data", "Config", "Localization.csv"),
   );
 
   // Pre-group labels by their source file once, so per-language extraction

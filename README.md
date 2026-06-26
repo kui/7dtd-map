@@ -6,33 +6,65 @@ Map renderer for 7 Day to Die.
 
 ## Build
 
-1. Create 'local.json' at project root like:
+Linux, macOS, and Windows are supported.
 
-```
-{
- "vanillaDir": "/Users/<UserName>/Library/Application Support/Steam/steamapps/common/7 Days To Die/7DaysToDie.app"
-}
-```
+1. Point the project at your installed copy of the game by creating a
+   `tools/vanilla` link at the project root. The path is wired into `deno task`
+   input-based caching, so it must be a static project-local path — not a
+   runtime config file. Pick the command for your OS:
 
-2. Execute in your teminal:
+   - **macOS / Linux** (symlink):
 
-```
-deno task build
-```
+     ```
+     ln -s "/Users/<UserName>/Library/Application Support/Steam/steamapps/common/7 Days To Die/7DaysToDie.app" tools/vanilla
+     ```
+
+     Linux Steam example:
+
+     ```
+     ln -s "$HOME/.local/share/Steam/steamapps/common/7 Days To Die" tools/vanilla
+     ```
+
+   - **Windows** (directory junction, no admin required). Run from the project
+     root in `cmd.exe`:
+
+     ```
+     mklink /J tools\vanilla "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
+     ```
+
+     Or in PowerShell:
+
+     ```
+     New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
+     ```
+
+2. Execute in your terminal:
+
+   ```
+   deno task build
+   ```
+
+   On a second run the tasks declared in `deno.jsonc` skip themselves
+   (`cached, inputs unchanged`) when neither the source TS nor the matched game
+   files have changed.
 
 ### Build: Font subset
 
-To build ".subset.woff2", you need to require fonttools or docker. If you
-already have fonttools, run:
+The font subsetter is a POSIX-only one-off (it depends on `pyftsubset`, and the
+docker wrapper additionally needs Linux UID/GID mapping). The generated
+`.subset.woff2` files are committed under `public/`, so Windows contributors do
+not need to run this — only re-run it when the source fonts change.
+
+If you already have `fonttools` installed locally:
 
 ```
-./tools/fonts/subset.sh
+./tools/fonts/subset.bash
 ```
 
-Or use docker wrapper:
+Or use the docker wrapper (Linux host only):
 
 ```
-./tools/fonts/subset-docker.sh
+./tools/fonts/subset-docker.bash
 ```
 
 ## Code lint

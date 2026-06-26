@@ -19,7 +19,7 @@ async function main() {
 }
 
 async function loadLabels() {
-  const fileName = await vanillaDir("Data", "Config", "Localization.csv");
+  const fileName = vanillaDir("Data", "Config", "Localization.csv");
   const labels = await parseLabel(fileName);
   console.log("Load %s labels", labels.size);
   return labels;

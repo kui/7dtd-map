@@ -14,7 +14,7 @@ async function main() {
 
   const blocks = await loadBlocks();
   const materials = await loadMaterials(
-    await vanillaDir("Data", "Config", "materials.xml"),
+    vanillaDir("Data", "Config", "materials.xml"),
   );
   const itemPattern = new RegExp(itemPatternString);
   const matchingBlocks = blocks.find((b) =>

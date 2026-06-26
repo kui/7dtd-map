@@ -1,7 +1,7 @@
 import { parse as parseXml } from "@libs/xml";
 import { vanillaDir } from "../utils.ts";
 
-const LOOT_XML = await vanillaDir("Data", "Config", "loot.xml");
+const LOOT_XML = vanillaDir("Data", "Config", "loot.xml");
 
 /* Raw XML types (encapsulated) */
 
