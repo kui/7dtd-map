@@ -113,6 +113,7 @@
     },
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
+    "test:changed": "deno test -A --parallel --changed --permit-no-files",
     // Playwright E2E. The dev server (deno task serve) is launched by
     // Playwright's webServer config and listens on the PORT env var
     // (default 18234). Browsers are auto-installed via the e2e:install

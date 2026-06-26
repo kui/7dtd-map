@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+staged=$(mktemp)
+trap 'rm -f "$staged"' EXIT
+git diff --cached --name-only --diff-filter=ACMR -z >"$staged"
+if [ -s "$staged" ]; then
+  xargs -0 -a "$staged" mise exec -- deno fmt --check --permit-no-files
+  xargs -0 -a "$staged" mise exec -- deno lint --permit-no-files
+fi
+mise exec -- deno check
+exec mise exec -- deno test -A --parallel --changed --permit-no-files
