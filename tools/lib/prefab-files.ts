@@ -15,7 +15,7 @@ function isIgnoredPrefabXml(p: string): boolean {
 }
 
 export async function listPrefabXmlPaths(): Promise<string[]> {
-  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.xml");
+  const globPath = vanillaDir("Data", "Prefabs", "*", "*.xml");
   const xmls = await Array.fromAsync(expandGlob(globPath), (e) => e.path);
   return xmls.filter((p) => !isIgnoredPrefabXml(p));
 }

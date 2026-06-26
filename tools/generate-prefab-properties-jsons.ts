@@ -31,7 +31,7 @@ async function main() {
   console.log("Found %d prefab xml", prefabXmlFiles.length);
   const [prefabXmls, districts] = await Promise.all([
     parseXmls(prefabXmlFiles),
-    parseRwgmixerXml(await vanillaDir("Data", "Config", "rwgmixer.xml")),
+    parseRwgmixerXml(vanillaDir("Data", "Config", "rwgmixer.xml")),
   ]);
   console.log("Load %d prefab xmls", Object.keys(prefabXmls).length);
   console.log("Load %d districts from rwgmixer.xml", districts.length);

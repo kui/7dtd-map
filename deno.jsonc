@@ -9,7 +9,24 @@
         "build:copy-map-files"
       ]
     },
-    "build:ts": "deno run -A tools/build.ts",
+    "build:ts": {
+      "command": "deno run -A tools/build.ts",
+      "files": [
+        "tools/build.ts",
+        "src/**/*.ts",
+        "lib/**/*.ts",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/*.js",
+        "public/*.js.map",
+        "public/worker/*.js",
+        "public/worker/*.js.map",
+        "public/prefabs/*.js",
+        "public/prefabs/*.js.map"
+      ]
+    },
     "build:json": {
       "dependencies": [
         "build:json:prefab-props",
@@ -17,11 +34,83 @@
         "build:json:block-counts"
       ]
     },
-    "build:json:prefab-props": "deno run -A tools/generate-prefab-properties-jsons.ts",
-    "build:json:labels": "deno run -A tools/generate-labels-jsons.ts",
-    "build:json:block-counts": "deno run -A tools/generate-prefab-block-counts.ts",
-    "build:prefab-html": "deno run -A tools/generate-prefab-html.ts",
-    "build:copy-map-files": "deno run -A tools/copy-map-files.ts",
+    "build:json:prefab-props": {
+      "command": "deno run -A tools/generate-prefab-properties-jsons.ts",
+      "files": [
+        "tools/generate-prefab-properties-jsons.ts",
+        "tools/lib/**/*.ts",
+        "tools/vanilla/Data/Prefabs/*/*.xml",
+        "tools/vanilla/Data/Config/rwgmixer.xml",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/prefab-difficulties.json",
+        "public/prefab-mesh-sizes.json",
+        "public/prefab-density-scores.json",
+        "public/district-colors.json"
+      ]
+    },
+    "build:json:labels": {
+      "command": "deno run -A tools/generate-labels-jsons.ts",
+      "files": [
+        "tools/generate-labels-jsons.ts",
+        "tools/lib/**/*.ts",
+        "tools/vanilla/Data/Config/Localization.csv",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/labels/**/*.json"
+      ]
+    },
+    "build:json:block-counts": {
+      "command": "deno run -A tools/generate-prefab-block-counts.ts",
+      "files": [
+        "tools/generate-prefab-block-counts.ts",
+        "tools/lib/**/*.ts",
+        "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
+        "tools/vanilla/Data/Prefabs/*/*.tts",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/prefab-block-counts.json"
+      ]
+    },
+    "build:prefab-html": {
+      "command": "deno run -A tools/generate-prefab-html.ts",
+      "files": [
+        "tools/generate-prefab-html.ts",
+        "tools/lib/**/*.ts",
+        "tools/vanilla/Data/Prefabs/*/*.xml",
+        "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
+        "tools/vanilla/Data/Prefabs/*/*.tts",
+        "tools/vanilla/Data/Prefabs/*/*.jpg",
+        "tools/vanilla/Data/Config/Localization.csv",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/prefabs/*.html",
+        "public/prefabs/*.jpg",
+        "public/prefabs/index.json"
+      ]
+    },
+    "build:copy-map-files": {
+      "command": "deno run -A tools/copy-map-files.ts",
+      "files": [
+        "tools/copy-map-files.ts",
+        "tools/lib/**/*.ts",
+        "lib/map-files.ts",
+        "tools/vanilla/Data/Worlds/**/*",
+        "deno.jsonc",
+        "deno.lock"
+      ],
+      "output": [
+        "public/maps/**/*"
+      ]
+    },
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
     // Playwright E2E. The dev server (deno task serve) is launched by

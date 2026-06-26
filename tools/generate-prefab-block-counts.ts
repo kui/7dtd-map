@@ -23,7 +23,7 @@ interface PrefabBlockCounts {
 
 async function main() {
   console.log("Load nim files");
-  const globPath = await vanillaDir("Data", "Prefabs", "*", "*.blocks.nim");
+  const globPath = vanillaDir("Data", "Prefabs", "*", "*.blocks.nim");
   const nimFiles = await Array.fromAsync(
     expandGlob(globPath),
     (e) => e.path,

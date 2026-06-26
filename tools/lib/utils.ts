@@ -12,22 +12,10 @@ export function publishDir(...pathList: string[]): string {
   return projectRoot("public", ...pathList);
 }
 
-export interface LocalJson {
-  vanillaDir: string;
-}
-
-let localJsonCache: LocalJson | undefined;
-
-export async function localJson(): Promise<LocalJson> {
-  if (localJsonCache === undefined) {
-    const buffer = await fs.promises.readFile(projectRoot("local.json"));
-    localJsonCache = JSON.parse(buffer.toString()) as LocalJson;
-  }
-  return localJsonCache;
-}
-
-export async function vanillaDir(...pathList: string[]): Promise<string> {
-  return path.join((await localJson()).vanillaDir, ...pathList);
+// Must stay a static project-relative path: `deno task` input-based
+// caching needs it expressible as a glob in `deno.jsonc:files`.
+export function vanillaDir(...pathList: string[]): string {
+  return projectRoot("tools", "vanilla", ...pathList);
 }
 
 export function requireNonnull<T>(
