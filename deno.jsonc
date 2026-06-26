@@ -24,11 +24,19 @@
     "build:copy-map-files": "deno run -A tools/copy-map-files.ts",
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
-    // Playwright E2E. Install browsers first with:
-    //   deno run -A npm:playwright install chromium
-    // The dev server (deno task serve) is launched by Playwright's
-    // webServer config and listens on the PORT env var (default 18234).
-    "e2e": "deno run -A npm:@playwright/test test",
+    // Playwright E2E. The dev server (deno task serve) is launched by
+    // Playwright's webServer config and listens on the PORT env var
+    // (default 18234). Browsers are auto-installed via the e2e:install
+    // dependency. On Linux CI you also need system libraries; run
+    // `deno run -A @playwright/test install-deps chromium` once (requires
+    // sudo) before `deno task e2e`. The bare `@playwright/test` specifier
+    // resolves through the `imports` field, so the version is pinned in a
+    // single place.
+    "e2e:install": "deno run -A @playwright/test install chromium",
+    "e2e": {
+      "command": "deno run -A @playwright/test test",
+      "dependencies": ["e2e:install"]
+    },
     "ci": {
       "dependencies": [
         "ci:lint",
