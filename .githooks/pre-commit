@@ -1,0 +1,2 @@
+#!/bin/sh
+exec mise exec -- deno task precommit
