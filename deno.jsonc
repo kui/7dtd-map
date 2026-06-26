@@ -96,7 +96,6 @@
       "./public/**/maps",
       "./public/**/*.js",
       "./public/**/*.json",
-      "./public/**/*.svg",
       "./public/**/prefabs"
     ]
   }
