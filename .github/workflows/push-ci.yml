@@ -15,8 +15,6 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno ci
-      # Playwright's Linux runner needs system libraries; Windows ships them
-      # with the browser bundle, so this step is Linux-only.
       - name: Install Playwright system dependencies
         if: runner.os == 'Linux'
         run: deno run -A @playwright/test install-deps chromium

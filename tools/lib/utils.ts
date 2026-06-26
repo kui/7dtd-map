@@ -12,12 +12,8 @@ export function publishDir(...pathList: string[]): string {
   return projectRoot("public", ...pathList);
 }
 
-// The vanilla game directory is exposed to the build pipeline through a
-// project-local symlink/junction at `tools/vanilla`. Keeping the path
-// static (rather than reading it from a runtime config file) is what lets
-// `deno task` declare game-data inputs in its `files` field for
-// input-based caching — those globs cannot be templated from environment
-// variables or external config.
+// Must stay a static project-relative path: `deno task` input-based
+// caching needs it expressible as a glob in `deno.jsonc:files`.
 export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);
 }

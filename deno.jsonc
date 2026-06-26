@@ -9,12 +9,6 @@
         "build:copy-map-files"
       ]
     },
-    // Input-based caching (Deno 2.9+): `files` lists the inputs whose contents
-    // and matched-set are fingerprinted, `output` lists artifacts restored on
-    // a cache hit. The vanilla game directory is reached through the
-    // `tools/vanilla` symlink/junction (see README "Build" section) so its
-    // game-data inputs can be declared as static globs here — env vars and
-    // external config are not expanded inside `files`.
     "build:ts": {
       "command": "deno run -A tools/build.ts",
       "files": [
