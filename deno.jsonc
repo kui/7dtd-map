@@ -51,7 +51,14 @@
     "ci:type-check": "deno check"
   },
   "nodeModulesDir": "auto",
-  "workspace": ["./lib", "./src", "./src/test", "./src/worker", "./tools"],
+  "workspace": [
+    "./lib",
+    "./src",
+    "./src/test",
+    "./src/worker",
+    "./tools",
+    "./e2e"
+  ],
   "imports": {
     "fast-png": "npm:fast-png@^8.0.0",
     "three": "npm:three@~0.184.0",
@@ -68,15 +75,12 @@
     "@std/testing/time": "jsr:@std/testing@^1.0.19/time",
     "@playwright/test": "npm:@playwright/test@^1.49.0"
   },
-  // Top-level exclude keeps deno fmt/lint/check away from Playwright sources
-  // and from Claude Code's working area (worktrees, job scratch). Without the
-  // latter, `deno check` recurses into `.claude/worktrees/<wt>/src/...` and
-  // type-checks those files as standalone — they fall outside the workspace
-  // members, so per-member compilerOptions (e.g. the worker `lib`) no longer
-  // apply and worker globals fail to resolve.
+  // Exclude `.claude` so `deno check` does not recurse into
+  // `.claude/worktrees/<wt>/src/...` and type-check those files as
+  // standalone. Such files fall outside the workspace members, so
+  // per-member compilerOptions (e.g. the worker `lib`) no longer apply
+  // and worker globals fail to resolve.
   "exclude": [
-    "./e2e",
-    "./playwright.config.ts",
     "./playwright-report",
     "./test-results",
     "./.claude"

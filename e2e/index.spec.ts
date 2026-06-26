@@ -18,9 +18,7 @@ test.describe("index.html", () => {
     // The label_lang select is populated asynchronously by LabelHandler; wait
     // for at least one extra option to appear beyond the default.
     await expect
-      .poll(async () =>
-        await page.locator("#label_lang option").count()
-      )
+      .poll(async () => await page.locator("#label_lang option").count())
       .toBeGreaterThan(1);
 
     await page.selectOption("#label_lang", "japanese");
@@ -88,25 +86,33 @@ test.describe("index.html", () => {
     // render scale is 0.12 -> 6144 * 0.12 = 737.28 -> 737. Map processing can
     // take a few seconds under parallel test load, so widen the poll window.
     const slow = { timeout: 20_000 };
-    await expect.poll(async () =>
-      await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.width), slow
+    await expect.poll(
+      async () =>
+        await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.width),
+      slow,
     ).toBe(737);
-    await expect.poll(async () =>
-      await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.height), slow
+    await expect.poll(
+      async () =>
+        await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.height),
+      slow,
     ).toBe(737);
 
     // Prefab list is populated.
-    await expect.poll(async () =>
-      await page.locator("#prefabs_list li").count(), slow
+    await expect.poll(
+      async () => await page.locator("#prefabs_list li").count(),
+      slow,
     ).toBeGreaterThan(0);
 
     // Map name input reflects the selection.
-    await expect.poll(async () =>
-      await page.locator("#map_name").inputValue(), slow
+    await expect.poll(
+      async () => await page.locator("#map_name").inputValue(),
+      slow,
     ).toBe("Navezgane");
 
     // Apply the "trader" prefab-filter preset.
-    await page.click('button[data-input-for="prefab_filter"]:text-is("trader")');
+    await page.click(
+      'button[data-input-for="prefab_filter"]:text-is("trader")',
+    );
     await expect.poll(async () =>
       await page.locator("#prefab_filter").inputValue()
     ).toBe("trader");
@@ -123,7 +129,9 @@ test.describe("index.html", () => {
     ).toBe("");
 
     // Apply the "Super Corn" block-filter preset.
-    await page.click('button[data-input-for="block_filter"]:text-is("Super Corn")');
+    await page.click(
+      'button[data-input-for="block_filter"]:text-is("Super Corn")',
+    );
     await expect.poll(async () =>
       await page.locator("#block_filter").inputValue()
     ).toBe("(Grace|Super)Corn");
@@ -153,7 +161,10 @@ test.describe("index.html", () => {
     const dialog = page.locator("#terrain_viewer_dialog");
     await expect(dialog).toBeAttached();
     await expect(dialog).not.toHaveAttribute("open", /.*/);
-    await expect(dialog).toHaveAttribute("aria-labelledby", "terrain_viewer_title");
+    await expect(dialog).toHaveAttribute(
+      "aria-labelledby",
+      "terrain_viewer_title",
+    );
 
     // Show button is disabled until a DTM is loaded.
     await expect(page.locator("#terrain_viewer_show")).toBeDisabled();
@@ -172,7 +183,7 @@ test.describe("index.html", () => {
     await page.click("#prefab-inspector-show");
     await expect(dialog).toHaveAttribute("open", /.*/);
 
-    await page.click("[data-close-dialog-for=\"prefab-inspector-dialog\"]");
+    await page.click('[data-close-dialog-for="prefab-inspector-dialog"]');
     await expect(dialog).not.toHaveAttribute("open", /.*/);
   });
 
@@ -187,14 +198,14 @@ test.describe("index.html", () => {
     // can assert it was invoked by a keyboard activation.
     await page.evaluate(() => {
       const w = globalThis as unknown as {
-        __copyCalls?: string[];
+        __copyCalls: string[];
       };
       w.__copyCalls = [];
       Object.defineProperty(navigator, "clipboard", {
         configurable: true,
         value: {
           writeText: (text: string) => {
-            w.__copyCalls!.push(text);
+            w.__copyCalls.push(text);
             return Promise.resolve();
           },
         },
