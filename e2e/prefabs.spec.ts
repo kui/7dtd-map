@@ -15,7 +15,9 @@ test.describe("prefabs.html", () => {
     await page.goto("/prefabs.html");
     await page.fill("#prefab-filter", "trader");
     // URL update is debounced behind UrlState; poll until it shows up.
-    await expect.poll(async () => new URL(page.url()).searchParams.get("prefab-filter"))
+    await expect.poll(() =>
+      new URL(page.url()).searchParams.get("prefab-filter")
+    )
       .toBe("trader");
   });
 
