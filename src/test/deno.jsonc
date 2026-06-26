@@ -3,7 +3,7 @@
     "lib": [
       "dom",
       "esnext",
-      "deno.ns"
-    ]
-  }
+      "deno.ns",
+    ],
+  },
 }

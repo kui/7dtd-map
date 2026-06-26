@@ -6,8 +6,8 @@
         "build:ts",
         "build:json",
         "build:prefab-html",
-        "build:copy-map-files"
-      ]
+        "build:copy-map-files",
+      ],
     },
     "build:ts": {
       "command": "deno run -A tools/build.ts",
@@ -16,7 +16,7 @@
         "src/**/*.ts",
         "lib/**/*.ts",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
         "public/*.js",
@@ -24,15 +24,15 @@
         "public/worker/*.js",
         "public/worker/*.js.map",
         "public/prefabs/*.js",
-        "public/prefabs/*.js.map"
-      ]
+        "public/prefabs/*.js.map",
+      ],
     },
     "build:json": {
       "dependencies": [
         "build:json:prefab-props",
         "build:json:labels",
-        "build:json:block-counts"
-      ]
+        "build:json:block-counts",
+      ],
     },
     "build:json:prefab-props": {
       "command": "deno run -A tools/generate-prefab-properties-jsons.ts",
@@ -42,14 +42,14 @@
         "tools/vanilla/Data/Prefabs/*/*.xml",
         "tools/vanilla/Data/Config/rwgmixer.xml",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
         "public/prefab-difficulties.json",
         "public/prefab-mesh-sizes.json",
         "public/prefab-density-scores.json",
-        "public/district-colors.json"
-      ]
+        "public/district-colors.json",
+      ],
     },
     "build:json:labels": {
       "command": "deno run -A tools/generate-labels-jsons.ts",
@@ -58,11 +58,11 @@
         "tools/lib/**/*.ts",
         "tools/vanilla/Data/Config/Localization.csv",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
-        "public/labels/**/*.json"
-      ]
+        "public/labels/**/*.json",
+      ],
     },
     "build:json:block-counts": {
       "command": "deno run -A tools/generate-prefab-block-counts.ts",
@@ -72,11 +72,11 @@
         "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
         "tools/vanilla/Data/Prefabs/*/*.tts",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
-        "public/prefab-block-counts.json"
-      ]
+        "public/prefab-block-counts.json",
+      ],
     },
     "build:prefab-html": {
       "command": "deno run -A tools/generate-prefab-html.ts",
@@ -89,13 +89,13 @@
         "tools/vanilla/Data/Prefabs/*/*.jpg",
         "tools/vanilla/Data/Config/Localization.csv",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
         "public/prefabs/*.html",
         "public/prefabs/*.jpg",
-        "public/prefabs/index.json"
-      ]
+        "public/prefabs/index.json",
+      ],
     },
     "build:copy-map-files": {
       "command": "deno run -A tools/copy-map-files.ts",
@@ -105,11 +105,11 @@
         "lib/map-files.ts",
         "tools/vanilla/Data/Worlds/**/*",
         "deno.jsonc",
-        "deno.lock"
+        "deno.lock",
       ],
       "output": [
-        "public/maps/**/*"
-      ]
+        "public/maps/**/*",
+      ],
     },
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
@@ -125,7 +125,7 @@
     "e2e:install": "deno run -A @playwright/test install chromium",
     "e2e": {
       "command": "deno run -A @playwright/test test",
-      "dependencies": ["e2e:install"]
+      "dependencies": ["e2e:install"],
     },
     "ci": {
       "dependencies": [
@@ -133,12 +133,12 @@
         "ci:fmt-check",
         "ci:type-check",
         "test",
-        "e2e"
-      ]
+        "e2e",
+      ],
     },
     "ci:lint": "deno lint",
     "ci:fmt-check": "deno fmt --check",
-    "ci:type-check": "deno check"
+    "ci:type-check": "deno check",
   },
   "nodeModulesDir": "auto",
   "workspace": [
@@ -147,7 +147,7 @@
     "./src/test",
     "./src/worker",
     "./tools",
-    "./e2e"
+    "./e2e",
   ],
   "imports": {
     "fast-png": "npm:fast-png@^8.0.0",
@@ -163,7 +163,7 @@
     "@std/testing/bdd": "jsr:@std/testing@^1.0.19/bdd",
     "@std/testing/mock": "jsr:@std/testing@^1.0.19/mock",
     "@std/testing/time": "jsr:@std/testing@^1.0.19/time",
-    "@playwright/test": "npm:@playwright/test@^1.49.0"
+    "@playwright/test": "npm:@playwright/test@^1.49.0",
   },
   // Exclude `.claude` so `deno check` does not recurse into
   // `.claude/worktrees/<wt>/src/...` and type-check those files as
@@ -173,7 +173,7 @@
   "exclude": [
     "./playwright-report",
     "./test-results",
-    "./.claude"
+    "./.claude",
   ],
   "lint": {
     "exclude": ["./public"],
@@ -186,17 +186,18 @@
         "default-param-last",
         "no-eval",
         "no-self-compare",
-        "no-throw-literal"
-      ]
-    }
+        "no-throw-literal",
+      ],
+    },
   },
   "fmt": {
+    "json.trailingCommas": "jsonc",
     "exclude": [
       "./public/**/old",
       "./public/**/maps",
       "./public/**/*.js",
       "./public/**/*.json",
-      "./public/**/prefabs"
-    ]
-  }
+      "./public/**/prefabs",
+    ],
+  },
 }

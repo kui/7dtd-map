@@ -3,7 +3,7 @@
     "lib": [
       "esnext",
       "webworker",
-      "deno.ns"
-    ]
-  }
+      "deno.ns",
+    ],
+  },
 }

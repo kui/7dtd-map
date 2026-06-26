@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": [
       "deno.ns",
-      "deno.shared_globals"
-    ]
-  }
+      "deno.shared_globals",
+    ],
+  },
 }

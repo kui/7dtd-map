@@ -4,7 +4,7 @@
       "webworker",
       "webworker.iterable",
       "webworker.asynciterable",
-      "esnext"
-    ]
-  }
+      "esnext",
+    ],
+  },
 }
