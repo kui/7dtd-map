@@ -54,7 +54,9 @@
   }
   & .hint {
     opacity: 0.55;
-    transition: opacity 0.1s, font-weight 0.1s;
+    transition:
+      opacity 0.1s,
+      font-weight 0.1s;
   }
   &:not(.shift-active) .hint.click,
   &:not(.shift-active) .hint.dblclick,

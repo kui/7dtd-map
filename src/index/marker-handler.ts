@@ -2,13 +2,12 @@ import type { DtmHandler } from "./dtm-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
 import type { GameCoords } from "../types/7dtdmap.ts";
 
-import { canvasEventToGameCoords, formatCoords } from "../lib/dom-utils.ts";
+import { canvasEventToGameCoords } from "../lib/dom-utils.ts";
 import { printError } from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
-  output: HTMLElement;
   resetMarker: HTMLButtonElement;
 }
 
@@ -29,26 +28,20 @@ export class MarkerHandler {
       // Shift+Click is reserved for prefab page navigation in
       // PrefabTooltipHandler; the two click roles are mutually exclusive.
       if (e.shiftKey) return;
-      this.#update(e).catch(printError);
+      this.#dispatch(e).catch(printError);
     });
     doms.canvas.addEventListener("dblclick", (e) => {
       if (e.shiftKey) return;
-      this.#update(null).catch(printError);
+      this.#dispatch(null).catch(printError);
     });
     doms.resetMarker.addEventListener("click", () => {
-      this.#update(null).catch(printError);
+      this.#dispatch(null).catch(printError);
     });
-    fileHandler.addListener(() => this.#update(null));
+    fileHandler.addListener(() => this.#dispatch(null));
   }
 
-  async #update(event: MouseEvent | null) {
+  async #dispatch(event: MouseEvent | null) {
     const size = await this.#dtmHandler.size();
-    this.#doms.output.textContent = await formatCoords(
-      size,
-      this.#doms.canvas,
-      (c) => this.#dtmHandler.getElevation(c),
-      event,
-    );
     const coords = event && size
       ? canvasEventToGameCoords(event, size, this.#doms.canvas)
       : null;
