@@ -2,10 +2,15 @@ import type { PrefabsFilterOutputMessage } from "../worker/types.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
-import type { HighlightedPrefab, Prefab } from "../types/7dtdmap.ts";
+import type {
+  HighlightedPrefab,
+  Prefab,
+  PrefabMeshSizes,
+} from "../types/7dtdmap.ts";
 
 import * as events from "../lib/events.ts";
 import { loadPrefabsXml } from "../lib/prefabs.ts";
+import { PrefabHitIndex } from "../lib/prefab-hit-index.ts";
 import {
   bindPrefabsFilterControls,
   type PrefabsFilterControlsDoms,
@@ -25,6 +30,10 @@ interface AllPrefabsEventMessage {
   update: { all: Prefab[] };
 }
 
+interface PrefabHitIndexEventMessage {
+  update: { index: PrefabHitIndex };
+}
+
 export class PrefabsHandler {
   #filteredPrefabsListeners = new events.ListenerManager<
     "update",
@@ -34,6 +43,10 @@ export class PrefabsHandler {
     "update",
     AllPrefabsEventMessage
   >();
+  #hitIndexListeners = new events.ListenerManager<
+    "update",
+    PrefabHitIndexEventMessage
+  >();
 
   constructor(
     doms: Doms,
@@ -41,6 +54,7 @@ export class PrefabsHandler {
     markerHandler: MarkerHandler,
     labelHandler: LabelHandler,
     fileHandler: FileHandler,
+    meshSizes: Promise<PrefabMeshSizes>,
   ) {
     worker.addEventListener(
       "message",
@@ -62,11 +76,17 @@ export class PrefabsHandler {
       worker.postMessage({ markCoords: m.update.coords });
     });
     fileHandler.addListener(async ({ update: fileNames }) => {
-      if (fileNames.includes("prefabs.xml")) {
-        const all = await loadPrefabsXml();
-        worker.postMessage({ all });
-        this.#allPrefabsListeners.dispatchNoAwait({ update: { all } });
-      }
+      if (!fileNames.includes("prefabs.xml")) return;
+      const all = await loadPrefabsXml();
+      // Send to the filter worker and notify "all" subscribers without
+      // waiting on meshSizes: neither path needs the hit index.
+      worker.postMessage({ all });
+      this.#allPrefabsListeners.dispatchNoAwait({ update: { all } });
+      // Hit index requires mesh sizes; emit on its own channel after the
+      // await so that subscribers who only want raw `all` are not delayed.
+      const sizes = await meshSizes;
+      const index = new PrefabHitIndex(all, sizes);
+      this.#hitIndexListeners.dispatchNoAwait({ update: { index } });
     });
   }
 
@@ -82,5 +102,9 @@ export class PrefabsHandler {
   // draw prefab footprints independently of the active filter.
   addAllPrefabsListener(fn: (m: AllPrefabsEventMessage) => unknown) {
     this.#allPrefabsListeners.addListener(fn);
+  }
+
+  addPrefabHitIndexListener(fn: (m: PrefabHitIndexEventMessage) => unknown) {
+    this.#hitIndexListeners.addListener(fn);
   }
 }

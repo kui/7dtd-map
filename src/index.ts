@@ -26,6 +26,7 @@ import { CursorHandler } from "./index/cursor-handler.ts";
 import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
 import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
+import { MarkerCoordsDisplayHandler } from "./index/marker-coords-display-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
 import { DndHandler } from "./index/dnd-handler.ts";
@@ -36,10 +37,8 @@ import { MapInfoHandler } from "./index/map-info-handler.ts";
 import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
 
-// Static JSONs fetched once and shared across handlers via Promise rather
-// than per-handler fetch thunks: both PrefabInspectorHandler and
-// PrefabTooltipHandler need difficulties, and any future feature can await
-// the same in-flight request instead of issuing a duplicate.
+// Fetched once and shared via Promise so multiple handlers awaiting the
+// same JSON do not issue duplicate requests.
 const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
   "prefab-mesh-sizes.json",
 );
@@ -98,7 +97,6 @@ function main() {
   const markerHandler = new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
-      output: component("mark_coods", HTMLElement),
       resetMarker: component("reset_mark", HTMLButtonElement),
     },
     dtmHandler,
@@ -121,6 +119,18 @@ function main() {
     markerHandler,
     labelHandler,
     fileHandler,
+    prefabMeshSizes,
+  );
+  new MarkerCoordsDisplayHandler(
+    {
+      output: component("mark_coods", HTMLElement),
+      prefab: component("mark_prefab", HTMLElement),
+    },
+    markerHandler,
+    dtmHandler,
+    prefabsHandler,
+    labelHandler,
+    prefabDifficulties,
   );
   new MapInfoHandler(
     {
@@ -187,7 +197,6 @@ function main() {
     cursorHandler,
     prefabsHandler,
     labelHandler,
-    prefabMeshSizes,
     prefabDifficulties,
   );
   new PrefabInspectorHandler(
