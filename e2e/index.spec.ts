@@ -58,15 +58,22 @@ test.describe("index.html", () => {
       )
       .toBeGreaterThan(1);
 
-    // Install an observer that latches when the load/processing dialog opens.
-    // The dialog is opened via showModal() and closed once processing
-    // finishes, so a plain poll can race past the open window.
+    // Install an observer that latches when the load/processing dialog opens
+    // and when it subsequently closes. The dialog is opened via showModal()
+    // and closed once processing finishes; using the close transition as the
+    // "processing done" signal avoids polling canvas dimensions before the
+    // worker has resized the canvas.
     await page.evaluate(() => {
-      const w = globalThis as unknown as { __dialogWasOpen?: boolean };
+      const w = globalThis as unknown as {
+        __dialogWasOpen?: boolean;
+        __dialogClosed?: boolean;
+      };
       w.__dialogWasOpen = false;
+      w.__dialogClosed = false;
       const dialog = document.getElementById("dialog") as HTMLDialogElement;
       new MutationObserver(() => {
         if (dialog.open) w.__dialogWasOpen = true;
+        else if (w.__dialogWasOpen) w.__dialogClosed = true;
       }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
     });
 
@@ -82,9 +89,22 @@ test.describe("index.html", () => {
       )
       .toBe(true);
 
+    // Wait for the dialog to close, signalling processing finished. Cold
+    // workers under parallel test load can take tens of seconds, so allow a
+    // generous window before checking canvas dimensions.
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(() =>
+            (globalThis as unknown as { __dialogClosed?: boolean })
+              .__dialogClosed ?? false
+          ),
+        { timeout: 40_000 },
+      )
+      .toBe(true);
+
     // Canvas dimensions: Navezgane HeightMapSize is 6144x6144 and the default
-    // render scale is 0.12 -> 6144 * 0.12 = 737.28 -> 737. Map processing can
-    // take a few seconds under parallel test load, so widen the poll window.
+    // render scale is 0.12 -> 6144 * 0.12 = 737.28 -> 737.
     const slow = { timeout: 20_000 };
     await expect.poll(
       async () =>
