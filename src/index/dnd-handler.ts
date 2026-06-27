@@ -2,9 +2,7 @@ import * as events from "../lib/events.ts";
 import { DialogHandler } from "./dialog-handler.ts";
 
 export interface EventMessage {
-  drop: {
-    files: FileSystemEntry[];
-  };
+  files: FileSystemEntry[];
 }
 
 interface Doms {
@@ -46,7 +44,7 @@ export function createDragCounter(): DragCounter {
 }
 
 export class DndHandler {
-  #listeners = new events.ListenerManager<"drop", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
 
   constructor(dom: Doms, dialogHandler: DialogHandler) {
     const counter = createDragCounter();
@@ -77,11 +75,9 @@ export class DndHandler {
       // so reset the counter to keep it consistent for the next drag.
       counter.reset();
       this.#listeners.dispatchNoAwait({
-        drop: {
-          files: Array.from(event.dataTransfer.items).flatMap((item) =>
-            item.webkitGetAsEntry() ?? []
-          ),
-        },
+        files: Array.from(event.dataTransfer.items).flatMap((item) =>
+          item.webkitGetAsEntry() ?? []
+        ),
       });
     });
   }

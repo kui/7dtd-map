@@ -9,9 +9,7 @@ import { runOneshotWorker } from "../lib/oneshot-worker.ts";
 import * as storage from "../lib/storage.ts";
 import * as events from "../lib/events.ts";
 
-interface EventMessage {
-  update: Record<string, never>;
-}
+type EventMessage = Record<string, never>;
 
 export class DtmHandler {
   #dtmRaw: CacheHolder<Uint8Array | null>;
@@ -21,7 +19,7 @@ export class DtmHandler {
       // Do nothing
     },
   );
-  #listeners = new events.ListenerManager<"update", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
 
   constructor(workerFactory: () => Worker, fileHandler: FileHandler) {
     this.#dtmRaw = new CacheHolder<Uint8Array | null>(
@@ -41,18 +39,18 @@ export class DtmHandler {
       },
     );
 
-    fileHandler.addListener(async ({ update: fileNames }) => {
+    fileHandler.addListener(async (fileNames) => {
       const dtmChanged = fileNames.includes("dtm_block.raw.gz");
       const mapSizeChanged = fileNames.includes("map_info.xml");
       if (dtmChanged) this.#dtmRaw.invalidate();
       if (mapSizeChanged) this.#mapSize.invalidate();
       if (dtmChanged || mapSizeChanged) {
-        await this.#listeners.dispatch({ update: {} });
+        await this.#listeners.dispatch({});
       }
     });
   }
 
-  addListener(fn: events.Listener<"update", EventMessage>) {
+  addListener(fn: events.Listener<EventMessage>) {
     this.#listeners.addListener(fn);
   }
 

@@ -18,8 +18,8 @@ export class MapInfoHandler {
         this.#doms.mapInfoDialog.close();
       }
     });
-    fileHandler.addListener(async ({ update }) => {
-      if (update.includes("map_info.xml")) await this.#update();
+    fileHandler.addListener(async (fileNames) => {
+      if (fileNames.includes("map_info.xml")) await this.#update();
     });
   }
 

@@ -11,13 +11,11 @@ interface Doms {
 }
 
 export interface CursorEventMessage {
-  update: {
-    // null when the cursor left the canvas.
-    event: MouseEvent | null;
-    // null when the cursor is outside the map area or when the map size is not
-    // yet known (no map_info.xml loaded).
-    coords: GameCoords | null;
-  };
+  // null when the cursor left the canvas.
+  event: MouseEvent | null;
+  // null when the cursor is outside the map area or when the map size is not
+  // yet known (no map_info.xml loaded).
+  coords: GameCoords | null;
 }
 
 // Streams "what is under the cursor" events to any number of subscribers
@@ -28,7 +26,7 @@ export class CursorHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;
   #lastEvent: MouseEvent | null = null;
-  #listeners = new events.ListenerManager<"update", CursorEventMessage>();
+  #listeners = new events.ListenerManager<CursorEventMessage>();
 
   constructor(doms: Doms, dtmHandler: DtmHandler) {
     this.#doms = doms;
@@ -60,10 +58,10 @@ export class CursorHandler {
     const coords = event && size
       ? canvasEventToGameCoords(event, size, this.#doms.canvas)
       : null;
-    await this.#listeners.dispatch({ update: { event, coords } });
+    await this.#listeners.dispatch({ event, coords });
   }
 
-  addListener(fn: events.Listener<"update", CursorEventMessage>) {
+  addListener(fn: events.Listener<CursorEventMessage>) {
     this.#listeners.addListener(fn);
   }
 }

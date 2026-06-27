@@ -6,12 +6,12 @@ interface Doms {
 }
 
 interface EventMessage {
-  update: { lang: Language };
+  lang: Language;
 }
 
 export class LabelHandler {
   #doms: Doms;
-  #listener = new events.ListenerManager<"update", EventMessage>();
+  #listener = new events.ListenerManager<EventMessage>();
   #holder: LabelHolder;
 
   constructor(
@@ -34,7 +34,7 @@ export class LabelHandler {
       const lang = this.language;
       if (lang === localStorage.getItem("language")) return;
       this.#commitLanguage(lang);
-      this.#listener.dispatchNoAwait({ update: { lang } });
+      this.#listener.dispatchNoAwait({ lang });
     });
   }
 

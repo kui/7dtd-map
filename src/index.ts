@@ -177,7 +177,7 @@ function main() {
     component("prefabs_list", HTMLElement),
     (p) => prefabLi(p),
   );
-  prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
+  prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
     prefabListRenderer.iterator = prefabs;
   });
   const cursorHandler = new CursorHandler(

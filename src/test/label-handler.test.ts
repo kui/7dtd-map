@@ -148,7 +148,7 @@ describe("LabelHandler", () => {
     );
     const received: string[] = [];
     h.addListener((m) => {
-      received.push(m.update.lang);
+      received.push(m.lang);
     });
     // Give any deferred work (microtasks, timers) a chance to run.
     await new Promise((r) => setTimeout(r, 0));
@@ -166,7 +166,7 @@ describe("LabelHandler", () => {
     );
     const received: string[] = [];
     h.addListener((m) => {
-      received.push(m.update.lang);
+      received.push(m.lang);
     });
 
     sel.value = "german";

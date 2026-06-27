@@ -16,7 +16,8 @@ import * as events from "../../lib/events.ts";
 import { escapeHtml } from "../../lib/utils.ts";
 
 export interface EventMessage {
-  update: { prefabs: HighlightedPrefab[]; status: string };
+  prefabs: HighlightedPrefab[];
+  status: string;
 }
 
 export class PrefabFilter {
@@ -28,7 +29,7 @@ export class PrefabFilter {
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
   #status = "";
-  #listeners = new events.ListenerManager<"update", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
   #preExcluds: RegExp[] = [];
   #prefabFilterInvalid = false;
   #blockFilterInvalid = false;
@@ -78,7 +79,8 @@ export class PrefabFilter {
     await this.#updateDistance();
     this.#sort();
     await this.#listeners.dispatch({
-      update: { status: this.#status, prefabs: this.#filtered },
+      status: this.#status,
+      prefabs: this.#filtered,
     });
   }
 

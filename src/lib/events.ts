@@ -1,27 +1,24 @@
 import { printError } from "./utils.ts";
 import { MultipleErrors } from "./errors.ts";
 
-export type MessageMap<N extends string> = { [K in N]?: object };
-export type Listener<N extends string, M extends MessageMap<N>> = (
-  m: M,
-) => unknown;
+export type Listener<T> = (payload: T) => unknown;
 
-export class ListenerManager<N extends string, M extends MessageMap<N>> {
-  #listeners: Listener<N, M>[] = [];
+export class ListenerManager<T> {
+  #listeners: Listener<T>[] = [];
 
-  addListener(listener: Listener<N, M>) {
+  addListener(listener: Listener<T>) {
     this.#listeners.push(listener);
   }
 
-  removeListener(listener: Listener<N, M>) {
+  removeListener(listener: Listener<T>) {
     const index = this.#listeners.indexOf(listener);
     if (index >= 0) this.#listeners.splice(index, 1);
   }
 
-  async dispatch(m: M) {
+  async dispatch(payload: T) {
     const results = await Promise.allSettled(
       this.#listeners.map((fn) =>
-        new Promise<unknown>((resolve) => resolve(fn(m)))
+        new Promise<unknown>((resolve) => resolve(fn(payload)))
       ),
     );
     const errors = results.flatMap((
@@ -31,7 +28,7 @@ export class ListenerManager<N extends string, M extends MessageMap<N>> {
     if (errors.length > 1) throw new MultipleErrors(errors);
   }
 
-  dispatchNoAwait(m: M) {
-    this.dispatch(m).catch(printError);
+  dispatchNoAwait(payload: T) {
+    this.dispatch(payload).catch(printError);
   }
 }

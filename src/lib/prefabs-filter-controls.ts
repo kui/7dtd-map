@@ -63,7 +63,7 @@ export function bindPrefabsFilterControls(
       worker.postMessage({ preExcludes: readPreExcludes(doms) });
     });
   });
-  labelHandler.addListener(({ update: { lang } }) => {
+  labelHandler.addListener(({ lang }) => {
     worker.postMessage({ language: lang });
   });
   worker.postMessage({ language: labelHandler.language });

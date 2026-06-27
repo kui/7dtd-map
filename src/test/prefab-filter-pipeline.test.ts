@@ -85,7 +85,7 @@ describe("PrefabFilter", () => {
   function capture(f: PrefabFilter): { current: Update | null } {
     const slot: { current: Update | null } = { current: null };
     f.addListener((m) => {
-      slot.current = m.update;
+      slot.current = m;
     });
     return slot;
   }

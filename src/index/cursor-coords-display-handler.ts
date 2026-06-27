@@ -23,7 +23,7 @@ export class CursorCoordsDisplayHandler {
     this.#doms = doms;
     this.#dtmHandler = dtmHandler;
 
-    cursor.addListener(({ update: { coords } }) => {
+    cursor.addListener(({ coords }) => {
       this.#lastCoords = coords;
       this.#update().catch(printError);
     });

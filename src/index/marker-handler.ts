@@ -12,13 +12,13 @@ interface Doms {
 }
 
 interface EventMessage {
-  update: { coords: GameCoords | null };
+  coords: GameCoords | null;
 }
 
 export class MarkerHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;
-  #listeners = new events.ListenerManager<"update", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
 
   constructor(doms: Doms, dtmHandler: DtmHandler, fileHandler: FileHandler) {
     this.#doms = doms;
@@ -45,7 +45,7 @@ export class MarkerHandler {
     const coords = event && size
       ? canvasEventToGameCoords(event, size, this.#doms.canvas)
       : null;
-    await this.#listeners.dispatch({ update: { coords } });
+    await this.#listeners.dispatch({ coords });
   }
 
   addListener(fn: (m: EventMessage) => unknown) {
