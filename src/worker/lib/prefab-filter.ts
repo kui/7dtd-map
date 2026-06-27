@@ -214,12 +214,12 @@ export class PrefabFilter {
     return prefabs.flatMap((prefab) => {
       const matchedBlocks = matchedPrefabNames[prefab.name];
       if (!matchedBlocks) return [];
-      const totalCount = matchedBlocks.reduce(
+      const matchedBlockCount = matchedBlocks.reduce(
         (acc, b) => acc + (b.count ?? 0),
         0,
       );
-      if (totalCount < this.minMatchedBlockCount) return [];
-      return { ...prefab, matchedBlocks };
+      if (matchedBlockCount < this.minMatchedBlockCount) return [];
+      return { ...prefab, matchedBlocks, matchedBlockCount };
     });
   }
 
@@ -302,9 +302,8 @@ function nameSorter(
 }
 
 function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
-  if (!a.matchedBlocks || !b.matchedBlocks) return nameSorter(a, b);
-  const aCount = a.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
-  const bCount = b.matchedBlocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
+  const aCount = a.matchedBlockCount ?? 0;
+  const bCount = b.matchedBlockCount ?? 0;
   if (aCount === bCount) return nameSorter(a, b);
   return bCount - aCount;
 }

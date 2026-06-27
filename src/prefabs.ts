@@ -1,6 +1,5 @@
 import type { PrefabsFilterOutputMessage } from "./worker/types.ts";
 import type {
-  HighlightedBlock,
   HighlightedPrefab,
   Prefab,
   PrefabBlockCounts,
@@ -117,8 +116,8 @@ function prefabLi(prefab: HighlightedPrefab) {
     prefab.highlightedLabel ?? "-",
     "/",
     `<small>${prefab.highlightedName ?? safeName}</small></a>`,
-    ...(prefab.matchedBlocks && prefab.matchedBlocks.length > 0
-      ? ["has", countHighlightedBlocks(prefab.matchedBlocks), "blocks"]
+    ...(prefab.matchedBlockCount !== undefined && prefab.matchedBlockCount > 0
+      ? ["has", prefab.matchedBlockCount, "blocks"]
       : []),
   ].join(" ");
   if (prefab.matchedBlocks && prefab.matchedBlocks.length > 0) {
@@ -138,10 +137,6 @@ function prefabLi(prefab: HighlightedPrefab) {
     li.appendChild(blocksUl);
   }
   return li;
-}
-
-function countHighlightedBlocks(blocks: HighlightedBlock[]): number {
-  return blocks.reduce((acc, b) => acc + (b.count ?? 0), 0);
 }
 
 type PrefabsHandlerEventMessage = PrefabsFilterOutputMessage;

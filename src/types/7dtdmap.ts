@@ -30,6 +30,7 @@ export interface HighlightedPrefab extends Prefab {
   highlightedName?: string;
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
+  matchedBlockCount?: number;
   distance?: [Direction | null, number] | null;
 }
 

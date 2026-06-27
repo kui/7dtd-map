@@ -235,6 +235,7 @@ describe("PrefabFilter", () => {
     const slot = capture(f);
     await f.updateImmediately();
     expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["house_01"]);
+    expect(slot.current!.prefabs[0].matchedBlockCount).toBe(5);
   });
 
   it("filters out prefabs below minMatchedBlockCount", async () => {
