@@ -6,15 +6,13 @@ interface Doms {
 }
 
 export interface EventMessage {
-  select: {
-    mapName: string;
-    mapDir: string;
-  };
+  mapName: string;
+  mapDir: string;
 }
 
 export class BundledMapHandler {
   #doms: Doms;
-  #listeners = new events.ListenerManager<"select", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
 
   constructor(doms: Doms) {
     this.#doms = doms;
@@ -24,7 +22,8 @@ export class BundledMapHandler {
       if (this.#doms.select.value === "") return;
       const mapName = this.#doms.select.value;
       this.#listeners.dispatchNoAwait({
-        select: { mapName, mapDir: `maps/${mapName}` },
+        mapName,
+        mapDir: `maps/${mapName}`,
       });
     });
   }

@@ -39,12 +39,12 @@ export class MarkerCoordsDisplayHandler {
     this.#labelHandler = labelHandler;
     this.#difficulties = difficulties;
 
-    prefabsHandler.addPrefabHitIndexListener(({ update: { index } }) => {
+    prefabsHandler.addPrefabHitIndexListener(({ index }) => {
       this.#index = index;
       if (this.#lastCoords) this.#update().catch(printError);
     });
 
-    markerHandler.addListener(({ update: { coords } }) => {
+    markerHandler.addListener(({ coords }) => {
       this.#lastCoords = coords;
       this.#update().catch(printError);
     });

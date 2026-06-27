@@ -94,16 +94,16 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
-    prefabsHandler.addFilteredPrefabsListener(({ update: { prefabs } }) => {
+    prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
       worker.postMessage({ filteredPrefabs: prefabs });
     });
-    prefabsHandler.addAllPrefabsListener(({ update: { all } }) => {
+    prefabsHandler.addAllPrefabsListener(({ all }) => {
       worker.postMessage({ allPrefabs: all });
     });
-    markerHandler.addListener(({ update: { coords } }) => {
+    markerHandler.addListener(({ coords }) => {
       worker.postMessage({ markerCoords: coords });
     });
-    fileHandler.addListener(({ update: fileNames }) => {
+    fileHandler.addListener((fileNames) => {
       const invalidate: DependentFile[] = [];
       for (const n of fileNames) {
         if (DEPENDENT_FILES.includes(n as DependentFile)) {

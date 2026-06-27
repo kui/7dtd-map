@@ -82,9 +82,9 @@ function main() {
     component("prefabs-list"),
     (p) => prefabLi(p),
   );
-  prefabsHandler.addListener(({ update }) => {
-    status.textContent = update.status;
-    prefabListRenderer.iterator = update.prefabs;
+  prefabsHandler.addListener(({ status: text, prefabs }) => {
+    status.textContent = text;
+    prefabListRenderer.iterator = prefabs;
   });
 
   // init
@@ -141,10 +141,7 @@ class PrefabsHandler {
   #worker: PrefabsFilterWorker;
   #labelHandler: LabelHandler;
   #fetchPrefabs: () => Promise<Prefab[]>;
-  #listeners = new events.ListenerManager<
-    "update",
-    PrefabsHandlerEventMessage
-  >();
+  #listeners = new events.ListenerManager<PrefabsHandlerEventMessage>();
 
   constructor(
     doms: PrefabsFilterControlsDoms,

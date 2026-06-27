@@ -6,15 +6,10 @@ import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { spy as fn } from "@std/testing/mock";
 
-interface FileHandlerEventMessage {
-  update: MapFileName[];
-}
+type FileHandlerEventMessage = MapFileName[];
 
 function createStubFileHandler() {
-  const listeners = new events.ListenerManager<
-    "update",
-    FileHandlerEventMessage
-  >();
+  const listeners = new events.ListenerManager<FileHandlerEventMessage>();
   const stub: Pick<FileHandler, "addListener"> = {
     addListener: (fn) => {
       listeners.addListener(fn);
@@ -37,7 +32,7 @@ describe("DtmHandler listeners", () => {
     const listener = fn();
     dtm.addListener(listener);
 
-    await emit({ update: ["map_info.xml"] });
+    await emit(["map_info.xml"]);
 
     expect(listener.calls.length).toBe(1);
   });
@@ -48,7 +43,7 @@ describe("DtmHandler listeners", () => {
     const listener = fn();
     dtm.addListener(listener);
 
-    await emit({ update: ["dtm_block.raw.gz"] });
+    await emit(["dtm_block.raw.gz"]);
 
     expect(listener.calls.length).toBe(1);
   });
@@ -59,7 +54,7 @@ describe("DtmHandler listeners", () => {
     const listener = fn();
     dtm.addListener(listener);
 
-    await emit({ update: ["biomes.png", "prefabs.xml"] });
+    await emit(["biomes.png", "prefabs.xml"]);
 
     expect(listener.calls.length).toBe(0);
   });

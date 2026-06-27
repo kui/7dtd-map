@@ -93,8 +93,8 @@ describe("FileHandler.initialize", () => {
     await handler.initialize();
 
     expect(listener.calls.length).toBe(1);
-    const msg = listener.calls[0]?.args[0] as { update: string[] };
-    expect(new Set(msg.update)).toEqual(
+    const msg = listener.calls[0]?.args[0] as string[];
+    expect(new Set(msg)).toEqual(
       new Set(["map_info.xml", "biomes.png"]),
     );
   });

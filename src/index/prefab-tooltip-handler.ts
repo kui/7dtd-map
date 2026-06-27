@@ -42,11 +42,11 @@ export class PrefabTooltipHandler {
     this.#labelHandler = labelHandler;
     this.#difficulties = difficulties;
 
-    prefabsHandler.addPrefabHitIndexListener(({ update: { index } }) => {
+    prefabsHandler.addPrefabHitIndexListener(({ index }) => {
       this.#index = index;
     });
 
-    cursor.addListener(({ update: { event, coords } }) => {
+    cursor.addListener(({ event, coords }) => {
       this.#lastEvent = event;
       this.#lastCoords = coords;
       if (event) this.#setShiftActive(event.shiftKey);

@@ -63,9 +63,7 @@ interface Doms {
   mapName: HTMLInputElement;
 }
 
-interface EventMessage {
-  update: MapFileName[];
-}
+type EventMessage = MapFileName[];
 
 export class FileHandler {
   #doms: Doms;
@@ -73,7 +71,7 @@ export class FileHandler {
   #processorFactory: () => Worker;
   #workspace: Promise<storage.MapDir>;
   #depletedFileHandler = new DepletedFileHandler();
-  #listeners = new events.ListenerManager<"update", EventMessage>();
+  #listeners = new events.ListenerManager<EventMessage>();
 
   constructor(
     doms: Doms,
@@ -97,8 +95,8 @@ export class FileHandler {
       this.#setMapName("");
       this.#clear().catch(printError);
     });
-    dndHandler.addListener(({ drop: { files } }) => this.#pushEntries(files));
-    bundledMapHandler.addListener(async ({ select: { mapName, mapDir } }) => {
+    dndHandler.addListener(({ files }) => this.#pushEntries(files));
+    bundledMapHandler.addListener(async ({ mapName, mapDir }) => {
       console.log("Select bundled map", mapName);
       this.#setMapName(mapName);
       await this.#pushUrls(
@@ -114,10 +112,10 @@ export class FileHandler {
     const existing = await workspace.list();
     const update = Array.from(MAP_FILE_NAMES).filter((n) => existing.has(n));
     if (update.length === 0) return;
-    await this.#listeners.dispatch({ update });
+    await this.#listeners.dispatch(update);
   }
 
-  addListener(fn: events.Listener<"update", EventMessage>) {
+  addListener(fn: events.Listener<EventMessage>) {
     this.#listeners.addListener(fn);
   }
 
@@ -270,7 +268,7 @@ export class FileHandler {
     }
 
     if (processedNames.length > 0) {
-      await this.#listeners.dispatch({ update: processedNames });
+      await this.#listeners.dispatch(processedNames);
     }
 
     this.#dialogHandler.close();
