@@ -23,6 +23,7 @@ import * as syncOutput from "./lib/ui/sync-output.ts";
 import { UrlState } from "./lib/url-state.ts";
 import { component } from "./lib/dom-utils.ts";
 import { escapeHtml, fetchJson, printError } from "./lib/utils.ts";
+import { installPrefabLinkTooltip } from "./lib/prefab-link-tooltip.ts";
 
 function main() {
   presetButton.init();
@@ -85,6 +86,11 @@ function main() {
   prefabsHandler.addListener(({ update }) => {
     status.textContent = update.status;
     prefabListRenderer.iterator = update.prefabs;
+  });
+
+  installPrefabLinkTooltip({
+    tooltip: component("prefab_link_tooltip", HTMLElement),
+    image: component("prefab_link_tooltip_image", HTMLImageElement),
   });
 
   // init

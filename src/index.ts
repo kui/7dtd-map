@@ -36,6 +36,7 @@ import { MapInfoHandler } from "./index/map-info-handler.ts";
 
 import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
+import { installPrefabLinkTooltip } from "./lib/prefab-link-tooltip.ts";
 
 // Fetched once and shared via Promise so multiple handlers awaiting the
 // same JSON do not issue duplicate requests.
@@ -240,6 +241,11 @@ function main() {
     prefabDifficulties,
     () => fetchJson("prefabs/index.json"),
   );
+
+  installPrefabLinkTooltip({
+    tooltip: component("prefab_link_tooltip", HTMLElement),
+    image: component("prefab_link_tooltip_image", HTMLImageElement),
+  });
 
   //
 
