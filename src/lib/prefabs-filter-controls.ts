@@ -9,6 +9,7 @@ export declare class PrefabsFilterWorker extends Worker {
 export interface PrefabsFilterControlsDoms {
   prefabFilter: HTMLInputElement;
   blockFilter: HTMLInputElement;
+  minMatchedBlockCount: HTMLInputElement;
   minTier: HTMLInputElement;
   maxTier: HTMLInputElement;
   preExcludes: HTMLInputElement[];
@@ -45,6 +46,10 @@ export function bindPrefabsFilterControls(
   });
   doms.blockFilter.addEventListener("input", () => {
     worker.postMessage({ blockFilterRegexp: doms.blockFilter.value });
+  });
+  doms.minMatchedBlockCount.addEventListener("input", () => {
+    const v = doms.minMatchedBlockCount.valueAsNumber;
+    worker.postMessage({ minMatchedBlockCount: Number.isNaN(v) ? 0 : v });
   });
   doms.minTier.addEventListener("input", () => {
     const v = doms.minTier.valueAsNumber;

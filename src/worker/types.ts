@@ -40,6 +40,7 @@ export type PrefabsFilterInputMessage = Partial<
     | "difficulty"
     | "prefabFilterRegexp"
     | "blockFilterRegexp"
+    | "minMatchedBlockCount"
     | "markCoords"
     | "language"
     | "preExcludes"

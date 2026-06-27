@@ -39,6 +39,7 @@ export class PrefabFilter {
   difficulty: NumberRange = { start: 0, end: 5 };
   prefabFilterRegexp = "";
   blockFilterRegexp = "";
+  minMatchedBlockCount = 0;
 
   constructor(
     labelsBaseUrl: string,
@@ -108,6 +109,10 @@ export class PrefabFilter {
       this.#status = "No prefabs matched";
     } else {
       this.#status = `${this.#filtered.length.toString()} prefabs matched`;
+    }
+    if (this.blockFilterRegexp.length > 0 && this.minMatchedBlockCount > 0) {
+      this.#status +=
+        `, at least ${this.minMatchedBlockCount.toString()} blocks`;
     }
   }
 
@@ -208,7 +213,13 @@ export class PrefabFilter {
     );
     return prefabs.flatMap((prefab) => {
       const matchedBlocks = matchedPrefabNames[prefab.name];
-      return matchedBlocks ? { ...prefab, matchedBlocks } : [];
+      if (!matchedBlocks) return [];
+      const totalCount = matchedBlocks.reduce(
+        (acc, b) => acc + (b.count ?? 0),
+        0,
+      );
+      if (totalCount < this.minMatchedBlockCount) return [];
+      return { ...prefab, matchedBlocks };
     });
   }
 

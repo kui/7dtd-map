@@ -42,6 +42,10 @@ function main() {
     {
       prefabFilter: component("prefab-filter", HTMLInputElement),
       blockFilter: component("block-filter", HTMLInputElement),
+      minMatchedBlockCount: component(
+        "min-matched-block-count",
+        HTMLInputElement,
+      ),
       minTier: component("min-tier", HTMLInputElement),
       maxTier: component("max-tier", HTMLInputElement),
       preExcludes: Array.from(
@@ -178,6 +182,7 @@ class PrefabsHandler {
     this.#worker.postMessage({
       prefabFilterRegexp: this.#doms.prefabFilter.value,
       blockFilterRegexp: this.#doms.blockFilter.value,
+      minMatchedBlockCount: this.#doms.minMatchedBlockCount.valueAsNumber || 0,
       difficulty: readTierRange(this.#doms),
       preExcludes: readPreExcludes(this.#doms),
       language: this.#labelHandler.language,

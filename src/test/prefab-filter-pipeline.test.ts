@@ -226,4 +226,68 @@ describe("PrefabFilter", () => {
     await f.updateImmediately();
     expect(slot.current!.prefabs.map((p) => p.name)).toContain("house_01");
   });
+
+  it("filters by block name", async () => {
+    const f = build({ stone: { house_01: 5 }, wood: { trader_01: 3 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "stone";
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["house_01"]);
+  });
+
+  it("filters out prefabs below minMatchedBlockCount", async () => {
+    const f = build({
+      crate: { house_01: 5, trader_01: 3 },
+      barrel: { house_01: 2, skyscraper_01: 10 },
+    });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "crate|barrel";
+    f.minMatchedBlockCount = 6;
+    const slot = capture(f);
+    await f.updateImmediately();
+    const names = slot.current!.prefabs.map((p) => p.name);
+    expect(names).toContain("house_01"); // 5 + 2 = 7
+    expect(names).toContain("skyscraper_01"); // 10
+    expect(names).not.toContain("trader_01"); // 3 < 6
+  });
+
+  it("status includes minMatchedBlockCount when active", async () => {
+    const f = build({ stone: { house_01: 5 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "stone";
+    f.minMatchedBlockCount = 2;
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toContain("at least 2 blocks");
+  });
+
+  it("allows all matched prefabs when minMatchedBlockCount is 0", async () => {
+    const f = build({ stone: { house_01: 5, trader_01: 1 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "stone";
+    f.minMatchedBlockCount = 0;
+    const slot = capture(f);
+    await f.updateImmediately();
+    const names = slot.current!.prefabs.map((p) => p.name);
+    expect(names).toContain("house_01");
+    expect(names).toContain("trader_01");
+  });
+
+  it("treats negative minMatchedBlockCount as 0", async () => {
+    const f = build({ stone: { house_01: 5, trader_01: 1 } });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "stone";
+    f.minMatchedBlockCount = -1;
+    const slot = capture(f);
+    await f.updateImmediately();
+    const names = slot.current!.prefabs.map((p) => p.name);
+    expect(names).toContain("house_01");
+    expect(names).toContain("trader_01");
+  });
 });

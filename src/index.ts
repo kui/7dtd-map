@@ -110,6 +110,10 @@ function main() {
       maxTier: component("max_tier", HTMLInputElement),
       prefabFilter: component("prefab_filter", HTMLInputElement),
       blockFilter: component("block_filter", HTMLInputElement),
+      minMatchedBlockCount: component(
+        "min_matched_block_count",
+        HTMLInputElement,
+      ),
       preExcludes: Array.from(
         component("prefab-pre-filters").querySelectorAll(
           "input[type=checkbox]",

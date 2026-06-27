@@ -189,6 +189,22 @@
           </td>
         </tr>
         <tr>
+          <th><label for="brightness">🔆 Brightness</label></th>
+          <td>
+            <label>
+              <output data-sync-for="brightness">60</output>%
+              <input
+                id="brightness"
+                type="range"
+                max="100"
+                min="0"
+                step="1"
+                value="60"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
           <th title="Scale of PNG files">
             <label for="scale">🔍️ Scale</label>
           </th>
@@ -267,22 +283,6 @@
                 </td>
               </tr>
             </table>
-          </td>
-        </tr>
-        <tr>
-          <th><label for="brightness">🔆 Brightness</label></th>
-          <td>
-            <label>
-              <output data-sync-for="brightness">60</output>%
-              <input
-                id="brightness"
-                type="range"
-                max="100"
-                min="0"
-                step="1"
-                value="60"
-              />
-            </label>
           </td>
         </tr>
         <tr>
@@ -400,14 +400,25 @@
         <tr>
           <th><label for="block_filter">📦 Block Filter</label></th>
           <td>
-            <input id="block_filter" placeholder="Enter block name" />
-            <button
-              title="Clear"
-              data-input-for="block_filter"
-              data-input-text=""
-            >
-              X
-            </button>
+            <div>
+              <input id="block_filter" placeholder="Enter block name" />
+              <button
+                title="Clear"
+                data-input-for="block_filter"
+                data-input-text=""
+              >
+                X
+              </button>
+            </div>
+            <div>
+              <strong>Min Count:</strong> <input
+                id="min_matched_block_count"
+                type="number"
+                min="0"
+                max="999"
+                placeholder="0-999"
+              />
+            </div>
           </td>
         </tr>
         <tr>
