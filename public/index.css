@@ -20,7 +20,7 @@
   z-index: 10;
   & > img {
     width: 96px;
-    height: 96px;
+    aspect-ratio: 4 / 3;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -72,7 +72,7 @@
   max-height: calc(100% - 40px);
   right: 0;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   overflow: auto;
   & table {
     & tr:hover {
