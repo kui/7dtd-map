@@ -140,9 +140,9 @@ test.describe("index.html", () => {
       await page.locator("#prefabs_list li").count()
     ).toBeGreaterThan(0);
 
-    // Clear the prefab filter via its X button (data-input-text="").
+    // Clear the prefab filter via its X button (data-input-value="").
     await page.click(
-      'button[data-input-for="prefab_filter"][data-input-text=""]',
+      'button[data-input-for="prefab_filter"][data-input-value=""]',
     );
     await expect.poll(async () =>
       await page.locator("#prefab_filter").inputValue()

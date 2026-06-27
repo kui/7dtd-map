@@ -260,7 +260,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   const safeName = escapeHtml(prefab.name);
   li.innerHTML = [
-    `<button data-input-for="prefab_filter" data-input-text="${safeName}" title="Filter with this prefab name">▲</button>`,
+    `<button data-input-for="prefab_filter" data-input-value="${safeName}" title="Filter with this prefab name">▲</button>`,
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
@@ -283,7 +283,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       const blockLi = document.createElement("li");
       const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-for="block_filter" data-input-text="${safeBlockName}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="block_filter" data-input-value="${safeBlockName}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,

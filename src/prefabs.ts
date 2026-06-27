@@ -127,7 +127,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       const blockLi = document.createElement("li");
       const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-for="blocks-filter" data-input-text="${safeBlockName}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="blocks-filter" data-input-value="${safeBlockName}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
