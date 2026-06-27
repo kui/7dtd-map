@@ -36,3 +36,13 @@ repository. Agents must read and follow these rules closely.
      should prefer graceful degradation: missing JSON entries are tolerated via
      nullish-coalescing defaults so a partial dataset still produces a usable UI
      rather than crashing the page.
+
+4. **Do Not Modify `public/old/` Directories**
+   - Directories under `public/old/` (e.g., `a20/`, `a21/`, `v1.4/`, `v2.6/`)
+     are frozen snapshots of previous major releases. They are self-contained.
+   - **Do not edit files inside these old directories.** Do not apply refactors,
+     renames, or style fixes to them.
+   - The only exception is during a major version upgrade: copy the current
+     system into a new `public/old/<version>/` directory, then edit `index.html`
+     (or similar top-level files) within that new copy to update only the nav
+     elements / version banner. No other edits to old snapshots are allowed.
