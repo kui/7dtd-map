@@ -88,7 +88,6 @@
   white-space: nowrap;
   text-align: right;
   padding-right: 0.5em;
-  border-right: 1px solid #ddd;
 }
 
 .controller-grid .cell-control {
@@ -104,11 +103,9 @@
 .controller-grid > .cell-control {
   padding-top: 0.3em;
   padding-bottom: 0.3em;
-  border-bottom: 1px solid #eee;
 }
 
 .controller-grid .layer-group {
-  border-bottom: 1px solid #eee;
   padding-top: 0.3em;
   padding-bottom: 0.3em;
 }
