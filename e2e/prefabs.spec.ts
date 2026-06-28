@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "./fixtures.ts";
 
 test.describe("prefabs.html", () => {
   test("loads the prefab list and renders status text", async ({ page }) => {

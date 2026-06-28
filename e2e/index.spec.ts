@@ -1,27 +1,28 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "./fixtures.ts";
 
 test.describe("index.html", () => {
   test("renders the main controls", async ({ page }) => {
     await page.goto("/index.html");
-    await expect(page.locator("#map_name")).toBeVisible();
-    await expect(page.locator("#prefabs_list")).toBeAttached();
-    await expect(page.locator("#min_tier")).toBeVisible();
-    await expect(page.locator("#max_tier")).toBeVisible();
-    await expect(page.locator("#prefab_filter")).toBeVisible();
-    await expect(page.locator("#block_filter")).toBeVisible();
-    await expect(page.locator("#label_lang")).toBeVisible();
+    await expect(page.locator("#map-name")).toBeVisible();
+    await expect(page.locator("#prefabs-list")).toBeAttached();
+    await expect(page.locator("#min-tier")).toBeVisible();
+    await expect(page.locator("#max-tier")).toBeVisible();
+    await expect(page.locator("#prefab-filter")).toBeVisible();
+    await expect(page.locator("#block-filter")).toBeVisible();
+    await expect(page.locator("#label-lang")).toBeVisible();
     await expect(page.locator("#download")).toBeVisible();
   });
 
   test("language select change is persisted in localStorage", async ({ page }) => {
     await page.goto("/index.html");
-    // The label_lang select is populated asynchronously by LabelHandler; wait
+    // The label-lang select is populated asynchronously by LabelHandler; wait
     // for at least one extra option to appear beyond the default.
     await expect
-      .poll(async () => await page.locator("#label_lang option").count())
+      .poll(async () => await page.locator("#label-lang option").count())
       .toBeGreaterThan(1);
 
-    await page.selectOption("#label_lang", "japanese");
+    await page.selectOption("#label-lang", "japanese");
     await expect
       .poll(async () =>
         await page.evaluate(() => localStorage.getItem("language"))
@@ -29,21 +30,21 @@ test.describe("index.html", () => {
       .toBe("japanese");
   });
 
-  test("min_tier cannot exceed max_tier — they correct each other", async ({ page }) => {
+  test("min-tier cannot exceed max-tier — they correct each other", async ({ page }) => {
     await page.goto("/index.html");
     // Set min above current max; min-max-inputs.ts should drag max up so
     // max >= min.
-    await page.locator("#max_tier").evaluate((el: HTMLInputElement) => {
+    await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "2";
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    await page.locator("#min_tier").evaluate((el: HTMLInputElement) => {
+    await page.locator("#min-tier").evaluate((el: HTMLInputElement) => {
       el.value = "4";
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    const maxValue = await page.locator("#max_tier").inputValue();
+    const maxValue = await page.locator("#max-tier").inputValue();
     expect(Number(maxValue)).toBeGreaterThanOrEqual(4);
   });
 
@@ -54,7 +55,7 @@ test.describe("index.html", () => {
     // Wait for the bundled-map select to be populated.
     await expect
       .poll(async () =>
-        await page.locator("#bundled_map_select option").count()
+        await page.locator("#bundled-map-select option").count()
       )
       .toBeGreaterThan(1);
 
@@ -77,7 +78,7 @@ test.describe("index.html", () => {
       }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
     });
 
-    await page.selectOption("#bundled_map_select", "Navezgane");
+    await page.selectOption("#bundled-map-select", "Navezgane");
 
     // Loading dialog should have been open at some point during processing.
     await expect
@@ -119,78 +120,78 @@ test.describe("index.html", () => {
 
     // Prefab list is populated.
     await expect.poll(
-      async () => await page.locator("#prefabs_list li").count(),
+      async () => await page.locator("#prefabs-list li").count(),
       slow,
     ).toBeGreaterThan(0);
 
     // Map name input reflects the selection.
     await expect.poll(
-      async () => await page.locator("#map_name").inputValue(),
+      async () => await page.locator("#map-name").inputValue(),
       slow,
     ).toBe("Navezgane");
 
     // Apply the "trader" prefab-filter preset.
     await page.click(
-      'button[data-input-for="prefab_filter"]:text-is("trader")',
+      'button[data-input-for="prefab-filter"]:text-is("trader")',
     );
     await expect.poll(async () =>
-      await page.locator("#prefab_filter").inputValue()
+      await page.locator("#prefab-filter").inputValue()
     ).toBe("trader");
     await expect.poll(async () =>
-      await page.locator("#prefabs_list li").count()
+      await page.locator("#prefabs-list li").count()
     ).toBeGreaterThan(0);
 
     // Clear the prefab filter via its X button (data-input-value="").
     await page.click(
-      'button[data-input-for="prefab_filter"][data-input-value=""]',
+      'button[data-input-for="prefab-filter"][data-input-value=""]',
     );
     await expect.poll(async () =>
-      await page.locator("#prefab_filter").inputValue()
+      await page.locator("#prefab-filter").inputValue()
     ).toBe("");
 
     // Apply the "Super Corn" block-filter preset.
     await page.click(
-      'button[data-input-for="block_filter"]:text-is("Super Corn")',
+      'button[data-input-for="block-filter"]:text-is("Super Corn")',
     );
     await expect.poll(async () =>
-      await page.locator("#block_filter").inputValue()
+      await page.locator("#block-filter").inputValue()
     ).toBe("(Grace|Super)Corn");
     await expect.poll(async () =>
-      await page.locator("#prefabs_list li").count()
+      await page.locator("#prefabs-list li").count()
     ).toBeGreaterThan(0);
 
     // Narrow the tier range to [0, 0]; with Super Corn still in the block
     // filter, no prefab should match.
-    await page.locator("#max_tier").evaluate((el: HTMLInputElement) => {
+    await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "0";
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    await page.locator("#min_tier").evaluate((el: HTMLInputElement) => {
+    await page.locator("#min-tier").evaluate((el: HTMLInputElement) => {
       el.value = "0";
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     });
     await expect.poll(async () =>
-      await page.locator("#prefabs_list li").count()
+      await page.locator("#prefabs-list li").count()
     ).toBe(0);
   });
 
   test("terrain viewer dialog is wired up with a11y attributes", async ({ page }) => {
     await page.goto("/index.html");
-    const dialog = page.locator("#terrain_viewer_dialog");
+    const dialog = page.locator("#terrain-viewer-dialog");
     await expect(dialog).toBeAttached();
     await expect(dialog).not.toHaveAttribute("open", /.*/);
     await expect(dialog).toHaveAttribute(
       "aria-labelledby",
-      "terrain_viewer_title",
+      "terrain-viewer-title",
     );
 
     // Show button is disabled until a DTM is loaded.
-    await expect(page.locator("#terrain_viewer_show")).toBeDisabled();
+    await expect(page.locator("#terrain-viewer-show")).toBeDisabled();
 
     // Close button carries an accessible name for screen readers.
-    await expect(page.locator("#terrain_viewer_close"))
+    await expect(page.locator("#terrain-viewer-close"))
       .toHaveAttribute("aria-label", "Close terrain viewer");
   });
 
@@ -210,7 +211,7 @@ test.describe("index.html", () => {
   test("copy-button activates with Enter key", async ({ page }) => {
     await page.goto("/index.html");
     const button = page.locator(
-      'button[data-copy-for="generated_world_path_windows"]',
+      'button[data-copy-for="generated-world-path-windows"]',
     );
     await expect(button).toBeVisible();
 
