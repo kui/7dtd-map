@@ -14,7 +14,7 @@ async function main() {
 
   const blocks = await loadBlocks();
   const materials = await loadMaterials();
-  const itemPattern = new RegExp(itemPatternString);  
+  const itemPattern = new RegExp(itemPatternString);
   const harvests = blocks.getHarvestsWithMaxDamage(materials).filter((drop) =>
     itemPattern.test(drop.itemName)
   );
