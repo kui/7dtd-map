@@ -132,7 +132,7 @@ test.describe("index.html", () => {
 
     // Apply the "trader" prefab-filter preset.
     await page.click(
-      'button[data-input-for="prefab-filter"]:text-is("trader")',
+      'button[data-input-prefab-filter="trader"]:text-is("trader")',
     );
     await expect.poll(async () =>
       await page.locator("#prefab-filter").inputValue()
@@ -141,9 +141,9 @@ test.describe("index.html", () => {
       await page.locator("#prefabs-list li").count()
     ).toBeGreaterThan(0);
 
-    // Clear the prefab filter via its X button (data-input-value="").
+    // Clear the prefab filter via its X button (data-input-prefab-filter="").
     await page.click(
-      'button[data-input-for="prefab-filter"][data-input-value=""]',
+      'button[data-input-prefab-filter=""]',
     );
     await expect.poll(async () =>
       await page.locator("#prefab-filter").inputValue()
@@ -151,7 +151,7 @@ test.describe("index.html", () => {
 
     // Apply the "Super Corn" block-filter preset.
     await page.click(
-      'button[data-input-for="block-filter"]:text-is("Super Corn")',
+      'button[data-input-block-filter="(Grace|Super)Corn"]:text-is("Super Corn")',
     );
     await expect.poll(async () =>
       await page.locator("#block-filter").inputValue()
