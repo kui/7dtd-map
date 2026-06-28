@@ -42,6 +42,7 @@ interface RawBlockDrop {
   "@tag"?: string;
   "@prob"?: string;
   "@stick_chance"?: string;
+  "@tool_category"?: string;
 }
 
 /* Public types */
@@ -70,19 +71,20 @@ export interface BlockDrop {
   event: string;
   name: string | undefined;
   count: NumberRange;
-  tag: string[];
+  tags: string[];
   prob: number | undefined;
   stickChance: number | undefined;
+  toolCategory: string | undefined;
 }
 
-export interface HarvestItems {
-  [itenName: string]: {
-    name: string;
-    count: NumberRange;
-    countExpected: number;
-    prob: number;
-  };
-}
+export type Harvest = {
+  itemName: string;
+  count: NumberRange;
+  countExpected: number;
+  prob: number;
+  tags: string[];
+  toolCategory: string | undefined;
+};
 
 function isRawBlocksXml(value: unknown): value is RawBlocksXml {
   if (typeof value !== "object" || value === null) return false;
@@ -124,10 +126,8 @@ function extractProperties(raw: unknown[]): BlockProperties {
 /* Public API */
 
 export async function loadBlocks(
-  blocksXmlFileName?: string,
+  fileName = vanillaDir("Data", "Config", "blocks.xml"),
 ): Promise<Blocks> {
-  const fileName = blocksXmlFileName ??
-    vanillaDir("Data", "Config", "blocks.xml");
   const parsed = parseXml(await Deno.readTextFile(fileName));
   if (!isRawBlocksXml(parsed)) {
     throw new Error(`Unexpected structure in ${fileName}`);
@@ -140,11 +140,12 @@ export async function loadBlocks(
         event: elem["@event"],
         name: elem["@name"],
         count: parseCount(elem["@count"]),
-        tag: elem["@tag"]?.split(",") ?? [],
+        tags: elem["@tag"]?.split(",").map((t) => t.trim()) ?? [],
         prob: elem["@prob"] ? parseFloat(elem["@prob"]) : undefined,
         stickChance: elem["@stick_chance"]
           ? parseFloat(elem["@stick_chance"])
           : undefined,
+        toolCategory: elem["@tool_category"] ?? "",
       }));
       const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
       map.set(name, {
@@ -180,8 +181,12 @@ export class Blocks {
     );
   }
 
+  all(): Block[] {
+    return Array.from(this.#blocks.values());
+  }
+
   find(predicate: (block: Block) => boolean): Block[] {
-    return Array.from(this.#blocks.values())
+    return this.all()
       .filter((b) => {
         const creativeMode = this.getPropertyExtended(b, "CreativeMode")?.value;
         return !creativeMode || creativeMode !== "None";
@@ -263,37 +268,52 @@ export class Blocks {
     return this.getDropsExtended(parent);
   }
 
-  getHarvests(block: Block, untilDestroy = true): HarvestItems {
-    const drops = this.getDropsExtended(block);
-    const harvests = drops.filter((drop) =>
-      drop.event === "Harvest" || (untilDestroy && drop.event === "Destroy")
-    );
-    const items: HarvestItems = {};
-    for (const harvest of harvests) {
-      if (harvest.count[1] === 0) continue;
-      if (harvest.prob === 0) continue;
+  getHarvestsByBlock(block: Block, untilDestroy = true): Harvest[] {
+    return this.getDropsExtended(block).filter((drop) =>
+      (drop.event === "Harvest" ||
+        (untilDestroy && drop.event === "Destroy")) &&
+      drop.count[1] !== 0 && drop.prob !== 0
+    ).map((harvest) => {
       if (harvest.name === undefined) {
         throw new Error(`Harvest drop without name: ${block.name}`);
       }
       const prob = harvest.prob ?? 1;
       const countExpected = ((harvest.count[0] + harvest.count[1]) / 2) * prob;
-      const oldCount = items[harvest.name]?.count;
-      const oldCountExpected = items[harvest.name]?.countExpected;
-      items[harvest.name] = {
-        name: harvest.name,
-        count: oldCount
-          ? [
-            Math.min(oldCount[0], harvest.count[0]),
-            oldCount[1] + harvest.count[1],
-          ]
-          : harvest.count,
-        countExpected: oldCountExpected
-          ? oldCountExpected + countExpected
-          : countExpected,
+      return {
+        itemName: harvest.name,
+        count: harvest.count,
+        countExpected,
         prob,
+        tags: harvest.tags,
+        toolCategory: harvest.toolCategory,
       };
-    }
-    return items;
+    });
+  }
+
+  getHarvests(untilDestroy = true): Map<Block, Harvest[]> {
+    return this.all().reduce((acc, block) => {
+      acc.set(block, this.getHarvestsByBlock(block, untilDestroy));
+      return acc;
+    }, new Map<Block, Harvest[]>());
+  }
+
+  getHarvestsWithMaxDamage(
+    materials: Materials,
+  ): (Harvest & {
+    blockName: string;
+    damage: number;
+    countPerDamage: number;
+  })[] {
+    return this.all().flatMap((block) => {
+      const damage = this.getMaxDamage(block, materials);
+      if (damage === null) return [];
+      return this.getHarvestsByBlock(block).map((drop) => ({
+        ...drop,
+        blockName: block.name,
+        damage,
+        countPerDamage: drop.countExpected / damage,
+      }));
+    }).toSorted((a, b) => b.countPerDamage - a.countPerDamage);
   }
 }
 
