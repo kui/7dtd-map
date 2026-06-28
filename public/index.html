@@ -33,10 +33,9 @@
     </nav>
 
     <div id="controller">
-      <p><input id="files" type="file" multiple webkitdirectory /></p>
       <p>
         <button id="clear-map" title="Clear all world files">Clear</button>
-        <button id="download">Download</button>
+        <input id="files" type="file" multiple webkitdirectory />
       </p>
       <table>
         <tr>
@@ -53,8 +52,9 @@
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
-          <td
-            colspan="2"><span id="cursor-coods">E/W: -, N/S: -, Elev: -</span></td>
+          <td colspan="2">
+            <span id="cursor-coods">E/W: -, N/S: -, Elev: -</span>
+          </td>
         </tr>
         <tr>
           <th>
@@ -71,6 +71,7 @@
         <tr>
           <th>🔧 Tools</th>
           <td colspan="2">
+            <button id="download">⬇️ Download as PNG</button>
             <button
               id="terrain-viewer-show"
               disabled
@@ -87,7 +88,7 @@
             >ℹ️ map_info.xml</button>
           </td>
         </tr>
-        <tr class="no-highlight">
+        <tr class="inner-table-container">
           <td colspan="3">
             <details>
               <summary>🎨 Layers</summary>

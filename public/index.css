@@ -1,5 +1,5 @@
 :root {
-  --controller-width: 550px;
+  --controller-width: 500px;
 }
 
 #map {
@@ -74,11 +74,20 @@
   top: 0;
   background-color: rgba(255, 255, 255, 0.9);
   overflow: auto;
+  & summary {
+    font-weight: bold;
+  }
   & table {
+    & td {
+      padding: 2px 4px;
+    }
     & tbody.multi-rows:hover tr,
-    & tr:hover:not(.no-highlight),
+    & tr:hover:not(.inner-table-container),
     & summary:hover {
-      background-color: whitesmoke;
+      background-color: #eef;
+    }
+    & tr.inner-table-container:hover {
+      background-color: #eff;
     }
     & td output {
       display: inline-block;
@@ -86,19 +95,27 @@
       width: 2em;
       text-align: right;
     }
-    & th {
+    & th,
+    & td:has(output):not(:has(details)) {
       white-space: nowrap;
+      width: 0.1%;
+      text-align: center;
+    }
+    & table.layer-table {
+      width: 100%;
+      margin-top: 0.5em;
+    }
+    & input[type="range"] {
+      width: 100%;
+      box-sizing: border-box;
     }
   }
-  table.layer-table {
-    width: 100%;
-    margin-top: 0.5em;
-  }
+
   & .alpha-output {
     width: 3em;
   }
   & .brightness-output {
-    width: 3em;
+    width: 2em;
   }
   & .tier-output {
     width: 1em;
@@ -118,11 +135,6 @@
       margin: 0 0.5em;
     }
   }
-}
-
-#controller input[type="range"] {
-  width: 100%;
-  box-sizing: border-box;
 }
 
 #prefabs-list,
