@@ -2,6 +2,7 @@ import { parse as parseXml } from "@libs/xml";
 import {
   buildArrayMapByEntries,
   requireNonnull,
+  toArray,
   vanillaDir,
 } from "../utils.ts";
 import type { Materials } from "./materials-xml.ts";
@@ -100,7 +101,7 @@ export async function loadBlocks(
   const blocks = parsed.blocks.block.reduce<Map<BlockName, Block>>(
     (map, blockElement) => {
       const name = blockElement["@name"];
-      const properties = blockElement.property.reduce<BlockProperties>(
+      const properties = toArray(blockElement.property).reduce<BlockProperties>(
         (props, elem) => {
           props[elem["@name"]] = {
             value: elem["@value"],
@@ -110,18 +111,16 @@ export async function loadBlocks(
         },
         {},
       );
-      const drops = blockElement.drop
-        ? blockElement.drop.map<BlockDrop>((elem) => ({
-          event: elem["@event"],
-          name: elem["@name"],
-          count: parseCount(elem["@count"]),
-          tag: elem["@tag"]?.split(",") ?? [],
-          prob: elem["@prob"] ? parseFloat(elem["@prob"]) : undefined,
-          stickChance: elem["@stick_chance"]
-            ? parseFloat(elem["@stick_chance"])
-            : undefined,
-        }))
-        : [];
+      const drops = toArray(blockElement.drop).map<BlockDrop>((elem) => ({
+        event: elem["@event"],
+        name: elem["@name"],
+        count: parseCount(elem["@count"]),
+        tag: elem["@tag"]?.split(",") ?? [],
+        prob: elem["@prob"] ? parseFloat(elem["@prob"]) : undefined,
+        stickChance: elem["@stick_chance"]
+          ? parseFloat(elem["@stick_chance"])
+          : undefined,
+      }));
       const enableDropExtendsOff = blockElement.dropextendsoff !== undefined;
       map.set(name, {
         name,

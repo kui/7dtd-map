@@ -99,6 +99,15 @@ export function buildArrayMapByEntries<K, V>(
 }
 
 /**
+ * Normalize a value that may be a single item, an array, or undefined into an
+ * array. Used when parsing XML where a single child element is returned as an
+ * object instead of an array.
+ */
+export function toArray<T>(value: T | T[] | undefined): T[] {
+  return Array.isArray(value) ? value : value ? [value] : [];
+}
+
+/**
  * Run async tasks with a limit on the number of concurrently running tasks.
  */
 export async function throttleAll<T>(

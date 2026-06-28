@@ -1,5 +1,5 @@
 import { parse as parseXml } from "@libs/xml";
-import { vanillaDir } from "../utils.ts";
+import { toArray, vanillaDir } from "../utils.ts";
 
 const LOOT_XML = vanillaDir("Data", "Config", "loot.xml");
 
@@ -70,14 +70,14 @@ export async function loadLoot(
   const groups = new Map<string, { items: string[]; groups: string[] }>();
   for (const g of parsed.lootcontainers.lootgroup) {
     groups.set(g["@name"], {
-      items: extractItems(g.item ?? []),
-      groups: extractGroups(g.item ?? []),
+      items: extractItems(toArray(g.item)),
+      groups: extractGroups(toArray(g.item)),
     });
   }
   const containers = parsed.lootcontainers.lootcontainer.map((c) => ({
     name: c["@name"],
-    items: extractItems(c.item ?? []),
-    groups: extractGroups(c.item ?? []),
+    items: extractItems(toArray(c.item)),
+    groups: extractGroups(toArray(c.item)),
   }));
   return new Loot(containers, groups);
 }
