@@ -6,6 +6,9 @@ charset = utf-8
 end_of_line = lf
 indent_style = space
 indent_size = 2
+# Zed conflates tab_width and indent_size (https://github.com/zed-industries/zed/issues/24108),
+# so tab_width must be explicitly set to match indent_size for Zed to honor the setting.
+tab_width = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 80
