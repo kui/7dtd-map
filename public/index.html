@@ -25,7 +25,7 @@
         <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
         <li>
           Prefab/Block Language:
-          <select id="label_lang">
+          <select id="label-lang">
             <option selected>english</option>
           </select>
         </li>
@@ -35,15 +35,15 @@
     <div id="controller">
       <p><input id="files" type="file" multiple webkitdirectory /></p>
       <p>
-        <button id="clear_map" title="Clear all world files">Clear</button>
+        <button id="clear-map" title="Clear all world files">Clear</button>
         <button id="download">Download</button>
       </p>
       <table>
         <tr>
-          <th><label for="map_name">🗺️ Map Name</label></th>
+          <th><label for="map-name">🗺️ Map Name</label></th>
           <td>
             <input
-              id="map_name"
+              id="map-name"
               type="text"
               value=""
               data-remember="mapName"
@@ -53,20 +53,20 @@
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
-          <td><span id="cursor_coods">E/W: -, N/S: -, Elev: -</span></td>
+          <td><span id="cursor-coods">E/W: -, N/S: -, Elev: -</span></td>
         </tr>
         <tr>
           <th>
             🚩 Flag <button
-              id="reset_mark"
+              id="reset-mark"
               title="Reset (or double-click the map)"
             >
               X
             </button>
           </th>
           <td>
-            <div id="mark_coods">E/W: -, N/S: -, Elev: -</div>
-            <div id="mark_prefab"></div>
+            <div id="mark-coods">E/W: -, N/S: -, Elev: -</div>
+            <div id="mark-prefab"></div>
           </td>
         </tr>
         <tr>
@@ -82,12 +82,12 @@
           </td>
         </tr>
         <tr>
-          <th><label for="biomes_alpha">🌲 biomes.png</label></th>
+          <th><label for="biomes-alpha">🌲 biomes.png</label></th>
           <td>
             <label>
-              <output data-sync-for="biomes_alpha">1</output>
+              <output data-sync-for="biomes-alpha">1</output>
               <input
-                id="biomes_alpha"
+                id="biomes-alpha"
                 type="range"
                 title="Alpha biomes.png"
                 value="1"
@@ -100,7 +100,7 @@
         </tr>
         <tr>
           <th title="Roads">
-            <label for="splat3_alpha">🛣️ splat3_processed.png</label>
+            <label for="splat3-alpha">🛣️ splat3_processed.png</label>
             <span
               id="warn-splat3-png"
               title="Currently using splat3.png which is degraded compared to splat3_processed.png"
@@ -108,9 +108,9 @@
           </th>
           <td>
             <label>
-              <output data-sync-for="splat3_alpha">1</output>
+              <output data-sync-for="splat3-alpha">1</output>
               <input
-                id="splat3_alpha"
+                id="splat3-alpha"
                 type="range"
                 title="Alpha splat3"
                 value="1"
@@ -123,7 +123,7 @@
         </tr>
         <tr>
           <th title="Water">
-            <label for="splat4_alpha">🌊 splat4_processed.png</label>
+            <label for="splat4-alpha">🌊 splat4_processed.png</label>
             <span
               id="warn-splat4-png"
               title="Currently using splat4.png which is degraded compared to splat4_processed.png"
@@ -131,9 +131,9 @@
           </th>
           <td>
             <label>
-              <output data-sync-for="splat4_alpha">0.7</output>
+              <output data-sync-for="splat4-alpha">0.7</output>
               <input
-                id="splat4_alpha"
+                id="splat4-alpha"
                 type="range"
                 title="Alpha splat4"
                 value="0.7"
@@ -146,13 +146,13 @@
         </tr>
         <tr>
           <th title="Radiation Area">
-            <label for="rad_alpha">☢️ radiation.png</label>
+            <label for="rad-alpha">☢️ radiation.png</label>
           </th>
           <td>
             <label>
-              <output data-sync-for="rad_alpha">0.5</output>
+              <output data-sync-for="rad-alpha">0.5</output>
               <input
-                id="rad_alpha"
+                id="rad-alpha"
                 type="range"
                 title="Alpha radiation"
                 value="0.5"
@@ -176,11 +176,11 @@
         </tr>
         <tr>
           <th title="Terrain">
-            <label for="terrain_viewer_show">⛰️ dtm.raw</label>
+            <label for="terrain-viewer-show">⛰️ dtm.raw</label>
           </th>
           <td>
             <button
-              id="terrain_viewer_show"
+              id="terrain-viewer-show"
               disabled
               title="Requires dtm.raw and map_info.xml"
             >
@@ -227,12 +227,12 @@
           <td>
             <table class="inner-table">
               <tr>
-                <th><label for="prefab_sign_size">Size:</label></th>
+                <th><label for="prefab-sign-size">Size:</label></th>
                 <td>
                   <label>
-                    <output data-sync-for="prefab_sign_size">200</output>px
+                    <output data-sync-for="prefab-sign-size">200</output>px
                     <input
-                      id="prefab_sign_size"
+                      id="prefab-sign-size"
                       type="range"
                       max="500"
                       min="20"
@@ -243,12 +243,12 @@
                 </td>
               </tr>
               <tr>
-                <th><label for="prefab_sign_alpha">Alpha:</label></th>
+                <th><label for="prefab-sign-alpha">Alpha:</label></th>
                 <td>
                   <label>
-                    <output data-sync-for="prefab_sign_alpha">1</output>
+                    <output data-sync-for="prefab-sign-alpha">1</output>
                     <input
-                      id="prefab_sign_alpha"
+                      id="prefab-sign-alpha"
                       type="range"
                       value="1"
                       step="0.1"
@@ -266,12 +266,12 @@
           <td>
             <table class="inner-table">
               <tr>
-                <th><label for="prefab_footprint_alpha">Alpha:</label></th>
+                <th><label for="prefab-footprint-alpha">Alpha:</label></th>
                 <td>
                   <label>
-                    <output data-sync-for="prefab_footprint_alpha">1</output>
+                    <output data-sync-for="prefab-footprint-alpha">1</output>
                     <input
-                      id="prefab_footprint_alpha"
+                      id="prefab-footprint-alpha"
                       type="range"
                       value="1"
                       step="0.1"
@@ -290,14 +290,14 @@
           <td>
             <table class="inner-table">
               <tr>
-                <th><label for="min_tier">Min:</label></th>
+                <th><label for="min-tier">Min:</label></th>
                 <td>
-                  <label for="min_tier"><output data-sync-for="min_tier"
+                  <label for="min-tier"><output data-sync-for="min-tier"
                     >0</output></label>
                 </td>
                 <td>
                   <input
-                    id="min_tier"
+                    id="min-tier"
                     type="range"
                     min="0"
                     max="5"
@@ -308,14 +308,14 @@
                 </td>
               </tr>
               <tr>
-                <th><label for="max_tier">Max:</label></th>
+                <th><label for="max-tier">Max:</label></th>
                 <td>
-                  <label for="max_tier"><output data-sync-for="max_tier"
+                  <label for="max-tier"><output data-sync-for="max-tier"
                     >5</output></label>
                 </td>
                 <td>
                   <input
-                    id="max_tier"
+                    id="max-tier"
                     type="range"
                     min="0"
                     max="5"
@@ -337,12 +337,12 @@
           </td>
         </tr>
         <tr>
-          <th><label for="prefab_filter">🏠️ Prefab Filter</label></th>
+          <th><label for="prefab-filter">🏠️ Prefab Filter</label></th>
           <td>
-            <input id="prefab_filter" placeholder="Enter prefab name" />
+            <input id="prefab-filter" placeholder="Enter prefab name" />
             <button
               title="Clear"
-              data-input-for="prefab_filter"
+              data-input-for="prefab-filter"
               data-input-value=""
             >
               X
@@ -378,9 +378,9 @@
         <tr>
           <th>Prefab Filter Preset</th>
           <td>
-            <button data-input-for="prefab_filter">trader</button>
-            <button data-input-for="prefab_filter">skyscraper</button>
-            <button data-input-for="prefab_filter"
+            <button data-input-for="prefab-filter">trader</button>
+            <button data-input-for="prefab-filter">skyscraper</button>
+            <button data-input-for="prefab-filter"
               data-input-value="^downtown_">
               downtown
             </button>
@@ -391,7 +391,7 @@
             -->
             <button
               title="More than or equal to 20 book containers"
-              data-input-for="prefab_filter"
+              data-input-for="prefab-filter"
               data-input-value="^(store_book_01|remnant_library_01|remnant_library_02|remnant_skyscraper_05|remnant_school_01|remnant_skyscraper_02|remnant_waste_18|remnant_downtown_strip_16|downtown_building_05|downtown_filler_29|remnant_downtown_strip_01|remnant_downtown_strip_12|remnant_downtown_strip_13|downtown_business_06|remnant_waste_19|house_old_ranch_11|radio_station_03|remnant_church_01|remnant_hospital_01|radio_station_02)$"
             >
               Many Books except High Tiers
@@ -399,13 +399,13 @@
           </td>
         </tr>
         <tr>
-          <th><label for="block_filter">📦 Block Filter</label></th>
+          <th><label for="block-filter">📦 Block Filter</label></th>
           <td>
             <div>
-              <input id="block_filter" placeholder="Enter block name" />
+              <input id="block-filter" placeholder="Enter block name" />
               <button
                 title="Clear"
-                data-input-for="block_filter"
+                data-input-for="block-filter"
                 data-input-value=""
               >
                 X
@@ -413,7 +413,7 @@
             </div>
             <div>
               <strong>Min Count:</strong> <input
-                id="min_matched_block_count"
+                id="min-matched-block-count"
                 type="number"
                 min="0"
                 max="999"
@@ -426,49 +426,49 @@
           <th>Block Filter Preset</th>
           <td>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="(Grace|Super)Corn"
             >
               Super Corn
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^decoCookingPot"
             >
               Cooking Pot
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^sleeper(?!Zombie|Vulture).*Animal$"
             >
               Meats
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^planted.*Harvest"
             >
               Plants
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^(cntVendingMachine.*Broken|cntATMInsecure|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump)"
             >
               Steel with Wrench
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
             >
               Book Containers
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$"
             >
               Working Vending-Machine
             </button>
             <button
-              data-input-for="block_filter"
+              data-input-for="block-filter"
               data-input-value="^cntLootCrateHero"
             >
               Hidden Stash
@@ -476,32 +476,32 @@
           </td>
         </tr>
       </table>
-      <p id="prefabs_num"></p>
-      <ul id="prefabs_list"></ul>
+      <p id="prefabs-num"></p>
+      <ul id="prefabs-list"></ul>
     </div>
     <dialog
-      id="terrain_viewer_dialog"
+      id="terrain-viewer-dialog"
       class="terrain-viewer-dialog"
-      aria-labelledby="terrain_viewer_title"
+      aria-labelledby="terrain-viewer-title"
     >
-      <h2 id="terrain_viewer_title" class="visually-hidden">Terrain Viewer</h2>
+      <h2 id="terrain-viewer-title" class="visually-hidden">Terrain Viewer</h2>
       <canvas
-        id="terrain_viewer"
+        id="terrain-viewer"
         width="0"
         height="0"
         tabindex="0"
       ></canvas>
-      <div id="terrarian_viewer_hud" class="terrain-viewer-hud">
+      <div id="terrarian-viewer-hud" class="terrain-viewer-hud">
         <label style="user-select: none">
           <input
-            id="terrain_viewer_help_toggle"
+            id="terrain-viewer-help-toggle"
             type="checkbox"
             checked
-            oninput='op_desc.style.display = checked ? "block" : "none"'
+            oninput='op-desc.style.display = checked ? "block" : "none"'
           />
           Show/Hide Help
         </label>
-        <dl id="op_desc">
+        <dl id="op-desc">
           <dt>
             <code>WASD</code> or <code>Arrow</code> keys / Grab with Mouse Left
             Button
@@ -521,7 +521,7 @@
         </dl>
       </div>
       <button
-        id="terrain_viewer_close"
+        id="terrain-viewer-close"
         class="terrain-viewer-close"
         type="button"
         aria-label="Close terrain viewer"
@@ -529,11 +529,11 @@
         ❌
       </button>
     </dialog>
-    <p id="loading_indicator"></p>
+    <p id="loading-indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
-    <div id="prefab_tooltip" role="tooltip" aria-hidden="true"></div>
-    <div id="prefab_link_tooltip" popover="manual" role="tooltip">
-      <img id="prefab_link_tooltip_image" alt="" loading="lazy" />
+    <div id="prefab-tooltip" role="tooltip" aria-hidden="true"></div>
+    <div id="prefab-link-tooltip" popover="manual" role="tooltip">
+      <img id="prefab-link-tooltip-image" alt="" loading="lazy" />
     </div>
 
     <h2>How to Use</h2>
@@ -552,11 +552,11 @@
         Open "GeneratedWorlds" folder:
         <ul>
           <li>
-            <code><span id="generated_world_path_windows"
+            <code><span id="generated-world-path-windows"
               >%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
             <button
               title="Copy this path"
-              data-copy-for="generated_world_path_windows"
+              data-copy-for="generated-world-path-windows"
               data-success-message="✅ Press Win+R then paste this"
             >
               📋️
@@ -571,7 +571,7 @@
 
     <p>
       Select:
-      <select id="bundled_map_select">
+      <select id="bundled-map-select">
         <option value="" selected>-- Choose a world --</option>
       </select>
     </p>

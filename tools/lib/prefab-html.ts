@@ -50,7 +50,7 @@ function html(model: HtmlModel): string {
       <li><a href="https://github.com/kui/7dtd-map">Github repository</a></li>
       <li>
         Prefab/Block Language:
-        <select id="label_lang">
+        <select id="label-lang">
           <option selected>english</option>
         </select>
       </li>

@@ -150,7 +150,7 @@ export class TerrainViewer {
   }
 
   // Drives the existing Show/Hide Help checkbox; its inline oninput
-  // handles updating the op_desc visibility, so we just synthesise a
+  // handles updating the op-desc visibility, so we just synthesise a
   // click. Bound to the "?" key by the camera controller.
   #toggleHelp() {
     this.#doms.helpToggle.click();

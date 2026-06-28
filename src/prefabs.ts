@@ -92,8 +92,8 @@ function main() {
   });
 
   installPrefabLinkTooltip({
-    tooltip: component("prefab_link_tooltip", HTMLElement),
-    image: component("prefab_link_tooltip_image", HTMLImageElement),
+    tooltip: component("prefab-link-tooltip", HTMLElement),
+    image: component("prefab-link-tooltip-image", HTMLImageElement),
   });
 
   // init

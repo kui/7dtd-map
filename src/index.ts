@@ -57,7 +57,7 @@ function main() {
   minMaxInputs.init();
 
   component("download").addEventListener("click", () => {
-    const mapName = component("map_name", HTMLInputElement).value || "7dtd-map";
+    const mapName = component("map-name", HTMLInputElement).value || "7dtd-map";
     downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
   });
 
@@ -73,13 +73,13 @@ function main() {
     dialogHandler,
   );
   const bundledMapHandler = new BundledMapHandler({
-    select: component("bundled_map_select", HTMLSelectElement),
+    select: component("bundled-map-select", HTMLSelectElement),
   });
   const fileHandler = new FileHandler(
     {
       files: component("files", HTMLInputElement),
-      clearMap: component("clear_map", HTMLButtonElement),
-      mapName: component("map_name", HTMLInputElement),
+      clearMap: component("clear-map", HTMLButtonElement),
+      mapName: component("map-name", HTMLInputElement),
     },
     dialogHandler,
     () => new Worker("worker/file-processor.js"),
@@ -87,7 +87,7 @@ function main() {
     bundledMapHandler,
   );
   const labelHandler = new LabelHandler(
-    { language: component("label_lang", HTMLSelectElement) },
+    { language: component("label-lang", HTMLSelectElement) },
     "labels",
     navigator.languages,
   );
@@ -98,20 +98,20 @@ function main() {
   const markerHandler = new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
-      resetMarker: component("reset_mark", HTMLButtonElement),
+      resetMarker: component("reset-mark", HTMLButtonElement),
     },
     dtmHandler,
     fileHandler,
   );
   const prefabsHandler = new PrefabsHandler(
     {
-      status: component("prefabs_num", HTMLElement),
-      minTier: component("min_tier", HTMLInputElement),
-      maxTier: component("max_tier", HTMLInputElement),
-      prefabFilter: component("prefab_filter", HTMLInputElement),
-      blockFilter: component("block_filter", HTMLInputElement),
+      status: component("prefabs-num", HTMLElement),
+      minTier: component("min-tier", HTMLInputElement),
+      maxTier: component("max-tier", HTMLInputElement),
+      prefabFilter: component("prefab-filter", HTMLInputElement),
+      blockFilter: component("block-filter", HTMLInputElement),
       minMatchedBlockCount: component(
-        "min_matched_block_count",
+        "min-matched-block-count",
         HTMLInputElement,
       ),
       preExcludes: Array.from(
@@ -128,8 +128,8 @@ function main() {
   );
   new MarkerCoordsDisplayHandler(
     {
-      output: component("mark_coods", HTMLElement),
-      prefab: component("mark_prefab", HTMLElement),
+      output: component("mark-coods", HTMLElement),
+      prefab: component("mark-prefab", HTMLElement),
     },
     markerHandler,
     dtmHandler,
@@ -148,14 +148,14 @@ function main() {
   new MapCanvasHandler(
     {
       canvas: component("map", HTMLCanvasElement),
-      biomesAlpha: component("biomes_alpha", HTMLInputElement),
-      splat3Alpha: component("splat3_alpha", HTMLInputElement),
-      splat4Alpha: component("splat4_alpha", HTMLInputElement),
-      radAlpha: component("rad_alpha", HTMLInputElement),
-      prefabSignSize: component("prefab_sign_size", HTMLInputElement),
-      prefabSignAlpha: component("prefab_sign_alpha", HTMLInputElement),
+      biomesAlpha: component("biomes-alpha", HTMLInputElement),
+      splat3Alpha: component("splat3-alpha", HTMLInputElement),
+      splat4Alpha: component("splat4-alpha", HTMLInputElement),
+      radAlpha: component("rad-alpha", HTMLInputElement),
+      prefabSignSize: component("prefab-sign-size", HTMLInputElement),
+      prefabSignAlpha: component("prefab-sign-alpha", HTMLInputElement),
       prefabFootprintAlpha: component(
-        "prefab_footprint_alpha",
+        "prefab-footprint-alpha",
         HTMLInputElement,
       ),
       brightness: component("brightness", HTMLInputElement),
@@ -168,18 +168,18 @@ function main() {
   );
   new TerrainViewer(
     {
-      dialog: component("terrain_viewer_dialog", HTMLDialogElement),
-      output: component("terrain_viewer", HTMLCanvasElement),
+      dialog: component("terrain-viewer-dialog", HTMLDialogElement),
+      output: component("terrain-viewer", HTMLCanvasElement),
       texture: component("map", HTMLCanvasElement),
-      show: component("terrain_viewer_show", HTMLButtonElement),
-      close: component("terrain_viewer_close", HTMLButtonElement),
-      hud: component("terrarian_viewer_hud"),
-      helpToggle: component("terrain_viewer_help_toggle", HTMLInputElement),
+      show: component("terrain-viewer-show", HTMLButtonElement),
+      close: component("terrain-viewer-close", HTMLButtonElement),
+      hud: component("terrarian-viewer-hud"),
+      helpToggle: component("terrain-viewer-help-toggle", HTMLInputElement),
     },
     dtmHandler,
   );
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
-    component("prefabs_list", HTMLElement),
+    component("prefabs-list", HTMLElement),
     (p) => prefabLi(p),
   );
   prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
@@ -190,13 +190,13 @@ function main() {
     dtmHandler,
   );
   new CursorCoordsDisplayHandler(
-    { output: component("cursor_coods", HTMLElement) },
+    { output: component("cursor-coods", HTMLElement) },
     cursorHandler,
     dtmHandler,
   );
   new PrefabTooltipHandler(
     {
-      tooltip: component("prefab_tooltip", HTMLElement),
+      tooltip: component("prefab-tooltip", HTMLElement),
       canvas: component("map", HTMLCanvasElement),
     },
     cursorHandler,
@@ -247,8 +247,8 @@ function main() {
   );
 
   installPrefabLinkTooltip({
-    tooltip: component("prefab_link_tooltip", HTMLElement),
-    image: component("prefab_link_tooltip_image", HTMLImageElement),
+    tooltip: component("prefab-link-tooltip", HTMLElement),
+    image: component("prefab-link-tooltip-image", HTMLImageElement),
   });
 
   //
@@ -260,7 +260,7 @@ function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
   const safeName = escapeHtml(prefab.name);
   li.innerHTML = [
-    `<button data-input-for="prefab_filter" data-input-value="${safeName}" title="Filter with this prefab name">▲</button>`,
+    `<button data-input-for="prefab-filter" data-input-value="${safeName}" title="Filter with this prefab name">▲</button>`,
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
@@ -283,7 +283,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       const blockLi = document.createElement("li");
       const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-for="block_filter" data-input-value="${safeBlockName}" title="Filter with this block name">▲</button>`,
+        `<button data-input-for="block-filter" data-input-value="${safeBlockName}" title="Filter with this block name">▲</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,

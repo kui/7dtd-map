@@ -7,7 +7,7 @@
   cursor: crosshair;
 }
 
-#prefab_tooltip {
+#prefab-tooltip {
   position: fixed;
   display: none;
   align-items: center;
@@ -102,8 +102,8 @@
   }
 }
 
-#prefabs_list,
-#prefabs_list ul {
+#prefabs-list,
+#prefabs-list ul {
   list-style-type: none;
   padding-inline-start: 16px;
 }
@@ -170,7 +170,7 @@ dialog {
   }
 }
 
-#terrain_viewer_dialog {
+#terrain-viewer-dialog {
   /* When opened via showModal() the dialog is position: fixed in the top
      layer; pin it to the viewport edges with inset:0 rather than width:100vw
      so the scrollbar width does not push the right edge off-screen. */
@@ -185,7 +185,7 @@ dialog {
   background: transparent;
   overflow: hidden;
 
-  & #terrain_viewer {
+  & #terrain-viewer {
     display: block;
     width: 100%;
     height: 100%;
@@ -207,6 +207,6 @@ dialog {
   }
 }
 
-#terrain_viewer_dialog::backdrop {
+#terrain-viewer-dialog::backdrop {
   background-color: black;
 }

@@ -5,7 +5,7 @@ import { printError } from "../lib/utils.ts";
 
 function main() {
   const labelHandler = new LabelHandler(
-    { language: component("label_lang", HTMLSelectElement) },
+    { language: component("label-lang", HTMLSelectElement) },
     "../labels",
     navigator.languages,
   );

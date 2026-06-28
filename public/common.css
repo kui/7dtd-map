@@ -15,7 +15,7 @@ dialog::backdrop {
   background-color: rgba(125, 125, 125, 0.4);
 }
 
-#prefab_link_tooltip {
+#prefab-link-tooltip {
   position: fixed;
   margin: 0;
   padding: 4px;
