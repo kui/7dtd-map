@@ -70,15 +70,22 @@
           </td>
         </tr>
         <tr>
-          <th>ℹ️ map_info.xml</th>
+          <th>🔧 Tools</th>
           <td>
+            <button
+              id="terrain-viewer-show"
+              disabled
+              title="Requires dtm.raw and map_info.xml"
+            >⛰️ Show terrain</button>
+            <button
+              id="prefab-inspector-show"
+              data-show-dialog-for="prefab-inspector-dialog"
+            >🔍️ Inspect prefabs</button>
             <button
               id="map-info-show"
               disabled
               data-show-dialog-for="map-info-dialog"
-            >
-              Show XML
-            </button>
+            >ℹ️ map_info.xml</button>
           </td>
         </tr>
         <tr>
@@ -166,47 +173,18 @@
         <tr>
           <th title="Prefabs">🏘️ prefabs.xml</th>
           <td>
-            <table class="inner-table">
-              <tr>
-                <td colspan="2">
-                  <button
-                    id="prefab-inspector-show"
-                    data-show-dialog-for="prefab-inspector-dialog"
-                  >🔍️ Inspect prefabs</button>
-                </td>
-              </tr>
-              <tr>
-                <th><label for="prefab-footprint-alpha">Alpha:</label></th>
-                <td>
-                  <label>
-                    <output data-sync-for="prefab-footprint-alpha">1</output>
-                    <input
-                      id="prefab-footprint-alpha"
-                      type="range"
-                      value="1"
-                      step="0.1"
-                      min="0"
-                      max="1"
-                      data-remember-value
-                    />
-                  </label>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <th title="Terrain">
-            <label for="terrain-viewer-show">⛰️ dtm.raw</label>
-          </th>
-          <td>
-            <button
-              id="terrain-viewer-show"
-              disabled
-              title="Requires dtm.raw and map_info.xml"
-            >
-              Show terrain
-            </button>
+            <label>
+              <output data-sync-for="prefab-footprint-alpha">1</output>
+              <input
+                id="prefab-footprint-alpha"
+                type="range"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+                data-remember-value
+              />
+            </label>
           </td>
         </tr>
         <tr>
