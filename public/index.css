@@ -74,111 +74,20 @@
   top: 0;
   background-color: rgba(255, 255, 255, 0.9);
   overflow: auto;
-}
-
-.controller-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 1em;
-  row-gap: 0.5em;
-  align-items: center;
-}
-
-.controller-grid .cell-label {
-  white-space: nowrap;
-  text-align: right;
-  padding-right: 0.5em;
-  border-right: 1px solid #ddd;
-}
-
-.controller-grid .cell-control {
-  min-width: 0;
-  padding-left: 0.2em;
-}
-
-.controller-grid .cell-control.full-width {
-  grid-column: 1 / -1;
-}
-
-.controller-grid > .cell-label,
-.controller-grid > .cell-control {
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid #eee;
-}
-
-.controller-grid .layer-group {
-  border-bottom: 1px solid #eee;
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
-}
-
-.layer-group {
-  grid-column: 1 / -1;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 0.3em 0.5em;
-}
-
-.layer-group summary {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.layer-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 1em;
-  row-gap: 0.3em;
-  margin-top: 0.5em;
-  padding-left: 0.5em;
-}
-
-.sign-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3em;
-}
-
-.sign-row {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-}
-
-.sign-row input[type="range"] {
-  flex: 1;
-}
-
-.tier-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3em;
-}
-
-.tier-row {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-}
-
-.tier-row output {
-  min-width: 1.5em;
-  text-align: right;
-}
-
-.tier-row input[type="range"] {
-  flex: 1;
-}
-
-.controller-grid output,
-.layer-grid output,
-.sign-row output,
-.tier-row output {
-  display: inline-block;
-  font-size: 1em;
-  width: 2em;
-  text-align: right;
+  & table {
+    & tr:hover {
+      background-color: whitesmoke;
+    }
+    & td output {
+      display: inline-block;
+      font-size: 1em;
+      width: 2em;
+      text-align: right;
+    }
+    & th {
+      white-space: nowrap;
+    }
+  }
 }
 
 #prefab-pre-filters {

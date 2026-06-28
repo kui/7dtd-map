@@ -38,380 +38,415 @@
         <button id="clear-map" title="Clear all world files">Clear</button>
         <button id="download">Download</button>
       </p>
-      <div class="controller-grid">
-        <div class="cell-label"><label for="map-name">🗺️ Map Name</label></div>
-        <div class="cell-control">
-          <input
-            id="map-name"
-            type="text"
-            value=""
-            data-remember="mapName"
-            readonly
-          />
-        </div>
-
-        <div class="cell-label">🖱️ Cursor</div>
-        <div class="cell-control">
-          <span id="cursor-coods">E/W: -, N/S: -, Elev: -</span>
-        </div>
-
-        <div class="cell-label">
-          🚩 Flag
-          <button id="reset-mark" title="Reset (or double-click the map)">
-            X
-          </button>
-        </div>
-        <div class="cell-control">
-          <div id="mark-coods">E/W: -, N/S: -, Elev: -</div>
-          <div id="mark-prefab"></div>
-        </div>
-
-        <div class="cell-label">🔧 Tools</div>
-        <div class="cell-control">
-          <button
-            id="terrain-viewer-show"
-            disabled
-            title="Requires dtm.raw and map_info.xml"
-          >⛰️ Show terrain</button>
-          <button
-            id="prefab-inspector-show"
-            data-show-dialog-for="prefab-inspector-dialog"
-          >🔍️ Inspect prefabs</button>
-          <button
-            id="map-info-show"
-            disabled
-            data-show-dialog-for="map-info-dialog"
-          >ℹ️ map_info.xml</button>
-        </div>
-
-        <details class="layer-group">
-          <summary>🎨 Layers</summary>
-          <div class="layer-grid">
-            <div class="cell-label">
-              <label for="biomes-alpha">🌲 biomes.png</label>
-            </div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="biomes-alpha">1</output>
-                <input
-                  id="biomes-alpha"
-                  type="range"
-                  title="Alpha biomes.png"
-                  value="1"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                />
-              </label>
-            </div>
-
-            <div class="cell-label" title="Roads">
-              <label for="splat3-alpha">🛣️ splat3_processed.png</label>
-              <span
-                id="warn-splat3-png"
-                title="Currently using splat3.png which is degraded compared to splat3_processed.png"
-              >⚠️</span>
-            </div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="splat3-alpha">1</output>
-                <input
-                  id="splat3-alpha"
-                  type="range"
-                  title="Alpha splat3"
-                  value="1"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                />
-              </label>
-            </div>
-
-            <div class="cell-label" title="Water">
-              <label for="splat4-alpha">🌊 splat4_processed.png</label>
-              <span
-                id="warn-splat4-png"
-                title="Currently using splat4.png which is degraded compared to splat4_processed.png"
-              >⚠️</span>
-            </div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="splat4-alpha">0.7</output>
-                <input
-                  id="splat4-alpha"
-                  type="range"
-                  title="Alpha splat4"
-                  value="0.7"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                />
-              </label>
-            </div>
-
-            <div class="cell-label" title="Radiation Area">
-              <label for="rad-alpha">☢️ radiation.png</label>
-            </div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="rad-alpha">0.5</output>
-                <input
-                  id="rad-alpha"
-                  type="range"
-                  title="Alpha radiation"
-                  value="0.5"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                />
-              </label>
-            </div>
-
-            <div class="cell-label" title="Prefabs">🏘️ prefabs.xml</div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="prefab-footprint-alpha">1</output>
-                <input
-                  id="prefab-footprint-alpha"
-                  type="range"
-                  value="1"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                  data-remember-value
-                />
-              </label>
-            </div>
-
-            <div class="cell-label">
-              <label for="brightness">🔆 Brightness</label>
-            </div>
-            <div class="cell-control">
-              <label>
-                <output data-sync-for="brightness">60</output>%
-                <input
-                  id="brightness"
-                  type="range"
-                  max="100"
-                  min="0"
-                  step="1"
-                  value="60"
-                />
-              </label>
-            </div>
-          </div>
-        </details>
-
-        <div class="cell-label" title="Scale of PNG files">
-          <label for="scale">🔍️ Scale</label>
-        </div>
-        <div class="cell-control">
-          <label>
-            <output data-sync-for="scale">0.12</output>
+      <table>
+        <tr>
+          <th><label for="map-name">🗺️ Map Name</label></th>
+          <td>
             <input
-              id="scale"
-              type="range"
-              max="1"
-              min="0.04"
-              step="0.02"
-              value="0.12"
+              id="map-name"
+              type="text"
+              value=""
+              data-remember="mapName"
+              readonly
             />
-          </label>
-        </div>
-
-        <div class="cell-label"><span class="logo">✘</span> Prefab Sign</div>
-        <div class="cell-control sign-group">
-          <div class="sign-row">
-            <label for="prefab-sign-size">Size:</label>
-            <output data-sync-for="prefab-sign-size">200</output>px
-            <input
-              id="prefab-sign-size"
-              type="range"
-              max="500"
-              min="20"
-              step="20"
-              value="200"
-            />
-          </div>
-          <div class="sign-row">
-            <label for="prefab-sign-alpha">Alpha:</label>
-            <output data-sync-for="prefab-sign-alpha">1</output>
-            <input
-              id="prefab-sign-alpha"
-              type="range"
-              value="1"
-              step="0.1"
-              min="0"
-              max="1"
-            />
-          </div>
-        </div>
-
-        <div class="cell-label">💀 Prefab Tier</div>
-        <div class="cell-control tier-group">
-          <div class="tier-row">
-            <label for="min-tier">Min:</label>
-            <output data-sync-for="min-tier">0</output>
-            <input
-              id="min-tier"
-              type="range"
-              min="0"
-              max="5"
-              value="0"
-              list="tiers"
-              data-min="tierRange"
-            />
-          </div>
-          <div class="tier-row">
-            <label for="max-tier">Max:</label>
-            <output data-sync-for="max-tier">5</output>
-            <input
-              id="max-tier"
-              type="range"
-              min="0"
-              max="5"
-              value="5"
-              list="tiers"
-              data-max="tierRange"
-            />
-          </div>
-          <datalist id="tiers">
-            <option value="0"></option>
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value="4"></option>
-            <option value="5"></option>
-          </datalist>
-        </div>
-
-        <div class="cell-label">
-          <label for="prefab-filter">🏠️ Prefab Filter</label>
-        </div>
-        <div class="cell-control">
-          <input id="prefab-filter" placeholder="Enter prefab name" />
-          <button title="Clear" data-input-prefab-filter="">X</button>
-          <details id="prefab-pre-filters">
-            <summary>Excludes</summary>
-            <ul>
-              <li>
-                <label><input
-                    type="checkbox"
-                    value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
-                    checked
-                  />Test</label>
-              </li>
-              <li>
-                <label><input
-                    type="checkbox"
-                    value="^rwg_tile_"
-                    checked
-                  />Tiles</label>
-              </li>
-              <li>
-                <label><input
-                    type="checkbox"
-                    value="^part_driveway_"
-                    checked
-                  />Driveways</label>
-              </li>
-            </ul>
-          </details>
-        </div>
-
-        <div class="cell-label">
-          <label for="block-filter">📦 Block Filter</label>
-        </div>
-        <div class="cell-control">
-          <div>
-            <input id="block-filter" placeholder="Enter block name" />
-            <button title="Clear" data-input-block-filter="">X</button>
-          </div>
-          <div>
-            <strong>Min Count:</strong>
-            <input
-              id="min-matched-block-count"
-              type="number"
-              min="1"
-              max="999"
-              placeholder="1-999"
-            />
-          </div>
-        </div>
-
-        <div class="cell-control full-width">
-          <strong>Filter Preset</strong>
-          <button
-            data-input-min-tier="0"
-            data-input-prefab-filter="trader"
-            data-input-block-filter=""
-          >All Traders</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter="skyscraper"
-            data-input-block-filter=""
-          >Skyscrapers</button>
-          <button
-            title="More than or equal to 20 book containers in early game"
-            data-input-min-tier="0"
-            data-input-max-tier="2"
-            data-input-prefab-filter=""
-            data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
-            data-input-min-matched-block-count="20"
-          >Many Books in Early Game</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="(Grace|Super)Corn"
-            data-input-min-matched-block-count=""
-          >Super Corn</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="2"
-            data-input-prefab-filter=""
-            data-input-block-filter="^decoCookingPot"
-            data-input-min-matched-block-count=""
-          >Cooking Pot in Early Game</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="^sleeper(?!Zombie|Vulture).*Animal$"
-            data-input-min-matched-block-count="6"
-          >Many Meats</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="^planted.*Harvest"
-            data-input-min-matched-block-count="20"
-          >Many Plants</button>
-          <!-- Check this regexp using ./tools/verify-steel-wrench-filter.ts -->
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="^(cntVendingMachine.*Broken|cntAllVendingMachine|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump|cntMunitionsBox)"
-            data-input-min-matched-block-count=""
-          >Steel with Wrench</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$"
-            data-input-min-matched-block-count=""
-          >Working Vending-Machine</button>
-          <button
-            data-input-min-tier="0"
-            data-input-max-tier="5"
-            data-input-prefab-filter=""
-            data-input-block-filter="^cntLootCrateHero"
-            data-input-min-matched-block-count=""
-          >Hidden Stash</button>
-        </div>
-      </div>
+          </td>
+        </tr>
+        <tr>
+          <th>🖱️ Cursor</th>
+          <td><span id="cursor-coods">E/W: -, N/S: -, Elev: -</span></td>
+        </tr>
+        <tr>
+          <th>
+            🚩 Flag <button
+              id="reset-mark"
+              title="Reset (or double-click the map)"
+            >
+              X
+            </button>
+          </th>
+          <td>
+            <div id="mark-coods">E/W: -, N/S: -, Elev: -</div>
+            <div id="mark-prefab"></div>
+          </td>
+        </tr>
+        <tr>
+          <th>🔧 Tools</th>
+          <td>
+            <button
+              id="terrain-viewer-show"
+              disabled
+              title="Requires dtm.raw and map_info.xml"
+            >⛰️ Show terrain</button>
+            <button
+              id="prefab-inspector-show"
+              data-show-dialog-for="prefab-inspector-dialog"
+            >🔍️ Inspect prefabs</button>
+            <button
+              id="map-info-show"
+              disabled
+              data-show-dialog-for="map-info-dialog"
+            >ℹ️ map_info.xml</button>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="biomes-alpha">🌲 biomes.png</label></th>
+          <td>
+            <label>
+              <output data-sync-for="biomes-alpha">1</output>
+              <input
+                id="biomes-alpha"
+                type="range"
+                title="Alpha biomes.png"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Roads">
+            <label for="splat3-alpha">🛣️ splat3_processed.png</label>
+            <span
+              id="warn-splat3-png"
+              title="Currently using splat3.png which is degraded compared to splat3_processed.png"
+            >⚠️</span>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="splat3-alpha">1</output>
+              <input
+                id="splat3-alpha"
+                type="range"
+                title="Alpha splat3"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Water">
+            <label for="splat4-alpha">🌊 splat4_processed.png</label>
+            <span
+              id="warn-splat4-png"
+              title="Currently using splat4.png which is degraded compared to splat4_processed.png"
+            >⚠️</span>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="splat4-alpha">0.7</output>
+              <input
+                id="splat4-alpha"
+                type="range"
+                title="Alpha splat4"
+                value="0.7"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Radiation Area">
+            <label for="rad-alpha">☢️ radiation.png</label>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="rad-alpha">0.5</output>
+              <input
+                id="rad-alpha"
+                type="range"
+                title="Alpha radiation"
+                value="0.5"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Prefabs">🏘️ prefabs.xml</th>
+          <td>
+            <label>
+              <output data-sync-for="prefab-footprint-alpha">1</output>
+              <input
+                id="prefab-footprint-alpha"
+                type="range"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+                data-remember-value
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="brightness">🔆 Brightness</label></th>
+          <td>
+            <label>
+              <output data-sync-for="brightness">60</output>%
+              <input
+                id="brightness"
+                type="range"
+                max="100"
+                min="0"
+                step="1"
+                value="60"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th title="Scale of PNG files">
+            <label for="scale">🔍️ Scale</label>
+          </th>
+          <td>
+            <label>
+              <output data-sync-for="scale">0.12</output>
+              <input
+                id="scale"
+                type="range"
+                max="1"
+                min="0.04"
+                step="0.02"
+                value="0.12"
+              />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th><span class="logo">✘</span> Prefab Sign</th>
+          <td>
+            <table class="inner-table">
+              <tr>
+                <th><label for="prefab-sign-size">Size:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="prefab-sign-size">200</output>px
+                    <input
+                      id="prefab-sign-size"
+                      type="range"
+                      max="500"
+                      min="20"
+                      step="20"
+                      value="200"
+                    />
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="prefab-sign-alpha">Alpha:</label></th>
+                <td>
+                  <label>
+                    <output data-sync-for="prefab-sign-alpha">1</output>
+                    <input
+                      id="prefab-sign-alpha"
+                      type="range"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
+                  </label>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th>💀 Prefab Tier</th>
+          <td>
+            <table class="inner-table">
+              <tr>
+                <th><label for="min-tier">Min:</label></th>
+                <td>
+                  <label for="min-tier"><output data-sync-for="min-tier"
+                    >0</output></label>
+                </td>
+                <td>
+                  <input
+                    id="min-tier"
+                    type="range"
+                    min="0"
+                    max="5"
+                    value="0"
+                    list="tiers"
+                    data-min="tierRange"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th><label for="max-tier">Max:</label></th>
+                <td>
+                  <label for="max-tier"><output data-sync-for="max-tier"
+                    >5</output></label>
+                </td>
+                <td>
+                  <input
+                    id="max-tier"
+                    type="range"
+                    min="0"
+                    max="5"
+                    value="5"
+                    list="tiers"
+                    data-max="tierRange"
+                  />
+                </td>
+              </tr>
+            </table>
+            <datalist id="tiers">
+              <option value="0"></option>
+              <option value="1"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+              <option value="4"></option>
+              <option value="5"></option>
+            </datalist>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="prefab-filter">🏠️ Prefab Filter</label></th>
+          <td>
+            <input id="prefab-filter" placeholder="Enter prefab name" />
+            <button
+              title="Clear"
+              data-input-prefab-filter=""
+            >
+              X
+            </button>
+            <details id="prefab-pre-filters">
+              <summary>Excludes</summary>
+              <ul>
+                <li>
+                  <label><input
+                      type="checkbox"
+                      value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
+                      checked
+                    />Test</label>
+                </li>
+                <li>
+                  <label><input
+                      type="checkbox"
+                      value="^rwg_tile_"
+                      checked
+                    />Tiles</label>
+                </li>
+                <li>
+                  <label><input
+                      type="checkbox"
+                      value="^part_driveway_"
+                      checked
+                    />Driveways</label>
+                </li>
+              </ul>
+            </details>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="block-filter">📦 Block Filter</label></th>
+          <td>
+            <div>
+              <input id="block-filter" placeholder="Enter block name" />
+              <button
+                title="Clear"
+                data-input-block-filter=""
+              >
+                X
+              </button>
+            </div>
+            <div>
+              <strong>Min Count:</strong> <input
+                id="min-matched-block-count"
+                type="number"
+                min="1"
+                max="999"
+                placeholder="1-999"
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <strong>Filter Preset</strong>
+            <button
+              data-input-min-tier="0"
+              data-input-prefab-filter="trader"
+              data-input-block-filter=""
+            >All Traders</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter="skyscraper"
+              data-input-block-filter=""
+            >Skyscrapers</button>
+            <button
+              title="More than or equal to 20 book containers in early game"
+              data-input-min-tier="0"
+              data-input-max-tier="2"
+              data-input-prefab-filter=""
+              data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
+              data-input-min-matched-block-count="20"
+            >Many Books in Early Game</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="(Grace|Super)Corn"
+              data-input-min-matched-block-count=""
+            >Super Corn</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="2"
+              data-input-prefab-filter=""
+              data-input-block-filter="^decoCookingPot"
+              data-input-min-matched-block-count=""
+            >Cooking Pot in Early Game</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="^sleeper(?!Zombie|Vulture).*Animal$"
+              data-input-min-matched-block-count="6"
+            >Many Meats</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="^planted.*Harvest"
+              data-input-min-matched-block-count="20"
+            >Many Plants</button>
+            <!-- Check this regexp using ./tools/verify-steel-wrench-filter.ts -->
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="^(cntVendingMachine.*Broken|cntAllVendingMachine|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump|cntMunitionsBox)"
+              data-input-min-matched-block-count=""
+            >Steel with Wrench</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$"
+              data-input-min-matched-block-count=""
+            >Working Vending-Machine</button>
+            <button
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+              data-input-prefab-filter=""
+              data-input-block-filter="^cntLootCrateHero"
+              data-input-min-matched-block-count=""
+            >Hidden Stash</button>
+          </td>
+        </tr>
+      </table>
       <p id="prefabs-num"></p>
       <ul id="prefabs-list"></ul>
     </div>
