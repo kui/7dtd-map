@@ -7,7 +7,12 @@ import {
 } from "../utils.ts";
 import type { Materials } from "./materials-xml.ts";
 
-const LOOTABLE_CLASS_NAMES = new Set(["Loot", "CarExplodeLoot", "SecureLoot"]);
+const LOOTABLE_CLASS_NAMES = new Set([
+  "Loot",
+  "CarExplodeLoot",
+  "SecureLoot",
+  "CompositeTileEntity",
+]);
 
 /* Raw XML types (encapsulated) */
 
@@ -87,6 +92,35 @@ function isRawBlocksXml(value: unknown): value is RawBlocksXml {
   return Array.isArray((blocks as Record<string, unknown>)["block"]);
 }
 
+function extractProperties(raw: unknown[]): BlockProperties {
+  const props: BlockProperties = {};
+
+  function visit(elem: unknown) {
+    if (
+      typeof elem === "object" && elem !== null && "@name" in elem
+    ) {
+      const e = elem as Record<string, string | undefined>;
+      const name = e["@name"];
+      if (name !== undefined) {
+        props[name] = {
+          value: e["@value"] ?? "",
+          param1: e["@param1"],
+        };
+      }
+    }
+    if (typeof elem === "object" && elem !== null && "property" in elem) {
+      for (const child of toArray((elem as Record<string, unknown>).property)) {
+        visit(child);
+      }
+    }
+  }
+
+  for (const elem of raw) {
+    visit(elem);
+  }
+  return props;
+}
+
 /* Public API */
 
 export async function loadBlocks(
@@ -101,16 +135,7 @@ export async function loadBlocks(
   const blocks = parsed.blocks.block.reduce<Map<BlockName, Block>>(
     (map, blockElement) => {
       const name = blockElement["@name"];
-      const properties = toArray(blockElement.property).reduce<BlockProperties>(
-        (props, elem) => {
-          props[elem["@name"]] = {
-            value: elem["@value"],
-            param1: elem["@param1"],
-          };
-          return props;
-        },
-        {},
-      );
+      const properties = extractProperties(toArray(blockElement.property));
       const drops = toArray(blockElement.drop).map<BlockDrop>((elem) => ({
         event: elem["@event"],
         name: elem["@name"],
