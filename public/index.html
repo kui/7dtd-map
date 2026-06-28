@@ -41,7 +41,7 @@
       <table>
         <tr>
           <th><label for="map-name">🗺️ Map Name</label></th>
-          <td>
+          <td colspan="2">
             <input
               id="map-name"
               type="text"
@@ -53,25 +53,24 @@
         </tr>
         <tr>
           <th>🖱️ Cursor</th>
-          <td><span id="cursor-coods">E/W: -, N/S: -, Elev: -</span></td>
+          <td
+            colspan="2"><span id="cursor-coods">E/W: -, N/S: -, Elev: -</span></td>
         </tr>
         <tr>
           <th>
-            🚩 Flag <button
-              id="reset-mark"
-              title="Reset (or double-click the map)"
-            >
+            🚩 Flag
+            <button id="reset-mark" title="Reset (or double-click the map)">
               X
             </button>
           </th>
-          <td>
+          <td colspan="2">
             <div id="mark-coods">E/W: -, N/S: -, Elev: -</div>
             <div id="mark-prefab"></div>
           </td>
         </tr>
         <tr>
           <th>🔧 Tools</th>
-          <td>
+          <td colspan="2">
             <button
               id="terrain-viewer-show"
               disabled
@@ -88,119 +87,133 @@
             >ℹ️ map_info.xml</button>
           </td>
         </tr>
-        <tr>
-          <th><label for="biomes-alpha">🌲 biomes.png</label></th>
-          <td>
-            <label>
-              <output data-sync-for="biomes-alpha">1</output>
-              <input
-                id="biomes-alpha"
-                type="range"
-                title="Alpha biomes.png"
-                value="1"
-                step="0.1"
-                min="0"
-                max="1"
-              />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th title="Roads">
-            <label for="splat3-alpha">🛣️ splat3_processed.png</label>
-            <span
-              id="warn-splat3-png"
-              title="Currently using splat3.png which is degraded compared to splat3_processed.png"
-            >⚠️</span>
-          </th>
-          <td>
-            <label>
-              <output data-sync-for="splat3-alpha">1</output>
-              <input
-                id="splat3-alpha"
-                type="range"
-                title="Alpha splat3"
-                value="1"
-                step="0.1"
-                min="0"
-                max="1"
-              />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th title="Water">
-            <label for="splat4-alpha">🌊 splat4_processed.png</label>
-            <span
-              id="warn-splat4-png"
-              title="Currently using splat4.png which is degraded compared to splat4_processed.png"
-            >⚠️</span>
-          </th>
-          <td>
-            <label>
-              <output data-sync-for="splat4-alpha">0.7</output>
-              <input
-                id="splat4-alpha"
-                type="range"
-                title="Alpha splat4"
-                value="0.7"
-                step="0.1"
-                min="0"
-                max="1"
-              />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th title="Radiation Area">
-            <label for="rad-alpha">☢️ radiation.png</label>
-          </th>
-          <td>
-            <label>
-              <output data-sync-for="rad-alpha">0.5</output>
-              <input
-                id="rad-alpha"
-                type="range"
-                title="Alpha radiation"
-                value="0.5"
-                step="0.1"
-                min="0"
-                max="1"
-              />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th title="Prefabs">🏘️ prefabs.xml</th>
-          <td>
-            <label>
-              <output data-sync-for="prefab-footprint-alpha">1</output>
-              <input
-                id="prefab-footprint-alpha"
-                type="range"
-                value="1"
-                step="0.1"
-                min="0"
-                max="1"
-                data-remember-value
-              />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th><label for="brightness">🔆 Brightness</label></th>
-          <td>
-            <label>
-              <output data-sync-for="brightness">60</output>%
-              <input
-                id="brightness"
-                type="range"
-                max="100"
-                min="0"
-                step="1"
-                value="60"
-              />
-            </label>
+        <tr class="no-highlight">
+          <td colspan="3">
+            <details>
+              <summary>🎨 Layers</summary>
+              <table class="layer-table">
+                <tr>
+                  <th><label for="biomes-alpha">🌲 biomes.png</label></th>
+                  <td>
+                    <output class="alpha-output"
+                      data-sync-for="biomes-alpha">1</output>
+                  </td>
+                  <td>
+                    <input
+                      id="biomes-alpha"
+                      type="range"
+                      title="Alpha biomes.png"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th title="Roads">
+                    <label for="splat3-alpha">🛣️ splat3_processed.png</label>
+                    <span
+                      id="warn-splat3-png"
+                      title="Currently using splat3.png which is degraded compared to splat3_processed.png"
+                    >⚠️</span>
+                  </th>
+                  <td>
+                    <output class="alpha-output"
+                      data-sync-for="splat3-alpha">1</output>
+                  </td>
+                  <td>
+                    <input
+                      id="splat3-alpha"
+                      type="range"
+                      title="Alpha splat3"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th title="Water">
+                    <label for="splat4-alpha">🌊 splat4_processed.png</label>
+                    <span
+                      id="warn-splat4-png"
+                      title="Currently using splat4.png which is degraded compared to splat4_processed.png"
+                    >⚠️</span>
+                  </th>
+                  <td>
+                    <output class="alpha-output"
+                      data-sync-for="splat4-alpha">0.7</output>
+                  </td>
+                  <td>
+                    <input
+                      id="splat4-alpha"
+                      type="range"
+                      title="Alpha splat4"
+                      value="0.7"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th title="Radiation Area">
+                    <label for="rad-alpha">☢️ radiation.png</label>
+                  </th>
+                  <td>
+                    <output class="alpha-output"
+                      data-sync-for="rad-alpha">0.5</output>
+                  </td>
+                  <td>
+                    <input
+                      id="rad-alpha"
+                      type="range"
+                      title="Alpha radiation"
+                      value="0.5"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th title="Prefabs">🏘️ prefabs.xml</th>
+                  <td>
+                    <output class="alpha-output"
+                      data-sync-for="prefab-footprint-alpha">1</output>
+                  </td>
+                  <td>
+                    <input
+                      id="prefab-footprint-alpha"
+                      type="range"
+                      value="1"
+                      step="0.1"
+                      min="0"
+                      max="1"
+                      data-remember-value
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="brightness">🔆 Brightness</label></th>
+                  <td>
+                    <output class="brightness-output" data-sync-for="brightness">60</output>%
+                  </td>
+                  <td>
+                    <input
+                      id="brightness"
+                      type="range"
+                      max="100"
+                      min="0"
+                      step="1"
+                      value="60"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </details>
           </td>
         </tr>
         <tr>
@@ -208,119 +221,96 @@
             <label for="scale">🔍️ Scale</label>
           </th>
           <td>
-            <label>
-              <output data-sync-for="scale">0.12</output>
+            <output data-sync-for="scale">0.12</output>
+          </td>
+          <td>
+            <input
+              id="scale"
+              type="range"
+              max="1"
+              min="0.04"
+              step="0.02"
+              value="0.12"
+            />
+          </td>
+        </tr>
+        <tbody class="multi-rows">
+          <tr>
+            <th rowspan="2"><span class="logo">✘</span> Prefab Sign</th>
+            <td>
+              <output class="font-size-output" data-sync-for="prefab-sign-size">200</output>px
+            </td>
+            <td>
               <input
-                id="scale"
+                id="prefab-sign-size"
                 type="range"
-                max="1"
-                min="0.04"
-                step="0.02"
-                value="0.12"
+                max="500"
+                min="20"
+                step="20"
+                value="200"
               />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <th><span class="logo">✘</span> Prefab Sign</th>
-          <td>
-            <table class="inner-table">
-              <tr>
-                <th><label for="prefab-sign-size">Size:</label></th>
-                <td>
-                  <label>
-                    <output data-sync-for="prefab-sign-size">200</output>px
-                    <input
-                      id="prefab-sign-size"
-                      type="range"
-                      max="500"
-                      min="20"
-                      step="20"
-                      value="200"
-                    />
-                  </label>
-                </td>
-              </tr>
-              <tr>
-                <th><label for="prefab-sign-alpha">Alpha:</label></th>
-                <td>
-                  <label>
-                    <output data-sync-for="prefab-sign-alpha">1</output>
-                    <input
-                      id="prefab-sign-alpha"
-                      type="range"
-                      value="1"
-                      step="0.1"
-                      min="0"
-                      max="1"
-                    />
-                  </label>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <th>💀 Prefab Tier</th>
-          <td>
-            <table class="inner-table">
-              <tr>
-                <th><label for="min-tier">Min:</label></th>
-                <td>
-                  <label for="min-tier"><output data-sync-for="min-tier"
-                    >0</output></label>
-                </td>
-                <td>
-                  <input
-                    id="min-tier"
-                    type="range"
-                    min="0"
-                    max="5"
-                    value="0"
-                    list="tiers"
-                    data-min="tierRange"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th><label for="max-tier">Max:</label></th>
-                <td>
-                  <label for="max-tier"><output data-sync-for="max-tier"
-                    >5</output></label>
-                </td>
-                <td>
-                  <input
-                    id="max-tier"
-                    type="range"
-                    min="0"
-                    max="5"
-                    value="5"
-                    list="tiers"
-                    data-max="tierRange"
-                  />
-                </td>
-              </tr>
-            </table>
-            <datalist id="tiers">
-              <option value="0"></option>
-              <option value="1"></option>
-              <option value="2"></option>
-              <option value="3"></option>
-              <option value="4"></option>
-              <option value="5"></option>
-            </datalist>
-          </td>
-        </tr>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <output class="alpha-output"
+                data-sync-for="prefab-sign-alpha">1</output>
+            </td>
+            <td>
+              <input
+                id="prefab-sign-alpha"
+                type="range"
+                value="1"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody class="multi-rows">
+          <tr>
+            <th rowspan="2">💀 Prefab Tier</th>
+            <td>
+              <label>Min: <output class="tier-output" data-sync-for="min-tier">0</output></label>
+            </td>
+            <td>
+              <input
+                id="min-tier"
+                type="range"
+                min="0"
+                max="5"
+                value="0"
+                list="tiers"
+                data-min="tierRange"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Max: <output class="tier-output" data-sync-for="max-tier">5</output></label>
+            </td>
+            <td>
+              <input
+                id="max-tier"
+                type="range"
+                min="0"
+                max="5"
+                value="5"
+                list="tiers"
+                data-max="tierRange"
+              />
+            </td>
+          </tr>
+        </tbody>
         <tr>
           <th><label for="prefab-filter">🏠️ Prefab Filter</label></th>
-          <td>
+          <td colspan="2">
             <input id="prefab-filter" placeholder="Enter prefab name" />
             <button
               title="Clear"
               data-input-prefab-filter=""
-            >
-              X
-            </button>
+            >X</button>
             <details id="prefab-pre-filters">
               <summary>Excludes</summary>
               <ul>
@@ -351,18 +341,17 @@
         </tr>
         <tr>
           <th><label for="block-filter">📦 Block Filter</label></th>
-          <td>
+          <td colspan="2">
             <div>
               <input id="block-filter" placeholder="Enter block name" />
               <button
                 title="Clear"
                 data-input-block-filter=""
-              >
-                X
-              </button>
+              >X</button>
             </div>
             <div>
-              <strong>Min Count:</strong> <input
+              <strong>Min Count:</strong>
+              <input
                 id="min-matched-block-count"
                 type="number"
                 min="1"
@@ -373,7 +362,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <strong>Filter Preset</strong>
             <button
               data-input-min-tier="0"

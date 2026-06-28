@@ -75,7 +75,9 @@
   background-color: rgba(255, 255, 255, 0.9);
   overflow: auto;
   & table {
-    & tr:hover {
+    & tbody.multi-rows:hover tr,
+    & tr:hover:not(.no-highlight),
+    & summary:hover {
       background-color: whitesmoke;
     }
     & td output {
@@ -87,6 +89,22 @@
     & th {
       white-space: nowrap;
     }
+  }
+  table.layer-table {
+    width: 100%;
+    margin-top: 0.5em;
+  }
+  & .alpha-output {
+    width: 3em;
+  }
+  & .brightness-output {
+    width: 3em;
+  }
+  & .tier-output {
+    width: 1em;
+  }
+  & font-size-output {
+    width: 3em;
   }
 }
 
@@ -100,6 +118,11 @@
       margin: 0 0.5em;
     }
   }
+}
+
+#controller input[type="range"] {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #prefabs-list,
