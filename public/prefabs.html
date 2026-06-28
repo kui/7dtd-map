@@ -47,6 +47,7 @@
                   min="0"
                   max="5"
                   value="0"
+                  list="tiers"
                   data-min="tierRange"
                 />
               </td>
@@ -61,6 +62,7 @@
                   min="0"
                   max="5"
                   value="5"
+                  list="tiers"
                   data-max="tierRange"
                 />
               </td>
@@ -84,52 +86,59 @@
           >
             X
           </button>
-          <section>
-            <button data-input-prefab-filter="trader">trader</button>
-            <button data-input-prefab-filter="store_book_">store_book_</button>
-            <button data-input-prefab-filter="^remnant_">
-              remnant
-            </button>
-          </section>
         </section>
         <section>
           <h2>Block Name</h2>
-          <input id="block-filter" placeholder="Enter block name" />
+          <div>
+            <input id="block-filter" placeholder="Enter block name" />
+            <button
+              title="Clear Block Name"
+              data-input-block-filter=""
+            >
+              X
+            </button>
+          </div>
+          <div>
+            <label>
+              Min Count:
+              <input
+                id="min-matched-block-count"
+                type="number"
+                min="1"
+                max="999"
+                placeholder="1-999"
+              />
+            </label>
+          </div>
+        </section>
+        <section>
+          <h2>Presets</h2>
           <button
-            title="Clear Block Name"
+            data-input-min-tier="0"
+            data-input-prefab-filter="trader"
             data-input-block-filter=""
-          >
-            X
-          </button>
-          <label>
-            Min Count:
-            <input
-              id="min-matched-block-count"
-              type="number"
-              min="0"
-              max="999"
-              value="0"
-              placeholder="0-999"
-            />
-          </label>
-          <section>
-            <button data-input-block-filter="Forge">Forge</button>
-            <button
-              data-input-block-filter="(Grace|Super)Corn"
-            >
-              Super Corn
-            </button>
-            <button
-              data-input-block-filter="^cntLootCrateHero"
-            >
-              Hidden Stash
-            </button>
-            <button
-              data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
-            >
-              Book Containers
-            </button>
-          </section>
+          >Traders</button>
+          <button
+            data-input-min-tier="0"
+            data-input-max-tier="5"
+            data-input-prefab-filter=""
+            data-input-block-filter="(Grace|Super)Corn"
+            data-input-min-matched-block-count=""
+          >Super Corn</button>
+          <button
+            data-input-min-tier="0"
+            data-input-max-tier="5"
+            data-input-prefab-filter=""
+            data-input-block-filter="^cntLootCrateHero"
+            data-input-min-matched-block-count=""
+          >Hidden Stash</button>
+          <button
+            data-input-min-tier="0"
+            data-input-max-tier="5"
+            data-input-prefab-filter=""
+            data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
+            data-input-min-matched-block-count="20"
+          >More than 20 Book Containers</button>
         </section>
         <details>
           <summary>Advanced Filters</summary>

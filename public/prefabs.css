@@ -6,6 +6,7 @@
 #filters {
   border: 1px solid lightgray;
   padding: 10px;
+  max-width: 400px;
 
   & h2 {
     margin: 8px 0 4px;
