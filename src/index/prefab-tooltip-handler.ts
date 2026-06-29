@@ -137,11 +137,13 @@ export class PrefabTooltipHandler {
     this.#doms.tooltip.style.top = `${
       (event.clientY + CURSOR_OFFSET).toString()
     }px`;
-    this.#doms.tooltip.style.display = "flex";
+    this.#doms.tooltip.showPopover();
   }
 
   #hide() {
-    this.#doms.tooltip.style.display = "none";
+    if (this.#doms.tooltip.matches(":popover-open")) {
+      this.#doms.tooltip.hidePopover();
+    }
     this.#shownPrefabName = null;
     this.#currentHit = null;
   }

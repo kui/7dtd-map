@@ -9,7 +9,8 @@
 
 #prefab-tooltip {
   position: fixed;
-  display: none;
+  inset: auto;
+  margin: 0;
   align-items: center;
   gap: 6px;
   pointer-events: none;
@@ -60,6 +61,10 @@
     opacity: 1;
     font-weight: bold;
   }
+}
+
+#prefab-tooltip:popover-open {
+  display: flex;
 }
 
 #controller {
