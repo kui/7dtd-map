@@ -481,14 +481,16 @@
           <dd>Close</dd>
         </dl>
       </div>
-      <button
-        id="terrain-viewer-close"
-        class="terrain-viewer-close"
-        type="button"
-        aria-label="Close terrain viewer"
-      >
-        ❌
-      </button>
+      <form method="dialog">
+        <button
+          id="terrain-viewer-close"
+          class="terrain-viewer-close"
+          type="submit"
+          aria-label="Close terrain viewer"
+        >
+          ❌
+        </button>
+      </form>
     </dialog>
     <p id="loading-indicator"></p>
     <canvas id="map" width="0" height="0"></canvas>
@@ -575,7 +577,9 @@
         <h2>⚠️ Error</h2>
         <p id="error-message">Error</p>
         <footer>
-          <button data-close-dialog-for="dnd-dialog">Close</button>
+          <form method="dialog">
+            <button>Close</button>
+          </form>
         </footer>
         <input
           type="radio"
@@ -592,7 +596,9 @@
       <h2>map_info.xml</h2>
       <table id="map-info-table"></table>
       <footer>
-        <button data-close-dialog-for="map-info-dialog">Close</button>
+        <form method="dialog">
+          <button>Close</button>
+        </form>
       </footer>
     </dialog>
 
@@ -658,7 +664,9 @@
       <ol id="prefab-inspector-missings"></ol>
 
       <footer>
-        <button data-close-dialog-for="prefab-inspector-dialog">Close</button>
+        <form method="dialog">
+          <button>Close</button>
+        </form>
       </footer>
     </dialog>
   </body>

@@ -53,9 +53,6 @@ export class TerrainViewer {
     doms.show.addEventListener("click", () => {
       this.#show().catch(printError);
     });
-    doms.close.addEventListener("click", () => {
-      doms.dialog.close();
-    });
     // The native <dialog> close event fires for Esc key, programmatic close(),
     // or form submit. Use it as the single teardown point so the render loop
     // stops regardless of how the dialog was dismissed.

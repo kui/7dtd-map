@@ -15,7 +15,8 @@ export class DialogHandler {
     this.#doms = doms;
     this.#radioList = requireType(
       requireNonnull(
-        doms.dialog.querySelector("form")?.elements.namedItem("active-section"),
+        (doms.dialog.querySelector("#dialog-active") as HTMLFormElement)
+          ?.elements.namedItem("active-section"),
         () => "Unexpected dialog content",
       ),
       RadioNodeList,
