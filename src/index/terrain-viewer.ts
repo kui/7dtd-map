@@ -36,7 +36,7 @@ export class TerrainViewer {
       canvas: doms.output,
       antialias: false,
     });
-    this.#renderer.setPixelRatio(devicePixelRatio);
+    this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     this.#scene = new three.Scene();
 
     const light = new three.DirectionalLight(0xffffff, 5);
