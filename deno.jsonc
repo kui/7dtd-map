@@ -150,6 +150,7 @@
     "./e2e",
   ],
   "imports": {
+    "@types/three": "npm:@types/three@^0.185.0",
     "fast-png": "npm:fast-png@^8.0.0",
     "three": "npm:three@~0.184.0",
     "@libs/xml": "jsr:@libs/xml@^7.0.4",
