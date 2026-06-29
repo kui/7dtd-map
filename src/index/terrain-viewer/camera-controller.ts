@@ -9,7 +9,7 @@ const MOUSE_BUTTON_BITMASK = {
 
 const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
-const TILT_RADIAN_BASE = new three.Vector3(0, -1, 0);
+const TILT_REFERENCE = new three.Vector3(0, -1, 0);
 const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
@@ -96,6 +96,7 @@ export class TerrainViewerCameraController {
     move: new three.Vector3(),
     groundPoint: new three.Vector3(),
     ray: new three.Ray(),
+    tiltOffset: new three.Vector3(),
   };
 
   #syncCameraWork(): void {
@@ -293,20 +294,26 @@ export class TerrainViewerCameraController {
     const deltaRad = deltaRadMouse + deltaRadKey;
     this.#mouseMove.center.y = 0;
 
-    const center = this.#cameraWork.groundPoint;
-    this.camera.position.sub(center);
-    this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
+    const pivot = this.#cameraWork.groundPoint;
+    const offset = this.#cameraWork.tiltOffset.copy(this.camera.position)
+      .sub(pivot);
+    offset.applyAxisAngle(TILT_AXIS, deltaRad);
 
-    const totalRad = TILT_RADIAN_BASE.angleTo(this.camera.position);
-    if (
-      totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad ||
-      this.camera.position.z < this.#minZ || this.#maxZ < this.camera.position.z
-    ) {
-      this.camera.position.applyAxisAngle(TILT_AXIS, -deltaRad);
+    const totalRad = TILT_REFERENCE.angleTo(offset);
+    const newZ = pivot.z + offset.z;
+    const hitsAngleLimit = totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad;
+    const hitsZLimit = newZ < this.#minZ || this.#maxZ < newZ;
+    if (hitsAngleLimit) {
+      offset.applyAxisAngle(TILT_AXIS, -deltaRad);
+    } else if (hitsZLimit) {
+      offset.z = Math.max(
+        this.#minZ - pivot.z,
+        Math.min(this.#maxZ - pivot.z, offset.z),
+      );
     }
 
-    this.camera.position.add(center);
-    this.camera.lookAt(center);
+    this.camera.position.copy(pivot).add(offset);
+    this.camera.lookAt(pivot);
     this.#syncCameraWork();
   }
 }
