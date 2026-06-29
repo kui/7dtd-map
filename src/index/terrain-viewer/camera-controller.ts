@@ -1,6 +1,6 @@
 import * as three from "three";
 import type { ThreePlaneSize } from "../../types/7dtdmap.ts";
-import { requireNonnull, threePlaneSize } from "../../lib/utils.ts";
+import { threePlaneSize } from "../../lib/utils.ts";
 
 const MOUSE_BUTTON_BITMASK = {
   left: 0b00000001,
@@ -90,6 +90,27 @@ export class TerrainViewerCameraController {
     wheel: 0,
   };
 
+  // Reusable temporary vectors / ray to avoid per-frame heap allocation.
+  #cameraWork = {
+    oldPosition: new three.Vector3(),
+    direction: new three.Vector3(),
+    move: new three.Vector3(),
+    groundPoint: new three.Vector3(),
+    ray: new three.Ray(),
+  };
+
+  #syncCameraWork(): void {
+    this.camera.getWorldDirection(this.#cameraWork.direction);
+    this.#cameraWork.ray.set(this.camera.position, this.#cameraWork.direction);
+    const groundPoint = this.#cameraWork.ray.intersectPlane(
+      XY_PLANE,
+      this.#cameraWork.groundPoint,
+    );
+    if (groundPoint === null) {
+      throw new Error("Camera ray is parallel to the XY plane");
+    }
+  }
+
   constructor(
     canvas: HTMLCanvasElement,
     camera: three.PerspectiveCamera,
@@ -157,6 +178,7 @@ export class TerrainViewerCameraController {
     this.camera.position.y = -this.#terrainSize.height;
     this.camera.position.z = this.#terrainSize.height;
     this.camera.lookAt(0, 0, 0);
+    this.#syncCameraWork();
   }
 
   update(deltaMsec: number): void {
@@ -210,14 +232,15 @@ export class TerrainViewerCameraController {
       60;
     const deltaMouse = this.#mouseMove.left;
 
-    const oldPosition = new three.Vector3().copy(this.camera.position);
+    const oldPosition = this.#cameraWork.oldPosition.copy(this.camera.position);
     this.camera.position.x += deltaDistKey * this.#speeds.x - deltaMouse.x;
     this.camera.position.y += deltaDistKey * this.#speeds.y + deltaMouse.y;
 
     this.#mouseMove.left.x = 0;
     this.#mouseMove.left.y = 0;
 
-    const lookAt = requireNonnull(this.#pointLookAtXYPlane());
+    this.#syncCameraWork();
+    const lookAt = this.#cameraWork.groundPoint;
     if (
       lookAt.x < -this.#terrainSize.width / 2 ||
       this.#terrainSize.width / 2 < lookAt.x
@@ -230,6 +253,7 @@ export class TerrainViewerCameraController {
     ) {
       this.camera.position.y = oldPosition.y;
     }
+    this.#syncCameraWork();
   }
 
   #moveCameraForward(deltaMsec: number) {
@@ -242,14 +266,15 @@ export class TerrainViewerCameraController {
     const keyDelta = (this.#speeds.zoom * this.#terrainSize.width * 0.3 *
       deltaMsec) / 1000;
     const moveDelta = wheelDelta + keyDelta;
-    const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
-    const moveVector = cameraDirection.normalize().multiplyScalar(moveDelta);
+    const moveVector = this.#cameraWork.move.copy(this.#cameraWork.direction)
+      .normalize().multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
     if (
       this.camera.position.z < this.#minZ || this.#maxZ < this.camera.position.z
     ) {
       this.camera.position.sub(moveVector);
     }
+    this.#syncCameraWork();
   }
 
   #tiltCamera(deltaMsec: number) {
@@ -266,7 +291,7 @@ export class TerrainViewerCameraController {
     const deltaRad = deltaRadMouse + deltaRadKey;
     this.#mouseMove.center.y = 0;
 
-    const center = requireNonnull(this.#pointLookAtXYPlane());
+    const center = this.#cameraWork.groundPoint;
     this.camera.position.sub(center);
     this.camera.position.applyAxisAngle(TILT_AXIS, deltaRad);
 
@@ -280,11 +305,6 @@ export class TerrainViewerCameraController {
 
     this.camera.position.add(center);
     this.camera.lookAt(center);
-  }
-
-  #pointLookAtXYPlane() {
-    const cameraDirection = this.camera.getWorldDirection(new three.Vector3());
-    const cameraRay = new three.Ray(this.camera.position, cameraDirection);
-    return cameraRay.intersectPlane(XY_PLANE, new three.Vector3());
+    this.#syncCameraWork();
   }
 }
