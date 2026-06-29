@@ -72,7 +72,7 @@ export class DtmHandler {
   }
 }
 
-class Dtm {
+export class Dtm {
   #data: Uint8Array | null;
   #mapSize: GameMapSize;
 
@@ -113,6 +113,21 @@ class Dtm {
   writeZ(geo: three.PlaneGeometry) {
     if (!this.#data) return;
 
+    const { width, height } = this.#mapSize;
+    if (
+      this.#data.byteLength % width !== 0 ||
+      this.#data.byteLength / width !== height
+    ) {
+      console.warn(
+        "Game map size does not match with DTM byte array length:",
+        "mapSize=",
+        this.#mapSize,
+        "data.byteLength=",
+        this.#data.byteLength,
+      );
+      return;
+    }
+
     const pos = requireNonnull(
       geo.attributes["position"],
       () => "No position attribute",
@@ -122,23 +137,32 @@ class Dtm {
     }
 
     const scaleFactor = (this.#mapSize.width - 1) / geo.parameters.width;
+    const halfW = geo.parameters.width / 2;
+    const halfH = geo.parameters.height / 2;
+    const maxX = width - 1;
+    const maxZ = height - 1;
 
-    // TODO Try pos.array instead of pos.getX(i) and pos.getY(i) for performance
-    for (let i = 0; i < pos.count; i++) {
-      // game axis -> webgl axis
-      // x -> x
-      // y -> z
-      // z -> y
-      const dataX = Math.round(
-        (pos.getX(i) + geo.parameters.width / 2) * scaleFactor,
-      );
-      const dataZ = Math.round(
-        (pos.getY(i) + geo.parameters.height / 2) * scaleFactor,
-      );
+    // pos.array layout is interleaved (x, y, z) per vertex. Bypassing
+    // getX/getY/setZ avoids per-call overhead that is significant across
+    // ~4M vertices.
+    const arr = pos.array as Float32Array;
+    for (let i = 0, j = 0; i < pos.count; i++, j += 3) {
+      // game axis -> webgl axis: game x -> x, game y -> z, game z -> y
+      const px = arr[j] as number;
+      const py = arr[j + 1] as number;
+      let dataX = Math.round((px + halfW) * scaleFactor);
+      let dataZ = Math.round((py + halfH) * scaleFactor);
+      // Plane vertices on the +width/+height edge round to width/height,
+      // one past the last valid DTM index. Clamp to keep sampling in range.
+      if (dataX < 0) dataX = 0;
+      else if (dataX > maxX) dataX = maxX;
+      if (dataZ < 0) dataZ = 0;
+      else if (dataZ > maxZ) dataZ = maxZ;
+      // Elevation byte is in game meters; divide by scaleFactor to convert
+      // to the geometry's local units (which are already shrunk by the same
+      // ratio horizontally).
       // deno-lint-ignore no-non-null-assertion
-      const elev = this.#data[dataX + dataZ * this.#mapSize.width]! /
-        scaleFactor;
-      pos.setZ(i, elev);
+      arr[j + 2] = this.#data[dataX + dataZ * width]! / scaleFactor;
     }
   }
 }
