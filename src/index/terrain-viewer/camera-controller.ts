@@ -270,7 +270,7 @@ export class TerrainViewerCameraController {
       deltaMsec) / 1000;
     const moveDelta = wheelDelta + keyDelta;
     const moveVector = this.#cameraWork.move.copy(this.#cameraWork.direction)
-      .normalize().multiplyScalar(moveDelta);
+      .multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
     if (
       this.camera.position.z < this.#minZ || this.#maxZ < this.camera.position.z
