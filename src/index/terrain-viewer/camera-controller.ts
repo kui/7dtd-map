@@ -92,7 +92,6 @@ export class TerrainViewerCameraController {
 
   // Reusable temporary vectors / ray to avoid per-frame heap allocation.
   #cameraWork = {
-    oldPosition: new three.Vector3(),
     direction: new three.Vector3(),
     move: new three.Vector3(),
     groundPoint: new three.Vector3(),
@@ -232,28 +231,31 @@ export class TerrainViewerCameraController {
       60;
     const deltaMouse = this.#mouseMove.left;
 
-    const oldPosition = this.#cameraWork.oldPosition.copy(this.camera.position);
-    this.camera.position.x += deltaDistKey * this.#speeds.x - deltaMouse.x;
-    this.camera.position.y += deltaDistKey * this.#speeds.y + deltaMouse.y;
+    const deltaX = deltaDistKey * this.#speeds.x - deltaMouse.x;
+    const deltaY = deltaDistKey * this.#speeds.y + deltaMouse.y;
 
     this.#mouseMove.left.x = 0;
     this.#mouseMove.left.y = 0;
 
+    if (deltaX !== 0) this.camera.position.x += deltaX;
+    if (deltaY !== 0) this.camera.position.y += deltaY;
+
     this.#syncCameraWork();
-    const lookAt = this.#cameraWork.groundPoint;
-    if (
-      lookAt.x < -this.#terrainSize.width / 2 ||
-      this.#terrainSize.width / 2 < lookAt.x
-    ) {
-      this.camera.position.x = oldPosition.x;
+
+    let needResync = false;
+    const gx = this.#cameraWork.groundPoint.x;
+    const halfW = this.#terrainSize.width / 2;
+    if (gx < -halfW || halfW < gx) {
+      this.camera.position.x -= deltaX;
+      needResync = true;
     }
-    if (
-      lookAt.y < -this.#terrainSize.height / 2 ||
-      this.#terrainSize.height / 2 < lookAt.y
-    ) {
-      this.camera.position.y = oldPosition.y;
+    const gy = this.#cameraWork.groundPoint.y;
+    const halfH = this.#terrainSize.height / 2;
+    if (gy < -halfH || halfH < gy) {
+      this.camera.position.y -= deltaY;
+      needResync = true;
     }
-    this.#syncCameraWork();
+    if (needResync) this.#syncCameraWork();
   }
 
   #moveCameraForward(deltaMsec: number) {
