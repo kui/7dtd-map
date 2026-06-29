@@ -61,9 +61,6 @@ function main() {
     downloadCanvasPng(`${mapName}.png`, component("map", HTMLCanvasElement));
   });
 
-  updateMapRightMargin();
-  globalThis.addEventListener("resize", updateMapRightMargin);
-
   const dialogHandler = new DialogHandler({
     dialog: component("dialog", HTMLDialogElement),
     processingFiles: component("processing-files", HTMLUListElement),
@@ -293,12 +290,6 @@ function prefabLi(prefab: HighlightedPrefab) {
     li.appendChild(blocksUl);
   }
   return li;
-}
-
-function updateMapRightMargin() {
-  const margin = component("controller").clientWidth + 48;
-  component("map", HTMLCanvasElement).style.marginRight =
-    `${margin.toString()}px`;
 }
 
 if (document.readyState === "loading") {

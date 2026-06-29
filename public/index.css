@@ -3,7 +3,7 @@
 }
 
 #map {
-  margin-right: var(--controller-width);
+  margin-right: calc(min(30vw, var(--controller-width)) + 58px);
   cursor: crosshair;
 }
 
