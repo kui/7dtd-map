@@ -204,7 +204,7 @@ test.describe("index.html", () => {
     await page.click("#prefab-inspector-show");
     await expect(dialog).toHaveAttribute("open", /.*/);
 
-    await page.click('[data-close-dialog-for="prefab-inspector-dialog"]');
+    await page.click("#prefab-inspector-close");
     await expect(dialog).not.toHaveAttribute("open", /.*/);
   });
 
