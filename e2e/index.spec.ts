@@ -132,7 +132,7 @@ test.describe("index.html", () => {
 
     // Apply the "trader" prefab-filter preset.
     await page.click(
-      'button[data-input-prefab-filter="trader"]:text-is("trader")',
+      'button[data-input-prefab-filter="trader"]:text-is("All Traders")',
     );
     await expect.poll(async () =>
       await page.locator("#prefab-filter").inputValue()
