@@ -240,6 +240,10 @@ dialog {
     padding: 0 16px;
   }
 
+  #terrarian-viewer-hud:has(#terrain-viewer-help-toggle:not(:checked)) #op-desc {
+    display: none;
+  }
+
   & .terrain-viewer-close {
     position: absolute;
     top: 0;
