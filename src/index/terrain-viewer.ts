@@ -15,7 +15,14 @@ interface Doms {
   helpToggle: HTMLInputElement;
 }
 
+// Base width of the terrain plane in local geometry units.
 const TERRAIN_WIDTH = 2048;
+// Mesh subdivisions along the horizontal axis.  Reduced from 2047 to 1024
+// to cut vertex count by ~4x; the overhead of writeZ +
+// computeVertexNormals dominates more than the small visual loss for a
+// top-down view where texture detail carries most of the perceived
+// quality.
+const TERRAIN_SEGMENTS = 1024;
 
 export class TerrainViewer {
   #doms: Doms;
@@ -36,13 +43,13 @@ export class TerrainViewer {
       canvas: doms.output,
       antialias: false,
     });
-    this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); // cap DPR for performance
     this.#scene = new three.Scene();
 
-    const light = new three.DirectionalLight(0xffffff, 5);
+    const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
     light.position.set(1, 1, 1).normalize();
     this.#scene.add(light);
-    this.#scene.add(new three.AmbientLight(0xffffff, 0.09));
+    this.#scene.add(new three.AmbientLight(0xffffff, 0.09)); // low fill to keep terrain contrast
 
     this.#cameraController = new TerrainViewerCameraController(
       doms.output,
@@ -99,11 +106,22 @@ export class TerrainViewer {
 
     console.log("terrainSize=", this.#terrain, "mapSize=", mapSize);
     console.time("updateElevations");
+    // LOD is not implemented because it would require tiled meshes with
+    // distance-based switching and seam stitching.  Halving subdivision
+    // provides the majority of the performance benefit for this top-down
+    // viewer with negligible visual loss.
+    const segmentW = TERRAIN_SEGMENTS;
+    const segmentH = Math.max(
+      1,
+      Math.floor(
+        TERRAIN_SEGMENTS * this.#terrainSize.height / this.#terrainSize.width,
+      ),
+    );
     const geo = new three.PlaneGeometry(
       this.#terrainSize.width,
       this.#terrainSize.height,
-      this.#terrainSize.width - 1,
-      this.#terrainSize.height - 1,
+      segmentW,
+      segmentH,
     );
     geo.clearGroups();
     geo.addGroup(0, Infinity, 0);
@@ -114,9 +132,10 @@ export class TerrainViewer {
     const map = new three.CanvasTexture(this.#doms.texture);
     map.colorSpace = three.SRGBColorSpace;
     this.#terrain = new three.Mesh(geo, [
-      new three.MeshLambertMaterial({ map, transparent: true }),
-      // Require a fallback mesh because the canvas of 7dtd-map can contain transparent pixels
-      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
+      new three.MeshStandardMaterial({ map, transparent: true }),
+      // Opaque gray behind the same faces so transparent canvas pixels show
+      // a neutral background instead of the scene clear color (black).
+      new three.MeshStandardMaterial({ color: new three.Color("lightgray") }),
     ]);
     this.#scene.add(this.#terrain);
     this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
