@@ -82,6 +82,16 @@
   & summary {
     font-weight: bold;
   }
+  /* Pin button metrics so glyph-driven font fallbacks (e.g. ↺, ⛰️, ✘)
+     cannot stretch one button taller than its siblings in the same row.
+     inline-flex + line-height:1 keeps button height driven purely by
+     padding + font-size, not by per-glyph ascender/descender. */
+  & button {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    vertical-align: middle;
+  }
   & table {
     & td {
       padding: 2px 4px;
