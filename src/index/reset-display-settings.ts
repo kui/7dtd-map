@@ -1,4 +1,5 @@
 import { isFormValueElement } from "../lib/dom-utils.ts";
+import { bindHoverHighlight } from "./controller-highlight.ts";
 
 // Explicit whitelist (not "all [data-remember]") so keys representing loaded
 // state, like "mapName", are not erased by the reset button. Must stay in
@@ -19,14 +20,13 @@ const RESET_KEYS: readonly string[] = [
   "terrainViewerHelpToggle",
 ];
 
-const HIGHLIGHT_CLASS = "reset-target-highlight";
-
 export function bindResetButton(button: HTMLButtonElement): void {
   button.addEventListener("click", resetDisplaySettings);
-  button.addEventListener("mouseenter", () => setHighlight(true));
-  button.addEventListener("mouseleave", () => setHighlight(false));
-  button.addEventListener("focus", () => setHighlight(true));
-  button.addEventListener("blur", () => setHighlight(false));
+  bindHoverHighlight(button, allTargets);
+}
+
+function* allTargets(): Iterable<Element> {
+  for (const key of RESET_KEYS) yield* querySelectorAllByKey(key);
 }
 
 function resetDisplaySettings(): void {
@@ -40,26 +40,6 @@ function resetDisplaySettings(): void {
       el.dispatchEvent(new Event("input", { bubbles: true }));
     }
     localStorage.removeItem(key);
-  }
-}
-
-function setHighlight(on: boolean): void {
-  for (const key of RESET_KEYS) {
-    for (const el of querySelectorAllByKey(key)) {
-      // tr for controller rows, li for Excludes checkboxes. Targets without
-      // either ancestor (e.g. inside a dialog) are still reset but unmarked.
-      const row = el.closest("tr, li");
-      if (row) row.classList.toggle(HIGHLIGHT_CLASS, on);
-      // Closed <details> hide their rows, so mark the collapsed section
-      // itself to give the user a visible cue.
-      for (
-        let d = el.closest("details");
-        d;
-        d = d.parentElement?.closest("details") ?? null
-      ) {
-        if (!d.open) d.classList.toggle(HIGHLIGHT_CLASS, on);
-      }
-    }
   }
 }
 
