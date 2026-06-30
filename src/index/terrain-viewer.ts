@@ -45,6 +45,9 @@ export class TerrainViewer {
     });
     this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); // cap DPR for performance
     this.#scene = new three.Scene();
+    // Neutral background shows through transparent texture pixels instead of
+    // the renderer's default black clear color.
+    this.#scene.background = new three.Color("#111111");
 
     const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
     light.position.set(1, 1, 1);
@@ -123,20 +126,15 @@ export class TerrainViewer {
       segmentW,
       segmentH,
     );
-    geo.clearGroups();
-    geo.addGroup(0, Infinity, 0);
-    geo.addGroup(0, Infinity, 1);
     await this.#dtm.writeZ(geo);
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
     const map = new three.CanvasTexture(this.#doms.texture);
     map.colorSpace = three.SRGBColorSpace;
-    this.#terrain = new three.Mesh(geo, [
+    this.#terrain = new three.Mesh(
+      geo,
       new three.MeshLambertMaterial({ map, transparent: true }),
-      // Opaque gray behind the same faces so transparent canvas pixels show
-      // a neutral background instead of the scene clear color (black).
-      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
-    ]);
+    );
     this.#scene.add(this.#terrain);
     this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
     console.timeEnd("updateElevations");
