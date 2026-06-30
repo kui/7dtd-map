@@ -87,9 +87,14 @@ export class FileHandler {
     this.#workspace = workspace;
 
     doms.files.addEventListener("change", () => {
-      if (doms.files.files) {
-        this.#pushFiles(Array.from(doms.files.files)).catch(printError);
-      }
+      if (!doms.files.files) return;
+      const files = Array.from(doms.files.files);
+      // webkitdirectory selections expose the chosen directory via the
+      // first file's webkitRelativePath ("<dir>/<file>"); use it so the
+      // Map Name row gets the same immediate feedback as drag-and-drop.
+      const dir = files[0]?.webkitRelativePath.split("/")[0];
+      if (dir) this.#setMapName(dir);
+      this.#pushFiles(files).catch(printError);
     });
     doms.clearMap.addEventListener("click", () => {
       this.#setMapName("");

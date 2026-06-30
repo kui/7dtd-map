@@ -3,6 +3,8 @@ import * as presetButton from "./lib/ui/preset-button.ts";
 import * as dialogButtons from "./lib/ui/dialog-buttons.ts";
 import * as syncOutput from "./lib/ui/sync-output.ts";
 import * as rememberValue from "./lib/ui/remember-value.ts";
+import { bindResetButton } from "./index/reset-display-settings.ts";
+import { bindPrefabSignToggleButton } from "./index/prefab-sign-toggle.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type {
@@ -57,6 +59,11 @@ function main() {
   syncOutput.init();
   dialogButtons.init();
   minMaxInputs.init();
+
+  bindResetButton(component("reset-remembered", HTMLButtonElement));
+  bindPrefabSignToggleButton(
+    component("toggle-prefab-sign", HTMLButtonElement),
+  );
 
   component("download").addEventListener("click", () => {
     const mapName = component("map-name", HTMLInputElement).value || "7dtd-map";
