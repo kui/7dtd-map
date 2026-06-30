@@ -14,6 +14,23 @@ const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
 
+// Approximate pixel-equivalent multipliers for the non-pixel wheel delta modes.
+// Browsers report line/page units when a discrete wheel is used; converting to a
+// pixel-like scale keeps zoom speed consistent across input devices.
+const WHEEL_LINE_HEIGHT_PX = 16;
+const WHEEL_PAGE_HEIGHT_PX = 800;
+
+function normalizeWheelDelta(event: WheelEvent): number {
+  switch (event.deltaMode) {
+    case WheelEvent.DOM_DELTA_LINE:
+      return event.deltaY * WHEEL_LINE_HEIGHT_PX;
+    case WheelEvent.DOM_DELTA_PAGE:
+      return event.deltaY * WHEEL_PAGE_HEIGHT_PX;
+    default:
+      return event.deltaY;
+  }
+}
+
 // Keyboard action set. Movement actions translate to a signed axis speed;
 // "toggle-help" is one-shot. Extracted so the keymap can be unit-tested
 // independently of the controller and the DOM.
@@ -137,7 +154,7 @@ export class TerrainViewerCameraController {
     canvas.addEventListener("wheel", (event) => {
       if (canvas !== document.activeElement || event.deltaY === 0) return;
       event.preventDefault();
-      this.#mouseMove.wheel += event.deltaY;
+      this.#mouseMove.wheel += normalizeWheelDelta(event);
     });
     canvas.addEventListener("mousedown", (event) => {
       if (canvas !== document.activeElement) return;
