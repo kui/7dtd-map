@@ -132,10 +132,10 @@ export class TerrainViewer {
     const map = new three.CanvasTexture(this.#doms.texture);
     map.colorSpace = three.SRGBColorSpace;
     this.#terrain = new three.Mesh(geo, [
-      new three.MeshStandardMaterial({ map, transparent: true }),
+      new three.MeshLambertMaterial({ map, transparent: true }),
       // Opaque gray behind the same faces so transparent canvas pixels show
       // a neutral background instead of the scene clear color (black).
-      new three.MeshStandardMaterial({ color: new three.Color("lightgray") }),
+      new three.MeshLambertMaterial({ color: new three.Color("lightgray") }),
     ]);
     this.#scene.add(this.#terrain);
     this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
