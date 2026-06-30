@@ -143,10 +143,34 @@ export class TerrainViewerCameraController {
       if (canvas !== document.activeElement) return;
       if (event.button === 0 || event.button === 1) {
         event.preventDefault();
+        // Pointer Lock lets drag-pan and drag-tilt keep delivering
+        // movementX/Y once the cursor would otherwise hit the window edge.
+        // requestPointerLock must be called from a trusted event such as
+        // mousedown; the returned promise is ignored because failures
+        // (e.g. user gesture lost) simply fall back to ordinary mousemove.
+        if (document.pointerLockElement !== canvas) {
+          void canvas.requestPointerLock().catch(() => {});
+        }
       }
     });
+    const releasePointerLockIfIdle = (event: MouseEvent) => {
+      if (
+        document.pointerLockElement === canvas &&
+        (event.buttons &
+            (MOUSE_BUTTON_BITMASK.left | MOUSE_BUTTON_BITMASK.center)) ===
+          0
+      ) {
+        document.exitPointerLock();
+      }
+    };
+    // If the browser drops Pointer Lock (e.g. user presses Escape) the
+    // canvas may not receive the subsequent mouseup, so listen on document
+    // as well to guarantee cleanup.
+    canvas.addEventListener("mouseup", releasePointerLockIfIdle);
+    document.addEventListener("mouseup", releasePointerLockIfIdle);
     canvas.addEventListener("mousemove", (event) => {
-      if (canvas !== document.activeElement) return;
+      const locked = document.pointerLockElement === canvas;
+      if (!locked && canvas !== document.activeElement) return;
 
       if ((event.buttons & MOUSE_BUTTON_BITMASK.left) > 0) {
         event.preventDefault();
