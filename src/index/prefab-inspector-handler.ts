@@ -1,6 +1,7 @@
 import type { PrefabDifficulties } from "../types/7dtdmap.ts";
 import { LabelHandler } from "../lib/label-handler.ts";
 import { assertDifficultyIndex, loadPrefabsXml } from "../lib/prefabs.ts";
+import { closeOnBackdropClick } from "../lib/ui/dialog-backdrop-close.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
@@ -52,9 +53,7 @@ export class PrefabInspectorHandler {
     this.#difficulties = difficulties;
     this.#fetchPrefabIndex = fetchPrefabIndex;
 
-    document.addEventListener("click", (event) => {
-      if (event.target === this.#doms.dialog) this.#doms.dialog.close();
-    });
+    closeOnBackdropClick(this.#doms.dialog);
     doms.show.addEventListener("click", () => {
       this.inspect().catch(printError);
     });
