@@ -99,11 +99,11 @@
     padding: 4px 4px;
     cursor: pointer;
   }
-  & button:hover,
+  & button:not(:disabled):hover,
   & .file-button:hover {
     background: #e8e8e8;
   }
-  & button:active,
+  & button:not(:disabled):active,
   & .file-button:active {
     background: #d8d8d8;
   }
