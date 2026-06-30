@@ -49,11 +49,13 @@ const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
 
 function main() {
   initMapStorage();
+  // Restore stored input values first so downstream init steps and handlers
+  // observe the restored state instead of HTML defaults.
+  rememberValue.init();
   presetButton.init();
   copyButton.init();
   syncOutput.init();
   dialogButtons.init();
-  rememberValue.init();
   minMaxInputs.init();
 
   component("download").addEventListener("click", () => {
