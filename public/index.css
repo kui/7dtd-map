@@ -9,7 +9,6 @@
 
 #prefab-tooltip {
   position: fixed;
-  inset: auto;
   margin: 0;
   align-items: center;
   gap: 6px;
@@ -79,9 +78,6 @@
   top: 0;
   background-color: rgba(255, 255, 255, 0.9);
   overflow: auto;
-  & summary {
-    font-weight: bold;
-  }
   /* Normalize buttons and the file-picker label to an identical box so
      glyph-driven fonts (↺, ⛰️, ✘) cannot stretch one taller than the
      next, and so the <label> file-button matches the <button> siblings
@@ -116,7 +112,7 @@
     padding: 1px 2px;
     font-size: inherit;
     font-weight: 200;
-    vertical-align: center;
+    vertical-align: middle;
   }
   & table {
     & td {

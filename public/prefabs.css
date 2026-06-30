@@ -12,11 +12,8 @@
     margin: 8px 0 4px;
     font-size: 1.2em;
   }
-  & > section > header {
-    display: block;
-    & > h2 {
-      display: inline-block;
-    }
+  & > section > header > h2 {
+    display: inline-block;
   }
   & > details > summary {
     margin-top: 8px;
