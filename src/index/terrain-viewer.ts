@@ -47,7 +47,7 @@ export class TerrainViewer {
     this.#scene = new three.Scene();
     // Neutral background shows through transparent texture pixels instead of
     // the renderer's default black clear color.
-    this.#scene.background = new three.Color("lightgray");
+    this.#scene.background = new three.Color("#111111");
 
     const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
     light.position.set(1, 1, 1);
