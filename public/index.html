@@ -108,6 +108,7 @@
                       step="0.1"
                       min="0"
                       max="1"
+                      data-remember="biomesAlpha"
                     />
                   </td>
                 </tr>
@@ -132,6 +133,7 @@
                       step="0.1"
                       min="0"
                       max="1"
+                      data-remember="splat3Alpha"
                     />
                   </td>
                 </tr>
@@ -156,6 +158,7 @@
                       step="0.1"
                       min="0"
                       max="1"
+                      data-remember="splat4Alpha"
                     />
                   </td>
                 </tr>
@@ -176,6 +179,7 @@
                       step="0.1"
                       min="0"
                       max="1"
+                      data-remember="radAlpha"
                     />
                   </td>
                 </tr>
@@ -193,7 +197,7 @@
                       step="0.1"
                       min="0"
                       max="1"
-                      data-remember-value
+                      data-remember="prefabFootprintAlpha"
                     />
                   </td>
                 </tr>
@@ -210,6 +214,7 @@
                       min="0"
                       step="1"
                       value="60"
+                      data-remember="brightness"
                     />
                   </td>
                 </tr>
@@ -232,6 +237,7 @@
               min="0.04"
               step="0.02"
               value="0.12"
+              data-remember="scale"
             />
           </td>
         </tr>
@@ -249,6 +255,7 @@
                 min="20"
                 step="20"
                 value="200"
+                data-remember="prefabSignSize"
               />
             </td>
           </tr>
@@ -265,6 +272,7 @@
                 step="0.1"
                 min="0"
                 max="1"
+                data-remember="prefabSignAlpha"
               />
             </td>
           </tr>
@@ -320,6 +328,7 @@
                       type="checkbox"
                       value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
                       checked
+                      data-remember="prefabFilterExcludeTest"
                     />Test</label>
                 </li>
                 <li>
@@ -327,6 +336,7 @@
                       type="checkbox"
                       value="^rwg_tile_"
                       checked
+                      data-remember="prefabFilterExcludeTiles"
                     />Tiles</label>
                 </li>
                 <li>
@@ -334,7 +344,8 @@
                       type="checkbox"
                       value="^part_driveway_"
                       checked
-                    />Driveways</label>
+                      data-remember="prefabFilterExcludeDrivewayParts"
+                    />Driveway Parts</label>
                 </li>
               </ul>
             </details>
@@ -458,6 +469,7 @@
             id="terrain-viewer-help-toggle"
             type="checkbox"
             checked
+            data-remember="terrainViewerHelpToggle"
           />
           Show/Hide Help
         </label>
