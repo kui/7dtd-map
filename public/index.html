@@ -34,7 +34,8 @@
 
     <div id="controller">
       <p>
-        <button id="clear-map" title="Clear all world files">Clear</button>
+        <button id="clear-map"
+          title="Discard the currently loaded world files">🗑️ Unload Map</button>
         <input id="files" type="file" multiple webkitdirectory />
       </p>
       <table>
@@ -277,6 +278,14 @@
             </td>
           </tr>
         </tbody>
+        <tr>
+          <td colspan="3">
+            <button
+              id="reset-remembered"
+              title="Restore display preferences (alpha, brightness, scale, prefab sign, terrain-viewer help, pre-filters) to their defaults"
+            >↺ Reset Display Settings</button>
+          </td>
+        </tr>
         <tbody class="multi-rows">
           <tr>
             <th rowspan="2">💀 Prefab Tier</th>
