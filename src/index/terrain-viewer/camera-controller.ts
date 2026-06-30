@@ -173,7 +173,13 @@ export class TerrainViewerCameraController {
     this.#minZ = (MAX_ELEV * terrainSize.width) / mapWidth;
     this.#maxZ = terrainSize.height * 1.2;
 
+    // Keep the far/near ratio bounded so the depth buffer retains precision
+    // at the terrain's far edge. The default near of 0.1 paired with a far
+    // proportional to terrain size produces a ratio of ~40000, which causes
+    // Z-fighting on distant geometry.
+    this.camera.near = 1;
     this.camera.far = this.#terrainSize.height * 2;
+    this.camera.updateProjectionMatrix();
     this.camera.position.x = 0;
     this.camera.position.y = -this.#terrainSize.height;
     this.camera.position.z = this.#terrainSize.height;
