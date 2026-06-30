@@ -80,7 +80,7 @@ export class MarkerCoordsDisplayHandler {
     const safeName = escapeHtml(hit.name);
     const safeLabel = escapeHtml(label);
     const tier = difficulty > 0
-      ? `<span class="tier prefab_difficulty_${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</span> `
+      ? `<span class="tier prefab-difficulty-${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</span> `
       : "";
     this.#doms.prefab.innerHTML =
       `${tier}<a href="prefabs/${safeName}.html" target="_blank">${safeLabel} / <small>${safeName}</small></a>`;

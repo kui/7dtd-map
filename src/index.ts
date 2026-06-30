@@ -270,7 +270,7 @@ function prefabLi(prefab: HighlightedPrefab) {
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
-        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab_difficulty_${prefab.difficulty.toString()}">`,
+        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
         `  💀${prefab.difficulty.toString()}`,
         `</span>`,
       ]

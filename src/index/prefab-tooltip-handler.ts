@@ -116,7 +116,7 @@ export class PrefabTooltipHandler {
       const safeName = escapeHtml(prefab.name);
       const safeLabel = escapeHtml(label);
       const tierLine = difficulty > 0
-        ? `<div class="tier prefab_difficulty_${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</div>`
+        ? `<div class="tier prefab-difficulty-${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</div>`
         : "";
       this.#doms.tooltip.innerHTML =
         `<img src="prefabs/${safeName}.jpg" alt="" loading="lazy">` +
