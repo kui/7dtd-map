@@ -47,7 +47,7 @@ export class TerrainViewer {
     this.#scene = new three.Scene();
 
     const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
-    light.position.set(1, 1, 1).normalize();
+    light.position.set(1, 1, 1);
     this.#scene.add(light);
     this.#scene.add(new three.AmbientLight(0xffffff, 0.09)); // low fill to keep terrain contrast
 
