@@ -172,7 +172,14 @@ export class TerrainViewer {
       this.#cameraController.update(currentTime - prevTime);
       this.#renderer.render(this.#scene, this.#cameraController.camera);
     };
-    r(0, 0);
+    // Seed prev == current via rAF so the first frame's delta is 0.
+    // Calling r(0, 0) directly would feed a zero prevTime into the next
+    // rAF's high-res currentTime, producing a multi-second delta that
+    // snaps the camera if a movement key is already held when the dialog
+    // opens.
+    this.#animationRequestId = requestAnimationFrame((t) => {
+      r(t, t);
+    });
   }
 
   #stopRender(): void {
