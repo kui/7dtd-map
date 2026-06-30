@@ -111,7 +111,7 @@ function main() {
   );
   const prefabsHandler = new PrefabsHandler(
     {
-      status: component("prefabs-num", HTMLElement),
+      status: component("prefabs-status", HTMLElement),
       minTier: component("min-tier", HTMLInputElement),
       maxTier: component("max-tier", HTMLInputElement),
       prefabFilter: component("prefab-filter", HTMLInputElement),
