@@ -65,6 +65,7 @@ export class TerrainViewer {
     // stops regardless of how the dialog was dismissed.
     doms.dialog.addEventListener("close", () => {
       this.#stopRender();
+      this.#disposeTerrain();
     });
     // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
     // otherwise move focus off the canvas and break keyboard camera
@@ -95,7 +96,7 @@ export class TerrainViewer {
   }
 
   async #updateElevations() {
-    if (this.#terrain) this.#scene.remove(this.#terrain);
+    this.#disposeTerrain();
     const mapSize = await this.#dtm.size();
     if (mapSize === null) throw Error("Unexpected state");
 
@@ -104,7 +105,6 @@ export class TerrainViewer {
       (TERRAIN_WIDTH / mapSize.width) * mapSize.height,
     );
 
-    console.log("terrainSize=", this.#terrain, "mapSize=", mapSize);
     console.time("updateElevations");
     // LOD is not implemented because it would require tiled meshes with
     // distance-based switching and seam stitching.  Halving subdivision
@@ -140,6 +140,23 @@ export class TerrainViewer {
     this.#scene.add(this.#terrain);
     this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
     console.timeEnd("updateElevations");
+  }
+
+  // three.js does not free GPU resources on GC; geometry, materials and
+  // textures must be disposed explicitly or VRAM accumulates each time the
+  // viewer is reopened with a different DTM.
+  #disposeTerrain(): void {
+    if (!this.#terrain) return;
+    this.#scene.remove(this.#terrain);
+    this.#terrain.geometry.dispose();
+    const materials = Array.isArray(this.#terrain.material)
+      ? this.#terrain.material
+      : [this.#terrain.material];
+    for (const m of materials) {
+      (m as { map?: three.Texture | null }).map?.dispose();
+      m.dispose();
+    }
+    this.#terrain = null;
   }
 
   #startRender(): void {
