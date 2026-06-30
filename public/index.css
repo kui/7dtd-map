@@ -254,3 +254,9 @@ dialog {
 #terrain-viewer-dialog::backdrop {
   background-color: black;
 }
+
+#controller tr.reset-target-highlight,
+#controller li.reset-target-highlight,
+#controller details.reset-target-highlight > summary {
+  background-color: #ffe8c2;
+}
