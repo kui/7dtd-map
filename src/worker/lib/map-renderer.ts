@@ -520,7 +520,7 @@ export default class MapRenderer {
     if (cached) return cached;
     const file = await this.#getFile(fileName);
     if (!file) return null;
-    const size = await readPngSize(file);
+    const size = await readPngSize(fileName, file);
     this.#nativeSizes.set(fileName, size);
     return size;
   }
@@ -628,15 +628,36 @@ function putText(
   context.strokeText(text, x, z);
 }
 
+// 8-byte signature + 4-byte chunk length + 4-byte "IHDR" type + 4-byte width
+// + 4-byte height.
+const PNG_HEADER_BYTES = 24;
+
 /**
  * Read width/height from a PNG's IHDR chunk without decoding pixels.
  * Layout: 8-byte signature, 4-byte chunk length, 4-byte "IHDR" type,
  * then 4-byte width and 4-byte height (big-endian).
  */
 async function readPngSize(
+  fileName: string,
   file: Blob,
 ): Promise<{ width: number; height: number }> {
-  const header = await file.slice(0, 24).arrayBuffer();
+  const header = await file.slice(0, PNG_HEADER_BYTES).arrayBuffer();
+  // Diagnostic for https://github.com/kui/7dtd-map/issues/202 (flaky short
+  // read of bundled PNGs in CI). Throw a descriptive error with the file
+  // metadata that was visible at the moment of the short read so the next
+  // CI flake captures what would otherwise be lost behind a bare RangeError.
+  if (header.byteLength < PNG_HEADER_BYTES) {
+    const headerHex = Array.from(new Uint8Array(header))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    throw new Error(
+      `readPngSize: short read for ${fileName} ` +
+        `(file.size=${file.size.toString()}, file.type=${file.type}, ` +
+        `header.byteLength=${header.byteLength.toString()}, ` +
+        `header[hex]=${headerHex}). ` +
+        `See https://github.com/kui/7dtd-map/issues/202`,
+    );
+  }
   const view = new DataView(header);
   return { width: view.getUint32(16), height: view.getUint32(20) };
 }
