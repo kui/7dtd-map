@@ -96,6 +96,25 @@
             >ℹ️ map_info.xml</button>
           </td>
         </tr>
+        <tr>
+          <th title="Scale of PNG files">
+            <label for="scale">🔍️ Scale</label>
+          </th>
+          <td>
+            <output data-sync-for="scale">0.12</output>
+          </td>
+          <td>
+            <input
+              id="scale"
+              type="range"
+              max="1"
+              min="0.04"
+              step="0.02"
+              value="0.12"
+              data-remember="scale"
+            />
+          </td>
+        </tr>
         <tr class="inner-table-container">
           <td colspan="3">
             <details>
@@ -228,25 +247,6 @@
                 </tr>
               </table>
             </details>
-          </td>
-        </tr>
-        <tr>
-          <th title="Scale of PNG files">
-            <label for="scale">🔍️ Scale</label>
-          </th>
-          <td>
-            <output data-sync-for="scale">0.12</output>
-          </td>
-          <td>
-            <input
-              id="scale"
-              type="range"
-              max="1"
-              min="0.04"
-              step="0.02"
-              value="0.12"
-              data-remember="scale"
-            />
           </td>
         </tr>
         <tbody class="multi-rows">
