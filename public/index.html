@@ -101,7 +101,7 @@
             <label for="scale">🔍️ Scale</label>
           </th>
           <td>
-            <output data-sync-for="scale">0.12</output>
+            <output class="scale-output" data-sync-for="scale">0.12</output>
           </td>
           <td>
             <input
@@ -124,7 +124,7 @@
                   <th><label for="biomes-alpha">🌲 biomes.png</label></th>
                   <td>
                     <output class="alpha-output"
-                      data-sync-for="biomes-alpha">1</output>
+                      data-sync-for="biomes-alpha">1.0</output>
                   </td>
                   <td>
                     <input
@@ -149,7 +149,7 @@
                   </th>
                   <td>
                     <output class="alpha-output"
-                      data-sync-for="splat3-alpha">1</output>
+                      data-sync-for="splat3-alpha">1.0</output>
                   </td>
                   <td>
                     <input
@@ -213,8 +213,10 @@
                 <tr>
                   <th title="Prefabs">🏘️ prefabs.xml</th>
                   <td>
-                    <output class="alpha-output"
-                      data-sync-for="prefab-footprint-alpha">1</output>
+                    <output
+                      class="alpha-output"
+                      data-sync-for="prefab-footprint-alpha"
+                    >1.0</output>
                   </td>
                   <td>
                     <input
@@ -231,7 +233,10 @@
                 <tr>
                   <th><label for="brightness">🔆 Brightness</label></th>
                   <td>
-                    <output class="brightness-output" data-sync-for="brightness">60</output>%
+                    <output
+                      class="percentage-output"
+                      data-sync-for="brightness"
+                    >60</output>%
                   </td>
                   <td>
                     <input
@@ -253,7 +258,13 @@
           <tr>
             <th rowspan="2"><span class="logo">✘</span> Prefab Sign</th>
             <td>
-              <output class="font-size-output" data-sync-for="prefab-sign-size">200</output>px
+              <label for="prefab-sign-size">
+                <span class="label-text">Size:</span>
+                <output
+                  class="font-size-output"
+                  data-sync-for="prefab-sign-size"
+                  >200</output>px
+              </label>
             </td>
             <td>
               <input
@@ -269,8 +280,11 @@
           </tr>
           <tr>
             <td>
-              <output class="alpha-output"
-                data-sync-for="prefab-sign-alpha">1</output>
+              <label for="prefab-sign-alpha">
+                <span class="label-text">Alpha:</span>
+                <output class="alpha-output"
+                  data-sync-for="prefab-sign-alpha">1.0</output>
+              </label>
             </td>
             <td>
               <input
@@ -301,7 +315,10 @@
           <tr>
             <th rowspan="2">💀 Prefab Tier</th>
             <td>
-              <label>Min: <output class="tier-output" data-sync-for="min-tier">0</output></label>
+              <label>
+                <span class="label-text">Min:</span>
+                <output class="tier-output" data-sync-for="min-tier">0</output>
+              </label>
             </td>
             <td>
               <input
@@ -317,7 +334,10 @@
           </tr>
           <tr>
             <td>
-              <label>Max: <output class="tier-output" data-sync-for="max-tier">5</output></label>
+              <label>
+                <span class="label-text">Max:</span>
+                <output class="tier-output" data-sync-for="max-tier">5</output>
+              </label>
             </td>
             <td>
               <input
@@ -336,11 +356,8 @@
           <th><label for="prefab-filter">🏠️ Prefab Filter</label></th>
           <td colspan="2">
             <input id="prefab-filter" placeholder="Enter prefab name" />
-            <button
-              title="Clear"
-              data-input-prefab-filter=""
-            >×</button>
-            <details id="prefab-pre-filters">
+            <button title="Clear" data-input-prefab-filter="">×</button>
+            <details id="prefab-pre-filters" class="sub-field">
               <summary>Excludes</summary>
               <ul>
                 <li>
@@ -376,26 +393,25 @@
           <td colspan="2">
             <div>
               <input id="block-filter" placeholder="Enter block name" />
-              <button
-                title="Clear"
-                data-input-block-filter=""
-              >×</button>
+              <button title="Clear" data-input-block-filter="">×</button>
             </div>
-            <div>
-              <strong>Min Count:</strong>
-              <input
-                id="min-matched-block-count"
-                type="number"
-                min="1"
-                max="999"
-                placeholder="1-999"
-              />
+            <div class="sub-field">
+              <label>
+                <span class="label-text">Min Count:</span>
+                <input
+                  id="min-matched-block-count"
+                  type="number"
+                  min="1"
+                  max="999"
+                  placeholder="1-999"
+                />
+              </label>
             </div>
           </td>
         </tr>
         <tr>
           <td colspan="3">
-            <strong>Filter Preset</strong>
+            <span class="label-text">Filter Preset:</span>
             <button
               data-input-min-tier="0"
               data-input-prefab-filter="trader"
@@ -477,12 +493,7 @@
       aria-labelledby="terrain-viewer-title"
     >
       <h2 id="terrain-viewer-title" class="visually-hidden">Terrain Viewer</h2>
-      <canvas
-        id="terrain-viewer"
-        width="0"
-        height="0"
-        tabindex="0"
-      ></canvas>
+      <canvas id="terrain-viewer" width="0" height="0" tabindex="0"></canvas>
       <div id="terrarian-viewer-hud" class="terrain-viewer-hud">
         <label style="user-select: none">
           <input
@@ -500,8 +511,9 @@
           </dt>
           <dd>Move horizontally</dd>
           <dt>
-            <code>R</code>/<code>F</code> or <code>PageUp</code>/<code
-            >PageDown</code> / Grab with Mouse Wheel Button
+            <code>R</code>/<code>F</code>
+            or <code>PageUp</code>/<code>PageDown</code>
+            / Grab with Mouse Wheel Button
           </dt>
           <dd>Tilt</dd>
           <dt><code>+</code>/<code>-</code> keys / Rotate Mouse Wheel</dt>
@@ -518,9 +530,7 @@
           class="terrain-viewer-close"
           type="submit"
           aria-label="Close terrain viewer"
-        >
-          ❌
-        </button>
+        >×</button>
       </form>
     </dialog>
     <p id="loading-indicator"></p>
@@ -546,15 +556,12 @@
         Open "GeneratedWorlds" folder:
         <ul>
           <li>
-            <code><span id="generated-world-path-windows"
-              >%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <code><span id="generated-world-path-windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
             <button
               title="Copy this path"
               data-copy-for="generated-world-path-windows"
               data-success-message="✅ Press Win+R then paste this"
-            >
-              📋️
-            </button>
+            >📋️</button>
           </li>
         </ul>
       </li>

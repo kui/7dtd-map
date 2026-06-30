@@ -100,7 +100,7 @@
     border: 1px solid #aaa;
     border-radius: 2px;
     background: #f5f5f5;
-    padding: 4px 8px;
+    padding: 4px 4px;
     cursor: pointer;
   }
   & button:hover,
@@ -111,23 +111,23 @@
   & .file-button:active {
     background: #d8d8d8;
   }
+  & input + button,
+  #reset-mark {
+    padding: 1px 2px;
+    font-size: inherit;
+    font-weight: 200;
+    vertical-align: center;
+  }
   & table {
     & td {
       padding: 2px 4px;
     }
     & tbody.multi-rows:hover tr,
-    & tr:hover:not(.inner-table-container),
-    & summary:hover {
+    & tr:hover:not(.inner-table-container) {
       background-color: #eef;
     }
     & tr.inner-table-container:hover {
       background-color: #eff;
-    }
-    & td output {
-      display: inline-block;
-      font-size: 1em;
-      width: 2em;
-      text-align: right;
     }
     & th,
     & td:has(output):not(:has(details)) {
@@ -145,30 +145,30 @@
     }
   }
 
-  & .alpha-output {
-    width: 3em;
+  & .label-text,
+  & th,
+  & summary {
+    font-weight: 600;
   }
-  & .brightness-output {
-    width: 2em;
-  }
-  & .tier-output {
-    width: 1em;
-  }
-  & font-size-output {
-    width: 3em;
+  & .sub-field {
+    font-size: small;
+    margin: 2px 0;
   }
 }
 
-#prefab-pre-filters {
-  font-size: small;
-  & > ul {
-    margin: 0;
-    padding: 0;
-    & > li {
-      list-style-type: none;
-      margin: 0 0.5em;
-    }
+#prefab-pre-filters > ul {
+  margin: 0;
+  padding: 0;
+  & > li {
+    list-style-type: none;
+    margin: 0 0.5em;
   }
+}
+
+.percentage-output {
+  display: inline-block;
+  text-align: center;
+  width: 1.7em;
 }
 
 #prefabs-list,
@@ -291,6 +291,6 @@ dialog {
 
 #controller tr.reset-target-highlight,
 #controller li.reset-target-highlight,
-#controller details.reset-target-highlight > summary {
+#controller details.reset-target-highlight {
   background-color: #ffe8c2;
 }

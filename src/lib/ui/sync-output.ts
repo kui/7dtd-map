@@ -8,7 +8,7 @@ export function init(): void {
         `output[data-sync-for="${target.id}"]`,
       );
       for (const output of outputElements) {
-        output.value = target.value;
+        output.value = formatValue(output, target.value);
       }
     });
   }
@@ -19,6 +19,18 @@ export function init(): void {
     )
   ) {
     const input = component(output.dataset["syncFor"], HTMLInputElement);
-    output.value = input.value;
+    output.value = formatValue(output, input.value);
   }
+}
+
+function formatValue(output: HTMLOutputElement, value: string): string {
+  if (output.classList.contains("alpha-output")) {
+    const n = Number(value);
+    if (Number.isFinite(n)) return n.toFixed(1);
+  }
+  if (output.classList.contains("scale-output")) {
+    const n = Number(value);
+    if (Number.isFinite(n)) return n.toFixed(2);
+  }
+  return value;
 }
