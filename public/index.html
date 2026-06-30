@@ -36,7 +36,16 @@
       <p>
         <button id="clear-map"
           title="Discard the currently loaded world files">🗑️ Unload Map</button>
-        <input id="files" type="file" multiple webkitdirectory />
+        <label class="file-button" title="Select a map folder to load">
+          📁 Load Map
+          <input
+            id="files"
+            type="file"
+            multiple
+            webkitdirectory
+            class="visually-hidden"
+          />
+        </label>
       </p>
       <table>
         <tr>

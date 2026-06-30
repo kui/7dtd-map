@@ -82,15 +82,34 @@
   & summary {
     font-weight: bold;
   }
-  /* Pin button metrics so glyph-driven font fallbacks (e.g. ↺, ⛰️, ✘)
-     cannot stretch one button taller than its siblings in the same row.
-     inline-flex + line-height:1 keeps button height driven purely by
-     padding + font-size, not by per-glyph ascender/descender. */
-  & button {
+  /* Normalize buttons and the file-picker label to an identical box so
+     glyph-driven fonts (↺, ⛰️, ✘) cannot stretch one taller than the
+     next, and so the <label> file-button matches the <button> siblings
+     (appearance:button alone did not render the label's border on Chrome).
+     The underlying file input stays in the tab order via .visually-hidden. */
+  & button,
+  & .file-button {
     display: inline-flex;
     align-items: center;
-    line-height: 1;
     vertical-align: middle;
+    /* font shorthand sets line-height too, so apply line-height AFTER it. */
+    font: inherit;
+    font-size: 13px;
+    line-height: 1;
+    appearance: none;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  & button:hover,
+  & .file-button:hover {
+    background: #e8e8e8;
+  }
+  & button:active,
+  & .file-button:active {
+    background: #d8d8d8;
   }
   & table {
     & td {
@@ -156,6 +175,11 @@
 #prefabs-list ul {
   list-style-type: none;
   padding-inline-start: 16px;
+  & > li button {
+    font-size: 50%;
+    padding: 4px;
+    color: #666;
+  }
 }
 
 [data-copy-for]:focus::after {
