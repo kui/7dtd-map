@@ -50,6 +50,7 @@ function main() {
       preExcludes: Array.from(
         component("prefab-excludes").querySelectorAll("input[type=checkbox]"),
       ),
+      onlyNew: component("only-new-prefabs", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
     new LabelHandler(
@@ -187,6 +188,7 @@ class PrefabsHandler {
       minMatchedBlockCount: this.#doms.minMatchedBlockCount.valueAsNumber || 0,
       difficulty: readTierRange(this.#doms),
       preExcludes: readPreExcludes(this.#doms),
+      onlyNew: this.#doms.onlyNew.checked,
       language: this.#labelHandler.language,
       all: await this.#fetchPrefabs(),
     });

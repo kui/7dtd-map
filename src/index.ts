@@ -138,6 +138,7 @@ function main() {
           "input[type=checkbox]",
         ),
       ),
+      onlyNew: component("only-new-prefabs", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
     markerHandler,

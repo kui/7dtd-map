@@ -59,7 +59,10 @@ export class PrefabsHandler {
     );
 
     bindPrefabsFilterControls(doms, worker, labelHandler);
-    worker.postMessage({ preExcludes: readPreExcludes(doms) });
+    worker.postMessage({
+      preExcludes: readPreExcludes(doms),
+      onlyNew: doms.onlyNew.checked,
+    });
 
     markerHandler.addListener((m) => {
       worker.postMessage({ markCoords: m.coords });

@@ -43,6 +43,7 @@ export class PrefabFilter {
   prefabFilterRegexp = "";
   blockFilterRegexp = "";
   minMatchedBlockCount = 0;
+  onlyNew = false;
 
   constructor(
     labelsBaseUrl: string,
@@ -110,7 +111,8 @@ export class PrefabFilter {
       this.prefabFilterRegexp.length === 0 &&
       this.blockFilterRegexp.length === 0 &&
       this.difficulty.start === 0 &&
-      this.difficulty.end === 5
+      this.difficulty.end === 5 &&
+      !this.onlyNew
     ) {
       this.#status = `All ${this.#preFiltereds.length.toString()} prefabs`;
     } else if (this.#filtered.length === 0) {
@@ -135,13 +137,19 @@ export class PrefabFilter {
     const addedVersions = await this.#addedVersionsHolder.get();
     const latestVersion = latestAddedVersion(addedVersions);
     this.#preFiltereds = this.#preMatch(this.all);
-    let result = this.#matchByDifficulty(this.#preFiltereds, difficulties);
+    let result: HighlightedPrefab[] = this.#matchByDifficulty(
+      this.#preFiltereds,
+      difficulties,
+    );
     result = await this.#matchByPrefabName(
       result,
       difficulties,
       addedVersions,
       latestVersion,
     );
+    if (this.onlyNew) {
+      result = result.filter((p) => p.isAddedInLatestVersion);
+    }
     result = await this.#matchByBlockName(result);
     if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
       this.#filtered = [];
