@@ -50,6 +50,7 @@ function main() {
       preExcludes: Array.from(
         component("prefab-excludes").querySelectorAll("input[type=checkbox]"),
       ),
+      onlyNew: component("only-new-prefabs", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
     new LabelHandler(
@@ -70,16 +71,6 @@ function main() {
       }));
     },
   );
-
-  const minTier = component("min-tier", HTMLInputElement);
-  const maxTier = component("max-tier", HTMLInputElement);
-  const tierClear = component("tier-clear", HTMLButtonElement);
-  tierClear.addEventListener("click", () => {
-    minTier.value = minTier.defaultValue;
-    maxTier.value = maxTier.defaultValue;
-    minTier.dispatchEvent(new Event("input", { bubbles: true }));
-    maxTier.dispatchEvent(new Event("input", { bubbles: true }));
-  });
 
   const status = component("prefabs-status");
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
@@ -110,6 +101,13 @@ function prefabLi(prefab: HighlightedPrefab) {
         `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
         `  💀${prefab.difficulty.toString()}`,
         `</span>`,
+      ]
+      : []),
+    ...(prefab.isAddedInLatestVersion
+      ? [
+        `<span title="Added in v${
+          escapeHtml(prefab.addedVersion ?? "")
+        }" class="new-badge">🆕</span>`,
       ]
       : []),
     `<a href="prefabs/${safeName}.html" target="_blank">`,
@@ -180,6 +178,7 @@ class PrefabsHandler {
       minMatchedBlockCount: this.#doms.minMatchedBlockCount.valueAsNumber || 0,
       difficulty: readTierRange(this.#doms),
       preExcludes: readPreExcludes(this.#doms),
+      onlyNew: this.#doms.onlyNew.checked,
       language: this.#labelHandler.language,
       all: await this.#fetchPrefabs(),
     });

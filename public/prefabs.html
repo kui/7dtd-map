@@ -34,7 +34,12 @@
         <section>
           <header>
             <h2>Tier</h2>
-            <button id="tier-clear" title="Clear Tier Range">X</button>
+            <button
+              id="tier-clear"
+              title="Clear Tier Range"
+              data-input-min-tier="0"
+              data-input-max-tier="5"
+            >×</button>
           </header>
           <table>
             <tr>
@@ -79,24 +84,22 @@
         </section>
         <section>
           <h2>Prefab Name</h2>
-          <input id="prefab-filter" placeholder="Enter prefab name" />
-          <button
-            title="Clear Prefab Name"
-            data-input-prefab-filter=""
-          >
-            X
-          </button>
+          <div>
+            <input id="prefab-filter" placeholder="Enter prefab name" />
+            <button title="Clear" data-input-prefab-filter="">×</button>
+          </div>
+          <div>
+            <label>
+              <input id="only-new-prefabs" type="checkbox" /> Only new
+              prefabs
+            </label>
+          </div>
         </section>
         <section>
           <h2>Block Name</h2>
           <div>
             <input id="block-filter" placeholder="Enter block name" />
-            <button
-              title="Clear Block Name"
-              data-input-block-filter=""
-            >
-              X
-            </button>
+            <button title="Clear" data-input-block-filter="">×</button>
           </div>
           <div>
             <label>

@@ -1,5 +1,6 @@
 import type {
   BlockPrefabCounts,
+  PrefabAddedVersions,
   PrefabBlockCounts,
   PrefabDifficulties,
   PrefabMeshSizes,
@@ -14,6 +15,7 @@ const prefabs = new PrefabFilter(
   async () => invertCounts(await fetchJson("../prefab-block-counts.json")),
   () => fetchJson<PrefabMeshSizes>("../prefab-mesh-sizes.json"),
   () => fetchJson<PrefabDifficulties>("../prefab-difficulties.json"),
+  () => fetchJson<PrefabAddedVersions>("../prefab-added-versions.json"),
 );
 
 onmessage = ({ data }: MessageEvent<PrefabsFilterInputMessage>) => {

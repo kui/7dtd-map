@@ -9,6 +9,7 @@ import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type {
   HighlightedPrefab,
+  PrefabAddedVersions,
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "./types/7dtdmap.ts";
@@ -19,6 +20,7 @@ import {
   humanreadableDistance,
   printError,
 } from "./lib/utils.ts";
+import { latestAddedVersion } from "./lib/prefab-added-versions.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
@@ -48,8 +50,19 @@ const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
 const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
   "prefab-difficulties.json",
 );
+const prefabAddedVersions: Promise<PrefabAddedVersions> = fetchJson(
+  "prefab-added-versions.json",
+);
 
 function main() {
+  prefabAddedVersions
+    .then((addedVersions) => {
+      component("app-version").textContent = `v${
+        latestAddedVersion(addedVersions)
+      }`;
+    })
+    .catch(printError);
+
   initMapStorage();
   // Restore stored input values first so downstream init steps and handlers
   // observe the restored state instead of HTML defaults.
@@ -125,6 +138,7 @@ function main() {
           "input[type=checkbox]",
         ),
       ),
+      onlyNew: component("only-new-prefabs", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
     markerHandler,
@@ -209,6 +223,7 @@ function main() {
     prefabsHandler,
     labelHandler,
     prefabDifficulties,
+    prefabAddedVersions,
   );
   new PrefabInspectorHandler(
     {
@@ -245,10 +260,16 @@ function main() {
           defined: component("prefab-inspector-total-defined-count"),
         },
       },
+      newVersion: component("prefab-inspector-new-version"),
+      newCounts: {
+        inMap: component("prefab-inspector-new-inmap-count"),
+        defined: component("prefab-inspector-new-defined-count"),
+      },
       missings: component("prefab-inspector-missings", HTMLOListElement),
     },
     labelHandler,
     prefabDifficulties,
+    prefabAddedVersions,
     () => fetchJson("prefabs/index.json"),
   );
 
@@ -273,6 +294,13 @@ function prefabLi(prefab: HighlightedPrefab) {
         `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
         `  💀${prefab.difficulty.toString()}`,
         `</span>`,
+      ]
+      : []),
+    ...(prefab.isAddedInLatestVersion
+      ? [
+        `<span title="Added in v${
+          escapeHtml(prefab.addedVersion ?? "")
+        }" class="new-badge">🆕</span>`,
       ]
       : []),
     `<a href="prefabs/${safeName}.html" target="_blank">`,

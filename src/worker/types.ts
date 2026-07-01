@@ -44,6 +44,7 @@ export type PrefabsFilterInputMessage = Partial<
     | "markCoords"
     | "language"
     | "preExcludes"
+    | "onlyNew"
   >
 >;
 
