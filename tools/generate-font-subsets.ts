@@ -110,10 +110,10 @@ function countGlyphs(sfnt: Uint8Array): number {
   for (let i = 0; i < numTables; i++) {
     const recordOffset = 12 + i * 16;
     const tag = String.fromCharCode(
-      sfnt[recordOffset],
-      sfnt[recordOffset + 1],
-      sfnt[recordOffset + 2],
-      sfnt[recordOffset + 3],
+      view.getUint8(recordOffset),
+      view.getUint8(recordOffset + 1),
+      view.getUint8(recordOffset + 2),
+      view.getUint8(recordOffset + 3),
     );
     if (tag === "maxp") {
       const tableOffset = view.getUint32(recordOffset + 8);
