@@ -17,19 +17,25 @@
         "build:prefab-html",
         "build:copy-map-files",
         "build:font-subsets",
-        "build:logo-svg",
+        "build:glyph-markers",
       ],
     },
-    "build:logo-svg": {
-      "command": "deno run -A tools/generate-logo-svg.ts",
+    "build:glyph-markers": {
+      "command": "deno run -A tools/generate-glyph-markers.ts",
       "files": [
-        "tools/generate-logo-svg.ts",
+        "tools/generate-glyph-markers.ts",
+        "tools/lib/utils.ts",
+        "lib/glyph-marker.ts",
         "tools/fonts/NotoSansSymbols2-Regular.ttf",
+        "tools/fonts/NotoEmojiOld-Regular.ttf",
         "deno.jsonc",
         "deno.lock",
       ],
       "output": [
         "public/logo.svg",
+        "public/sign-path.json",
+        "public/flag-mark.svg",
+        "public/flag-path.json",
       ],
     },
     "build:font-subsets": {
@@ -38,8 +44,6 @@
         "tools/generate-font-subsets.ts",
         "tools/lib/symbol-chars.ts",
         "tools/fonts/NotoColorEmoji-COLRv1.ttf",
-        "tools/fonts/NotoSansSymbols2-Regular.ttf",
-        "tools/fonts/NotoEmojiOld-Regular.ttf",
         "src/**/*.ts",
         "public/*.html",
         "tools/lib/prefab-html.ts",
@@ -48,8 +52,6 @@
       ],
       "output": [
         "public/NotoColorEmoji.subset.woff2",
-        "public/NotoSansSymbols2.subset.woff2",
-        "public/NotoEmojiOld.subset.woff2",
       ],
     },
     "build:ts": {

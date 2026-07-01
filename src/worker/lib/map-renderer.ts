@@ -12,9 +12,12 @@ import { gameMapSize } from "../../lib/utils.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
+import {
+  GLYPH_MARKER_FONT_SIZE,
+  GLYPH_MARKER_STROKE_WIDTHS,
+  GLYPH_MARKER_VIEWPORT,
+} from "../../../lib/glyph-marker.ts";
 
-const SIGN_CHAR = "✘";
-const MARK_CHAR = "🚩";
 // Edge length of an `rwg_tile_*` prefab in game blocks.
 const TILE_SIZE = 150;
 
@@ -23,11 +26,6 @@ interface TileIndex {
   offsetZ: number;
   // Key: `${gridX},${gridZ}` → district name (extracted from tile filename).
   cells: Map<string, string>;
-}
-
-interface FontFamilies {
-  [SIGN_CHAR]: string;
-  [MARK_CHAR]: string;
 }
 
 export default class MapRenderer {
@@ -55,7 +53,8 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  #fontFamilies: FontFamilies;
+  #signPath2D: Path2D;
+  #markPath2D: Path2D;
 
   #nativeSizes = new Map<
     mapFiles.MapFileName,
@@ -74,13 +73,15 @@ export default class MapRenderer {
 
   constructor(
     canvas: OffscreenCanvas,
-    fontFamilies: FontFamilies,
+    signPathD: string,
+    markPathD: string,
     fetchMeshSizes: () => Promise<PrefabMeshSizes>,
     fetchDensityScores: () => Promise<PrefabDensityScores>,
     fetchDistrictColors: () => Promise<DistrictColors>,
   ) {
     this.canvas = canvas;
-    this.#fontFamilies = fontFamilies;
+    this.#signPath2D = new Path2D(signPathD);
+    this.#markPath2D = new Path2D(markPathD);
     // Static tables fetched on demand inside the worker, mirroring the
     // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
     // because nothing here owns external resources.
@@ -437,25 +438,9 @@ export default class MapRenderer {
     const scale = this.scale;
 
     const pixelSize = Math.max(1, Math.round(signSize * scale));
-    const spriteW = pixelSize * 2;
-    const spriteH = pixelSize * 2;
-    const spriteCX = spriteW / 2;
-    const spriteCY = spriteH / 2;
-    const sprite = new OffscreenCanvas(spriteW, spriteH);
-    const sc = sprite.getContext("2d");
-    if (sc) {
-      sc.font = `${pixelSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
-      sc.textAlign = "center";
-      sc.textBaseline = "middle";
-      sc.lineJoin = "round";
-      sc.lineCap = "round";
-      putText(sc, {
-        text: SIGN_CHAR,
-        x: spriteCX,
-        z: spriteCY,
-        size: pixelSize,
-      });
-    }
+    const sprite = buildGlyphSprite(this.#signPath2D, pixelSize);
+    const spriteCX = sprite.width / 2;
+    const spriteCY = sprite.height / 2;
 
     const offsetX = width / 2;
     const offsetY = height / 2;
@@ -498,22 +483,33 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    context.font = `${this.prefabSignSize.toString()}px '${
-      this.#fontFamilies[MARK_CHAR]
-    }'`;
-    context.fillStyle = "red";
-    context.textAlign = "left";
-    context.textBaseline = "alphabetic";
+    const pixelSize = Math.max(1, Math.round(this.prefabSignSize * this.scale));
+    const sprite = buildGlyphSprite(this.#markPath2D, pixelSize);
+    const spriteCX = sprite.width / 2;
+    const spriteCY = sprite.height / 2;
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.prefabSignSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.prefabSignSize * 0.1);
+    // The sprite stamps centred on (x, z), but the flag's pole base — not
+    // the glyph's bounding-box centre — should land on markerCoords. In the
+    // shared VIEWPORT square (see lib/glyph-marker.ts) the baked flag's pole
+    // base sits at roughly (54, 234), i.e. offset from the centre (128, 128)
+    // by (-74, +106); scaled to signSize/FONT_SIZE and negated, that shifts
+    // the sprite so the pole lands where the centre otherwise would have.
+    const charOffsetX = Math.round(this.prefabSignSize * 0.336);
+    const charOffsetY = Math.round(this.prefabSignSize * -0.481);
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(context, { text: MARK_CHAR, x, z, size: this.prefabSignSize });
+    context.save();
+    context.resetTransform();
+    context.drawImage(
+      sprite,
+      Math.round(x * this.scale - spriteCX),
+      Math.round(z * this.scale - spriteCY),
+    );
+    context.restore();
   }
 
   async #nativeSize(
@@ -604,37 +600,37 @@ function mapSize(
   });
 }
 
-interface MapSign {
-  text: string;
-  x: number;
-  z: number;
-  size: number;
-}
-
-function putText(
-  context: OffscreenCanvasRenderingContext2D,
-  { text, x, z, size }: MapSign,
-) {
-  // Pass 1: fill + stroke both black — mirrors SVG's first <text fill=black
-  // stroke=black stroke-width=…>. The fill makes the interior solid so the
-  // outer stroke extends the silhouette outward without creating voids, and
-  // round line caps/joins (set by caller) avoid spiky tips on the ✘ arms.
-  context.lineWidth = Math.round(size * 0.12);
-  context.strokeStyle = "black";
-  context.fillStyle = "black";
-  context.strokeText(text, x, z);
-  context.fillText(text, x, z);
-
-  // Pass 2: red fill covers the black interior — mirrors SVG's second <text
-  // fill=red>. The outer black strip remains because the fill only covers
-  // the original glyph interior, not the outward stroke extension.
-  context.fillStyle = "red";
-  context.fillText(text, x, z);
-
-  // Pass 3: thin white stroke at the glyph edge — mirrors SVG's stroke=white.
-  context.lineWidth = Math.round(size * 0.04);
-  context.strokeStyle = "white";
-  context.strokeText(text, x, z);
+// Stamps a baked glyph path (see tools/lib/bake-glyph-path.ts) into a square
+// sprite twice the target pixel size, black-outline-then-red-fill-then-white-
+// outline — mirroring the same 3-layer look public/logo.svg bakes as static
+// SVG <use> elements. Shared by the ✘ sign and 🚩 flag markers, which only
+// differ in which path/size they stamp.
+function buildGlyphSprite(path2D: Path2D, pixelSize: number): OffscreenCanvas {
+  const spriteSize = pixelSize * 2;
+  const sprite = new OffscreenCanvas(spriteSize, spriteSize);
+  const sc = sprite.getContext("2d");
+  if (sc) {
+    // Scale the baked path's viewport so it fills `pixelSize` the same way
+    // `${pixelSize}px` sized the webfont glyph this replaces, then centre it
+    // on the sprite (the viewport was built to be centred at build time).
+    const k = pixelSize / GLYPH_MARKER_FONT_SIZE;
+    sc.lineJoin = "round";
+    sc.lineCap = "round";
+    sc.translate(spriteSize / 2, spriteSize / 2);
+    sc.scale(k, k);
+    sc.translate(-GLYPH_MARKER_VIEWPORT / 2, -GLYPH_MARKER_VIEWPORT / 2);
+    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.black;
+    sc.strokeStyle = "black";
+    sc.fillStyle = "black";
+    sc.stroke(path2D);
+    sc.fill(path2D);
+    sc.fillStyle = "red";
+    sc.fill(path2D);
+    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.white;
+    sc.strokeStyle = "white";
+    sc.stroke(path2D);
+  }
+  return sprite;
 }
 
 // 8-byte signature + 4-byte chunk length + 4-byte "IHDR" type + 4-byte width

@@ -19,27 +19,13 @@ interface FontJob {
 // without cross-contamination (verified empirically before adopting this).
 const JOBS: Readonly<Record<string, FontJob>> = {
   "NotoColorEmoji-COLRv1.ttf": {
-    // DOM-facing source only. The ✘/🚩 map markers under src/worker/ are
-    // drawn with ctx.fillText using their own dedicated monochrome subsets
-    // below, chosen for a specific solid marker color; this color font
-    // would never apply to them even if scanned.
+    // DOM-facing source only. The ✘/🚩 map markers under src/worker/ stamp
+    // baked Path2D shapes (see tools/generate-glyph-markers.ts) in a
+    // specific solid marker color; this layered color font would never
+    // apply to them even if scanned.
     target: ["src/**/*.ts", "public/*.html", "tools/lib/prefab-html.ts"],
     exclude: [`${path.sep}worker${path.sep}`],
     dist: "NotoColorEmoji.subset.woff2",
-  },
-  "NotoSansSymbols2-Regular.ttf": {
-    // ✘ sign/flag marker (canvas) and the logo.svg demo page (src/logo.ts).
-    // public/logo.svg itself no longer depends on this font: its glyph is
-    // baked to a static path by tools/generate-logo-svg.ts.
-    target: ["src/worker/lib/map-renderer.ts", "src/logo.ts"],
-    dist: "NotoSansSymbols2.subset.woff2",
-  },
-  "NotoEmojiOld-Regular.ttf": {
-    // 🚩 flag marker (canvas only). This "old" Noto Emoji release draws a
-    // filled flag; the current release's 🚩 is hollow and hard to see
-    // against map terrain.
-    target: ["src/worker/lib/map-renderer.ts"],
-    dist: "NotoEmojiOld.subset.woff2",
   },
 };
 
