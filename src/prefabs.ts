@@ -72,16 +72,6 @@ function main() {
     },
   );
 
-  const minTier = component("min-tier", HTMLInputElement);
-  const maxTier = component("max-tier", HTMLInputElement);
-  const tierClear = component("tier-clear", HTMLButtonElement);
-  tierClear.addEventListener("click", () => {
-    minTier.value = minTier.defaultValue;
-    maxTier.value = maxTier.defaultValue;
-    minTier.dispatchEvent(new Event("input", { bubbles: true }));
-    maxTier.dispatchEvent(new Event("input", { bubbles: true }));
-  });
-
   const status = component("prefabs-status");
   const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
     component("prefabs-list"),
