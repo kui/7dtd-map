@@ -20,6 +20,7 @@ import {
   humanreadableDistance,
   printError,
 } from "./lib/utils.ts";
+import { latestAddedVersion } from "./lib/prefab-added-versions.ts";
 
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
@@ -54,6 +55,14 @@ const prefabAddedVersions: Promise<PrefabAddedVersions> = fetchJson(
 );
 
 function main() {
+  prefabAddedVersions
+    .then((addedVersions) => {
+      component("app-version").textContent = `v${
+        latestAddedVersion(addedVersions)
+      }`;
+    })
+    .catch(printError);
+
   initMapStorage();
   // Restore stored input values first so downstream init steps and handlers
   // observe the restored state instead of HTML defaults.
