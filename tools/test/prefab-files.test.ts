@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { prefabSiblingFiles } from "./prefab-files.ts";
+import { prefabSiblingFiles } from "../lib/prefab-files.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 

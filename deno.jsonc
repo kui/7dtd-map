@@ -1,4 +1,13 @@
 {
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+  },
   "tasks": {
     "serve": "deno run -A tools/build.ts serve",
     "build": {
@@ -180,6 +189,7 @@
     "./src/test",
     "./src/worker",
     "./tools",
+    "./tools/test",
     "./e2e",
   ],
   "imports": {

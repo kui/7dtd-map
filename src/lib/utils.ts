@@ -73,7 +73,7 @@ export async function fetchJson<T>(url: string): Promise<T> {
 
 export function basename(path: string) {
   const tail = path.substring(path.lastIndexOf("/") + 1);
-  return tail.split(/[?#]/, 1)[0];
+  return tail.split(/[?#]/, 1)[0] ?? tail;
 }
 
 // Escape characters that have special meaning in HTML text content or in

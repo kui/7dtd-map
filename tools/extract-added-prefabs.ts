@@ -30,8 +30,10 @@ async function main() {
 
   let totalAdded = 0;
   for (let i = 1; i < VERSIONS.length; i++) {
-    const { version, ref } = VERSIONS[i];
-    const previousRef = VERSIONS[i - 1].ref;
+    // deno-lint-ignore no-non-null-assertion
+    const { version, ref } = VERSIONS[i]!;
+    // deno-lint-ignore no-non-null-assertion
+    const previousRef = VERSIONS[i - 1]!.ref;
 
     const previousNames = await readIndexJsonAt(previousRef);
     const currentNames = await readIndexJsonAt(ref);

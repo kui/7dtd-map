@@ -32,7 +32,7 @@ async function main() {
   const m = indexHtml.match(
     /data-input-block-filter="([^"]+)"[^>]*>\s*\n?\s*Steel with Wrench/,
   );
-  if (!m) {
+  if (!m || m[1] === undefined) {
     throw new Error("Could not find Steel with Wrench filter in index.html");
   }
   const regexp = new RegExp(m[1]);
