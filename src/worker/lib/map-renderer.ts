@@ -2,6 +2,7 @@ import type {
   DistrictColors,
   GameCoords,
   GameMapSize,
+  GlyphMarker,
   HighlightedPrefab,
   Prefab,
   PrefabDensityScores,
@@ -54,7 +55,9 @@ export default class MapRenderer {
 
   canvas: OffscreenCanvas;
   #signPath2D: Path2D;
+  #signAnchor: GlyphMarker["anchor"];
   #markPath2D: Path2D;
+  #markAnchor: GlyphMarker["anchor"];
 
   #nativeSizes = new Map<
     mapFiles.MapFileName,
@@ -73,15 +76,17 @@ export default class MapRenderer {
 
   constructor(
     canvas: OffscreenCanvas,
-    signPathD: string,
-    markPathD: string,
+    signMarker: GlyphMarker,
+    markMarker: GlyphMarker,
     fetchMeshSizes: () => Promise<PrefabMeshSizes>,
     fetchDensityScores: () => Promise<PrefabDensityScores>,
     fetchDistrictColors: () => Promise<DistrictColors>,
   ) {
     this.canvas = canvas;
-    this.#signPath2D = new Path2D(signPathD);
-    this.#markPath2D = new Path2D(markPathD);
+    this.#signPath2D = new Path2D(signMarker.d);
+    this.#signAnchor = signMarker.anchor;
+    this.#markPath2D = new Path2D(markMarker.d);
+    this.#markAnchor = markMarker.anchor;
     // Static tables fetched on demand inside the worker, mirroring the
     // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
     // because nothing here owns external resources.
@@ -445,8 +450,10 @@ export default class MapRenderer {
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(signSize * 0.01);
-    const charOffsetY = Math.round(signSize * 0.05);
+    const { x: charOffsetX, z: charOffsetY } = anchorOffset(
+      this.#signAnchor,
+      signSize,
+    );
 
     // Remove the active scale transform so the sprite stamps 1:1 on output
     // pixels. globalAlpha set by the caller is unaffected by resetTransform.
@@ -490,14 +497,10 @@ export default class MapRenderer {
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    // The sprite stamps centred on (x, z), but the flag's pole base — not
-    // the glyph's bounding-box centre — should land on markerCoords. In the
-    // shared VIEWPORT square (see lib/glyph-marker.ts) the baked flag's pole
-    // base sits at roughly (54, 234), i.e. offset from the centre (128, 128)
-    // by (-74, +106); scaled to signSize/FONT_SIZE and negated, that shifts
-    // the sprite so the pole lands where the centre otherwise would have.
-    const charOffsetX = Math.round(this.prefabSignSize * 0.336);
-    const charOffsetY = Math.round(this.prefabSignSize * -0.481);
+    const { x: charOffsetX, z: charOffsetY } = anchorOffset(
+      this.#markAnchor,
+      this.prefabSignSize,
+    );
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
@@ -600,19 +603,17 @@ function mapSize(
   });
 }
 
-// Stamps a baked glyph path (see tools/lib/bake-glyph-path.ts) into a square
-// sprite twice the target pixel size, black-outline-then-red-fill-then-white-
-// outline — mirroring the same 3-layer look public/logo.svg bakes as static
-// SVG <use> elements. Shared by the ✘ sign and 🚩 flag markers, which only
-// differ in which path/size they stamp.
+// Stamps a baked glyph path (see tools/generate-glyph-markers.ts) into a
+// square sprite twice the target pixel size, with the same 3-layer
+// black-outline/red-fill/white-outline look the baked SVGs use. Shared by
+// the sign and flag markers, which only differ in which path/size they stamp.
 function buildGlyphSprite(path2D: Path2D, pixelSize: number): OffscreenCanvas {
   const spriteSize = pixelSize * 2;
   const sprite = new OffscreenCanvas(spriteSize, spriteSize);
   const sc = sprite.getContext("2d");
   if (sc) {
-    // Scale the baked path's viewport so it fills `pixelSize` the same way
-    // `${pixelSize}px` sized the webfont glyph this replaces, then centre it
-    // on the sprite (the viewport was built to be centred at build time).
+    // Scale the baked path's viewport to `pixelSize`, then centre it on the
+    // sprite; the path itself is built centred on VIEWPORT/2 at build time.
     const k = pixelSize / GLYPH_MARKER_FONT_SIZE;
     sc.lineJoin = "round";
     sc.lineCap = "round";
@@ -631,6 +632,21 @@ function buildGlyphSprite(path2D: Path2D, pixelSize: number): OffscreenCanvas {
     sc.stroke(path2D);
   }
   return sprite;
+}
+
+// The sprite stamps centred on the target coordinate, but `anchor` (a point
+// in the shared VIEWPORT square, see lib/glyph-marker.ts) should land there
+// instead. Converts the offset between the two into the same unscaled units
+// as prefab/marker coordinates.
+function anchorOffset(
+  anchor: GlyphMarker["anchor"],
+  targetSize: number,
+): { x: number; z: number } {
+  const k = targetSize / GLYPH_MARKER_FONT_SIZE;
+  return {
+    x: k * (GLYPH_MARKER_VIEWPORT / 2 - anchor.x),
+    z: k * (GLYPH_MARKER_VIEWPORT / 2 - anchor.y),
+  };
 }
 
 // 8-byte signature + 4-byte chunk length + 4-byte "IHDR" type + 4-byte width

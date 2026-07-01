@@ -32,10 +32,10 @@
         "deno.lock",
       ],
       "output": [
-        "public/logo.svg",
-        "public/sign-path.json",
-        "public/flag-mark.svg",
-        "public/flag-path.json",
+        "public/heavy-ballot-x.svg",
+        "public/heavy-ballot-x-path.json",
+        "public/triangular-flag.svg",
+        "public/triangular-flag-path.json",
       ],
     },
     "build:font-subsets": {

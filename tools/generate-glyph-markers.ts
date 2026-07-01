@@ -18,44 +18,42 @@ interface MarkerJob {
   // Hand-tuned placement of `glyph` within the shared VIEWPORT square.
   x: number;
   y: number;
-  svgName: string;
-  jsonName: string;
+  // Point in the VIEWPORT square that render time should align with the
+  // target coordinate (e.g. the flag's pole base, not its bbox centre).
+  anchor: { x: number; y: number };
 }
 
-// Baked at build time from font outlines instead of rendered from a webfont
-// at runtime: the map canvas (src/worker/lib/map-renderer.ts) and each SVG
-// stamp/render the identical static shape with zero font-loading cost.
+// Baked at build time; each job writes public/{name}.svg and
+// public/{name}-path.json for canvas/SVG use without runtime font loading.
 const MARKERS: Readonly<Record<string, MarkerJob>> = {
-  sign: {
-    // U+2718 HEAVY MULTIPLICATION X — the Prefab Sign / Toggle Sign marker.
+  "heavy-ballot-x": {
+    // U+2718 HEAVY BALLOT X, used for the Prefab Sign / Toggle Sign marker.
     fontFile: "NotoSansSymbols2-Regular.ttf",
     glyph: "✘",
     x: 52,
     y: 180,
-    svgName: "logo.svg",
-    jsonName: "sign-path.json",
+    anchor: { x: 125.8, y: 117 },
   },
-  flag: {
-    // U+1F6A9 TRIANGULAR FLAG ON POST. Uses the "old" Noto Emoji release,
-    // which draws a filled flag; the current release's 🚩 is hollow and
-    // hard to see against map terrain.
+  "triangular-flag": {
+    // U+1F6A9 TRIANGULAR FLAG ON POST, used for the flag marker. Uses the
+    // "old" Noto Emoji release, which draws a filled flag; the current
+    // release's 🚩 is hollow and hard to see against map terrain.
     fontFile: "NotoEmojiOld-Regular.ttf",
     glyph: "🚩",
     x: -18,
     y: 207,
-    svgName: "flag-mark.svg",
-    jsonName: "flag-path.json",
+    anchor: { x: 54, y: 234 },
   },
 };
 
 async function main() {
-  for (const job of Object.values(MARKERS)) {
-    await generateMarker(job);
+  for (const [name, job] of Object.entries(MARKERS)) {
+    await generateMarker(name, job);
   }
   return 0;
 }
 
-async function generateMarker(job: MarkerJob) {
+async function generateMarker(name: string, job: MarkerJob) {
   const fontBuffer = await fs.readFile(
     projectRoot("tools", "fonts", job.fontFile),
   );
@@ -77,14 +75,14 @@ async function generateMarker(job: MarkerJob) {
   <use href="#glyph" fill="red" stroke="white" stroke-width="${GLYPH_MARKER_STROKE_WIDTHS.white}" />
 </svg>
 `;
-  const svgPath = publishDir(job.svgName);
+  const svgPath = publishDir(`${name}.svg`);
   await fs.writeFile(svgPath, svg);
   console.log("Wrote %s", svgPath);
 
-  // Consumed by the canvas map-renderer, which stamps this same path
-  // instead of rendering the glyph from a webfont. Only `d` varies between
-  // markers; the rest of the sizing (lib/glyph-marker.ts) is shared.
-  await writeJsonFile(publishDir(job.jsonName), d);
+  await writeJsonFile(publishDir(`${name}-path.json`), {
+    d,
+    anchor: job.anchor,
+  });
 }
 
 handleMain(main());
