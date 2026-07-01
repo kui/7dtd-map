@@ -107,13 +107,6 @@
   & .file-button:active {
     background: #d8d8d8;
   }
-  & input + button,
-  #reset-mark {
-    padding: 1px 2px;
-    font-size: inherit;
-    font-weight: 200;
-    vertical-align: middle;
-  }
   & table {
     & td {
       padding: 2px 4px;
@@ -138,6 +131,9 @@
     & input[type="range"] {
       width: 100%;
       box-sizing: border-box;
+    }
+    & .buttons {
+      text-align: right;
     }
   }
 
@@ -238,6 +234,11 @@ dialog {
     border-style: solid none;
     border-color: lavender;
   }
+}
+
+#prefab-inspector-dialog table td:last-child,
+#prefab-inspector-dialog table th:last-child {
+  border-left: 1px solid lavender;
 }
 
 #terrain-viewer-dialog {

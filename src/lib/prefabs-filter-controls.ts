@@ -13,6 +13,7 @@ export interface PrefabsFilterControlsDoms {
   minTier: HTMLInputElement;
   maxTier: HTMLInputElement;
   preExcludes: HTMLInputElement[];
+  onlyNew: HTMLInputElement;
 }
 
 export function readTierRange(
@@ -67,6 +68,9 @@ export function bindPrefabsFilterControls(
     e.addEventListener("change", () => {
       worker.postMessage({ preExcludes: readPreExcludes(doms) });
     });
+  });
+  doms.onlyNew.addEventListener("change", () => {
+    worker.postMessage({ onlyNew: doms.onlyNew.checked });
   });
   labelHandler.addListener(({ lang }) => {
     worker.postMessage({ language: lang });

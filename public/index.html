@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body>
-    <h1>7 Days to Die Map Renderer v3.0</h1>
+    <h1>7 Days to Die Map Renderer <span id="app-version"></span></h1>
 
     <p>Only supported in latest Google Chrome.</p>
 
@@ -300,7 +300,7 @@
           </tr>
         </tbody>
         <tr>
-          <td colspan="3">
+          <td colspan="3" class="buttons">
             <button
               id="toggle-prefab-sign"
               title="Toggle prefab sign visibility (alpha 0 / 1)"
@@ -357,6 +357,14 @@
           <td colspan="2">
             <input id="prefab-filter" placeholder="Enter prefab name" />
             <button title="Clear" data-input-prefab-filter="">×</button>
+            <div class="sub-field">
+              <label>
+                <input
+                  id="only-new-prefabs"
+                  type="checkbox"
+                /> 🆕 Only new prefabs
+              </label>
+            </div>
             <details id="prefab-pre-filters" class="sub-field">
               <summary>Excludes</summary>
               <ul>
@@ -645,58 +653,68 @@
       </p>
 
       <h3>Unique Prefabs</h3>
-      <p>Number of unique prefabs in this map and defined in the game.</p>
+      <p>
+        Number of unique prefab names found in this map, out of the total
+        defined in the game.
+      </p>
       <table>
         <thead>
           <tr>
-            <th>Tier</th>
-            <th>InMap</th>
-            <th>Defined</th>
+            <th></th>
+            <th>💀5</th>
+            <th>💀4</th>
+            <th>💀3</th>
+            <th>💀2</th>
+            <th>💀1</th>
+            <th>💀0</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th>💀5</th>
+            <th>Found</th>
             <td><span id="prefab-inspector-tier-5-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-5-defined-count">-</span></td>
-          </tr>
-          <tr>
-            <th>💀4</th>
             <td><span id="prefab-inspector-tier-4-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-4-defined-count">-</span></td>
-          </tr>
-          <tr>
-            <th>💀3</th>
             <td><span id="prefab-inspector-tier-3-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-3-defined-count">-</span></td>
-          </tr>
-          <tr>
-            <th>💀2</th>
             <td><span id="prefab-inspector-tier-2-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-2-defined-count">-</span></td>
-          </tr>
-          <tr>
-            <th>💀1</th>
             <td><span id="prefab-inspector-tier-1-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-1-defined-count">-</span></td>
-          </tr>
-          <tr>
-            <th>💀0</th>
             <td><span id="prefab-inspector-tier-0-inmap-count">-</span></td>
-            <td><span id="prefab-inspector-tier-0-defined-count">-</span></td>
+            <td><span id="prefab-inspector-total-inmap-count">-</span></td>
           </tr>
-        </tbody>
-        <tfoot>
           <tr>
             <th>Total</th>
-            <td><span id="prefab-inspector-total-inmap-count">-</span></td>
+            <td><span id="prefab-inspector-tier-5-defined-count">-</span></td>
+            <td><span id="prefab-inspector-tier-4-defined-count">-</span></td>
+            <td><span id="prefab-inspector-tier-3-defined-count">-</span></td>
+            <td><span id="prefab-inspector-tier-2-defined-count">-</span></td>
+            <td><span id="prefab-inspector-tier-1-defined-count">-</span></td>
+            <td><span id="prefab-inspector-tier-0-defined-count">-</span></td>
             <td><span id="prefab-inspector-total-defined-count">-</span></td>
           </tr>
-        </tfoot>
+        </tbody>
+      </table>
+
+      <h3>New Prefabs</h3>
+      <p>
+        Prefabs added in version
+        <span id="prefab-inspector-new-version">-</span>, and how many of
+        them were found in this map.
+      </p>
+      <table>
+        <tbody>
+          <tr>
+            <th>Found</th>
+            <td><span id="prefab-inspector-new-inmap-count">-</span></td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <td><span id="prefab-inspector-new-defined-count">-</span></td>
+          </tr>
+        </tbody>
       </table>
 
       <h3>Missing Prefabs</h3>
-      <p>These prefabs are defined in the game but not placed in this map.</p>
+      <p>These prefabs are defined in the game but not found in this map.</p>
       <ol id="prefab-inspector-missings"></ol>
 
       <footer>

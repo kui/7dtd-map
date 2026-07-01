@@ -41,6 +41,7 @@
         "build:json:prefab-props",
         "build:json:labels",
         "build:json:block-counts",
+        "build:json:added-prefabs",
       ],
     },
     "build:json:prefab-props": {
@@ -71,6 +72,17 @@
       ],
       "output": [
         "public/labels/**/*.json",
+      ],
+    },
+    "build:json:added-prefabs": {
+      "command": "deno run -A tools/extract-added-prefabs.ts",
+      "files": [
+        "tools/extract-added-prefabs.ts",
+        "deno.jsonc",
+        "deno.lock",
+      ],
+      "output": [
+        "public/prefab-added-versions.json",
       ],
     },
     "build:json:block-counts": {

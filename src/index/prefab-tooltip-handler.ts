@@ -4,12 +4,14 @@ import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type {
   GameCoords,
   Prefab,
+  PrefabAddedVersions,
   PrefabDifficulties,
 } from "../types/7dtdmap.ts";
 import type { PrefabHitIndex } from "../lib/prefab-hit-index.ts";
 
 import { throttledInvoker } from "../lib/throttled-invoker.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
+import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
 
 interface Doms {
   tooltip: HTMLElement;
@@ -24,6 +26,8 @@ export class PrefabTooltipHandler {
   #doms: Doms;
   #labelHandler: LabelHandler;
   #difficulties: Promise<PrefabDifficulties>;
+  #addedVersions: Promise<PrefabAddedVersions>;
+  #latestAddedVersion: Promise<string>;
   #index: PrefabHitIndex | null = null;
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
@@ -37,10 +41,13 @@ export class PrefabTooltipHandler {
     prefabsHandler: PrefabsHandler,
     labelHandler: LabelHandler,
     difficulties: Promise<PrefabDifficulties>,
+    addedVersions: Promise<PrefabAddedVersions>,
   ) {
     this.#doms = doms;
     this.#labelHandler = labelHandler;
     this.#difficulties = difficulties;
+    this.#addedVersions = addedVersions;
+    this.#latestAddedVersion = addedVersions.then(latestAddedVersion);
 
     prefabsHandler.addPrefabHitIndexListener(({ index }) => {
       this.#index = index;
@@ -98,16 +105,35 @@ export class PrefabTooltipHandler {
       this.#hide();
       return;
     }
-    const [labels, difficulties] = await Promise.all([
-      this.#labelHandler.holder.get("prefabs"),
-      this.#difficulties,
-    ]);
+    const [labels, difficulties, addedVersions, latestVersion] = await Promise
+      .all([
+        this.#labelHandler.holder.get("prefabs"),
+        this.#difficulties,
+        this.#addedVersions,
+        this.#latestAddedVersion,
+      ]);
     const label = labels.get(hit.name) ?? "-";
     const difficulty = difficulties[hit.name] ?? 0;
-    this.#show(event, hit, label, difficulty);
+    const addedVersion = addedVersions[hit.name];
+    const isAddedInLatestVersion = addedVersion === latestVersion;
+    this.#show(
+      event,
+      hit,
+      label,
+      difficulty,
+      addedVersion,
+      isAddedInLatestVersion,
+    );
   }
 
-  #show(event: MouseEvent, prefab: Prefab, label: string, difficulty: number) {
+  #show(
+    event: MouseEvent,
+    prefab: Prefab,
+    label: string,
+    difficulty: number,
+    addedVersion: string | undefined,
+    isAddedInLatestVersion: boolean,
+  ) {
     this.#currentHit = prefab;
     // Rebuild the inner HTML only when the prefab changes so we don't trigger
     // a new <img> request (and the flash that comes with it) on every
@@ -118,10 +144,16 @@ export class PrefabTooltipHandler {
       const tierLine = difficulty > 0
         ? `<div class="tier prefab-difficulty-${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</div>`
         : "";
+      const newLine = isAddedInLatestVersion
+        ? `<div class="new-badge" title="Added in v${
+          escapeHtml(addedVersion ?? "")
+        }">🆕 New in v${escapeHtml(addedVersion ?? "")}</div>`
+        : "";
       this.#doms.tooltip.innerHTML =
         `<img src="prefabs/${safeName}.jpg" alt="" loading="lazy">` +
         `<div class="text">` +
         tierLine +
+        newLine +
         `<div class="name">${safeLabel} / <small>${safeName}</small></div>` +
         `<div class="hints">` +
         `<div class="hint click">🚩 Click: Set flag</div>` +
