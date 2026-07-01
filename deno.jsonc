@@ -18,6 +18,7 @@
         "build:copy-map-files",
         "build:font-subsets",
         "build:glyph-markers",
+        "build:favicon",
       ],
     },
     "build:glyph-markers": {
@@ -36,6 +37,21 @@
         "public/heavy-ballot-x-path.json",
         "public/triangular-flag.svg",
         "public/triangular-flag-path.json",
+      ],
+    },
+    "build:favicon": {
+      "command": "deno run -A tools/generate-favicon.ts",
+      "dependencies": ["build:glyph-markers"],
+      "files": [
+        "tools/generate-favicon.ts",
+        "tools/lib/ico.ts",
+        "tools/lib/utils.ts",
+        "public/heavy-ballot-x.svg",
+        "deno.jsonc",
+        "deno.lock",
+      ],
+      "output": [
+        "public/favicon.ico",
       ],
     },
     "build:font-subsets": {
@@ -216,6 +232,7 @@
     "esbuild": "npm:esbuild@~0.28.0",
     "@web-alchemy/fonttools": "npm:@web-alchemy/fonttools@^1.4.0",
     "opentype.js": "npm:opentype.js@^2.0.0",
+    "@resvg/resvg-js": "npm:@resvg/resvg-js@^2.6.2",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/fs/expand-glob": "jsr:@std/fs@^1.0.24/expand-glob",
     "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",
