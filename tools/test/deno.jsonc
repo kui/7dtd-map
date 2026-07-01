@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "lib": [
-      "dom",
-      "esnext",
       "deno.ns",
+      "deno.shared_globals",
     ],
     // Tests index into arrays/objects they just built, so the extra
     // undefined-checking noise from the root config isn't worth it here.

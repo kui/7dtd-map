@@ -71,10 +71,14 @@ export class PrefabHitIndex {
     const { x0, z0, w, d, prefabs } = this;
     const n = prefabs.length;
     for (let i = 0; i < n; i++) {
-      const xi = x0[i];
-      if (x < xi || x >= xi + w[i]) continue;
-      const zi = z0[i];
-      if (z < zi || z >= zi + d[i]) continue;
+      // deno-lint-ignore no-non-null-assertion
+      const xi = x0[i]!;
+      // deno-lint-ignore no-non-null-assertion
+      if (x < xi || x >= xi + w[i]!) continue;
+      // deno-lint-ignore no-non-null-assertion
+      const zi = z0[i]!;
+      // deno-lint-ignore no-non-null-assertion
+      if (z < zi || z >= zi + d[i]!) continue;
       // deno-lint-ignore no-non-null-assertion
       return prefabs[i]!;
     }

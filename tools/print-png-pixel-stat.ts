@@ -36,8 +36,10 @@ export function statDecodedPixels(decoded: DecodedPng): Map<number, number> {
   for (let i = 0; i < data.length; i += 4) {
     // Pack RGBA into a single non-negative 32-bit integer so the Map key
     // is a number rather than an allocated string per pixel.
-    const key = data[i] * 0x1000000 +
-      ((data[i + 1] << 16) | (data[i + 2] << 8) | data[i + 3]);
+    // deno-lint-ignore no-non-null-assertion
+    const key = data[i]! * 0x1000000 +
+      // deno-lint-ignore no-non-null-assertion
+      ((data[i + 1]! << 16) | (data[i + 2]! << 8) | data[i + 3]!);
     stat.set(key, (stat.get(key) ?? 0) + 1);
   }
   return stat;

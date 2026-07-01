@@ -121,7 +121,8 @@ export async function throttleAll<T>(
     while (true) {
       const currentIndex = index++;
       if (currentIndex >= tasks.length) break;
-      results[currentIndex] = await tasks[currentIndex]();
+      // deno-lint-ignore no-non-null-assertion
+      results[currentIndex] = await tasks[currentIndex]!();
     }
   }
 

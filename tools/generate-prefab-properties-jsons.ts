@@ -106,6 +106,7 @@ function extractMeshSizes(prefabXmls: PrefabXmls) {
         const parts = raw.split(",").map((s) => parseInt(s.trim(), 10));
         if (parts.length < 3) return [];
         const [x, , z] = parts;
+        if (x === undefined || z === undefined) return [];
         if (!Number.isFinite(x) || !Number.isFinite(z)) return [];
         if (x <= 0 || z <= 0) return [];
         return [[prefabName, [x, z]]];

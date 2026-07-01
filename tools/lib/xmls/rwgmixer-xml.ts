@@ -25,6 +25,7 @@ function parsePreviewColor(raw: string): [number, number, number] | null {
   const parts = raw.split(",").map((s) => parseFloat(s.trim()));
   if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
   const [r, g, b] = parts;
+  if (r === undefined || g === undefined || b === undefined) return null;
   return [r, g, b];
 }
 

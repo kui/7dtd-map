@@ -1,5 +1,5 @@
 import process from "node:process";
-import { program } from "./utils.ts";
+import { program } from "../lib/utils.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 

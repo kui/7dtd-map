@@ -269,14 +269,17 @@ export default class MapRenderer {
     for (const p of this.allPrefabs) {
       const m = /^rwg_tile_([^_]+)_/.exec(p.name);
       if (!m) continue;
-      tiles.push({ x: p.x, z: p.z, district: m[1] });
+      // deno-lint-ignore no-non-null-assertion
+      tiles.push({ x: p.x, z: p.z, district: m[1]! });
     }
     // Tiles align on a 150-block lattice but the lattice origin is the world
     // centre offset, not a multiple of 150 in world coords. Pick any tile to
     // derive the offset (mod 150 normalised to [0, 150)).
     const mod = (n: number) => ((n % TILE_SIZE) + TILE_SIZE) % TILE_SIZE;
-    const offsetX = tiles.length > 0 ? mod(tiles[0].x) : 0;
-    const offsetZ = tiles.length > 0 ? mod(tiles[0].z) : 0;
+    // deno-lint-ignore no-non-null-assertion
+    const offsetX = tiles.length > 0 ? mod(tiles[0]!.x) : 0;
+    // deno-lint-ignore no-non-null-assertion
+    const offsetZ = tiles.length > 0 ? mod(tiles[0]!.z) : 0;
     const cells = new Map<string, string>();
     for (const t of tiles) {
       const gx = Math.floor((t.x - offsetX) / TILE_SIZE);
@@ -564,9 +567,12 @@ export default class MapRenderer {
 function withAlpha(hex: string, alpha: number): string {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return hex;
-  const r = parseInt(m[1], 16);
-  const g = parseInt(m[2], 16);
-  const b = parseInt(m[3], 16);
+  // deno-lint-ignore no-non-null-assertion
+  const r = parseInt(m[1]!, 16);
+  // deno-lint-ignore no-non-null-assertion
+  const g = parseInt(m[2]!, 16);
+  // deno-lint-ignore no-non-null-assertion
+  const b = parseInt(m[3]!, 16);
   return `rgba(${r.toString()}, ${g.toString()}, ${b.toString()}, ${alpha.toString()})`;
 }
 
@@ -574,9 +580,12 @@ function hexToRgbFloat(hex: string): [number, number, number] {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return [1, 1, 1];
   return [
-    parseInt(m[1], 16) / 255,
-    parseInt(m[2], 16) / 255,
-    parseInt(m[3], 16) / 255,
+    // deno-lint-ignore no-non-null-assertion
+    parseInt(m[1]!, 16) / 255,
+    // deno-lint-ignore no-non-null-assertion
+    parseInt(m[2]!, 16) / 255,
+    // deno-lint-ignore no-non-null-assertion
+    parseInt(m[3]!, 16) / 255,
   ];
 }
 

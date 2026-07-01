@@ -1,4 +1,4 @@
-import { parsePrefabXml } from "./prefab-xml.ts";
+import { parsePrefabXml } from "../lib/xmls/prefab-xml.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 
