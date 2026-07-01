@@ -240,6 +240,11 @@ dialog {
   }
 }
 
+#prefab-inspector-dialog table td:last-child,
+#prefab-inspector-dialog table th:last-child {
+  border-left: 1px solid lavender;
+}
+
 #terrain-viewer-dialog {
   /* When opened via showModal() the dialog is position: fixed in the top
      layer; pin it to the viewport edges with inset:0 rather than width:100vw
