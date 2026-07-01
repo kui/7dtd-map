@@ -23,6 +23,7 @@
     "npm:esbuild@0.28": "0.28.1",
     "npm:esbuild@~0.25.5": "0.25.12",
     "npm:fast-png@8": "8.0.0",
+    "npm:opentype.js@2": "2.0.0",
     "npm:three@0.184": "0.184.0"
   },
   "jsr": {
@@ -479,6 +480,10 @@
     "meshoptimizer@1.1.1": {
       "integrity": "sha512-oRFNWJRDA/WTrVj7NWvqa5HqE1t9MYDj2VaWirQCzCCrAd2GHrqR/sQezCxiWATPNlKTcRaPRHPJwIRoPBAp5g=="
     },
+    "opentype.js@2.0.0": {
+      "integrity": "sha512-kCyjv6xdDY1W/jLWZ/L3QhhTlKUqDZMQ5+Jdlw12b3dXkKNpYBqqlMMj0YDQPShWFTMwgZI1hG14kN3XUDSg/A==",
+      "bin": true
+    },
     "playwright-core@1.61.1": {
       "integrity": "sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==",
       "bin": true
@@ -520,6 +525,7 @@
       "npm:csv-parse@^6.2.1",
       "npm:esbuild@0.28",
       "npm:fast-png@8",
+      "npm:opentype.js@2",
       "npm:three@0.184"
     ]
   }

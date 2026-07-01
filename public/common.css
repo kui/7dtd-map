@@ -1,9 +1,4 @@
 @font-face {
-  font-family: "Noto Symbol";
-  src: url("./NotoSansSymbols2.subset.woff2") format("woff2");
-}
-
-@font-face {
   font-family: "Noto Color Emoji Subset";
   src: url("./NotoColorEmoji.subset.woff2") format("woff2");
 }
@@ -17,17 +12,7 @@ body {
 }
 
 .logo {
-  font-family: "Noto Symbol";
-  -webkit-text-fill-color: red;
-  -webkit-text-stroke-width: 0.1px;
-  -webkit-text-stroke-color: white;
-  text-shadow: 0px 0px 3px;
-  /* Pin layout height: the symbol font's tall ascender/descender would
-     otherwise stretch any line box it sits in. The glyph may overflow
-     visually (overflow defaults to visible), but parent layout is stable. */
-  display: inline-block;
   height: 1em;
-  line-height: 1;
   vertical-align: middle;
 }
 

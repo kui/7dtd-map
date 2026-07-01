@@ -69,9 +69,6 @@ async function renderLogo2(canvas: HTMLCanvasElement): Promise<void> {
   canvas.width = WIDTH;
   canvas.height = WIDTH;
 
-  await FONT_FACE.load();
-  document.fonts.add(FONT_FACE);
-
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const img = new Image();

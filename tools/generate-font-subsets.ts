@@ -28,7 +28,9 @@ const JOBS: Readonly<Record<string, FontJob>> = {
     dist: "NotoColorEmoji.subset.woff2",
   },
   "NotoSansSymbols2-Regular.ttf": {
-    // ✘ sign/flag marker (canvas) and Prefab Sign / Toggle Sign label (DOM).
+    // ✘ sign/flag marker (canvas) and the logo.svg demo page (src/logo.ts).
+    // public/logo.svg itself no longer depends on this font: its glyph is
+    // baked to a static path by tools/generate-logo-svg.ts.
     target: ["src/worker/lib/map-renderer.ts", "src/logo.ts"],
     dist: "NotoSansSymbols2.subset.woff2",
   },

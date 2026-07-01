@@ -17,6 +17,19 @@
         "build:prefab-html",
         "build:copy-map-files",
         "build:font-subsets",
+        "build:logo-svg",
+      ],
+    },
+    "build:logo-svg": {
+      "command": "deno run -A tools/generate-logo-svg.ts",
+      "files": [
+        "tools/generate-logo-svg.ts",
+        "tools/fonts/NotoSansSymbols2-Regular.ttf",
+        "deno.jsonc",
+        "deno.lock",
+      ],
+      "output": [
+        "public/logo.svg",
       ],
     },
     "build:font-subsets": {
@@ -200,6 +213,7 @@
     "csv-parse": "npm:csv-parse@^6.2.1",
     "esbuild": "npm:esbuild@~0.28.0",
     "@web-alchemy/fonttools": "npm:@web-alchemy/fonttools@^1.4.0",
+    "opentype.js": "npm:opentype.js@^2.0.0",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/fs/expand-glob": "jsr:@std/fs@^1.0.24/expand-glob",
     "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",
