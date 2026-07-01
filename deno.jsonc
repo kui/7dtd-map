@@ -8,6 +8,7 @@
         "build:prefab-html",
         "build:copy-map-files",
         "build:emoji-font",
+        "build:canvas-symbol-fonts",
       ],
     },
     "build:emoji-font": {
@@ -23,6 +24,20 @@
       ],
       "output": [
         "public/emoji-color.subset.woff2",
+      ],
+    },
+    "build:canvas-symbol-fonts": {
+      "command": "deno run -A tools/generate-canvas-symbol-fonts.ts",
+      "files": [
+        "tools/generate-canvas-symbol-fonts.ts",
+        "tools/fonts/NotoSansSymbols2-Regular.ttf",
+        "tools/fonts/NotoEmojiOld-Regular.ttf",
+        "deno.jsonc",
+        "deno.lock",
+      ],
+      "output": [
+        "public/NotoSansSymbols2.subset.woff2",
+        "public/NotoEmojiOld.subset.woff2",
       ],
     },
     "build:ts": {

@@ -48,25 +48,6 @@ Linux, macOS, and Windows are supported.
    (`cached, inputs unchanged`) when neither the source TS nor the matched game
    files have changed.
 
-### Build: Font subset
-
-The font subsetter is a POSIX-only one-off (it depends on `pyftsubset`, and the
-docker wrapper additionally needs Linux UID/GID mapping). The generated
-`.subset.woff2` files are committed under `public/`, so Windows contributors do
-not need to run this — only re-run it when the source fonts change.
-
-If you already have `fonttools` installed locally:
-
-```
-./tools/fonts/subset.bash
-```
-
-Or use the docker wrapper (Linux host only):
-
-```
-./tools/fonts/subset-docker.bash
-```
-
 ## Code lint
 
 ```
