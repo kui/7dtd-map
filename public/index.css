@@ -132,6 +132,9 @@
       width: 100%;
       box-sizing: border-box;
     }
+    & .buttons {
+      text-align: right;
+    }
   }
 
   & .label-text,
