@@ -94,26 +94,30 @@ function isRawBlocksXml(value: unknown): value is RawBlocksXml {
   return Array.isArray((blocks as Record<string, unknown>)["block"]);
 }
 
+// Nested <property> elements can wrap further <property> children (e.g. a
+// class container), so this recurses through the same shape rather than
+// modeling it as a flat RawBlockProperty[].
+interface RawNestedProperty {
+  "@name"?: string;
+  "@value"?: string;
+  "@param1"?: string;
+  property?: RawNestedProperty | RawNestedProperty[];
+}
+
 function extractProperties(raw: unknown[]): BlockProperties {
   const props: BlockProperties = {};
 
   function visit(elem: unknown) {
-    if (
-      typeof elem === "object" && elem !== null && "@name" in elem
-    ) {
-      const e = elem as Record<string, string | undefined>;
-      const name = e["@name"];
-      if (name !== undefined) {
-        props[name] = {
-          value: e["@value"] ?? "",
-          param1: e["@param1"],
-        };
-      }
+    if (typeof elem !== "object" || elem === null) return;
+    const e = elem as RawNestedProperty;
+    if (e["@name"] !== undefined) {
+      props[e["@name"]] = {
+        value: e["@value"] ?? "",
+        param1: e["@param1"],
+      };
     }
-    if (typeof elem === "object" && elem !== null && "property" in elem) {
-      for (const child of toArray((elem as Record<string, unknown>).property)) {
-        visit(child);
-      }
+    for (const child of toArray(e.property)) {
+      visit(child);
     }
   }
 

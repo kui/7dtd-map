@@ -1,4 +1,4 @@
-import { parseCount } from "./blocks-xml.ts";
+import { parseCount } from "../lib/xmls/blocks-xml.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 

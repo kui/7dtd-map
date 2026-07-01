@@ -23,9 +23,9 @@ function asArray<T>(v: T | T[] | undefined): T[] {
 
 function parsePreviewColor(raw: string): [number, number, number] | null {
   const parts = raw.split(",").map((s) => parseFloat(s.trim()));
-  if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
-  const [r, g, b] = parts;
-  return [r, g, b];
+  return parts.length === 3 && parts.every((n) => Number.isFinite(n))
+    ? parts as [number, number, number]
+    : null;
 }
 
 // rwgmixer.xml lists districts as `<district name="X">…<property name="preview_color"
