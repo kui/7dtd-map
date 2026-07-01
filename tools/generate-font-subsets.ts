@@ -25,7 +25,7 @@ const JOBS: Readonly<Record<string, FontJob>> = {
     // would never apply to them even if scanned.
     target: ["src/**/*.ts", "public/*.html", "tools/lib/prefab-html.ts"],
     exclude: [`${path.sep}worker${path.sep}`],
-    dist: "emoji-color.subset.woff2",
+    dist: "NotoColorEmoji.subset.woff2",
   },
   "NotoSansSymbols2-Regular.ttf": {
     // ✘ sign/flag marker (canvas) and Prefab Sign / Toggle Sign label (DOM).

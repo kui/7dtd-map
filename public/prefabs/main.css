@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Noto Color Emoji Subset";
-  src: url("../emoji-color.subset.woff2") format("woff2");
+  src: url("../NotoColorEmoji.subset.woff2") format("woff2");
 }
 
 /* See public/common.css for why this font is listed first. */

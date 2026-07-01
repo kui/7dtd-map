@@ -25,7 +25,7 @@
         "deno.lock",
       ],
       "output": [
-        "public/emoji-color.subset.woff2",
+        "public/NotoColorEmoji.subset.woff2",
         "public/NotoSansSymbols2.subset.woff2",
         "public/NotoEmojiOld.subset.woff2",
       ],

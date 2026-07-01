@@ -5,7 +5,7 @@
 
 @font-face {
   font-family: "Noto Color Emoji Subset";
-  src: url("./emoji-color.subset.woff2") format("woff2");
+  src: url("./NotoColorEmoji.subset.woff2") format("woff2");
 }
 
 /* Listed first so the browser's per-character font fallback picks a color
