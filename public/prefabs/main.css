@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Noto Color Emoji Subset";
+  src: url("../emoji-color.subset.woff2") format("woff2");
+}
+
+/* See public/common.css for why this font is listed first. */
+body {
+  font-family: "Noto Color Emoji Subset", sans-serif;
+}
+
 tr:nth-child(odd) > * {
   background-color: lavender;
 }

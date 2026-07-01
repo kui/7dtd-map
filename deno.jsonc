@@ -7,6 +7,22 @@
         "build:json",
         "build:prefab-html",
         "build:copy-map-files",
+        "build:emoji-font",
+      ],
+    },
+    "build:emoji-font": {
+      "command": "deno run -A tools/generate-emoji-font.ts",
+      "files": [
+        "tools/generate-emoji-font.ts",
+        "tools/fonts/NotoColorEmoji-COLRv1.ttf",
+        "src/**/*.ts",
+        "public/*.html",
+        "tools/lib/prefab-html.ts",
+        "deno.jsonc",
+        "deno.lock",
+      ],
+      "output": [
+        "public/emoji-color.subset.woff2",
       ],
     },
     "build:ts": {
@@ -168,6 +184,8 @@
     "@libs/xml": "jsr:@libs/xml@^7.0.4",
     "csv-parse": "npm:csv-parse@^6.2.1",
     "esbuild": "npm:esbuild@~0.28.0",
+    "@twemoji/parser": "npm:@twemoji/parser@^15.1.1",
+    "@web-alchemy/fonttools": "npm:@web-alchemy/fonttools@^1.4.0",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/fs/expand-glob": "jsr:@std/fs@^1.0.24/expand-glob",
     "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",

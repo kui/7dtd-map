@@ -2,6 +2,20 @@
   font-family: "Noto Symbol";
   src: url("./NotoSansSymbols2.subset.woff2") format("woff2");
 }
+
+@font-face {
+  font-family: "Noto Color Emoji Subset";
+  src: url("./emoji-color.subset.woff2") format("woff2");
+}
+
+/* Listed first so the browser's per-character font fallback picks a color
+   glyph from this subset for the emoji it contains, and falls through to the
+   system default for everything else. This keeps every emoji in one color
+   regardless of whether the OS has a color emoji font installed. */
+body {
+  font-family: "Noto Color Emoji Subset", sans-serif;
+}
+
 .logo {
   font-family: "Noto Symbol";
   -webkit-text-fill-color: red;
