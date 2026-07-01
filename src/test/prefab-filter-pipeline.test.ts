@@ -142,6 +142,26 @@ describe("PrefabFilter", () => {
     );
   });
 
+  it("filters to prefabs added in the latest version when onlyNew is set", async () => {
+    const f = build({}, {}, {}, { house_01: "2.0", trader_01: "1.0" });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.onlyNew = true;
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["house_01"]);
+  });
+
+  it("status does not report 'All N prefabs' when onlyNew is set", async () => {
+    const f = build({}, {}, {}, { house_01: "2.0", trader_01: "1.0" });
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.onlyNew = true;
+    const slot = capture(f);
+    await f.updateImmediately();
+    expect(slot.current!.status).toBe("1 prefabs matched");
+  });
+
   it("reports invalid prefab name pattern without throwing", async () => {
     const f = build();
     f.all = prefabs;
