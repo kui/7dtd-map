@@ -112,6 +112,13 @@ function prefabLi(prefab: HighlightedPrefab) {
         `</span>`,
       ]
       : []),
+    ...(prefab.isAddedInLatestVersion
+      ? [
+        `<span title="Added in v${
+          escapeHtml(prefab.addedVersion ?? "")
+        }" class="new-badge">🆕</span>`,
+      ]
+      : []),
     `<a href="prefabs/${safeName}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",
     "/",

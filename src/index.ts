@@ -9,6 +9,7 @@ import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type {
   HighlightedPrefab,
+  PrefabAddedVersions,
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "./types/7dtdmap.ts";
@@ -47,6 +48,9 @@ const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
 );
 const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
   "prefab-difficulties.json",
+);
+const prefabAddedVersions: Promise<PrefabAddedVersions> = fetchJson(
+  "prefab-added-versions.json",
 );
 
 function main() {
@@ -209,6 +213,7 @@ function main() {
     prefabsHandler,
     labelHandler,
     prefabDifficulties,
+    prefabAddedVersions,
   );
   new PrefabInspectorHandler(
     {
@@ -249,6 +254,7 @@ function main() {
     },
     labelHandler,
     prefabDifficulties,
+    prefabAddedVersions,
     () => fetchJson("prefabs/index.json"),
   );
 
@@ -273,6 +279,13 @@ function prefabLi(prefab: HighlightedPrefab) {
         `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
         `  💀${prefab.difficulty.toString()}`,
         `</span>`,
+      ]
+      : []),
+    ...(prefab.isAddedInLatestVersion
+      ? [
+        `<span title="Added in v${
+          escapeHtml(prefab.addedVersion ?? "")
+        }" class="new-badge">🆕</span>`,
       ]
       : []),
     `<a href="prefabs/${safeName}.html" target="_blank">`,
