@@ -26,6 +26,8 @@ interface Doms {
     5: PrefabCountDoms;
     total: PrefabCountDoms;
   };
+  newVersion: HTMLElement;
+  newCounts: PrefabCountDoms;
   missings: HTMLUListElement | HTMLOListElement;
 }
 
@@ -88,6 +90,7 @@ export class PrefabInspectorHandler {
     const countsPerDifficulty: { inMap: number; defined: number }[] = Array
       .from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
     const totalCounts = { inMap: 0, defined: 0 };
+    const newCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
       // Should rise an error if the difficulty is not in the range of 0-5
@@ -95,9 +98,14 @@ export class PrefabInspectorHandler {
       const counts = countsPerDifficulty[difficulty]!;
       counts.defined++;
       totalCounts.defined++;
-      if (uniquePrefabNames.has(name)) {
+      const isInMap = uniquePrefabNames.has(name);
+      if (isInMap) {
         counts.inMap++;
         totalCounts.inMap++;
+      }
+      if (addedVersions[name] === latestVersion) {
+        newCounts.defined++;
+        if (isInMap) newCounts.inMap++;
       }
     }
     for (let i = 0; i < 6; i++) {
@@ -108,6 +116,9 @@ export class PrefabInspectorHandler {
       countDoms.inMap.textContent = counts.inMap.toString();
       countDoms.defined.textContent = counts.defined.toString();
     }
+    this.#doms.newVersion.textContent = latestVersion;
+    this.#doms.newCounts.inMap.textContent = newCounts.inMap.toString();
+    this.#doms.newCounts.defined.textContent = newCounts.defined.toString();
     this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap
       .toString();
     this.#doms.detailCounts.total.defined.textContent = totalCounts.defined

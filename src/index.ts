@@ -250,6 +250,11 @@ function main() {
           defined: component("prefab-inspector-total-defined-count"),
         },
       },
+      newVersion: component("prefab-inspector-new-version"),
+      newCounts: {
+        inMap: component("prefab-inspector-new-inmap-count"),
+        defined: component("prefab-inspector-new-defined-count"),
+      },
       missings: component("prefab-inspector-missings", HTMLOListElement),
     },
     labelHandler,
