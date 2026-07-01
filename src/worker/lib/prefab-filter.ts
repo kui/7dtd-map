@@ -5,6 +5,7 @@ import type {
   HighlightedBlock,
   HighlightedPrefab,
   Prefab,
+  PrefabAddedVersions,
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
@@ -14,6 +15,7 @@ import { LabelHolder, Language } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
 import { escapeHtml } from "../../lib/utils.ts";
+import { latestAddedVersion } from "../../lib/prefab-added-versions.ts";
 
 export interface EventMessage {
   prefabs: HighlightedPrefab[];
@@ -25,6 +27,7 @@ export class PrefabFilter {
   #blockPrefabCountsHolder: CacheHolder<BlockPrefabCounts>;
   #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
   #difficultiesHolder: CacheHolder<PrefabDifficulties>;
+  #addedVersionsHolder: CacheHolder<PrefabAddedVersions>;
 
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
@@ -47,6 +50,7 @@ export class PrefabFilter {
     fetchPrefabBlockCounts: () => Promise<BlockPrefabCounts>,
     fetchPrefabMeshSizes: () => Promise<PrefabMeshSizes>,
     fetchPrefabDifficulties: () => Promise<PrefabDifficulties>,
+    fetchPrefabAddedVersions: () => Promise<PrefabAddedVersions>,
   ) {
     const noop = () => {};
     this.#labelHolder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
@@ -56,6 +60,10 @@ export class PrefabFilter {
     );
     this.#meshSizesHolder = new CacheHolder(fetchPrefabMeshSizes, noop);
     this.#difficultiesHolder = new CacheHolder(fetchPrefabDifficulties, noop);
+    this.#addedVersionsHolder = new CacheHolder(
+      fetchPrefabAddedVersions,
+      noop,
+    );
   }
 
   set language(lang: Language) {
@@ -124,9 +132,16 @@ export class PrefabFilter {
     this.#prefabFilterInvalid = false;
     this.#blockFilterInvalid = false;
     const difficulties = await this.#difficultiesHolder.get();
+    const addedVersions = await this.#addedVersionsHolder.get();
+    const latestVersion = latestAddedVersion(addedVersions);
     this.#preFiltereds = this.#preMatch(this.all);
     let result = this.#matchByDifficulty(this.#preFiltereds, difficulties);
-    result = await this.#matchByPrefabName(result, difficulties);
+    result = await this.#matchByPrefabName(
+      result,
+      difficulties,
+      addedVersions,
+      latestVersion,
+    );
     result = await this.#matchByBlockName(result);
     if (this.#prefabFilterInvalid || this.#blockFilterInvalid) {
       this.#filtered = [];
@@ -157,6 +172,8 @@ export class PrefabFilter {
   async #matchByPrefabName(
     prefabs: Prefab[],
     difficulties: PrefabDifficulties,
+    addedVersions: PrefabAddedVersions,
+    latestVersion: string,
   ): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
     const pattern = this.prefabFilterRegexp.length === 0
@@ -172,10 +189,14 @@ export class PrefabFilter {
     return prefabs.flatMap<HighlightedPrefab>((prefab) => {
       const label = labels.get(prefab.name);
       const difficulty = difficulties[prefab.name] ?? 0;
+      const addedVersion = addedVersions[prefab.name];
+      const isAddedInLatestVersion = addedVersion === latestVersion;
       if (this.prefabFilterRegexp.length === 0) {
         return {
           ...prefab,
           difficulty,
+          addedVersion,
+          isAddedInLatestVersion,
           highlightedName: prefab.name,
           highlightedLabel: label ?? "-",
         };
@@ -188,6 +209,8 @@ export class PrefabFilter {
         return {
           ...prefab,
           difficulty,
+          addedVersion,
+          isAddedInLatestVersion,
           highlightedName: highlightedName ?? prefab.name,
           highlightedLabel: highlightedLabel ?? label ?? "-",
         };

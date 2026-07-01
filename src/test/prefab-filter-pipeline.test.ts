@@ -3,6 +3,7 @@ import type {
   BlockPrefabCounts,
   HighlightedPrefab,
   Prefab,
+  PrefabAddedVersions,
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
@@ -41,6 +42,7 @@ function build(
   blockCounts: BlockPrefabCounts = {},
   meshSizes: PrefabMeshSizes = {},
   difficulties: PrefabDifficulties = {},
+  addedVersions: PrefabAddedVersions = { unrelated_prefab: "0.0" },
 ): PrefabFilter {
   return new PrefabFilter(
     "/labels",
@@ -48,6 +50,7 @@ function build(
     () => Promise.resolve(blockCounts),
     () => Promise.resolve(meshSizes),
     () => Promise.resolve(difficulties),
+    () => Promise.resolve(addedVersions),
   );
 }
 

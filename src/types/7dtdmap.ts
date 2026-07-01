@@ -27,6 +27,10 @@ export interface HighlightedPrefab extends Prefab {
   // the highlighted variant (not Prefab itself) so the type stays a pure
   // representation of the prefabs.xml entry.
   difficulty?: number;
+  // Looked up from prefab-added-versions.json; absent for prefabs that
+  // predate that tracking (e.g. everything before 3.0).
+  addedVersion?: string;
+  isAddedInLatestVersion?: boolean;
   highlightedName?: string;
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
@@ -43,6 +47,10 @@ export interface HighlightedBlock {
 
 export interface PrefabDifficulties {
   [prefabName: string]: number;
+}
+
+export interface PrefabAddedVersions {
+  [prefabName: string]: string;
 }
 
 export interface GameMapSize {
