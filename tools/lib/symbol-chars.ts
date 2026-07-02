@@ -11,7 +11,8 @@ const SYMBOL_RANGES: readonly (readonly [number, number])[] = [
   [0x1f300, 0x1faff], // Misc symbols/pictographs, emoticons, transport, supplemental symbols
   [0x2100, 0x214f], // Letterlike symbols (e.g. ℹ)
   [0x2190, 0x21ff], // Arrows
-  [0x2300, 0x23ff], // Misc technical (e.g. ⌛)
+  [0x2300, 0x23ff], // Misc technical (e.g. ⌛, ⌖)
+  [0x25a0, 0x25ff], // Geometric shapes (e.g. ▽)
   [0x2600, 0x27bf], // Misc symbols + Dingbats (e.g. ✘, ✅, ☢, ⚠, ❌)
   [0x2b00, 0x2bff], // Misc symbols and arrows (e.g. ⬇)
 ];

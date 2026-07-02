@@ -1,30 +1,36 @@
 import type { CursorHandler } from "./cursor-handler.ts";
+import type { DtmHandler } from "./dtm-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type {
   GameCoords,
+  GameMapSize,
   Prefab,
   PrefabAddedVersions,
   PrefabDifficulties,
+  PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
 import type { PrefabHitIndex } from "../lib/prefab-hit-index.ts";
 
 import { throttledInvoker } from "../lib/throttled-invoker.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
 import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
+import { prefabFootprintCssRect } from "../lib/dom-utils.ts";
 
 interface Doms {
   tooltip: HTMLElement;
   canvas: HTMLCanvasElement;
 }
 
-// Pixels offset from the cursor so the tooltip does not sit on top of the
-// crosshair and is not captured by mouseout when the cursor advances.
+// Pixels between the anchor (footprint box edge, or the cursor on the
+// fallback path) and the tooltip, so it does not sit on top of the crosshair.
 const CURSOR_OFFSET = 16;
 
 export class PrefabTooltipHandler {
   #doms: Doms;
   #labelHandler: LabelHandler;
+  #dtmHandler: DtmHandler;
+  #meshSizes: Promise<PrefabMeshSizes>;
   #difficulties: Promise<PrefabDifficulties>;
   #addedVersions: Promise<PrefabAddedVersions>;
   #latestAddedVersion: Promise<string>;
@@ -40,11 +46,15 @@ export class PrefabTooltipHandler {
     cursor: CursorHandler,
     prefabsHandler: PrefabsHandler,
     labelHandler: LabelHandler,
+    dtmHandler: DtmHandler,
     difficulties: Promise<PrefabDifficulties>,
     addedVersions: Promise<PrefabAddedVersions>,
+    meshSizes: Promise<PrefabMeshSizes>,
   ) {
     this.#doms = doms;
     this.#labelHandler = labelHandler;
+    this.#dtmHandler = dtmHandler;
+    this.#meshSizes = meshSizes;
     this.#difficulties = difficulties;
     this.#addedVersions = addedVersions;
     this.#latestAddedVersion = addedVersions.then(latestAddedVersion);
@@ -105,12 +115,21 @@ export class PrefabTooltipHandler {
       this.#hide();
       return;
     }
-    const [labels, difficulties, addedVersions, latestVersion] = await Promise
+    const [
+      labels,
+      difficulties,
+      addedVersions,
+      latestVersion,
+      mapSize,
+      meshSizes,
+    ] = await Promise
       .all([
         this.#labelHandler.holder.get("prefabs"),
         this.#difficulties,
         this.#addedVersions,
         this.#latestAddedVersion,
+        this.#dtmHandler.size(),
+        this.#meshSizes,
       ]);
     const label = labels.get(hit.name) ?? "-";
     const difficulty = difficulties[hit.name] ?? 0;
@@ -123,6 +142,8 @@ export class PrefabTooltipHandler {
       difficulty,
       addedVersion,
       isAddedInLatestVersion,
+      mapSize,
+      meshSizes,
     );
   }
 
@@ -133,6 +154,8 @@ export class PrefabTooltipHandler {
     difficulty: number,
     addedVersion: string | undefined,
     isAddedInLatestVersion: boolean,
+    mapSize: GameMapSize | null,
+    meshSizes: PrefabMeshSizes,
   ) {
     this.#currentHit = prefab;
     // Rebuild the inner HTML only when the prefab changes so we don't trigger
@@ -163,12 +186,28 @@ export class PrefabTooltipHandler {
         `</div>`;
       this.#shownPrefabName = prefab.name;
     }
-    this.#doms.tooltip.style.left = `${
-      (event.clientX + CURSOR_OFFSET).toString()
-    }px`;
-    this.#doms.tooltip.style.top = `${
-      (event.clientY + CURSOR_OFFSET).toString()
-    }px`;
+    // Anchor the tooltip beside the POI's footprint AABB, using the same
+    // game-coords-to-canvas-pixels mapping as the prefab-list hover
+    // highlight, so it stays put while the cursor moves within one POI.
+    // Falls back to cursor-relative placement when the map size is unknown.
+    const canvas = this.#doms.canvas;
+    if (mapSize && mapSize.width > 0 && canvas.width > 1) {
+      const rect = prefabFootprintCssRect(prefab, mapSize, canvas, meshSizes);
+      const canvasRect = canvas.getBoundingClientRect();
+      this.#doms.tooltip.style.left = `${
+        (canvasRect.left + rect.left + rect.width + CURSOR_OFFSET).toString()
+      }px`;
+      this.#doms.tooltip.style.top = `${
+        (canvasRect.top + rect.top).toString()
+      }px`;
+    } else {
+      this.#doms.tooltip.style.left = `${
+        (event.clientX + CURSOR_OFFSET).toString()
+      }px`;
+      this.#doms.tooltip.style.top = `${
+        (event.clientY + CURSOR_OFFSET).toString()
+      }px`;
+    }
     this.#doms.tooltip.showPopover();
   }
 

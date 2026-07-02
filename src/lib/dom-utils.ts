@@ -1,4 +1,9 @@
-import type { GameCoords, GameMapSize } from "../types/7dtdmap.ts";
+import type {
+  GameCoords,
+  GameMapSize,
+  Prefab,
+  PrefabMeshSizes,
+} from "../types/7dtdmap.ts";
 import { gameCoords, requireNonnull, requireType } from "./utils.ts";
 
 export function component<T extends HTMLElement = HTMLElement>(
@@ -58,6 +63,60 @@ export function downloadCanvasPng(
   a.download = fileName;
   a.href = canvas.toDataURL("image/png");
   a.click();
+}
+
+export interface CssRect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * On-canvas CSS rect of a prefab's footprint AABB, computed as the inverse
+ * of canvasEventToGameCoords. Boxes smaller than minSizePx grow around their
+ * centre so they stay noticeable on a zoomed-out map; when the mesh size is
+ * unknown the fixed-size box keeps its left/bottom anchored at the prefab
+ * coords instead (decoration.position is the SW corner of the AABB).
+ */
+export function prefabFootprintCssRect(
+  prefab: Pick<Prefab, "name" | "x" | "z" | "rotation">,
+  mapSize: GameMapSize,
+  canvasSize: { width: number; height: number },
+  meshSizes: PrefabMeshSizes,
+  minSizePx = 24,
+): CssRect {
+  const scaleX = canvasSize.width / mapSize.width;
+  const scaleY = canvasSize.height / mapSize.height;
+  const left = (prefab.x + Math.floor(mapSize.width / 2)) * scaleX;
+  const bottom = (Math.floor(mapSize.height / 2) - prefab.z) * scaleY;
+
+  const size = meshSizes[prefab.name];
+  if (!size) {
+    return {
+      left,
+      top: bottom - minSizePx,
+      width: minSizePx,
+      height: minSizePx,
+    };
+  }
+
+  // 90°/270° rotations swap the world-aligned width/depth; same formula as
+  // the footprint pass in src/worker/lib/map-renderer.ts.
+  const odd = ((prefab.rotation ?? 0) & 1) === 1;
+  let width = (odd ? size[1] : size[0]) * scaleX;
+  let height = (odd ? size[0] : size[1]) * scaleY;
+  let clampedLeft = left;
+  let clampedBottom = bottom;
+  if (width < minSizePx) {
+    clampedLeft -= (minSizePx - width) / 2;
+    width = minSizePx;
+  }
+  if (height < minSizePx) {
+    clampedBottom += (minSizePx - height) / 2;
+    height = minSizePx;
+  }
+  return { left: clampedLeft, top: clampedBottom - height, width, height };
 }
 
 /** Returns null if the event was fired out of the canvas */

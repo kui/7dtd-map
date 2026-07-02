@@ -60,6 +60,7 @@
         "tools/generate-font-subsets.ts",
         "tools/lib/symbol-chars.ts",
         "tools/fonts/NotoColorEmoji-COLRv1.ttf",
+        "tools/fonts/NotoSansSymbols2-Regular.ttf",
         "src/**/*.ts",
         "public/*.html",
         "tools/lib/prefab-html.ts",
@@ -68,6 +69,7 @@
       ],
       "output": [
         "public/NotoColorEmoji.subset.woff2",
+        "public/NotoSansSymbols2.subset.woff2",
       ],
     },
     "build:ts": {

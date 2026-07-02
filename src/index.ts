@@ -27,6 +27,7 @@ import { DtmHandler } from "./index/dtm-handler.ts";
 import { PrefabsHandler } from "./index/prefabs-handler.ts";
 import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import { CursorHandler } from "./index/cursor-handler.ts";
+import { PrefabHighlightHandler } from "./index/prefab-highlight-handler.ts";
 import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
 import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
@@ -205,6 +206,16 @@ function main() {
   prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
     prefabListRenderer.iterator = prefabs;
   });
+  new PrefabHighlightHandler(
+    {
+      list: component("prefabs-list", HTMLElement),
+      canvas: component("map", HTMLCanvasElement),
+      highlight: component("map-prefab-highlight", HTMLElement),
+    },
+    dtmHandler,
+    prefabsHandler,
+    prefabMeshSizes,
+  );
   const cursorHandler = new CursorHandler(
     { canvas: component("map", HTMLCanvasElement) },
     dtmHandler,
@@ -222,8 +233,10 @@ function main() {
     cursorHandler,
     prefabsHandler,
     labelHandler,
+    dtmHandler,
     prefabDifficulties,
     prefabAddedVersions,
+    prefabMeshSizes,
   );
   new PrefabInspectorHandler(
     {
@@ -285,9 +298,14 @@ function main() {
 
 function prefabLi(prefab: HighlightedPrefab) {
   const li = document.createElement("li");
+  li.dataset["name"] = prefab.name;
+  li.dataset["x"] = prefab.x.toString();
+  li.dataset["z"] = prefab.z.toString();
+  li.dataset["rotation"] = (prefab.rotation ?? 0).toString();
   const safeName = escapeHtml(prefab.name);
   li.innerHTML = [
-    `<button data-input-prefab-filter="${safeName}" title="Filter with this prefab name">▲</button>`,
+    `<button data-jump-to-map title="Scroll the map to this prefab" aria-label="Scroll the map to this prefab">⌖</button>`,
+    `<button data-input-prefab-filter="${safeName}" title="Filter with this prefab name" aria-label="Filter with this prefab name">▽</button>`,
     ...(prefab.distance ? [`${humanreadableDistance(prefab.distance)},`] : []),
     ...(prefab.difficulty
       ? [
@@ -317,7 +335,7 @@ function prefabLi(prefab: HighlightedPrefab) {
       const blockLi = document.createElement("li");
       const safeBlockName = escapeHtml(block.name);
       blockLi.innerHTML = [
-        `<button data-input-block-filter="${safeBlockName}" title="Filter with this block name">▲</button>`,
+        `<button data-input-block-filter="${safeBlockName}" title="Filter with this block name" aria-label="Filter with this block name">▽</button>`,
         `${block.count.toString()}x`,
         block.highlightedLabel,
         `<small>${block.highlightedName}</small>`,
