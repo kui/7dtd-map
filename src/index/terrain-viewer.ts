@@ -50,7 +50,10 @@ export class TerrainViewer {
     this.#scene.background = new three.Color("#111111");
 
     const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
-    light.position.set(1, 1, 1);
+    // Only the terrain mesh is rotated -90° around X (see #updateElevations)
+    // to become Y-up; rotate this fixed light position the same way so it
+    // keeps the same angle relative to the terrain surface as before.
+    light.position.set(1, 1, -1);
     this.#scene.add(light);
     this.#scene.add(new three.AmbientLight(0xffffff, 0.09)); // low fill to keep terrain contrast
 
