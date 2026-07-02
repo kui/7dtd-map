@@ -9,7 +9,7 @@ const MOUSE_BUTTON_BITMASK = {
 
 const GROUND_PLANE = new three.Plane(new three.Vector3(0, 1, 0), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
-const TILT_REFERENCE = new three.Vector3(0, 0, -1);
+const TILT_REFERENCE = new three.Vector3(0, 0, 1);
 const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
@@ -198,7 +198,7 @@ export class TerrainViewerCameraController {
     this.camera.far = this.#terrainSize.height * 2;
     this.camera.updateProjectionMatrix();
     this.camera.position.x = 0;
-    this.camera.position.z = -this.#terrainSize.height;
+    this.camera.position.z = this.#terrainSize.height;
     this.camera.position.y = this.#terrainSize.height;
     this.camera.lookAt(0, 0, 0);
     this.#syncCameraWork();
@@ -262,7 +262,10 @@ export class TerrainViewerCameraController {
     this.#mouseMove.left.y = 0;
 
     if (deltaX !== 0) this.camera.position.x += deltaX;
-    if (deltaZ !== 0) this.camera.position.z += deltaZ;
+    // Z is the negated counterpart of the pre-migration ground Y axis
+    // (the -90° X rotation that put the plane in Y-up maps old +Y to
+    // new -Z), so panning subtracts here where it used to add.
+    if (deltaZ !== 0) this.camera.position.z -= deltaZ;
 
     this.#syncCameraWork();
 
@@ -276,7 +279,7 @@ export class TerrainViewerCameraController {
     const gz = this.#cameraWork.groundPoint.z;
     const halfH = this.#terrainSize.height / 2;
     if (gz < -halfH || halfH < gz) {
-      this.camera.position.z -= deltaZ;
+      this.camera.position.z += deltaZ;
       needResync = true;
     }
     if (needResync) this.#syncCameraWork();
