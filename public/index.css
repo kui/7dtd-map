@@ -4,13 +4,19 @@
 
 #map-wrapper {
   position: relative;
+  /* Must hug the canvas exactly (not stretch to the container's full auto
+     width): otherwise the canvas overflows its own parent, which triggers
+     the same margin-drop described below, just one level up. */
   width: fit-content;
-  margin-right: calc(min(30vw, var(--controller-width)) + 58px);
 }
 
 #map {
   display: block;
   cursor: crosshair;
+  /* Must live on the canvas itself: a fit-content wrapper around an
+     oversized child drops its own margin from document.body.scrollWidth,
+     so the map could never scroll clear of the fixed controller panel. */
+  margin-right: calc(min(30vw, var(--controller-width)) + 58px);
 }
 
 #map-prefab-highlight {
