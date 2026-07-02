@@ -3,23 +3,13 @@ import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { PrefabMeshSizes } from "../types/7dtdmap.ts";
 
 import { printError } from "../lib/utils.ts";
+import { type CssRect, prefabFootprintCssRect } from "../lib/dom-utils.ts";
 
 interface Doms {
   list: HTMLElement;
   canvas: HTMLCanvasElement;
   highlight: HTMLElement;
 }
-
-interface CssRect {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-// Smallest on-screen edge of the highlight box so tiny footprints (or a
-// zoomed-out map) stay noticeable.
-const MIN_SIZE_PX = 24;
 
 /**
  * Highlights a prefab's footprint on the map while its row in the prefab
@@ -124,43 +114,12 @@ export class PrefabHighlightHandler {
     if (name === undefined || Number.isNaN(x) || Number.isNaN(z)) return null;
     const meshSizes = await this.#meshSizes;
 
-    // Inverse of canvasEventToGameCoords (src/lib/dom-utils.ts): game coords
-    // are centre-offset with z pointing north, canvas pixels are
-    // top-left-offset with y pointing south.
-    const scaleX = canvas.width / mapSize.width;
-    const scaleY = canvas.height / mapSize.height;
-    const left = (x + Math.floor(mapSize.width / 2)) * scaleX;
-    const bottom = (Math.floor(mapSize.height / 2) - z) * scaleY;
-
-    const size = meshSizes[name];
-    if (!size) {
-      // decoration.position is the SW corner of the footprint AABB, so the
-      // fixed-size fallback box keeps its left/bottom anchored there rather
-      // than centring on the coords.
-      return {
-        left,
-        top: bottom - MIN_SIZE_PX,
-        width: MIN_SIZE_PX,
-        height: MIN_SIZE_PX,
-      };
-    }
-
-    // 90°/270° rotations swap the world-aligned width/depth; same formula as
-    // the footprint pass in src/worker/lib/map-renderer.ts.
-    const odd = (rotation & 1) === 1;
-    let width = (odd ? size[1] : size[0]) * scaleX;
-    let height = (odd ? size[0] : size[1]) * scaleY;
-    let clampedLeft = left;
-    let clampedBottom = bottom;
-    if (width < MIN_SIZE_PX) {
-      clampedLeft -= (MIN_SIZE_PX - width) / 2;
-      width = MIN_SIZE_PX;
-    }
-    if (height < MIN_SIZE_PX) {
-      clampedBottom += (MIN_SIZE_PX - height) / 2;
-      height = MIN_SIZE_PX;
-    }
-    return { left: clampedLeft, top: clampedBottom - height, width, height };
+    return prefabFootprintCssRect(
+      { name, x, z, rotation },
+      mapSize,
+      canvas,
+      meshSizes,
+    );
   }
 }
 

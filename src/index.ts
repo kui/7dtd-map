@@ -233,8 +233,10 @@ function main() {
     cursorHandler,
     prefabsHandler,
     labelHandler,
+    dtmHandler,
     prefabDifficulties,
     prefabAddedVersions,
+    prefabMeshSizes,
   );
   new PrefabInspectorHandler(
     {
