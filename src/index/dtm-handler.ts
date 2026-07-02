@@ -65,10 +65,10 @@ export class DtmHandler {
       : null;
   }
 
-  async writeZ(geo: three.PlaneGeometry): Promise<void> {
+  async writeY(geo: three.PlaneGeometry): Promise<void> {
     const size = await this.#mapSize.get();
     if (!size) return;
-    new Dtm(await this.#dtmRaw.get(), size).writeZ(geo);
+    new Dtm(await this.#dtmRaw.get(), size).writeY(geo);
   }
 }
 
@@ -110,7 +110,10 @@ export class Dtm {
     return elev ?? null;
   }
 
-  writeZ(geo: three.PlaneGeometry) {
+  // `geo` must already be rotated into the XZ ground plane (+Y normal),
+  // i.e. `geo.rotateX(-Math.PI / 2)` has been applied to a fresh
+  // PlaneGeometry before calling this.
+  writeY(geo: three.PlaneGeometry) {
     if (!this.#data) return;
 
     const { width, height } = this.#mapSize;
@@ -147,11 +150,11 @@ export class Dtm {
     // ~4M vertices.
     const arr = pos.array as Float32Array;
     for (let i = 0, j = 0; i < pos.count; i++, j += 3) {
-      // game axis -> webgl axis: game x -> x, game y -> z, game z -> y
+      // game axis -> webgl axis: game x -> x, game z(row) -> -z, elevation -> y
       const px = arr[j] as number;
-      const py = arr[j + 1] as number;
+      const pz = arr[j + 2] as number;
       let dataX = Math.round((px + halfW) * scaleFactor);
-      let dataZ = Math.round((py + halfH) * scaleFactor);
+      let dataZ = Math.round((halfH - pz) * scaleFactor);
       // Plane vertices on the +width/+height edge round to width/height,
       // one past the last valid DTM index. Clamp to keep sampling in range.
       if (dataX < 0) dataX = 0;
@@ -162,7 +165,7 @@ export class Dtm {
       // to the geometry's local units (which are already shrunk by the same
       // ratio horizontally).
       // deno-lint-ignore no-non-null-assertion
-      arr[j + 2] = this.#data[dataX + dataZ * width]! / scaleFactor;
+      arr[j + 1] = this.#data[dataX + dataZ * width]! / scaleFactor;
     }
   }
 }

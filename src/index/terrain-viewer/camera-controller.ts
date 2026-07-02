@@ -7,9 +7,9 @@ const MOUSE_BUTTON_BITMASK = {
   center: 0b00000100,
 };
 
-const XY_PLANE = new three.Plane(new three.Vector3(0, 0, 1), 0);
+const GROUND_PLANE = new three.Plane(new three.Vector3(0, 1, 0), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
-const TILT_REFERENCE = new three.Vector3(0, -1, 0);
+const TILT_REFERENCE = new three.Vector3(0, 0, 1);
 const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
@@ -97,8 +97,8 @@ export class TerrainViewerCameraController {
 
   #terrainSize = threePlaneSize(1, 1);
   #mapWidth = 1;
-  #minZ = 1;
-  #maxZ = 1;
+  #minY = 1;
+  #maxY = 1;
 
   #speeds = { x: 0, y: 0, tilt: 0, zoom: 0 };
   #mouseMove = {
@@ -120,11 +120,11 @@ export class TerrainViewerCameraController {
     this.camera.getWorldDirection(this.#cameraWork.direction);
     this.#cameraWork.ray.set(this.camera.position, this.#cameraWork.direction);
     const groundPoint = this.#cameraWork.ray.intersectPlane(
-      XY_PLANE,
+      GROUND_PLANE,
       this.#cameraWork.groundPoint,
     );
     if (groundPoint === null) {
-      throw new Error("Camera ray is parallel to the XY plane");
+      throw new Error("Camera ray is parallel to the XZ plane");
     }
   }
 
@@ -187,8 +187,8 @@ export class TerrainViewerCameraController {
   onUpdateTerrain(mapWidth: number, terrainSize: ThreePlaneSize): void {
     this.#mapWidth = mapWidth;
     this.#terrainSize = terrainSize;
-    this.#minZ = (MAX_ELEV * terrainSize.width) / mapWidth;
-    this.#maxZ = terrainSize.height * 1.2;
+    this.#minY = (MAX_ELEV * terrainSize.width) / mapWidth;
+    this.#maxY = terrainSize.height * 1.2;
 
     // Keep the far/near ratio bounded so the depth buffer retains precision
     // at the terrain's far edge. The default near of 0.1 paired with a far
@@ -198,14 +198,14 @@ export class TerrainViewerCameraController {
     this.camera.far = this.#terrainSize.height * 2;
     this.camera.updateProjectionMatrix();
     this.camera.position.x = 0;
-    this.camera.position.y = -this.#terrainSize.height;
     this.camera.position.z = this.#terrainSize.height;
+    this.camera.position.y = this.#terrainSize.height;
     this.camera.lookAt(0, 0, 0);
     this.#syncCameraWork();
   }
 
   update(deltaMsec: number): void {
-    this.#moveCameraXY(deltaMsec);
+    this.#moveCameraXZ(deltaMsec);
     this.#tiltCamera(deltaMsec);
     this.#moveCameraForward(deltaMsec);
   }
@@ -243,7 +243,7 @@ export class TerrainViewerCameraController {
     }
   }
 
-  #moveCameraXY(deltaMsec: number) {
+  #moveCameraXZ(deltaMsec: number) {
     if (
       this.#speeds.x === 0 && this.#speeds.y === 0 &&
       this.#mouseMove.left.x === 0 && this.#mouseMove.left.y === 0
@@ -256,13 +256,16 @@ export class TerrainViewerCameraController {
     const deltaMouse = this.#mouseMove.left;
 
     const deltaX = deltaDistKey * this.#speeds.x - deltaMouse.x;
-    const deltaY = deltaDistKey * this.#speeds.y + deltaMouse.y;
+    const deltaZ = deltaDistKey * this.#speeds.y + deltaMouse.y;
 
     this.#mouseMove.left.x = 0;
     this.#mouseMove.left.y = 0;
 
     if (deltaX !== 0) this.camera.position.x += deltaX;
-    if (deltaY !== 0) this.camera.position.y += deltaY;
+    // Z is the negated counterpart of the pre-migration ground Y axis
+    // (the -90° X rotation that put the plane in Y-up maps old +Y to
+    // new -Z), so panning subtracts here where it used to add.
+    if (deltaZ !== 0) this.camera.position.z -= deltaZ;
 
     this.#syncCameraWork();
 
@@ -273,10 +276,10 @@ export class TerrainViewerCameraController {
       this.camera.position.x -= deltaX;
       needResync = true;
     }
-    const gy = this.#cameraWork.groundPoint.y;
+    const gz = this.#cameraWork.groundPoint.z;
     const halfH = this.#terrainSize.height / 2;
-    if (gy < -halfH || halfH < gy) {
-      this.camera.position.y -= deltaY;
+    if (gz < -halfH || halfH < gz) {
+      this.camera.position.z += deltaZ;
       needResync = true;
     }
     if (needResync) this.#syncCameraWork();
@@ -296,7 +299,7 @@ export class TerrainViewerCameraController {
       .multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
     if (
-      this.camera.position.z < this.#minZ || this.#maxZ < this.camera.position.z
+      this.camera.position.y < this.#minY || this.#maxY < this.camera.position.y
     ) {
       this.camera.position.sub(moveVector);
     }
@@ -323,15 +326,15 @@ export class TerrainViewerCameraController {
     offset.applyAxisAngle(TILT_AXIS, deltaRad);
 
     const totalRad = TILT_REFERENCE.angleTo(offset);
-    const newZ = pivot.z + offset.z;
+    const newY = pivot.y + offset.y;
     const hitsAngleLimit = totalRad < TILT_MIN_RAD || TILT_MAX_RAD < totalRad;
-    const hitsZLimit = newZ < this.#minZ || this.#maxZ < newZ;
+    const hitsYLimit = newY < this.#minY || this.#maxY < newY;
     if (hitsAngleLimit) {
       offset.applyAxisAngle(TILT_AXIS, -deltaRad);
-    } else if (hitsZLimit) {
-      offset.z = Math.max(
-        this.#minZ - pivot.z,
-        Math.min(this.#maxZ - pivot.z, offset.z),
+    } else if (hitsYLimit) {
+      offset.y = Math.max(
+        this.#minY - pivot.y,
+        Math.min(this.#maxY - pivot.y, offset.y),
       );
     }
 

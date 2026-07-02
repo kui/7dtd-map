@@ -18,7 +18,7 @@ interface Doms {
 // Base width of the terrain plane in local geometry units.
 const TERRAIN_WIDTH = 2048;
 // Mesh subdivisions along the horizontal axis.  Reduced from 2047 to 1024
-// to cut vertex count by ~4x; the overhead of writeZ +
+// to cut vertex count by ~4x; the overhead of writeY +
 // computeVertexNormals dominates more than the small visual loss for a
 // top-down view where texture detail carries most of the perceived
 // quality.
@@ -50,7 +50,10 @@ export class TerrainViewer {
     this.#scene.background = new three.Color("#111111");
 
     const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
-    light.position.set(1, 1, 1);
+    // Only the terrain mesh is rotated -90° around X (see #updateElevations)
+    // to become Y-up; rotate this fixed light position the same way so it
+    // keeps the same angle relative to the terrain surface as before.
+    light.position.set(1, 1, -1);
     this.#scene.add(light);
     this.#scene.add(new three.AmbientLight(0xffffff, 0.09)); // low fill to keep terrain contrast
 
@@ -126,7 +129,10 @@ export class TerrainViewer {
       segmentW,
       segmentH,
     );
-    await this.#dtm.writeZ(geo);
+    // Default PlaneGeometry lies in the XY plane (+Z normal); rotate into
+    // the XZ ground plane (+Y normal) to match three.js's Y-up convention.
+    geo.rotateX(-Math.PI / 2);
+    await this.#dtm.writeY(geo);
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
     const map = new three.CanvasTexture(this.#doms.texture);
