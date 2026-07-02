@@ -29,16 +29,12 @@ onmessage = async (
   event: MessageEvent<MapRendererInputMessage>,
 ) => {
   const message = event.data;
-  const [signMarker, markMarker] = await Promise.all([
-    signMarkerReady,
-    markMarkerReady,
-  ]);
   if (!map) {
     if (message.canvas) {
       map = new MapRenderer(
         message.canvas,
-        signMarker,
-        markMarker,
+        await signMarkerReady,
+        await markMarkerReady,
         () => fetchJson<PrefabMeshSizes>("../prefab-mesh-sizes.json"),
         () => fetchJson<PrefabDensityScores>("../prefab-density-scores.json"),
         () => fetchJson<DistrictColors>("../district-colors.json"),
