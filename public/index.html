@@ -540,7 +540,10 @@
         >×</button>
       </form>
     </dialog>
-    <canvas id="map" width="0" height="0"></canvas>
+    <div id="map-wrapper">
+      <canvas id="map" width="0" height="0"></canvas>
+      <div id="map-prefab-highlight" aria-hidden="true"></div>
+    </div>
     <div id="prefab-tooltip" popover="manual" role="tooltip"></div>
     <div id="prefab-link-tooltip" popover="manual" role="tooltip">
       <img id="prefab-link-tooltip-image" alt="" loading="lazy" />

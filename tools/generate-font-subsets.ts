@@ -27,6 +27,11 @@ const JOBS: Readonly<Record<string, FontJob>> = {
     exclude: [`${path.sep}worker${path.sep}`],
     dist: "NotoColorEmoji.subset.woff2",
   },
+  "NotoSansSymbols2-Regular.ttf": {
+    target: ["src/**/*.ts", "public/*.html", "tools/lib/prefab-html.ts"],
+    exclude: [`${path.sep}worker${path.sep}`],
+    dist: "NotoSansSymbols2.subset.woff2",
+  },
 };
 
 async function main() {

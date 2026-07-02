@@ -3,12 +3,21 @@
   src: url("./NotoColorEmoji.subset.woff2") format("woff2");
 }
 
-/* Listed first so the browser's per-character font fallback picks a color
-   glyph from this subset for the emoji it contains, and falls through to the
-   system default for everything else. This keeps every emoji in one color
-   regardless of whether the OS has a color emoji font installed. */
+@font-face {
+  font-family: "Noto Sans Symbols 2 Subset";
+  src: url("./NotoSansSymbols2.subset.woff2") format("woff2");
+}
+
+/* Subsets are listed first so the browser's per-character font fallback picks
+   a color glyph from the emoji subset when it has one, then a monochrome
+   symbol glyph (✘, ▽, ⌖, …) from the symbols subset, and falls through to
+   the system default for everything else. This keeps emoji colors and symbol
+   shapes consistent regardless of the fonts installed on the OS. */
 body {
-  font-family: "Noto Color Emoji Subset", sans-serif;
+  font-family:
+    "Noto Color Emoji Subset",
+    "Noto Sans Symbols 2 Subset",
+    sans-serif;
 }
 
 .logo {
