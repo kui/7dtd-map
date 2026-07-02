@@ -22,6 +22,14 @@ export interface PrefabDensityScores {
   [prefabName: string]: number;
 }
 
+// Written by tools/generate-glyph-markers.ts.
+export interface GlyphMarker {
+  d: string;
+  // Point in the shared VIEWPORT square (lib/glyph-marker.ts) that should
+  // land on the target coordinate when this marker is placed.
+  anchor: { x: number; y: number };
+}
+
 export interface HighlightedPrefab extends Prefab {
   // Looked up from prefab-difficulties.json inside the filter worker — kept on
   // the highlighted variant (not Prefab itself) so the type stays a pure

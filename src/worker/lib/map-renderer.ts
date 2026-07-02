@@ -2,6 +2,7 @@ import type {
   DistrictColors,
   GameCoords,
   GameMapSize,
+  GlyphMarker,
   HighlightedPrefab,
   Prefab,
   PrefabDensityScores,
@@ -12,9 +13,12 @@ import { gameMapSize } from "../../lib/utils.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
+import {
+  GLYPH_MARKER_FONT_SIZE,
+  GLYPH_MARKER_STROKE_WIDTHS,
+  GLYPH_MARKER_VIEWPORT,
+} from "../../../lib/glyph-marker.ts";
 
-const SIGN_CHAR = "✘";
-const MARK_CHAR = "🚩";
 // Edge length of an `rwg_tile_*` prefab in game blocks.
 const TILE_SIZE = 150;
 
@@ -23,11 +27,6 @@ interface TileIndex {
   offsetZ: number;
   // Key: `${gridX},${gridZ}` → district name (extracted from tile filename).
   cells: Map<string, string>;
-}
-
-interface FontFamilies {
-  [SIGN_CHAR]: string;
-  [MARK_CHAR]: string;
 }
 
 export default class MapRenderer {
@@ -55,7 +54,10 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  #fontFamilies: FontFamilies;
+  #signPath2D: Path2D;
+  #signAnchor: GlyphMarker["anchor"];
+  #markPath2D: Path2D;
+  #markAnchor: GlyphMarker["anchor"];
 
   #nativeSizes = new Map<
     mapFiles.MapFileName,
@@ -74,13 +76,17 @@ export default class MapRenderer {
 
   constructor(
     canvas: OffscreenCanvas,
-    fontFamilies: FontFamilies,
+    signMarker: GlyphMarker,
+    markMarker: GlyphMarker,
     fetchMeshSizes: () => Promise<PrefabMeshSizes>,
     fetchDensityScores: () => Promise<PrefabDensityScores>,
     fetchDistrictColors: () => Promise<DistrictColors>,
   ) {
     this.canvas = canvas;
-    this.#fontFamilies = fontFamilies;
+    this.#signPath2D = new Path2D(signMarker.d);
+    this.#signAnchor = signMarker.anchor;
+    this.#markPath2D = new Path2D(markMarker.d);
+    this.#markAnchor = markMarker.anchor;
     // Static tables fetched on demand inside the worker, mirroring the
     // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
     // because nothing here owns external resources.
@@ -437,31 +443,17 @@ export default class MapRenderer {
     const scale = this.scale;
 
     const pixelSize = Math.max(1, Math.round(signSize * scale));
-    const spriteW = pixelSize * 2;
-    const spriteH = pixelSize * 2;
-    const spriteCX = spriteW / 2;
-    const spriteCY = spriteH / 2;
-    const sprite = new OffscreenCanvas(spriteW, spriteH);
-    const sc = sprite.getContext("2d");
-    if (sc) {
-      sc.font = `${pixelSize.toString()}px '${this.#fontFamilies[SIGN_CHAR]}'`;
-      sc.textAlign = "center";
-      sc.textBaseline = "middle";
-      sc.lineJoin = "round";
-      sc.lineCap = "round";
-      putText(sc, {
-        text: SIGN_CHAR,
-        x: spriteCX,
-        z: spriteCY,
-        size: pixelSize,
-      });
-    }
+    const sprite = buildGlyphSprite(this.#signPath2D, pixelSize);
+    const spriteCX = sprite.width / 2;
+    const spriteCY = sprite.height / 2;
 
     const offsetX = width / 2;
     const offsetY = height / 2;
 
-    const charOffsetX = Math.round(signSize * 0.01);
-    const charOffsetY = Math.round(signSize * 0.05);
+    const { x: charOffsetX, z: charOffsetY } = anchorOffset(
+      this.#signAnchor,
+      signSize,
+    );
 
     // Remove the active scale transform so the sprite stamps 1:1 on output
     // pixels. globalAlpha set by the caller is unaffected by resetTransform.
@@ -498,22 +490,29 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    context.font = `${this.prefabSignSize.toString()}px '${
-      this.#fontFamilies[MARK_CHAR]
-    }'`;
-    context.fillStyle = "red";
-    context.textAlign = "left";
-    context.textBaseline = "alphabetic";
+    const pixelSize = Math.max(1, Math.round(this.prefabSignSize * this.scale));
+    const sprite = buildGlyphSprite(this.#markPath2D, pixelSize);
+    const spriteCX = sprite.width / 2;
+    const spriteCY = sprite.height / 2;
 
     const offsetX = width / 2;
     const offsetY = height / 2;
-    const charOffsetX = -1 * Math.round(this.prefabSignSize * 0.32);
-    const charOffsetY = -1 * Math.round(this.prefabSignSize * 0.1);
+    const { x: charOffsetX, z: charOffsetY } = anchorOffset(
+      this.#markAnchor,
+      this.prefabSignSize,
+    );
 
     const x = offsetX + this.markerCoords.x + charOffsetX;
     const z = offsetY - this.markerCoords.z + charOffsetY;
 
-    putText(context, { text: MARK_CHAR, x, z, size: this.prefabSignSize });
+    context.save();
+    context.resetTransform();
+    context.drawImage(
+      sprite,
+      Math.round(x * this.scale - spriteCX),
+      Math.round(z * this.scale - spriteCY),
+    );
+    context.restore();
   }
 
   async #nativeSize(
@@ -604,37 +603,50 @@ function mapSize(
   });
 }
 
-interface MapSign {
-  text: string;
-  x: number;
-  z: number;
-  size: number;
+// Stamps a baked glyph path (see tools/generate-glyph-markers.ts) into a
+// square sprite twice the target pixel size, with the same 3-layer
+// black-outline/red-fill/white-outline look the baked SVGs use. Shared by
+// the sign and flag markers, which only differ in which path/size they stamp.
+function buildGlyphSprite(path2D: Path2D, pixelSize: number): OffscreenCanvas {
+  const spriteSize = pixelSize * 2;
+  const sprite = new OffscreenCanvas(spriteSize, spriteSize);
+  const sc = sprite.getContext("2d");
+  if (sc) {
+    // Scale the baked path's viewport to `pixelSize`, then centre it on the
+    // sprite; the path itself is built centred on VIEWPORT/2 at build time.
+    const k = pixelSize / GLYPH_MARKER_FONT_SIZE;
+    sc.lineJoin = "round";
+    sc.lineCap = "round";
+    sc.translate(spriteSize / 2, spriteSize / 2);
+    sc.scale(k, k);
+    sc.translate(-GLYPH_MARKER_VIEWPORT / 2, -GLYPH_MARKER_VIEWPORT / 2);
+    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.black;
+    sc.strokeStyle = "black";
+    sc.fillStyle = "black";
+    sc.stroke(path2D);
+    sc.fill(path2D);
+    sc.fillStyle = "red";
+    sc.fill(path2D);
+    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.white;
+    sc.strokeStyle = "white";
+    sc.stroke(path2D);
+  }
+  return sprite;
 }
 
-function putText(
-  context: OffscreenCanvasRenderingContext2D,
-  { text, x, z, size }: MapSign,
-) {
-  // Pass 1: fill + stroke both black — mirrors SVG's first <text fill=black
-  // stroke=black stroke-width=…>. The fill makes the interior solid so the
-  // outer stroke extends the silhouette outward without creating voids, and
-  // round line caps/joins (set by caller) avoid spiky tips on the ✘ arms.
-  context.lineWidth = Math.round(size * 0.12);
-  context.strokeStyle = "black";
-  context.fillStyle = "black";
-  context.strokeText(text, x, z);
-  context.fillText(text, x, z);
-
-  // Pass 2: red fill covers the black interior — mirrors SVG's second <text
-  // fill=red>. The outer black strip remains because the fill only covers
-  // the original glyph interior, not the outward stroke extension.
-  context.fillStyle = "red";
-  context.fillText(text, x, z);
-
-  // Pass 3: thin white stroke at the glyph edge — mirrors SVG's stroke=white.
-  context.lineWidth = Math.round(size * 0.04);
-  context.strokeStyle = "white";
-  context.strokeText(text, x, z);
+// The sprite stamps centred on the target coordinate, but `anchor` (a point
+// in the shared VIEWPORT square, see lib/glyph-marker.ts) should land there
+// instead. Converts the offset between the two into the same unscaled units
+// as prefab/marker coordinates.
+function anchorOffset(
+  anchor: GlyphMarker["anchor"],
+  targetSize: number,
+): { x: number; z: number } {
+  const k = targetSize / GLYPH_MARKER_FONT_SIZE;
+  return {
+    x: k * (GLYPH_MARKER_VIEWPORT / 2 - anchor.x),
+    z: k * (GLYPH_MARKER_VIEWPORT / 2 - anchor.y),
+  };
 }
 
 // 8-byte signature + 4-byte chunk length + 4-byte "IHDR" type + 4-byte width
