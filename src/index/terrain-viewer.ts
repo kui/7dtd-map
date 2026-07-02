@@ -18,7 +18,7 @@ interface Doms {
 // Base width of the terrain plane in local geometry units.
 const TERRAIN_WIDTH = 2048;
 // Mesh subdivisions along the horizontal axis.  Reduced from 2047 to 1024
-// to cut vertex count by ~4x; the overhead of writeZ +
+// to cut vertex count by ~4x; the overhead of writeY +
 // computeVertexNormals dominates more than the small visual loss for a
 // top-down view where texture detail carries most of the perceived
 // quality.
@@ -126,7 +126,10 @@ export class TerrainViewer {
       segmentW,
       segmentH,
     );
-    await this.#dtm.writeZ(geo);
+    // Default PlaneGeometry lies in the XY plane (+Z normal); rotate into
+    // the XZ ground plane (+Y normal) to match three.js's Y-up convention.
+    geo.rotateX(-Math.PI / 2);
+    await this.#dtm.writeY(geo);
     geo.computeBoundingSphere();
     geo.computeVertexNormals();
     const map = new three.CanvasTexture(this.#doms.texture);
