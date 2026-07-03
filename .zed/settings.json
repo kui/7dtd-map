@@ -47,6 +47,30 @@
         "!eslint"
       ],
       "formatter": "language_server"
+    },
+    "HTML": {
+      "formatter": {
+        "external": {
+          "command": "deno",
+          "arguments": ["fmt", "--ext", "html", "-"]
+        }
+      }
+    },
+    "CSS": {
+      "formatter": {
+        "external": {
+          "command": "deno",
+          "arguments": ["fmt", "--ext", "css", "-"]
+        }
+      }
+    },
+    "YAML": {
+      "formatter": {
+        "external": {
+          "command": "deno",
+          "arguments": ["fmt", "--ext", "yaml", "-"]
+        }
+      }
     }
   }
 }
