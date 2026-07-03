@@ -45,6 +45,17 @@ dialog::backdrop {
   }
 }
 
+/* Containing the nested <ul> is load bearing: a matched prefab can carry
+   thousands of block <li>, which otherwise force layout even off-screen. */
+#prefabs-list > li {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1.5em;
+}
+#prefabs-list > li > ul {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1.5em;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

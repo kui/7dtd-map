@@ -6,7 +6,6 @@ import type {
   PrefabDifficulties,
 } from "./types/7dtdmap.ts";
 
-import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import * as events from "./lib/events.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import {
@@ -73,13 +72,14 @@ function main() {
   );
 
   const status = component("prefabs-status");
-  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
-    component("prefabs-list"),
-    (p) => prefabLi(p),
-  );
-  prefabsHandler.addListener(({ status: text, prefabs }) => {
-    status.textContent = text;
-    prefabListRenderer.iterator = prefabs;
+  const prefabsList = component("prefabs-list");
+  prefabsHandler.addListener((m) => {
+    if (m.type === "header") {
+      status.textContent = m.status;
+      prefabsList.replaceChildren();
+    } else {
+      for (const p of m.prefabs) prefabsList.appendChild(prefabLi(p));
+    }
   });
 
   installPrefabLinkTooltip({
@@ -132,6 +132,15 @@ function prefabLi(prefab: HighlightedPrefab) {
       ].join(" ");
       blocksUl.appendChild(blockLi);
     });
+    if (
+      prefab.matchedBlockTypeCount !== undefined &&
+      prefab.matchedBlocks.length < prefab.matchedBlockTypeCount
+    ) {
+      const moreLi = document.createElement("li");
+      const more = prefab.matchedBlockTypeCount - prefab.matchedBlocks.length;
+      moreLi.textContent = `… and ${more.toString()} more block types`;
+      blocksUl.appendChild(moreLi);
+    }
     li.appendChild(blocksUl);
   }
   return li;

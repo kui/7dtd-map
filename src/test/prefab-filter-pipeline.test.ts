@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-non-null-assertion
 import type {
   BlockPrefabCounts,
   HighlightedPrefab,
@@ -7,7 +6,11 @@ import type {
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "../types/7dtdmap.ts";
-import { PrefabFilter } from "../worker/lib/prefab-filter.ts";
+import {
+  CHUNK_SIZE,
+  MATCHED_BLOCKS_LIMIT,
+  PrefabFilter,
+} from "../worker/lib/prefab-filter.ts";
 import { expect } from "@std/expect";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 import { stub } from "@std/testing/mock";
@@ -54,7 +57,11 @@ function build(
   );
 }
 
-type Update = { prefabs: HighlightedPrefab[]; status: string };
+interface Captured {
+  prefabs: HighlightedPrefab[];
+  status: string;
+  total: number;
+}
 
 const fetchStubs: { restore: () => void }[] = [];
 
@@ -85,12 +92,27 @@ describe("PrefabFilter", () => {
     "skyscraper_01": 5,
   };
 
-  function capture(f: PrefabFilter): { current: Update | null } {
-    const slot: { current: Update | null } = { current: null };
+  function capture(f: PrefabFilter): Captured {
+    const slot: Captured = { prefabs: [], status: "", total: 0 };
     f.addListener((m) => {
-      slot.current = m;
+      if (m.type === "header") {
+        slot.status = m.status;
+        slot.total = m.total;
+        slot.prefabs = [];
+      } else {
+        slot.prefabs.push(...m.prefabs);
+      }
     });
     return slot;
+  }
+
+  // Chunks stream in on detached macrotasks after the header resolves
+  // updateImmediately, so wait until the whole run has been received.
+  async function settle(f: PrefabFilter, slot: Captured): Promise<void> {
+    await f.updateImmediately();
+    while (slot.prefabs.length < slot.total) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
   }
 
   it("excludes prefabs that match preExcludes patterns", async () => {
@@ -98,11 +120,11 @@ describe("PrefabFilter", () => {
     f.all = prefabs;
     f.preExcludes = ["^aaa_"];
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).not.toContain(
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).not.toContain(
       "aaa_test_01",
     );
-    expect(slot.current!.prefabs.length).toBe(3);
+    expect(slot.prefabs.length).toBe(3);
   });
 
   it("filters by difficulty range", async () => {
@@ -111,8 +133,8 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.difficulty = { start: 2, end: 4 };
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["trader_01"]);
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toEqual(["trader_01"]);
   });
 
   it("computes distance when markCoords is set", async () => {
@@ -121,11 +143,11 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.markCoords = { type: "game", x: 0, z: 0 };
     const slot = capture(f);
-    await f.updateImmediately();
-    const first = slot.current!.prefabs[0];
+    await settle(f, slot);
+    const first = slot.prefabs[0];
     expect(first.name).toBe("aaa_test_01");
     expect(
-      slot.current!.prefabs.every((p) =>
+      slot.prefabs.every((p) =>
         p.distance !== null && p.distance !== undefined
       ),
     ).toBe(true);
@@ -136,8 +158,8 @@ describe("PrefabFilter", () => {
     f.all = prefabs;
     f.preExcludes = [];
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe(
+    await settle(f, slot);
+    expect(slot.status).toBe(
       `All ${prefabs.length.toString()} prefabs`,
     );
   });
@@ -148,8 +170,8 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.onlyNew = true;
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["house_01"]);
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toEqual(["house_01"]);
   });
 
   it("status does not report 'All N prefabs' when onlyNew is set", async () => {
@@ -158,8 +180,8 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.onlyNew = true;
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe("1 prefabs matched");
+    await settle(f, slot);
+    expect(slot.status).toBe("1 prefabs matched");
   });
 
   it("reports invalid prefab name pattern without throwing", async () => {
@@ -168,9 +190,9 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.prefabFilterRegexp = "(unbalanced";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe("Invalid prefab name pattern");
-    expect(slot.current!.prefabs).toEqual([]);
+    await settle(f, slot);
+    expect(slot.status).toBe("Invalid prefab name pattern");
+    expect(slot.prefabs).toEqual([]);
   });
 
   it("reports invalid block name pattern without throwing", async () => {
@@ -179,9 +201,9 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.blockFilterRegexp = "[unbalanced";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe("Invalid block name pattern");
-    expect(slot.current!.prefabs).toEqual([]);
+    await settle(f, slot);
+    expect(slot.status).toBe("Invalid block name pattern");
+    expect(slot.prefabs).toEqual([]);
   });
 
   it("reports both invalid patterns together", async () => {
@@ -191,11 +213,11 @@ describe("PrefabFilter", () => {
     f.prefabFilterRegexp = "(unbalanced";
     f.blockFilterRegexp = "[unbalanced";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe(
+    await settle(f, slot);
+    expect(slot.status).toBe(
       "Invalid prefab name and block name patterns",
     );
-    expect(slot.current!.prefabs).toEqual([]);
+    expect(slot.prefabs).toEqual([]);
   });
 
   it("recovers when invalid prefab pattern is corrected", async () => {
@@ -204,13 +226,13 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.prefabFilterRegexp = "(unbalanced";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toBe("Invalid prefab name pattern");
+    await settle(f, slot);
+    expect(slot.status).toBe("Invalid prefab name pattern");
 
     f.prefabFilterRegexp = "house";
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toContain("house_01");
-    expect(slot.current!.status).not.toContain("Invalid");
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
+    expect(slot.status).not.toContain("Invalid");
   });
 
   it("skips invalid preExcludes patterns without throwing", async () => {
@@ -218,8 +240,8 @@ describe("PrefabFilter", () => {
     f.all = prefabs;
     f.preExcludes = ["(unbalanced", "^aaa_"];
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).not.toContain(
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).not.toContain(
       "aaa_test_01",
     );
   });
@@ -230,8 +252,8 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.prefabFilterRegexp = "house";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toContain("house_01");
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
 
     // Replace stub to also serve japanese labels.
     while (fetchStubs.length) fetchStubs.pop()?.restore();
@@ -246,8 +268,8 @@ describe("PrefabFilter", () => {
       }),
     );
     f.language = "japanese";
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toContain("house_01");
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
   });
 
   it("filters by block name", async () => {
@@ -256,9 +278,9 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     f.blockFilterRegexp = "stone";
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.prefabs.map((p) => p.name)).toEqual(["house_01"]);
-    expect(slot.current!.prefabs[0].matchedBlockCount).toBe(5);
+    await settle(f, slot);
+    expect(slot.prefabs.map((p) => p.name)).toEqual(["house_01"]);
+    expect(slot.prefabs[0].matchedBlockCount).toBe(5);
   });
 
   it("filters out prefabs below minMatchedBlockCount", async () => {
@@ -271,8 +293,8 @@ describe("PrefabFilter", () => {
     f.blockFilterRegexp = "crate|barrel";
     f.minMatchedBlockCount = 6;
     const slot = capture(f);
-    await f.updateImmediately();
-    const names = slot.current!.prefabs.map((p) => p.name);
+    await settle(f, slot);
+    const names = slot.prefabs.map((p) => p.name);
     expect(names).toContain("house_01"); // 5 + 2 = 7
     expect(names).toContain("skyscraper_01"); // 10
     expect(names).not.toContain("trader_01"); // 3 < 6
@@ -285,8 +307,8 @@ describe("PrefabFilter", () => {
     f.blockFilterRegexp = "stone";
     f.minMatchedBlockCount = 2;
     const slot = capture(f);
-    await f.updateImmediately();
-    expect(slot.current!.status).toContain("at least 2 blocks");
+    await settle(f, slot);
+    expect(slot.status).toContain("at least 2 blocks");
   });
 
   it("allows all matched prefabs when minMatchedBlockCount is 0", async () => {
@@ -296,8 +318,8 @@ describe("PrefabFilter", () => {
     f.blockFilterRegexp = "stone";
     f.minMatchedBlockCount = 0;
     const slot = capture(f);
-    await f.updateImmediately();
-    const names = slot.current!.prefabs.map((p) => p.name);
+    await settle(f, slot);
+    const names = slot.prefabs.map((p) => p.name);
     expect(names).toContain("house_01");
     expect(names).toContain("trader_01");
   });
@@ -309,9 +331,90 @@ describe("PrefabFilter", () => {
     f.blockFilterRegexp = "stone";
     f.minMatchedBlockCount = -1;
     const slot = capture(f);
-    await f.updateImmediately();
-    const names = slot.current!.prefabs.map((p) => p.name);
+    await settle(f, slot);
+    const names = slot.prefabs.map((p) => p.name);
     expect(names).toContain("house_01");
     expect(names).toContain("trader_01");
+  });
+
+  it("caps matchedBlocks while keeping the true count and type total", async () => {
+    const typeCount = MATCHED_BLOCKS_LIMIT + 5;
+    const blockCounts: BlockPrefabCounts = {};
+    for (let i = 0; i < typeCount; i++) {
+      const name = `block_${i.toString().padStart(2, "0")}`;
+      blockCounts[name] = { house_01: i + 1 };
+    }
+    const f = build(blockCounts);
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "block_";
+    const slot = capture(f);
+    await settle(f, slot);
+
+    const house = slot.prefabs.find((p) => p.name === "house_01");
+    expect(house).toBeDefined();
+    const blocks = house?.matchedBlocks ?? [];
+    expect(blocks.length).toBe(MATCHED_BLOCKS_LIMIT);
+    expect(house?.matchedBlockTypeCount).toBe(typeCount);
+    // matchedBlockCount sums every matched type, not just the transmitted ones.
+    const fullSum = Array.from({ length: typeCount }, (_, i) => i + 1)
+      .reduce((a, b) => a + b, 0);
+    expect(house?.matchedBlockCount).toBe(fullSum);
+    // Transmitted blocks are the highest counts, in descending order.
+    const counts = blocks.map((b) => b.count ?? 0);
+    expect(counts).toEqual([...counts].sort((a, b) => b - a));
+    expect(counts[0]).toBe(typeCount);
+  });
+
+  it("breaks matchedBlocks count ties by name ascending", async () => {
+    const typeCount = MATCHED_BLOCKS_LIMIT + 5;
+    const blockCounts: BlockPrefabCounts = {};
+    for (let i = 0; i < typeCount; i++) {
+      const name = `block_${i.toString().padStart(2, "0")}`;
+      blockCounts[name] = { house_01: 7 };
+    }
+    const f = build(blockCounts);
+    f.all = prefabs;
+    f.preExcludes = [];
+    f.blockFilterRegexp = "block_";
+    const slot = capture(f);
+    await settle(f, slot);
+
+    const house = slot.prefabs.find((p) => p.name === "house_01");
+    const names = (house?.matchedBlocks ?? []).map((b) => b.name);
+    const expected = Array.from(
+      { length: MATCHED_BLOCKS_LIMIT },
+      (_, i) => `block_${i.toString().padStart(2, "0")}`,
+    );
+    expect(names).toEqual(expected);
+  });
+
+  it("stops streaming chunks when input changes mid-stream", async () => {
+    // More than one chunk so there is a remainder to abort. No filters, so
+    // every prefab matches and the result exceeds CHUNK_SIZE.
+    const many: Prefab[] = Array.from({ length: CHUNK_SIZE * 3 }, (_, i) => ({
+      name: `prefab_${i.toString().padStart(3, "0")}`,
+      x: 0,
+      z: 0,
+    }));
+    const f = build();
+    f.all = many;
+    f.preExcludes = [];
+    const slot = capture(f);
+
+    // The header plus the first chunk are delivered synchronously as the
+    // stream is detached; the rest wait on macrotask yields.
+    await f.updateImmediately();
+    expect(slot.total).toBe(many.length);
+    expect(slot.prefabs.length).toBe(CHUNK_SIZE);
+
+    // Simulate a new keystroke arriving before the remaining chunks stream.
+    f.bumpInputVersion();
+
+    // Let the detached stream run its next iteration; it must abort at the
+    // pre-post check instead of delivering the remaining chunks.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(slot.prefabs.length).toBe(CHUNK_SIZE);
   });
 });

@@ -10,17 +10,16 @@ import type {
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
+import type { PrefabsFilterOutputMessage } from "../types.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { LabelHolder, Language } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
-import { escapeHtml } from "../../lib/utils.ts";
+import { escapeHtml, printError, sleep } from "../../lib/utils.ts";
 import { latestAddedVersion } from "../../lib/prefab-added-versions.ts";
 
-export interface EventMessage {
-  prefabs: HighlightedPrefab[];
-  status: string;
-}
+export const CHUNK_SIZE = 50;
+export const MATCHED_BLOCKS_LIMIT = 20;
 
 export class PrefabFilter {
   #labelHolder: LabelHolder;
@@ -32,7 +31,8 @@ export class PrefabFilter {
   #preFiltereds: Prefab[] = [];
   #filtered: HighlightedPrefab[] = [];
   #status = "";
-  #listeners = new events.ListenerManager<EventMessage>();
+  #listeners = new events.ListenerManager<PrefabsFilterOutputMessage>();
+  #inputVersion = 0;
   #preExcluds: RegExp[] = [];
   #prefabFilterInvalid = false;
   #blockFilterInvalid = false;
@@ -82,6 +82,10 @@ export class PrefabFilter {
     });
   }
 
+  bumpInputVersion(): void {
+    this.#inputVersion++;
+  }
+
   update = throttledInvoker(() => this.updateImmediately());
   async updateImmediately(): Promise<void> {
     await this.#applyFilter();
@@ -89,9 +93,31 @@ export class PrefabFilter {
     await this.#updateDistance();
     this.#sort();
     await this.#listeners.dispatch({
+      type: "header",
       status: this.#status,
-      prefabs: this.#filtered,
+      total: this.#filtered.length,
     });
+    // Detached so a newer run can start (and cancel this one) before the
+    // stream finishes; throttledInvoker awaits the returned promise.
+    void this.#streamChunks(this.#filtered);
+  }
+
+  async #streamChunks(prefabs: HighlightedPrefab[]): Promise<void> {
+    const inputVersion = this.#inputVersion;
+    try {
+      for (let i = 0; i < prefabs.length; i += CHUNK_SIZE) {
+        // Must precede the post: guarantees a stale stream never delivers a
+        // chunk after newer input has arrived.
+        if (inputVersion !== this.#inputVersion) return;
+        await this.#listeners.dispatch({
+          type: "chunk",
+          prefabs: prefabs.slice(i, i + CHUNK_SIZE),
+        });
+        await sleep(10);
+      }
+    } catch (e) {
+      printError(e);
+    }
   }
 
   #updateStatus() {
@@ -126,7 +152,7 @@ export class PrefabFilter {
     }
   }
 
-  addListener(fn: (m: EventMessage) => unknown) {
+  addListener(fn: (m: PrefabsFilterOutputMessage) => unknown) {
     this.#listeners.addListener(fn);
   }
 
@@ -243,14 +269,24 @@ export class PrefabFilter {
       pattern,
     );
     return prefabs.flatMap((prefab) => {
-      const matchedBlocks = matchedPrefabNames[prefab.name];
-      if (!matchedBlocks) return [];
-      const matchedBlockCount = matchedBlocks.reduce(
+      const allMatchedBlocks = matchedPrefabNames[prefab.name];
+      if (!allMatchedBlocks) return [];
+      // Count and threshold use the full set so the reported totals stay true;
+      // only the transmitted list is capped for serialize/DOM cost.
+      const matchedBlockCount = allMatchedBlocks.reduce(
         (acc, b) => acc + (b.count ?? 0),
         0,
       );
       if (matchedBlockCount < this.minMatchedBlockCount) return [];
-      return { ...prefab, matchedBlocks, matchedBlockCount };
+      const matchedBlocks = allMatchedBlocks
+        .toSorted(matchedBlockSorter)
+        .slice(0, MATCHED_BLOCKS_LIMIT);
+      return {
+        ...prefab,
+        matchedBlocks,
+        matchedBlockCount,
+        matchedBlockTypeCount: allMatchedBlocks.length,
+      };
     });
   }
 
@@ -271,13 +307,12 @@ export class PrefabFilter {
       if (highlightedName === null && highlightedLabel === null) continue;
       for (const [prefabName, count] of Object.entries(prefabs)) {
         if (!prefabNames.has(prefabName)) continue;
-        matchedPrefabNames[prefabName] = (matchedPrefabNames[prefabName] ?? [])
-          .concat({
-            name: blockName,
-            highlightedName: highlightedName ?? blockName,
-            highlightedLabel: highlightedLabel ?? label,
-            count,
-          });
+        (matchedPrefabNames[prefabName] ??= []).push({
+          name: blockName,
+          highlightedName: highlightedName ?? blockName,
+          highlightedLabel: highlightedLabel ?? label,
+          count,
+        });
       }
     }
     return matchedPrefabNames;
@@ -336,6 +371,13 @@ function blockCountSorter(a: HighlightedPrefab, b: HighlightedPrefab) {
   const aCount = a.matchedBlockCount ?? 0;
   const bCount = b.matchedBlockCount ?? 0;
   if (aCount === bCount) return nameSorter(a, b);
+  return bCount - aCount;
+}
+
+function matchedBlockSorter(a: HighlightedBlock, b: HighlightedBlock) {
+  const aCount = a.count ?? 0;
+  const bCount = b.count ?? 0;
+  if (aCount === bCount) return a.name.localeCompare(b.name);
   return bCount - aCount;
 }
 

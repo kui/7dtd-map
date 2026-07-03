@@ -43,6 +43,9 @@ export interface HighlightedPrefab extends Prefab {
   highlightedLabel?: string;
   matchedBlocks?: HighlightedBlock[];
   matchedBlockCount?: number;
+  // Number of matched block types before matchedBlocks was capped for display;
+  // larger than matchedBlocks.length when the list was truncated.
+  matchedBlockTypeCount?: number;
   distance?: [Direction | null, number] | null;
 }
 

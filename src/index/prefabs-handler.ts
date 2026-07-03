@@ -18,7 +18,12 @@ import {
   readPreExcludes,
 } from "../lib/prefabs-filter-controls.ts";
 
-interface FilteredPrefabsEventMessage {
+interface FilterHeaderEventMessage {
+  status: string;
+  total: number;
+}
+
+interface FilterChunkEventMessage {
   prefabs: HighlightedPrefab[];
 }
 
@@ -35,8 +40,11 @@ interface Doms extends PrefabsFilterControlsDoms {
 }
 
 export class PrefabsHandler {
-  #filteredPrefabsListeners = new events.ListenerManager<
-    FilteredPrefabsEventMessage
+  #filterHeaderListeners = new events.ListenerManager<
+    FilterHeaderEventMessage
+  >();
+  #filterChunkListeners = new events.ListenerManager<
+    FilterChunkEventMessage
   >();
   #allPrefabsListeners = new events.ListenerManager<AllPrefabsEventMessage>();
   #hitIndexListeners = new events.ListenerManager<PrefabHitIndexEventMessage>();
@@ -52,9 +60,16 @@ export class PrefabsHandler {
     worker.addEventListener(
       "message",
       (event: MessageEvent<PrefabsFilterOutputMessage>) => {
-        const { prefabs, status } = event.data;
-        doms.status.textContent = status;
-        this.#filteredPrefabsListeners.dispatchNoAwait({ prefabs });
+        const data = event.data;
+        if (data.type === "header") {
+          doms.status.textContent = data.status;
+          this.#filterHeaderListeners.dispatchNoAwait({
+            status: data.status,
+            total: data.total,
+          });
+        } else {
+          this.#filterChunkListeners.dispatchNoAwait({ prefabs: data.prefabs });
+        }
       },
     );
 
@@ -82,11 +97,13 @@ export class PrefabsHandler {
     });
   }
 
-  // Filter pipeline output: emitted whenever the user-facing filter
-  // (search box, difficulty range, …) re-evaluates, carrying the highlighted
-  // subset that should appear in the prefab list and as ✘ map markers.
-  addFilteredPrefabsListener(fn: (m: FilteredPrefabsEventMessage) => unknown) {
-    this.#filteredPrefabsListeners.addListener(fn);
+  // Fires once per run before the chunks; consumers clear accumulated state.
+  addFilterHeaderListener(fn: (m: FilterHeaderEventMessage) => unknown) {
+    this.#filterHeaderListeners.addListener(fn);
+  }
+
+  addFilterChunkListener(fn: (m: FilterChunkEventMessage) => unknown) {
+    this.#filterChunkListeners.addListener(fn);
   }
 
   // Raw load output: emitted once per prefabs.xml load with the full,
