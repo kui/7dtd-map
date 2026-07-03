@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<MapInfo>
-  <property name="Name"		value="::PREGEN6k::"/>
-  <property name="HeightMapSize" value="6144,6144" />
-  <property name="Modes" value="Survival,SurvivalSP,SurvivalMP,Creative" />
-  
-  <property name="GameVersion" value="Alpha.21.0.302" />
-  
-</MapInfo>
