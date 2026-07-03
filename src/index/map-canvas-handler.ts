@@ -2,6 +2,7 @@ import type { MapRendererInputMessage } from "../worker/types.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
+import type { Prefab } from "../types/7dtdmap.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
@@ -94,8 +95,21 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
-    prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
-      worker.postMessage({ filteredPrefabs: prefabs });
+    const filteredPrefabs: Prefab[] = [];
+    prefabsHandler.addFilterHeaderListener(() => {
+      filteredPrefabs.length = 0;
+      worker.postMessage({ filteredPrefabs });
+    });
+    prefabsHandler.addFilterChunkListener(({ prefabs }) => {
+      for (const p of prefabs) {
+        filteredPrefabs.push({
+          name: p.name,
+          x: p.x,
+          z: p.z,
+          rotation: p.rotation,
+        });
+      }
+      worker.postMessage({ filteredPrefabs });
     });
     prefabsHandler.addAllPrefabsListener(({ all }) => {
       worker.postMessage({ allPrefabs: all });

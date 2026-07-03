@@ -25,7 +25,6 @@ import { latestAddedVersion } from "./lib/prefab-added-versions.ts";
 import { DialogHandler } from "./index/dialog-handler.ts";
 import { DtmHandler } from "./index/dtm-handler.ts";
 import { PrefabsHandler } from "./index/prefabs-handler.ts";
-import { DelayedRenderer } from "./lib/delayed-renderer.ts";
 import { CursorHandler } from "./index/cursor-handler.ts";
 import { PrefabHighlightHandler } from "./index/prefab-highlight-handler.ts";
 import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
@@ -199,12 +198,12 @@ function main() {
     },
     dtmHandler,
   );
-  const prefabListRenderer = new DelayedRenderer<HighlightedPrefab>(
-    component("prefabs-list", HTMLElement),
-    (p) => prefabLi(p),
-  );
-  prefabsHandler.addFilteredPrefabsListener(({ prefabs }) => {
-    prefabListRenderer.iterator = prefabs;
+  const prefabsList = component("prefabs-list", HTMLElement);
+  prefabsHandler.addFilterHeaderListener(() => {
+    prefabsList.replaceChildren();
+  });
+  prefabsHandler.addFilterChunkListener(({ prefabs }) => {
+    for (const p of prefabs) prefabsList.appendChild(prefabLi(p));
   });
   new PrefabHighlightHandler(
     {
@@ -291,8 +290,6 @@ function main() {
     image: component("prefab-link-tooltip-image", HTMLImageElement),
   });
 
-  //
-
   fileHandler.initialize().catch(printError);
 }
 
@@ -342,6 +339,15 @@ function prefabLi(prefab: HighlightedPrefab) {
       ].join(" ");
       blocksUl.appendChild(blockLi);
     });
+    if (
+      prefab.matchedBlockTypeCount !== undefined &&
+      prefab.matchedBlocks.length < prefab.matchedBlockTypeCount
+    ) {
+      const moreLi = document.createElement("li");
+      const more = prefab.matchedBlockTypeCount - prefab.matchedBlocks.length;
+      moreLi.textContent = `… and ${more.toString()} more block types`;
+      blocksUl.appendChild(moreLi);
+    }
     li.appendChild(blocksUl);
   }
   return li;

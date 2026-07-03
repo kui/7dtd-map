@@ -3,7 +3,6 @@ import type {
   GameCoords,
   GameMapSize,
   GlyphMarker,
-  HighlightedPrefab,
   Prefab,
   PrefabDensityScores,
   PrefabMeshSizes,
@@ -33,9 +32,7 @@ export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
-  // Filtered subset emitted by the prefabs-filter worker — drives the ✘
-  // sign overlay and reflects the user's active search/difficulty filter.
-  filteredPrefabs: HighlightedPrefab[] = [];
+  filteredPrefabs: Prefab[] = [];
   // Full decoration list straight from prefabs.xml — drives the footprint
   // overlay and tile-district lookup regardless of the filter state.
   allPrefabs: Prefab[] = [];

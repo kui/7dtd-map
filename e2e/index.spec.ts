@@ -177,6 +177,91 @@ test.describe("index.html", () => {
     ).toBe(0);
   });
 
+  test("block filter input stays responsive (freeze regression)", async ({ page }) => {
+    test.setTimeout(60_000);
+
+    // Collect long tasks with their start times so we can look only at the
+    // window around typing, ignoring long tasks from the initial map load.
+    await page.addInitScript(() => {
+      const w = globalThis as unknown as {
+        __longtasks?: { start: number; duration: number }[];
+      };
+      w.__longtasks = [];
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries()) {
+          w.__longtasks?.push({ start: e.startTime, duration: e.duration });
+        }
+      }).observe({ type: "longtask", buffered: true });
+    });
+
+    await page.goto("/index.html");
+    await expect
+      .poll(async () =>
+        await page.locator("#bundled-map-select option").count()
+      )
+      .toBeGreaterThan(1);
+
+    await page.evaluate(() => {
+      const w = globalThis as unknown as {
+        __dialogWasOpen?: boolean;
+        __dialogClosed?: boolean;
+      };
+      w.__dialogWasOpen = false;
+      w.__dialogClosed = false;
+      const dialog = document.getElementById("dialog") as HTMLDialogElement;
+      new MutationObserver(() => {
+        if (dialog.open) w.__dialogWasOpen = true;
+        else if (w.__dialogWasOpen) w.__dialogClosed = true;
+      }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
+    });
+    await page.selectOption("#bundled-map-select", "Navezgane");
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(() =>
+            (globalThis as unknown as { __dialogClosed?: boolean })
+              .__dialogClosed ?? false
+          ),
+        { timeout: 40_000 },
+      )
+      .toBe(true);
+    await expect
+      .poll(async () => await page.locator("#prefabs-list li").count(), {
+        timeout: 20_000,
+      })
+      .toBeGreaterThan(0);
+
+    const typingStart = await page.evaluate(() => performance.now());
+    for (const ch of "stump") {
+      await page.locator("#block-filter").press(ch);
+      await page.waitForTimeout(230);
+    }
+    await page.waitForTimeout(2500);
+
+    const durations = await page.evaluate((start) => {
+      const w = globalThis as unknown as {
+        __longtasks?: { start: number; duration: number }[];
+      };
+      return (w.__longtasks ?? [])
+        .filter((t) => t.start >= start)
+        .map((t) => t.duration);
+    }, typingStart);
+    const maxSingle = durations.length ? Math.max(...durations) : 0;
+    const total = durations.reduce((a, b) => a + b, 0);
+    // Thresholds are loose vs the pre-fix baseline (single 1,864ms / total
+    // 5,100ms) to tolerate CI speed variance; prefer retries over loosening.
+    expect(maxSingle).toBeLessThan(500);
+    expect(total).toBeLessThan(1500);
+
+    await expect(page.locator("#block-filter")).toHaveValue("stump");
+    await expect
+      .poll(async () => await page.locator("#prefabs-list > li").count())
+      .toBeGreaterThan(0);
+    await expect(
+      page.locator("#prefabs-list li", { hasText: "treeStumpPOI" }).first(),
+    ).toBeAttached();
+  });
+
   test("terrain viewer dialog is wired up with a11y attributes", async ({ page }) => {
     await page.goto("/index.html");
     const dialog = page.locator("#terrain-viewer-dialog");

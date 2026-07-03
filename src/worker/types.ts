@@ -1,6 +1,8 @@
 import type * as mapFiles from "../../lib/map-files.ts";
 import type MapRendererClass from "./lib/map-renderer.ts";
-import type { EventMessage, PrefabFilter } from "./lib/prefab-filter.ts";
+import type { PrefabFilter } from "./lib/prefab-filter.ts";
+
+export type { PrefabsFilterOutputMessage } from "./lib/prefab-filter.ts";
 
 export type DtmOutputMessage = null | Uint8Array;
 
@@ -47,5 +49,3 @@ export type PrefabsFilterInputMessage = Partial<
     | "onlyNew"
   >
 >;
-
-export type PrefabsFilterOutputMessage = EventMessage;
