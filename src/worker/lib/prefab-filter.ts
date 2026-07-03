@@ -95,14 +95,11 @@ export class PrefabFilter {
   async updateImmediately(): Promise<void> {
     const inputVersion = this.#inputVersion;
     await this.#applyFilter();
+    if (inputVersion !== this.#inputVersion) return;
     this.#updateStatus();
     await this.#updateDistance();
-    this.#sort();
-    // The awaits above are the only points a newer input message can be
-    // processed (cached holders resolve on microtasks, which cannot interleave
-    // a message), so one check right before the header suffices. A newer run is
-    // already queued in throttledInvoker, so dropping this run loses nothing.
     if (inputVersion !== this.#inputVersion) return;
+    this.#sort();
     await this.#listeners.dispatch({
       type: "header",
       status: this.#status,
