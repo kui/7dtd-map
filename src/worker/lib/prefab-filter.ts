@@ -93,10 +93,16 @@ export class PrefabFilter {
 
   update = throttledInvoker(() => this.updateImmediately());
   async updateImmediately(): Promise<void> {
+    const inputVersion = this.#inputVersion;
     await this.#applyFilter();
     this.#updateStatus();
     await this.#updateDistance();
     this.#sort();
+    // The awaits above are the only points a newer input message can be
+    // processed (cached holders resolve on microtasks, which cannot interleave
+    // a message), so one check right before the header suffices. A newer run is
+    // already queued in throttledInvoker, so dropping this run loses nothing.
+    if (inputVersion !== this.#inputVersion) return;
     await this.#listeners.dispatch({
       type: "header",
       status: this.#status,
@@ -104,11 +110,13 @@ export class PrefabFilter {
     });
     // Detached so a newer run can start (and cancel this one) before the
     // stream finishes; throttledInvoker awaits the returned promise.
-    void this.#streamChunks(this.#filtered);
+    void this.#streamChunks(inputVersion, this.#filtered);
   }
 
-  async #streamChunks(prefabs: HighlightedPrefab[]): Promise<void> {
-    const inputVersion = this.#inputVersion;
+  async #streamChunks(
+    inputVersion: number,
+    prefabs: HighlightedPrefab[],
+  ): Promise<void> {
     try {
       for (let i = 0; i < prefabs.length; i += CHUNK_SIZE) {
         // Must precede the post: guarantees a stale stream never delivers a

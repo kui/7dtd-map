@@ -61,6 +61,7 @@ interface Captured {
   prefabs: HighlightedPrefab[];
   status: string;
   total: number;
+  headers: number;
 }
 
 const fetchStubs: { restore: () => void }[] = [];
@@ -93,9 +94,10 @@ describe("PrefabFilter", () => {
   };
 
   function capture(f: PrefabFilter): Captured {
-    const slot: Captured = { prefabs: [], status: "", total: 0 };
+    const slot: Captured = { prefabs: [], status: "", total: 0, headers: 0 };
     f.addListener((m) => {
       if (m.type === "header") {
+        slot.headers++;
         slot.status = m.status;
         slot.total = m.total;
         slot.prefabs = [];
@@ -416,5 +418,21 @@ describe("PrefabFilter", () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(slot.prefabs.length).toBe(CHUNK_SIZE);
+  });
+
+  it("does not dispatch a header for a superseded run", async () => {
+    const f = build();
+    f.all = prefabs;
+    f.preExcludes = [];
+    const slot = capture(f);
+
+    // Start the run, then bump the input version before its awaits resolve so
+    // the pre-header staleness check trips and nothing is dispatched.
+    const pending = f.updateImmediately();
+    f.bumpInputVersion();
+    await pending;
+
+    expect(slot.headers).toBe(0);
+    expect(slot.prefabs.length).toBe(0);
   });
 });
