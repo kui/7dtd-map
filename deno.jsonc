@@ -245,11 +245,6 @@
     "@std/testing/time": "jsr:@std/testing@^1.0.19/time",
     "@playwright/test": "npm:@playwright/test@^1.49.0",
   },
-  // Exclude `.claude` so `deno check` does not recurse into
-  // `.claude/worktrees/<wt>/src/...` and type-check those files as
-  // standalone. Such files fall outside the workspace members, so
-  // per-member compilerOptions (e.g. the worker `lib`) no longer apply
-  // and worker globals fail to resolve.
   "exclude": [
     "./playwright-report",
     "./test-results",
@@ -273,11 +268,12 @@
   "fmt": {
     "json.trailingCommas": "jsonc",
     "exclude": [
-      "./public/**/old",
-      "./public/**/maps",
+      "./public/old",
+      "./public/maps",
+      "./public/**/*.svg",
       "./public/**/*.js",
       "./public/**/*.json",
-      "./public/**/prefabs",
+      "./public/prefabs",
     ],
   },
 }
