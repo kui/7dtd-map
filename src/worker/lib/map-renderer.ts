@@ -32,7 +32,6 @@ export default class MapRenderer {
   brightness = "100%";
   markerCoords: GameCoords | null = null;
   scale = 0.1;
-  // Filtered subset from the prefabs-filter worker; drives the ✘ sign overlay.
   filteredPrefabs: Prefab[] = [];
   // Full decoration list straight from prefabs.xml — drives the footprint
   // overlay and tile-district lookup regardless of the filter state.

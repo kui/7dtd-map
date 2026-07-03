@@ -95,9 +95,6 @@ export class MapCanvasHandler {
     doms.scale.addEventListener("input", () => {
       worker.postMessage({ scale: doms.scale.valueAsNumber });
     });
-    // Re-sent on every chunk (and on the header's clear, so 0 hits transfer an
-    // empty array). Only name/x/z/rotation are read, so highlight fields are
-    // dropped.
     const filteredPrefabs: Prefab[] = [];
     prefabsHandler.addFilterHeaderListener(() => {
       filteredPrefabs.length = 0;

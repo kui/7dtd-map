@@ -97,7 +97,6 @@ export class PrefabsHandler {
     });
   }
 
-  // Fires once per run before the chunks; consumers clear accumulated state.
   addFilterHeaderListener(fn: (m: FilterHeaderEventMessage) => unknown) {
     this.#filterHeaderListeners.addListener(fn);
   }
