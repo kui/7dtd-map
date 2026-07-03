@@ -1,7 +1,8 @@
 import type * as mapFiles from "../../lib/map-files.ts";
 import type MapRendererClass from "./lib/map-renderer.ts";
 import type { PrefabFilter } from "./lib/prefab-filter.ts";
-import type { HighlightedPrefab } from "../types/7dtdmap.ts";
+
+export type { PrefabsFilterOutputMessage } from "./lib/prefab-filter.ts";
 
 export type DtmOutputMessage = null | Uint8Array;
 
@@ -48,9 +49,3 @@ export type PrefabsFilterInputMessage = Partial<
     | "onlyNew"
   >
 >;
-
-// One `header` per run followed by `chunk`s, so the main thread never
-// deserializes one huge result. Complete when received count == total.
-export type PrefabsFilterOutputMessage =
-  | { type: "header"; status: string; total: number }
-  | { type: "chunk"; prefabs: HighlightedPrefab[] };

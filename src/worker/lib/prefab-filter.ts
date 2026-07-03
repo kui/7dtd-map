@@ -10,13 +10,18 @@ import type {
   PrefabMeshSizes,
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
-import type { PrefabsFilterOutputMessage } from "../types.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
 import { LabelHolder, Language } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
 import { escapeHtml, printError, sleep } from "../../lib/utils.ts";
 import { latestAddedVersion } from "../../lib/prefab-added-versions.ts";
+
+// One `header` per run followed by `chunk`s, so the main thread never
+// deserializes one huge result. Complete when received count == total.
+export type PrefabsFilterOutputMessage =
+  | { type: "header"; status: string; total: number }
+  | { type: "chunk"; prefabs: HighlightedPrefab[] };
 
 export const CHUNK_SIZE = 50;
 export const MATCHED_BLOCKS_LIMIT = 20;
