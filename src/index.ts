@@ -290,8 +290,6 @@ function main() {
     image: component("prefab-link-tooltip-image", HTMLImageElement),
   });
 
-  //
-
   fileHandler.initialize().catch(printError);
 }
 

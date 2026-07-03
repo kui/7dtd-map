@@ -87,8 +87,6 @@ function main() {
     image: component("prefab-link-tooltip-image", HTMLImageElement),
   });
 
-  // init
-
   prefabsHandler.init().catch(printError);
 }
 

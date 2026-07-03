@@ -34,9 +34,8 @@ export class PrefabHighlightHandler {
     this.#dtmHandler = dtmHandler;
     this.#meshSizes = meshSizes;
 
-    // Delegated on the list so rows appended later by streamed chunks are
-    // covered. Nested block rows have no data-x, so closest() resolves them
-    // to their parent prefab row.
+    // Nested block rows have no data-x, so closest() resolves them to their
+    // parent prefab row.
     doms.list.addEventListener("mouseover", (event) => {
       const li = coordsLi(event.target);
       if (li === this.#hoveredLi) return;

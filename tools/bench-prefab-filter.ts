@@ -1,7 +1,6 @@
 // Phase-level CPU benchmark of the block-name matching pipeline in
 // src/worker/lib/prefab-filter.ts (#matchByBlockName equivalent), run directly
 // under Deno so no browser / dev server is needed.
-//   deno run --allow-read tools/bench-prefab-filter.ts
 import {
   matchAndHighlight,
   MATCHED_BLOCKS_LIMIT,
@@ -108,7 +107,6 @@ function runOnce(pattern: RegExp) {
     return r;
   };
 
-  // scan phase: mirrors #matchPrefabTypesByBlockName
   let t0 = performance.now();
   const matched: { [prefab: string]: HB[] } = {};
   for (const [blockName, prefabs] of invertedEntries) {
@@ -128,7 +126,6 @@ function runOnce(pattern: RegExp) {
   }
   t.scan = performance.now() - t0;
 
-  // join phase: mirrors the flatMap in #matchByBlockName
   t0 = performance.now();
   const result = allPrefabNames.flatMap((name) => {
     const matchedBlocks = matched[name];
@@ -141,7 +138,6 @@ function runOnce(pattern: RegExp) {
   });
   t.join = performance.now() - t0;
 
-  // sort phase: mirrors blockCountSorter
   t0 = performance.now();
   result.sort((a, b) =>
     b.matchedBlockCount - a.matchedBlockCount ||
@@ -149,9 +145,7 @@ function runOnce(pattern: RegExp) {
   );
   t.sort = performance.now() - t0;
 
-  // serialize cost proxies (structuredClone ~ postMessage serialization):
-  // full result, the first uncapped chunk, and the first chunk after the
-  // per-prefab matchedBlocks cap the worker now applies.
+  // structuredClone approximates the postMessage serialize cost.
   t0 = performance.now();
   structuredClone(result);
   t.cloneAll = performance.now() - t0;

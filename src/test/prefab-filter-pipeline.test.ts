@@ -362,7 +362,6 @@ describe("PrefabFilter", () => {
     const fullSum = Array.from({ length: typeCount }, (_, i) => i + 1)
       .reduce((a, b) => a + b, 0);
     expect(house?.matchedBlockCount).toBe(fullSum);
-    // Transmitted blocks are the highest counts, in descending order.
     const counts = blocks.map((b) => b.count ?? 0);
     expect(counts).toEqual([...counts].sort((a, b) => b - a));
     expect(counts[0]).toBe(typeCount);

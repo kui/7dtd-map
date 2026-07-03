@@ -231,13 +231,11 @@ test.describe("index.html", () => {
       })
       .toBeGreaterThan(0);
 
-    // Type "stump" one character at a time, as a user would.
     const typingStart = await page.evaluate(() => performance.now());
     for (const ch of "stump") {
       await page.locator("#block-filter").press(ch);
       await page.waitForTimeout(230);
     }
-    // Let the final filter run settle before reading long tasks.
     await page.waitForTimeout(2500);
 
     const durations = await page.evaluate((start) => {
