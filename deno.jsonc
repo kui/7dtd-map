@@ -230,7 +230,7 @@
     "fast-png": "npm:fast-png@^8.0.0",
     "three": "npm:three@~0.185.0",
     "@libs/xml": "jsr:@libs/xml@^7.0.4",
-    "csv-parse": "npm:csv-parse@^6.2.1",
+    "csv-parse": "npm:csv-parse@^7.0.1",
     "esbuild": "npm:esbuild@~0.28.0",
     "@web-alchemy/fonttools": "npm:@web-alchemy/fonttools@^1.4.0",
     "opentype.js": "npm:opentype.js@^2.0.0",

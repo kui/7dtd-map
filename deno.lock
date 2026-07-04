@@ -19,7 +19,7 @@
     "npm:@resvg/resvg-js@^2.6.2": "2.6.2",
     "npm:@types/three@0.185": "0.185.0",
     "npm:@web-alchemy/fonttools@^1.4.0": "1.4.0",
-    "npm:csv-parse@^6.2.1": "6.2.1",
+    "npm:csv-parse@^7.0.1": "7.0.1",
     "npm:esbuild@0.28": "0.28.1",
     "npm:esbuild@~0.25.5": "0.25.12",
     "npm:fast-png@8": "8.0.0",
@@ -467,8 +467,8 @@
       ],
       "bin": true
     },
-    "csv-parse@6.2.1": {
-      "integrity": "sha512-LRLMV+UCyfMokp8Wb411duBf1gaBKJfOfBWU9eHMJ+b+cJYZsNu3AFmjJf3+yPGd59Exz1TsMjaSFyxnYB9+IQ=="
+    "csv-parse@7.0.1": {
+      "integrity": "sha512-+2z7Ar0APQ7Uu6fX4cn+pitRmxjZ1WPBcGmZFKmA74FCyi7Et/XZx8cjNQ5CjbZ4HCOxXCOpRBYvYH08Qa003A=="
     },
     "esbuild@0.25.12": {
       "integrity": "sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==",
@@ -600,7 +600,7 @@
       "npm:@resvg/resvg-js@^2.6.2",
       "npm:@types/three@0.185",
       "npm:@web-alchemy/fonttools@^1.4.0",
-      "npm:csv-parse@^6.2.1",
+      "npm:csv-parse@^7.0.1",
       "npm:esbuild@0.28",
       "npm:fast-png@8",
       "npm:opentype.js@2",
