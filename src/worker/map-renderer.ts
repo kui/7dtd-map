@@ -20,15 +20,7 @@ const markMarkerReady: Promise<GlyphMarker> = fetchJson<GlyphMarker>(
   "../triangular-flag-path.json",
 );
 
-// Apply incoming field updates immediately and fire-and-forget the render.
-// throttledInvoker inside MapRenderer.update coalesces concurrent calls, so
-// awaiting it here would just queue onmessage handlers behind the throttle and
-// release them in bursts on every tick. Returning synchronously keeps the
-// worker's message queue drained and the main thread free of reply bursts.
-onmessage = async (
-  event: MessageEvent<MapRendererInputMessage>,
-) => {
-  const message = event.data;
+async function handleMessage(message: MapRendererInputMessage): Promise<void> {
   if (!map) {
     if (message.canvas) {
       map = new MapRenderer(
@@ -48,5 +40,14 @@ onmessage = async (
     delete message.canvas;
   }
   Object.assign(map, message);
+  // Not awaited: awaiting would serialize the queue below behind each
+  // throttled render instead of letting throttledInvoker coalesce them.
   map.update().catch(printError);
+}
+
+// Serialize handling so messages arriving while the MapRenderer construction
+// awaits the glyph fetches are queued instead of dropped.
+let queue: Promise<void> = Promise.resolve();
+onmessage = (event: MessageEvent<MapRendererInputMessage>) => {
+  queue = queue.then(() => handleMessage(event.data)).catch(printError);
 };
