@@ -5,19 +5,19 @@ export function throttledInvoker(
   intervalMs = 100,
 ): () => Promise<void> {
   const workerPromises: Promise<void>[] = [];
-  let lastInvokationAt = 0;
+  let lastCompletionAt = 0;
   return () => {
     switch (workerPromises.length) {
       case 0: {
         const p = (async () => {
           const now = Date.now();
-          if (now < lastInvokationAt + intervalMs) {
-            await sleep(lastInvokationAt + intervalMs - now);
+          if (now < lastCompletionAt + intervalMs) {
+            await sleep(lastCompletionAt + intervalMs - now);
           }
-          lastInvokationAt = Date.now();
           try {
             await asyncFunc();
           } finally {
+            lastCompletionAt = Date.now();
             void workerPromises.shift();
           }
         })();
@@ -29,10 +29,10 @@ export function throttledInvoker(
         const p = (async () => {
           await prev;
           await sleep(intervalMs);
-          lastInvokationAt = Date.now();
           try {
             await asyncFunc();
           } finally {
+            lastCompletionAt = Date.now();
             void workerPromises.shift();
           }
         })();
