@@ -4,48 +4,24 @@ export function throttledInvoker(
   asyncFunc: () => Promise<void> | void,
   intervalMs = 100,
 ): () => Promise<void> {
-  const workerPromises: Promise<void>[] = [];
+  let tail: Promise<void> = Promise.resolve();
+  let pendingCount = 0;
   let lastCompletionAt = 0;
+
   return () => {
-    switch (workerPromises.length) {
-      case 0: {
-        const p = (async () => {
-          const now = Date.now();
-          if (now < lastCompletionAt + intervalMs) {
-            await sleep(lastCompletionAt + intervalMs - now);
-          }
-          try {
-            await asyncFunc();
-          } finally {
-            lastCompletionAt = Date.now();
-            void workerPromises.shift();
-          }
-        })();
-        workerPromises.push(p);
-        return p;
+    if (pendingCount >= 2) return tail;
+    pendingCount++;
+    return (tail = tail.catch(() => {}).then(async () => {
+      const now = Date.now();
+      if (now < lastCompletionAt + intervalMs) {
+        await sleep(lastCompletionAt + intervalMs - now);
       }
-      case 1: {
-        const prev = workerPromises[0];
-        const p = (async () => {
-          await prev;
-          await sleep(intervalMs);
-          try {
-            await asyncFunc();
-          } finally {
-            lastCompletionAt = Date.now();
-            void workerPromises.shift();
-          }
-        })();
-        workerPromises.push(p);
-        return p;
+      try {
+        await asyncFunc();
+      } finally {
+        lastCompletionAt = Date.now();
+        pendingCount--;
       }
-      case 2:
-        // deno-lint-ignore no-non-null-assertion
-        return workerPromises[1]!;
-      default:
-        throw Error(
-          `Unexpected state: promiceses=${workerPromises.length.toString()}`,
-        );
-    }
+    }));
   };
 }
