@@ -16,9 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/configure-pages@v6
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
+      - uses: jdx/mise-action@v4
       - run: deno task build:ts
       - uses: actions/upload-pages-artifact@v5
         with:
