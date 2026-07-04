@@ -6,7 +6,7 @@ import { FakeTime } from "@std/testing/time";
 import { spy as fn } from "@std/testing/mock";
 
 describe("throttledInvoker", () => {
-  it("should call original function only twice even if 3 invokation in a short time", async () => {
+  it("coalesces calls arriving during execution into one trailing run", async () => {
     using time = new FakeTime(0);
     const mockFn = fn();
     const invoker = throttledInvoker(async () => {
@@ -30,40 +30,49 @@ describe("throttledInvoker", () => {
     await expect(third).resolves.toBeUndefined();
   });
 
-  it("should wait intervalMs from completion, not from start", async () => {
+  it("does not schedule an extra run for calls during the throttle wait", async () => {
+    using time = new FakeTime(0);
+    const mockFn = fn();
+    const invoker = throttledInvoker(() => {
+      mockFn();
+    }, 100);
+
+    invoker().catch(printError);
+    await time.tickAsync(0);
+    expect(mockFn.calls.length).toBe(1);
+
+    const second = invoker();
+    await time.tickAsync(50);
+    const third = invoker();
+    expect(third).toBe(second);
+
+    await time.tickAsync(200);
+    expect(mockFn.calls.length).toBe(2);
+    await expect(second).resolves.toBeUndefined();
+  });
+
+  it("waits intervalMs from completion of the previous run, not from its start", async () => {
     using time = new FakeTime(0);
     const events: string[] = [];
-
-    // asyncFunc takes 50ms; intervalMs=100
     const invoker = throttledInvoker(async () => {
       events.push(`start:${Date.now()}`);
       await sleep(50);
       events.push(`end:${Date.now()}`);
     }, 100);
 
-    // First call at t=0. Initial lastCompletionAt=0, so sleeps 100ms.
-    // asyncFunc runs t=100..150, completion recorded at t=150.
     invoker().catch(printError);
-    await time.tickAsync(100); // t=100: initial sleep resolves, asyncFunc starts
-    await time.tickAsync(50); // t=150: asyncFunc completes, lastCompletionAt=150
+    await time.tickAsync(50);
+    expect(events).toEqual(["start:0", "end:50"]);
 
-    expect(events).toEqual(["start:100", "end:150"]);
-
-    // Second call at t=150. lastCompletionAt=150, so needs to wait until t=250.
-    // With start-based logic (old), last start was t=100 so wait until t=200.
+    // Second call right after completion must wait until t=150 (end + 100),
+    // not t=100 (start + 100).
     invoker().catch(printError);
-    await time.tickAsync(100); // t=250: sleep resolves, second asyncFunc starts
-    await time.tickAsync(50); // t=300: second asyncFunc completes
-
-    expect(events).toEqual([
-      "start:100",
-      "end:150",
-      "start:250", // 100ms after completion(150), not after start(100)
-      "end:300",
-    ]);
+    await time.tickAsync(100);
+    await time.tickAsync(50);
+    expect(events).toEqual(["start:0", "end:50", "start:150", "end:200"]);
   });
 
-  it("should call original function avoiding parallel", async () => {
+  it("avoids parallel execution", async () => {
     using time = new FakeTime(0);
     let count = 0;
     const invoker = throttledInvoker(async () => {
@@ -79,6 +88,39 @@ describe("throttledInvoker", () => {
     await time.tickAsync(200);
     await time.tickAsync(200);
 
+    expect(count).toBe(0);
     await expect(p).resolves.toEqual([undefined, undefined, undefined]);
+  });
+
+  it("rejects only the failing cycle and keeps serving later calls", async () => {
+    using time = new FakeTime(0);
+    let calls = 0;
+    const invoker = throttledInvoker(async () => {
+      calls++;
+      await sleep(10);
+      if (calls === 1) throw new Error("boom");
+    }, 10);
+
+    const first = invoker();
+    // Handle the rejection before ticking; it settles inside tickAsync and
+    // would otherwise be reported as an uncaught error.
+    first.catch(() => {});
+    await time.tickAsync(5);
+    const trailing = invoker();
+
+    // Advance enough time incrementally
+    await time.tickAsync(50);
+    await time.tickAsync(50);
+    await time.tickAsync(50);
+    await time.tickAsync(50);
+    await expect(first).rejects.toThrow("boom");
+    await expect(trailing).resolves.toBeUndefined();
+    expect(calls).toBe(2);
+
+    const later = invoker();
+    await time.tickAsync(50);
+    await time.tickAsync(50);
+    await expect(later).resolves.toBeUndefined();
+    expect(calls).toBe(3);
   });
 });

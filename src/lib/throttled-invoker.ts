@@ -4,24 +4,37 @@ export function throttledInvoker(
   asyncFunc: () => Promise<void> | void,
   intervalMs = 100,
 ): () => Promise<void> {
-  let tail: Promise<void> = Promise.resolve();
-  let pendingCount = 0;
-  let lastCompletionAt = 0;
+  let running = false;
+  let pending: PromiseWithResolvers<void> | null = null;
+  let lastFinishedAt = -Infinity;
+
+  const loop = async () => {
+    running = true;
+    try {
+      while (pending) {
+        const cycle = pending;
+        const wait = lastFinishedAt + intervalMs - Date.now();
+        if (wait > 0) await sleep(wait);
+        // Cleared just before invoking: calls arriving while asyncFunc runs
+        // must schedule one more cycle; calls during the wait above must not.
+        pending = null;
+        try {
+          await asyncFunc();
+          cycle.resolve();
+        } catch (e) {
+          cycle.reject(e);
+        } finally {
+          lastFinishedAt = Date.now();
+        }
+      }
+    } finally {
+      running = false;
+    }
+  };
 
   return () => {
-    if (pendingCount >= 2) return tail;
-    pendingCount++;
-    return (tail = tail.catch(() => {}).then(async () => {
-      const now = Date.now();
-      if (now < lastCompletionAt + intervalMs) {
-        await sleep(lastCompletionAt + intervalMs - now);
-      }
-      try {
-        await asyncFunc();
-      } finally {
-        lastCompletionAt = Date.now();
-        pendingCount--;
-      }
-    }));
+    const cycle = (pending ??= Promise.withResolvers<void>());
+    if (!running) void loop();
+    return cycle.promise;
   };
 }
