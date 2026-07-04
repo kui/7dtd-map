@@ -6,6 +6,23 @@ import { FakeTime } from "@std/testing/time";
 import { spy as fn } from "@std/testing/mock";
 
 describe("throttledInvoker", () => {
+  it("delays the first run by at least 10ms so rapid successive calls coalesce", async () => {
+    using time = new FakeTime(0);
+    const mockFn = fn();
+    const invoker = throttledInvoker(() => {
+      mockFn();
+    }, 100);
+
+    invoker().catch(printError);
+    await time.tickAsync(9);
+    expect(mockFn.calls.length).toBe(0);
+
+    const second = invoker();
+    await time.tickAsync(1);
+    expect(mockFn.calls.length).toBe(1);
+    await expect(second).resolves.toBeUndefined();
+  });
+
   it("coalesces calls arriving during execution into one trailing run", async () => {
     using time = new FakeTime(0);
     const mockFn = fn();
@@ -15,7 +32,8 @@ describe("throttledInvoker", () => {
     }, 100);
 
     invoker().catch(printError);
-    await time.tickAsync(1);
+    // The first run starts after the minimum 10ms delay.
+    await time.tickAsync(10);
     invoker().catch(printError);
     await time.tickAsync(1);
     const third = invoker();
@@ -38,7 +56,7 @@ describe("throttledInvoker", () => {
     }, 100);
 
     invoker().catch(printError);
-    await time.tickAsync(0);
+    await time.tickAsync(10);
     expect(mockFn.calls.length).toBe(1);
 
     const second = invoker();
@@ -60,16 +78,19 @@ describe("throttledInvoker", () => {
       events.push(`end:${Date.now()}`);
     }, 100);
 
+    // Ticks must land exactly on each due time: Date.now() inside an await
+    // continuation reads the tick target, not the timer's scheduled time.
     invoker().catch(printError);
+    await time.tickAsync(10);
     await time.tickAsync(50);
-    expect(events).toEqual(["start:0", "end:50"]);
+    expect(events).toEqual(["start:10", "end:60"]);
 
-    // Second call right after completion must wait until t=150 (end + 100),
-    // not t=100 (start + 100).
+    // Second call right after completion must wait until t=160 (end + 100),
+    // not t=110 (start + 100).
     invoker().catch(printError);
     await time.tickAsync(100);
     await time.tickAsync(50);
-    expect(events).toEqual(["start:0", "end:50", "start:150", "end:200"]);
+    expect(events).toEqual(["start:10", "end:60", "start:160", "end:210"]);
   });
 
   it("avoids parallel execution", async () => {
@@ -105,7 +126,9 @@ describe("throttledInvoker", () => {
     // Handle the rejection before ticking; it settles inside tickAsync and
     // would otherwise be reported as an uncaught error.
     first.catch(() => {});
-    await time.tickAsync(5);
+    // t=15: the first run started at t=10 and is still executing, so this
+    // call schedules a trailing cycle instead of joining the first one.
+    await time.tickAsync(15);
     const trailing = invoker();
 
     // Advance enough time incrementally

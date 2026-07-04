@@ -13,8 +13,8 @@ export function throttledInvoker(
     try {
       while (pending) {
         const cycle = pending;
-        const wait = lastFinishedAt + intervalMs - Date.now();
-        if (wait > 0) await sleep(wait);
+        const wait = Math.max(10, lastFinishedAt + intervalMs - Date.now());
+        await sleep(wait);
         // Cleared just before invoking: calls arriving while asyncFunc runs
         // must schedule one more cycle; calls during the wait above must not.
         pending = null;
