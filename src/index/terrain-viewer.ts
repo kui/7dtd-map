@@ -1,9 +1,23 @@
 import type { DtmHandler } from "./dtm-handler.ts";
-import type { ThreePlaneSize } from "../types/7dtdmap.ts";
+import type { PrefabsHandler } from "./prefabs-handler.ts";
+import type { MarkerHandler } from "./marker-handler.ts";
+import type {
+  GameCoords,
+  GameMapSize,
+  GlyphMarker,
+  Prefab,
+  PrefabMeshSizes,
+  ThreePlaneSize,
+} from "../types/7dtdmap.ts";
 
 import * as three from "three";
-import { printError, threePlaneSize } from "../lib/utils.ts";
+import { gameCoords, printError, threePlaneSize } from "../lib/utils.ts";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller.ts";
+import {
+  buildMarkerSprites,
+  type MarkerPlacement,
+  type MarkerSprites,
+} from "./terrain-viewer/marker-sprites.ts";
 
 interface Doms {
   dialog: HTMLDialogElement;
@@ -13,6 +27,8 @@ interface Doms {
   close: HTMLButtonElement;
   hud: HTMLElement;
   helpToggle: HTMLInputElement;
+  signSize: HTMLInputElement;
+  signAlpha: HTMLInputElement;
 }
 
 // Base width of the terrain plane in local geometry units.
@@ -23,10 +39,16 @@ const TERRAIN_WIDTH = 2048;
 // top-down view where texture detail carries most of the perceived
 // quality.
 const TERRAIN_SEGMENTS = 1024;
+// On-screen glyph pixels per unit of the Prefab Sign Size setting; 0.1
+// matches the 2D map's look at its default 0.1 scale.
+const SIGN_SCREEN_SIZE_FACTOR = 0.1;
 
 export class TerrainViewer {
   #doms: Doms;
   #dtm: DtmHandler;
+  #meshSizes: Promise<PrefabMeshSizes>;
+  #signMarker: Promise<GlyphMarker>;
+  #flagMarker: Promise<GlyphMarker>;
 
   #renderer: three.WebGLRenderer;
   #cameraController: TerrainViewerCameraController;
@@ -34,10 +56,41 @@ export class TerrainViewer {
   #terrain: three.Mesh | null = null;
   #terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   #animationRequestId: number | null = null;
+  #markers: MarkerSprites | null = null;
+  #filteredPrefabs: Prefab[] = [];
+  #markerCoords: GameCoords | null = null;
 
-  constructor(doms: Doms, dtm: DtmHandler) {
+  constructor(
+    doms: Doms,
+    dtm: DtmHandler,
+    prefabsHandler: PrefabsHandler,
+    markerHandler: MarkerHandler,
+    meshSizes: Promise<PrefabMeshSizes>,
+    signMarker: Promise<GlyphMarker>,
+    flagMarker: Promise<GlyphMarker>,
+  ) {
     this.#doms = doms;
     this.#dtm = dtm;
+    this.#meshSizes = meshSizes;
+    this.#signMarker = signMarker;
+    this.#flagMarker = flagMarker;
+
+    prefabsHandler.addFilterHeaderListener(() => {
+      this.#filteredPrefabs.length = 0;
+    });
+    prefabsHandler.addFilterChunkListener(({ prefabs }) => {
+      for (const p of prefabs) {
+        this.#filteredPrefabs.push({
+          name: p.name,
+          x: p.x,
+          z: p.z,
+          rotation: p.rotation,
+        });
+      }
+    });
+    markerHandler.addListener(({ coords }) => {
+      this.#markerCoords = coords;
+    });
 
     this.#renderer = new three.WebGLRenderer({
       canvas: doms.output,
@@ -72,6 +125,7 @@ export class TerrainViewer {
     doms.dialog.addEventListener("close", () => {
       this.#stopRender();
       this.#disposeTerrain();
+      this.#disposeMarkers();
     });
     // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
     // otherwise move focus off the canvas and break keyboard camera
@@ -93,6 +147,7 @@ export class TerrainViewer {
 
   async #show() {
     await this.#updateElevations();
+    await this.#updateMarkers();
     this.#doms.dialog.showModal();
     const { clientWidth, clientHeight } = document.documentElement;
     this.#renderer.setSize(clientWidth, clientHeight);
@@ -144,6 +199,89 @@ export class TerrainViewer {
     this.#scene.add(this.#terrain);
     this.#cameraController.onUpdateTerrain(mapSize.width, this.#terrainSize);
     console.timeEnd("updateElevations");
+  }
+
+  async #updateMarkers(): Promise<void> {
+    this.#disposeMarkers();
+    const signOpacity = this.#doms.signAlpha.valueAsNumber;
+    const prefabs = signOpacity > 0 ? this.#filteredPrefabs : [];
+    if (prefabs.length === 0 && !this.#markerCoords) return;
+    const mapSize = await this.#dtm.size();
+    if (mapSize === null) return;
+
+    // Same game-meters-per-local-unit ratio that writeY bakes into the mesh,
+    // so marker positions and elevations line up with the terrain vertices.
+    const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
+
+    const glyphPx = this.#doms.signSize.valueAsNumber * SIGN_SCREEN_SIZE_FACTOR;
+    const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
+    // World scale s spans s / (2 * tan(fov / 2)) of the viewport height with
+    // sizeAttenuation off; the sprite canvas is twice the glyph box.
+    const spriteScale = (4 * glyphPx * Math.tan(fovRad / 2)) /
+      document.documentElement.clientHeight;
+
+    const meshSizes = await this.#meshSizes;
+    const signs = await Promise.all(prefabs.map((prefab) => {
+      // Same footprint-centre shift as the 2D sign renderer: decoration
+      // positions are the SW corner of the rotated AABB.
+      const size = meshSizes[prefab.name];
+      const odd = ((prefab.rotation ?? 0) & 1) === 1;
+      const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
+      const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
+      return this.#placement(
+        prefab.x + halfW,
+        prefab.z + halfD,
+        mapSize,
+        scaleFactor,
+      );
+    }));
+    const flag = this.#markerCoords
+      ? await this.#placement(
+        this.#markerCoords.x,
+        this.#markerCoords.z,
+        mapSize,
+        scaleFactor,
+      )
+      : null;
+
+    this.#markers = buildMarkerSprites({
+      signMarker: await this.#signMarker,
+      flagMarker: await this.#flagMarker,
+      signs,
+      flag,
+      spriteScale,
+      signOpacity,
+    });
+    this.#scene.add(this.#markers.object);
+  }
+
+  async #placement(
+    x: number,
+    z: number,
+    mapSize: GameMapSize,
+    scaleFactor: number,
+  ): Promise<MarkerPlacement> {
+    // Clamp to the DTM index range; footprint centres of edge prefabs can
+    // round one block past it.
+    const halfW = Math.floor(mapSize.width / 2);
+    const halfH = Math.floor(mapSize.height / 2);
+    const elevation = await this.#dtm.getElevation(gameCoords({
+      x: Math.min(Math.max(Math.round(x), -halfW), mapSize.width - 1 - halfW),
+      z: Math.min(Math.max(Math.round(z), -halfH), mapSize.height - 1 - halfH),
+    })) ?? 0;
+    return {
+      x: x / scaleFactor,
+      y: elevation / scaleFactor,
+      // Game z (north positive) maps to -z in the Y-up terrain space.
+      z: -z / scaleFactor,
+    };
+  }
+
+  #disposeMarkers(): void {
+    if (!this.#markers) return;
+    this.#scene.remove(this.#markers.object);
+    this.#markers.dispose();
+    this.#markers = null;
   }
 
   // three.js does not free GPU resources on GC; geometry, materials and

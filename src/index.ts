@@ -8,6 +8,7 @@ import { bindPrefabSignToggleButton } from "./index/prefab-sign-toggle.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type {
+  GlyphMarker,
   HighlightedPrefab,
   PrefabAddedVersions,
   PrefabDifficulties,
@@ -52,6 +53,12 @@ const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
 );
 const prefabAddedVersions: Promise<PrefabAddedVersions> = fetchJson(
   "prefab-added-versions.json",
+);
+const signGlyphMarker: Promise<GlyphMarker> = fetchJson(
+  "heavy-ballot-x-path.json",
+);
+const flagGlyphMarker: Promise<GlyphMarker> = fetchJson(
+  "triangular-flag-path.json",
 );
 
 function main() {
@@ -165,9 +172,13 @@ function main() {
     },
     fileHandler,
   );
+  // Never appended to the DOM: the worker draws the sign/marker-free composite
+  // into it and the terrain viewer samples the placeholder as its texture.
+  const mapCompositeCanvas = document.createElement("canvas");
   new MapCanvasHandler(
     {
       canvas: component("map", HTMLCanvasElement),
+      compositeCanvas: mapCompositeCanvas,
       biomesAlpha: component("biomes-alpha", HTMLInputElement),
       splat3Alpha: component("splat3-alpha", HTMLInputElement),
       splat4Alpha: component("splat4-alpha", HTMLInputElement),
@@ -190,13 +201,20 @@ function main() {
     {
       dialog: component("terrain-viewer-dialog", HTMLDialogElement),
       output: component("terrain-viewer", HTMLCanvasElement),
-      texture: component("map", HTMLCanvasElement),
+      texture: mapCompositeCanvas,
       show: component("terrain-viewer-show", HTMLButtonElement),
       close: component("terrain-viewer-close", HTMLButtonElement),
       hud: component("terrarian-viewer-hud"),
       helpToggle: component("terrain-viewer-help-toggle", HTMLInputElement),
+      signSize: component("prefab-sign-size", HTMLInputElement),
+      signAlpha: component("prefab-sign-alpha", HTMLInputElement),
     },
     dtmHandler,
+    prefabsHandler,
+    markerHandler,
+    prefabMeshSizes,
+    signGlyphMarker,
+    flagGlyphMarker,
   );
   const prefabsList = component("prefabs-list", HTMLElement);
   prefabsHandler.addFilterHeaderListener(() => {
