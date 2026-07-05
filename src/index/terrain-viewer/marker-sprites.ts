@@ -8,7 +8,7 @@ import {
 } from "../../../lib/glyph-marker.ts";
 
 // Baked glyph resolution, independent of the on-screen size (the largest
-// reachable screen size is 50px, so this stays oversampled).
+// reachable screen size is 60px, so this stays oversampled).
 const GLYPH_TEXTURE_PX = 128;
 
 // Position in the terrain mesh's local (three.js) coordinate space.
