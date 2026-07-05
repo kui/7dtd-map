@@ -12,9 +12,9 @@ import { gameMapSize } from "../../lib/utils.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as storage from "../../lib/storage.ts";
 import * as mapFiles from "../../../lib/map-files.ts";
+import { buildGlyphSprite } from "../../lib/glyph-sprite.ts";
 import {
   GLYPH_MARKER_FONT_SIZE,
-  GLYPH_MARKER_STROKE_WIDTHS,
   GLYPH_MARKER_VIEWPORT,
 } from "../../../lib/glyph-marker.ts";
 
@@ -51,6 +51,9 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
+  // Mirror of the sign/marker-free composite, kept for the terrain viewer
+  // which samples its placeholder canvas element as a texture.
+  compositeCanvas: OffscreenCanvas | null = null;
   #signPath2D: Path2D;
   #signAnchor: GlyphMarker["anchor"];
   #markPath2D: Path2D;
@@ -117,6 +120,12 @@ export default class MapRenderer {
     if (width === 0 || height === 0) {
       this.canvas.width = 1;
       this.canvas.height = 1;
+      // This path skips #composeBase, so the mirror must be cleared here or
+      // the previous map would linger in the terrain viewer.
+      if (this.compositeCanvas) {
+        this.compositeCanvas.width = 1;
+        this.compositeCanvas.height = 1;
+      }
       return;
     }
 
@@ -427,6 +436,13 @@ export default class MapRenderer {
     this.#composite = canvas;
     this.#compositeKey = key;
     this.#compositeAllPrefabs = this.allPrefabs;
+    // Copying only on recompose keeps the mirror current: cache hits mean
+    // the composite content is unchanged.
+    if (this.compositeCanvas) {
+      this.compositeCanvas.width = width;
+      this.compositeCanvas.height = height;
+      this.compositeCanvas.getContext("2d")?.drawImage(canvas, 0, 0);
+    }
     return canvas;
   }
 
@@ -598,37 +614,6 @@ function mapSize(
     width: Math.max(0, ...sizes.map((s) => s?.width ?? 0)),
     height: Math.max(0, ...sizes.map((s) => s?.height ?? 0)),
   });
-}
-
-// Stamps a baked glyph path (see tools/generate-glyph-markers.ts) into a
-// square sprite twice the target pixel size, with the same 3-layer
-// black-outline/red-fill/white-outline look the baked SVGs use. Shared by
-// the sign and flag markers, which only differ in which path/size they stamp.
-function buildGlyphSprite(path2D: Path2D, pixelSize: number): OffscreenCanvas {
-  const spriteSize = pixelSize * 2;
-  const sprite = new OffscreenCanvas(spriteSize, spriteSize);
-  const sc = sprite.getContext("2d");
-  if (sc) {
-    // Scale the baked path's viewport to `pixelSize`, then centre it on the
-    // sprite; the path itself is built centred on VIEWPORT/2 at build time.
-    const k = pixelSize / GLYPH_MARKER_FONT_SIZE;
-    sc.lineJoin = "round";
-    sc.lineCap = "round";
-    sc.translate(spriteSize / 2, spriteSize / 2);
-    sc.scale(k, k);
-    sc.translate(-GLYPH_MARKER_VIEWPORT / 2, -GLYPH_MARKER_VIEWPORT / 2);
-    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.black;
-    sc.strokeStyle = "black";
-    sc.fillStyle = "black";
-    sc.stroke(path2D);
-    sc.fill(path2D);
-    sc.fillStyle = "red";
-    sc.fill(path2D);
-    sc.lineWidth = GLYPH_MARKER_STROKE_WIDTHS.white;
-    sc.strokeStyle = "white";
-    sc.stroke(path2D);
-  }
-  return sprite;
 }
 
 // The sprite stamps centred on the target coordinate, but `anchor` (a point

@@ -34,10 +34,11 @@ async function handleMessage(message: MapRendererInputMessage): Promise<void> {
     } else {
       throw Error("Unexpected state");
     }
-  } else if (message.canvas) {
-    // The OffscreenCanvas is captured at construction time and must not be
-    // replaced by later messages; drop any stray `canvas` field defensively.
+  } else if (message.canvas || message.compositeCanvas) {
+    // The OffscreenCanvases are captured by the first message and must not be
+    // replaced by later messages; drop any stray canvas fields defensively.
     delete message.canvas;
+    delete message.compositeCanvas;
   }
   Object.assign(map, message);
   // Not awaited: awaiting would serialize the queue below behind each

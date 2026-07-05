@@ -19,6 +19,7 @@ export type MapRendererInputMessage = Partial<
   Pick<
     InstanceType<typeof MapRendererClass>,
     | "canvas"
+    | "compositeCanvas"
     | "biomesAlpha"
     | "splat3Alpha"
     | "splat4Alpha"

@@ -6,6 +6,9 @@ import type { Prefab } from "../types/7dtdmap.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
+  // Off-DOM mirror of the sign/marker-free composite; its placeholder element
+  // is sampled by the terrain viewer as a texture.
+  compositeCanvas: HTMLCanvasElement;
   biomesAlpha: HTMLInputElement;
   splat3Alpha: HTMLInputElement;
   splat4Alpha: HTMLInputElement;
@@ -45,9 +48,11 @@ export class MapCanvasHandler {
     fileHandler: FileHandler,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
+    const compositeCanvas = doms.compositeCanvas.transferControlToOffscreen();
     worker.postMessage(
       {
         canvas,
+        compositeCanvas,
         biomesAlpha: doms.biomesAlpha.valueAsNumber,
         splat3Alpha: doms.splat3Alpha.valueAsNumber,
         splat4Alpha: doms.splat4Alpha.valueAsNumber,
@@ -58,7 +63,7 @@ export class MapCanvasHandler {
         prefabFootprintAlpha: doms.prefabFootprintAlpha.valueAsNumber,
         scale: doms.scale.valueAsNumber,
       },
-      [canvas],
+      [canvas, compositeCanvas],
     );
 
     doms.prefabFootprintAlpha.addEventListener("input", () => {
