@@ -39,9 +39,6 @@ const TERRAIN_WIDTH = 2048;
 // top-down view where texture detail carries most of the perceived
 // quality.
 const TERRAIN_SEGMENTS = 1024;
-// On-screen glyph pixels per unit of the Prefab Sign Size setting; 0.1
-// matches the 2D map's look at its default 0.1 scale.
-const SIGN_SCREEN_SIZE_FACTOR = 0.1;
 
 export class TerrainViewer {
   #doms: Doms;
@@ -213,7 +210,7 @@ export class TerrainViewer {
     // so marker positions and elevations line up with the terrain vertices.
     const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
 
-    const glyphPx = this.#doms.signSize.valueAsNumber * SIGN_SCREEN_SIZE_FACTOR;
+    const glyphPx = this.#doms.signSize.valueAsNumber;
     const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
     // World scale s spans s / (2 * tan(fov / 2)) of the viewport height with
     // sizeAttenuation off; the sprite canvas is twice the glyph box.

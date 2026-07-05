@@ -42,7 +42,8 @@ export default class MapRenderer {
   #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
   #densityScoresHolder: CacheHolder<PrefabDensityScores>;
   #districtColorsHolder: CacheHolder<DistrictColors>;
-  prefabSignSize = 200;
+  // On-screen glyph size in output pixels, independent of the map scale.
+  prefabSignSize = 20;
   prefabSignAlpha = 1;
   prefabFootprintAlpha = 1;
   biomesAlpha = 1;
@@ -455,7 +456,7 @@ export default class MapRenderer {
     const signSize = this.prefabSignSize;
     const scale = this.scale;
 
-    const pixelSize = Math.max(1, Math.round(signSize * scale));
+    const pixelSize = Math.max(1, Math.round(signSize));
     const sprite = buildGlyphSprite(this.#signPath2D, pixelSize);
     const spriteCX = sprite.width / 2;
     const spriteCY = sprite.height / 2;
@@ -482,14 +483,15 @@ export default class MapRenderer {
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const halfW = meshSize ? (odd ? meshSize[1] : meshSize[0]) / 2 : 0;
       const halfD = meshSize ? (odd ? meshSize[0] : meshSize[1]) / 2 : 0;
-      const x = offsetX + prefab.x + halfW + charOffsetX;
+      const x = offsetX + prefab.x + halfW;
       // prefab vertical positions are inverted for canvas coordinates
-      const z = offsetY - prefab.z - halfD + charOffsetY;
-      // Multiply by scale to convert game-world coords to canvas pixels.
+      const z = offsetY - prefab.z - halfD;
+      // Multiply by scale to convert game-world coords to canvas pixels; the
+      // anchor offset is already in output pixels so it applies after scaling.
       context.drawImage(
         sprite,
-        Math.round(x * scale - spriteCX),
-        Math.round(z * scale - spriteCY),
+        Math.round(x * scale + charOffsetX - spriteCX),
+        Math.round(z * scale + charOffsetY - spriteCY),
       );
     }
 
@@ -503,7 +505,7 @@ export default class MapRenderer {
   ) {
     if (!this.markerCoords) return;
 
-    const pixelSize = Math.max(1, Math.round(this.prefabSignSize * this.scale));
+    const pixelSize = Math.max(1, Math.round(this.prefabSignSize));
     const sprite = buildGlyphSprite(this.#markPath2D, pixelSize);
     const spriteCX = sprite.width / 2;
     const spriteCY = sprite.height / 2;
@@ -515,15 +517,15 @@ export default class MapRenderer {
       this.prefabSignSize,
     );
 
-    const x = offsetX + this.markerCoords.x + charOffsetX;
-    const z = offsetY - this.markerCoords.z + charOffsetY;
+    const x = offsetX + this.markerCoords.x;
+    const z = offsetY - this.markerCoords.z;
 
     context.save();
     context.resetTransform();
     context.drawImage(
       sprite,
-      Math.round(x * this.scale - spriteCX),
-      Math.round(z * this.scale - spriteCY),
+      Math.round(x * this.scale + charOffsetX - spriteCX),
+      Math.round(z * this.scale + charOffsetY - spriteCY),
     );
     context.restore();
   }
@@ -618,8 +620,7 @@ function mapSize(
 
 // The sprite stamps centred on the target coordinate, but `anchor` (a point
 // in the shared VIEWPORT square, see lib/glyph-marker.ts) should land there
-// instead. Converts the offset between the two into the same unscaled units
-// as prefab/marker coordinates.
+// instead. Converts the offset between the two into output pixels.
 function anchorOffset(
   anchor: GlyphMarker["anchor"],
   targetSize: number,

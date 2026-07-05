@@ -12,7 +12,7 @@ const RESET_KEYS: readonly string[] = [
   "prefabFootprintAlpha",
   "brightness",
   "scale",
-  "prefabSignSize",
+  "prefabSignPixelSize",
   "prefabSignAlpha",
   "prefabFilterExcludeTest",
   "prefabFilterExcludeTiles",
