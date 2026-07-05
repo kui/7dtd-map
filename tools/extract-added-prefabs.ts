@@ -58,7 +58,7 @@ async function main() {
   const sorted = Object.fromEntries(
     Object.entries(recorded).sort(([a], [b]) => a.localeCompare(b)),
   );
-  await writeJsonFile(outputPath, sorted);
+  await writeJsonFile(outputPath, sorted, { compact: true });
   console.log(
     "Recorded %d newly added prefab(s) (%d total)",
     totalAdded,

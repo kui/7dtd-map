@@ -33,7 +33,9 @@ async function main() {
   console.log("Read counts");
   const prefabBlockCount = await readCounts(nimFiles);
   console.log("Write json");
-  await writeJsonFile(path.join(DOCS_DIR, FILE), prefabBlockCount);
+  await writeJsonFile(path.join(DOCS_DIR, FILE), prefabBlockCount, {
+    compact: true,
+  });
   console.log("Done");
   return 0;
 }

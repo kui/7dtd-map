@@ -39,15 +39,17 @@ async function main() {
     writeJsonFile(
       path.join(DOCS_DIR, DIFFICULTY_FILE),
       extractDifficulties(prefabXmls),
+      { compact: true },
     ),
     writeJsonFile(
       path.join(DOCS_DIR, MESH_SIZE_FILE),
       extractMeshSizes(prefabXmls),
-      { collapseLeafArrays: true },
+      { collapseLeafArrays: true, compact: true },
     ),
     writeJsonFile(
       path.join(DOCS_DIR, DENSITY_FILE),
       extractDensityScores(prefabXmls),
+      { compact: true },
     ),
     writeJsonFile(
       path.join(DOCS_DIR, DISTRICT_COLOR_FILE),
