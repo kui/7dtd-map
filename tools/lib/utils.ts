@@ -40,12 +40,48 @@ export function handleMain(main: Promise<number>): void {
 export async function writeJsonFile(
   file: string,
   json: unknown,
-  options: { collapseLeafArrays?: boolean } = {},
+  options: { collapseLeafArrays?: boolean; compact?: boolean } = {},
 ) {
-  let body = JSON.stringify(json, null, "\t");
-  if (options.collapseLeafArrays) body = collapseLeafArrays(body);
+  let body: string;
+  if (options.compact) {
+    body = compactStringify(json, options.collapseLeafArrays ?? false);
+  } else {
+    body = JSON.stringify(json, null, "\t");
+    if (options.collapseLeafArrays) body = collapseLeafArrays(body);
+  }
   await fs.promises.writeFile(file, body);
   console.log("Write %s", file);
+}
+
+// Same line structure as JSON.stringify(json, null, "\t") so diffs stay
+// per-entry, but without indentation or spaces after ":" and ",".
+function compactStringify(
+  value: unknown,
+  collapseLeafArrays: boolean,
+): string {
+  if (isJsonPrimitive(value)) return JSON.stringify(value);
+  if (Array.isArray(value)) {
+    if (value.length === 0) return "[]";
+    if (collapseLeafArrays && value.every(isJsonPrimitive)) {
+      return `[${value.map((v) => JSON.stringify(v)).join(",")}]`;
+    }
+    const items = value.map((v) => compactStringify(v, collapseLeafArrays));
+    return `[\n${items.join(",\n")}\n]`;
+  }
+  if (typeof value === "object" && value !== null) {
+    const entries = Object.entries(value);
+    if (entries.length === 0) return "{}";
+    const items = entries.map(([k, v]) =>
+      `${JSON.stringify(k)}:${compactStringify(v, collapseLeafArrays)}`
+    );
+    return `{\n${items.join(",\n")}\n}`;
+  }
+  throw Error(`Unsupported JSON value: ${String(value)}`);
+}
+
+function isJsonPrimitive(value: unknown): boolean {
+  return value === null || typeof value === "string" ||
+    typeof value === "number" || typeof value === "boolean";
 }
 
 // Folds tab-indented arrays of primitives onto a single line so callers like
