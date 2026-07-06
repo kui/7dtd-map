@@ -65,6 +65,7 @@ function main() {
       return Object.keys(prefabBlockCounts).map((n) => ({
         name: n,
         x: 0,
+        y: 0,
         z: 0,
         difficulty: difficulties[n] ?? 0,
       }));

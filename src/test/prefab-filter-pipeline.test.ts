@@ -81,10 +81,10 @@ describe("PrefabFilter", () => {
   });
 
   const prefabs: Prefab[] = [
-    { name: "aaa_test_01", x: 0, z: 0 },
-    { name: "house_01", x: 100, z: 0 },
-    { name: "trader_01", x: 0, z: 200 },
-    { name: "skyscraper_01", x: 500, z: 500 },
+    { name: "aaa_test_01", x: 0, y: 0, z: 0 },
+    { name: "house_01", x: 100, y: 0, z: 0 },
+    { name: "trader_01", x: 0, y: 0, z: 200 },
+    { name: "skyscraper_01", x: 500, y: 0, z: 500 },
   ];
   const difficulties: PrefabDifficulties = {
     "aaa_test_01": 0,
@@ -396,6 +396,7 @@ describe("PrefabFilter", () => {
     const many: Prefab[] = Array.from({ length: CHUNK_SIZE * 3 }, (_, i) => ({
       name: `prefab_${i.toString().padStart(3, "0")}`,
       x: 0,
+      y: 0,
       z: 0,
     }));
     const f = build();

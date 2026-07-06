@@ -37,18 +37,22 @@ export function buildMarkerSprites(opts: {
   const disposables: { dispose(): void }[] = [];
 
   if (opts.signs.length > 0 && opts.signOpacity > 0) {
-    const { material, center } = glyphMaterial(
+    const { material, center, disposables: d } = glyphMaterial(
       opts.signMarker,
       opts.signOpacity,
-      disposables,
     );
+    disposables.push(...d);
     for (const p of opts.signs) {
       group.add(makeSprite(material, center, p, opts.spriteScale));
     }
   }
 
   if (opts.flag) {
-    const { material, center } = glyphMaterial(opts.flagMarker, 1, disposables);
+    const { material, center, disposables: d } = glyphMaterial(
+      opts.flagMarker,
+      1,
+    );
+    disposables.push(...d);
     group.add(makeSprite(material, center, opts.flag, opts.spriteScale));
   }
 
@@ -63,8 +67,11 @@ export function buildMarkerSprites(opts: {
 function glyphMaterial(
   marker: GlyphMarker,
   opacity: number,
-  disposables: { dispose(): void }[],
-): { material: three.SpriteMaterial; center: three.Vector2 } {
+): {
+  material: three.SpriteMaterial;
+  center: three.Vector2;
+  disposables: [three.Texture, three.Material];
+} {
   const texture = new three.CanvasTexture(
     buildGlyphSprite(new Path2D(marker.d), GLYPH_TEXTURE_PX),
   );
@@ -79,8 +86,11 @@ function glyphMaterial(
     depthTest: false,
     depthWrite: false,
   });
-  disposables.push(texture, material);
-  return { material, center: anchorCenter(marker.anchor) };
+  return {
+    material,
+    center: anchorCenter(marker.anchor),
+    disposables: [texture, material],
+  };
 }
 
 // Convert a glyph anchor (a point in the shared VIEWPORT square) into
@@ -102,8 +112,8 @@ function makeSprite(
   sprite.center.copy(center);
   sprite.scale.set(scale, scale, 1);
   sprite.position.set(placement.x, placement.y, placement.z);
-  // Draw after the terrain: the transparent pass's distance sort could put
-  // the terrain last and paint it over these non-depth-writing sprites.
-  sprite.renderOrder = 1;
+  // Above terrain, boxes (0) and highlight (1); the transparent pass's distance
+  // sort could otherwise paint those over these non-depth-writing sprites.
+  sprite.renderOrder = 2;
   return sprite;
 }

@@ -1,15 +1,20 @@
 export interface Prefab {
   name: string;
   x: number;
+  y: number;
   z: number;
   // Placed rotation from prefabs.xml `decoration.rotation`, 0..3 = 0/90/180/270
   // degrees clockwise applied at placement time.
   rotation?: number;
+  // True when the decoration carries `y_is_groundlevel="true"` (v2.x worlds),
+  // making y the terrain surface rather than the prefab's bottom.
+  yIsGroundLevel?: boolean;
 }
 
 export interface PrefabMeshSizes {
-  // [width (X), depth (Z)] in game blocks
-  [prefabName: string]: [number, number];
+  // [width (X), depth (Z), height (Y), yOffset] in game blocks. yOffset is the
+  // number of blocks the prefab sits below ground (0 or negative).
+  [prefabName: string]: [number, number, number, number];
 }
 
 export interface DistrictColors {

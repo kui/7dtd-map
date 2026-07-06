@@ -19,25 +19,45 @@ export function assertDifficultyIndex(
 export async function loadPrefabsXml(): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml ? parseXml(await prefabsXml.text()) : [];
+  return prefabsXml ? parsePrefabsXml(await prefabsXml.text()) : [];
 }
 
-function parseXml(xml: string): Prefab[] {
+export function parsePrefabsXml(xml: string): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
-    const position = e.getAttribute("position")?.split(",");
-    if (position?.length !== 3) return [];
-    const [x, , z] = position;
-    if (!x || !z) return [];
-    const name = e.getAttribute("name");
-    if (!name) return [];
-    const rotationAttr = e.getAttribute("rotation");
-    const rotation = rotationAttr === null ? 0 : parseInt(rotationAttr, 10);
-    return {
-      name,
-      x: parseInt(x),
-      z: parseInt(z),
-      rotation: Number.isFinite(rotation) ? rotation & 3 : 0,
-    };
+    const prefab = decorationToPrefab(e);
+    return prefab ? [prefab] : [];
   });
+}
+
+// Exported for testing without a DOM; accepts anything with `getAttribute`.
+export function decorationToPrefab(
+  e: { getAttribute(name: string): string | null },
+): Prefab | null {
+  const positionAttr = e.getAttribute("position");
+  const name = e.getAttribute("name");
+  // A decoration without a name or position is not a placed prefab; skip it.
+  if (name === null || positionAttr === null) return null;
+  const nums = positionAttr.split(",").map((s) => parseInt(s, 10));
+  // A malformed position is a corrupt World File, so fail loudly instead of
+  // coercing to NaN or silently dropping the prefab.
+  if (nums.length !== 3 || !nums.every((n) => Number.isFinite(n))) {
+    throw new Error(
+      `Invalid decoration position "${positionAttr}" for prefab "${name}"`,
+    );
+  }
+  const [x, y, z] = nums as [number, number, number];
+  const rotationAttr = e.getAttribute("rotation");
+  const rotation = rotationAttr === null ? 0 : parseInt(rotationAttr, 10);
+  // v2.x worlds tag every decoration with y_is_groundlevel="true", making y
+  // the terrain surface; older worlds omit it and y is the box's bottom.
+  const yIsGroundLevel = e.getAttribute("y_is_groundlevel") === "true";
+  return {
+    name,
+    x,
+    y,
+    z,
+    rotation: Number.isFinite(rotation) ? rotation & 3 : 0,
+    ...(yIsGroundLevel ? { yIsGroundLevel } : {}),
+  };
 }
