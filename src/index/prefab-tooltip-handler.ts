@@ -31,6 +31,7 @@ export class PrefabTooltipHandler {
   #lastEvent: MouseEvent | null = null;
   #lastCoords: GameCoords | null = null;
   #currentHit: Prefab | null = null;
+  #mapSize: GameMapSize | null = null;
 
   constructor(
     doms: Doms,
@@ -48,6 +49,9 @@ export class PrefabTooltipHandler {
     prefabsHandler.addPrefabHitIndexListener(({ index }) => {
       this.#index = index;
     });
+
+    dtmHandler.addListener(() => this.#refreshMapSize());
+    this.#refreshMapSize().catch(printError);
 
     cursor.addListener(({ event, coords }) => {
       this.#lastEvent = event;
@@ -70,6 +74,10 @@ export class PrefabTooltipHandler {
     });
   }
 
+  async #refreshMapSize() {
+    this.#mapSize = await this.#dtmHandler.size();
+  }
+
   #update = throttledInvoker(() => this.#updateImmediately(), 50);
 
   async #updateImmediately() {
@@ -84,15 +92,12 @@ export class PrefabTooltipHandler {
       this.#hide();
       return;
     }
-    const [mapSize, meshSizes] = await Promise.all([
-      this.#dtmHandler.size(),
-      this.#meshSizes,
-    ]);
+    const meshSizes = await this.#meshSizes;
     this.#currentHit = hit;
     await this.#controller.showFor(
       hit,
       ["click", "dblclick", "shift-click"],
-      () => this.#anchor(event, hit, mapSize, meshSizes),
+      () => this.#anchor(event, hit, this.#mapSize, meshSizes),
     );
   }
 

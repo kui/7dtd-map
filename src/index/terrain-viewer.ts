@@ -82,6 +82,8 @@ export class TerrainViewer {
   #districtColors: Promise<DistrictColors>;
   #densityScores: Promise<PrefabDensityScores>;
   #markerCoords: GameCoords | null = null;
+  // Cached so that each terrain-build phase does not re-await the same value.
+  #mapSize: GameMapSize | null = null;
 
   constructor(
     doms: Doms,
@@ -180,13 +182,17 @@ export class TerrainViewer {
   }
 
   async #updateShowButton() {
-    this.#doms.show.disabled = (await this.#dtm.size()) === null;
+    this.#mapSize = await this.#dtm.size();
+    this.#doms.show.disabled = this.#mapSize === null;
   }
 
   async #show() {
-    await this.#updateElevations();
-    await this.#updateBoxes();
-    await this.#updateMarkers();
+    await this.#updateShowButton();
+    const mapSize = this.#mapSize;
+    if (!mapSize) throw Error("Unexpected state");
+    await this.#updateElevations(mapSize);
+    await this.#updateBoxes(mapSize);
+    await this.#updateMarkers(mapSize);
     this.#doms.dialog.showModal();
     const { clientWidth, clientHeight } = document.documentElement;
     this.#renderer.setSize(clientWidth, clientHeight);
@@ -195,10 +201,8 @@ export class TerrainViewer {
     this.#startRender();
   }
 
-  async #updateElevations() {
+  async #updateElevations(mapSize: GameMapSize) {
     this.#disposeTerrain();
-    const mapSize = await this.#dtm.size();
-    if (mapSize === null) throw Error("Unexpected state");
 
     this.#terrainSize.width = TERRAIN_WIDTH;
     this.#terrainSize.height = Math.floor(
@@ -240,13 +244,11 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
-  async #updateMarkers(): Promise<void> {
+  async #updateMarkers(mapSize: GameMapSize): Promise<void> {
     this.#disposeMarkers();
     const signOpacity = this.#doms.signAlpha.valueAsNumber;
     const prefabs = signOpacity > 0 ? this.#filteredPrefabs : [];
     if (prefabs.length === 0 && !this.#markerCoords) return;
-    const mapSize = await this.#dtm.size();
-    if (mapSize === null) return;
 
     // Same game-meters-per-local-unit ratio that writeY bakes into the mesh,
     // so marker positions and elevations line up with the terrain vertices.
@@ -324,14 +326,12 @@ export class TerrainViewer {
     })) ?? 0;
   }
 
-  async #updateBoxes(): Promise<void> {
+  async #updateBoxes(mapSize: GameMapSize): Promise<void> {
     this.#disposeBoxes();
     // Boxes cover every decoration regardless of the prefab filter (which only
     // drives the ✘ signs); the footprint-alpha slider is their on/off switch.
     const footprintAlpha = this.#doms.footprintAlpha.valueAsNumber;
     if (footprintAlpha <= 0 || this.#allPrefabs.length === 0) return;
-    const mapSize = await this.#dtm.size();
-    if (mapSize === null) return;
 
     const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
     const [meshSizes, districtColors, densityScores] = await Promise.all([
