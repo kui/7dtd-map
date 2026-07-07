@@ -19,10 +19,10 @@ export function assertDifficultyIndex(
 export async function loadPrefabsXml(): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
-  return prefabsXml ? parsePrefabsXml(await prefabsXml.text()) : [];
+  return prefabsXml ? parseXml(await prefabsXml.text()) : [];
 }
 
-export function parsePrefabsXml(xml: string): Prefab[] {
+function parseXml(xml: string): Prefab[] {
   const dom = new DOMParser().parseFromString(xml, "text/xml");
   return Array.from(dom.getElementsByTagName("decoration")).flatMap((e) => {
     const prefab = decorationToPrefab(e);
