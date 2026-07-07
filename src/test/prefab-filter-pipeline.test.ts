@@ -81,10 +81,10 @@ describe("PrefabFilter", () => {
   });
 
   const prefabs: Prefab[] = [
-    { name: "aaa_test_01", x: 0, y: 0, z: 0 },
-    { name: "house_01", x: 100, y: 0, z: 0 },
-    { name: "trader_01", x: 0, y: 0, z: 200 },
-    { name: "skyscraper_01", x: 500, y: 0, z: 500 },
+    { name: "aaa_test_01", x: 0, y: 0, z: 0, yIsGroundLevel: false },
+    { name: "house_01", x: 100, y: 0, z: 0, yIsGroundLevel: false },
+    { name: "trader_01", x: 0, y: 0, z: 200, yIsGroundLevel: false },
+    { name: "skyscraper_01", x: 500, y: 0, z: 500, yIsGroundLevel: false },
   ];
   const difficulties: PrefabDifficulties = {
     "aaa_test_01": 0,
@@ -398,6 +398,7 @@ describe("PrefabFilter", () => {
       x: 0,
       y: 0,
       z: 0,
+      yIsGroundLevel: false,
     }));
     const f = build();
     f.all = many;

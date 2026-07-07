@@ -21,7 +21,14 @@ describe("decorationToPrefab", () => {
         position: "10,44,-20",
         rotation: "2",
       })),
-    ).toEqual({ name: "house_01", x: 10, z: -20, rotation: 2, y: 44 });
+    ).toEqual({
+      name: "house_01",
+      x: 10,
+      z: -20,
+      rotation: 2,
+      y: 44,
+      yIsGroundLevel: false,
+    });
   });
 
   it("keeps y as ground level and flags v2.x groundlevel decorations", () => {
@@ -42,13 +49,17 @@ describe("decorationToPrefab", () => {
     });
   });
 
-  it("omits yIsGroundLevel for legacy decorations without the attribute", () => {
-    const prefab = decorationToPrefab(decoration({
+  it("defaults yIsGroundLevel to false when the attribute is absent", () => {
+    expect(
+      decorationToPrefab(decoration({ name: "old_poi", position: "5,30,7" })),
+    ).toEqual({
       name: "old_poi",
-      position: "5,30,7",
-    }));
-    expect(prefab).toEqual({ name: "old_poi", x: 5, z: 7, rotation: 0, y: 30 });
-    expect(prefab && "yIsGroundLevel" in prefab).toBe(false);
+      x: 5,
+      z: 7,
+      rotation: 0,
+      y: 30,
+      yIsGroundLevel: false,
+    });
   });
 
   it("wraps rotation into 0..3", () => {

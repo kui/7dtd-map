@@ -6,9 +6,9 @@ export interface Prefab {
   // Placed rotation from prefabs.xml `decoration.rotation`, 0..3 = 0/90/180/270
   // degrees clockwise applied at placement time.
   rotation?: number;
-  // True when the decoration carries `y_is_groundlevel="true"` (v2.x worlds),
-  // making y the terrain surface rather than the prefab's bottom.
-  yIsGroundLevel?: boolean;
+  // From `y_is_groundlevel="true"`; a missing attribute is false. When true,
+  // y is the terrain surface rather than the prefab's bottom.
+  yIsGroundLevel: boolean;
 }
 
 export interface PrefabMeshSizes {

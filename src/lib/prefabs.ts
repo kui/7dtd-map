@@ -49,8 +49,6 @@ export function decorationToPrefab(
   const [x, y, z] = nums as [number, number, number];
   const rotationAttr = e.getAttribute("rotation");
   const rotation = rotationAttr === null ? 0 : parseInt(rotationAttr, 10);
-  // v2.x worlds tag every decoration with y_is_groundlevel="true", making y
-  // the terrain surface; older worlds omit it and y is the box's bottom.
   const yIsGroundLevel = e.getAttribute("y_is_groundlevel") === "true";
   return {
     name,
@@ -58,6 +56,6 @@ export function decorationToPrefab(
     y,
     z,
     rotation: Number.isFinite(rotation) ? rotation & 3 : 0,
-    ...(yIsGroundLevel ? { yIsGroundLevel } : {}),
+    yIsGroundLevel,
   };
 }

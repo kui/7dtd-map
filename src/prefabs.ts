@@ -67,6 +67,7 @@ function main() {
         x: 0,
         y: 0,
         z: 0,
+        yIsGroundLevel: false,
         difficulty: difficulties[n] ?? 0,
       }));
     },

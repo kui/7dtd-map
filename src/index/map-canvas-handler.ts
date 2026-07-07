@@ -113,6 +113,7 @@ export class MapCanvasHandler {
           y: p.y,
           z: p.z,
           rotation: p.rotation,
+          yIsGroundLevel: p.yIsGroundLevel,
         });
       }
       worker.postMessage({ filteredPrefabs });

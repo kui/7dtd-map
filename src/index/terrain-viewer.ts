@@ -116,6 +116,7 @@ export class TerrainViewer {
           y: p.y,
           z: p.z,
           rotation: p.rotation,
+          yIsGroundLevel: p.yIsGroundLevel,
         });
       }
     });
