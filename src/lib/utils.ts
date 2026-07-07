@@ -71,6 +71,30 @@ export async function fetchJson<T>(url: string): Promise<T> {
   return (await r.json()) as T;
 }
 
+// Reject empty/short bodies before they are persisted: dev/CI static servers
+// occasionally return them under load. See github.com/kui/7dtd-map/issues/202.
+export async function fetchCompleteBlob(url: string): Promise<Blob> {
+  const r = await fetch(url);
+  if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
+  const blob = await r.blob();
+  // Content-Encoding bodies decompress client-side, so blob.size legitimately
+  // differs from Content-Length; only length-check uncompressed responses.
+  const header = r.headers.get("content-length");
+  const declared = header === null ? NaN : Number(header);
+  const short = r.headers.get("content-encoding") === null &&
+    Number.isFinite(declared) && blob.size !== declared;
+  if (blob.size === 0 || short) {
+    throw Error(
+      `Incomplete download for ${url}: ${blob.size.toString()} bytes` +
+        (Number.isFinite(declared)
+          ? ` (content-length=${declared.toString()})`
+          : "") +
+        ". See https://github.com/kui/7dtd-map/issues/202",
+    );
+  }
+  return blob;
+}
+
 export function basename(path: string) {
   const tail = path.substring(path.lastIndexOf("/") + 1);
   return tail.split(/[?#]/, 1)[0] ?? tail;

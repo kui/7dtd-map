@@ -1,6 +1,7 @@
 import {
   basename,
   escapeHtml,
+  fetchCompleteBlob,
   humanreadableDistance,
   requireNonnull,
   requireType,
@@ -8,6 +9,7 @@ import {
 } from "../lib/utils.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
+import { stub } from "@std/testing/mock";
 
 describe("requireNonnull", () => {
   it("returns non-null values unchanged", () => {
@@ -148,6 +150,90 @@ describe("basename", () => {
   it("strips query and hash from a full URL", () => {
     expect(basename("https://example.com/path/to/a.png?q=1")).toBe("a.png");
     expect(basename("https://example.com/path/to/a.png#frag")).toBe("a.png");
+  });
+});
+
+describe("fetchCompleteBlob", () => {
+  function fakeResponse(
+    body: string,
+    headers: Record<string, string> = {},
+    ok = true,
+  ): Response {
+    return {
+      ok,
+      statusText: ok ? "OK" : "Not Found",
+      headers: new Headers(headers),
+      blob: () => Promise.resolve(new Blob([body])),
+    } as unknown as Response;
+  }
+
+  async function withFetch(
+    response: Response,
+    fn: () => Promise<void>,
+  ): Promise<void> {
+    const s = stub(globalThis, "fetch", () => Promise.resolve(response));
+    try {
+      await fn();
+    } finally {
+      s.restore();
+    }
+  }
+
+  it("returns the body when content-length matches", async () => {
+    await withFetch(
+      fakeResponse("hello", { "content-length": "5" }),
+      async () => {
+        const blob = await fetchCompleteBlob("/x.png");
+        expect(blob.size).toBe(5);
+      },
+    );
+  });
+
+  it("returns the body when no content-length header is present", async () => {
+    await withFetch(fakeResponse("hello"), async () => {
+      const blob = await fetchCompleteBlob("/x.png");
+      expect(blob.size).toBe(5);
+    });
+  });
+
+  it("throws on an empty body", async () => {
+    await withFetch(fakeResponse("", { "content-length": "0" }), async () => {
+      await expect(fetchCompleteBlob("/x.png")).rejects.toThrow(
+        "Incomplete download",
+      );
+    });
+  });
+
+  it("throws when an uncompressed body is shorter than content-length", async () => {
+    await withFetch(
+      fakeResponse("hi", { "content-length": "10" }),
+      async () => {
+        await expect(fetchCompleteBlob("/x.png")).rejects.toThrow(
+          "Incomplete download",
+        );
+      },
+    );
+  });
+
+  it("does not length-check compressed bodies", async () => {
+    await withFetch(
+      fakeResponse("hi", {
+        "content-length": "10",
+        "content-encoding": "gzip",
+      }),
+      async () => {
+        const blob = await fetchCompleteBlob("/x.json");
+        expect(blob.size).toBe(2);
+      },
+    );
+  });
+
+  it("throws when the response is not ok", async () => {
+    await withFetch(fakeResponse("", {}, false), async () => {
+      await expect(fetchCompleteBlob("/x.png")).rejects.toThrow(
+        "Failed to fetch",
+      );
+    });
   });
 });
 
