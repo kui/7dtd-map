@@ -3,7 +3,8 @@
     "deno": {
       "settings": {
         "deno": {
-          "enable": true
+          "enable": true,
+          "enablePaths": ["src", "tools", "lib", "e2e"]
         }
       }
     },
