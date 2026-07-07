@@ -1,11 +1,14 @@
 import type { DtmHandler } from "./dtm-handler.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { MarkerHandler } from "./marker-handler.ts";
+import type { PrefabTooltipController } from "../lib/prefab-tooltip.ts";
 import type {
+  DistrictColors,
   GameCoords,
   GameMapSize,
   GlyphMarker,
   Prefab,
+  PrefabDensityScores,
   PrefabMeshSizes,
   ThreePlaneSize,
 } from "../types/7dtdmap.ts";
@@ -18,6 +21,16 @@ import {
   type MarkerPlacement,
   type MarkerSprites,
 } from "./terrain-viewer/marker-sprites.ts";
+import {
+  type BoxHighlight,
+  type BoxPlacement,
+  buildBoxHighlight,
+  buildPrefabBoxes,
+  type PrefabBoxes,
+} from "./terrain-viewer/prefab-boxes.ts";
+import { buildTileIndex, footprintColorRgb } from "../lib/footprint-color.ts";
+import { EXCLUDED_NAME_FRAGMENTS } from "../lib/prefab-hit-index.ts";
+import { TerrainViewerHoverController } from "./terrain-viewer/hover-controller.ts";
 
 interface Doms {
   dialog: HTMLDialogElement;
@@ -29,6 +42,7 @@ interface Doms {
   helpToggle: HTMLInputElement;
   signSize: HTMLInputElement;
   signAlpha: HTMLInputElement;
+  footprintAlpha: HTMLInputElement;
 }
 
 // Base width of the terrain plane in local geometry units.
@@ -39,6 +53,9 @@ const TERRAIN_WIDTH = 2048;
 // top-down view where texture detail carries most of the perceived
 // quality.
 const TERRAIN_SEGMENTS = 1024;
+// Measured on Pregen06k01: a decoration's y sits ~1 block above the DTM
+// surface (signed mean +1.01 over 1590 POIs), so drop it one block to sit flush.
+const DECORATION_Y_TO_DTM = -1;
 
 export class TerrainViewer {
   #doms: Doms;
@@ -54,8 +71,19 @@ export class TerrainViewer {
   #terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   #animationRequestId: number | null = null;
   #markers: MarkerSprites | null = null;
+  #boxes: PrefabBoxes | null = null;
+  #hover: TerrainViewerHoverController;
+  #highlight: BoxHighlight | null = null;
+  // Placement currently drawn as the hover highlight, synced each frame from
+  // the tooltip handler's raycast result.
+  #highlightedPlacement: BoxPlacement | null = null;
   #filteredPrefabs: Prefab[] = [];
+  #allPrefabs: Prefab[] = [];
+  #districtColors: Promise<DistrictColors>;
+  #densityScores: Promise<PrefabDensityScores>;
   #markerCoords: GameCoords | null = null;
+  // Cached so that each terrain-build phase does not re-await the same value.
+  #mapSize: GameMapSize | null = null;
 
   constructor(
     doms: Doms,
@@ -65,12 +93,17 @@ export class TerrainViewer {
     meshSizes: Promise<PrefabMeshSizes>,
     signMarker: Promise<GlyphMarker>,
     flagMarker: Promise<GlyphMarker>,
+    districtColors: Promise<DistrictColors>,
+    densityScores: Promise<PrefabDensityScores>,
+    tooltipController: PrefabTooltipController,
   ) {
     this.#doms = doms;
     this.#dtm = dtm;
     this.#meshSizes = meshSizes;
     this.#signMarker = signMarker;
     this.#flagMarker = flagMarker;
+    this.#districtColors = districtColors;
+    this.#densityScores = densityScores;
 
     prefabsHandler.addFilterHeaderListener(() => {
       this.#filteredPrefabs.length = 0;
@@ -80,10 +113,15 @@ export class TerrainViewer {
         this.#filteredPrefabs.push({
           name: p.name,
           x: p.x,
+          y: p.y,
           z: p.z,
           rotation: p.rotation,
+          yIsGroundLevel: p.yIsGroundLevel,
         });
       }
+    });
+    prefabsHandler.addAllPrefabsListener(({ all }) => {
+      this.#allPrefabs = all;
     });
     markerHandler.addListener(({ coords }) => {
       this.#markerCoords = coords;
@@ -112,6 +150,11 @@ export class TerrainViewer {
       new three.PerspectiveCamera(),
       { onToggleHelp: () => this.#toggleHelp() },
     );
+    this.#hover = new TerrainViewerHoverController(
+      doms.output,
+      this.#cameraController.camera,
+      tooltipController,
+    );
 
     doms.show.addEventListener("click", () => {
       this.#show().catch(printError);
@@ -123,6 +166,7 @@ export class TerrainViewer {
       this.#stopRender();
       this.#disposeTerrain();
       this.#disposeMarkers();
+      this.#disposeBoxes();
     });
     // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
     // otherwise move focus off the canvas and break keyboard camera
@@ -139,12 +183,17 @@ export class TerrainViewer {
   }
 
   async #updateShowButton() {
-    this.#doms.show.disabled = (await this.#dtm.size()) === null;
+    this.#mapSize = await this.#dtm.size();
+    this.#doms.show.disabled = this.#mapSize === null;
   }
 
   async #show() {
-    await this.#updateElevations();
-    await this.#updateMarkers();
+    await this.#updateShowButton();
+    const mapSize = this.#mapSize;
+    if (!mapSize) throw Error("Unexpected state");
+    await this.#updateElevations(mapSize);
+    await this.#updateBoxes(mapSize);
+    await this.#updateMarkers(mapSize);
     this.#doms.dialog.showModal();
     const { clientWidth, clientHeight } = document.documentElement;
     this.#renderer.setSize(clientWidth, clientHeight);
@@ -153,10 +202,8 @@ export class TerrainViewer {
     this.#startRender();
   }
 
-  async #updateElevations() {
+  async #updateElevations(mapSize: GameMapSize) {
     this.#disposeTerrain();
-    const mapSize = await this.#dtm.size();
-    if (mapSize === null) throw Error("Unexpected state");
 
     this.#terrainSize.width = TERRAIN_WIDTH;
     this.#terrainSize.height = Math.floor(
@@ -198,13 +245,11 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
-  async #updateMarkers(): Promise<void> {
+  async #updateMarkers(mapSize: GameMapSize): Promise<void> {
     this.#disposeMarkers();
     const signOpacity = this.#doms.signAlpha.valueAsNumber;
     const prefabs = signOpacity > 0 ? this.#filteredPrefabs : [];
     if (prefabs.length === 0 && !this.#markerCoords) return;
-    const mapSize = await this.#dtm.size();
-    if (mapSize === null) return;
 
     // Same game-meters-per-local-unit ratio that writeY bakes into the mesh,
     // so marker positions and elevations line up with the terrain vertices.
@@ -258,20 +303,145 @@ export class TerrainViewer {
     mapSize: GameMapSize,
     scaleFactor: number,
   ): Promise<MarkerPlacement> {
-    // Clamp to the DTM index range; footprint centres of edge prefabs can
-    // round one block past it.
-    const halfW = Math.floor(mapSize.width / 2);
-    const halfH = Math.floor(mapSize.height / 2);
-    const elevation = await this.#dtm.getElevation(gameCoords({
-      x: Math.min(Math.max(Math.round(x), -halfW), mapSize.width - 1 - halfW),
-      z: Math.min(Math.max(Math.round(z), -halfH), mapSize.height - 1 - halfH),
-    })) ?? 0;
+    const elevation = await this.#sampleGroundGame(x, z, mapSize);
     return {
       x: x / scaleFactor,
       y: elevation / scaleFactor,
       // Game z (north positive) maps to -z in the Y-up terrain space.
       z: -z / scaleFactor,
     };
+  }
+
+  // DTM elevation (game meters) at a footprint centre, clamped to the index
+  // range since edge prefabs can round one block past it.
+  async #sampleGroundGame(
+    x: number,
+    z: number,
+    mapSize: GameMapSize,
+  ): Promise<number> {
+    const halfW = Math.floor(mapSize.width / 2);
+    const halfH = Math.floor(mapSize.height / 2);
+    return await this.#dtm.getElevation(gameCoords({
+      x: Math.min(Math.max(Math.round(x), -halfW), mapSize.width - 1 - halfW),
+      z: Math.min(Math.max(Math.round(z), -halfH), mapSize.height - 1 - halfH),
+    })) ?? 0;
+  }
+
+  async #updateBoxes(mapSize: GameMapSize): Promise<void> {
+    this.#disposeBoxes();
+    // Boxes cover every decoration regardless of the prefab filter (which only
+    // drives the ✘ signs); the footprint-alpha slider is their on/off switch.
+    const footprintAlpha = this.#doms.footprintAlpha.valueAsNumber;
+    if (footprintAlpha <= 0 || this.#allPrefabs.length === 0) return;
+
+    const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
+    const [meshSizes, districtColors, densityScores] = await Promise.all([
+      this.#meshSizes,
+      this.#districtColors,
+      this.#densityScores,
+    ]);
+    const tileIndex = buildTileIndex(this.#allPrefabs);
+
+    const placements = this.#allPrefabs
+      .map((prefab) =>
+        this.#boxPlacement(
+          prefab,
+          meshSizes,
+          tileIndex,
+          densityScores,
+          districtColors,
+          scaleFactor,
+        )
+      )
+      .filter((p): p is BoxPlacement => p !== null);
+    if (placements.length === 0) return;
+
+    this.#boxes = buildPrefabBoxes(placements, 0.9);
+    this.#scene.add(this.#boxes.object);
+    this.#hover.setBoxes(this.#boxes);
+  }
+
+  #boxPlacement(
+    prefab: Prefab,
+    meshSizes: PrefabMeshSizes,
+    tileIndex: ReturnType<typeof buildTileIndex>,
+    densityScores: PrefabDensityScores,
+    districtColors: DistrictColors,
+    scaleFactor: number,
+  ): BoxPlacement | null {
+    if (EXCLUDED_NAME_FRAGMENTS.some((frag) => prefab.name.includes(frag))) {
+      return null;
+    }
+    const size = meshSizes[prefab.name];
+    if (!size) return null;
+    const [sx, sz, sy, yOffset] = size;
+    const odd = ((prefab.rotation ?? 0) & 1) === 1;
+    const w = odd ? sz : sx;
+    const d = odd ? sx : sz;
+    const centerGameX = prefab.x + w / 2;
+    const centerGameZ = prefab.z + d / 2;
+
+    // Vertical anchor (game meters). yOffset is 0 or negative (blocks buried);
+    // decoration y sits ~1 block above the DTM surface (see DECORATION_Y_TO_DTM).
+    let bottomGame: number;
+    let groundGame: number;
+    if (prefab.yIsGroundLevel) {
+      groundGame = prefab.y + DECORATION_Y_TO_DTM;
+      bottomGame = groundGame + yOffset;
+    } else {
+      bottomGame = prefab.y + DECORATION_Y_TO_DTM;
+      groundGame = bottomGame - yOffset;
+    }
+    const topGame = bottomGame + sy;
+
+    const [r, g, b] = footprintColorRgb(
+      prefab,
+      tileIndex,
+      densityScores,
+      districtColors,
+    );
+    const color = new three.Color().setRGB(r, g, b, three.SRGBColorSpace);
+
+    return {
+      prefab,
+      centerX: centerGameX / scaleFactor,
+      centerZ: -centerGameZ / scaleFactor,
+      width: w / scaleFactor,
+      depth: d / scaleFactor,
+      bottomY: bottomGame / scaleFactor,
+      topY: topGame / scaleFactor,
+      groundY: groundGame / scaleFactor,
+      color,
+    };
+  }
+
+  #disposeBoxes(): void {
+    this.#hover.setBoxes(null);
+    this.#highlightedPlacement = null;
+    this.#disposeHighlight();
+    if (!this.#boxes) return;
+    this.#scene.remove(this.#boxes.object);
+    this.#boxes.dispose();
+    this.#boxes = null;
+  }
+
+  // Mirror the tooltip handler's hovered box as the two-part highlight; the
+  // handler owns hit detection, this owns the scene-facing visual.
+  #syncHighlight(): void {
+    const placement = this.#hover.hoveredPlacement;
+    if (placement === this.#highlightedPlacement) return;
+    this.#highlightedPlacement = placement;
+    this.#disposeHighlight();
+    if (!placement) return;
+    this.#highlight = buildBoxHighlight(placement);
+    this.#scene.add(this.#highlight.object);
+  }
+
+  #disposeHighlight(): void {
+    if (!this.#highlight) return;
+    this.#scene.remove(this.#highlight.object);
+    this.#highlight.dispose();
+    this.#highlight = null;
   }
 
   #disposeMarkers(): void {
@@ -309,6 +479,8 @@ export class TerrainViewer {
         r(currentTime, t);
       });
       this.#cameraController.update(currentTime - prevTime);
+      this.#hover.update();
+      this.#syncHighlight();
       this.#renderer.render(this.#scene, this.#cameraController.camera);
     };
     // Seed prev == current via rAF so the first frame's delta is 0.

@@ -8,9 +8,11 @@ import { bindPrefabSignToggleButton } from "./index/prefab-sign-toggle.ts";
 import * as minMaxInputs from "./lib/ui/min-max-inputs.ts";
 import { LabelHandler } from "./lib/label-handler.ts";
 import type {
+  DistrictColors,
   GlyphMarker,
   HighlightedPrefab,
   PrefabAddedVersions,
+  PrefabDensityScores,
   PrefabDifficulties,
   PrefabMeshSizes,
 } from "./types/7dtdmap.ts";
@@ -30,6 +32,7 @@ import { CursorHandler } from "./index/cursor-handler.ts";
 import { PrefabHighlightHandler } from "./index/prefab-highlight-handler.ts";
 import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handler.ts";
 import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
+import { PrefabTooltipController } from "./lib/prefab-tooltip.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
 import { MarkerCoordsDisplayHandler } from "./index/marker-coords-display-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
@@ -53,6 +56,12 @@ const prefabDifficulties: Promise<PrefabDifficulties> = fetchJson(
 );
 const prefabAddedVersions: Promise<PrefabAddedVersions> = fetchJson(
   "prefab-added-versions.json",
+);
+const districtColors: Promise<DistrictColors> = fetchJson(
+  "district-colors.json",
+);
+const prefabDensityScores: Promise<PrefabDensityScores> = fetchJson(
+  "prefab-density-scores.json",
 );
 const signGlyphMarker: Promise<GlyphMarker> = fetchJson(
   "heavy-ballot-x-path.json",
@@ -197,6 +206,14 @@ function main() {
     markerHandler,
     fileHandler,
   );
+  // One controller owns the shared #prefab-tooltip DOM for both the 2D map
+  // hover and the terrain viewer hover.
+  const prefabTooltipController = new PrefabTooltipController(
+    component("prefab-tooltip", HTMLElement),
+    labelHandler,
+    prefabDifficulties,
+    prefabAddedVersions,
+  );
   new TerrainViewer(
     {
       dialog: component("terrain-viewer-dialog", HTMLDialogElement),
@@ -208,6 +225,7 @@ function main() {
       helpToggle: component("terrain-viewer-help-toggle", HTMLInputElement),
       signSize: component("prefab-sign-size", HTMLInputElement),
       signAlpha: component("prefab-sign-alpha", HTMLInputElement),
+      footprintAlpha: component("prefab-footprint-alpha", HTMLInputElement),
     },
     dtmHandler,
     prefabsHandler,
@@ -215,6 +233,9 @@ function main() {
     prefabMeshSizes,
     signGlyphMarker,
     flagGlyphMarker,
+    districtColors,
+    prefabDensityScores,
+    prefabTooltipController,
   );
   const prefabsList = component("prefabs-list", HTMLElement);
   prefabsHandler.addFilterHeaderListener(() => {
@@ -244,16 +265,13 @@ function main() {
   );
   new PrefabTooltipHandler(
     {
-      tooltip: component("prefab-tooltip", HTMLElement),
       canvas: component("map", HTMLCanvasElement),
     },
     cursorHandler,
     prefabsHandler,
-    labelHandler,
     dtmHandler,
-    prefabDifficulties,
-    prefabAddedVersions,
     prefabMeshSizes,
+    prefabTooltipController,
   );
   new PrefabInspectorHandler(
     {

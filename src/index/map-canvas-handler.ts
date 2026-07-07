@@ -110,8 +110,10 @@ export class MapCanvasHandler {
         filteredPrefabs.push({
           name: p.name,
           x: p.x,
+          y: p.y,
           z: p.z,
           rotation: p.rotation,
+          yIsGroundLevel: p.yIsGroundLevel,
         });
       }
       worker.postMessage({ filteredPrefabs });

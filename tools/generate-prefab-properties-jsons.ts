@@ -96,24 +96,47 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
   );
 }
 
-// PrefabSize is "X, Y, Z"; the map is top-down so only X (width) and Z
-// (depth) are emitted. Entries with a non-positive footprint are skipped so
-// the renderer can fall back to the legacy point marker for those prefabs.
-function extractMeshSizes(prefabXmls: PrefabXmls) {
+// PrefabSize "X, Y, Z" → [X (width), Z (depth), Y (height), yOffset]. Absent or
+// zero footprint (sign/part) is skipped; a malformed present value throws.
+export function extractMeshSizes(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
-      .flatMap<[string, [number, number]]>(([prefabName, entries]) => {
-        const raw = findValueEntry(entries, "PrefabSize")?.value;
-        if (!raw) return [];
-        const parts = raw.split(",").map((s) => parseInt(s.trim(), 10));
-        if (parts.length < 3) return [];
-        const [x, , z] = parts as [number, unknown, number];
-        if (!Number.isFinite(x) || !Number.isFinite(z)) return [];
-        if (x <= 0 || z <= 0) return [];
-        return [[prefabName, [x, z]]];
-      })
+      .flatMap<[string, [number, number, number, number]]>(
+        ([prefabName, entries]) => {
+          const raw = findValueEntry(entries, "PrefabSize")?.value;
+          if (raw === undefined) return [];
+          const parts = raw.split(",").map((s) => s.trim());
+          if (parts.length !== 3 || !parts.every((p) => /^-?\d+$/.test(p))) {
+            throw new Error(
+              `Unexpected PrefabSize "${raw}" in prefab ${prefabName}`,
+            );
+          }
+          const [x, y, z] = parts.map((p) => parseInt(p, 10)) as [
+            number,
+            number,
+            number,
+          ];
+          // Zero/negative footprints (embedded parts) have no drawable box.
+          if (x <= 0 || z <= 0) return [];
+          const yOffset = parseYOffset(
+            findValueEntry(entries, "YOffset")?.value,
+            prefabName,
+          );
+          return [[prefabName, [x, z, y, yOffset]]];
+        },
+      )
       .toSorted((a, b) => a[0].localeCompare(b[0])),
   );
+}
+
+// YOffset is authored as an integer string; reject anything else so a schema
+// change surfaces loudly instead of coercing to a wrong box depth.
+function parseYOffset(raw: string | undefined, prefabName: string): number {
+  if (raw === undefined) return 0;
+  if (!/^-?\d+$/.test(raw.trim())) {
+    throw new Error(`Unexpected YOffset "${raw}" in prefab ${prefabName}`);
+  }
+  return parseInt(raw.trim(), 10);
 }
 
 // Mirrors PrefabData.Init: DensityScore = (TotalVertices + 50000) / 100000
@@ -175,4 +198,4 @@ async function parseXmls(xmlFiles: string[]): Promise<PrefabXmls> {
   return Object.fromEntries(await throttleAll(xmlTasks, 100));
 }
 
-handleMain(main());
+if (import.meta.main) handleMain(main());
