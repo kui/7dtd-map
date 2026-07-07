@@ -13,9 +13,9 @@ export const CURSOR_OFFSET = 16;
 
 // Which action hints to list. The 2D map wires all three; the 3D terrain
 // viewer only supports Shift+Click, so it passes just that one.
-export type TooltipHint = "click" | "dblclick" | "shift-click";
+type TooltipHint = "click" | "dblclick" | "shift-click";
 
-export interface TooltipContent {
+interface TooltipContent {
   prefab: Pick<Prefab, "name">;
   label: string;
   difficulty: number;

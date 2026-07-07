@@ -82,7 +82,7 @@ export function footprintColorHex(
   );
 }
 
-export function hexToRgbFloat(hex: string): [number, number, number] {
+function hexToRgbFloat(hex: string): [number, number, number] {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return [1, 1, 1];
   return [
@@ -95,7 +95,7 @@ export function hexToRgbFloat(hex: string): [number, number, number] {
   ];
 }
 
-export function rgbFloatToHex([r, g, b]: [number, number, number]): string {
+function rgbFloatToHex([r, g, b]: [number, number, number]): string {
   const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n * 255)));
   const hex = (n: number) => clamp(n).toString(16).padStart(2, "0");
   return `#${hex(r)}${hex(g)}${hex(b)}`;
