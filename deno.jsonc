@@ -10,6 +10,7 @@
   },
   "tasks": {
     "serve": "deno run -A tools/build.ts serve",
+    "serve:static": "deno run -A tools/build.ts serve-static",
     "build": {
       "dependencies": [
         "build:ts",
@@ -189,8 +190,8 @@
     "fix": "deno fmt && deno lint --fix",
     "test": "deno test -A --parallel",
     "test:changed": "deno test -A --parallel --changed --permit-no-files",
-    // Playwright E2E. The dev server (deno task serve) is launched by
-    // Playwright's webServer config and listens on the PORT env var
+    // Playwright E2E. The static server (deno task serve:static) is launched
+    // by Playwright's webServer config and listens on the PORT env var
     // (default 18234). Browsers are auto-installed via the e2e:install
     // dependency. On Linux CI you also need system libraries; run
     // `deno run -A @playwright/test install-deps chromium` once (requires
@@ -237,6 +238,7 @@
     "@resvg/resvg-js": "npm:@resvg/resvg-js@^2.6.2",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/fs/expand-glob": "jsr:@std/fs@^1.0.24/expand-glob",
+    "@std/http/file-server": "jsr:@std/http@^1.0.20/file-server",
     "@deno/esbuild-plugin": "jsr:@deno/esbuild-plugin@^1.2.1",
     "@std/expect": "jsr:@std/expect@^1.0.20",
     "@std/testing": "jsr:@std/testing@^1.0.19",

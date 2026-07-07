@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild";
 import { expandGlob } from "@std/fs/expand-glob";
+import { serveDir } from "@std/http/file-server";
 import { denoPlugin } from "@deno/esbuild-plugin";
 
 async function* multiExpandGlob(...globs: string[]) {
@@ -39,6 +40,9 @@ const prodOpts: esbuild.BuildOptions = {
 };
 
 const args = Deno.args;
+const envPort = Deno.env.get("PORT");
+const envHost = Deno.env.get("HOST");
+
 if (args[0] === "serve") {
   const ctx = await esbuild.context({
     ...commonOpts,
@@ -47,8 +51,6 @@ if (args[0] === "serve") {
 
   await ctx.watch();
 
-  const envPort = Deno.env.get("PORT");
-  const envHost = Deno.env.get("HOST");
   const { hosts, port } = await ctx.serve({
     servedir: outDir,
     ...(envPort ? { port: Number(envPort) } : {}),
@@ -59,6 +61,18 @@ if (args[0] === "serve") {
 
   // Keep alive
   await new Promise(() => {});
+} else if (args[0] === "serve-static") {
+  // esbuild's serve drops response bodies under CI load, giving E2E 0-byte map
+  // files (issue 202); build once, then serve public/ from a real static server.
+  await esbuild.build({ ...commonOpts, ...serveOpts });
+  esbuild.stop();
+
+  const port = envPort ? Number(envPort) : 8000;
+  const hostname = envHost ?? "127.0.0.1";
+  Deno.serve(
+    { port, hostname },
+    (req) => serveDir(req, { fsRoot: outDir, quiet: true }),
+  );
 } else {
   await esbuild.build({
     ...commonOpts,

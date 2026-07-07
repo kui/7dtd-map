@@ -11,8 +11,8 @@ export default defineConfig({
   forbidOnly: !!CI,
   retries: CI ? 2 : 0,
   // The bundled-map load test fetches ~5MB of assets through the dev server.
-  // With too many parallel workers the esbuild dev server saturates and the
-  // map render times out. Cap workers to keep that contention bounded.
+  // Cap workers to keep server contention bounded even though serve:static is
+  // sturdier than esbuild's serve under load.
   workers: CI ? 1 : 2,
   reporter: CI ? [["html", { open: "never" }], ["list"]] : "list",
   timeout: 30_000,
@@ -29,7 +29,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `deno task serve`,
+    command: `deno task serve:static`,
     url: baseURL,
     timeout: 120_000,
     reuseExistingServer: !CI,

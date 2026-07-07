@@ -15,7 +15,7 @@ import {
   PREFER_WORLD_FILE_NAMES,
 } from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
-import { basename, printError } from "../lib/utils.ts";
+import { basename, fetchCompleteBlob, printError } from "../lib/utils.ts";
 import * as events from "../lib/events.ts";
 import { runOneshotWorker } from "../lib/oneshot-worker.ts";
 
@@ -248,13 +248,10 @@ export class FileHandler {
         if ("blob" in resource) {
           await workspace.put(resource.name, resource.blob);
         } else {
-          const response = await fetch(resource.url);
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch ${resource.url}: ${response.statusText}`,
-            );
-          }
-          await workspace.put(resource.name, await response.blob());
+          await workspace.put(
+            resource.name,
+            await fetchCompleteBlob(resource.url),
+          );
         }
       } else if (
         isAlwaysProcessRequiredResource(resource) ||
