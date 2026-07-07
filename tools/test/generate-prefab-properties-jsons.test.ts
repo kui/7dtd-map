@@ -35,10 +35,11 @@ describe("extractMeshSizes", () => {
     );
   });
 
-  it("skips prefabs with fewer than 3 size components", () => {
-    expect(extractMeshSizes({ p: prefab({ PrefabSize: "10, 8" }) })).toEqual(
-      {},
-    );
+  it("throws on a PrefabSize that is not three integers", () => {
+    for (const PrefabSize of ["10, 8", "10, 8, 12, 4", "10, x, 20"]) {
+      expect(() => extractMeshSizes({ p: prefab({ PrefabSize }) }))
+        .toThrow(/PrefabSize/);
+    }
   });
 
   it("skips prefabs with a non-positive footprint", () => {

@@ -96,26 +96,33 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
   );
 }
 
-// PrefabSize "X, Y, Z" → [X (width), Z (depth), Y (height), yOffset]; yOffset is
-// blocks below ground (0/negative). Non-positive footprints are skipped (point-marker fallback).
+// PrefabSize "X, Y, Z" → [X (width), Z (depth), Y (height), yOffset]. Absent or
+// zero footprint (sign/part) is skipped; a malformed present value throws.
 export function extractMeshSizes(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
       .flatMap<[string, [number, number, number, number]]>(
         ([prefabName, entries]) => {
           const raw = findValueEntry(entries, "PrefabSize")?.value;
-          if (!raw) return [];
-          const parts = raw.split(",").map((s) => parseInt(s.trim(), 10));
-          if (parts.length < 3) return [];
-          const [x, y, z] = parts as [number, number, number];
-          if (!Number.isFinite(x) || !Number.isFinite(z)) return [];
+          if (raw === undefined) return [];
+          const parts = raw.split(",").map((s) => s.trim());
+          if (parts.length !== 3 || !parts.every((p) => /^-?\d+$/.test(p))) {
+            throw new Error(
+              `Unexpected PrefabSize "${raw}" in prefab ${prefabName}`,
+            );
+          }
+          const [x, y, z] = parts.map((p) => parseInt(p, 10)) as [
+            number,
+            number,
+            number,
+          ];
+          // Zero/negative footprints (embedded parts) have no drawable box.
           if (x <= 0 || z <= 0) return [];
-          const ySize = Number.isFinite(y) ? y : 0;
           const yOffset = parseYOffset(
             findValueEntry(entries, "YOffset")?.value,
             prefabName,
           );
-          return [[prefabName, [x, z, ySize, yOffset]]];
+          return [[prefabName, [x, z, y, yOffset]]];
         },
       )
       .toSorted((a, b) => a[0].localeCompare(b[0])),
