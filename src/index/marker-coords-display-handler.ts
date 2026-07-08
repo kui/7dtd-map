@@ -1,5 +1,5 @@
 import type { DtmHandler } from "./dtm-handler.ts";
-import type { MarkerHandler } from "./marker-handler.ts";
+import type { MarkerStore } from "./marker-store.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { GameCoords, PrefabDifficulties } from "../types/7dtdmap.ts";
@@ -28,7 +28,7 @@ export class MarkerCoordsDisplayHandler {
 
   constructor(
     doms: Doms,
-    markerHandler: MarkerHandler,
+    markerStore: MarkerStore,
     dtmHandler: DtmHandler,
     prefabsHandler: PrefabsHandler,
     labelHandler: LabelHandler,
@@ -44,7 +44,7 @@ export class MarkerCoordsDisplayHandler {
       if (this.#lastCoords) this.#update().catch(printError);
     });
 
-    markerHandler.addListener(({ coords }) => {
+    markerStore.addListener(({ coords }) => {
       this.#lastCoords = coords;
       this.#update().catch(printError);
     });

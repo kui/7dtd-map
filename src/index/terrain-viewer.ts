@@ -1,6 +1,6 @@
 import type { DtmHandler } from "./dtm-handler.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
-import type { MarkerHandler } from "./marker-handler.ts";
+import type { MarkerStore } from "./marker-store.ts";
 import type { PrefabTooltipController } from "../lib/prefab-tooltip.ts";
 import type {
   DistrictColors,
@@ -89,7 +89,7 @@ export class TerrainViewer {
     doms: Doms,
     dtm: DtmHandler,
     prefabsHandler: PrefabsHandler,
-    markerHandler: MarkerHandler,
+    markerStore: MarkerStore,
     meshSizes: Promise<PrefabMeshSizes>,
     signMarker: Promise<GlyphMarker>,
     flagMarker: Promise<GlyphMarker>,
@@ -123,7 +123,7 @@ export class TerrainViewer {
     prefabsHandler.addAllPrefabsListener(({ all }) => {
       this.#allPrefabs = all;
     });
-    markerHandler.addListener(({ coords }) => {
+    markerStore.addListener(({ coords }) => {
       this.#markerCoords = coords;
     });
 

@@ -1,6 +1,6 @@
 import type { MapRendererInputMessage } from "../worker/types.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
-import type { MarkerHandler } from "./marker-handler.ts";
+import type { MarkerStore } from "./marker-store.ts";
 import type { FileHandler } from "./file-handler.ts";
 import type { Prefab } from "../types/7dtdmap.ts";
 
@@ -44,7 +44,7 @@ export class MapCanvasHandler {
     doms: Doms,
     worker: MapRendererWorker,
     prefabsHandler: PrefabsHandler,
-    markerHandler: MarkerHandler,
+    markerStore: MarkerStore,
     fileHandler: FileHandler,
   ) {
     const canvas = doms.canvas.transferControlToOffscreen();
@@ -121,7 +121,7 @@ export class MapCanvasHandler {
     prefabsHandler.addAllPrefabsListener(({ all }) => {
       worker.postMessage({ allPrefabs: all });
     });
-    markerHandler.addListener(({ coords }) => {
+    markerStore.addListener(({ coords }) => {
       worker.postMessage({ markerCoords: coords });
     });
     fileHandler.addListener((fileNames) => {
