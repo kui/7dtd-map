@@ -25,44 +25,45 @@ export interface MarkerSprites {
 
 // `spriteScale` is the world scale that yields the desired constant
 // on-screen size with `sizeAttenuation: false`.
-export function buildMarkerSprites(opts: {
-  signMarker: GlyphMarker;
-  flagMarker: GlyphMarker;
-  signs: MarkerPlacement[];
-  flag: MarkerPlacement | null;
+export function buildSignSprites(opts: {
+  marker: GlyphMarker;
+  placements: MarkerPlacement[];
   spriteScale: number;
-  signOpacity: number;
-}): MarkerSprites {
+  opacity: number;
+}): MarkerSprites | null {
+  if (opts.placements.length === 0 || opts.opacity <= 0) return null;
+  const { material, center, disposables } = glyphMaterial(
+    opts.marker,
+    opts.opacity,
+  );
   const group = new three.Group();
-  const disposables: { dispose(): void }[] = [];
-
-  if (opts.signs.length > 0 && opts.signOpacity > 0) {
-    const { material, center, disposables: d } = glyphMaterial(
-      opts.signMarker,
-      opts.signOpacity,
-    );
-    disposables.push(...d);
-    for (const p of opts.signs) {
-      group.add(makeSprite(material, center, p, opts.spriteScale, 2));
-    }
+  for (const p of opts.placements) {
+    group.add(makeSprite(material, center, p, opts.spriteScale, 2));
   }
-
-  if (opts.flag) {
-    const { material, center, disposables: d } = glyphMaterial(
-      opts.flagMarker,
-      1,
-    );
-    disposables.push(...d);
-    // Higher renderOrder than signs so the flag paints last regardless of the
-    // transparent pass's distance sort (all sprites share depthTest: false).
-    group.add(makeSprite(material, center, opts.flag, opts.spriteScale, 3));
-  }
-
   return {
     object: group,
-    dispose: () => {
-      for (const d of disposables) d.dispose();
-    },
+    dispose: () => disposables.forEach((d) => d.dispose()),
+  };
+}
+
+export function buildFlagSprite(opts: {
+  marker: GlyphMarker;
+  placement: MarkerPlacement;
+  spriteScale: number;
+}): MarkerSprites {
+  const { material, center, disposables } = glyphMaterial(opts.marker, 1);
+  // Higher renderOrder than signs (2) so the flag paints last regardless of
+  // the transparent pass's distance sort (all sprites share depthTest: false).
+  const sprite = makeSprite(
+    material,
+    center,
+    opts.placement,
+    opts.spriteScale,
+    3,
+  );
+  return {
+    object: sprite,
+    dispose: () => disposables.forEach((d) => d.dispose()),
   };
 }
 

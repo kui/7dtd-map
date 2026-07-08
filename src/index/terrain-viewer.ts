@@ -17,7 +17,8 @@ import * as three from "three";
 import { gameCoords, printError, threePlaneSize } from "../lib/utils.ts";
 import { TerrainViewerCameraController } from "./terrain-viewer/camera-controller.ts";
 import {
-  buildMarkerSprites,
+  buildFlagSprite,
+  buildSignSprites,
   type MarkerPlacement,
   type MarkerSprites,
 } from "./terrain-viewer/marker-sprites.ts";
@@ -70,7 +71,8 @@ export class TerrainViewer {
   #terrain: three.Mesh | null = null;
   #terrainSize: ThreePlaneSize = threePlaneSize(1, 1);
   #animationRequestId: number | null = null;
-  #markers: MarkerSprites | null = null;
+  #signSprites: MarkerSprites | null = null;
+  #flagSprite: MarkerSprites | null = null;
   #boxes: PrefabBoxes | null = null;
   #hover: TerrainViewerHoverController;
   #highlight: BoxHighlight | null = null;
@@ -134,7 +136,7 @@ export class TerrainViewer {
     markerStore.addListener(({ coords }) => {
       this.#markerCoords = coords;
       if (doms.dialog.open && this.#mapSize) {
-        this.#updateMarkers(this.#mapSize).catch(printError);
+        this.#updateFlag(this.#mapSize).catch(printError);
       }
     });
 
@@ -176,7 +178,8 @@ export class TerrainViewer {
     doms.dialog.addEventListener("close", () => {
       this.#stopRender();
       this.#disposeTerrain();
-      this.#disposeMarkers();
+      this.#disposeSigns();
+      this.#disposeFlag();
       this.#disposeBoxes();
     });
     // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
@@ -237,7 +240,8 @@ export class TerrainViewer {
     if (!mapSize) throw Error("Unexpected state");
     await this.#updateElevations(mapSize);
     await this.#updateBoxes(mapSize);
-    await this.#updateMarkers(mapSize);
+    await this.#updateSigns(mapSize);
+    await this.#updateFlag(mapSize);
     this.#doms.dialog.showModal();
     const { clientWidth, clientHeight } = document.documentElement;
     this.#renderer.setSize(clientWidth, clientHeight);
@@ -289,25 +293,15 @@ export class TerrainViewer {
     console.timeEnd("updateElevations");
   }
 
-  async #updateMarkers(mapSize: GameMapSize): Promise<void> {
-    this.#disposeMarkers();
-    const signOpacity = this.#doms.signAlpha.valueAsNumber;
-    const prefabs = signOpacity > 0 ? this.#filteredPrefabs : [];
-    if (prefabs.length === 0 && !this.#markerCoords) return;
+  async #updateSigns(mapSize: GameMapSize): Promise<void> {
+    this.#disposeSigns();
+    const opacity = this.#doms.signAlpha.valueAsNumber;
+    if (opacity <= 0 || this.#filteredPrefabs.length === 0) return;
 
-    // Same game-meters-per-local-unit ratio that writeY bakes into the mesh,
-    // so marker positions and elevations line up with the terrain vertices.
     const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
-
-    const glyphPx = this.#doms.signSize.valueAsNumber;
-    const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
-    // World scale s spans s / (2 * tan(fov / 2)) of the viewport height with
-    // sizeAttenuation off; the sprite canvas is twice the glyph box.
-    const spriteScale = (4 * glyphPx * Math.tan(fovRad / 2)) /
-      document.documentElement.clientHeight;
-
+    const spriteScale = this.#spriteScale();
     const meshSizes = await this.#meshSizes;
-    const signs = await Promise.all(prefabs.map((prefab) => {
+    const placements = await Promise.all(this.#filteredPrefabs.map((prefab) => {
       // Same footprint-centre shift as the 2D sign renderer: decoration
       // positions are the SW corner of the rotated AABB.
       const size = meshSizes[prefab.name];
@@ -321,24 +315,45 @@ export class TerrainViewer {
         scaleFactor,
       );
     }));
-    const flag = this.#markerCoords
-      ? await this.#placement(
-        this.#markerCoords.x,
-        this.#markerCoords.z,
-        mapSize,
-        scaleFactor,
-      )
-      : null;
 
-    this.#markers = buildMarkerSprites({
-      signMarker: await this.#signMarker,
-      flagMarker: await this.#flagMarker,
-      signs,
-      flag,
+    this.#signSprites = buildSignSprites({
+      marker: await this.#signMarker,
+      placements,
       spriteScale,
-      signOpacity,
+      opacity,
     });
-    this.#scene.add(this.#markers.object);
+    if (this.#signSprites) this.#scene.add(this.#signSprites.object);
+  }
+
+  // Cheap on its own; kept separate from #updateSigns so a marker change does
+  // not force a resample of every sign (which would refetch the DTM raw after
+  // its CacheHolder expires and briefly wipe every sign sprite).
+  async #updateFlag(mapSize: GameMapSize): Promise<void> {
+    this.#disposeFlag();
+    if (!this.#markerCoords) return;
+
+    const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
+    const placement = await this.#placement(
+      this.#markerCoords.x,
+      this.#markerCoords.z,
+      mapSize,
+      scaleFactor,
+    );
+    this.#flagSprite = buildFlagSprite({
+      marker: await this.#flagMarker,
+      placement,
+      spriteScale: this.#spriteScale(),
+    });
+    this.#scene.add(this.#flagSprite.object);
+  }
+
+  #spriteScale(): number {
+    const glyphPx = this.#doms.signSize.valueAsNumber;
+    const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
+    // World scale s spans s / (2 * tan(fov / 2)) of the viewport height with
+    // sizeAttenuation off; the sprite canvas is twice the glyph box.
+    return (4 * glyphPx * Math.tan(fovRad / 2)) /
+      document.documentElement.clientHeight;
   }
 
   async #placement(
@@ -512,11 +527,18 @@ export class TerrainViewer {
     this.#highlight = null;
   }
 
-  #disposeMarkers(): void {
-    if (!this.#markers) return;
-    this.#scene.remove(this.#markers.object);
-    this.#markers.dispose();
-    this.#markers = null;
+  #disposeSigns(): void {
+    if (!this.#signSprites) return;
+    this.#scene.remove(this.#signSprites.object);
+    this.#signSprites.dispose();
+    this.#signSprites = null;
+  }
+
+  #disposeFlag(): void {
+    if (!this.#flagSprite) return;
+    this.#scene.remove(this.#flagSprite.object);
+    this.#flagSprite.dispose();
+    this.#flagSprite = null;
   }
 
   // three.js does not free GPU resources on GC; geometry, materials and
