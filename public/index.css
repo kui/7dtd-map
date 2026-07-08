@@ -19,6 +19,30 @@
   margin-right: calc(min(30vw, var(--controller-width)) + 58px);
 }
 
+#jump-to-mark,
+#reset-mark {
+  color: #666;
+  border-color: transparent;
+  background: transparent;
+  &:hover,
+  &:focus-visible {
+    border-color: #aaa;
+    background: #e8e8e8;
+  }
+  &:active {
+    border-color: #aaa;
+    background: #d8d8d8;
+  }
+}
+
+#map-flag-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
 #map-prefab-highlight {
   position: absolute;
   box-sizing: border-box;

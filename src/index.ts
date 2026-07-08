@@ -36,6 +36,7 @@ import { PrefabTooltipController } from "./lib/prefab-tooltip.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
 import { MarkerStore } from "./index/marker-store.ts";
 import { MarkerCoordsDisplayHandler } from "./index/marker-coords-display-handler.ts";
+import { MarkerJumpHandler } from "./index/marker-jump-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
 import { DndHandler } from "./index/dnd-handler.ts";
@@ -164,6 +165,15 @@ function main() {
     labelHandler,
     fileHandler,
     prefabMeshSizes,
+  );
+  new MarkerJumpHandler(
+    {
+      jump: component("jump-to-mark", HTMLButtonElement),
+      canvas: component("map", HTMLCanvasElement),
+      anchor: component("map-flag-anchor", HTMLElement),
+    },
+    dtmHandler,
+    markerStore,
   );
   new MarkerCoordsDisplayHandler(
     {
