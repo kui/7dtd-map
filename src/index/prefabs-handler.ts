@@ -1,5 +1,5 @@
 import type { PrefabsFilterOutputMessage } from "../worker/types.ts";
-import type { MarkerHandler } from "./marker-handler.ts";
+import type { MarkerStore } from "./marker-store.ts";
 import type { LabelHandler } from "../lib/label-handler.ts";
 import type { FileHandler } from "./file-handler.ts";
 import type {
@@ -52,7 +52,7 @@ export class PrefabsHandler {
   constructor(
     doms: Doms,
     worker: PrefabsFilterWorker,
-    markerHandler: MarkerHandler,
+    markerStore: MarkerStore,
     labelHandler: LabelHandler,
     fileHandler: FileHandler,
     meshSizes: Promise<PrefabMeshSizes>,
@@ -79,7 +79,7 @@ export class PrefabsHandler {
       onlyNew: doms.onlyNew.checked,
     });
 
-    markerHandler.addListener((m) => {
+    markerStore.addListener((m) => {
       worker.postMessage({ markCoords: m.coords });
     });
     fileHandler.addListener(async (fileNames) => {

@@ -34,6 +34,7 @@ import { CursorCoordsDisplayHandler } from "./index/cursor-coords-display-handle
 import { PrefabTooltipHandler } from "./index/prefab-tooltip-handler.ts";
 import { PrefabTooltipController } from "./lib/prefab-tooltip.ts";
 import { MarkerHandler } from "./index/marker-handler.ts";
+import { MarkerStore } from "./index/marker-store.ts";
 import { MarkerCoordsDisplayHandler } from "./index/marker-coords-display-handler.ts";
 import { FileHandler } from "./index/file-handler.ts";
 import { MapCanvasHandler } from "./index/map-canvas-handler.ts";
@@ -130,13 +131,15 @@ function main() {
     () => new Worker("worker/dtm.js"),
     fileHandler,
   );
-  const markerHandler = new MarkerHandler(
+  const markerStore = new MarkerStore();
+  new MarkerHandler(
     {
       canvas: component("map", HTMLCanvasElement),
       resetMarker: component("reset-mark", HTMLButtonElement),
     },
     dtmHandler,
     fileHandler,
+    markerStore,
   );
   const prefabsHandler = new PrefabsHandler(
     {
@@ -157,7 +160,7 @@ function main() {
       onlyNew: component("only-new-prefabs", HTMLInputElement),
     },
     new Worker("worker/prefabs-filter.js"),
-    markerHandler,
+    markerStore,
     labelHandler,
     fileHandler,
     prefabMeshSizes,
@@ -167,7 +170,7 @@ function main() {
       output: component("mark-coods", HTMLElement),
       prefab: component("mark-prefab", HTMLElement),
     },
-    markerHandler,
+    markerStore,
     dtmHandler,
     prefabsHandler,
     labelHandler,
@@ -203,7 +206,7 @@ function main() {
     },
     new Worker("worker/map-renderer.js"),
     prefabsHandler,
-    markerHandler,
+    markerStore,
     fileHandler,
   );
   // One controller owns the shared #prefab-tooltip DOM for both the 2D map
@@ -229,7 +232,7 @@ function main() {
     },
     dtmHandler,
     prefabsHandler,
-    markerHandler,
+    markerStore,
     prefabMeshSizes,
     signGlyphMarker,
     flagGlyphMarker,
