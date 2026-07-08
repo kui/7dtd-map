@@ -82,8 +82,15 @@ export class TerrainViewer {
   #districtColors: Promise<DistrictColors>;
   #densityScores: Promise<PrefabDensityScores>;
   #markerCoords: GameCoords | null = null;
+  #markerStore: MarkerStore;
   // Cached so that each terrain-build phase does not re-await the same value.
   #mapSize: GameMapSize | null = null;
+  #clickRaycaster = new three.Raycaster();
+  #clickNdc = new three.Vector2();
+  // Guards the trailing click of a camera drag from synthesizing a marker.
+  #pointerDownX = 0;
+  #pointerDownY = 0;
+  #pointerDragged = false;
 
   constructor(
     doms: Doms,
@@ -123,8 +130,12 @@ export class TerrainViewer {
     prefabsHandler.addAllPrefabsListener(({ all }) => {
       this.#allPrefabs = all;
     });
+    this.#markerStore = markerStore;
     markerStore.addListener(({ coords }) => {
       this.#markerCoords = coords;
+      if (doms.dialog.open && this.#mapSize) {
+        this.#updateMarkers(this.#mapSize).catch(printError);
+      }
     });
 
     this.#renderer = new three.WebGLRenderer({
@@ -175,6 +186,39 @@ export class TerrainViewer {
     // still toggles the control.
     doms.hud.addEventListener("mousedown", (event) => {
       event.preventDefault();
+    });
+
+    doms.output.addEventListener("pointerdown", (event) => {
+      this.#pointerDownX = event.clientX;
+      this.#pointerDownY = event.clientY;
+      this.#pointerDragged = false;
+    });
+    doms.output.addEventListener("pointermove", (event) => {
+      if ((event.buttons & 1) === 0) return;
+      const dx = event.clientX - this.#pointerDownX;
+      const dy = event.clientY - this.#pointerDownY;
+      if (dx * dx + dy * dy > 16) this.#pointerDragged = true;
+    });
+    doms.output.addEventListener("click", (event) => {
+      if (event.shiftKey) {
+        const placement = this.#hover.hoveredPlacement;
+        if (!placement) return;
+        event.preventDefault();
+        // Shift is not a "background tab" modifier for browsers, so a plain
+        // window.open() opens the new tab in the foreground.
+        globalThis.open(
+          `prefabs/${encodeURIComponent(placement.prefab.name)}.html`,
+          "_blank",
+          "noopener",
+        );
+        return;
+      }
+      if (this.#pointerDragged) return;
+      this.#placeMarkerAt(event);
+    });
+    doms.output.addEventListener("dblclick", (event) => {
+      if (event.shiftKey) return;
+      this.#markerStore.set(null).catch(printError);
     });
 
     dtm.addListener(() => this.#updateShowButton());
@@ -413,6 +457,30 @@ export class TerrainViewer {
       groundY: groundGame / scaleFactor,
       color,
     };
+  }
+
+  #placeMarkerAt(event: MouseEvent): void {
+    if (!this.#terrain || !this.#mapSize) return;
+    const rect = this.#doms.output.getBoundingClientRect();
+    this.#clickNdc.set(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1,
+    );
+    this.#clickRaycaster.setFromCamera(
+      this.#clickNdc,
+      this.#cameraController.camera,
+    );
+    const hit = this.#clickRaycaster.intersectObject(this.#terrain)[0];
+    if (!hit) return;
+    const scaleFactor = (this.#mapSize.width - 1) / this.#terrainSize.width;
+    const gx = Math.round(hit.point.x * scaleFactor);
+    // Game z (north positive) is the negated world z.
+    const gz = Math.round(-hit.point.z * scaleFactor);
+    const halfW = Math.floor(this.#mapSize.width / 2);
+    const halfH = Math.floor(this.#mapSize.height / 2);
+    if (gx < -halfW || gx > this.#mapSize.width - 1 - halfW) return;
+    if (gz < -halfH || gz > this.#mapSize.height - 1 - halfH) return;
+    this.#markerStore.set(gameCoords({ x: gx, z: gz })).catch(printError);
   }
 
   #disposeBoxes(): void {

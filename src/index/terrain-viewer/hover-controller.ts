@@ -54,18 +54,6 @@ export class TerrainViewerHoverController {
       this.#pointerInside = false;
       this.#setHover(null);
     });
-    canvas.addEventListener("click", (event) => {
-      const placement = this.hoveredPlacement;
-      if (!event.shiftKey || !placement) return;
-      event.preventDefault();
-      // Shift is not a "background tab" modifier for browsers, so a plain
-      // window.open() opens the new tab in the foreground.
-      globalThis.open(
-        `prefabs/${encodeURIComponent(placement.prefab.name)}.html`,
-        "_blank",
-        "noopener",
-      );
-    });
   }
 
   get hoveredPlacement(): BoxPlacement | null {
@@ -98,7 +86,7 @@ export class TerrainViewerHoverController {
     // before the content lookup resolves, so no per-instance recheck is needed.
     this.#controller.showFor(
       placement.prefab,
-      ["shift-click"],
+      ["click", "dblclick", "shift-click"],
       () => this.#anchor(placement),
     ).catch(printError);
   }
