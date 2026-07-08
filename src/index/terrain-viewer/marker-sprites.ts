@@ -43,7 +43,7 @@ export function buildMarkerSprites(opts: {
     );
     disposables.push(...d);
     for (const p of opts.signs) {
-      group.add(makeSprite(material, center, p, opts.spriteScale));
+      group.add(makeSprite(material, center, p, opts.spriteScale, 2));
     }
   }
 
@@ -53,7 +53,9 @@ export function buildMarkerSprites(opts: {
       1,
     );
     disposables.push(...d);
-    group.add(makeSprite(material, center, opts.flag, opts.spriteScale));
+    // Higher renderOrder than signs so the flag paints last regardless of the
+    // transparent pass's distance sort (all sprites share depthTest: false).
+    group.add(makeSprite(material, center, opts.flag, opts.spriteScale, 3));
   }
 
   return {
@@ -107,6 +109,7 @@ function makeSprite(
   center: three.Vector2,
   placement: MarkerPlacement,
   scale: number,
+  renderOrder: number,
 ): three.Sprite {
   const sprite = new three.Sprite(material);
   sprite.center.copy(center);
@@ -114,6 +117,6 @@ function makeSprite(
   sprite.position.set(placement.x, placement.y, placement.z);
   // Above terrain, boxes (0) and highlight (1); the transparent pass's distance
   // sort could otherwise paint those over these non-depth-writing sprites.
-  sprite.renderOrder = 2;
+  sprite.renderOrder = renderOrder;
   return sprite;
 }
