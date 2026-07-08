@@ -35,15 +35,7 @@
   }
 }
 
-#map-flag-anchor {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-#map-prefab-highlight {
+#map-highlight {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
@@ -54,11 +46,11 @@
   transition: opacity 0.1s;
   &.visible {
     opacity: 1;
-    animation: map-prefab-highlight-pulse 1.2s ease-out infinite;
+    animation: map-highlight-pulse 1.2s ease-out infinite;
   }
 }
 
-@keyframes map-prefab-highlight-pulse {
+@keyframes map-highlight-pulse {
   from {
     box-shadow: 0 0 0 0 rgba(255, 212, 0, 0.9);
   }
@@ -68,7 +60,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #map-prefab-highlight.visible {
+  #map-highlight.visible {
     animation: none;
   }
 }

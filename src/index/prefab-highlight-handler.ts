@@ -1,6 +1,7 @@
 import type { DtmHandler } from "./dtm-handler.ts";
 import type { PrefabsHandler } from "./prefabs-handler.ts";
 import type { PrefabMeshSizes } from "../types/7dtdmap.ts";
+import type { MapHighlight } from "./map-highlight.ts";
 
 import { printError } from "../lib/utils.ts";
 import { type CssRect, prefabFootprintCssRect } from "../lib/dom-utils.ts";
@@ -8,7 +9,6 @@ import { type CssRect, prefabFootprintCssRect } from "../lib/dom-utils.ts";
 interface Doms {
   list: HTMLElement;
   canvas: HTMLCanvasElement;
-  highlight: HTMLElement;
 }
 
 /**
@@ -22,6 +22,7 @@ export class PrefabHighlightHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;
   #meshSizes: Promise<PrefabMeshSizes>;
+  #highlight: MapHighlight;
   #hoveredLi: HTMLElement | null = null;
 
   constructor(
@@ -29,10 +30,12 @@ export class PrefabHighlightHandler {
     dtmHandler: DtmHandler,
     prefabsHandler: PrefabsHandler,
     meshSizes: Promise<PrefabMeshSizes>,
+    highlight: MapHighlight,
   ) {
     this.#doms = doms;
     this.#dtmHandler = dtmHandler;
     this.#meshSizes = meshSizes;
+    this.#highlight = highlight;
 
     // Nested block rows have no data-x, so closest() resolves them to their
     // parent prefab row.
@@ -74,16 +77,11 @@ export class PrefabHighlightHandler {
       this.#hide();
       return;
     }
-    const style = this.#doms.highlight.style;
-    style.left = `${rect.left.toString()}px`;
-    style.top = `${rect.top.toString()}px`;
-    style.width = `${rect.width.toString()}px`;
-    style.height = `${rect.height.toString()}px`;
-    this.#doms.highlight.classList.add("visible");
+    this.#highlight.show(rect);
   }
 
   #hide(): void {
-    this.#doms.highlight.classList.remove("visible");
+    this.#highlight.hide();
   }
 
   async #jump(li: HTMLElement): Promise<void> {
@@ -91,9 +89,9 @@ export class PrefabHighlightHandler {
     // position the highlight ourselves before scrolling to it.
     this.#hoveredLi = li;
     await this.#show(li);
-    if (!this.#doms.highlight.classList.contains("visible")) return;
+    if (!this.#highlight.visible) return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    this.#doms.highlight.scrollIntoView({
+    this.#highlight.scrollIntoView({
       behavior: reduce ? "auto" : "smooth",
       block: "center",
       inline: "center",
