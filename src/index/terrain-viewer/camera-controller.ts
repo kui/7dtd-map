@@ -14,6 +14,9 @@ const TILT_MAX_RAD = Math.PI / 2; // 90°
 const TILT_MIN_RAD = Math.PI / 6; // 30°
 const MAX_ELEV = 255;
 
+// Speed multiplier applied to horizontal pan while Shift is held.
+const PAN_BOOST_MULTIPLIER = 4;
+
 // Approximate pixel-equivalent multipliers for the non-pixel wheel delta modes.
 // Browsers report line/page units when a discrete wheel is used; converting to a
 // pixel-like scale keeps zoom speed consistent across input devices.
@@ -101,6 +104,7 @@ export class TerrainViewerCameraController {
   #maxY = 1;
 
   #speeds = { x: 0, y: 0, tilt: 0, zoom: 0 };
+  #panBoost = 1;
   #mouseMove = {
     left: { x: 0, y: 0 },
     center: { x: 0, y: 0 },
@@ -136,6 +140,7 @@ export class TerrainViewerCameraController {
     this.camera = camera;
 
     canvas.addEventListener("keydown", (event) => {
+      this.#panBoost = event.shiftKey ? PAN_BOOST_MULTIPLIER : 1;
       const action = mapCameraKey(event);
       if (action === null) return;
       if (action === "toggle-help") {
@@ -147,6 +152,7 @@ export class TerrainViewerCameraController {
       event.preventDefault();
     });
     canvas.addEventListener("keyup", (event) => {
+      this.#panBoost = event.shiftKey ? PAN_BOOST_MULTIPLIER : 1;
       const action = mapCameraKey(event);
       if (action === null || action === "toggle-help") return;
       this.#applyKeyAction(action, false);
@@ -251,8 +257,8 @@ export class TerrainViewerCameraController {
 
     const scaleFactor = this.#mapWidth / (this.#terrainSize.width + 1);
 
-    const deltaDistKey = (scaleFactor * 120 * 1000 * deltaMsec) / 1000 / 60 /
-      60;
+    const deltaDistKey =
+      (scaleFactor * 120 * 1000 * deltaMsec * this.#panBoost) / 1000 / 60 / 60;
     const deltaMouse = this.#mouseMove.left;
 
     const deltaX = deltaDistKey * this.#speeds.x - deltaMouse.x;
