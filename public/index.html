@@ -65,9 +65,10 @@
             <span id="cursor-coods">E/W: -, N/S: -, Elev: -</span>
           </td>
         </tr>
-        <tr>
+        <tr id="flag-row">
           <th>
             🚩 Flag
+            <button id="jump-to-mark" disabled title="Scroll the map to the flag" aria-label="Scroll the map to the flag">⌖</button>
             <button id="reset-mark" title="Reset (or double-click the map)">×</button>
           </th>
           <td colspan="2">
@@ -550,7 +551,7 @@
     </dialog>
     <div id="map-wrapper">
       <canvas id="map" width="0" height="0"></canvas>
-      <div id="map-prefab-highlight" aria-hidden="true"></div>
+      <div id="map-highlight" aria-hidden="true"></div>
     </div>
     <div id="prefab-tooltip" popover="manual" role="tooltip"></div>
     <div id="prefab-link-tooltip" popover="manual" role="tooltip">

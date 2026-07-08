@@ -19,7 +19,23 @@
   margin-right: calc(min(30vw, var(--controller-width)) + 58px);
 }
 
-#map-prefab-highlight {
+#jump-to-mark,
+#reset-mark {
+  color: #666;
+  border-color: transparent;
+  background: transparent;
+  &:hover,
+  &:focus-visible {
+    border-color: #aaa;
+    background: #e8e8e8;
+  }
+  &:active {
+    border-color: #aaa;
+    background: #d8d8d8;
+  }
+}
+
+#map-highlight {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
@@ -30,11 +46,11 @@
   transition: opacity 0.1s;
   &.visible {
     opacity: 1;
-    animation: map-prefab-highlight-pulse 1.2s ease-out infinite;
+    animation: map-highlight-pulse 1.2s ease-out infinite;
   }
 }
 
-@keyframes map-prefab-highlight-pulse {
+@keyframes map-highlight-pulse {
   from {
     box-shadow: 0 0 0 0 rgba(255, 212, 0, 0.9);
   }
@@ -44,7 +60,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #map-prefab-highlight.visible {
+  #map-highlight.visible {
     animation: none;
   }
 }
