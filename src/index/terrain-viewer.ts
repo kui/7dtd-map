@@ -58,6 +58,12 @@ const TERRAIN_SEGMENTS = 1024;
 // surface (signed mean +1.01 over 1590 POIs), so drop it one block to sit flush.
 const DECORATION_Y_TO_DTM = -1;
 
+function prefabGroundGame(prefab: Prefab, yOffset: number): number {
+  return prefab.yIsGroundLevel
+    ? prefab.y + DECORATION_Y_TO_DTM
+    : prefab.y + DECORATION_Y_TO_DTM - yOffset;
+}
+
 export class TerrainViewer {
   #doms: Doms;
   #dtm: DtmHandler;
@@ -301,20 +307,21 @@ export class TerrainViewer {
     const scaleFactor = (mapSize.width - 1) / this.#terrainSize.width;
     const spriteScale = this.#spriteScale();
     const meshSizes = await this.#meshSizes;
-    const placements = await Promise.all(this.#filteredPrefabs.map((prefab) => {
+    const placements = this.#filteredPrefabs.map((prefab) => {
       // Same footprint-centre shift as the 2D sign renderer: decoration
       // positions are the SW corner of the rotated AABB.
       const size = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
       const halfD = size ? (odd ? size[0] : size[1]) / 2 : 0;
-      return this.#placement(
-        prefab.x + halfW,
-        prefab.z + halfD,
-        mapSize,
-        scaleFactor,
-      );
-    }));
+      const yOffset = size ? size[3] : 0;
+      const groundGame = prefabGroundGame(prefab, yOffset);
+      return {
+        x: (prefab.x + halfW) / scaleFactor,
+        y: groundGame / scaleFactor,
+        z: -(prefab.z + halfD) / scaleFactor,
+      };
+    });
 
     this.#signSprites = buildSignSprites({
       marker: await this.#signMarker,
@@ -440,17 +447,8 @@ export class TerrainViewer {
     const centerGameX = prefab.x + w / 2;
     const centerGameZ = prefab.z + d / 2;
 
-    // Vertical anchor (game meters). yOffset is 0 or negative (blocks buried);
-    // decoration y sits ~1 block above the DTM surface (see DECORATION_Y_TO_DTM).
-    let bottomGame: number;
-    let groundGame: number;
-    if (prefab.yIsGroundLevel) {
-      groundGame = prefab.y + DECORATION_Y_TO_DTM;
-      bottomGame = groundGame + yOffset;
-    } else {
-      bottomGame = prefab.y + DECORATION_Y_TO_DTM;
-      groundGame = bottomGame - yOffset;
-    }
+    const groundGame = prefabGroundGame(prefab, yOffset);
+    const bottomGame = groundGame + yOffset;
     const topGame = bottomGame + sy;
 
     const [r, g, b] = footprintColorRgb(
