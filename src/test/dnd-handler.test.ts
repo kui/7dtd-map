@@ -11,19 +11,19 @@ describe("createDragCounter", () => {
 
   it("does not signal open/close on nested boundary crossings", () => {
     const c = createDragCounter();
-    expect(c.enter()).toBe(true); // body
-    expect(c.enter()).toBe(false); // child
-    expect(c.enter()).toBe(false); // grandchild
+    expect(c.enter()).toBe(true);
+    expect(c.enter()).toBe(false);
+    expect(c.enter()).toBe(false);
     expect(c.leave()).toBe(false);
     expect(c.leave()).toBe(false);
-    expect(c.leave()).toBe(true); // truly left
+    expect(c.leave()).toBe(true);
   });
 
   it("clamps to zero so spurious extra leaves do not go negative", () => {
     const c = createDragCounter();
     c.enter();
     expect(c.leave()).toBe(true);
-    // Extra leave (e.g. dragleave after drop) should still report "out".
+    // WHY: browsers can fire an extra dragleave after drop; the counter must stay clamped at zero and still report "out".
     expect(c.leave()).toBe(true);
     expect(c.enter()).toBe(true);
   });

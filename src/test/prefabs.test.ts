@@ -6,9 +6,12 @@ import {
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 
-// Stand-in for a <decoration> element: decorationToPrefab only reads
-// getAttribute, so a plain attribute map is enough to exercise both the
-// v2.x (y_is_groundlevel) and legacy attribute systems without a DOM.
+/**
+ * Stand-in for a `<decoration>` element. `decorationToPrefab` only calls
+ * `getAttribute`, so a plain attribute map is enough to exercise both
+ * the v2.x (`y_is_groundlevel`) and legacy attribute systems without a
+ * DOM.
+ */
 function decoration(attrs: Record<string, string>) {
   return { getAttribute: (name: string) => attrs[name] ?? null };
 }
