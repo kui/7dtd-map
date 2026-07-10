@@ -44,15 +44,16 @@ describe("parseTts error handling", () => {
     return p;
   }
 
-  // Empty-body fixture: valid 14-byte header with dim 0,0,0 so the block
-  // loop iterates zero times. Lets us exercise the post-loop header checks
-  // without needing a real prefab body.
+  /**
+   * Builds a valid 14-byte TTS header with dim 0,0,0 so the block loop
+   * iterates zero times, letting tests exercise the post-loop header
+   * checks without a real prefab body.
+   */
   function emptyBodyHeader(magic: number[], version: number): Uint8Array {
     const buf = new Uint8Array(14);
     buf.set(magic, 0);
     const view = new DataView(buf.buffer);
     view.setUint32(4, version, true);
-    // dim x=y=z=0
     return buf;
   }
 
@@ -73,16 +74,14 @@ describe("parseTts error handling", () => {
   });
 
   it("rejects truncated files (FD must still be released via finally)", async () => {
-    // Valid header claiming a 1-block body but no body bytes follow.
-    // ByteReader.read should throw; the try/finally in parseTts is what
-    // keeps the ReadStream FD from leaking under throttleAll concurrency.
+    // WHY: header claims a 1×1×1 body but no bytes follow, forcing ByteReader.read to throw; the try/finally in parseTts must release the ReadStream FD to survive throttleAll concurrency.
     const buf = new Uint8Array(14);
     buf.set([0x74, 0x74, 0x73, 0x00], 0);
     const view = new DataView(buf.buffer);
     view.setUint32(4, 19, true);
-    view.setUint16(8, 1, true); // x = 1
-    view.setUint16(10, 1, true); // y = 1
-    view.setUint16(12, 1, true); // z = 1
+    view.setUint16(8, 1, true);
+    view.setUint16(10, 1, true);
+    view.setUint16(12, 1, true);
     const p = writeTmp("truncated.tts", buf);
     await expect(parseTts(p)).rejects.toThrow();
   });

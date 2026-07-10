@@ -19,7 +19,7 @@ function fakeDecoded(
 
 describe("statDecodedPixels", () => {
   it("counts each unique RGBA pixel exactly once", () => {
-    // Three pixels: red, red, blue (with distinct alphas to keep keys unique).
+    // WHY: alphas are distinct so each RGBA becomes a unique key.
     const data = new Uint8Array([
       255,
       0,

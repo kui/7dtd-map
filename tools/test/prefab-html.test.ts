@@ -8,8 +8,7 @@ import {
 
 describe("escapeHtml", () => {
   it("escapes <, >, and & without double-escaping the ampersand", () => {
-    // Regression: previous implementation replaced `&` last, which turned the
-    // `&` introduced by `&lt;`/`&gt;` into `&amp;`, producing `&amp;lt;small&amp;gt;`.
+    // WHY: previous implementation replaced `&` last, turning the `&` from `&lt;`/`&gt;` into `&amp;` and producing `&amp;lt;small&amp;gt;`.
     expect(escapeHtml("<small>&")).toBe("&lt;small&gt;&amp;");
   });
 
@@ -23,7 +22,6 @@ describe("escapeHtml", () => {
 });
 
 describe("buildSleeperVolumes", () => {
-  // Minimal set of properties required by buildSleeperVolumes for two groups.
   function baseProps(): PrefabProperty[] {
     return [
       { name: "SleeperVolumeGroup", value: "groupA,1,2,groupB,3,4" },
@@ -35,9 +33,7 @@ describe("buildSleeperVolumes", () => {
   }
 
   it("defaults isLoot/isQuestExclude/isBoss to false when the property is shorter than groups", () => {
-    // Regression: previously these used requireNonnull(arr[i]) which threw
-    // when the boolean array had fewer entries than the group list, causing
-    // generate-prefab-html.ts to silently drop the prefab.
+    // WHY: previously requireNonnull(arr[i]) threw when the boolean array had fewer entries than the group list, silently dropping the prefab in generate-prefab-html.ts.
     const props: PrefabProperty[] = [
       ...baseProps(),
       { name: "SleeperIsBossVolume", value: "True" },
@@ -69,9 +65,7 @@ describe("buildSleeperVolumes", () => {
   });
 
   it("throws the original message when SleeperVolumeFlags is missing", () => {
-    // Guards the refactor that replaced direct properties.find() lookups with
-    // a propMap-backed helper; the specific error messages are part of the
-    // contract and must not regress.
+    // INVARIANT: error message texts are part of the contract and must not regress.
     const props = baseProps().filter((p) => p.name !== "SleeperVolumeFlags");
     expect(() => buildSleeperVolumes(props)).toThrow(
       "SleeperVolumeFlags is not found",
