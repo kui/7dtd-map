@@ -3,9 +3,11 @@ import { UrlState } from "../lib/url-state.ts";
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 
-// Minimal stand-in for an HTMLInputElement; only implements the surface that
-// UrlState touches: id, type, value/checked, addEventListener,
-// dispatchEvent.
+/**
+ * Minimal stand-in for HTMLInputElement. Only implements the surface
+ * that UrlState touches: id, type, value/checked, addEventListener,
+ * dispatchEvent.
+ */
 class FakeInput extends EventTarget {
   id: string;
   type: "text" | "checkbox" | "select-one";
@@ -129,13 +131,11 @@ describe("UrlState", () => {
     });
 
     input.value = "hello";
-    // Browsers fire input + change for the same edit; we should only notify
-    // listeners once per distinct value.
+    // WHY: browsers fire input + change for the same edit, so listeners must be notified once per distinct value.
     input.dispatchEvent(new Event("input"));
     input.dispatchEvent(new Event("change"));
     expect(called).toBe(1);
 
-    // Same value again should not notify.
     input.dispatchEvent(new Event("input"));
     expect(called).toBe(1);
   });

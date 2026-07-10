@@ -2,9 +2,12 @@ import { FileProgressionIndicator } from "../index/dialog-handler.ts";
 import { expect } from "@std/expect";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 
-// Minimal fake <li> and document for the indicator. The class only touches
-// textContent and classList.replace/add/contains, so a thin stand-in is
-// enough to exercise the map-based lookup without pulling in a DOM.
+/**
+ * Minimal fakes for FileProgressionIndicator. The class only touches
+ * `textContent` and `classList.{add,contains,replace}`, so this thin
+ * stand-in is enough to exercise the map-based lookup without pulling
+ * in a DOM.
+ */
 class FakeClassList {
   #set = new Set<string>();
   add(c: string) {
@@ -70,9 +73,6 @@ describe("FileProgressionIndicator", () => {
   it("duplicate task names still render both <li>s without colliding in the lookup", () => {
     const ind = new FileProgressionIndicator(["dup", "dup", "unique"]);
     expect(ind.liList.length).toBe(3);
-    // Only the first occurrence is addressable by setState; the second stays
-    // in the processing state. This matches the documented "first wins" rule
-    // and proves the map lookup does not get confused by repeated names.
     ind.setState("dup", "completed");
     expect(ind.liList[0].classList.contains("completed")).toBe(true);
     expect(ind.liList[1].classList.contains("processing")).toBe(true);
