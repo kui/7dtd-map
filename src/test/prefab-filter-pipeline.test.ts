@@ -408,15 +408,15 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     const slot = capture(f);
 
-    // WHY: header plus the first chunk arrive synchronously because the stream is detached; only the remainder waits on macrotask yields.
+    // WHY: the header and the first chunk arrive synchronously because the stream is detached.
     await f.updateImmediately();
     expect(slot.total).toBe(many.length);
     expect(slot.prefabs.length).toBe(CHUNK_SIZE);
 
-    // WHY: bumpInputVersion() is what the UI calls on each keystroke; simulate one arriving mid-stream.
+    // WHY: bumpInputVersion() is what the UI calls on each keystroke.
     f.bumpInputVersion();
 
-    // WHY: two macrotask yields let the detached stream run its next iteration and hit the pre-post staleness check; a single yield can miss it.
+    // INVARIANT: reducing to a single macrotask yield can miss the pre-post staleness check.
     await new Promise((resolve) => setTimeout(resolve, 0));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(slot.prefabs.length).toBe(CHUNK_SIZE);

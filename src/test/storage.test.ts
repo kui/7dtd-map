@@ -216,7 +216,7 @@ describe("MapDir.put() resource handling", () => {
     });
 
     await dir.put("biomes.png", source);
-    // INVARIANT: pipeTo is responsible for closing the writable exactly once; MapDir must not call close() again on this path.
+    // INVARIANT: MapDir must not call close() on the writable because pipeTo already closes it exactly once.
     expect(closeCount).toBe(1);
   });
 });

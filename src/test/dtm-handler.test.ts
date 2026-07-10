@@ -100,7 +100,7 @@ describe("Dtm.writeY", () => {
 
     dtm.writeY(geo);
 
-    // WHY: `data[3 + 3 * 4]` is the corner cell after clamping to maxX=maxZ=3; `/ 0.75` reverses scaleFactor (mapSize - 1) / mapSize.
+    // WHY: the expected value uses data at the clamped corner (maxX=maxZ=3) divided by scaleFactor (mapSize - 1) / mapSize.
     const expected = data[3 + 3 * 4] / 0.75;
     expect(arr[1]).toBeCloseTo(expected, 5);
   });
