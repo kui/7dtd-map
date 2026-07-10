@@ -3,14 +3,18 @@ import { LANGUAGES } from "../lib/labels.ts";
 import { expect } from "@std/expect";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 
-// Minimal <option> + <select> fake for LabelHandler#buildSelectOptions and
-// the change event flow. Only the members that LabelHandler reads/writes are
-// implemented.
+/**
+ * Minimal <option> stand-in for LabelHandler#buildSelectOptions and the
+ * change event flow. Only the members that LabelHandler reads or writes
+ * are implemented.
+ */
 class FakeOption {
-  // Mirrors HTMLOptionElement: when `value` is not set explicitly, it
-  // defaults to textContent.
   #explicitValue: string | null = null;
   textContent: string = "";
+  /**
+   * Mirrors HTMLOptionElement: when `value` has not been assigned
+   * explicitly, reading it returns `textContent`.
+   */
   get value(): string {
     return this.#explicitValue ?? this.textContent;
   }
@@ -83,16 +87,14 @@ describe("LabelHandler", () => {
     saved = {};
     storage = new FakeLocalStorage();
     setGlobal("localStorage", storage);
-    // No DOM at runtime in deno test, so define a tiny document.createElement
-    // that returns FakeOption for "option" — the only element LabelHandler
-    // creates.
+    // WHY: no DOM in deno test, so a tiny document.createElement returning FakeOption for "option" (the only tag LabelHandler creates) is enough.
     setGlobal("document", {
       createElement: (tag: string) => {
         if (tag === "option") return new FakeOption();
         throw new Error(`Unexpected createElement: ${tag}`);
       },
     });
-    // LabelHolder eagerly kicks off background fetches in its constructor.
+    // WHY: LabelHolder eagerly kicks off background fetches in its constructor, so fetch must be stubbed before every LabelHandler build.
     setGlobal("fetch", () =>
       Promise.resolve(
         new Response("{}", {
@@ -150,10 +152,9 @@ describe("LabelHandler", () => {
     h.addListener((m) => {
       received.push(m.lang);
     });
-    // Give any deferred work (microtasks, timers) a chance to run.
+    // WHY: yield a macrotask so any deferred listener dispatch would have fired by the time we assert on `received`.
     await new Promise((r) => setTimeout(r, 0));
     expect(received).toEqual([]);
-    // Initial value is still available via the pull-style getter.
     expect(h.language).toBe("japanese");
   });
 
@@ -171,7 +172,7 @@ describe("LabelHandler", () => {
 
     sel.value = "german";
     sel.dispatchEvent(new Event("change"));
-    // The dispatchNoAwait path eventually runs the listeners; allow a turn.
+    // WHY: dispatchNoAwait defers listener execution, so a macrotask yield is required before asserting on the received messages.
     await new Promise((r) => setTimeout(r, 0));
 
     expect(storage.getItem("language")).toBe("german");
