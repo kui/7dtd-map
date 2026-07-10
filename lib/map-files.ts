@@ -288,7 +288,6 @@ class PngEditingTransformer extends TransformStream<Uint8Array, Uint8Array> {
           const decoded = decode(buf);
           const src = normalizeToUint8(decoded.data);
 
-          // Edit in place
           copyAndEdit(src, src);
 
           const encoded = encode(
