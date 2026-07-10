@@ -15,9 +15,11 @@ import { expect } from "@std/expect";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 import { stub } from "@std/testing/mock";
 
-// LabelHolder.fetchJson hits globalThis.fetch with URLs like
-// `${baseUrl}/${language}/{prefabs|blocks|shapes}.json`. We stub it so
-// PrefabFilter can run end-to-end without touching the network.
+/**
+ * Stubs globalThis.fetch (which LabelHolder.fetchJson hits with URLs like
+ * `${baseUrl}/${language}/{prefabs|blocks|shapes}.json`) so PrefabFilter
+ * can run end-to-end without touching the network.
+ */
 function stubFetch(map: Record<string, unknown>) {
   return stub(
     globalThis,
@@ -108,8 +110,11 @@ describe("PrefabFilter", () => {
     return slot;
   }
 
-  // Chunks stream in on detached macrotasks after the header resolves
-  // updateImmediately, so wait until the whole run has been received.
+  /**
+   * Waits until the whole run has been received. Chunks stream in on
+   * detached macrotasks after the header resolves updateImmediately, so a
+   * plain `await updateImmediately()` returns before the body arrives.
+   */
   async function settle(f: PrefabFilter, slot: Captured): Promise<void> {
     await f.updateImmediately();
     while (slot.prefabs.length < slot.total) {
@@ -257,7 +262,6 @@ describe("PrefabFilter", () => {
     await settle(f, slot);
     expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
 
-    // Replace stub to also serve japanese labels.
     while (fetchStubs.length) fetchStubs.pop()?.restore();
     fetchStubs.push(
       stubFetch({
@@ -297,9 +301,9 @@ describe("PrefabFilter", () => {
     const slot = capture(f);
     await settle(f, slot);
     const names = slot.prefabs.map((p) => p.name);
-    expect(names).toContain("house_01"); // 5 + 2 = 7
-    expect(names).toContain("skyscraper_01"); // 10
-    expect(names).not.toContain("trader_01"); // 3 < 6
+    expect(names).toContain("house_01");
+    expect(names).toContain("skyscraper_01");
+    expect(names).not.toContain("trader_01");
   });
 
   it("status includes minMatchedBlockCount when active", async () => {
@@ -358,7 +362,7 @@ describe("PrefabFilter", () => {
     const blocks = house?.matchedBlocks ?? [];
     expect(blocks.length).toBe(MATCHED_BLOCKS_LIMIT);
     expect(house?.matchedBlockTypeCount).toBe(typeCount);
-    // matchedBlockCount sums every matched type, not just the transmitted ones.
+    // INVARIANT: matchedBlockCount sums every matched type, not just the transmitted ones capped by MATCHED_BLOCKS_LIMIT.
     const fullSum = Array.from({ length: typeCount }, (_, i) => i + 1)
       .reduce((a, b) => a + b, 0);
     expect(house?.matchedBlockCount).toBe(fullSum);
@@ -391,8 +395,7 @@ describe("PrefabFilter", () => {
   });
 
   it("stops streaming chunks when input changes mid-stream", async () => {
-    // More than one chunk so there is a remainder to abort. No filters, so
-    // every prefab matches and the result exceeds CHUNK_SIZE.
+    // WHY: CHUNK_SIZE * 3 with no filters guarantees the result exceeds CHUNK_SIZE, leaving a remainder for the abort path to actually skip.
     const many: Prefab[] = Array.from({ length: CHUNK_SIZE * 3 }, (_, i) => ({
       name: `prefab_${i.toString().padStart(3, "0")}`,
       x: 0,
@@ -405,17 +408,15 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     const slot = capture(f);
 
-    // The header plus the first chunk are delivered synchronously as the
-    // stream is detached; the rest wait on macrotask yields.
+    // WHY: header plus the first chunk arrive synchronously because the stream is detached; only the remainder waits on macrotask yields.
     await f.updateImmediately();
     expect(slot.total).toBe(many.length);
     expect(slot.prefabs.length).toBe(CHUNK_SIZE);
 
-    // Simulate a new keystroke arriving before the remaining chunks stream.
+    // WHY: bumpInputVersion() is what the UI calls on each keystroke; simulate one arriving mid-stream.
     f.bumpInputVersion();
 
-    // Let the detached stream run its next iteration; it must abort at the
-    // pre-post check instead of delivering the remaining chunks.
+    // WHY: two macrotask yields let the detached stream run its next iteration and hit the pre-post staleness check; a single yield can miss it.
     await new Promise((resolve) => setTimeout(resolve, 0));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(slot.prefabs.length).toBe(CHUNK_SIZE);
@@ -427,8 +428,7 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     const slot = capture(f);
 
-    // Start the run, then bump the input version before its awaits resolve so
-    // the pre-header staleness check trips and nothing is dispatched.
+    // WHY: bumping the input version before the run's awaits resolve trips the pre-header staleness check, so no header should be dispatched.
     const pending = f.updateImmediately();
     f.bumpInputVersion();
     await pending;

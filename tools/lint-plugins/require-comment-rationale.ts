@@ -70,7 +70,6 @@ const EXCLUDED_PATHS: readonly string[] = [
   "/src/test/dnd-handler.test.ts",
   "/src/test/dtm-handler.test.ts",
   "/src/test/label-handler.test.ts",
-  "/src/test/prefab-filter-pipeline.test.ts",
   "/src/test/prefabs.test.ts",
   "/src/test/storage.test.ts",
   "/src/test/throttled-invoker.test.ts",
