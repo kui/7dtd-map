@@ -78,7 +78,7 @@ function toEntry(raw: unknown): ParsedPrefabProperty {
       properties: list.map(toEntry),
     };
   }
-  // WHY: silently dropping unknown shapes would hide schema drift; AGENTS.md requires tools/ to fail fast on unrecognized entries.
+  // WHY: silently dropping unknown shapes would hide schema drift in the source XML.
   throw new Error(
     `Unexpected <property> entry: ${JSON.stringify(raw)}`,
   );
