@@ -89,7 +89,7 @@ describe("CacheHolder.get()", () => {
     const fetcher = fn(async () => {
       const id = ++counter;
       await sleep(sleepTime);
-      // WHY: invalidate mid-fetch so the first result is discarded once it resolves; exercises the deconstruct-on-discard path.
+      // WHY: invalidate mid-fetch so the first result is discarded once it resolves.
       if (id === 1) holder.invalidate();
       return `value-${id.toString()}`;
     });

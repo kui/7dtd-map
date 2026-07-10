@@ -23,7 +23,7 @@ describe("createDragCounter", () => {
     const c = createDragCounter();
     c.enter();
     expect(c.leave()).toBe(true);
-    // WHY: browsers can fire an extra dragleave after drop; the counter must stay clamped at zero and still report "out".
+    // WHY: browsers can fire an extra dragleave after drop.
     expect(c.leave()).toBe(true);
     expect(c.enter()).toBe(true);
   });

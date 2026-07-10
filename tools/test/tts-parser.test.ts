@@ -74,7 +74,7 @@ describe("parseTts error handling", () => {
   });
 
   it("rejects truncated files (FD must still be released via finally)", async () => {
-    // WHY: header claims a 1×1×1 body but no bytes follow, forcing ByteReader.read to throw; the try/finally in parseTts must release the ReadStream FD to survive throttleAll concurrency.
+    // WHY: header claims a 1×1×1 body with no bytes to follow, forcing ByteReader.read to throw.
     const buf = new Uint8Array(14);
     buf.set([0x74, 0x74, 0x73, 0x00], 0);
     const view = new DataView(buf.buffer);

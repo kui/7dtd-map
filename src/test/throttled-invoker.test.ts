@@ -37,7 +37,7 @@ describe("throttledInvoker", () => {
     await time.tickAsync(1);
     const third = invoker();
 
-    // WHY: split ticks let microtasks between them settle await continuations; a single large tick can hide ordering bugs.
+    // WHY: microtasks between ticks must run to settle await continuations.
     await time.tickAsync(200);
     await time.tickAsync(200);
     await time.tickAsync(200);
