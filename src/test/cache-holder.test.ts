@@ -23,7 +23,6 @@ describe("CacheHolder.get()", () => {
 
     expect(deconstructor.calls.length).toBe(0);
 
-    // We want to reach T=20000.
     await time.tickAsync(age + 1000);
 
     expect(deconstructor.calls.length).toBe(1);
@@ -75,7 +74,6 @@ describe("CacheHolder.get()", () => {
     const second = holder.get();
 
     await time.tickAsync(sleepTime);
-    // Extra tick for the second fetch call
     await time.tickAsync(sleepTime);
 
     expect(await first).toBe("value");
@@ -91,8 +89,7 @@ describe("CacheHolder.get()", () => {
     const fetcher = fn(async () => {
       const id = ++counter;
       await sleep(sleepTime);
-      // Invalidate while the first fetch is still pending, so its result
-      // will be discarded once it resolves.
+      // WHY: invalidate mid-fetch so the first result is discarded once it resolves; exercises the deconstruct-on-discard path.
       if (id === 1) holder.invalidate();
       return `value-${id.toString()}`;
     });
@@ -105,11 +102,9 @@ describe("CacheHolder.get()", () => {
 
     expect(await first).toBe("value-2");
     expect(fetcher.calls.length).toBe(2);
-    // The first fetched value was discarded and must be deconstructed.
     expect(deconstructor.calls.length).toBe(1);
     expect(deconstructor.calls[0].args[0]).toBe("value-1");
     holder.invalidate();
-    // After explicit invalidate, the retained final value is deconstructed too.
     expect(deconstructor.calls.length).toBe(2);
     expect(deconstructor.calls[1].args[0]).toBe("value-2");
   });

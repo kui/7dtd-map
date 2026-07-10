@@ -69,8 +69,7 @@ describe("strictParseInt", () => {
   });
 
   it("stops at the first non-decimal character under radix 10", () => {
-    // "0x10" is documented behavior: parseInt(_, 10) parses up to the "x"
-    // and yields 0 rather than 16.
+    // WHY: parseInt("0x10", 10) reads "0" then stops at the "x", so strictParseInt returns 0 rather than 16 under radix 10.
     expect(strictParseInt("0x10")).toBe(0);
   });
 });
