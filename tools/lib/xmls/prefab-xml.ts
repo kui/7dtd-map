@@ -78,7 +78,6 @@ function toEntry(raw: unknown): ParsedPrefabProperty {
       properties: list.map(toEntry),
     };
   }
-  // WHY: silently dropping unknown shapes would hide schema drift in the source XML.
   throw new Error(
     `Unexpected <property> entry: ${JSON.stringify(raw)}`,
   );
