@@ -4,8 +4,6 @@ import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { spy } from "@std/testing/mock";
 
-// A minimal in-memory FileSystemDirectoryHandle that satisfies the parts of
-// the API used by MapDir. Anything MapDir doesn't touch is left as a stub.
 class FakeWritable {
   parts: (ArrayBuffer | Blob)[] = [];
   closed = false;
@@ -33,7 +31,7 @@ class FakeFileHandle {
   }
   createWritable(): Promise<FakeWritable> {
     const w = new FakeWritable();
-    // Capture writes back into `this.data` on close.
+    // WHY: shadow write() so each call also updates this.data, letting getFile() round-trip the payload.
     const origWrite = w.write.bind(w);
     w.write = async (d: ArrayBuffer | Blob) => {
       await origWrite(d);
@@ -47,6 +45,11 @@ class FakeFileHandle {
   }
 }
 
+/**
+ * Minimal in-memory FileSystemDirectoryHandle covering the parts of the
+ * API that MapDir touches. Anything MapDir doesn't touch is left as a
+ * stub.
+ */
 class FakeDirHandle {
   kind = "directory" as const;
   name = "workspace";
@@ -113,7 +116,6 @@ describe("MapDir", () => {
     expect(fake.files.has("map_info.xml")).toBe(true);
     await dir.remove("map_info.xml");
     expect(fake.files.has("map_info.xml")).toBe(false);
-    // After removal a subsequent get() resolves to null again.
     expect(await dir.get("map_info.xml")).toBeNull();
   });
 
@@ -143,7 +145,6 @@ describe("MapDir", () => {
 describe("MapDir.remove() idempotency", () => {
   it("swallows NotFoundError so bulk clears stay idempotent", async () => {
     const { dir } = buildMapDir();
-    // No file has been put — the underlying handle would throw NotFoundError.
     await dir.remove("biomes.png");
   });
 
@@ -215,7 +216,7 @@ describe("MapDir.put() resource handling", () => {
     });
 
     await dir.put("biomes.png", source);
-    // pipeTo is responsible for closing exactly once.
+    // INVARIANT: pipeTo is responsible for closing the writable exactly once; MapDir must not call close() again on this path.
     expect(closeCount).toBe(1);
   });
 });

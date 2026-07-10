@@ -75,9 +75,7 @@ describe("Dtm.writeY", () => {
 
     const pos = geo.attributes["position"] as three.BufferAttribute;
     const arr = pos.array as Float32Array;
-    // scaleFactor = (4 - 1) / 3 = 1
-    // PlaneGeometry vertices start at the top (iy=0) and move downward,
-    // so dataZ decreases as i increases row-by-row.
+    // WHY: PlaneGeometry vertices go top-to-bottom (iy=0 at the top), so dataZ decreases as i increases row-by-row.
     for (let i = 0, j = 0; i < pos.count; i++, j += 3) {
       const ix = i % 4;
       const iy = 3 - Math.floor(i / 4);
@@ -95,16 +93,14 @@ describe("Dtm.writeY", () => {
     for (let i = 0; i < 16; i++) data[i] = i + 10;
     const dtm = new Dtm(data, mapSize);
 
-    // Push one vertex far outside the map to force clamping.
     const pos = geo.attributes["position"] as three.BufferAttribute;
     const arr = pos.array as Float32Array;
-    arr[0] = 100; // x -> game coords far beyond +halfW
-    arr[2] = -100; // z -> game coords far beyond +halfH
+    arr[0] = 100;
+    arr[2] = -100;
 
     dtm.writeY(geo);
 
-    // scaleFactor = (4 - 1) / 4 = 0.75
-    // dataX/dataZ would be ~76 without clamp, clamped to maxX/maxZ = 3.
+    // WHY: `data[3 + 3 * 4]` is the corner cell after clamping to maxX=maxZ=3; `/ 0.75` reverses scaleFactor (mapSize - 1) / mapSize.
     const expected = data[3 + 3 * 4] / 0.75;
     expect(arr[1]).toBeCloseTo(expected, 5);
   });
