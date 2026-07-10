@@ -35,7 +35,7 @@ describe("parseNim", () => {
   });
 
   it("rejects unknown versions", async () => {
-    // WHY: empty body (idsNum=0) lets the read loop complete so the post-loop version check fires — validation is intentionally after the body read; see nim-parser.ts for the rationale.
+    // WHY: empty body (idsNum=0) lets the read loop complete so the post-loop version check fires. Version validation is intentionally after the body read.
     const file = await writeTempNim(header(2, 0));
 
     await expect(parseNim(file)).rejects.toThrow(/Unexpected version/);

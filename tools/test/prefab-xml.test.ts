@@ -17,7 +17,7 @@ async function withTempXml<T>(
 
 describe("parsePrefabXml", () => {
   it("parses a prefab with exactly one <property> element", async () => {
-    // WHY: @libs/xml represents a single repeated child as a bare object, not a 1-element array — the parser must handle both shapes.
+    // WHY: @libs/xml represents a single repeated child as a bare object, not a 1-element array. The parser must handle both shapes.
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <prefab>
   <property name="DifficultyTier" value="3" />

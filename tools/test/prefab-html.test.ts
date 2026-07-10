@@ -65,7 +65,7 @@ describe("buildSleeperVolumes", () => {
   });
 
   it("throws the original message when SleeperVolumeFlags is missing", () => {
-    // INVARIANT: error message texts are part of the contract and must not regress; guards the refactor that swapped properties.find() for a propMap-backed helper.
+    // INVARIANT: error message texts are part of the contract and must not regress.
     const props = baseProps().filter((p) => p.name !== "SleeperVolumeFlags");
     expect(() => buildSleeperVolumes(props)).toThrow(
       "SleeperVolumeFlags is not found",
