@@ -35,24 +35,19 @@ describe("parseNim", () => {
   });
 
   it("rejects unknown versions", async () => {
-    // Empty body (idsNum=0) so the read loop completes and the version
-    // check at the end fires. Version validation is intentionally done
-    // after the body read; see nim-parser.ts for the rationale.
+    // WHY: empty body (idsNum=0) lets the read loop complete so the post-loop version check fires — validation is intentionally after the body read; see nim-parser.ts for the rationale.
     const file = await writeTempNim(header(2, 0));
 
     await expect(parseNim(file)).rejects.toThrow(/Unexpected version/);
   });
 
   it("rejects when the body is truncated", async () => {
-    // version=1, claims 1 entry, but no body bytes follow.
     const file = await writeTempNim(header(1, 1));
     await expect(parseNim(file)).rejects.toThrow();
   });
 
   it("does not leak file descriptors on repeated parse failures", async () => {
-    // Force many failures; if the stream were not closed on the throw path,
-    // this would eventually exhaust the FD limit. We keep the count modest
-    // so the test stays fast while still exercising the finally branch.
+    // WHY: 200 iterations is large enough to exhaust FDs if finally is broken, small enough to keep the test fast.
     const file = await writeTempNim(header(2, 0));
     for (let i = 0; i < 200; i++) {
       await expect(parseNim(file)).rejects.toThrow(/Unexpected version/);
