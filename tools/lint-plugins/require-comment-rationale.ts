@@ -21,8 +21,6 @@ const PRESERVE_PATTERNS: readonly string[] = [
    is not audited in one big sweep; shrink to empty, then delete this mechanism.
    Match is POSIX-style substring on the absolute filename. */
 const EXCLUDED_PATHS: readonly string[] = [
-  "/lib/glyph-marker.ts",
-  "/lib/map-files.ts",
   "/src/index.ts",
   "/src/index/controller-highlight.ts",
   "/src/index/cursor-coords-display-handler.ts",
