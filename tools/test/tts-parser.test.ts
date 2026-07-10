@@ -44,7 +44,11 @@ describe("parseTts error handling", () => {
     return p;
   }
 
-  // WHY: dim 0,0,0 makes the block loop iterate zero times so we can exercise the post-loop header checks without a real prefab body.
+  /**
+   * Builds a valid 14-byte TTS header with dim 0,0,0 so the block loop
+   * iterates zero times, letting tests exercise the post-loop header
+   * checks without a real prefab body.
+   */
   function emptyBodyHeader(magic: number[], version: number): Uint8Array {
     const buf = new Uint8Array(14);
     buf.set(magic, 0);
