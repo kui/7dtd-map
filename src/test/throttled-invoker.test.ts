@@ -32,13 +32,12 @@ describe("throttledInvoker", () => {
     }, 100);
 
     invoker().catch(printError);
-    // The first run starts after the minimum 10ms delay.
     await time.tickAsync(10);
     invoker().catch(printError);
     await time.tickAsync(1);
     const third = invoker();
 
-    // Advance enough time incrementally
+    // WHY: split ticks let microtasks between them settle await continuations; a single large tick can hide ordering bugs.
     await time.tickAsync(200);
     await time.tickAsync(200);
     await time.tickAsync(200);
@@ -78,15 +77,12 @@ describe("throttledInvoker", () => {
       events.push(`end:${Date.now()}`);
     }, 100);
 
-    // Ticks must land exactly on each due time: Date.now() inside an await
-    // continuation reads the tick target, not the timer's scheduled time.
+    // WHY: FakeTime returns Date.now() as the tick target inside an await continuation, not the timer's scheduled time, so ticks must land exactly on each due time.
     invoker().catch(printError);
     await time.tickAsync(10);
     await time.tickAsync(50);
     expect(events).toEqual(["start:10", "end:60"]);
 
-    // Second call right after completion must wait until t=160 (end + 100),
-    // not t=110 (start + 100).
     invoker().catch(printError);
     await time.tickAsync(100);
     await time.tickAsync(50);
@@ -123,15 +119,12 @@ describe("throttledInvoker", () => {
     }, 10);
 
     const first = invoker();
-    // Handle the rejection before ticking; it settles inside tickAsync and
-    // would otherwise be reported as an uncaught error.
+    // WHY: attach the rejection handler before ticking so it settles inside tickAsync without being reported as an uncaught error.
     first.catch(() => {});
-    // t=15: the first run started at t=10 and is still executing, so this
-    // call schedules a trailing cycle instead of joining the first one.
+    // WHY: at t=15 the first run started at t=10 and is still executing, so this call schedules a trailing cycle instead of joining the first one.
     await time.tickAsync(15);
     const trailing = invoker();
 
-    // Advance enough time incrementally
     await time.tickAsync(50);
     await time.tickAsync(50);
     await time.tickAsync(50);
