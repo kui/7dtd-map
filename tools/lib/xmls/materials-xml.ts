@@ -3,8 +3,6 @@ import { vanillaDir } from "../utils.ts";
 
 const MATERIALS_XML = vanillaDir("Data", "Config", "materials.xml");
 
-/* Raw XML types (encapsulated) */
-
 interface RawMaterialsXml {
   materials: {
     material: RawMaterial[];
@@ -21,8 +19,6 @@ interface RawMaterialProperty {
   "@value": string;
 }
 
-/* Public types */
-
 export interface Material {
   id: string;
   properties: Record<string, string>;
@@ -35,8 +31,6 @@ function isRawMaterialsXml(value: unknown): value is RawMaterialsXml {
   if (typeof materials !== "object" || materials === null) return false;
   return Array.isArray((materials as Record<string, unknown>)["material"]);
 }
-
-/* Public API */
 
 export async function loadMaterials(
   materialsXmlFileName: string = MATERIALS_XML,

@@ -3,8 +3,6 @@ import { toArray, vanillaDir } from "../utils.ts";
 
 const LOOT_XML = vanillaDir("Data", "Config", "loot.xml");
 
-/* Raw XML types (encapsulated) */
-
 type LootGroupName = string;
 
 interface RawLootXml {
@@ -34,8 +32,6 @@ interface RawLootLootItem {
   "@name": string;
 }
 
-/* Public types */
-
 export interface LootTable {
   items: string[];
   groups: LootGroup[];
@@ -57,8 +53,6 @@ function isRawLootXml(value: unknown): value is RawLootXml {
   const c = containers as Record<string, unknown>;
   return Array.isArray(c["lootgroup"]) && Array.isArray(c["lootcontainer"]);
 }
-
-/* Public API */
 
 export async function loadLoot(
   lootXmlFileName: string = LOOT_XML,

@@ -2,8 +2,11 @@ import { parse as parseXml } from "@libs/xml";
 
 interface RawPrefabXml {
   prefab: {
-    // @libs/xml collapses a single repeated element into the bare object
-    // instead of a one-element array, so accept either shape here.
+    /**
+     * `@libs/xml` collapses a single repeated element into the bare
+     * object instead of a one-element array, so both shapes must be
+     * accepted here.
+     */
     property: RawPrefabProperty | RawPrefabProperty[];
   };
 }
@@ -15,8 +18,10 @@ interface RawPrefabPropertyValue {
   "@value": string;
 }
 
-// Class containers may nest other classes (e.g. `Stats > BlockEntities`), so
-// the child `property` field carries the same recursive shape.
+/**
+ * Class containers may nest other classes (e.g. `Stats > BlockEntities`),
+ * so the child `property` field carries the same recursive shape.
+ */
 interface RawPrefabPropertyClass {
   "@class": string;
   property?: RawPrefabProperty | RawPrefabProperty[];
@@ -32,8 +37,11 @@ export interface ParsedPrefabPropertyClass {
   properties: ParsedPrefabProperty[];
 }
 
-// A single `<property>` element from a prefab xml — either a `name`/`value`
-// pair or a class container whose body holds more entries of the same shape.
+/**
+ * A single `<property>` element from a prefab xml: either a
+ * `name`/`value` pair or a class container whose body holds more
+ * entries of the same shape.
+ */
 export type ParsedPrefabProperty =
   | ParsedPrefabPropertyValue
   | ParsedPrefabPropertyClass;
@@ -70,8 +78,6 @@ function toEntry(raw: unknown): ParsedPrefabProperty {
       properties: list.map(toEntry),
     };
   }
-  // Fail fast on anything that is neither a name/value property nor a class
-  // container: silently dropping would hide schema drift in the source XML.
   throw new Error(
     `Unexpected <property> entry: ${JSON.stringify(raw)}`,
   );
@@ -89,8 +95,10 @@ export async function parsePrefabXml(
   return list.map(toEntry);
 }
 
-// Narrowing helpers — exported so call sites can drop into the value variant
-// without spelling the type guard each time.
+/**
+ * Narrowing helper exported so call sites can drop into the value
+ * variant without spelling the type guard each time.
+ */
 export function isPrefabPropertyValue(
   p: ParsedPrefabProperty,
 ): p is ParsedPrefabPropertyValue {

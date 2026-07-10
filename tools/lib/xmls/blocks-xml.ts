@@ -14,8 +14,6 @@ const LOOTABLE_CLASS_NAMES = new Set([
   "CompositeTileEntity",
 ]);
 
-/* Raw XML types (encapsulated) */
-
 interface RawBlocksXml {
   blocks: {
     block: RawBlock[];
@@ -44,8 +42,6 @@ interface RawBlockDrop {
   "@stick_chance"?: string;
   "@tool_category"?: string;
 }
-
-/* Public types */
 
 export type BlockName = string;
 
@@ -94,9 +90,11 @@ function isRawBlocksXml(value: unknown): value is RawBlocksXml {
   return Array.isArray((blocks as Record<string, unknown>)["block"]);
 }
 
-// Nested <property> elements can wrap further <property> children (e.g. a
-// class container), so this recurses through the same shape rather than
-// modeling it as a flat RawBlockProperty[].
+/**
+ * Nested `<property>` elements can wrap further `<property>` children
+ * (e.g. a class container), so this shape recurses rather than being
+ * modeled as a flat `RawBlockProperty[]`.
+ */
 interface RawNestedProperty {
   "@name"?: string;
   "@value"?: string;
@@ -126,8 +124,6 @@ function extractProperties(raw: unknown[]): BlockProperties {
   }
   return props;
 }
-
-/* Public API */
 
 export async function loadBlocks(
   fileName = vanillaDir("Data", "Config", "blocks.xml"),
@@ -167,8 +163,12 @@ export async function loadBlocks(
 
 export class Blocks {
   #blocks: Map<BlockName, Block>;
-  // The downgrading of the value block results in the key blocks
-  // e.g. key=cntGunSafeInsecure, value=[cntGunCafe] if cntGunSafe can be downgraded to cntGunSafeInsecure
+  /**
+   * Inverse index of the `DowngradeBlock` relation: for a given block,
+   * lists the blocks that downgrade into it. For example, if `cntGunSafe`
+   * downgrades to `cntGunSafeInsecure`, the map holds
+   * `cntGunSafeInsecure -> [cntGunSafe]`.
+   */
   #downgradeRelations: Map<Block, Block[]>;
 
   constructor(blocks: Map<BlockName, Block>) {

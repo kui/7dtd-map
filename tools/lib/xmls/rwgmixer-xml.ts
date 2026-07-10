@@ -2,7 +2,7 @@ import { parse as parseXml } from "@libs/xml";
 
 export interface District {
   name: string;
-  // RGB triplet in 0–1 floats as written in rwgmixer.xml.
+  /** RGB triplet as `[r, g, b]` where each channel is a float in `[0, 1]`, matching the raw values in `rwgmixer.xml`. */
   previewColor: [number, number, number] | null;
 }
 
@@ -28,10 +28,13 @@ function parsePreviewColor(raw: string): [number, number, number] | null {
     : null;
 }
 
-// rwgmixer.xml lists districts as `<district name="X">…<property name="preview_color"
-// value="r,g,b"/>…</district>` siblings under the root `<rwgmixer>` element.
-// Districts without a preview_color are still returned with previewColor=null
-// so callers can decide whether to fall back to a default.
+/**
+ * Parses `rwgmixer.xml`, which lists districts as
+ * `<district name="X">...<property name="preview_color" value="r,g,b"/>...</district>`
+ * siblings under the root `<rwgmixer>` element. Districts without a
+ * `preview_color` are still returned with `previewColor = null` so
+ * callers can decide whether to fall back to a default.
+ */
 export async function parseRwgmixerXml(
   fileName: string,
 ): Promise<District[]> {
