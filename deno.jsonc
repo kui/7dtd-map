@@ -253,6 +253,7 @@
     "./.claude",
   ],
   "lint": {
+    "plugins": ["./tools/lint-plugins/require-comment-rationale.ts"],
     "exclude": ["./public"],
     "rules": {
       "include": [
