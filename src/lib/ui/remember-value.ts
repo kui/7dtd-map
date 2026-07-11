@@ -1,6 +1,3 @@
-// Store the value in the local storage
-// And restore it when the page is reloaded
-
 import { isFormValueElement } from "../dom-utils.ts";
 
 type FormValueElement =
@@ -34,8 +31,7 @@ export function init() {
 function serialize(el: FormValueElement): string | null {
   if (el instanceof HTMLInputElement) {
     if (el.type === "checkbox") return el.checked ? "1" : "0";
-    // A radio "change" only fires on the newly-checked element, so we ignore
-    // events from the now-unchecked sibling rather than overwriting the group.
+    // WHY: a radio "change" only fires on the newly-checked element, so the unchecked sibling must not overwrite the group.
     if (el.type === "radio") return el.checked ? el.value : null;
   }
   return el.value;

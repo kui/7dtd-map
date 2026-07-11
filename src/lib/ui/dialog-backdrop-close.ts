@@ -1,5 +1,8 @@
-// `event.target === dialog` also matches clicks on the dialog's own padding,
-// so the rect check is required to distinguish backdrop from padding.
+/**
+ * Closes the dialog when the user clicks the backdrop. A
+ * bounding-rect check is used because `event.target === dialog` also
+ * matches clicks on the dialog's own padding.
+ */
 export function closeOnBackdropClick(dialog: HTMLDialogElement) {
   dialog.addEventListener("click", (event) => {
     if (event.target !== dialog) return;

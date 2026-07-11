@@ -1,5 +1,3 @@
-// Sync values between two inputs, one for max and one for min.
-
 export function init() {
   for (const eventName of ["input", "change"]) {
     globalThis.addEventListener(eventName, ({ target }) => {
@@ -18,9 +16,11 @@ export function init() {
   }
 }
 
+/**
+ * A value carrying `data-min` is a lower bound for the `data-max`
+ * inputs it references, and vice versa.
+ */
 function updateMinMax(target: HTMLInputElement) {
-  // A value carrying `data-min` is a lower bound for the `data-max` inputs it
-  // references, and vice versa.
   if (target.dataset["min"]) {
     updateBounded(target, "max", target.dataset["min"]);
   }
