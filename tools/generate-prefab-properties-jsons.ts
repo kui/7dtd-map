@@ -96,8 +96,11 @@ function extractDifficulties(prefabXmls: PrefabXmls) {
   );
 }
 
-// PrefabSize "X, Y, Z" → [X (width), Z (depth), Y (height), yOffset]. Absent or
-// zero footprint (sign/part) is skipped; a malformed present value throws.
+/**
+ * Reshapes `PrefabSize` from `"X, Y, Z"` into `[X (width), Z (depth),
+ * Y (height), yOffset]`. Prefabs with an absent or zero footprint
+ * (signs, embedded parts) are skipped. A malformed present value throws.
+ */
 export function extractMeshSizes(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
@@ -116,7 +119,7 @@ export function extractMeshSizes(prefabXmls: PrefabXmls) {
             number,
             number,
           ];
-          // Zero/negative footprints (embedded parts) have no drawable box.
+          // WHY: zero or negative footprints belong to embedded parts and have no drawable box.
           if (x <= 0 || z <= 0) return [];
           const yOffset = parseYOffset(
             findValueEntry(entries, "YOffset")?.value,
@@ -129,8 +132,11 @@ export function extractMeshSizes(prefabXmls: PrefabXmls) {
   );
 }
 
-// YOffset is authored as an integer string; reject anything else so a schema
-// change surfaces loudly instead of coercing to a wrong box depth.
+/**
+ * Parses the `YOffset` property. It is authored as an integer string,
+ * so anything else is rejected. Silent coercion would push the drawable
+ * box to the wrong depth on a schema change.
+ */
 function parseYOffset(raw: string | undefined, prefabName: string): number {
   if (raw === undefined) return 0;
   if (!/^-?\d+$/.test(raw.trim())) {
@@ -139,10 +145,13 @@ function parseYOffset(raw: string | undefined, prefabName: string): number {
   return parseInt(raw.trim(), 10);
 }
 
-// Mirrors PrefabData.Init: DensityScore = (TotalVertices + 50000) / 100000
-// using C# integer division, so the result is always an int. Prefabs without
-// a Stats block (or TotalVertices=0) get 0 and become "low density" which the
-// renderer treats as ×0.4 brightness, matching the game preview.
+/**
+ * Mirrors `PrefabData.Init`: `DensityScore = (TotalVertices + 50000) /
+ * 100000` using C# integer division, so the result is always an int.
+ * Prefabs without a `Stats` block (or `TotalVertices=0`) get 0 and
+ * become "low density", which the renderer treats as ×0.4 brightness
+ * to match the game preview.
+ */
 function extractDensityScores(prefabXmls: PrefabXmls) {
   return Object.fromEntries(
     Object.entries(prefabXmls)
@@ -168,9 +177,11 @@ function rgbFloatToHex([r, g, b]: [number, number, number]): string {
   return `#${hex(r)}${hex(g)}${hex(b)}`;
 }
 
-// District preview_color lookup table consumed by the renderer at draw time.
-// Districts without a preview_color are dropped so the renderer can fall back
-// to the wilderness default.
+/**
+ * Builds the district `preview_color` lookup table consumed by the
+ * renderer at draw time. Districts without a `preview_color` are
+ * dropped so the renderer can fall back to the wilderness default.
+ */
 function extractDistrictColors(districts: District[]) {
   return Object.fromEntries(
     districts

@@ -34,8 +34,7 @@ export function statDecodedPixels(decoded: DecodedPng): Map<number, number> {
   const data = decoded.data;
   const stat = new Map<number, number>();
   for (let i = 0; i < data.length; i += 4) {
-    // Pack RGBA into a single non-negative 32-bit integer so the Map key
-    // is a number rather than an allocated string per pixel.
+    // WHY: pack RGBA into a single non-negative 32-bit integer so the Map key is a number rather than an allocated string per pixel.
     // deno-lint-ignore no-non-null-assertion
     const key = data[i]! * 0x1000000 +
       // deno-lint-ignore no-non-null-assertion

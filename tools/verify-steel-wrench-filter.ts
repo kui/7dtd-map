@@ -3,7 +3,6 @@ import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
 import { loadMaterials } from "./lib/xmls/materials-xml.ts";
 
 async function main() {
-  // Collect blocks that pass the programmatic filter
   const blocks = await loadBlocks();
   const materials = await loadMaterials();
   const harvests = blocks.getHarvestsWithMaxDamage(materials).filter((drop) =>
@@ -14,18 +13,17 @@ async function main() {
   if (gunSafeScore === 0) throw new Error("gunSafeScore is 0");
   const filtered = new Set<string>();
   for (const harvest of harvests) {
-    // Avoid high durability blocks harder than gunSafeScore
+    // WHY: skip blocks harder than gunSafeScore so the effective steel yield is not overstated.
     if (harvest.countPerDamage <= gunSafeScore) continue;
-    // Avoid working vending machines
+    // WHY: skip working vending machines because their broken variants alone drop steel.
     if (/^cntVending.*(?<!Broken)$/.test(harvest.blockName)) continue;
-    // Avoid blocks that require the PercMasterySteelHarvest perk
+    // WHY: skip blocks that require the PercMasterySteelHarvest perk since the filter targets the wrench path.
     if (harvest.tags.includes("PercMasterySteelHarvest")) continue;
-    // Avoid infestation loot boxes that are not always placed.
+    // WHY: skip infestation loot boxes because they are not always placed on the map.
     if (/^cntQuestInfestedT/.test(harvest.blockName)) continue;
     filtered.add(harvest.blockName);
   }
 
-  // Parse the regexp from index.html
   const indexHtml = await Deno.readTextFile(
     new URL("../public/index.html", import.meta.url),
   );
@@ -37,7 +35,6 @@ async function main() {
   }
   const regexp = new RegExp(m[1]);
 
-  // Compare
   const regexMatched = new Set(
     blocks.all().map((b) => b.name).filter((name) => regexp.test(name)),
   );

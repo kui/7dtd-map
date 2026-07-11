@@ -17,7 +17,6 @@ async function main() {
   console.log("Each number of blocks:");
   console.log(tts.blockNums);
 
-  // print block IDs slicing horizontally.
   for (let y = 0; y < tts.maxy; y += 1) {
     console.log("height = %d", y);
     for (let z = 0; z < tts.maxz; z += 1) {

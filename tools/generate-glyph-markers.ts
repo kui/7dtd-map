@@ -15,19 +15,25 @@ import {
 interface MarkerJob {
   fontFile: string;
   glyph: string;
-  // Hand-tuned placement of `glyph` within the shared VIEWPORT square.
+  /** Hand-tuned placement of `glyph` within the shared `VIEWPORT` square. */
   x: number;
   y: number;
-  // Point in the VIEWPORT square that render time should align with the
-  // target coordinate (e.g. the flag's pole base, not its bbox centre).
+  /**
+   * Point in the `VIEWPORT` square that render time should align with
+   * the target coordinate (e.g. the flag's pole base, not its bbox
+   * centre).
+   */
   anchor: { x: number; y: number };
 }
 
-// Baked at build time; each job writes public/{name}.svg and
-// public/{name}-path.json for canvas/SVG use without runtime font loading.
+/**
+ * Marker jobs baked at build time. Each job writes
+ * `public/{name}.svg` and `public/{name}-path.json` for canvas/SVG
+ * use without runtime font loading.
+ */
 const MARKERS: Readonly<Record<string, MarkerJob>> = {
   "heavy-ballot-x": {
-    // U+2718 HEAVY BALLOT X, used for the Prefab Sign / Toggle Sign marker.
+    // WHY: U+2718 HEAVY BALLOT X drives the Prefab Sign / Toggle Sign marker.
     fontFile: "NotoSansSymbols2-Regular.ttf",
     glyph: "✘",
     x: 52,
@@ -35,9 +41,7 @@ const MARKERS: Readonly<Record<string, MarkerJob>> = {
     anchor: { x: 125.8, y: 117 },
   },
   "triangular-flag": {
-    // U+1F6A9 TRIANGULAR FLAG ON POST, used for the flag marker. Uses the
-    // "old" Noto Emoji release, which draws a filled flag; the current
-    // release's 🚩 is hollow and hard to see against map terrain.
+    // WHY: NotoEmojiOld draws a filled U+1F6A9 flag. The current release's 🚩 is hollow and hard to see against map terrain.
     fontFile: "NotoEmojiOld-Regular.ttf",
     glyph: "🚩",
     x: -18,

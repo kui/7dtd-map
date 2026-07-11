@@ -6,15 +6,18 @@ import {
   writeJsonFile,
 } from "./lib/utils.ts";
 
-// index.json only tracks the prefabs of the latest game version; there is no
-// tag-per-release history of it. Experimental versions also add/remove
-// prefabs across many commits without ever bumping the version tag, so each
-// version's added set is computed as (names at its `ref`) minus (names at
-// the previous version's `ref`), not from a single tagged snapshot.
-//
-// The last entry is the in-progress version: its `ref` stays "HEAD" until
-// that version is tagged, at which point set it to the new tag and append a
-// new in-progress entry for the version after it.
+/**
+ * `index.json` only tracks prefabs of the latest game version. There is
+ * no tag-per-release history, and experimental versions add or remove
+ * prefabs across many commits without ever bumping the version tag. So
+ * each version's added set is computed as (names at its `ref`) minus
+ * (names at the previous version's `ref`), not from a single tagged
+ * snapshot.
+ *
+ * The last entry is the in-progress version. Its `ref` stays `"HEAD"`
+ * until that version is tagged. On release, change it to the new tag
+ * and append a new in-progress entry for the version after it.
+ */
 const VERSIONS: readonly { version: string; ref: string }[] = [
   { version: "2.6", ref: "v2.6" },
   { version: "3.0", ref: "v3.0" },

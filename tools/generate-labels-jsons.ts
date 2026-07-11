@@ -18,8 +18,7 @@ async function main() {
     vanillaDir("Data", "Config", "Localization.csv"),
   );
 
-  // Pre-group labels by their source file once, so per-language extraction
-  // does not re-scan the full label Map for every (lang, file) pair.
+  // WHY: per-language extraction would otherwise re-scan the full label Map for every (lang, file) pair.
   const labelsByFile = buildArrayMapByEntries(
     Array.from(labels, ([id, label]) => [label.file, [id, label] as const]),
   );

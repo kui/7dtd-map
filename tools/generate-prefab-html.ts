@@ -89,7 +89,6 @@ async function copyJpg(xmlFileName: string) {
     await fs.copyFile(jpg, dist);
   } catch (e) {
     if (isErrnoException(e) && e.code === "ENOENT") {
-      // No jpg
       return;
     }
     throw e;
