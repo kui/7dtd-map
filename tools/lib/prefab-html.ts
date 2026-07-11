@@ -159,9 +159,6 @@ export async function prefabHtml(
 ): Promise<string> {
   const name = path.basename(xml, ".xml");
   const label = labels.get(name)?.english ?? "-";
-  // Launch all three I/O operations in parallel; previously parseTts was
-  // awaited before the other two were even constructed, doubling per-prefab
-  // latency across the throttled fan-out in generate-prefab-html.ts.
   const [ttsData, blockNimEntries, rawProperties] = await Promise.all([
     parseTts(tts),
     parseNim(nim),
@@ -176,14 +173,11 @@ export async function prefabHtml(
       count: blockNums.get(id) ?? 0,
     }))
     .toSorted((a, b) => a.name.localeCompare(b.name));
-  // The HTML page only renders flat name/value properties; nested class
-  // containers (e.g. Stats) are intentionally dropped to keep the existing
-  // output stable.
+  // WHY: nested class containers (e.g. Stats) are dropped so the HTML output stays flat and stable.
   const properties = rawProperties
     .filter(isPrefabPropertyValue)
     .toSorted((a, b) => a.name.localeCompare(b.name));
 
-  // List of blocks used in .tts but not defined in .blocks.nim
   const blockIdSet = new Set(blocks.map((b) => b.id));
   const undefinedBlockIds = [...blockNums.keys()].filter((i) =>
     !blockIdSet.has(i)
@@ -196,7 +190,6 @@ export async function prefabHtml(
     );
   }
 
-  // List of blocks defined in .blocks.nim but not placed in .tts
   const noPlacedBlocks = blocks.filter((b) => b.count === 0);
   if (noPlacedBlocks.length > 0) {
     console.warn(
@@ -222,8 +215,7 @@ export async function prefabHtml(
   });
 }
 
-// `&` must be replaced first; otherwise the `&` introduced by `&lt;`/`&gt;`
-// would be re-escaped into `&amp;lt;` / `&amp;gt;`.
+// INVARIANT: `&` must appear first so it is not re-escaped by later `&lt;`/`&gt;` replacements into `&amp;lt;` / `&amp;gt;`.
 const ESCAPE_HTML_PATTERNS: [RegExp, string][] = [
   [/&/g, "&amp;"],
   [/</g, "&lt;"],
@@ -251,9 +243,11 @@ export interface SleeperVolume {
   start: [number, number, number];
 }
 
-// Apply `parser` to each `separator`-split token of the property identified
-// by `key`, or return undefined if the property is absent. Replaces ~7
-// repetitions of `properties.find(p => p.name === key)?.value.split(...).map(...)`.
+/**
+ * Applies `parser` to each `separator`-split token of the property
+ * identified by `key`. Returns `undefined` when the property is
+ * absent.
+ */
 function parseCsvField<T>(
   propMap: Map<string, string>,
   key: string,
@@ -272,8 +266,6 @@ function parseTriple(raw: string, kind: string): [number, number, number] {
 export function buildSleeperVolumes(
   properties: PrefabProperty[],
 ): SleeperVolume[] {
-  // Single O(N) scan up front; subsequent lookups are O(1) instead of O(N)
-  // per field (previously ~10 full scans of `properties`).
   const propMap = new Map(properties.map((p) => [p.name, p.value]));
 
   const groupsRaw = parseCsvField(
@@ -284,9 +276,7 @@ export function buildSleeperVolumes(
   if (groupsRaw === undefined) return [];
   const groups = [];
   for (let i = 0; i < groupsRaw.length; i += 3) {
-    // NOTE: This implementation for SleeperVolumeGroup could be wrong.
-    // The 2nd and 3rd elements are treated as the number of sleepers in this implementation.
-    // However, I don't know the exact meaning of these values.
+    // HACK: the 2nd and 3rd elements of each triple are treated as sleeper counts because the exact 7DTD semantic is unknown.
     const countMin = parseInt(groupsRaw[i + 1] ?? "", 10);
     const countMax = parseInt(groupsRaw[i + 2] ?? "", 10);
     if (isNaN(countMin) || isNaN(countMax)) {
@@ -297,7 +287,7 @@ export function buildSleeperVolumes(
       );
     }
     groups.push({
-      // Skip ith element checking because i+1 is alraedy checked
+      // SAFETY: index i is validated because the preceding countMin/countMax parse already checks i+1 and i+2.
       // deno-lint-ignore no-non-null-assertion
       group: groupsRaw[i]!,
       count: [countMin, countMax] as [number, number],
@@ -311,9 +301,7 @@ export function buildSleeperVolumes(
   if (groupIds === undefined) {
     throw new Error("SleeperVolumeGroupId is not found");
   }
-  // NOTE: This implementation for SleeperVolumeGameStageAdjust could be wrong.
-  // Some prefabs have no SleeperVolumeGameStageAdjust or shorter than SleeperVolumeGroup
-  // This implementation assumes that padding empty string to the length of SleeperVolumeGroup.
+  // HACK: pad SleeperVolumeGameStageAdjust with empty strings when it is absent or shorter than SleeperVolumeGroup.
   const gameStageAdjusts =
     parseCsvField(propMap, "SleeperVolumeGameStageAdjust", (s) => s.trim()) ??
       Array.from(groups, () => "");
@@ -323,8 +311,7 @@ export function buildSleeperVolumes(
     (s) => parseInt(s, 10),
   );
   if (flags === undefined) throw new Error("SleeperVolumeFlags is not found");
-  // NOTE: This implementation for SleeperIsBossVolume could be wrong.
-  // See the comment for SleeperVolumeGameStageAdjust.
+  // HACK: default SleeperIsBoss/Loot/QuestExclude arrays to all-false when the property is absent or shorter than groups.
   const parseBool = (s: string) => s === "True";
   const isBosses = parseCsvField(propMap, "SleeperIsBossVolume", parseBool) ??
     Array.from(groups, () => false);
@@ -355,14 +342,11 @@ export function buildSleeperVolumes(
         groupIds[i],
         () => `Unexpected state: groupId is not found: index=${String(i)}`,
       ),
-      gameStageAdjust: gameStageAdjusts[i] ?? "", // See the above comment for SleeperVolumeGameStageAdjust.
+      gameStageAdjust: gameStageAdjusts[i] ?? "",
       flags: requireNonnull(
         flags[i],
         () => `Unexpected state: flags is not found: index=${String(i)}`,
       ),
-      // See the above comment for SleeperVolumeGameStageAdjust: the property
-      // may be absent or shorter than `groups`, so default missing entries to
-      // false instead of throwing (which would drop the whole prefab).
       isBoss: isBosses[i] ?? false,
       isLoot: isLoots[i] ?? false,
       isQuestExclude: isQuestExcludes[i] ?? false,

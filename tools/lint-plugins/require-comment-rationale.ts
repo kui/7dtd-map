@@ -79,7 +79,6 @@ const EXCLUDED_PATHS: readonly string[] = [
   "/tools/lib/ico.ts",
   "/tools/lib/nim-parser.ts",
   "/tools/lib/prefab-files.ts",
-  "/tools/lib/prefab-html.ts",
   "/tools/lib/symbol-chars.ts",
   "/tools/lib/tts-parser.ts",
   "/tools/lib/utils.ts",
