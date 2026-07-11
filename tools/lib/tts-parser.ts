@@ -2,23 +2,23 @@ import * as fs from "node:fs";
 import { ByteReader } from "./byte-reader.ts";
 import { BlockId } from "./nim-parser.ts";
 
-// TTS format: https://7daystodie.gamepedia.com/Prefabs#TTS
 const KNOWN_VERSIONS = [13, 15, 16, 17, 18, 19];
 const BLOCK_ID_BIT_MASK = 0b0111111111111111;
 
+/**
+ * Parses a `.tts` prefab file. TTS format reference:
+ * https://7daystodie.gamepedia.com/Prefabs#TTS
+ */
 export async function parseTts(ttsFileName: string): Promise<Tts> {
   const stream = fs.createReadStream(ttsFileName);
   let fileFormat: string;
   let version: number;
   let dim: { x: number; y: number; z: number };
   let blockIds: Uint32Array;
-  // try wraps only the I/O so the finally guarantees the FD is released if
-  // ByteReader.read throws on a truncated/corrupt file. Header validation
-  // and the Tts allocation run after close() and don't need the guard.
+  // INVARIANT: the try scope must contain only ByteReader reads so the finally releases the FD when reads throw.
   try {
     const r = new ByteReader(stream);
 
-    // Header
     fileFormat = (await r.read(4)).toString();
     version = (await r.read(4)).readUInt32LE();
     dim = {
@@ -27,7 +27,6 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
       z: (await r.read(2)).readUInt16LE(),
     };
 
-    // Block data
     const blocksNum = dim.x * dim.y * dim.z;
     blockIds = new Uint32Array(blocksNum);
     for (let i = 0; i < blocksNum; i++) {
@@ -38,11 +37,7 @@ export async function parseTts(ttsFileName: string): Promise<Tts> {
     stream.close();
   }
 
-  // Header validation runs after the body read so the read(...) sequence
-  // above mirrors the on-disk TTS layout and serves as a visual map of the
-  // file format. Malformed TTS files are vanishingly rare in this toolchain
-  // (inputs come from the game's own exporter), so the cost of parsing the
-  // body before rejecting is negligible.
+  // WHY: header is validated after the body read to keep the code sequence mirroring the on-disk layout. Malformed TTS files are rare because inputs come from the game's own exporter.
   if (fileFormat !== "tts\x00") {
     throw Error(
       `Unexpected file prefix: filename=${ttsFileName}, format=${fileFormat}`,

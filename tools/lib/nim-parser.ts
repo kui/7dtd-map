@@ -5,21 +5,24 @@ export type BlockId = number;
 
 export type BlockIdNames = Map<BlockId, string>;
 
-// ".blocks.nim" format (Its just my guess, refered to no docs.)
-// * Header part
-// 1-4: (uint32) file format version?
-// 5-8: (uint32) the number of block types `blockNum`
-// * Body part: repeated each block ID-Name definisions
-// 1-4: (uint32) block ID for a tts file
-// 5:   (uint8) the number of chars of the block name
-// 6-:  (string) block name
+/**
+ * Parses a `.blocks.nim` file. The layout below is reverse-engineered
+ * from observed files, not from a spec.
+ *
+ * Header:
+ *   1-4: (uint32) file format version
+ *   5-8: (uint32) the number of block types `blockNum`
+ *
+ * Body (repeated per block ID-name definition):
+ *   1-4: (uint32) block ID for a TTS file
+ *   5:   (uint8)  length of the block name
+ *   6-:  (string) block name
+ */
 export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
   const stream = fs.createReadStream(nimFileName);
   let version: number;
   const blocks: BlockIdNames = new Map();
-  // try wraps only the I/O so the finally guarantees the FD is released if
-  // ByteReader.read throws on a truncated/corrupt file. Version validation
-  // runs after close() and does not need the guard.
+  // INVARIANT: the try scope must contain only ByteReader reads so the finally releases the FD when reads throw.
   try {
     const r = new ByteReader(stream);
 
@@ -35,11 +38,7 @@ export async function parseNim(nimFileName: string): Promise<BlockIdNames> {
     stream.close();
   }
 
-  // Version validation runs after the body read so the read(...) sequence
-  // above mirrors the on-disk .blocks.nim layout and serves as a visual map
-  // of the file format. Malformed .nim files are vanishingly rare in this
-  // toolchain (inputs come from the game's own exporter), so the cost of
-  // parsing the body before rejecting is negligible.
+  // WHY: version is validated after the body read to keep the code sequence mirroring the on-disk layout. Malformed .nim files are rare because inputs come from the game's own exporter.
   if (version !== 1) {
     throw Error(
       `Unexpected version: filename=${nimFileName} version=${String(version)}`,
