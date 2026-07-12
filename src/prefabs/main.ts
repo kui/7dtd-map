@@ -18,7 +18,6 @@ function main() {
     );
   });
 
-  // init
   (async () => {
     updatePrefabLabels(await labelHolder.get("prefabs"));
     updateBlockLabels(

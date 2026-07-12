@@ -17,10 +17,12 @@ export const LANGUAGES = [
 ] as const;
 export type Language = (typeof LANGUAGES)[number];
 
-// Maps a BCP47 primary language subtag to a 7 Days to Die label set.
-// Chinese is resolved separately because its label set depends on the script
-// subtag (Hans vs Hant), which we derive via Intl.Locale's CLDR-backed
-// Likely Subtags expansion.
+/**
+ * Maps a BCP47 primary language subtag to a 7 Days to Die label set.
+ * Chinese is resolved separately because its label set depends on the
+ * script subtag (Hans vs Hant), derived via `Intl.Locale`'s CLDR-backed
+ * Likely Subtags expansion.
+ */
 const PRIMARY_SUBTAG_LANGUAGES: { [primary: string]: Language } = {
   en: "english",
   de: "german",
@@ -131,12 +133,14 @@ function matchLanguage(clientTag: string): Language | undefined {
   return PRIMARY_SUBTAG_LANGUAGES[locale.language];
 }
 
-// Use Intl.Locale's `maximize()` (backed by CLDR Likely Subtags) to fill in the
-// script subtag from language/region — so `zh-CN`, `zh-SG` expand to Hans and
-// `zh-TW`, `zh-HK`, `zh-MO` expand to Hant without us hand-maintaining the
-// region list. Bare `zh` expands to `zh-Hans-CN`, matching the upstream
-// 7 Days to Die / Steam convention where `schinese` is the canonical Chinese
-// label set.
+/**
+ * Uses `Intl.Locale.maximize()` (backed by CLDR Likely Subtags) to
+ * fill in the script subtag from language and region. `zh-CN` and
+ * `zh-SG` expand to Hans, while `zh-TW`, `zh-HK`, and `zh-MO` expand
+ * to Hant without a hand-maintained region list. Bare `zh` expands to
+ * `zh-Hans-CN`, matching the upstream 7 Days to Die / Steam convention
+ * where `schinese` is the canonical Chinese label set.
+ */
 function resolveChinese(locale: Intl.Locale): Language {
   return locale.maximize().script === "Hant" ? "tchinese" : "schinese";
 }

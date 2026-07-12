@@ -1,10 +1,15 @@
 import type { PrefabAddedVersions } from "../types/7dtdmap.ts";
 
-// Parses each dot-separated version string (e.g. "3.10") into a numeric
-// segment array and keeps the numerically greatest one, so "3.10" is treated
-// as newer than "3.2" (a plain lexicographic sort would get this backwards).
-// Kept separate from lib/prefabs.ts (which uses DOMParser) so this is
-// importable from the filter worker, where DOM types are unavailable.
+/**
+ * Parses each dot-separated version string (e.g. `"3.10"`) into a
+ * numeric segment array and keeps the numerically greatest one, so
+ * `"3.10"` is treated as newer than `"3.2"`. Plain lexicographic sort
+ * would order them backwards.
+ *
+ * Kept separate from `lib/prefabs.ts` (which uses `DOMParser`) so it
+ * is importable from the filter worker, where DOM types are
+ * unavailable.
+ */
 export function latestAddedVersion(
   addedVersions: PrefabAddedVersions,
 ): string {

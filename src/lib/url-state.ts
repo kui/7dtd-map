@@ -3,7 +3,7 @@ interface StateElement {
   element: HTMLInputElement;
 }
 
-// Store values of input elements in the URL query string.
+/** Stores values of input elements in the URL query string. */
 export class UrlState {
   #url: URL;
   #inputs: Map<HTMLInputElement, StateElement>;
@@ -20,9 +20,7 @@ export class UrlState {
     for (const [input, { defaultValue }] of this.#inputs.entries()) {
       if (this.#url.searchParams.has(input.id)) {
         setValue(input, this.#url.searchParams.get(input.id) ?? defaultValue);
-        // Dispatch both events so listeners that subscribe to either one
-        // observe the restored value. Both are bubbling to match how
-        // browsers fire native user-driven events.
+        // WHY: dispatch both events so listeners that subscribe to either one observe the restored value. Both bubble to match how browsers fire native user-driven events.
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.dispatchEvent(new Event("change", { bubbles: true }));
       }
@@ -37,9 +35,7 @@ export class UrlState {
           fn(this.#url);
         });
       };
-      // Subscribe to both events so we catch text-style typing (input) and
-      // checkbox/radio/select toggles (change). The value-equality guard
-      // above prevents the duplicate dispatch from causing double updates.
+      // WHY: subscribe to both events to catch text-style typing (input) and checkbox/radio/select toggles (change). The value-equality guard above prevents the duplicate dispatch from causing double updates.
       input.addEventListener("input", handler);
       input.addEventListener("change", handler);
     }

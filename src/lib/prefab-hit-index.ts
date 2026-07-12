@@ -1,19 +1,23 @@
 import type { GameCoords, Prefab, PrefabMeshSizes } from "../types/7dtdmap.ts";
 
-// Mirrors the exclusions in map-renderer's footprint draw so that hit-tests
-// target exactly the rectangles a user can see on the map. Tiles are the
-// placement framework; part_driveway overlaps its parent POI and is never the
-// thing the user is asking about.
+/**
+ * Mirrors the exclusions in `map-renderer`'s footprint draw so hit-tests
+ * target exactly the rectangles a user can see on the map. `rwg_tile_`
+ * is the placement framework and `part_driveway_` overlaps its parent
+ * POI, so neither is ever what a user is asking about.
+ */
 export const EXCLUDED_NAME_FRAGMENTS = [
   "rwg_tile_",
   "part_driveway_",
 ] as const;
 
-// AABB stored in four parallel Int32Arrays so the hit-test loop is pure
-// integer compares (no string `.includes`, no PrefabMeshSizes lookup, no
-// rotation parity per sample). Rows are sorted ascending by footprint area
-// so the first hit is the smallest, naturally preferring the more specific
-// POI on overlapping footprints.
+/**
+ * AABB stored in four parallel `Int32Array`s so the hit-test loop is
+ * pure integer compares (no string `.includes`, no `PrefabMeshSizes`
+ * lookup, no rotation parity per sample). Rows are sorted ascending by
+ * footprint area so the first hit is the smallest, naturally preferring
+ * the more specific POI on overlapping footprints.
+ */
 export class PrefabHitIndex {
   readonly source: Prefab[];
   readonly prefabs: Prefab[];
@@ -38,9 +42,7 @@ export class PrefabHitIndex {
       const size = meshSizes[p.name];
       if (!size) continue;
       const [sx, sz] = size;
-      // decoration.position is the SW corner of the rotated AABB; 90°/270°
-      // rotations swap world-aligned width/depth. Matches the renderer's
-      // footprint formula in src/worker/lib/map-renderer.ts.
+      // WHY: decoration.position is the SW corner of the rotated AABB. Rotations by 90° or 270° swap world-aligned width and depth.
       const odd = ((p.rotation ?? 0) & 1) === 1;
       const w = odd ? sz : sx;
       const d = odd ? sx : sz;

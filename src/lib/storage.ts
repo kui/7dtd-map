@@ -71,8 +71,7 @@ export class MapDir {
         await writable.close();
       }
     } else {
-      // pipeTo closes the writable on its own (preventClose defaults to false),
-      // so we must not call close() again here.
+      // INVARIANT: do not close() again here because pipeTo already closes the writable (preventClose defaults to false).
       await data.pipeTo(writable);
     }
   }
@@ -114,8 +113,7 @@ export class MapDir {
     try {
       await this.#dir.removeEntry(name);
     } catch (e: unknown) {
-      // Treat removal as idempotent: ignore missing entries so that bulk
-      // clears (e.g. FileHandler#clear) don't abort halfway through.
+      // WHY: treat removal as idempotent so bulk clears (e.g. FileHandler#clear) do not abort halfway through when an entry is already gone.
       if (e instanceof DOMException && e.name === "NotFoundError") {
         return;
       }

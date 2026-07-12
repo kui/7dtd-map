@@ -40,8 +40,7 @@ function awaitOneshotWorker<T>(worker: Worker): Promise<T> {
       settle(() => resolve(event.data));
     });
     worker.addEventListener("error", (event) => {
-      // Prevent the browser from also logging an "Uncaught" notice for an
-      // error we are about to surface through the promise.
+      // WHY: prevent the browser from also logging an "Uncaught" notice for an error we are about to surface through the promise.
       event.preventDefault();
       const { message, filename, lineno } = event;
       const detail = message || filename

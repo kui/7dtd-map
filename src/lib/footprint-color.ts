@@ -4,18 +4,20 @@ import type {
   PrefabDensityScores,
 } from "../types/7dtdmap.ts";
 
-// Edge length of an `rwg_tile_*` prefab in game blocks.
+/** Edge length of an `rwg_tile_*` prefab in game blocks. */
 const TILE_SIZE = 150;
 
 export interface TileIndex {
   offsetX: number;
   offsetZ: number;
-  // Key: `${gridX},${gridZ}` → district name (extracted from tile filename).
+  /** Key `${gridX},${gridZ}` maps to a district name extracted from the tile filename. */
   cells: Map<string, string>;
 }
 
-// Tile prefabs are 150×150 `rwg_tile_<district>_*` blocks on a regular lattice;
-// index each by grid cell for O(1) per-POI district lookups.
+/**
+ * Tile prefabs are 150×150 `rwg_tile_<district>_*` blocks on a regular
+ * lattice. Indexes each by grid cell for O(1) per-POI district lookups.
+ */
 export function buildTileIndex(allPrefabs: Prefab[]): TileIndex {
   const tiles: { x: number; z: number; district: string }[] = [];
   for (const p of allPrefabs) {
@@ -24,8 +26,7 @@ export function buildTileIndex(allPrefabs: Prefab[]): TileIndex {
     // deno-lint-ignore no-non-null-assertion
     tiles.push({ x: p.x, z: p.z, district: m[1]! });
   }
-  // The lattice origin is the world-centre offset, not a multiple of 150 in
-  // world coords. Derive it from any tile (mod 150 normalised to [0, 150)).
+  // WHY: the lattice origin is the world-centre offset, not a multiple of 150 in world coords. Derive it from any tile (mod 150 normalised to [0, 150)).
   const mod = (n: number) => ((n % TILE_SIZE) + TILE_SIZE) % TILE_SIZE;
   // deno-lint-ignore no-non-null-assertion
   const offsetX = tiles.length > 0 ? mod(tiles[0]!.x) : 0;
@@ -40,8 +41,11 @@ export function buildTileIndex(allPrefabs: Prefab[]): TileIndex {
   return { offsetX, offsetZ, cells };
 }
 
-// Mirrors WorldGenerationEngineFinal.StreetTile.SpawnMarkerPartsAndPrefabs:
-// preview_color × (remnant/abandoned 0.75, low-density 0.4), trader #994d4d, wilderness white.
+/**
+ * Mirrors `WorldGenerationEngineFinal.StreetTile.SpawnMarkerPartsAndPrefabs`.
+ * Returns `preview_color × (remnant/abandoned 0.75, low-density 0.4)`,
+ * trader `#994d4d`, wilderness white.
+ */
 export function footprintColorRgb(
   prefab: Prefab,
   tileIndex: TileIndex,

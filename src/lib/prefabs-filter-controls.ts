@@ -31,10 +31,13 @@ export function readPreExcludes(
   return doms.preExcludes.flatMap((i) => (i.checked ? [i.value] : []));
 }
 
-// Wire the controls common to every PrefabsHandler variant: text filters,
-// tier range inputs with change-suppression, pre-exclude checkboxes, and
-// the language switch. Callers handle the variant-specific concerns
-// (initial postMessage, marker/file integration, output dispatch).
+/**
+ * Wires the controls common to every `PrefabsHandler` variant: text
+ * filters, tier range inputs with change-suppression, pre-exclude
+ * checkboxes, and the language switch. Callers handle the
+ * variant-specific concerns (initial `postMessage`, marker or file
+ * integration, output dispatch).
+ */
 export function bindPrefabsFilterControls(
   doms: PrefabsFilterControlsDoms,
   worker: PrefabsFilterWorker,

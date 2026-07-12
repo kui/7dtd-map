@@ -101,8 +101,7 @@ export function prefabFootprintCssRect(
     };
   }
 
-  // 90°/270° rotations swap the world-aligned width/depth; same formula as
-  // the footprint pass in src/worker/lib/map-renderer.ts.
+  // WHY: rotations by 90° or 270° swap the world-aligned width and depth.
   const odd = ((prefab.rotation ?? 0) & 1) === 1;
   let width = (odd ? size[1] : size[0]) * scaleX;
   let height = (odd ? size[0] : size[1]) * scaleY;
@@ -125,14 +124,12 @@ export function canvasEventToGameCoords(
   mapSize: GameMapSize,
   canvasSize: HTMLCanvasElement,
 ): GameCoords | null {
-  // in-game scale coords with left-top offset
   const gx = (event.offsetX * mapSize.width) / canvasSize.width;
   const gz = (event.offsetY * mapSize.height) / canvasSize.height;
   if (gx < 0 || gx >= mapSize.width || gz < 0 || gz >= mapSize.height) {
     return null;
   }
 
-  // in-game coords (center offset)
   const x = gx - Math.floor(mapSize.width / 2);
   const z = Math.floor(mapSize.height / 2) - gz;
   return gameCoords({ x: Math.round(x), z: Math.round(z) });
