@@ -301,7 +301,9 @@ export function buildSleeperVolumes(
   if (groupIds === undefined) {
     throw new Error("SleeperVolumeGroupId is not found");
   }
-  // HACK: pad SleeperVolumeGameStageAdjust with empty strings when it is absent or shorter than SleeperVolumeGroup.
+  // WHY: vanilla prefabs omit trailing falses/empties on optional properties.
+  // WHY: IsLoot/IsQuestExclude/Flags fallbacks match the 7DTD binary bounds-checks.
+  // WHY: GameStageAdjust and IsBoss are absent from the binary model.
   const gameStageAdjusts =
     parseCsvField(propMap, "SleeperVolumeGameStageAdjust", (s) => s.trim()) ??
       Array.from(groups, () => "");
@@ -311,7 +313,6 @@ export function buildSleeperVolumes(
     (s) => parseInt(s, 10),
   );
   if (flags === undefined) throw new Error("SleeperVolumeFlags is not found");
-  // HACK: default SleeperIsBoss/Loot/QuestExclude arrays to all-false when the property is absent or shorter than groups.
   const parseBool = (s: string) => s === "True";
   const isBosses = parseCsvField(propMap, "SleeperIsBossVolume", parseBool) ??
     Array.from(groups, () => false);
@@ -342,11 +343,14 @@ export function buildSleeperVolumes(
         groupIds[i],
         () => `Unexpected state: groupId is not found: index=${String(i)}`,
       ),
+      // WHY: trailing empty entries are omitted in vanilla prefabs for optional string arrays.
       gameStageAdjust: gameStageAdjusts[i] ?? "",
-      flags: requireNonnull(
-        flags[i],
-        () => `Unexpected state: flags is not found: index=${String(i)}`,
-      ),
+      // WHY: the 7DTD binary (Assembly-CSharp.dll, PrefabVolumes.PrefabSleeperVolumeList::ReadFromProperties)
+      // WHY: falls back to 0 when SleeperVolumeFlags is shorter than SleeperVolumeGroup.
+      flags: flags[i] ?? 0,
+      // WHY: the 7DTD binary falls back to false when SleeperIsLootVolume and
+      // WHY: SleeperIsQuestExclude are shorter than SleeperVolumeGroup.
+      // WHY: isBoss is not part of the binary model; kept here for HTML display.
       isBoss: isBosses[i] ?? false,
       isLoot: isLoots[i] ?? false,
       isQuestExclude: isQuestExcludes[i] ?? false,

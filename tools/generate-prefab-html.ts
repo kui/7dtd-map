@@ -61,8 +61,7 @@ async function buildHtmls(labels: Map<LabelId, Label>) {
         console.warn("Abort a prefab HTML: ", e.message);
         return;
       }
-      console.warn("Abort a prefab HTML: ", e);
-      return;
+      throw e;
     }
     if (++successCount % 50 === 0) {
       console.log("Build HTML files: %d/%d", successCount, xmlFiles.length);
