@@ -21,7 +21,7 @@ const prefabs = new PrefabFilter(
 onmessage = ({ data }: MessageEvent<PrefabsFilterInputMessage>) => {
   console.log("Prefab-filter received message: ", data);
   Object.assign(prefabs, data);
-  // Bump before update() so an in-flight stream from the previous input aborts.
+  // WHY: bump before update() so an in-flight stream from the previous input aborts.
   prefabs.bumpInputVersion();
   prefabs.update().catch(printError);
 };

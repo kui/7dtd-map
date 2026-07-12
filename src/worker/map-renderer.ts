@@ -10,9 +10,7 @@ import type {
 
 let map: MapRenderer | null = null;
 
-// The prefab sign and flag markers stamp SVG path data baked at build time
-// (see tools/generate-glyph-markers.ts) instead of rendering glyphs from a
-// webfont, so it's fetched once here rather than per MapRenderer instance.
+// WHY: fetch the baked glyph path once at module load. Every MapRenderer instance stamps the same SVG path data from tools/generate-glyph-markers.ts and would otherwise re-fetch.
 const signMarkerReady: Promise<GlyphMarker> = fetchJson<GlyphMarker>(
   "../heavy-ballot-x-path.json",
 );
@@ -35,19 +33,16 @@ async function handleMessage(message: MapRendererInputMessage): Promise<void> {
       throw Error("Unexpected state");
     }
   } else if (message.canvas || message.compositeCanvas) {
-    // The OffscreenCanvases are captured by the first message and must not be
-    // replaced by later messages; drop any stray canvas fields defensively.
+    // INVARIANT: OffscreenCanvases captured by the first message must not be replaced by later messages. Drop any stray canvas fields defensively.
     delete message.canvas;
     delete message.compositeCanvas;
   }
   Object.assign(map, message);
-  // Not awaited: awaiting would serialize the queue below behind each
-  // throttled render instead of letting throttledInvoker coalesce them.
+  // WHY: not awaited. Awaiting would serialize the queue below behind each throttled render instead of letting throttledInvoker coalesce them.
   map.update().catch(printError);
 }
 
-// Serialize handling so messages arriving while the MapRenderer construction
-// awaits the glyph fetches are queued instead of dropped.
+// WHY: serialize message handling so messages arriving while the MapRenderer construction awaits the glyph fetches are queued instead of dropped.
 let queue: Promise<void> = Promise.resolve();
 onmessage = (event: MessageEvent<MapRendererInputMessage>) => {
   queue = queue.then(() => handleMessage(event.data)).catch(printError);
