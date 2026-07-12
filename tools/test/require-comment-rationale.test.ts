@@ -1,9 +1,7 @@
 /// <reference lib="deno.unstable" />
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
-import plugin, {
-  isExcludedFile,
-} from "../lint-plugins/require-comment-rationale.ts";
+import plugin from "../lint-plugins/require-comment-rationale.ts";
 
 function run(source: string, filename = "main.ts") {
   return Deno.lint.runPlugin(plugin, filename, source);
@@ -85,18 +83,6 @@ describe("require-comment-rationale", () => {
   it("flags a KEEP: marker (contentless, intentionally not preserved)", () => {
     const d = run("// KEEP: no reason\nconst x = 1;\n");
     expect(d.length).toBe(1);
-  });
-
-  it("skips files matching excluded path substrings", () => {
-    expect(isExcludedFile("/repo/src/index/foo.ts", ["/src/index/"])).toBe(
-      true,
-    );
-    expect(isExcludedFile("/repo/src/lib/bar.ts", ["/src/index/"])).toBe(false);
-    expect(isExcludedFile("C:\\repo\\src\\index\\foo.ts", ["/src/index/"]))
-      .toBe(true);
-    expect(isExcludedFile("/repo/src/lib/foo.ts", ["/src/lib/foo.ts"])).toBe(
-      true,
-    );
   });
 
   it("flags multiple bare comments in one file", () => {

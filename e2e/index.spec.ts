@@ -16,8 +16,7 @@ test.describe("index.html", () => {
 
   test("language select change is persisted in localStorage", async ({ page }) => {
     await page.goto("/index.html");
-    // The label-lang select is populated asynchronously by LabelHandler; wait
-    // for at least one extra option to appear beyond the default.
+    // WHY: LabelHandler populates the select asynchronously, so wait for options before interacting.
     await expect
       .poll(async () => await page.locator("#label-lang option").count())
       .toBeGreaterThan(1);
@@ -32,8 +31,6 @@ test.describe("index.html", () => {
 
   test("min-tier cannot exceed max-tier — they correct each other", async ({ page }) => {
     await page.goto("/index.html");
-    // Set min above current max; min-max-inputs.ts should drag max up so
-    // max >= min.
     await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "2";
       el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -52,18 +49,15 @@ test.describe("index.html", () => {
     test.setTimeout(60_000);
     await page.goto("/index.html");
 
-    // Wait for the bundled-map select to be populated.
+    // WHY: The bundled-map select is populated asynchronously.
     await expect
       .poll(async () =>
         await page.locator("#bundled-map-select option").count()
       )
       .toBeGreaterThan(1);
 
-    // Install an observer that latches when the load/processing dialog opens
-    // and when it subsequently closes. The dialog is opened via showModal()
-    // and closed once processing finishes; using the close transition as the
-    // "processing done" signal avoids polling canvas dimensions before the
-    // worker has resized the canvas.
+    /* WHY: Latch dialog open/close via MutationObserver so we can detect
+       when processing finishes without polling canvas dimensions prematurely. */
     await page.evaluate(() => {
       const w = globalThis as unknown as {
         __dialogWasOpen?: boolean;
@@ -80,7 +74,6 @@ test.describe("index.html", () => {
 
     await page.selectOption("#bundled-map-select", "Navezgane");
 
-    // Loading dialog should have been open at some point during processing.
     await expect
       .poll(async () =>
         await page.evaluate(() =>
@@ -90,9 +83,7 @@ test.describe("index.html", () => {
       )
       .toBe(true);
 
-    // Wait for the dialog to close, signalling processing finished. Cold
-    // workers under parallel test load can take tens of seconds, so allow a
-    // generous window before checking canvas dimensions.
+    // WHY: Cold workers under parallel test load can take tens of seconds, so allow a generous timeout before asserting canvas dimensions.
     await expect
       .poll(
         async () =>
@@ -104,8 +95,7 @@ test.describe("index.html", () => {
       )
       .toBe(true);
 
-    // Canvas dimensions: Navezgane HeightMapSize is 6144x6144 and the default
-    // render scale is 0.12 -> 6144 * 0.12 = 737.28 -> 737.
+    // WHY: Navezgane HeightMapSize is 6144x6144 and the default render scale is 0.12, so the expected canvas size is 6144 * 0.12 = 737.28 -> 737.
     const slow = { timeout: 20_000 };
     await expect.poll(
       async () =>
@@ -118,19 +108,16 @@ test.describe("index.html", () => {
       slow,
     ).toBe(737);
 
-    // Prefab list is populated.
     await expect.poll(
       async () => await page.locator("#prefabs-list li").count(),
       slow,
     ).toBeGreaterThan(0);
 
-    // Map name input reflects the selection.
     await expect.poll(
       async () => await page.locator("#map-name").inputValue(),
       slow,
     ).toBe("Navezgane");
 
-    // Apply the "trader" prefab-filter preset.
     await page.click(
       'button[data-input-prefab-filter="trader"]:text-is("All Traders")',
     );
@@ -141,7 +128,6 @@ test.describe("index.html", () => {
       await page.locator("#prefabs-list li").count()
     ).toBeGreaterThan(0);
 
-    // Clear the prefab filter via its X button (data-input-prefab-filter="").
     await page.click(
       'button[data-input-prefab-filter=""]',
     );
@@ -149,7 +135,6 @@ test.describe("index.html", () => {
       await page.locator("#prefab-filter").inputValue()
     ).toBe("");
 
-    // Apply the "Super Corn" block-filter preset.
     await page.click(
       'button[data-input-block-filter="(Grace|Super)Corn"]:text-is("Super Corn")',
     );
@@ -160,8 +145,6 @@ test.describe("index.html", () => {
       await page.locator("#prefabs-list li").count()
     ).toBeGreaterThan(0);
 
-    // Narrow the tier range to [0, 0]; with Super Corn still in the block
-    // filter, no prefab should match.
     await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "0";
       el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -180,8 +163,7 @@ test.describe("index.html", () => {
   test("block filter input stays responsive (freeze regression)", async ({ page }) => {
     test.setTimeout(60_000);
 
-    // Collect long tasks with their start times so we can look only at the
-    // window around typing, ignoring long tasks from the initial map load.
+    // WHY: Collect long-task timings so we can isolate typing-window latency from initial load overhead.
     await page.addInitScript(() => {
       const w = globalThis as unknown as {
         __longtasks?: { start: number; duration: number }[];
@@ -248,8 +230,7 @@ test.describe("index.html", () => {
     }, typingStart);
     const maxSingle = durations.length ? Math.max(...durations) : 0;
     const total = durations.reduce((a, b) => a + b, 0);
-    // Thresholds are loose vs the pre-fix baseline (single 1,864ms / total
-    // 5,100ms) to tolerate CI speed variance; prefer retries over loosening.
+    // WHY: Thresholds are loose versus the pre-fix baseline (single 1,864ms / total 5,100ms) so CI speed variance does not cause flakes.
     expect(maxSingle).toBeLessThan(500);
     expect(total).toBeLessThan(1500);
 
@@ -272,10 +253,8 @@ test.describe("index.html", () => {
       "terrain-viewer-title",
     );
 
-    // Show button is disabled until a DTM is loaded.
     await expect(page.locator("#terrain-viewer-show")).toBeDisabled();
 
-    // Close button carries an accessible name for screen readers.
     await expect(page.locator("#terrain-viewer-close"))
       .toHaveAttribute("aria-label", "Close terrain viewer");
   });
@@ -300,8 +279,7 @@ test.describe("index.html", () => {
     );
     await expect(button).toBeVisible();
 
-    // Replace clipboard.writeText with a spy stored on globalThis so the test
-    // can assert it was invoked by a keyboard activation.
+    // WHY: Replace clipboard.writeText with a spy on globalThis so the test can assert keyboard activation invoked it.
     await page.evaluate(() => {
       const w = globalThis as unknown as {
         __copyCalls: string[];
