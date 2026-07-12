@@ -71,4 +71,19 @@ describe("buildSleeperVolumes", () => {
       "SleeperVolumeFlags is not found",
     );
   });
+
+  it("defaults flags to 0 when the property is shorter than groups", () => {
+    // WHY: the 7DTD binary also falls back to 0 for missing flags entries.
+    const props: PrefabProperty[] = [
+      { name: "SleeperVolumeGroup", value: "groupA,1,2,groupB,3,4" },
+      { name: "SleeperVolumeGroupId", value: "0,1" },
+      { name: "SleeperVolumeFlags", value: "1" },
+      { name: "SleeperVolumeSize", value: "1,2,3#4,5,6" },
+      { name: "SleeperVolumeStart", value: "0,0,0#1,1,1" },
+    ];
+    const volumes = buildSleeperVolumes(props);
+    expect(volumes.length).toBe(2);
+    expect(volumes[0].flags).toBe(1);
+    expect(volumes[1].flags).toBe(0);
+  });
 });
