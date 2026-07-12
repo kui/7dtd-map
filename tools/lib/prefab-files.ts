@@ -2,14 +2,14 @@ import * as path from "node:path";
 import { expandGlob } from "@std/fs/expand-glob";
 import { vanillaDir } from "./utils.ts";
 
-// Known prefab sidecar suffixes. Order matters: longer suffixes (e.g.
-// ".blocks.nim") must precede shorter ones (".nim") so stripping picks the
-// most specific match.
+// INVARIANT: longer suffixes must precede shorter ones so that stripping picks the most specific match (e.g. `.blocks.nim` before `.nim`).
 const PREFAB_SUFFIXES = [".blocks.nim", ".tts", ".xml", ".jpg"] as const;
 
-// Predicate for prefab XML files that should be ignored — currently the
-// auto-generated `<name>_signs.xml` companion files. Consolidated here so that
-// any future exclusions live in a single place.
+/**
+ * Predicate for prefab XML files that should be ignored, currently the
+ * auto-generated `<name>_signs.xml` companion files. Consolidated so
+ * future exclusions live in one place.
+ */
 function isIgnoredPrefabXml(p: string): boolean {
   return p.endsWith("_signs.xml");
 }

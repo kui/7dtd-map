@@ -12,8 +12,11 @@ export function publishDir(...pathList: string[]): string {
   return projectRoot("public", ...pathList);
 }
 
-// Must stay a static project-relative path: `deno task` input-based
-// caching needs it expressible as a glob in `deno.jsonc:files`.
+/**
+ * Resolves a project-relative path under `tools/vanilla`. Must stay a
+ * static project-relative path because `deno task` input-based caching
+ * needs to express it as a glob in `deno.jsonc:files`.
+ */
 export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);
 }
@@ -53,8 +56,11 @@ export async function writeJsonFile(
   console.log("Write %s", file);
 }
 
-// Same line structure as JSON.stringify(json, null, "\t") so diffs stay
-// per-entry, but without indentation or spaces after ":" and ",".
+/**
+ * Serializes JSON with the same line structure as `JSON.stringify(json,
+ * null, "\t")` so diffs stay per-entry, but without indentation or
+ * spaces after `":"` and `","`.
+ */
 function compactStringify(
   value: unknown,
   collapseLeafArrays: boolean,
@@ -84,10 +90,12 @@ function isJsonPrimitive(value: unknown): boolean {
     typeof value === "number" || typeof value === "boolean";
 }
 
-// Folds tab-indented arrays of primitives onto a single line so callers like
-// the mesh-sizes table render as `"name": [w, d]` instead of spanning four
-// lines. Only matches JSON primitives (numbers / strings / booleans / null),
-// so structured elements stay pretty-printed.
+/**
+ * Folds tab-indented arrays of primitives onto a single line so callers
+ * like the mesh-sizes table render as `"name": [w, d]` instead of
+ * spanning four lines. Only matches JSON primitives (numbers, strings,
+ * booleans, null), so structured elements stay pretty-printed.
+ */
 function collapseLeafArrays(body: string): string {
   const primitive =
     `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;

@@ -12,17 +12,17 @@ interface FontJob {
   dist: string;
 }
 
-// Each entry scans its `target` files for symbol/emoji characters and
-// subsets only the glyphs its own font actually contains: pyftsubset drops
-// codepoints missing from a font's cmap silently rather than erroring, so
-// the same candidate character set can safely be offered to multiple fonts
-// without cross-contamination (verified empirically before adopting this).
+/**
+ * Font subset jobs. Each entry scans its `target` files for symbol
+ * and emoji characters and subsets only the glyphs its own font
+ * actually contains. `pyftsubset` silently drops codepoints missing
+ * from a font's cmap rather than erroring, so the same candidate
+ * character set can be offered to multiple fonts without
+ * cross-contamination.
+ */
 const JOBS: Readonly<Record<string, FontJob>> = {
   "NotoColorEmoji-COLRv1.ttf": {
-    // DOM-facing source only. The ✘/🚩 map markers under src/worker/ stamp
-    // baked Path2D shapes (see tools/generate-glyph-markers.ts) in a
-    // specific solid marker color; this layered color font would never
-    // apply to them even if scanned.
+    // WHY: exclude src/worker/. The ✘/🚩 map markers there stamp baked Path2D shapes (see tools/generate-glyph-markers.ts) in a solid marker color, so a layered color font would never apply to them.
     target: ["src/**/*.ts", "public/*.html", "tools/lib/prefab-html.ts"],
     exclude: [`${path.sep}worker${path.sep}`],
     dist: "NotoColorEmoji.subset.woff2",
@@ -95,8 +95,11 @@ async function collectFiles(job: FontJob): Promise<string[]> {
   return [...files];
 }
 
-// Reads maxp.numGlyphs from a raw (non-woff2) sfnt buffer, to sanity-check
-// that a subset job actually kept more than just the mandatory .notdef glyph.
+/**
+ * Reads `maxp.numGlyphs` from a raw (non-woff2) sfnt buffer as a
+ * sanity check that the subset job kept more than just the mandatory
+ * `.notdef` glyph.
+ */
 function countGlyphs(sfnt: Uint8Array): number {
   const view = new DataView(sfnt.buffer, sfnt.byteOffset, sfnt.byteLength);
   const numTables = view.getUint16(4);

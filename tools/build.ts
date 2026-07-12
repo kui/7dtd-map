@@ -59,11 +59,9 @@ if (args[0] === "serve") {
 
   console.log(`Serving at http://${hosts[0]}:${port}`);
 
-  // Keep alive
   await new Promise(() => {});
 } else if (args[0] === "serve-static") {
-  // esbuild's serve drops response bodies under CI load, giving E2E 0-byte map
-  // files (issue 202); build once, then serve public/ from a real static server.
+  // WHY: esbuild's own serve drops response bodies under CI load, giving E2E 0-byte map files (see issue #202). Build once, then serve public/ from a real static server.
   await esbuild.build({ ...commonOpts, ...serveOpts });
   esbuild.stop();
 

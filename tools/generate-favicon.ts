@@ -3,7 +3,7 @@ import { Resvg } from "@resvg/resvg-js";
 import { handleMain, publishDir } from "./lib/utils.ts";
 import { buildIco } from "./lib/ico.ts";
 
-// Standard Windows/browser favicon resolutions.
+/** Standard Windows/browser favicon resolutions. */
 const SIZES = [16, 32, 48];
 
 async function main() {

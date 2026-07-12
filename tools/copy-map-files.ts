@@ -13,9 +13,11 @@ import {
 const WORLDS_DIR = vanillaDir("Data", "Worlds");
 const DST_DIR = publishDir("maps");
 
-// Concurrency for top-level world processing. Each world fans out into
-// parallel per-file copies internally, so this value is intentionally small
-// to avoid thrashing disk I/O across many large PNG/raw streams.
+/**
+ * Concurrency for top-level world processing. Each world fans out into
+ * parallel per-file copies internally, so this value stays small to
+ * avoid thrashing disk I/O across many large PNG/raw streams.
+ */
 const WORLD_CONCURRENCY = 8;
 
 async function main() {

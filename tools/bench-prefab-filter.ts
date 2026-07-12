@@ -1,6 +1,8 @@
-// Phase-level CPU benchmark of the block-name matching pipeline in
-// src/worker/lib/prefab-filter.ts (#matchByBlockName equivalent), run directly
-// under Deno so no browser / dev server is needed.
+/**
+ * Phase-level CPU benchmark of the block-name matching pipeline in
+ * `src/worker/lib/prefab-filter.ts` (`#matchByBlockName` equivalent).
+ * Runs directly under Deno so no browser or dev server is needed.
+ */
 import {
   matchAndHighlight,
   MATCHED_BLOCKS_LIMIT,
@@ -145,7 +147,7 @@ function runOnce(pattern: RegExp) {
   );
   t.sort = performance.now() - t0;
 
-  // structuredClone approximates the postMessage serialize cost.
+  // WHY: structuredClone approximates the postMessage serialize cost.
   t0 = performance.now();
   structuredClone(result);
   t.cloneAll = performance.now() - t0;
