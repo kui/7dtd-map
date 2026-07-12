@@ -71,14 +71,16 @@ export async function fetchJson<T>(url: string): Promise<T> {
   return (await r.json()) as T;
 }
 
-// Reject empty/short bodies before they are persisted: dev/CI static servers
-// occasionally return them under load. See github.com/kui/7dtd-map/issues/202.
+/**
+ * Rejects empty or short bodies before they are persisted. Dev and CI
+ * static servers occasionally return them under load. See
+ * https://github.com/kui/7dtd-map/issues/202.
+ */
 export async function fetchCompleteBlob(url: string): Promise<Blob> {
   const r = await fetch(url);
   if (!r.ok) throw Error(`Failed to fetch ${url}: ${r.statusText}`);
   const blob = await r.blob();
-  // Content-Encoding bodies decompress client-side, so blob.size legitimately
-  // differs from Content-Length; only length-check uncompressed responses.
+  // WHY: content-encoding bodies decompress client-side, so blob.size legitimately differs from Content-Length. Only length-check uncompressed responses.
   const header = r.headers.get("content-length");
   const declared = header === null ? NaN : Number(header);
   const short = r.headers.get("content-encoding") === null &&
@@ -100,10 +102,12 @@ export function basename(path: string) {
   return tail.split(/[?#]/, 1)[0] ?? tail;
 }
 
-// Escape characters that have special meaning in HTML text content or in
-// double-quoted attribute values. Inputs sourced from user-supplied XML files
-// or worker output must be passed through this before being interpolated into
-// innerHTML strings.
+/**
+ * Escapes characters that have special meaning in HTML text content or
+ * in double-quoted attribute values. Inputs sourced from user-supplied
+ * XML files or worker output must be passed through this before being
+ * interpolated into `innerHTML` strings.
+ */
 export function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => {
     switch (c) {

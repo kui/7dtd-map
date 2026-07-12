@@ -15,8 +15,7 @@ export function throttledInvoker(
         const cycle = pending;
         const wait = Math.max(10, lastFinishedAt + intervalMs - Date.now());
         await sleep(wait);
-        // Cleared just before invoking: calls arriving while asyncFunc runs
-        // must schedule one more cycle; calls during the wait above must not.
+        // INVARIANT: clear pending just before invoking so calls arriving while asyncFunc runs schedule one more cycle, while calls during the wait above coalesce into this one.
         pending = null;
         try {
           await asyncFunc();

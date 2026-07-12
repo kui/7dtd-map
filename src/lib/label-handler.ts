@@ -22,10 +22,7 @@ export class LabelHandler {
     this.#doms = doms;
     this.#holder = new LabelHolder(labelsBaseUrl, navigatorLanguages);
     this.#buildSelectOptions();
-    // Resolve and apply the initial language synchronously so that callers
-    // can pull it via `labelHandler.language` / `holder` right after
-    // construction. The initial value is delivered by pull, not push;
-    // subscribers only receive subsequent user changes via `addListener`.
+    // WHY: resolve and apply the initial language synchronously so callers can pull it via labelHandler.language / holder right after construction. Subscribers via addListener() only receive subsequent user changes.
     this.#commitLanguage(
       (localStorage.getItem("language") as Language | null) ??
         resolveLanguage(navigatorLanguages),

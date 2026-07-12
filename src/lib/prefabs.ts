@@ -15,7 +15,10 @@ export function assertDifficultyIndex(
   }
 }
 
-// Note: This logic can not be moved to a worker because DOM API like `DOMParser` is not available in workers.
+/**
+ * Runs on the main thread because it uses `DOMParser`, which is not
+ * available in workers.
+ */
 export async function loadPrefabsXml(): Promise<Prefab[]> {
   const workspace = await storage.workspaceDir();
   const prefabsXml = await workspace.get("prefabs.xml");
@@ -30,17 +33,16 @@ function parseXml(xml: string): Prefab[] {
   });
 }
 
-// Exported for testing without a DOM; accepts anything with `getAttribute`.
+/** Exported for testing without a DOM. Accepts anything with `getAttribute`. */
 export function decorationToPrefab(
   e: { getAttribute(name: string): string | null },
 ): Prefab | null {
   const positionAttr = e.getAttribute("position");
   const name = e.getAttribute("name");
-  // A decoration without a name or position is not a placed prefab; skip it.
+  // WHY: a decoration without a name or position is not a placed prefab, so skip it.
   if (name === null || positionAttr === null) return null;
   const nums = positionAttr.split(",").map((s) => parseInt(s, 10));
-  // A malformed position is a corrupt World File, so fail loudly instead of
-  // coercing to NaN or silently dropping the prefab.
+  // WHY: a malformed position is a corrupt World File. Fail loudly instead of coercing to NaN or silently dropping the prefab.
   if (nums.length !== 3 || !nums.every((n) => Number.isFinite(n))) {
     throw new Error(
       `Invalid decoration position "${positionAttr}" for prefab "${name}"`,

@@ -1,4 +1,4 @@
-// Pixels offset from the cursor so the tooltip does not sit on top of it.
+/** Pixels offset from the cursor so the tooltip does not sit on top of it. */
 const CURSOR_OFFSET = 16;
 
 const HREF_PATTERN = /(?:^|\/)prefabs\/([^/]+)\.html(?:[?#]|$)/;
@@ -8,9 +8,12 @@ interface Doms {
   image: HTMLImageElement;
 }
 
-// Shows a preview image popover when the user hovers a link to an individual
-// prefab page. The popover element is placed in the top layer so it overlays
-// modal `<dialog>` content (e.g. the prefab inspector).
+/**
+ * Shows a preview image popover when the user hovers a link to an
+ * individual prefab page. The popover element is placed in the top
+ * layer so it overlays modal `<dialog>` content (e.g. the prefab
+ * inspector).
+ */
 export function installPrefabLinkTooltip(doms: Doms): void {
   let currentLink: HTMLAnchorElement | null = null;
   let lastEvent: MouseEvent | null = null;

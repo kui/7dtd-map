@@ -4,8 +4,11 @@ import {
   GLYPH_MARKER_VIEWPORT,
 } from "../../lib/glyph-marker.ts";
 
-// Stamps a glyph path baked by tools/generate-glyph-markers.ts into a square
-// sprite twice the target pixel size, matching the baked SVGs' layered look.
+/**
+ * Stamps a glyph path baked by `tools/generate-glyph-markers.ts` into
+ * a square sprite twice the target pixel size, matching the baked
+ * SVGs' layered look.
+ */
 export function buildGlyphSprite(
   path2D: Path2D,
   pixelSize: number,
@@ -14,8 +17,7 @@ export function buildGlyphSprite(
   const sprite = new OffscreenCanvas(spriteSize, spriteSize);
   const sc = sprite.getContext("2d");
   if (sc) {
-    // Scale the baked path's viewport to `pixelSize`, then centre it on the
-    // sprite; the path itself is built centred on VIEWPORT/2 at build time.
+    // WHY: scale the baked path's viewport to pixelSize, then centre it on the sprite. The path itself is built centred on VIEWPORT/2 at build time.
     const k = pixelSize / GLYPH_MARKER_FONT_SIZE;
     sc.lineJoin = "round";
     sc.lineCap = "round";
