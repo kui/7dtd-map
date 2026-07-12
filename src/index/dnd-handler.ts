@@ -9,13 +9,14 @@ interface Doms {
   dragovered: HTMLElement;
 }
 
-// Tracks nested dragenter/dragleave pairs so we only react to the outermost
-// boundary crossings. dragenter/dragleave fire for every child element the
-// cursor crosses, so a naive close() on dragleave would fire while the cursor
-// is still over the page. By incrementing on enter and decrementing on leave,
-// the counter returns to 0 only when the cursor truly leaves the target. The
-// previous implementation relied on the clientX/Y === 0 heuristic, which is
-// unreliable across browsers and only matched the window's top-left corner.
+/**
+ * Tracks nested dragenter/dragleave pairs so we only react to the
+ * outermost boundary crossings. `dragenter` and `dragleave` fire for
+ * every child element the cursor crosses, so a naive `close()` on
+ * `dragleave` would fire while the cursor is still over the page.
+ * Incrementing on enter and decrementing on leave returns the counter
+ * to 0 only when the cursor truly leaves the target.
+ */
 export interface DragCounter {
   enter(): boolean;
   leave(): boolean;
@@ -71,8 +72,7 @@ export class DndHandler {
     dom.dragovered.addEventListener("drop", (event) => {
       if (!event.dataTransfer?.types.includes("Files")) return;
       event.preventDefault();
-      // drop consumes the dragenter without firing a matching dragleave,
-      // so reset the counter to keep it consistent for the next drag.
+      // WHY: drop consumes the dragenter without firing a matching dragleave, so reset the counter to keep it consistent for the next drag.
       counter.reset();
       this.#listeners.dispatchNoAwait({
         files: Array.from(event.dataTransfer.items).flatMap((item) =>

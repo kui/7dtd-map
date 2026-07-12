@@ -10,16 +10,21 @@ const MOUSE_BUTTON_BITMASK = {
 const GROUND_PLANE = new three.Plane(new three.Vector3(0, 1, 0), 0);
 const TILT_AXIS = new three.Vector3(1, 0, 0);
 const TILT_REFERENCE = new three.Vector3(0, 0, 1);
-const TILT_MAX_RAD = Math.PI / 2; // 90°
-const TILT_MIN_RAD = Math.PI / 6; // 30°
+/** 90° in radians. */
+const TILT_MAX_RAD = Math.PI / 2;
+/** 30° in radians. */
+const TILT_MIN_RAD = Math.PI / 6;
 const MAX_ELEV = 255;
 
-// Speed multiplier applied to horizontal pan while Shift is held.
+/** Speed multiplier applied to horizontal pan while Shift is held. */
 const PAN_BOOST_MULTIPLIER = 4;
 
-// Approximate pixel-equivalent multipliers for the non-pixel wheel delta modes.
-// Browsers report line/page units when a discrete wheel is used; converting to a
-// pixel-like scale keeps zoom speed consistent across input devices.
+/**
+ * Approximate pixel-equivalent multipliers for the non-pixel wheel
+ * delta modes. Browsers report line and page units when a discrete
+ * wheel is used, so converting to a pixel-like scale keeps zoom speed
+ * consistent across input devices.
+ */
 const WHEEL_LINE_HEIGHT_PX = 16;
 const WHEEL_PAGE_HEIGHT_PX = 800;
 
@@ -34,9 +39,11 @@ function normalizeWheelDelta(event: WheelEvent): number {
   }
 }
 
-// Keyboard action set. Movement actions translate to a signed axis speed;
-// "toggle-help" is one-shot. Extracted so the keymap can be unit-tested
-// independently of the controller and the DOM.
+/**
+ * Keyboard action set. Movement actions translate to a signed axis
+ * speed. `"toggle-help"` is one-shot. Extracted so the keymap can be
+ * unit-tested independently of the controller and the DOM.
+ */
 export type CameraKeyAction =
   | "pan-left"
   | "pan-right"
@@ -58,8 +65,7 @@ interface KeyEventLike {
 }
 
 export function mapCameraKey(event: KeyEventLike): CameraKeyAction {
-  // Defer to the browser when a modifier is held so we do not steal
-  // shortcuts like Ctrl+R (reload) or Cmd+Left (history back).
+  // WHY: defer to the browser when a modifier is held so we do not steal shortcuts like Ctrl+R (reload) or Cmd+Left (history back).
   if (event.ctrlKey || event.altKey || event.metaKey) return null;
   switch (event.code) {
     case "KeyA":
@@ -111,7 +117,7 @@ export class TerrainViewerCameraController {
     wheel: 0,
   };
 
-  // Reusable temporary vectors / ray to avoid per-frame heap allocation.
+  /** Reusable temporary vectors and ray to avoid per-frame heap allocation. */
   #cameraWork = {
     direction: new three.Vector3(),
     move: new three.Vector3(),
@@ -196,10 +202,7 @@ export class TerrainViewerCameraController {
     this.#minY = (MAX_ELEV * terrainSize.width) / mapWidth;
     this.#maxY = terrainSize.height * 1.2;
 
-    // Keep the far/near ratio bounded so the depth buffer retains precision
-    // at the terrain's far edge. The default near of 0.1 paired with a far
-    // proportional to terrain size produces a ratio of ~40000, which causes
-    // Z-fighting on distant geometry.
+    // WHY: keep the far/near ratio bounded so the depth buffer retains precision at the terrain's far edge. The default near of 0.1 paired with a far proportional to terrain size produces a ratio around 40000, which causes Z-fighting on distant geometry.
     this.camera.near = 1;
     this.camera.far = this.#terrainSize.height * 2;
     this.camera.updateProjectionMatrix();
@@ -268,9 +271,7 @@ export class TerrainViewerCameraController {
     this.#mouseMove.left.y = 0;
 
     if (deltaX !== 0) this.camera.position.x += deltaX;
-    // Z is the negated counterpart of the pre-migration ground Y axis
-    // (the -90° X rotation that put the plane in Y-up maps old +Y to
-    // new -Z), so panning subtracts here where it used to add.
+    // WHY: Z is the negated counterpart of the pre-migration ground Y axis. The -90° X rotation that put the plane in Y-up maps old +Y to new -Z, so panning subtracts here where it used to add.
     if (deltaZ !== 0) this.camera.position.z -= deltaZ;
 
     this.#syncCameraWork();
@@ -296,8 +297,7 @@ export class TerrainViewerCameraController {
     const wheelDelta = (this.#mouseMove.wheel * this.#terrainSize.width) /
       -5000;
     this.#mouseMove.wheel = 0;
-    // Keyboard zoom advances roughly 30% of the terrain width per second at
-    // speed 1; matches the perceived feel of the mouse wheel at moderate use.
+    // WHY: keyboard zoom advances roughly 30% of the terrain width per second at speed 1 to match the perceived feel of the mouse wheel at moderate use.
     const keyDelta = (this.#speeds.zoom * this.#terrainSize.width * 0.3 *
       deltaMsec) / 1000;
     const moveDelta = wheelDelta + keyDelta;
@@ -315,11 +315,10 @@ export class TerrainViewerCameraController {
   #tiltCamera(deltaMsec: number) {
     if (this.#mouseMove.center.y === 0 && this.#speeds.tilt === 0) return;
 
-    // PI rad = 180°
-    // -(PI/2) rad / 1000 pixels by mouse
+    // WHY: mouse tilt uses -(PI/2) rad per 1000 pixels of vertical movement (about 90° per drag height).
     const deltaRadMouse = this.#mouseMove.center.y * (-(Math.PI / 2) / 1000);
 
-    // PI/4 rad/sec by keypress
+    // WHY: keypress tilt uses PI/4 rad per second (about 45°/s at speed 1).
     const deltaRadKey = (((this.#speeds.tilt * Math.PI) / 4) * deltaMsec) /
       1000;
 

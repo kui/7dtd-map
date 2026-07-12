@@ -6,8 +6,10 @@ import type { Prefab } from "../types/7dtdmap.ts";
 
 interface Doms {
   canvas: HTMLCanvasElement;
-  // Off-DOM mirror of the sign/marker-free composite; its placeholder element
-  // is sampled by the terrain viewer as a texture.
+  /**
+   * Off-DOM mirror of the sign/marker-free composite. Its placeholder
+   * element is sampled by the terrain viewer as a texture.
+   */
   compositeCanvas: HTMLCanvasElement;
   biomesAlpha: HTMLInputElement;
   splat3Alpha: HTMLInputElement;

@@ -6,10 +6,13 @@ import {
 } from "../../lib/prefab-tooltip.ts";
 import { printError } from "../../lib/utils.ts";
 
-// TerrainViewer's hover sub-controller (peer of TerrainViewerCameraController):
-// raycasts the pointer against the footprint boxes and projects a hovered box
-// to an anchor, feeding the shared PrefabTooltipController. The viewer ticks
-// update() each frame and reads hoveredPlacement to drive its box highlight.
+/**
+ * `TerrainViewer`'s hover sub-controller (peer of
+ * `TerrainViewerCameraController`). Raycasts the pointer against the
+ * footprint boxes and projects a hovered box to an anchor, feeding
+ * the shared `PrefabTooltipController`. The viewer ticks `update()`
+ * each frame and reads `hoveredPlacement` to drive its box highlight.
+ */
 export class TerrainViewerHoverController {
   #controller: PrefabTooltipController;
   #camera: three.Camera;
@@ -32,8 +35,7 @@ export class TerrainViewerHoverController {
     this.#camera = camera;
     this.#controller = controller;
 
-    // The raycast runs once per frame via update(); these listeners only track
-    // pointer state so a held button (camera drag) can suppress it.
+    // WHY: the raycast runs once per frame via update(). These listeners only track pointer state so a held button (camera drag) can suppress it.
     canvas.addEventListener("pointermove", (event) => {
       const rect = canvas.getBoundingClientRect();
       this.#pointerNdc.set(
@@ -61,7 +63,7 @@ export class TerrainViewerHoverController {
     return this.#boxes.placements[this.#hoverInstanceId] ?? null;
   }
 
-  // Called on each box rebuild (and with null on teardown); resets the hover.
+  /** Called on each box rebuild, and with `null` on teardown. Resets the hover. */
   setBoxes(boxes: PrefabBoxes | null): void {
     this.#boxes = boxes;
     this.#setHover(null);
@@ -82,8 +84,7 @@ export class TerrainViewerHoverController {
       this.#controller.hide();
       return;
     }
-    // The controller's token guard drops this if the hover changes (or hides)
-    // before the content lookup resolves, so no per-instance recheck is needed.
+    // WHY: the controller's token guard drops this if the hover changes or hides before the content lookup resolves, so no per-instance recheck is needed.
     this.#controller.showFor(
       placement.prefab,
       ["click", "dblclick", "shift-click"],
@@ -91,8 +92,11 @@ export class TerrainViewerHoverController {
     ).catch(printError);
   }
 
-  // Anchor to the right of the hovered box by projecting its 8 corners; falls
-  // back to the cursor when every corner is behind the camera (off-screen).
+  /**
+   * Anchors to the right of the hovered box by projecting its 8
+   * corners. Falls back to the cursor when every corner is behind the
+   * camera (off-screen).
+   */
   #anchor(p: BoxPlacement): { left: number; top: number } {
     const rect = this.#canvas.getBoundingClientRect();
     const v = new three.Vector3();

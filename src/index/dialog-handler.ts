@@ -57,8 +57,11 @@ export class DialogHandler {
 const TERMINATED_STATES = ["completed", "skipped"] as const;
 
 export class FileProgressionIndicator {
-  // Direct name -> <li> lookup. Avoids scanning by textContent, which is
-  // fragile under i18n, whitespace differences, or duplicate task names.
+  /**
+   * Direct name-to-`<li>` lookup. Avoids scanning by `textContent`,
+   * which is fragile under i18n, whitespace differences, or duplicate
+   * task names.
+   */
   #liByName = new Map<string, HTMLLIElement>();
   #liList: HTMLLIElement[] = [];
 
@@ -68,8 +71,7 @@ export class FileProgressionIndicator {
       li.textContent = taskName;
       li.classList.add("processing");
       this.#liList.push(li);
-      // First occurrence wins so setState is deterministic when duplicate
-      // task names appear.
+      // INVARIANT: the first occurrence wins so setState is deterministic when duplicate task names appear.
       if (!this.#liByName.has(taskName)) this.#liByName.set(taskName, li);
     }
   }

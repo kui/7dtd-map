@@ -7,11 +7,13 @@ import {
   GLYPH_MARKER_VIEWPORT,
 } from "../../../lib/glyph-marker.ts";
 
-// Baked glyph resolution, independent of the on-screen size (the largest
-// reachable screen size is 60px, so this stays oversampled).
+/**
+ * Baked glyph resolution, independent of on-screen size. The largest
+ * reachable screen size is 60px, so this stays oversampled.
+ */
 const GLYPH_TEXTURE_PX = 128;
 
-// Position in the terrain mesh's local (three.js) coordinate space.
+/** Position in the terrain mesh's local (three.js) coordinate space. */
 export interface MarkerPlacement {
   x: number;
   y: number;
@@ -23,8 +25,10 @@ export interface MarkerSprites {
   dispose(): void;
 }
 
-// `spriteScale` is the world scale that yields the desired constant
-// on-screen size with `sizeAttenuation: false`.
+/**
+ * `spriteScale` is the world scale that yields the desired constant
+ * on-screen size with `sizeAttenuation: false`.
+ */
 export function buildSignSprites(opts: {
   marker: GlyphMarker;
   placements: MarkerPlacement[];
@@ -52,8 +56,7 @@ export function buildFlagSprite(opts: {
   spriteScale: number;
 }): MarkerSprites {
   const { material, center, disposables } = glyphMaterial(opts.marker, 1);
-  // Higher renderOrder than signs (2) so the flag paints last regardless of
-  // the transparent pass's distance sort (all sprites share depthTest: false).
+  // WHY: renderOrder 3 exceeds signs (2) so the flag paints last regardless of the transparent pass's distance sort, since all sprites share depthTest: false.
   const sprite = makeSprite(
     material,
     center,
@@ -84,8 +87,7 @@ function glyphMaterial(
     transparent: true,
     opacity,
     sizeAttenuation: false,
-    // Markers show through terrain by design: with depth testing, glyph
-    // pixels away from the anchor row get culled by nearer terrain.
+    // WHY: markers show through terrain by design. With depth testing, glyph pixels away from the anchor row get culled by nearer terrain.
     depthTest: false,
     depthWrite: false,
   });
@@ -96,8 +98,11 @@ function glyphMaterial(
   };
 }
 
-// Convert a glyph anchor (a point in the shared VIEWPORT square) into
-// Sprite.center units: [0, 1] with (0, 0) at the sprite's bottom-left.
+/**
+ * Converts a glyph anchor (a point in the shared `VIEWPORT` square)
+ * into `Sprite.center` units, `[0, 1]` with `(0, 0)` at the sprite's
+ * bottom-left.
+ */
 function anchorCenter(anchor: GlyphMarker["anchor"]): three.Vector2 {
   return new three.Vector2(
     0.5 + (anchor.x - GLYPH_MARKER_VIEWPORT / 2) / (2 * GLYPH_MARKER_FONT_SIZE),
@@ -116,8 +121,7 @@ function makeSprite(
   sprite.center.copy(center);
   sprite.scale.set(scale, scale, 1);
   sprite.position.set(placement.x, placement.y, placement.z);
-  // Above terrain, boxes (0) and highlight (1); the transparent pass's distance
-  // sort could otherwise paint those over these non-depth-writing sprites.
+  // WHY: renderOrder above terrain, boxes (0), and highlight (1). Without it, the transparent pass's distance sort could paint those over these non-depth-writing sprites.
   sprite.renderOrder = renderOrder;
   return sprite;
 }

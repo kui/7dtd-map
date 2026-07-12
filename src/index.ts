@@ -49,8 +49,7 @@ import { initMapStorage } from "./lib/map-storage.ts";
 import { PrefabInspectorHandler } from "./index/prefab-inspector-handler.ts";
 import { installPrefabLinkTooltip } from "./lib/prefab-link-tooltip.ts";
 
-// Fetched once and shared via Promise so multiple handlers awaiting the
-// same JSON do not issue duplicate requests.
+// WHY: fetched once and shared via Promise so multiple handlers awaiting the same JSON do not issue duplicate requests.
 const prefabMeshSizes: Promise<PrefabMeshSizes> = fetchJson(
   "prefab-mesh-sizes.json",
 );
@@ -83,8 +82,7 @@ function main() {
     .catch(printError);
 
   initMapStorage();
-  // Restore stored input values first so downstream init steps and handlers
-  // observe the restored state instead of HTML defaults.
+  // WHY: restore stored input values first so downstream init steps and handlers observe the restored state instead of HTML defaults.
   rememberValue.init();
   presetButton.init();
   copyButton.init();
@@ -199,8 +197,7 @@ function main() {
     },
     fileHandler,
   );
-  // Never appended to the DOM: the worker draws the sign/marker-free composite
-  // into it and the terrain viewer samples the placeholder as its texture.
+  // WHY: never appended to the DOM. The worker draws the sign/marker-free composite into it and the terrain viewer samples the placeholder as its texture.
   const mapCompositeCanvas = document.createElement("canvas");
   new MapCanvasHandler(
     {
@@ -224,8 +221,7 @@ function main() {
     markerStore,
     fileHandler,
   );
-  // One controller owns the shared #prefab-tooltip DOM for both the 2D map
-  // hover and the terrain viewer hover.
+  // WHY: one controller owns the shared #prefab-tooltip DOM for both the 2D map hover and the terrain viewer hover.
   const prefabTooltipController = new PrefabTooltipController(
     component("prefab-tooltip", HTMLElement),
     labelHandler,

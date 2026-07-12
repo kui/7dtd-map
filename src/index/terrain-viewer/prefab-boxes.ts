@@ -2,8 +2,11 @@ import type { Prefab } from "../../types/7dtdmap.ts";
 
 import * as three from "three";
 
-// A footprint box in the terrain's local space; 90°/270° rotations fold into
-// width/depth. groundY splits it into above-ground and buried highlight slabs.
+/**
+ * A footprint box in the terrain's local space. Rotations of 90° or
+ * 270° fold into width and depth. `groundY` splits it into
+ * above-ground and buried highlight slabs.
+ */
 export interface BoxPlacement {
   prefab: Prefab;
   centerX: number;
@@ -18,13 +21,13 @@ export interface BoxPlacement {
 
 export interface PrefabBoxes {
   object: three.Object3D;
-  // Exposed for the hover raycaster; instanceId indexes `placements`.
+  /** Exposed for the hover raycaster. `instanceId` indexes `placements`. */
   mesh: three.InstancedMesh;
   placements: BoxPlacement[];
   dispose(): void;
 }
 
-// Amber buried-part highlight, distinct from the brightened above-ground tint.
+/** Amber buried-part highlight, distinct from the brightened above-ground tint. */
 const BURIED_HIGHLIGHT = new three.Color("#ffb300");
 
 export function buildPrefabBoxes(
@@ -69,8 +72,11 @@ export interface BoxHighlight {
   dispose(): void;
 }
 
-// Two depth-test-off slabs so the highlight reads through terrain: a brightened
-// above-ground slab and, when the prefab is buried, an amber below-ground slab.
+/**
+ * Two depth-test-off slabs so the highlight reads through terrain: a
+ * brightened above-ground slab, plus an amber below-ground slab when
+ * the prefab is buried.
+ */
 export function buildBoxHighlight(placement: BoxPlacement): BoxHighlight {
   const group = new three.Group();
   const disposables: { dispose(): void }[] = [];

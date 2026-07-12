@@ -14,9 +14,11 @@ interface Doms {
 
 const EMPTY = "E/W: -, N/S: -, Elev: -";
 
-// Hit index is sourced from PrefabsHandler so cursor hover and flag drop
-// agree on "which prefab is here" without each consumer doing its own
-// bookkeeping over PrefabMeshSizes.
+/**
+ * Sources the hit index from `PrefabsHandler` so cursor hover and flag
+ * drop agree on "which prefab is here" without each consumer doing
+ * its own bookkeeping over `PrefabMeshSizes`.
+ */
 export class MarkerCoordsDisplayHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;
