@@ -17,8 +17,11 @@ import * as events from "../../lib/events.ts";
 import { escapeHtml, printError, sleep } from "../../lib/utils.ts";
 import { latestAddedVersion } from "../../lib/prefab-added-versions.ts";
 
-// One `header` per run followed by `chunk`s, so the main thread never
-// deserializes one huge result. Complete when received count == total.
+/**
+ * Wire messages from the filter worker. One `header` per run followed
+ * by `chunk`s so the main thread never deserializes one huge result.
+ * A run is complete when the received count reaches `header.total`.
+ */
 export type PrefabsFilterOutputMessage =
   | { type: "header"; status: string; total: number }
   | { type: "chunk"; prefabs: HighlightedPrefab[] };
@@ -105,8 +108,7 @@ export class PrefabFilter {
       status: this.#status,
       total: this.#filtered.length,
     });
-    // Detached so a newer run can start (and cancel this one) before the
-    // stream finishes; throttledInvoker awaits the returned promise.
+    // WHY: detached so a newer run can start and cancel this one before the stream finishes. throttledInvoker only awaits the returned promise.
     void this.#streamChunks(inputVersion, this.#filtered);
   }
 
@@ -116,8 +118,7 @@ export class PrefabFilter {
   ): Promise<void> {
     try {
       for (let i = 0; i < prefabs.length; i += CHUNK_SIZE) {
-        // Must precede the post: guarantees a stale stream never delivers a
-        // chunk after newer input has arrived.
+        // INVARIANT: the staleness check must precede the post so a stale stream never delivers a chunk after newer input has arrived.
         if (inputVersion !== this.#inputVersion) return;
         await this.#listeners.dispatch({
           type: "chunk",
@@ -281,8 +282,7 @@ export class PrefabFilter {
     return prefabs.flatMap((prefab) => {
       const allMatchedBlocks = matchedPrefabNames[prefab.name];
       if (!allMatchedBlocks) return [];
-      // Count and threshold use the full set so the reported totals stay true;
-      // only the transmitted list is capped for serialize/DOM cost.
+      // INVARIANT: count and threshold use the full set so the reported totals stay true. Only the transmitted list is capped for serialize and DOM cost.
       const matchedBlockCount = allMatchedBlocks.reduce(
         (acc, b) => acc + (b.count ?? 0),
         0,
@@ -333,9 +333,7 @@ export class PrefabFilter {
       const { markCoords } = this;
       const meshSizes = await this.#meshSizesHolder.get();
       this.#filtered.forEach((p) => {
-        // decoration.position is the SW corner of the rotated AABB, so add the
-        // rotation-aware half-extents to compare against the flag from the
-        // prefab's centre instead of its corner.
+        // WHY: decoration.position is the SW corner of the rotated AABB, so add the rotation-aware half-extents to compare against the flag from the prefab's centre instead of its corner.
         const c = prefabCenter(p, meshSizes);
         p.distance = [
           computeDirection(c, markCoords),
@@ -434,8 +432,11 @@ function computeDirection(
   return "NW";
 }
 
-// Returns null instead of throwing when `source` is not a valid RegExp pattern,
-// so partial / mid-typed user input does not break the worker pipeline.
+/**
+ * Returns `null` instead of throwing when `source` is not a valid
+ * RegExp pattern. Partial or mid-typed user input must not break the
+ * worker pipeline.
+ */
 function tryCompileRegex(source: string, flags: string): RegExp | null {
   try {
     return new RegExp(source, flags);
@@ -444,15 +445,16 @@ function tryCompileRegex(source: string, flags: string): RegExp | null {
   }
 }
 
-// Escapes non-matching segments and wraps matches in <mark>, so the resulting
-// string is safe to assign to innerHTML even when `str` came from user XML.
-// Exported for testing.
+/**
+ * Escapes non-matching segments and wraps matches in `<mark>`, so the
+ * resulting string is safe to assign to `innerHTML` even when `str`
+ * came from user XML. Exported for testing.
+ */
 export function matchAndHighlight(str: string, regex: RegExp) {
   let isMatched = false;
   let lastIndex = 0;
   let out = "";
-  // Use matchAll so we can interleave escaped non-matches with wrapped matches
-  // regardless of whether the regex has the global flag set by the caller.
+  // WHY: matchAll lets us interleave escaped non-matches with wrapped matches whether or not the caller's regex has the global flag.
   const source = regex.global
     ? regex
     : new RegExp(regex.source, regex.flags + "g");

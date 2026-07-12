@@ -28,16 +28,22 @@ export default class MapRenderer {
   markerCoords: GameCoords | null = null;
   scale = 0.1;
   filteredPrefabs: Prefab[] = [];
-  // Full decoration list straight from prefabs.xml — drives the footprint
-  // overlay and tile-district lookup regardless of the filter state.
+  /**
+   * Full decoration list straight from `prefabs.xml`. Drives the
+   * footprint overlay and tile-district lookup regardless of the
+   * filter state.
+   */
   allPrefabs: Prefab[] = [];
-  // Cache of the tile index keyed by the most recent `allPrefabs` reference,
-  // so the index is rebuilt only when the upstream array changes.
+  /**
+   * Cache of the tile index keyed by the most recent `allPrefabs`
+   * reference so the index is rebuilt only when the upstream array
+   * changes.
+   */
   #tileIndex: { source: Prefab[]; index: TileIndex } | null = null;
   #meshSizesHolder: CacheHolder<PrefabMeshSizes>;
   #densityScoresHolder: CacheHolder<PrefabDensityScores>;
   #districtColorsHolder: CacheHolder<DistrictColors>;
-  // On-screen glyph size in output pixels, independent of the map scale.
+  /** On-screen glyph size in output pixels, independent of the map scale. */
   prefabSignSize = 20;
   prefabSignAlpha = 1;
   prefabFootprintAlpha = 1;
@@ -47,8 +53,10 @@ export default class MapRenderer {
   radAlpha = 1;
 
   canvas: OffscreenCanvas;
-  // Mirror of the sign/marker-free composite, kept for the terrain viewer
-  // which samples its placeholder canvas element as a texture.
+  /**
+   * Mirror of the sign/marker-free composite, kept for the terrain
+   * viewer which samples its placeholder canvas element as a texture.
+   */
   compositeCanvas: OffscreenCanvas | null = null;
   #signPath2D: Path2D;
   #signAnchor: GlyphMarker["anchor"];
@@ -60,14 +68,19 @@ export default class MapRenderer {
     { width: number; height: number }
   >();
 
-  // Composited base map (layers + brightness + per-layer alpha + footprint
-  // overlay) cached so that sign/marker-only updates can skip recompositing.
+  /**
+   * Composited base map (layers, brightness, per-layer alpha, footprint
+   * overlay) cached so sign/marker-only updates can skip recompositing.
+   */
   #composite: OffscreenCanvas | null = null;
   #compositeKey: string | null = null;
-  // Reference identity of the `allPrefabs` array that produced the cached
-  // composite; bumped implicitly when the upstream array is replaced.
+  /**
+   * Reference identity of the `allPrefabs` array that produced the
+   * cached composite. Bumped implicitly when the upstream array is
+   * replaced.
+   */
   #compositeAllPrefabs: Prefab[] | null = null;
-  // Bumped whenever a source image is invalidated, to invalidate the composite.
+  /** Bumped whenever a source image is invalidated to invalidate the composite. */
   #generation = 0;
 
   constructor(
@@ -83,9 +96,7 @@ export default class MapRenderer {
     this.#signAnchor = signMarker.anchor;
     this.#markPath2D = new Path2D(markMarker.d);
     this.#markAnchor = markMarker.anchor;
-    // Static tables fetched on demand inside the worker, mirroring the
-    // CacheHolder usage in PrefabFilter. The deconstructor is a no-op
-    // because nothing here owns external resources.
+    // WHY: static tables are fetched on demand inside the worker, mirroring PrefabFilter's CacheHolder usage. The deconstructor is a no-op because nothing here owns external resources.
     const noop = () => {};
     this.#meshSizesHolder = new CacheHolder(fetchMeshSizes, noop);
     this.#densityScoresHolder = new CacheHolder(fetchDensityScores, noop);
@@ -116,8 +127,7 @@ export default class MapRenderer {
     if (width === 0 || height === 0) {
       this.canvas.width = 1;
       this.canvas.height = 1;
-      // This path skips #composeBase, so the mirror must be cleared here or
-      // the previous map would linger in the terrain viewer.
+      // WHY: this path skips #composeBase, so the mirror must be cleared here or the previous map would linger in the terrain viewer.
       if (this.compositeCanvas) {
         this.compositeCanvas.width = 1;
         this.compositeCanvas.height = 1;
@@ -131,20 +141,13 @@ export default class MapRenderer {
     const context = this.canvas.getContext("2d");
     if (!context) throw new Error("Failed to get 2d context");
 
-    // Static lookup tables are fetched lazily inside the worker. Their values
-    // never change between map loads so they are cheap to re-fetch (the
-    // CacheHolder amortises to a no-op after the first call).
     const [meshSizes, districtColors, densityScores] = await Promise.all([
       this.#meshSizesHolder.get(),
       this.#districtColorsHolder.get(),
       this.#densityScoresHolder.get(),
     ]);
 
-    // Compose the base map + footprint overlay (which may re-decode at the
-    // new size) before touching the visible canvas. Resizing the canvas
-    // clears it, so doing it ahead of an await would expose a blank canvas
-    // and cause a flash while scaling; instead we resize and redraw in one
-    // synchronous pass below.
+    // WHY: compose the base map and footprint overlay before touching the visible canvas. Resizing the canvas clears it, so doing that ahead of an await would flash a blank canvas while scaling. Resize and redraw run in one synchronous pass below.
     const base = await this.#composeBase(
       canvasWidth,
       canvasHeight,
@@ -159,8 +162,7 @@ export default class MapRenderer {
     context.imageSmoothingEnabled = false;
     if (base) context.drawImage(base, 0, 0);
 
-    // Sign + marker overlays sit on top of the cached composite and are
-    // redrawn every paint so filter / flag interactions stay responsive.
+    // WHY: sign and marker overlays sit on top of the cached composite and are redrawn every paint so filter and flag interactions stay responsive.
     context.save();
     context.scale(this.scale, this.scale);
     if (this.prefabSignAlpha > 0) {
@@ -173,12 +175,15 @@ export default class MapRenderer {
     context.restore();
   }
 
-  // Draw each prefab as a rotated rectangle sized by PrefabSize. Drawn under
-  // the ✘ marker so the filter highlight remains visible on top. Mirrors the
-  // game's PrefabPreviewManager: skip `rwg_tile*` (the placement framework
-  // itself) and `part_driveway*` (sub-parts that overlap their parent POI).
-  // Per-POI colour matches the in-game preview: it comes from the tile that
-  // contains the POI, with name- and DensityScore-based modifiers applied.
+  /**
+   * Draws each prefab as a rotated rectangle sized by `PrefabSize`.
+   * Rendered under the ✘ marker so the filter highlight stays visible
+   * on top. Mirrors the game's `PrefabPreviewManager` by skipping
+   * `rwg_tile*` (the placement framework) and `part_driveway*`
+   * (sub-parts that overlap their parent POI). Per-POI colour matches
+   * the in-game preview, sourced from the tile that contains the POI
+   * with name- and DensityScore-based modifiers applied.
+   */
   #drawPrefabFootprints(
     context: OffscreenCanvasRenderingContext2D,
     width: number,
@@ -189,19 +194,13 @@ export default class MapRenderer {
   ) {
     const offsetX = width / 2;
     const offsetY = height / 2;
-    // Outline thickness in game-block units (the renderer's current transform
-    // scales it down to canvas pixels). Drawn inset by `stroke / 2` further
-    // below so two neighbours sharing an edge never double-stroke.
+    // WHY: outline thickness is in game-block units because the renderer's transform scales it to canvas pixels. Drawn inset by stroke/2 below so two neighbours sharing an edge never double-stroke.
     const stroke = 8;
     const half = stroke / 2;
 
     const tileIndex = this.#getTileIndex();
 
-    // Batch fill and stroke rects by color into Path2D objects so each unique
-    // color requires only two GPU draw calls (fill + stroke) instead of one
-    // pair per prefab. A Chrome trace showed CrGpuMain tasks of 300–865 ms
-    // during footprint redraws (~10 k ops for 1000 prefabs), stalling the
-    // compositor and causing visible slider stutter.
+    // WHY: batch fill and stroke rects by colour into Path2D objects so each unique colour costs only one fill and one stroke draw call. A Chrome trace showed CrGpuMain tasks of 300 to 865 ms during footprint redraws with per-prefab calls, stalling the compositor.
     const fillPaths = new Map<string, Path2D>();
     const strokePaths = new Map<string, Path2D>();
 
@@ -213,15 +212,13 @@ export default class MapRenderer {
       const size = meshSizes[prefab.name];
       if (!size) continue;
       const [sx, sz] = size;
-      // decoration.position is the SW corner of the rotated AABB, so for
-      // 90°/270° rotations the world-aligned width/depth swap. No canvas
-      // rotation is needed because the bounding box stays axis-aligned.
+      // WHY: decoration.position is the SW corner of the rotated AABB, so rotations by 90° or 270° swap the world-aligned width and depth. The bounding box stays axis-aligned, so no canvas rotation is needed.
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const w = odd ? sz : sx;
       const d = odd ? sx : sz;
 
       const cx = offsetX + prefab.x;
-      // prefab vertical positions are inverted for canvas coordinates
+      // WHY: prefab vertical positions run north-positive but canvas y runs down.
       const cy = offsetY - prefab.z;
 
       const color = footprintColorHex(
@@ -239,11 +236,7 @@ export default class MapRenderer {
       }
       fp.rect(cx, cy - d, w, d);
 
-      // Canvas strokes straddle the path, so an N-block outline would spill
-      // N/2 blocks past the prefab edge and double-up where neighbours share
-      // a boundary. Inset by half the stroke so the outer edge sits exactly
-      // on the prefab boundary, then clamp negatives for prefabs smaller
-      // than the stroke (very rare; they collapse to a point).
+      // WHY: canvas strokes straddle the path, so an N-block outline would spill N/2 blocks past the prefab edge and double up where neighbours share a boundary. Inset by half the stroke so the outer edge sits on the prefab boundary. Clamp negatives for prefabs smaller than the stroke, which collapse to a point.
       const iw = Math.max(0, w - stroke);
       const id = Math.max(0, d - stroke);
       let sp = strokePaths.get(color);
@@ -266,7 +259,7 @@ export default class MapRenderer {
     }
   }
 
-  // Cached wrapper over buildTileIndex; rebuilt only when allPrefabs changes.
+  /** Cached wrapper over `buildTileIndex`. Rebuilds only when `allPrefabs` changes. */
   #getTileIndex(): TileIndex {
     if (this.#tileIndex && this.#tileIndex.source === this.allPrefabs) {
       return this.#tileIndex.index;
@@ -303,9 +296,7 @@ export default class MapRenderer {
       this.prefabFootprintAlpha,
       this.#generation,
     ].join(":");
-    // The static lookup tables are pinned for the lifetime of the worker, so
-    // their reference identity is enough; allPrefabs is replaced on every
-    // prefabs.xml load and is the only input that escapes the key string.
+    // WHY: the static lookup tables are pinned for the lifetime of the worker, so their reference identity is enough. allPrefabs is replaced on every prefabs.xml load and is the only input that escapes the key string.
     if (
       this.#composite &&
       this.#compositeKey === key &&
@@ -343,15 +334,12 @@ export default class MapRenderer {
         context.drawImage(splat4, 0, 0);
       }
       if (rad && this.radAlpha !== 0) {
-        // Radiation is intentionally drawn at full brightness so its tint
-        // stays readable on dimmed maps.
+        // WHY: radiation is drawn at full brightness so its tint stays readable on dimmed maps.
         context.filter = "none";
         context.globalAlpha = this.radAlpha;
         context.drawImage(rad, 0, 0);
       }
-      // Footprints go inside the cached composite so the brightness filter
-      // applies the same way it does to the biomes/splat layers, and so
-      // sign-only re-renders don't have to recompute them.
+      // WHY: footprints go inside the cached composite so the brightness filter applies the same way it does to the biomes and splat layers, and so sign-only re-renders skip recomputing them.
       if (this.prefabFootprintAlpha > 0) {
         context.save();
         context.filter = `brightness(${this.brightness})`;
@@ -368,15 +356,14 @@ export default class MapRenderer {
         context.restore();
       }
     } finally {
-      // Only the composite is cached; release the per-layer bitmaps.
+      // WHY: only the composite is cached, so release the per-layer bitmaps here.
       for (const bitmap of [biomes, splat3, splat4, rad]) bitmap?.close();
     }
 
     this.#composite = canvas;
     this.#compositeKey = key;
     this.#compositeAllPrefabs = this.allPrefabs;
-    // Copying only on recompose keeps the mirror current: cache hits mean
-    // the composite content is unchanged.
+    // WHY: copy only on recompose to keep the mirror current because cache hits mean the composite content is unchanged.
     if (this.compositeCanvas) {
       this.compositeCanvas.width = width;
       this.compositeCanvas.height = height;
@@ -407,25 +394,21 @@ export default class MapRenderer {
       signSize,
     );
 
-    // Remove the active scale transform so the sprite stamps 1:1 on output
-    // pixels. globalAlpha set by the caller is unaffected by resetTransform.
+    // WHY: remove the active scale transform so the sprite stamps 1:1 on output pixels. globalAlpha set by the caller is unaffected by resetTransform.
     context.save();
     context.resetTransform();
 
-    // Inverted iteration to overwrite signs by higher order prefabs
+    // WHY: iterate reversed so higher-order prefabs overwrite lower ones.
     for (const prefab of this.filteredPrefabs.toReversed()) {
-      // decoration.position is the SW corner of the rotated AABB; shift to
-      // the centre so the ✘ marks the middle of the footprint. Falls back to
-      // a zero-size offset when the mesh size is unknown.
+      // WHY: decoration.position is the SW corner of the rotated AABB. Shift to the centre so the ✘ marks the middle of the footprint. Falls back to a zero offset when the mesh size is unknown.
       const meshSize = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const halfW = meshSize ? (odd ? meshSize[1] : meshSize[0]) / 2 : 0;
       const halfD = meshSize ? (odd ? meshSize[0] : meshSize[1]) / 2 : 0;
       const x = offsetX + prefab.x + halfW;
-      // prefab vertical positions are inverted for canvas coordinates
+      // WHY: prefab vertical positions run north-positive but canvas y runs down.
       const z = offsetY - prefab.z - halfD;
-      // Multiply by scale to convert game-world coords to canvas pixels; the
-      // anchor offset is already in output pixels so it applies after scaling.
+      // WHY: multiply by scale to convert game-world coords to canvas pixels. The anchor offset is already in output pixels and applies after scaling.
       context.drawImage(
         sprite,
         Math.round(x * scale + charOffsetX - spriteCX),
@@ -513,9 +496,11 @@ export default class MapRenderer {
   }
 }
 
-// Build an `rgba(r, g, b, a)` string from a `#rrggbb` colour. Falls back to
-// the input when the hex format is unrecognised so the renderer still gets a
-// valid CSS colour for the stroke pass.
+/**
+ * Builds an `rgba(r, g, b, a)` string from a `#rrggbb` colour. Falls
+ * back to the input when the hex format is unrecognised so the
+ * renderer still gets a valid CSS colour for the stroke pass.
+ */
 function withAlpha(hex: string, alpha: number): string {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return hex;
@@ -537,9 +522,12 @@ function mapSize(
   });
 }
 
-// The sprite stamps centred on the target coordinate, but `anchor` (a point
-// in the shared VIEWPORT square, see lib/glyph-marker.ts) should land there
-// instead. Converts the offset between the two into output pixels.
+/**
+ * The sprite stamps centred on the target coordinate, but `anchor` (a
+ * point in the shared `VIEWPORT` square, see `lib/glyph-marker.ts`)
+ * should land there instead. Converts the offset between the two into
+ * output pixels.
+ */
 function anchorOffset(
   anchor: GlyphMarker["anchor"],
   targetSize: number,
@@ -551,8 +539,7 @@ function anchorOffset(
   };
 }
 
-// 8-byte signature + 4-byte chunk length + 4-byte "IHDR" type + 4-byte width
-// + 4-byte height.
+/** 8-byte signature + 4-byte chunk length + 4-byte `IHDR` type + 4-byte width + 4-byte height. */
 const PNG_HEADER_BYTES = 24;
 
 /**
@@ -565,10 +552,7 @@ async function readPngSize(
   file: Blob,
 ): Promise<{ width: number; height: number }> {
   const header = await file.slice(0, PNG_HEADER_BYTES).arrayBuffer();
-  // Diagnostic for https://github.com/kui/7dtd-map/issues/202 (flaky short
-  // read of bundled PNGs in CI). Throw a descriptive error with the file
-  // metadata that was visible at the moment of the short read so the next
-  // CI flake captures what would otherwise be lost behind a bare RangeError.
+  // WHY: diagnostic for https://github.com/kui/7dtd-map/issues/202 (flaky short read of bundled PNGs in CI). Throw a descriptive error with the file metadata visible at the moment of the short read so the next CI flake captures what would otherwise be lost behind a bare RangeError.
   if (header.byteLength < PNG_HEADER_BYTES) {
     const headerHex = Array.from(new Uint8Array(header))
       .map((b) => b.toString(16).padStart(2, "0"))
