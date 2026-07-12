@@ -63,8 +63,7 @@ export class MarkerJumpHandler {
   async #jump(): Promise<void> {
     const coords = this.#store.coords;
     if (!coords) return;
-    // On touch devices the click arrives without a preceding mouseenter, so
-    // position the highlight ourselves before scrolling to it.
+    // WHY: on touch devices the click arrives without a preceding mouseenter, so position the highlight ourselves before scrolling to it.
     await this.#show(coords);
     if (!this.#highlight.visible) return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -85,12 +85,10 @@ export class PrefabsHandler {
     fileHandler.addListener(async (fileNames) => {
       if (!fileNames.includes("prefabs.xml")) return;
       const all = await loadPrefabsXml();
-      // Send to the filter worker and notify "all" subscribers without
-      // waiting on meshSizes: neither path needs the hit index.
+      // WHY: send to the filter worker and notify "all" subscribers without waiting on meshSizes because neither path needs the hit index.
       worker.postMessage({ all });
       this.#allPrefabsListeners.dispatchNoAwait({ all });
-      // Hit index requires mesh sizes; emit on its own channel after the
-      // await so that subscribers who only want raw `all` are not delayed.
+      // WHY: the hit index requires mesh sizes. Emit on its own channel after the await so subscribers who only want raw `all` are not delayed.
       const sizes = await meshSizes;
       const index = new PrefabHitIndex(all, sizes);
       this.#hitIndexListeners.dispatchNoAwait({ index });
@@ -105,9 +103,12 @@ export class PrefabsHandler {
     this.#filterChunkListeners.addListener(fn);
   }
 
-  // Raw load output: emitted once per prefabs.xml load with the full,
-  // unfiltered prefab list (with rotation). Used by the map renderer to
-  // draw prefab footprints independently of the active filter.
+  /**
+   * Raw load output. Emitted once per `prefabs.xml` load with the
+   * full, unfiltered prefab list (including rotation). Used by the
+   * map renderer to draw prefab footprints independently of the
+   * active filter.
+   */
   addAllPrefabsListener(fn: (m: AllPrefabsEventMessage) => unknown) {
     this.#allPrefabsListeners.addListener(fn);
   }

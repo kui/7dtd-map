@@ -5,9 +5,11 @@ interface EventMessage {
   coords: GameCoords | null;
 }
 
-// Domain state for the map's flag marker. Kept DOM-free so both the 2D canvas
-// input adapter (MarkerHandler) and other input sources (e.g. the terrain
-// viewer's raycast) can drive the same broadcast.
+/**
+ * Domain state for the map's flag marker. Kept DOM-free so both the
+ * 2D canvas input adapter (`MarkerHandler`) and other input sources
+ * (e.g. the terrain viewer's raycast) can drive the same broadcast.
+ */
 export class MarkerStore {
   #coords: GameCoords | null = null;
   #listeners = new events.ListenerManager<EventMessage>();

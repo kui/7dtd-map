@@ -11,9 +11,11 @@ interface Doms {
 
 const EMPTY = "E/W: -, N/S: -, Elev: -";
 
-// Sink for cursor events that renders the coords/elevation line. Elevation is
-// resolved here (not in CursorHandler) because it is asynchronous and not
-// needed by every subscriber.
+/**
+ * Sink for cursor events that renders the coords / elevation line.
+ * Elevation is resolved here rather than in `CursorHandler` because it
+ * is asynchronous and not needed by every subscriber.
+ */
 export class CursorCoordsDisplayHandler {
   #doms: Doms;
   #dtmHandler: DtmHandler;

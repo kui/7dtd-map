@@ -32,13 +32,9 @@ interface Doms {
 }
 
 const EXCLUDE_PREFAB_REGEXPS = [
-  // Test prefabs
   /^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)/,
-  // Tile
   /^rwg_tile_/,
-  // Parts
   /^part_/,
-  // Located by the other generation methods (e.g. biome, spawn point) or may not be used
   /^(?:deco_|desert_|departure_bridge_|departure_city_sign|player_start|rock_form|roadblock_|rwg_bridge|sign_|streets?_)/,
 ];
 
@@ -93,7 +89,7 @@ export class PrefabInspectorHandler {
     const newCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
-      // Should rise an error if the difficulty is not in the range of 0-5
+      // SAFETY: countsPerDifficulty is built with length 6, so an out-of-range difficulty would raise before this dereference.
       // deno-lint-ignore no-non-null-assertion
       const counts = countsPerDifficulty[difficulty]!;
       counts.defined++;

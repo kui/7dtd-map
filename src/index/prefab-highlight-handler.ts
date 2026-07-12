@@ -37,8 +37,7 @@ export class PrefabHighlightHandler {
     this.#meshSizes = meshSizes;
     this.#highlight = highlight;
 
-    // Nested block rows have no data-x, so closest() resolves them to their
-    // parent prefab row.
+    // WHY: nested block rows have no data-x, so closest() resolves them to their parent prefab row.
     doms.list.addEventListener("mouseover", (event) => {
       const li = coordsLi(event.target);
       if (li === this.#hoveredLi) return;
@@ -61,8 +60,7 @@ export class PrefabHighlightHandler {
       if (!li) return;
       this.#jump(li).catch(printError);
     });
-    // A filter update can replace the hovered row without a mouseout; drop
-    // the highlight instead of leaving it pinned to a stale position.
+    // WHY: a filter update can replace the hovered row without a mouseout, so drop the highlight instead of leaving it pinned to a stale position.
     prefabsHandler.addFilterHeaderListener(() => {
       this.#hoveredLi = null;
       this.#hide();
@@ -71,7 +69,7 @@ export class PrefabHighlightHandler {
 
   async #show(li: HTMLElement): Promise<void> {
     const rect = await this.#computeRect(li);
-    // The hover may have moved on during the awaits.
+    // WHY: the hover may have moved on during the awaits, so re-check identity before applying.
     if (this.#hoveredLi !== li) return;
     if (!rect) {
       this.#hide();
@@ -85,8 +83,7 @@ export class PrefabHighlightHandler {
   }
 
   async #jump(li: HTMLElement): Promise<void> {
-    // On touch devices the click arrives without a preceding mouseover, so
-    // position the highlight ourselves before scrolling to it.
+    // WHY: on touch devices the click arrives without a preceding mouseover, so position the highlight ourselves before scrolling to it.
     this.#hoveredLi = li;
     await this.#show(li);
     if (!this.#highlight.visible) return;

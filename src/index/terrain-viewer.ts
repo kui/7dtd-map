@@ -46,16 +46,20 @@ interface Doms {
   footprintAlpha: HTMLInputElement;
 }
 
-// Base width of the terrain plane in local geometry units.
+/** Base width of the terrain plane in local geometry units. */
 const TERRAIN_WIDTH = 2048;
-// Mesh subdivisions along the horizontal axis.  Reduced from 2047 to 1024
-// to cut vertex count by ~4x; the overhead of writeY +
-// computeVertexNormals dominates more than the small visual loss for a
-// top-down view where texture detail carries most of the perceived
-// quality.
+/**
+ * Mesh subdivisions along the horizontal axis. Chosen at 1024 to cut
+ * vertex count by roughly 4× compared with a per-block 2047: `writeY`
+ * and `computeVertexNormals` dominate the frame budget, and a top-down
+ * view carries most of the perceived quality through the texture.
+ */
 const TERRAIN_SEGMENTS = 1024;
-// Measured on Pregen06k01: a decoration's y sits ~1 block above the DTM
-// surface (signed mean +1.01 over 1590 POIs), so drop it one block to sit flush.
+/**
+ * Measured on Pregen06k01. A decoration's y sits ~1 block above the
+ * DTM surface (signed mean +1.01 over 1590 POIs), so drop it one block
+ * to sit flush.
+ */
 const DECORATION_Y_TO_DTM = -1;
 
 function prefabGroundGame(prefab: Prefab, yOffset: number): number {
@@ -82,8 +86,10 @@ export class TerrainViewer {
   #boxes: PrefabBoxes | null = null;
   #hover: TerrainViewerHoverController;
   #highlight: BoxHighlight | null = null;
-  // Placement currently drawn as the hover highlight, synced each frame from
-  // the tooltip handler's raycast result.
+  /**
+   * Placement currently drawn as the hover highlight, synced each
+   * frame from the tooltip handler's raycast result.
+   */
   #highlightedPlacement: BoxPlacement | null = null;
   #filteredPrefabs: Prefab[] = [];
   #allPrefabs: Prefab[] = [];
@@ -91,11 +97,11 @@ export class TerrainViewer {
   #densityScores: Promise<PrefabDensityScores>;
   #markerCoords: GameCoords | null = null;
   #markerStore: MarkerStore;
-  // Cached so that each terrain-build phase does not re-await the same value.
+  /** Cached so each terrain-build phase does not re-await the same value. */
   #mapSize: GameMapSize | null = null;
   #clickRaycaster = new three.Raycaster();
   #clickNdc = new three.Vector2();
-  // Guards the trailing click of a camera drag from synthesizing a marker.
+  /** Guards the trailing click of a camera drag from synthesizing a marker. */
   #pointerDownX = 0;
   #pointerDownY = 0;
   #pointerDragged = false;
@@ -150,19 +156,19 @@ export class TerrainViewer {
       canvas: doms.output,
       antialias: false,
     });
-    this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); // cap DPR for performance
+    // WHY: cap DPR at 2 so downstream fill cost stays bounded on hidpi displays.
+    this.#renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     this.#scene = new three.Scene();
-    // Neutral background shows through transparent texture pixels instead of
-    // the renderer's default black clear color.
+    // WHY: a neutral background shows through transparent texture pixels instead of the renderer's default black clear colour.
     this.#scene.background = new three.Color("#111111");
 
-    const light = new three.DirectionalLight(0xffffff, 5); // bright key light to balance the dim ambient
-    // Only the terrain mesh is rotated -90° around X (see #updateElevations)
-    // to become Y-up; rotate this fixed light position the same way so it
-    // keeps the same angle relative to the terrain surface as before.
+    // WHY: bright key light balances the dim ambient below.
+    const light = new three.DirectionalLight(0xffffff, 5);
+    // WHY: the terrain mesh is rotated -90° around X in #updateElevations to become Y-up. Rotate this fixed light position the same way so it keeps the same angle relative to the terrain surface.
     light.position.set(1, 1, -1);
     this.#scene.add(light);
-    this.#scene.add(new three.AmbientLight(0xffffff, 0.09)); // low fill to keep terrain contrast
+    // WHY: low ambient fill keeps terrain contrast without crushing shadows.
+    this.#scene.add(new three.AmbientLight(0xffffff, 0.09));
 
     this.#cameraController = new TerrainViewerCameraController(
       doms.output,
@@ -178,9 +184,7 @@ export class TerrainViewer {
     doms.show.addEventListener("click", () => {
       this.#show().catch(printError);
     });
-    // The native <dialog> close event fires for Esc key, programmatic close(),
-    // or form submit. Use it as the single teardown point so the render loop
-    // stops regardless of how the dialog was dismissed.
+    // WHY: the native <dialog> close event fires for Esc, programmatic close(), and form submit. Use it as the single teardown point so the render loop stops regardless of how the dialog was dismissed.
     doms.dialog.addEventListener("close", () => {
       this.#stopRender();
       this.#disposeTerrain();
@@ -188,11 +192,7 @@ export class TerrainViewer {
       this.#disposeFlag();
       this.#disposeBoxes();
     });
-    // Clicking inside the HUD (e.g. the Show/Hide Help checkbox) would
-    // otherwise move focus off the canvas and break keyboard camera
-    // controls until the user clicks back. Suppress the default focus
-    // shift on mousedown so the canvas keeps focus while the click event
-    // still toggles the control.
+    // WHY: clicking inside the HUD would otherwise move focus off the canvas and break keyboard camera controls. Suppress the default focus shift on mousedown so the canvas keeps focus while the click still toggles the control.
     doms.hud.addEventListener("mousedown", (event) => {
       event.preventDefault();
     });
@@ -213,8 +213,7 @@ export class TerrainViewer {
         const placement = this.#hover.hoveredPlacement;
         if (!placement) return;
         event.preventDefault();
-        // Shift is not a "background tab" modifier for browsers, so a plain
-        // window.open() opens the new tab in the foreground.
+        // WHY: browsers do not treat Shift as a background-tab modifier, so a plain window.open() opens the new tab in the foreground.
         globalThis.open(
           `prefabs/${encodeURIComponent(placement.prefab.name)}.html`,
           "_blank",
@@ -265,10 +264,7 @@ export class TerrainViewer {
     );
 
     console.time("updateElevations");
-    // LOD is not implemented because it would require tiled meshes with
-    // distance-based switching and seam stitching.  Halving subdivision
-    // provides the majority of the performance benefit for this top-down
-    // viewer with negligible visual loss.
+    // WHY: full LOD would require tiled meshes with distance-based switching and seam stitching. Halving subdivision provides most of the performance benefit for this top-down viewer with negligible visual loss.
     const segmentW = TERRAIN_SEGMENTS;
     const segmentH = Math.max(
       1,
@@ -282,8 +278,7 @@ export class TerrainViewer {
       segmentW,
       segmentH,
     );
-    // Default PlaneGeometry lies in the XY plane (+Z normal); rotate into
-    // the XZ ground plane (+Y normal) to match three.js's Y-up convention.
+    // WHY: default PlaneGeometry lies in the XY plane with +Z normal. Rotate into the XZ ground plane with +Y normal to match three.js's Y-up convention.
     geo.rotateX(-Math.PI / 2);
     await this.#dtm.writeY(geo);
     geo.computeBoundingSphere();
@@ -308,8 +303,7 @@ export class TerrainViewer {
     const spriteScale = this.#spriteScale();
     const meshSizes = await this.#meshSizes;
     const placements = this.#filteredPrefabs.map((prefab) => {
-      // Same footprint-centre shift as the 2D sign renderer: decoration
-      // positions are the SW corner of the rotated AABB.
+      // WHY: decoration positions are the SW corner of the rotated AABB, so shift by half-extents to the footprint centre. Same shift as the 2D sign renderer.
       const size = meshSizes[prefab.name];
       const odd = ((prefab.rotation ?? 0) & 1) === 1;
       const halfW = size ? (odd ? size[1] : size[0]) / 2 : 0;
@@ -332,9 +326,12 @@ export class TerrainViewer {
     if (this.#signSprites) this.#scene.add(this.#signSprites.object);
   }
 
-  // Cheap on its own; kept separate from #updateSigns so a marker change does
-  // not force a resample of every sign (which would refetch the DTM raw after
-  // its CacheHolder expires and briefly wipe every sign sprite).
+  /**
+   * Cheap on its own. Kept separate from `#updateSigns` so a marker
+   * change does not force a resample of every sign, which would
+   * refetch the DTM raw after its `CacheHolder` expires and briefly
+   * wipe every sign sprite.
+   */
   async #updateFlag(mapSize: GameMapSize): Promise<void> {
     this.#disposeFlag();
     if (!this.#markerCoords) return;
@@ -357,8 +354,7 @@ export class TerrainViewer {
   #spriteScale(): number {
     const glyphPx = this.#doms.signSize.valueAsNumber;
     const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
-    // World scale s spans s / (2 * tan(fov / 2)) of the viewport height with
-    // sizeAttenuation off; the sprite canvas is twice the glyph box.
+    // WHY: with sizeAttenuation off, world scale s spans s / (2 * tan(fov / 2)) of the viewport height. The sprite canvas is twice the glyph box, so the factor of 4 combines both.
     return (4 * glyphPx * Math.tan(fovRad / 2)) /
       document.documentElement.clientHeight;
   }
@@ -373,13 +369,15 @@ export class TerrainViewer {
     return {
       x: x / scaleFactor,
       y: elevation / scaleFactor,
-      // Game z (north positive) maps to -z in the Y-up terrain space.
+      // WHY: game z is north-positive, but the Y-up terrain space is south-positive, so negate.
       z: -z / scaleFactor,
     };
   }
 
-  // DTM elevation (game meters) at a footprint centre, clamped to the index
-  // range since edge prefabs can round one block past it.
+  /**
+   * DTM elevation (game meters) at a footprint centre. Clamped to the
+   * index range because edge prefabs can round one block past it.
+   */
   async #sampleGroundGame(
     x: number,
     z: number,
@@ -395,8 +393,7 @@ export class TerrainViewer {
 
   async #updateBoxes(mapSize: GameMapSize): Promise<void> {
     this.#disposeBoxes();
-    // Boxes cover every decoration regardless of the prefab filter (which only
-    // drives the ✘ signs); the footprint-alpha slider is their on/off switch.
+    // WHY: boxes cover every decoration regardless of the prefab filter (which only drives the ✘ signs). The footprint-alpha slider is their on/off switch.
     const footprintAlpha = this.#doms.footprintAlpha.valueAsNumber;
     if (footprintAlpha <= 0 || this.#allPrefabs.length === 0) return;
 
@@ -487,7 +484,7 @@ export class TerrainViewer {
     if (!hit) return;
     const scaleFactor = (this.#mapSize.width - 1) / this.#terrainSize.width;
     const gx = Math.round(hit.point.x * scaleFactor);
-    // Game z (north positive) is the negated world z.
+    // WHY: game z is north-positive, opposite of world z, so negate.
     const gz = Math.round(-hit.point.z * scaleFactor);
     const halfW = Math.floor(this.#mapSize.width / 2);
     const halfH = Math.floor(this.#mapSize.height / 2);
@@ -506,8 +503,11 @@ export class TerrainViewer {
     this.#boxes = null;
   }
 
-  // Mirror the tooltip handler's hovered box as the two-part highlight; the
-  // handler owns hit detection, this owns the scene-facing visual.
+  /**
+   * Mirrors the tooltip handler's hovered box as the two-part
+   * highlight. The handler owns hit detection, this owns the
+   * scene-facing visual.
+   */
   #syncHighlight(): void {
     const placement = this.#hover.hoveredPlacement;
     if (placement === this.#highlightedPlacement) return;
@@ -539,9 +539,11 @@ export class TerrainViewer {
     this.#flagSprite = null;
   }
 
-  // three.js does not free GPU resources on GC; geometry, materials and
-  // textures must be disposed explicitly or VRAM accumulates each time the
-  // viewer is reopened with a different DTM.
+  /**
+   * three.js does not free GPU resources on GC. Geometry, materials,
+   * and textures must be disposed explicitly, or VRAM accumulates each
+   * time the viewer is reopened with a different DTM.
+   */
   #disposeTerrain(): void {
     if (!this.#terrain) return;
     this.#scene.remove(this.#terrain);
@@ -571,11 +573,7 @@ export class TerrainViewer {
       this.#syncHighlight();
       this.#renderer.render(this.#scene, this.#cameraController.camera);
     };
-    // Seed prev == current via rAF so the first frame's delta is 0.
-    // Calling r(0, 0) directly would feed a zero prevTime into the next
-    // rAF's high-res currentTime, producing a multi-second delta that
-    // snaps the camera if a movement key is already held when the dialog
-    // opens.
+    // WHY: seed prev == current via rAF so the first frame's delta is zero. Calling r(0, 0) directly would feed a zero prevTime into the next rAF's high-res currentTime, producing a multi-second delta that snaps the camera if a movement key is already held when the dialog opens.
     this.#animationRequestId = requestAnimationFrame((t) => {
       r(t, t);
     });
@@ -588,9 +586,11 @@ export class TerrainViewer {
     }
   }
 
-  // Drives the existing Show/Hide Help checkbox; its inline oninput
-  // handles updating the op-desc visibility, so we just synthesise a
-  // click. Bound to the "?" key by the camera controller.
+  /**
+   * Drives the existing Show/Hide Help checkbox. Its inline `oninput`
+   * updates the op-desc visibility, so this just synthesises a click.
+   * Bound to the "?" key by the camera controller.
+   */
   #toggleHelp() {
     this.#doms.helpToggle.click();
   }

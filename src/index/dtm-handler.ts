@@ -15,9 +15,7 @@ export class DtmHandler {
   #dtmRaw: CacheHolder<Uint8Array | null>;
   #mapSize = new CacheHolder<GameMapSize | null>(
     () => getHightMapSize(),
-    () => {
-      // Do nothing
-    },
+    () => {},
   );
   #listeners = new events.ListenerManager<EventMessage>();
 
@@ -34,9 +32,7 @@ export class DtmHandler {
           return null;
         }
       },
-      () => {
-        // Do nothing
-      },
+      () => {},
     );
 
     fileHandler.addListener(async (fileNames) => {
@@ -103,16 +99,17 @@ export class Dtm {
       return null;
     }
 
-    // In-game coords with left-top offset
     const x = Math.floor(width / 2) + coords.x;
     const z = Math.floor(height / 2) + coords.z;
     const elev = this.#data[x + z * width];
     return elev ?? null;
   }
 
-  // `geo` must already be rotated into the XZ ground plane (+Y normal),
-  // i.e. `geo.rotateX(-Math.PI / 2)` has been applied to a fresh
-  // PlaneGeometry before calling this.
+  /**
+   * `geo` must already be rotated into the XZ ground plane (+Y normal).
+   * Callers should apply `geo.rotateX(-Math.PI / 2)` to a fresh
+   * `PlaneGeometry` before calling this.
+   */
   writeY(geo: three.PlaneGeometry) {
     if (!this.#data) return;
 
@@ -145,25 +142,20 @@ export class Dtm {
     const maxX = width - 1;
     const maxZ = height - 1;
 
-    // pos.array layout is interleaved (x, y, z) per vertex. Bypassing
-    // getX/getY/setZ avoids per-call overhead that is significant across
-    // ~4M vertices.
+    // WHY: pos.array is interleaved (x, y, z) per vertex. Bypassing getX/getY/setZ avoids per-call overhead that is significant across roughly 4M vertices.
     const arr = pos.array as Float32Array;
     for (let i = 0, j = 0; i < pos.count; i++, j += 3) {
-      // game axis -> webgl axis: game x -> x, game z(row) -> -z, elevation -> y
+      // WHY: game axis to webgl axis: game x maps to x, game z (row) maps to -z, elevation maps to y.
       const px = arr[j] as number;
       const pz = arr[j + 2] as number;
       let dataX = Math.round((px + halfW) * scaleFactor);
       let dataZ = Math.round((halfH - pz) * scaleFactor);
-      // Plane vertices on the +width/+height edge round to width/height,
-      // one past the last valid DTM index. Clamp to keep sampling in range.
+      // WHY: plane vertices on the +width or +height edge round to width or height, one past the last valid DTM index. Clamp to keep sampling in range.
       if (dataX < 0) dataX = 0;
       else if (dataX > maxX) dataX = maxX;
       if (dataZ < 0) dataZ = 0;
       else if (dataZ > maxZ) dataZ = maxZ;
-      // Elevation byte is in game meters; divide by scaleFactor to convert
-      // to the geometry's local units (which are already shrunk by the same
-      // ratio horizontally).
+      // WHY: elevation byte is in game meters. Divide by scaleFactor to convert to the geometry's local units, which are already shrunk by the same ratio horizontally.
       // deno-lint-ignore no-non-null-assertion
       arr[j + 1] = this.#data[dataX + dataZ * width]! / scaleFactor;
     }

@@ -1,9 +1,12 @@
 import { isFormValueElement } from "../lib/dom-utils.ts";
 import { bindHoverHighlight } from "./controller-highlight.ts";
 
-// Explicit whitelist (not "all [data-remember]") so keys representing loaded
-// state, like "mapName", are not erased by the reset button. Must stay in
-// sync with data-remember values in public/index.html.
+/**
+ * Explicit whitelist rather than every `[data-remember]` so keys
+ * representing loaded state (like `mapName`) are not erased by the
+ * reset button. Must stay in sync with `data-remember` values in
+ * `public/index.html`.
+ */
 const RESET_KEYS: readonly string[] = [
   "biomesAlpha",
   "splat3Alpha",
@@ -34,9 +37,7 @@ function resetDisplaySettings(): void {
     for (const el of querySelectorAllByKey(key)) {
       if (!isFormValueElement(el)) continue;
       restoreDefault(el);
-      // Dispatch before removeItem: the persistence handler re-saves on
-      // input, so removing first would leave the just-restored default in
-      // localStorage.
+      // WHY: dispatch before removeItem so the persistence handler's input listener does not immediately re-save the just-restored default into localStorage.
       el.dispatchEvent(new Event("input", { bubbles: true }));
     }
     localStorage.removeItem(key);

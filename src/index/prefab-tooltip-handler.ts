@@ -19,9 +19,12 @@ interface Doms {
   canvas: HTMLCanvasElement;
 }
 
-// 2D map side of the shared tooltip: turns cursor coords into a footprint hit
-// and a footprint-relative anchor, feeding the shared PrefabTooltipController.
-// (The terrain viewer feeds the same controller via TerrainViewerHoverController.)
+/**
+ * 2D map side of the shared tooltip. Turns cursor coords into a
+ * footprint hit and a footprint-relative anchor, feeding the shared
+ * `PrefabTooltipController`. The terrain viewer feeds the same
+ * controller via `TerrainViewerHoverController`.
+ */
 export class PrefabTooltipHandler {
   #doms: Doms;
   #controller: PrefabTooltipController;
@@ -64,8 +67,7 @@ export class PrefabTooltipHandler {
       const hit = this.#currentHit;
       if (!hit) return;
       e.preventDefault();
-      // Shift is not a "background tab" modifier for browsers, so a plain
-      // window.open() opens the new tab in the foreground.
+      // WHY: browsers do not treat Shift as a background-tab modifier, so a plain window.open() opens the new tab in the foreground.
       globalThis.open(
         `prefabs/${encodeURIComponent(hit.name)}.html`,
         "_blank",
@@ -101,9 +103,12 @@ export class PrefabTooltipHandler {
     );
   }
 
-  // Anchor beside the POI's footprint AABB (same game-coords-to-canvas mapping
-  // as the prefab-list hover highlight) so it stays put while the cursor moves
-  // within one POI; falls back to the cursor when the map size is unknown.
+  /**
+   * Anchors beside the POI's footprint AABB using the same
+   * game-coords-to-canvas mapping as the prefab-list hover highlight,
+   * so it stays put while the cursor moves within one POI. Falls back
+   * to the cursor when the map size is unknown.
+   */
   #anchor(
     event: MouseEvent,
     prefab: Prefab,

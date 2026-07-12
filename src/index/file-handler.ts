@@ -89,9 +89,7 @@ export class FileHandler {
     doms.files.addEventListener("change", () => {
       if (!doms.files.files) return;
       const files = Array.from(doms.files.files);
-      // webkitdirectory selections expose the chosen directory via the
-      // first file's webkitRelativePath ("<dir>/<file>"); use it so the
-      // Map Name row gets the same immediate feedback as drag-and-drop.
+      // WHY: webkitdirectory selections expose the chosen directory via the first file's webkitRelativePath ("<dir>/<file>"). Use it so the Map Name row gets the same immediate feedback as drag-and-drop.
       const dir = files[0]?.webkitRelativePath.split("/")[0];
       if (dir) this.#setMapName(dir);
       this.#pushFiles(files).catch(printError);
@@ -106,7 +104,7 @@ export class FileHandler {
       this.#setMapName(mapName);
       await this.#pushUrls(
         Array.from(MAP_FILE_NAMES).map((name) => `${mapDir}/${name}`),
-        // Bundled world files are preprocessed. See tools/copy-map-files.ts
+        // WHY: bundled world files are preprocessed by tools/copy-map-files.ts, so no further preprocessing is needed.
         true,
       );
     });
@@ -200,7 +198,6 @@ export class FileHandler {
       throw new Error("Already processing");
     }
     this.#dialogHandler.state = "processing";
-    // Prevent opening the dialog because the dialog will be closed immediately.
     let progression = null;
     if (resourceList.some((r) => !("remove" in r))) {
       progression = this.#dialogHandler.createProgression(

@@ -1,8 +1,11 @@
 export const HIGHLIGHT_CLASS = "reset-target-highlight";
 
-// Mark each target's closest <tr> or <li> ancestor, plus any collapsed
-// <details> ancestor so the cue stays visible when the section is folded.
-// Targets without any of these ancestors (e.g. inside a dialog) are skipped.
+/**
+ * Marks each target's closest `<tr>` or `<li>` ancestor plus any
+ * collapsed `<details>` ancestor so the cue stays visible when the
+ * section is folded. Targets without any of these ancestors (e.g.
+ * inside a dialog) are skipped.
+ */
 export function setHighlightFor(
   targets: Iterable<Element>,
   on: boolean,

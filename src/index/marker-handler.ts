@@ -10,9 +10,12 @@ interface Doms {
   resetMarker: HTMLButtonElement;
 }
 
-// 2D map input adapter: turns canvas clicks/dblclicks, the reset button, and
-// file loads into MarkerStore updates. The store owns the coordinate state and
-// broadcasts to subscribers; this class only translates DOM events into calls.
+/**
+ * 2D map input adapter. Turns canvas clicks / dblclicks, the reset
+ * button, and file loads into `MarkerStore` updates. The store owns
+ * the coordinate state and broadcasts to subscribers, so this class
+ * only translates DOM events into calls.
+ */
 export class MarkerHandler {
   constructor(
     doms: Doms,
@@ -29,8 +32,7 @@ export class MarkerHandler {
     };
 
     doms.canvas.addEventListener("click", (e) => {
-      // Shift+Click is reserved for prefab page navigation in
-      // PrefabTooltipHandler; the two click roles are mutually exclusive.
+      // WHY: Shift+Click is reserved for prefab page navigation in PrefabTooltipHandler. The two click roles are mutually exclusive.
       if (e.shiftKey) return;
       setFromEvent(e).catch(printError);
     });
