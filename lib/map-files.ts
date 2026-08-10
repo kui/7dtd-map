@@ -263,6 +263,48 @@ function normalizeToUint8(
 }
 
 /**
+ * Expand grayscale, gray+alpha, or RGB pixel data to RGBA.
+ *
+ * Client-generated worlds encode their PNGs as RGBA, but dedicated-server
+ * worlds (SavesLocal) contain RGB PNGs without an alpha channel. The editing
+ * loops and the final `encode({ channels: 4 })` both assume 4 channels, so a
+ * 3-channel source used to throw `RangeError: wrong data size` in the
+ * file-processor worker (#246).
+ */
+function toRgba(data: Uint8Array, channels: number): Uint8Array {
+  if (channels === 4) return data;
+  const pixels = data.length / channels;
+  const out = new Uint8Array(pixels * 4);
+  for (let i = 0, j = 0; i < data.length; i += channels, j += 4) {
+    switch (channels) {
+      case 1:
+        // deno-lint-ignore no-non-null-assertion
+        out[j] = out[j + 1] = out[j + 2] = data[i]!;
+        out[j + 3] = 255;
+        break;
+      case 2:
+        // deno-lint-ignore no-non-null-assertion
+        out[j] = out[j + 1] = out[j + 2] = data[i]!;
+        // deno-lint-ignore no-non-null-assertion
+        out[j + 3] = data[i + 1]!;
+        break;
+      case 3:
+        // deno-lint-ignore no-non-null-assertion
+        out[j] = data[i]!;
+        // deno-lint-ignore no-non-null-assertion
+        out[j + 1] = data[i + 1]!;
+        // deno-lint-ignore no-non-null-assertion
+        out[j + 2] = data[i + 2]!;
+        out[j + 3] = 255;
+        break;
+      default:
+        throw new Error(`Unsupported PNG channel count: ${channels}`);
+    }
+  }
+  return out;
+}
+
+/**
  * Decode the whole PNG from accumulated chunks, edit pixels in-place,
  * then re-encode as an 8-bit RGBA PNG with maximum compression.
  */
@@ -286,7 +328,7 @@ class PngEditingTransformer extends TransformStream<Uint8Array, Uint8Array> {
           }
 
           const decoded = decode(buf);
-          const src = normalizeToUint8(decoded.data);
+          const src = toRgba(normalizeToUint8(decoded.data), decoded.channels);
 
           copyAndEdit(src, src);
 

@@ -29,9 +29,15 @@ async function main(
   const processor = new mapFiles.Processor(inMessage.name);
   const outName = processor.mapFileName;
   const workspace = await storage.workspaceDir();
-  await processor.process(
-    blob.stream(),
-    await workspace.createWritable(outName),
-  );
+  try {
+    await processor.process(
+      blob.stream(),
+      await workspace.createWritable(outName),
+    );
+  } catch (e) {
+    // WHY: the output file is created before processing starts, so a failure would otherwise strand a partial (often zero-byte) file in OPFS that breaks every later page load until the user clears site data (#246).
+    await workspace.remove(outName).catch(() => {});
+    throw e;
+  }
   return { name: outName, size: await workspace.size(outName) };
 }
