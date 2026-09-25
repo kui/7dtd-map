@@ -628,7 +628,7 @@
 	"shapecubeHalfWallDeco01Offset": "1/2 方塊牆體裝飾 01 壁階",
 	"shapecubeHalfWedge60BevelLeft": "1/2 方塊 60 度角楔形左斜面",
 	"shapecubeHalfWedge60BevelRight": "1/2 方塊 60 度角楔形右斜面",
-	"shapecubeHalfWedge60Incline": "方塊 1/2 60 度角楔形斜面",
+	"shapecubeHalfWedge60Incline": "1/2 方塊 60 度角楔形斜面",
 	"shapecubeHalfWedge60InclineCornerLeft": "方塊 60 度角楔形斜面 1/2 左轉角",
 	"shapecubeHalfWedge60InclineCornerRight": "方塊 60 度角楔形斜面 1/2 右轉角",
 	"shapecubeHalfWedge60InclineRampInclineHalfFillerLeft": "方塊 1/2 60 度角楔形斜面坡道斜面 1/2 填隙料左",
