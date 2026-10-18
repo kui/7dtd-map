@@ -206,6 +206,7 @@
     "ci": {
       "dependencies": [
         "ci:lint",
+        "ci:ast-grep",
         "ci:fmt-check",
         "ci:type-check",
         "test",
@@ -213,6 +214,7 @@
       ],
     },
     "ci:lint": "deno lint",
+    "ci:ast-grep": "ast-grep scan && ast-grep test",
     "ci:fmt-check": "deno fmt --check",
     "ci:type-check": "deno check",
   },
@@ -253,7 +255,6 @@
     "./.claude",
   ],
   "lint": {
-    "plugins": ["./tools/lint-plugins/require-comment-rationale.ts"],
     "exclude": ["./public"],
     "rules": {
       "include": [
@@ -277,6 +278,7 @@
       "./public/**/*.js",
       "./public/**/*.json",
       "./public/prefabs",
+      "./ast-grep/tests/__snapshots__",
     ],
   },
 }

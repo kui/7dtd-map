@@ -1,0 +1,6 @@
+id: require-comment-rationale-html
+valid:
+  - "<!-- WHY: verified by tools/verify-steel-wrench-filter.ts -->\n<p></p>"
+  - "<!--[if IE]><p></p><![endif]-->"
+invalid:
+  - "<!-- section header -->\n<p></p>"

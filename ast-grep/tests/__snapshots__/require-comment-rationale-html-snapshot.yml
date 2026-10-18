@@ -1,0 +1,8 @@
+id: require-comment-rationale-html
+snapshots:
+  "<!-- section header -->\n<p></p>":
+    labels:
+    - source: <!-- section header -->
+      style: primary
+      start: 0
+      end: 23

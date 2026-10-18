@@ -1,0 +1,38 @@
+id: require-comment-rationale
+snapshots:
+  "/* explains nothing */\nconst x = 1;":
+    labels:
+    - source: /* explains nothing */
+      style: primary
+      start: 0
+      end: 22
+  "// IMPORTANT: read this\nconst x = 1;":
+    labels:
+    - source: "// IMPORTANT: read this"
+      style: primary
+      start: 0
+      end: 23
+  "// KEEP: no reason\nconst x = 1;":
+    labels:
+    - source: "// KEEP: no reason"
+      style: primary
+      start: 0
+      end: 18
+  "// NOTE: nothing to see here\nconst x = 1;":
+    labels:
+    - source: "// NOTE: nothing to see here"
+      style: primary
+      start: 0
+      end: 28
+  "// this restates the code\nconst x = 1;":
+    labels:
+    - source: // this restates the code
+      style: primary
+      start: 0
+      end: 25
+  "/// plain triple slash\nconst x = 1;":
+    labels:
+    - source: /// plain triple slash
+      style: primary
+      start: 0
+      end: 22
