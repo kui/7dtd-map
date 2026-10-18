@@ -55,7 +55,7 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
 
   return Object.fromEntries(
     (await throttleAll(tasks, 100)).toSorted((a, b) =>
-      a[0].localeCompare(b[0])
+      a[0].localeCompare(b[0]),
     ),
   );
 }

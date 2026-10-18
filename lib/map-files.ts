@@ -113,10 +113,11 @@ export const PREFER_WORLD_FILE_NAMES = {
  */
 export function filterWorldFileNames(names: string[]): WorldFileName[] {
   const n = names.filter(isWorldFileName);
-  return n.filter((f) =>
-    !n.includes(
-      PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES],
-    )
+  return n.filter(
+    (f) =>
+      !n.includes(
+        PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES],
+      ),
   );
 }
 
@@ -129,10 +130,12 @@ export function hasPreferWorldFileNameIn(
   name: string,
   files: string[],
 ): boolean {
-  return name in PREFER_WORLD_FILE_NAMES &&
+  return (
+    name in PREFER_WORLD_FILE_NAMES &&
     files.includes(
       PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES],
-    );
+    )
+  );
 }
 
 export function getPreferWorldFileName(name: string): string | undefined {
@@ -202,8 +205,10 @@ class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
  * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
  *  when piping to streams that accept strict BufferSource inputs.
  */
-class OddByteTransformer
-  extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
+class OddByteTransformer extends TransformStream<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>
+> {
   constructor() {
     let nextOffset = 1;
     super(
@@ -213,8 +218,8 @@ class OddByteTransformer
             chunk.length % 2 === 0
               ? chunk.length / 2
               : nextOffset === 1
-              ? (chunk.length - 1) / 2
-              : (chunk.length + 1) / 2,
+                ? (chunk.length - 1) / 2
+                : (chunk.length + 1) / 2,
           );
 
           let i = nextOffset;
@@ -312,9 +317,7 @@ function toRgba(data: Uint8Array, channels: number): Uint8Array {
  * then re-encode as an 8-bit RGBA PNG with maximum compression.
  */
 class PngEditingTransformer extends TransformStream<Uint8Array, Uint8Array> {
-  constructor(
-    copyAndEdit: (src: Uint8Array, dst: Uint8Array) => void,
-  ) {
+  constructor(copyAndEdit: (src: Uint8Array, dst: Uint8Array) => void) {
     const chunks: Uint8Array[] = [];
     super(
       {

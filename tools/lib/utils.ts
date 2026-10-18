@@ -71,10 +71,7 @@ export async function writeJsonFile(
  * null, "\t")` so diffs stay per-entry, but without indentation or
  * spaces after `":"` and `","`.
  */
-function compactStringify(
-  value: unknown,
-  collapseLeafArrays: boolean,
-): string {
+function compactStringify(value: unknown, collapseLeafArrays: boolean): string {
   if (isJsonPrimitive(value)) return JSON.stringify(value);
   if (Array.isArray(value)) {
     if (value.length === 0) return "[]";
@@ -87,8 +84,9 @@ function compactStringify(
   if (typeof value === "object" && value !== null) {
     const entries = Object.entries(value);
     if (entries.length === 0) return "{}";
-    const items = entries.map(([k, v]) =>
-      `${JSON.stringify(k)}:${compactStringify(v, collapseLeafArrays)}`
+    const items = entries.map(
+      ([k, v]) =>
+        `${JSON.stringify(k)}:${compactStringify(v, collapseLeafArrays)}`,
     );
     return `{\n${items.join(",\n")}\n}`;
   }
@@ -96,8 +94,12 @@ function compactStringify(
 }
 
 function isJsonPrimitive(value: unknown): boolean {
-  return value === null || typeof value === "string" ||
-    typeof value === "number" || typeof value === "boolean";
+  return (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  );
 }
 
 /**
@@ -107,8 +109,7 @@ function isJsonPrimitive(value: unknown): boolean {
  * booleans, null), so structured elements stay pretty-printed.
  */
 function collapseLeafArrays(body: string): string {
-  const primitive =
-    `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;
+  const primitive = `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;
   const re = new RegExp(
     `\\[\\n\\s*(${primitive}(?:,\\n\\s*${primitive})*)\\n\\s*\\]`,
     "g",

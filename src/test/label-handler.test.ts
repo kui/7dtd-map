@@ -98,7 +98,8 @@ describe("LabelHandler", () => {
         new Response("{}", {
           headers: { "content-type": "application/json" },
         }),
-      ));
+      ),
+    );
   });
   afterEach(() => {
     for (const [k, v] of Object.entries(saved)) restoreGlobal(k, v);

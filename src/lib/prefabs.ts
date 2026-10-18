@@ -5,9 +5,7 @@ export type DifficultyIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
 const MAX_DIFFICULTY: DifficultyIndex = 5;
 
-export function assertDifficultyIndex(
-  i: number,
-): asserts i is DifficultyIndex {
+export function assertDifficultyIndex(i: number): asserts i is DifficultyIndex {
   if (!Number.isInteger(i) || i < 0 || i > MAX_DIFFICULTY) {
     throw new RangeError(
       `Difficulty index out of range (0-5): ${i.toString()}`,
@@ -34,9 +32,9 @@ function parseXml(xml: string): Prefab[] {
 }
 
 /** Exported for testing without a DOM. Accepts anything with `getAttribute`. */
-export function decorationToPrefab(
-  e: { getAttribute(name: string): string | null },
-): Prefab | null {
+export function decorationToPrefab(e: {
+  getAttribute(name: string): string | null;
+}): Prefab | null {
   const positionAttr = e.getAttribute("position");
   const name = e.getAttribute("name");
   // WHY: a decoration without a name or position is not a placed prefab, so skip it.

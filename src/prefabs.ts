@@ -98,17 +98,17 @@ function prefabLi(prefab: HighlightedPrefab) {
   li.innerHTML = [
     ...(prefab.difficulty
       ? [
-        `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
-        `  💀${prefab.difficulty.toString()}`,
-        `</span>`,
-      ]
+          `<span title="Difficulty Tier ${prefab.difficulty.toString()}" class="prefab-difficulty-${prefab.difficulty.toString()}">`,
+          `  💀${prefab.difficulty.toString()}`,
+          `</span>`,
+        ]
       : []),
     ...(prefab.isAddedInLatestVersion
       ? [
-        `<span title="Added in v${
-          escapeHtml(prefab.addedVersion ?? "")
-        }" class="new-badge">🆕</span>`,
-      ]
+          `<span title="Added in v${escapeHtml(
+            prefab.addedVersion ?? "",
+          )}" class="new-badge">🆕</span>`,
+        ]
       : []),
     `<a href="prefabs/${safeName}.html" target="_blank">`,
     prefab.highlightedLabel ?? "-",

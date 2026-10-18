@@ -13,16 +13,13 @@ describe("matchAndHighlight", () => {
   });
 
   it("escapes HTML metacharacters in non-matched segments", () => {
-    expect(matchAndHighlight(`<img src=x onerror="alert(1)">house`, /house/gi))
-      .toBe(
-        "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;<mark>house</mark>",
-      );
+    expect(
+      matchAndHighlight(`<img src=x onerror="alert(1)">house`, /house/gi),
+    ).toBe("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;<mark>house</mark>");
   });
 
   it("escapes HTML metacharacters inside matched segments too", () => {
-    expect(matchAndHighlight("a<b>c", /<b>/g)).toBe(
-      "a<mark>&lt;b&gt;</mark>c",
-    );
+    expect(matchAndHighlight("a<b>c", /<b>/g)).toBe("a<mark>&lt;b&gt;</mark>c");
   });
 
   it("works with non-global regexes", () => {

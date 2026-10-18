@@ -14,9 +14,7 @@ async function main() {
   }
   const stat = await statPixels(pngFile);
   console.log("  red,gre,blu,alp: count");
-  for (
-    const [key, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])
-  ) {
+  for (const [key, count] of Array.from(stat).toSorted((a, b) => b[1] - a[1])) {
     console.log(`  ${formatPixelKey(key)}: ${count.toString()}`);
   }
   return 0;
@@ -55,9 +53,10 @@ export function formatPixelKey(key: number): string {
 
 function assertPng8BitRgba(
   decoded: DecodedPng,
-): asserts decoded is
-  & DecodedPng
-  & { data: Uint8Array | Uint8ClampedArray; channels: 4 } {
+): asserts decoded is DecodedPng & {
+  data: Uint8Array | Uint8ClampedArray;
+  channels: 4;
+} {
   if (decoded.data instanceof Uint16Array) {
     throw new Error(
       "Unsupported PNG format: 16-bit depth is not expected for this tool.",

@@ -1,9 +1,7 @@
 export function init() {
-  for (
-    const button of document.querySelectorAll<HTMLButtonElement>(
-      "button[data-show-dialog-for]",
-    )
-  ) {
+  for (const button of document.querySelectorAll<HTMLButtonElement>(
+    "button[data-show-dialog-for]",
+  )) {
     button.addEventListener("click", () => {
       const dialogId = button.dataset["showDialogFor"];
       if (!dialogId) return;

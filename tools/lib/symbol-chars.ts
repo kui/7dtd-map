@@ -35,11 +35,7 @@ const SYMBOL_RANGES: readonly (readonly [number, number])[] = [
  *   0x200d: zero-width joiner (ZWJ sequences)
  *   0x20e3: combining enclosing keycap
  */
-const EXTRA_CODE_POINTS = new Set([
-  0xfe0f,
-  0x200d,
-  0x20e3,
-]);
+const EXTRA_CODE_POINTS = new Set([0xfe0f, 0x200d, 0x20e3]);
 
 export function extractSymbolChars(text: string): Set<string> {
   const found = new Set<string>();

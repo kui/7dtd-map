@@ -41,14 +41,15 @@ async function main() {
 
 async function runJob(sourceFontFile: string, job: FontJob) {
   const files = await collectFiles(job);
-  const text = (await Promise.all(files.map((f) => fs.readFile(f, "utf-8"))))
-    .join("\n");
+  const text = (
+    await Promise.all(files.map((f) => fs.readFile(f, "utf-8")))
+  ).join("\n");
   const chars = extractSymbolChars(text);
   if (chars.size === 0) {
     throw new Error(
-      `No symbol characters found while scanning ${
-        job.target.join(", ")
-      } for ${sourceFontFile}; refusing to write an empty font`,
+      `No symbol characters found while scanning ${job.target.join(
+        ", ",
+      )} for ${sourceFontFile}; refusing to write an empty font`,
     );
   }
   const charText = [...chars].sort().join("");

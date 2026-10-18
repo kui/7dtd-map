@@ -269,7 +269,7 @@ export class TerrainViewer {
     const segmentH = Math.max(
       1,
       Math.floor(
-        TERRAIN_SEGMENTS * this.#terrainSize.height / this.#terrainSize.width,
+        (TERRAIN_SEGMENTS * this.#terrainSize.height) / this.#terrainSize.width,
       ),
     );
     const geo = new three.PlaneGeometry(
@@ -355,8 +355,10 @@ export class TerrainViewer {
     const glyphPx = this.#doms.signSize.valueAsNumber;
     const fovRad = (this.#cameraController.camera.fov * Math.PI) / 180;
     // WHY: with sizeAttenuation off, world scale s spans s / (2 * tan(fov / 2)) of the viewport height. The sprite canvas is twice the glyph box, so the factor of 4 combines both.
-    return (4 * glyphPx * Math.tan(fovRad / 2)) /
-      document.documentElement.clientHeight;
+    return (
+      (4 * glyphPx * Math.tan(fovRad / 2)) /
+      document.documentElement.clientHeight
+    );
   }
 
   async #placement(
@@ -385,10 +387,20 @@ export class TerrainViewer {
   ): Promise<number> {
     const halfW = Math.floor(mapSize.width / 2);
     const halfH = Math.floor(mapSize.height / 2);
-    return await this.#dtm.getElevation(gameCoords({
-      x: Math.min(Math.max(Math.round(x), -halfW), mapSize.width - 1 - halfW),
-      z: Math.min(Math.max(Math.round(z), -halfH), mapSize.height - 1 - halfH),
-    })) ?? 0;
+    return (
+      (await this.#dtm.getElevation(
+        gameCoords({
+          x: Math.min(
+            Math.max(Math.round(x), -halfW),
+            mapSize.width - 1 - halfW,
+          ),
+          z: Math.min(
+            Math.max(Math.round(z), -halfH),
+            mapSize.height - 1 - halfH,
+          ),
+        }),
+      )) ?? 0
+    );
   }
 
   async #updateBoxes(mapSize: GameMapSize): Promise<void> {
@@ -414,7 +426,7 @@ export class TerrainViewer {
           densityScores,
           districtColors,
           scaleFactor,
-        )
+        ),
       )
       .filter((p): p is BoxPlacement => p !== null);
     if (placements.length === 0) return;

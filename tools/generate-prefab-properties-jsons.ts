@@ -186,7 +186,7 @@ function extractDistrictColors(districts: District[]) {
   return Object.fromEntries(
     districts
       .flatMap<[string, string]>((d) =>
-        d.previewColor ? [[d.name, rgbFloatToHex(d.previewColor)]] : []
+        d.previewColor ? [[d.name, rgbFloatToHex(d.previewColor)]] : [],
       )
       .toSorted((a, b) => a[0].localeCompare(b[0])),
   );

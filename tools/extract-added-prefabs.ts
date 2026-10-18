@@ -41,8 +41,8 @@ async function main() {
 
     const previousNames = await readIndexJsonAt(previousRef);
     const currentNames = await readIndexJsonAt(ref);
-    const addedNames = [...currentNames].filter((name) =>
-      !previousNames.has(name)
+    const addedNames = [...currentNames].filter(
+      (name) => !previousNames.has(name),
     );
 
     for (const name of addedNames) {
@@ -79,17 +79,15 @@ async function readIndexJsonAt(ref: string): Promise<Set<string>> {
       .nothrow();
   if (exitCode !== 0) {
     throw new Error(
-      `git show ${ref}:${INDEX_JSON_PATH} failed: ${
-        new TextDecoder().decode(stderr)
-      }`,
+      `git show ${ref}:${INDEX_JSON_PATH} failed: ${new TextDecoder().decode(
+        stderr,
+      )}`,
     );
   }
 
   const json: unknown = JSON.parse(new TextDecoder().decode(stdout));
   if (!Array.isArray(json) || !json.every((v) => typeof v === "string")) {
-    throw new Error(
-      `${INDEX_JSON_PATH} at ${ref} is not an array of strings`,
-    );
+    throw new Error(`${INDEX_JSON_PATH} at ${ref} is not an array of strings`);
   }
   return new Set(json);
 }
@@ -107,7 +105,9 @@ async function readExistingOutput(
 
   const json: unknown = JSON.parse(text);
   if (
-    json === null || typeof json !== "object" || Array.isArray(json) ||
+    json === null ||
+    typeof json !== "object" ||
+    Array.isArray(json) ||
     !Object.values(json).every((v) => typeof v === "string")
   ) {
     throw new Error(`${outputPath} is not a flat string-to-string map`);

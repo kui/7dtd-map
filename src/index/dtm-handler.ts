@@ -170,9 +170,9 @@ async function getHightMapSize(): Promise<GameMapSize | null> {
     await file.text(),
     "application/xml",
   );
-  const size = doc.querySelector("property[name=HeightMapSize]")?.getAttribute(
-    "value",
-  );
+  const size = doc
+    .querySelector("property[name=HeightMapSize]")
+    ?.getAttribute("value");
   if (!size) {
     console.warn("HeightMapSize not found in map_info.xml");
     return null;

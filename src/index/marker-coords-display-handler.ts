@@ -63,8 +63,7 @@ export class MarkerCoordsDisplayHandler {
 
     const elev = (await this.#dtmHandler.getElevation(coords)) ?? "-";
     if (token !== this.#renderToken) return;
-    this.#doms.output.textContent =
-      `E/W: ${coords.x.toString()}, N/S: ${coords.z.toString()}, Elev: ${elev.toString()}`;
+    this.#doms.output.textContent = `E/W: ${coords.x.toString()}, N/S: ${coords.z.toString()}, Elev: ${elev.toString()}`;
 
     const hit = this.#index?.find(coords) ?? null;
     if (!hit) {
@@ -81,10 +80,10 @@ export class MarkerCoordsDisplayHandler {
     const difficulty = difficulties[hit.name] ?? 0;
     const safeName = escapeHtml(hit.name);
     const safeLabel = escapeHtml(label);
-    const tier = difficulty > 0
-      ? `<span class="tier prefab-difficulty-${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</span> `
-      : "";
-    this.#doms.prefab.innerHTML =
-      `${tier}<a href="prefabs/${safeName}.html" target="_blank">${safeLabel} / <small>${safeName}</small></a>`;
+    const tier =
+      difficulty > 0
+        ? `<span class="tier prefab-difficulty-${difficulty.toString()}" title="Difficulty Tier ${difficulty.toString()}">💀${difficulty.toString()}</span> `
+        : "";
+    this.#doms.prefab.innerHTML = `${tier}<a href="prefabs/${safeName}.html" target="_blank">${safeLabel} / <small>${safeName}</small></a>`;
   }
 }

@@ -69,19 +69,14 @@ function toEntry(raw: unknown): ParsedPrefabProperty {
   if (isRawValue(raw)) return { name: raw["@name"], value: raw["@value"] };
   if (isRawClass(raw)) {
     const inner = raw.property;
-    const list = inner === undefined
-      ? []
-      : Array.isArray(inner)
-      ? inner
-      : [inner];
+    const list =
+      inner === undefined ? [] : Array.isArray(inner) ? inner : [inner];
     return {
       className: raw["@class"],
       properties: list.map(toEntry),
     };
   }
-  throw new Error(
-    `Unexpected <property> entry: ${JSON.stringify(raw)}`,
-  );
+  throw new Error(`Unexpected <property> entry: ${JSON.stringify(raw)}`);
 }
 
 export async function parsePrefabXml(

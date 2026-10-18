@@ -39,8 +39,8 @@ export function buildIco(images: readonly IcoImage[]): Uint8Array {
   }
 
   const dirSize = ICONDIR_BYTES + ICONDIRENTRY_BYTES * images.length;
-  const totalSize = dirSize +
-    images.reduce((sum, { png }) => sum + png.length, 0);
+  const totalSize =
+    dirSize + images.reduce((sum, { png }) => sum + png.length, 0);
   const out = new Uint8Array(totalSize);
   const view = new DataView(out.buffer);
 

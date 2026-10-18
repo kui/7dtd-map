@@ -25,7 +25,7 @@ function asArray<T>(v: T | T[] | undefined): T[] {
 function parsePreviewColor(raw: string): [number, number, number] | null {
   const parts = raw.split(",").map((s) => parseFloat(s.trim()));
   return parts.length === 3 && parts.every((n) => Number.isFinite(n))
-    ? parts as [number, number, number]
+    ? (parts as [number, number, number])
     : null;
 }
 

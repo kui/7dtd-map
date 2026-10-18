@@ -21,9 +21,9 @@ const DST_DIR = publishDir("maps");
 const WORLD_CONCURRENCY = 8;
 
 async function main() {
-  const worldDirs = await fs.promises.readdir(WORLDS_DIR).then(
-    filterValidWorldDirs,
-  );
+  const worldDirs = await fs.promises
+    .readdir(WORLDS_DIR)
+    .then(filterValidWorldDirs);
   await writeJsonFile(path.join(DST_DIR, "index.json"), worldDirs);
   await throttleAll(
     worldDirs.map((worldDir) => () => processWorld(worldDir)),
@@ -60,8 +60,10 @@ async function filterValidWorldDirs(dirs: string[]): Promise<string[]> {
 }
 
 async function isValidWorldDir(dir: string) {
-  return (await fs.promises.stat(dir)).isDirectory() &&
-    (await fs.promises.readdir(dir)).includes("map_info.xml");
+  return (
+    (await fs.promises.stat(dir)).isDirectory() &&
+    (await fs.promises.readdir(dir)).includes("map_info.xml")
+  );
 }
 
 async function pruneUnkownMapFiles(dir: string) {
@@ -77,7 +79,7 @@ async function processFiles(srcDir: string, dstDir: string) {
   const srcFiles = await fs.promises.readdir(srcDir);
   await Promise.all(
     srcFiles.map((srcFileName) =>
-      processOneFile(srcDir, dstDir, srcFileName, srcFiles)
+      processOneFile(srcDir, dstDir, srcFileName, srcFiles),
     ),
   );
   return 0;
@@ -109,9 +111,9 @@ async function processOneFile(
   console.log(`Process ${src}`);
   console.time(`-> ${dst}`);
   await processor.process(
-    stream.Readable.toWeb(fs.createReadStream(src)) as ReadableStream<
-      Uint8Array
-    >,
+    stream.Readable.toWeb(
+      fs.createReadStream(src),
+    ) as ReadableStream<Uint8Array>,
     stream.Writable.toWeb(fs.createWriteStream(dst)),
   );
   console.timeEnd(`-> ${dst}`);

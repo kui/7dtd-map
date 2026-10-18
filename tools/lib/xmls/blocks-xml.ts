@@ -176,8 +176,8 @@ export class Blocks {
     this.#blocks = blocks;
     this.#downgradeRelations = buildArrayMapByEntries(
       Array.from(this.#blocks.values()).flatMap((b: Block) => {
-        const downgradedBlockName = b.properties["DowngradeBlock"]?.value
-          .trim();
+        const downgradedBlockName =
+          b.properties["DowngradeBlock"]?.value.trim();
         if (!downgradedBlockName) return [];
         const downgradedBlock = blocks.get(downgradedBlockName);
         if (!downgradedBlock) return [];
@@ -215,7 +215,7 @@ export class Blocks {
     );
     if (upgradBlocks) {
       return upgradBlocks.flatMap((b) =>
-        this.findByDowngradeBlocks([b, ...graphs])
+        this.findByDowngradeBlocks([b, ...graphs]),
       );
     } else {
       return [graphs];
@@ -274,25 +274,30 @@ export class Blocks {
   }
 
   getHarvestsByBlock(block: Block, untilDestroy = true): Harvest[] {
-    return this.getDropsExtended(block).filter((drop) =>
-      (drop.event === "Harvest" ||
-        (untilDestroy && drop.event === "Destroy")) &&
-      drop.count[1] !== 0 && drop.prob !== 0
-    ).map((harvest) => {
-      if (harvest.name === undefined) {
-        throw new Error(`Harvest drop without name: ${block.name}`);
-      }
-      const prob = harvest.prob ?? 1;
-      const countExpected = ((harvest.count[0] + harvest.count[1]) / 2) * prob;
-      return {
-        itemName: harvest.name,
-        count: harvest.count,
-        countExpected,
-        prob,
-        tags: harvest.tags,
-        toolCategory: harvest.toolCategory,
-      };
-    });
+    return this.getDropsExtended(block)
+      .filter(
+        (drop) =>
+          (drop.event === "Harvest" ||
+            (untilDestroy && drop.event === "Destroy")) &&
+          drop.count[1] !== 0 &&
+          drop.prob !== 0,
+      )
+      .map((harvest) => {
+        if (harvest.name === undefined) {
+          throw new Error(`Harvest drop without name: ${block.name}`);
+        }
+        const prob = harvest.prob ?? 1;
+        const countExpected =
+          ((harvest.count[0] + harvest.count[1]) / 2) * prob;
+        return {
+          itemName: harvest.name,
+          count: harvest.count,
+          countExpected,
+          prob,
+          tags: harvest.tags,
+          toolCategory: harvest.toolCategory,
+        };
+      });
   }
 
   getHarvests(untilDestroy = true): Map<Block, Harvest[]> {
@@ -302,23 +307,23 @@ export class Blocks {
     }, new Map<Block, Harvest[]>());
   }
 
-  getHarvestsWithMaxDamage(
-    materials: Materials,
-  ): (Harvest & {
+  getHarvestsWithMaxDamage(materials: Materials): (Harvest & {
     blockName: string;
     damage: number;
     countPerDamage: number;
   })[] {
-    return this.all().flatMap((block) => {
-      const damage = this.getMaxDamage(block, materials);
-      if (damage === null) return [];
-      return this.getHarvestsByBlock(block).map((drop) => ({
-        ...drop,
-        blockName: block.name,
-        damage,
-        countPerDamage: drop.countExpected / damage,
-      }));
-    }).toSorted((a, b) => b.countPerDamage - a.countPerDamage);
+    return this.all()
+      .flatMap((block) => {
+        const damage = this.getMaxDamage(block, materials);
+        if (damage === null) return [];
+        return this.getHarvestsByBlock(block).map((drop) => ({
+          ...drop,
+          blockName: block.name,
+          damage,
+          countPerDamage: drop.countExpected / damage,
+        }));
+      })
+      .toSorted((a, b) => b.countPerDamage - a.countPerDamage);
   }
 }
 

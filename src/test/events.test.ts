@@ -42,9 +42,7 @@ describe("ListenerManager", () => {
       const manager = new ListenerManager<TestMessage>();
       const err = new Error("async error");
       manager.addListener(() => Promise.reject(err));
-      await expect(
-        manager.dispatch({ value: "test" }),
-      ).rejects.toBe(err);
+      await expect(manager.dispatch({ value: "test" })).rejects.toBe(err);
     });
 
     it("wraps multiple synchronous throws in MultipleErrors", async () => {

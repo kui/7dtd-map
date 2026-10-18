@@ -65,26 +65,26 @@ export class PrefabInspectorHandler {
   }
 
   async inspect() {
-    const [prefabs, difficulties, addedVersions, rawPrefabIndex] = await Promise
-      .all([
+    const [prefabs, difficulties, addedVersions, rawPrefabIndex] =
+      await Promise.all([
         loadPrefabsXml(),
         this.#difficulties,
         this.#addedVersions,
         this.#fetchPrefabIndex(),
       ]);
     const latestVersion = latestAddedVersion(addedVersions);
-    const prefabNames = prefabs.flatMap((
-      { name },
-    ) => (isExcludedPrefabName(name) ? [] : [name]));
+    const prefabNames = prefabs.flatMap(({ name }) =>
+      isExcludedPrefabName(name) ? [] : [name],
+    );
     this.#doms.count.textContent = prefabNames.length.toString();
 
     const uniquePrefabNames = new Set(prefabNames);
-    const prefabIndex = rawPrefabIndex.filter((name) =>
-      !isExcludedPrefabName(name)
+    const prefabIndex = rawPrefabIndex.filter(
+      (name) => !isExcludedPrefabName(name),
     );
 
-    const countsPerDifficulty: { inMap: number; defined: number }[] = Array
-      .from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
+    const countsPerDifficulty: { inMap: number; defined: number }[] =
+      Array.from({ length: 6 }, () => ({ inMap: 0, defined: 0 }));
     const totalCounts = { inMap: 0, defined: 0 };
     const newCounts = { inMap: 0, defined: 0 };
     for (const name of prefabIndex) {
@@ -115,10 +115,10 @@ export class PrefabInspectorHandler {
     this.#doms.newVersion.textContent = latestVersion;
     this.#doms.newCounts.inMap.textContent = newCounts.inMap.toString();
     this.#doms.newCounts.defined.textContent = newCounts.defined.toString();
-    this.#doms.detailCounts.total.inMap.textContent = totalCounts.inMap
-      .toString();
-    this.#doms.detailCounts.total.defined.textContent = totalCounts.defined
-      .toString();
+    this.#doms.detailCounts.total.inMap.textContent =
+      totalCounts.inMap.toString();
+    this.#doms.detailCounts.total.defined.textContent =
+      totalCounts.defined.toString();
 
     const labels = await this.#labelHandler.holder.get("prefabs");
     const missingPrefabNames = new Set(
@@ -131,22 +131,22 @@ export class PrefabInspectorHandler {
         const addedVersion = addedVersions[name];
         return { name, label, difficulty, addedVersion };
       })
-      .toSorted((
-        a,
-        b,
-      ) => (a.difficulty === b.difficulty
-        ? a.name.localeCompare(b.name)
-        : b.difficulty - a.difficulty)
+      .toSorted((a, b) =>
+        a.difficulty === b.difficulty
+          ? a.name.localeCompare(b.name)
+          : b.difficulty - a.difficulty,
       )
       .map(({ name, label, difficulty, addedVersion }) => {
-        const tierStr = difficulty === 0
-          ? ""
-          : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
-        const newStr = addedVersion === latestVersion
-          ? `<span class="new-badge" title="Added in v${
-            escapeHtml(addedVersion)
-          }">🆕</span> `
-          : "";
+        const tierStr =
+          difficulty === 0
+            ? ""
+            : `<span title="Difficulty Tier">💀${difficulty.toString()}</span> `;
+        const newStr =
+          addedVersion === latestVersion
+            ? `<span class="new-badge" title="Added in v${escapeHtml(
+                addedVersion,
+              )}">🆕</span> `
+            : "";
         const safeName = escapeHtml(name);
         const safeLabel = escapeHtml(label);
         return `<li>${tierStr}${newStr}<a href="prefabs/${safeName}.html">${safeLabel} / ${safeName}</a></li>`;

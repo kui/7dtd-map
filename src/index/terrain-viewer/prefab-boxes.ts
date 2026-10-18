@@ -86,11 +86,11 @@ export function buildBoxHighlight(placement: BoxPlacement): BoxHighlight {
     makeSlab(placement, placement.groundY, placement.topY, aboveTint),
     placement.bottomY < placement.groundY
       ? makeSlab(
-        placement,
-        placement.bottomY,
-        placement.groundY,
-        BURIED_HIGHLIGHT,
-      )
+          placement,
+          placement.bottomY,
+          placement.groundY,
+          BURIED_HIGHLIGHT,
+        )
       : null,
   ];
   for (const slab of slabs) {
@@ -112,9 +112,10 @@ function makeSlab(
   y0: number,
   y1: number,
   color: three.Color,
-):
-  | { mesh: three.Mesh; disposables: [three.BufferGeometry, three.Material] }
-  | null {
+): {
+  mesh: three.Mesh;
+  disposables: [three.BufferGeometry, three.Material];
+} | null {
   const height = y1 - y0;
   if (height <= 0) return null;
   const geometry = new three.BoxGeometry(

@@ -26,9 +26,11 @@ export function removeAllChildren(e: HTMLElement): void {
 export function isFormValueElement(
   target: EventTarget | null,
 ): target is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement {
-  return target instanceof HTMLInputElement ||
+  return (
+    target instanceof HTMLInputElement ||
     target instanceof HTMLTextAreaElement ||
-    target instanceof HTMLSelectElement;
+    target instanceof HTMLSelectElement
+  );
 }
 
 export function waitAnimationFrame(): Promise<number> {

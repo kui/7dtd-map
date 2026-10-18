@@ -208,7 +208,8 @@ export default class MapRenderer {
       if (
         prefab.name.includes("rwg_tile") ||
         prefab.name.includes("part_driveway")
-      ) continue;
+      )
+        continue;
       const size = meshSizes[prefab.name];
       if (!size) continue;
       const [sx, sz] = size;

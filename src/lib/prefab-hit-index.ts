@@ -6,10 +6,7 @@ import type { GameCoords, Prefab, PrefabMeshSizes } from "../types/7dtdmap.ts";
  * is the placement framework and `part_driveway_` overlaps its parent
  * POI, so neither is ever what a user is asking about.
  */
-export const EXCLUDED_NAME_FRAGMENTS = [
-  "rwg_tile_",
-  "part_driveway_",
-] as const;
+export const EXCLUDED_NAME_FRAGMENTS = ["rwg_tile_", "part_driveway_"] as const;
 
 /**
  * AABB stored in four parallel `Int32Array`s so the hit-test loop is

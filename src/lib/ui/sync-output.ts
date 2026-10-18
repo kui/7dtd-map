@@ -13,11 +13,9 @@ export function init(): void {
     });
   }
 
-  for (
-    const output of document.querySelectorAll<HTMLOutputElement>(
-      "output[data-sync-for]",
-    )
-  ) {
+  for (const output of document.querySelectorAll<HTMLOutputElement>(
+    "output[data-sync-for]",
+  )) {
     const input = component(output.dataset["syncFor"], HTMLInputElement);
     output.value = formatValue(output, input.value);
   }

@@ -73,9 +73,12 @@ export class Tts {
   }
   getBlockId(x: number, y: number, z: number): BlockId | undefined {
     if (
-      x < 0 || x >= this.maxx ||
-      y < 0 || y >= this.maxy ||
-      z < 0 || z >= this.maxz
+      x < 0 ||
+      x >= this.maxx ||
+      y < 0 ||
+      y >= this.maxy ||
+      z < 0 ||
+      z >= this.maxz
     ) {
       throw Error(
         `Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`,

@@ -29,10 +29,9 @@ interface TooltipContent {
 }
 
 const HINT_HTML: Record<TooltipHint, string> = {
-  "click": `<div class="hint click">🚩 Click: Set flag</div>`,
-  "dblclick": `<div class="hint dblclick">❌ Double-click: Reset flag</div>`,
-  "shift-click":
-    `<div class="hint shift-click">🔗 Shift+Click: Open prefab page</div>`,
+  click: `<div class="hint click">🚩 Click: Set flag</div>`,
+  dblclick: `<div class="hint dblclick">❌ Double-click: Reset flag</div>`,
+  "shift-click": `<div class="hint shift-click">🔗 Shift+Click: Open prefab page</div>`,
 };
 
 /**
@@ -62,13 +61,14 @@ class PrefabTooltip {
     if (this.#shownKey === key) return;
     const safeName = escapeHtml(content.prefab.name);
     const safeLabel = escapeHtml(content.label);
-    const tierLine = content.difficulty > 0
-      ? `<div class="tier prefab-difficulty-${content.difficulty.toString()}" title="Difficulty Tier ${content.difficulty.toString()}">💀${content.difficulty.toString()}</div>`
-      : "";
+    const tierLine =
+      content.difficulty > 0
+        ? `<div class="tier prefab-difficulty-${content.difficulty.toString()}" title="Difficulty Tier ${content.difficulty.toString()}">💀${content.difficulty.toString()}</div>`
+        : "";
     const newLine = content.isAddedInLatestVersion
-      ? `<div class="new-badge" title="Added in v${
-        escapeHtml(content.addedVersion ?? "")
-      }">🆕 New in v${escapeHtml(content.addedVersion ?? "")}</div>`
+      ? `<div class="new-badge" title="Added in v${escapeHtml(
+          content.addedVersion ?? "",
+        )}">🆕 New in v${escapeHtml(content.addedVersion ?? "")}</div>`
       : "";
     const hints = content.hints.map((h) => HINT_HTML[h]).join("");
     this.#dom.innerHTML =
@@ -148,8 +148,8 @@ export class PrefabTooltipController {
     anchor: () => { left: number; top: number },
   ): Promise<void> {
     const token = ++this.#token;
-    const [labels, difficulties, addedVersions, latestVersion] = await Promise
-      .all([
+    const [labels, difficulties, addedVersions, latestVersion] =
+      await Promise.all([
         this.#labelHandler.holder.get("prefabs"),
         this.#difficulties,
         this.#addedVersions,

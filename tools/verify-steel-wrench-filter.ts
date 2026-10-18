@@ -6,9 +6,9 @@ import { loadMaterials } from "./lib/xmls/materials-xml.ts";
 async function main() {
   const blocks = await loadBlocks();
   const materials = await loadMaterials();
-  const harvests = blocks.getHarvestsWithMaxDamage(materials).filter((drop) =>
-    drop.itemName.startsWith("resourceForgedSteel")
-  );
+  const harvests = blocks
+    .getHarvestsWithMaxDamage(materials)
+    .filter((drop) => drop.itemName.startsWith("resourceForgedSteel"));
   const gunSafeScore =
     harvests.find((h) => h.blockName.startsWith("cntGunSafe"))
       ?.countPerDamage ?? 0;
@@ -39,7 +39,10 @@ async function main() {
   const regexp = new RegExp(m[1]);
 
   const regexMatched = new Set(
-    blocks.all().map((b) => b.name).filter((name) => regexp.test(name)),
+    blocks
+      .all()
+      .map((b) => b.name)
+      .filter((name) => regexp.test(name)),
   );
 
   const missing: string[] = [];

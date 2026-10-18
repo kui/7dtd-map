@@ -7,22 +7,27 @@ test.describe("prefabs.html", () => {
     await expect(page.locator("#prefab-filter")).toBeVisible();
     await expect(page.locator("#prefabs-list")).toBeAttached();
     // WHY: Poll until the worker finishes the first filter pass so the status text is non-empty.
-    await expect.poll(async () =>
-      (await page.locator("#prefabs-status").textContent())?.trim().length ?? 0
-    ).toBeGreaterThan(0);
+    await expect
+      .poll(
+        async () =>
+          (await page.locator("#prefabs-status").textContent())?.trim()
+            .length ?? 0,
+      )
+      .toBeGreaterThan(0);
   });
 
   test("filter input updates the URL querystring", async ({ page }) => {
     await page.goto("/prefabs.html");
     await page.fill("#prefab-filter", "trader");
     // WHY: UrlState debounces updates, so poll until the querystring reflects the input.
-    await expect.poll(() =>
-      new URL(page.url()).searchParams.get("prefab-filter")
-    )
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get("prefab-filter"))
       .toBe("trader");
   });
 
-  test("tier-clear button restores the default tier range", async ({ page }) => {
+  test("tier-clear button restores the default tier range", async ({
+    page,
+  }) => {
     await page.goto("/prefabs.html");
     await page.locator("#min-tier").evaluate((el: HTMLInputElement) => {
       el.value = "3";
@@ -35,7 +40,9 @@ test.describe("prefabs.html", () => {
     expect(Number(await page.locator("#max-tier").inputValue())).toBe(5);
   });
 
-  test("highlighted prefab names do not execute injected scripts (XSS regression)", async ({ page }) => {
+  test("highlighted prefab names do not execute injected scripts (XSS regression)", async ({
+    page,
+  }) => {
     /* WHY: We can't easily plant a malicious-named prefab without controlling
        the backing JSON. We therefore verify (a) no accidental dialog fires
        and (b) <mark> elements are produced, which proves the escape-then-mark

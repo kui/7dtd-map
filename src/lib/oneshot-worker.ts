@@ -43,9 +43,10 @@ function awaitOneshotWorker<T>(worker: Worker): Promise<T> {
       // WHY: prevent the browser from also logging an "Uncaught" notice for an error we are about to surface through the promise.
       event.preventDefault();
       const { message, filename, lineno } = event;
-      const detail = message || filename
-        ? `${message || "error"} (${filename ?? "?"}:${lineno ?? "?"})`
-        : "error";
+      const detail =
+        message || filename
+          ? `${message || "error"} (${filename ?? "?"}:${lineno ?? "?"})`
+          : "error";
       settle(() => reject(new Error(`Worker failed: ${detail}`)));
     });
     worker.addEventListener("messageerror", () => {

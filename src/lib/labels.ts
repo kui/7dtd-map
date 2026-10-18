@@ -52,8 +52,9 @@ export class LabelHolder {
     this.#baseUrl = baseUrl;
     this.#language = resolveLanguage(navigatorLanguages);
     this.#fallbacks = new Map(
-      FILE_BASE_NAMES.map((n) =>
-        [n, this.#fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, n)] as const
+      FILE_BASE_NAMES.map(
+        (n) =>
+          [n, this.#fetchLabelMap(LabelHolder.DEFAULT_LANGUAGE, n)] as const,
       ),
     );
     this.#labels = this.#buildAllLabels();

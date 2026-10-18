@@ -20,12 +20,12 @@ export function installPrefabLinkTooltip(doms: Doms): void {
 
   const reposition = () => {
     if (!lastEvent) return;
-    doms.tooltip.style.left = `${
-      (lastEvent.clientX + CURSOR_OFFSET).toString()
-    }px`;
-    doms.tooltip.style.top = `${
-      (lastEvent.clientY + CURSOR_OFFSET).toString()
-    }px`;
+    doms.tooltip.style.left = `${(
+      lastEvent.clientX + CURSOR_OFFSET
+    ).toString()}px`;
+    doms.tooltip.style.top = `${(
+      lastEvent.clientY + CURSOR_OFFSET
+    ).toString()}px`;
   };
 
   const hide = () => {

@@ -75,8 +75,8 @@ export class DndHandler {
       // WHY: drop consumes the dragenter without firing a matching dragleave, so reset the counter to keep it consistent for the next drag.
       counter.reset();
       this.#listeners.dispatchNoAwait({
-        files: Array.from(event.dataTransfer.items).flatMap((item) =>
-          item.webkitGetAsEntry() ?? []
+        files: Array.from(event.dataTransfer.items).flatMap(
+          (item) => item.webkitGetAsEntry() ?? [],
         ),
       });
     });

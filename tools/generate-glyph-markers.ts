@@ -67,11 +67,11 @@ async function generateMarker(name: string, job: MarkerJob) {
       fontBuffer.byteOffset + fontBuffer.byteLength,
     ),
   );
-  const d = font.getPath(job.glyph, job.x, job.y, GLYPH_MARKER_FONT_SIZE)
+  const d = font
+    .getPath(job.glyph, job.x, job.y, GLYPH_MARKER_FONT_SIZE)
     .toPathData(2);
 
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${GLYPH_MARKER_VIEWPORT}" height="${GLYPH_MARKER_VIEWPORT}">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${GLYPH_MARKER_VIEWPORT}" height="${GLYPH_MARKER_VIEWPORT}">
   <defs>
     <path id="glyph" d="${d}" />
   </defs>
