@@ -1,0 +1,10 @@
+id: require-comment-rationale-css
+language: Css
+severity: error
+message: Delete this comment, or prefix it with a rationale marker (WHY:, SAFETY:, INVARIANT:, HACK:) followed by the reason.
+ignores:
+  - public/old/**
+rule:
+  kind: comment
+  not:
+    regex: '^/\*\s*(WHY|HACK|SAFETY|INVARIANT)\b'

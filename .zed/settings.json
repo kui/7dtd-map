@@ -34,6 +34,7 @@
     "TypeScript": {
       "language_servers": [
         "deno",
+        "ast-grep",
         "!typescript-language-server",
         "!vtsls",
         "!eslint"

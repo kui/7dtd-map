@@ -1,0 +1,13 @@
+id: require-comment-rationale-html
+language: Html
+severity: error
+message: Delete this comment, or prefix it with a rationale marker (WHY:, SAFETY:, INVARIANT:, HACK:) followed by the reason.
+ignores:
+  - public/old/**
+  - public/prefabs/**
+rule:
+  kind: comment
+  not:
+    any:
+      - regex: '^<!--\s*(WHY|HACK|SAFETY|INVARIANT)\b'
+      - regex: '^<!--\s*\[if '

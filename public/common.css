@@ -8,7 +8,7 @@
   src: url("./NotoSansSymbols2.subset.woff2") format("woff2");
 }
 
-/* Subsets are listed first so the browser's per-character font fallback picks
+/* WHY: Subsets are listed first so the browser's per-character font fallback picks
    a color glyph from the emoji subset when it has one, then a monochrome
    symbol glyph (✘, ▽, ⌖, …) from the symbols subset, and falls through to
    the system default for everything else. This keeps emoji colors and symbol
@@ -45,7 +45,7 @@ dialog::backdrop {
   }
 }
 
-/* Containing the nested <ul> is load bearing: a matched prefab can carry
+/* WHY: Containing the nested <ul> is load bearing: a matched prefab can carry
    thousands of block <li>, which otherwise force layout even off-screen. */
 #prefabs-list > li {
   content-visibility: auto;
@@ -68,7 +68,7 @@ dialog::backdrop {
   border: 0;
 }
 
-/* Normalize buttons and the file-picker label to an identical box so
+/* WHY: Normalize buttons and the file-picker label to an identical box so
    glyph-driven fonts (↺, ⛰️, ✘) cannot stretch one taller than the
    next, and so the <label> file-button matches the <button> siblings
    (appearance:button alone did not render the label's border on Chrome).
@@ -78,7 +78,7 @@ dialog::backdrop {
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
-  /* font shorthand sets line-height too, so apply line-height AFTER it. */
+  /* INVARIANT: font shorthand sets line-height too, so apply line-height AFTER it. */
   font: inherit;
   font-size: 13px;
   line-height: 1;

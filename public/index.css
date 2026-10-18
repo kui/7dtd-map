@@ -4,7 +4,7 @@
 
 #map-wrapper {
   position: relative;
-  /* Must hug the canvas exactly (not stretch to the container's full auto
+  /* WHY: Must hug the canvas exactly (not stretch to the container's full auto
      width): otherwise the canvas overflows its own parent, which triggers
      the same margin-drop described below, just one level up. */
   width: fit-content;
@@ -13,7 +13,7 @@
 #map {
   display: block;
   cursor: crosshair;
-  /* Must live on the canvas itself: a fit-content wrapper around an
+  /* WHY: Must live on the canvas itself: a fit-content wrapper around an
      oversized child drops its own margin from document.body.scrollWidth,
      so the map could never scroll clear of the fixed controller panel. */
   margin-right: calc(min(30vw, var(--controller-width)) + 58px);
@@ -126,7 +126,7 @@
 
 #controller {
   position: fixed;
-  /* #map-wrapper is positioned and later in the DOM, so without an explicit
+  /* WHY: #map-wrapper is positioned and later in the DOM, so without an explicit
      z-index a large canvas would paint over this panel and steal its
      pointer events. */
   z-index: 1;
@@ -200,7 +200,7 @@
 #prefabs-list ul {
   list-style-type: none;
   padding-inline-start: 16px;
-  /* Ghost style: two glyph buttons per row over hundreds of rows would draw
+  /* WHY: Ghost style: two glyph buttons per row over hundreds of rows would draw
      a noisy grid of boxes, so the border/background only appear on
      hover/focus. Fixed width keeps the glyph columns aligned. */
   & > li button {
@@ -227,7 +227,6 @@
   content: attr(data-message);
 }
 
-/* Handle warn message to use depleted files */
 #warn-splat3-png,
 #warn-splat4-png {
   display: none;
@@ -291,7 +290,7 @@ dialog {
 }
 
 #terrain-viewer-dialog {
-  /* When opened via showModal() the dialog is position: fixed in the top
+  /* WHY: When opened via showModal() the dialog is position: fixed in the top
      layer; pin it to the viewport edges with inset:0 rather than width:100vw
      so the scrollbar width does not push the right edge off-screen. */
   inset: 0;
