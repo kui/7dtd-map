@@ -63,7 +63,7 @@ if (args[0] === "serve") {
 } else if (args[0] === "serve-static") {
   // WHY: esbuild's own serve drops response bodies under CI load, giving E2E 0-byte map files (see issue #202). Build once, then serve public/ from a real static server.
   await esbuild.build({ ...commonOpts, ...serveOpts });
-  esbuild.stop();
+  await esbuild.stop();
 
   const port = envPort ? Number(envPort) : 8000;
   const hostname = envHost ?? "127.0.0.1";
@@ -76,5 +76,5 @@ if (args[0] === "serve") {
     ...commonOpts,
     ...prodOpts,
   });
-  esbuild.stop();
+  await esbuild.stop();
 }

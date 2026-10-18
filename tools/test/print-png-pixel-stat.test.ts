@@ -38,7 +38,7 @@ describe("statDecodedPixels", () => {
     expect(stat.size).toBe(2);
 
     const redKey = 255 * 0x1000000 + ((0 << 16) | (0 << 8) | 255);
-    const blueKey = 0 * 0x1000000 + ((0 << 16) | (255 << 8) | 128);
+    const blueKey = (0 << 16) | (255 << 8) | 128;
     expect(stat.get(redKey)).toBe(2);
     expect(stat.get(blueKey)).toBe(1);
   });

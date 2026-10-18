@@ -6,10 +6,11 @@ async function main() {
   const blocks = await loadBlocks();
   const materials = await loadMaterials();
   const harvests = blocks.getHarvestsWithMaxDamage(materials).filter((drop) =>
-    /^resourceForgedSteel/.test(drop.itemName)
+    drop.itemName.startsWith("resourceForgedSteel")
   );
   const gunSafeScore =
-    harvests.find((h) => /^cntGunSafe/.test(h.blockName))?.countPerDamage ?? 0;
+    harvests.find((h) => h.blockName.startsWith("cntGunSafe"))
+      ?.countPerDamage ?? 0;
   if (gunSafeScore === 0) throw new Error("gunSafeScore is 0");
   const filtered = new Set<string>();
   for (const harvest of harvests) {
@@ -20,7 +21,7 @@ async function main() {
     // WHY: skip blocks that require the PercMasterySteelHarvest perk since the filter targets the wrench path.
     if (harvest.tags.includes("PercMasterySteelHarvest")) continue;
     // WHY: skip infestation loot boxes because they are not always placed on the map.
-    if (/^cntQuestInfestedT/.test(harvest.blockName)) continue;
+    if (harvest.blockName.startsWith("cntQuestInfestedT")) continue;
     filtered.add(harvest.blockName);
   }
 
