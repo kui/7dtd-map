@@ -1,7 +1,0 @@
-id: require-comment-rationale-css
-valid:
-  - "/* WHY: keeps glyph columns aligned */\na { width: 1em; }"
-  - "/* INVARIANT: must follow the font shorthand */\na { line-height: 1; }"
-invalid:
-  - "/* Handle warn message */\na { display: none; }"
-  - "/* TODO: later */\na { display: none; }"

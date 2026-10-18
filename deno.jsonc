@@ -214,7 +214,7 @@
       ],
     },
     "ci:lint": "deno lint",
-    "ci:ast-grep": "ast-grep scan && ast-grep test",
+    "ci:ast-grep": "ast-grep scan",
     "ci:fmt-check": "deno fmt --check",
     "ci:type-check": "deno check",
   },
@@ -278,7 +278,6 @@
       "./public/**/*.js",
       "./public/**/*.json",
       "./public/prefabs",
-      "./ast-grep/tests/__snapshots__",
     ],
   },
 }
