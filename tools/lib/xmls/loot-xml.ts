@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { parse as parseXml } from "@libs/xml";
 import { toArray, vanillaDir } from "../utils.ts";
 
@@ -57,7 +58,7 @@ function isRawLootXml(value: unknown): value is RawLootXml {
 export async function loadLoot(
   lootXmlFileName: string = LOOT_XML,
 ): Promise<Loot> {
-  const parsed = parseXml(await Deno.readTextFile(lootXmlFileName));
+  const parsed = parseXml(await readFile(lootXmlFileName, "utf8"));
   if (!isRawLootXml(parsed)) {
     throw new Error(`Unexpected structure in ${lootXmlFileName}`);
   }

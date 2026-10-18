@@ -1,27 +1,18 @@
 import * as esbuild from "esbuild";
-import { expandGlob } from "@std/fs/expand-glob";
-import { serveDir } from "@std/http/file-server";
-import { denoPlugin } from "@deno/esbuild-plugin";
+import * as path from "node:path";
+import { globFiles, projectRoot } from "./lib/utils.ts";
 
-async function* multiExpandGlob(...globs: string[]) {
-  for (const glob of globs) {
-    yield* expandGlob(glob);
-  }
-}
-
-const targets = await Array.fromAsync(
-  multiExpandGlob(
-    "src/*.ts",
-    "src/worker/*.ts",
-    "src/prefabs/*.ts",
-  ),
-  (e) => e.path,
-);
+const targets = (
+  await Promise.all(
+    ["src/*.ts", "src/worker/*.ts", "src/prefabs/*.ts"].map((g) =>
+      globFiles(projectRoot(), g),
+    ),
+  )
+).flat();
 
 const outDir = "public";
 
 const commonOpts: esbuild.BuildOptions = {
-  plugins: [denoPlugin()],
   bundle: true,
   sourcemap: true,
   outdir: outDir,
@@ -39,9 +30,9 @@ const prodOpts: esbuild.BuildOptions = {
   sourcemap: "external",
 };
 
-const args = Deno.args;
-const envPort = Deno.env.get("PORT");
-const envHost = Deno.env.get("HOST");
+const args = process.argv.slice(2);
+const envPort = process.env["PORT"];
+const envHost = process.env["HOST"];
 
 if (args[0] === "serve") {
   const ctx = await esbuild.context({
@@ -67,10 +58,21 @@ if (args[0] === "serve") {
 
   const port = envPort ? Number(envPort) : 8000;
   const hostname = envHost ?? "127.0.0.1";
-  Deno.serve(
-    { port, hostname },
-    (req) => serveDir(req, { fsRoot: outDir, quiet: true }),
-  );
+  const root = path.resolve(outDir);
+  Bun.serve({
+    port,
+    hostname,
+    async fetch(req) {
+      let file = path.join(root, decodeURIComponent(new URL(req.url).pathname));
+      if (!file.startsWith(root))
+        return new Response("Forbidden", { status: 403 });
+      if (file.endsWith(path.sep)) file = path.join(file, "index.html");
+      const body = Bun.file(file);
+      return (await body.exists())
+        ? new Response(body)
+        : new Response("Not Found", { status: 404 });
+    },
+  });
 } else {
   await esbuild.build({
     ...commonOpts,

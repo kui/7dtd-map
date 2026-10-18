@@ -1,17 +1,20 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import * as path from "node:path";
 import { parsePrefabXml } from "../lib/xmls/prefab-xml.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 async function withTempXml<T>(
   body: string,
   fn: (file: string) => Promise<T>,
 ): Promise<T> {
-  const file = await Deno.makeTempFile({ suffix: ".xml" });
+  const dir = await mkdtemp(path.join(tmpdir(), "prefab-xml-"));
+  const file = path.join(dir, "prefab.xml");
   try {
-    await Deno.writeTextFile(file, body);
+    await writeFile(file, body);
     return await fn(file);
   } finally {
-    await Deno.remove(file);
+    await rm(dir, { recursive: true });
   }
 }
 

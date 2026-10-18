@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { parse as parseXml } from "@libs/xml";
 import {
   buildArrayMapByEntries,
@@ -128,7 +129,7 @@ function extractProperties(raw: unknown[]): BlockProperties {
 export async function loadBlocks(
   fileName = vanillaDir("Data", "Config", "blocks.xml"),
 ): Promise<Blocks> {
-  const parsed = parseXml(await Deno.readTextFile(fileName));
+  const parsed = parseXml(await readFile(fileName, "utf8"));
   if (!isRawBlocksXml(parsed)) {
     throw new Error(`Unexpected structure in ${fileName}`);
   }

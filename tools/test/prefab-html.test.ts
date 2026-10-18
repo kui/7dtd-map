@@ -1,10 +1,9 @@
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
 import {
   buildSleeperVolumes,
   escapeHtml,
   PrefabProperty,
 } from "../lib/prefab-html.ts";
+import { describe, expect, it } from "bun:test";
 
 describe("escapeHtml", () => {
   it("escapes <, >, and & without double-escaping the ampersand", () => {

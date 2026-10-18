@@ -1,10 +1,8 @@
-import { expandGlob } from "@std/fs/expand-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { extractSymbolChars } from "./lib/symbol-chars.ts";
-import { handleMain, projectRoot, publishDir } from "./lib/utils.ts";
-// deno-lint-ignore no-explicit-any
-const fontTools = await import("@web-alchemy/fonttools") as any;
+import { globFiles, handleMain, projectRoot, publishDir } from "./lib/utils.ts";
+const fontTools = await import("@web-alchemy/fonttools");
 
 interface FontJob {
   target: readonly string[];
@@ -86,10 +84,9 @@ async function runJob(sourceFontFile: string, job: FontJob) {
 async function collectFiles(job: FontJob): Promise<string[]> {
   const files = new Set<string>();
   for (const pattern of job.target) {
-    for await (const entry of expandGlob(projectRoot(pattern))) {
-      if (!entry.isFile) continue;
-      if (job.exclude?.some((s) => entry.path.includes(s))) continue;
-      files.add(entry.path);
+    for (const file of await globFiles(projectRoot(), pattern)) {
+      if (job.exclude?.some((s) => file.includes(s))) continue;
+      files.add(file);
     }
   }
   return [...files];

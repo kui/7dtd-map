@@ -7,9 +7,7 @@ import {
   requireType,
   strictParseInt,
 } from "../lib/utils.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-import { stub } from "@std/testing/mock";
+import { describe, expect, it, spyOn } from "bun:test";
 
 describe("requireNonnull", () => {
   it("returns non-null values unchanged", () => {
@@ -170,11 +168,12 @@ describe("fetchCompleteBlob", () => {
     response: Response,
     fn: () => Promise<void>,
   ): Promise<void> {
-    const s = stub(globalThis, "fetch", () => Promise.resolve(response));
+    const s = spyOn(globalThis, "fetch").mockImplementation((() =>
+      Promise.resolve(response)) as unknown as typeof fetch);
     try {
       await fn();
     } finally {
-      s.restore();
+      s.mockRestore();
     }
   }
 

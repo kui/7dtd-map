@@ -3,10 +3,8 @@ import type { FileHandler } from "../index/file-handler.ts";
 import type { MapFileName } from "../../lib/map-files.ts";
 import * as events from "../lib/events.ts";
 import { gameMapSize } from "../lib/utils.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-import { spy as fn } from "@std/testing/mock";
 import * as three from "three";
+import { describe, expect, it, mock } from "bun:test";
 
 type FileHandlerEventMessage = MapFileName[];
 
@@ -31,34 +29,34 @@ describe("DtmHandler listeners", () => {
   it("fires update when map_info.xml is in the update list", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = fn();
+    const listener = mock();
     dtm.addListener(listener);
 
     await emit(["map_info.xml"]);
 
-    expect(listener.calls.length).toBe(1);
+    expect(listener.mock.calls.length).toBe(1);
   });
 
   it("fires update when dtm_block.raw.gz is in the update list", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = fn();
+    const listener = mock();
     dtm.addListener(listener);
 
     await emit(["dtm_block.raw.gz"]);
 
-    expect(listener.calls.length).toBe(1);
+    expect(listener.mock.calls.length).toBe(1);
   });
 
   it("does not fire update for unrelated file changes", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = fn();
+    const listener = mock();
     dtm.addListener(listener);
 
     await emit(["biomes.png", "prefabs.xml"]);
 
-    expect(listener.calls.length).toBe(0);
+    expect(listener.mock.calls.length).toBe(0);
   });
 });
 

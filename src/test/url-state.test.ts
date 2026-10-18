@@ -1,7 +1,6 @@
-// deno-lint-ignore-file no-non-null-assertion
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { UrlState } from "../lib/url-state.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 /**
  * Minimal stand-in for HTMLInputElement. Only implements the surface

@@ -11,9 +11,7 @@ import {
   MATCHED_BLOCKS_LIMIT,
   PrefabFilter,
 } from "../worker/lib/prefab-filter.ts";
-import { expect } from "@std/expect";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { stub } from "@std/testing/mock";
+import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
 
 /**
  * Stubs globalThis.fetch (which LabelHolder.fetchJson hits with URLs like
@@ -21,11 +19,11 @@ import { stub } from "@std/testing/mock";
  * can run end-to-end without touching the network.
  */
 function stubFetch(map: Record<string, unknown>) {
-  return stub(
-    globalThis,
-    "fetch",
-    ((input: string | URL | Request): Promise<Response> => {
-      const url = typeof input === "string"
+  return spyOn(globalThis, "fetch").mockImplementation(((
+    input: string | URL | Request,
+  ): Promise<Response> => {
+    const url =
+      typeof input === "string"
         ? input
         : input instanceof URL
         ? input.toString()
@@ -66,7 +64,7 @@ interface Captured {
   headers: number;
 }
 
-const fetchStubs: { restore: () => void }[] = [];
+const fetchStubs: { mockRestore: () => void }[] = [];
 
 describe("PrefabFilter", () => {
   beforeEach(() => {
@@ -79,7 +77,7 @@ describe("PrefabFilter", () => {
     );
   });
   afterEach(() => {
-    while (fetchStubs.length) fetchStubs.pop()?.restore();
+    while (fetchStubs.length) fetchStubs.pop()?.mockRestore();
   });
 
   const prefabs: Prefab[] = [
@@ -262,7 +260,7 @@ describe("PrefabFilter", () => {
     await settle(f, slot);
     expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
 
-    while (fetchStubs.length) fetchStubs.pop()?.restore();
+    while (fetchStubs.length) fetchStubs.pop()?.mockRestore();
     fetchStubs.push(
       stubFetch({
         "japanese/prefabs.json": { house_01: "家", trader_01: "商人" },

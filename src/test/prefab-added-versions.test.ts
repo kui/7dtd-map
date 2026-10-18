@@ -1,6 +1,5 @@
 import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 describe("latestAddedVersion", () => {
   it("throws for an empty map", () => {

@@ -1,6 +1,5 @@
 import * as path from "node:path";
-import { expandGlob } from "@std/fs/expand-glob";
-import { vanillaDir } from "./utils.ts";
+import { globFiles, vanillaDir } from "./utils.ts";
 
 // INVARIANT: longer suffixes must precede shorter ones so that stripping picks the most specific match (e.g. `.blocks.nim` before `.nim`).
 const PREFAB_SUFFIXES = [".blocks.nim", ".tts", ".xml", ".jpg"] as const;
@@ -15,8 +14,7 @@ function isIgnoredPrefabXml(p: string): boolean {
 }
 
 export async function listPrefabXmlPaths(): Promise<string[]> {
-  const globPath = vanillaDir("Data", "Prefabs", "*", "*.xml");
-  const xmls = await Array.fromAsync(expandGlob(globPath), (e) => e.path);
+  const xmls = await globFiles(vanillaDir("Data", "Prefabs"), "*/*.xml");
   return xmls.filter((p) => !isIgnoredPrefabXml(p));
 }
 

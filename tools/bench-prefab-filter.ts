@@ -1,8 +1,8 @@
 /**
  * Phase-level CPU benchmark of the block-name matching pipeline in
  * `src/worker/lib/prefab-filter.ts` (`#matchByBlockName` equivalent).
- * Runs directly under Deno so no browser or dev server is needed.
  */
+import { readFile } from "node:fs/promises";
 import {
   matchAndHighlight,
   MATCHED_BLOCKS_LIMIT,
@@ -17,7 +17,7 @@ async function readJson(relative: string): Promise<unknown> {
   const url = new URL(relative, PUBLIC);
   let text: string;
   try {
-    text = await Deno.readTextFile(url);
+    text = await readFile(url, "utf8");
   } catch (e) {
     throw new Error(`Cannot read ${url.pathname}: ${String(e)}`);
   }

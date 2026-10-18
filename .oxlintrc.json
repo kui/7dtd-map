@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "eslint/default-param-last": "error",
+    "eslint/eqeqeq": "error",
+    "eslint/no-eval": "error",
+    "eslint/no-self-compare": "error",
+    "eslint/no-throw-literal": "error",
+    "eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-asserted-optional-chain": "error",
+    "typescript/no-non-null-assertion": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/test/**", "tools/test/**"],
+      "rules": {
+        "typescript/await-thenable": "off"
+      }
+    }
+  ],
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": ["public/**", "tools/vanilla/**"]
+}

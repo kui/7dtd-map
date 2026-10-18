@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import {
   handleMain,
@@ -33,9 +34,9 @@ async function main() {
 
   let totalAdded = 0;
   for (let i = 1; i < VERSIONS.length; i++) {
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { version, ref } = VERSIONS[i]!;
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const previousRef = VERSIONS[i - 1]!.ref;
 
     const previousNames = await readIndexJsonAt(previousRef);
@@ -71,14 +72,12 @@ async function main() {
 }
 
 async function readIndexJsonAt(ref: string): Promise<Set<string>> {
-  const command = new Deno.Command("git", {
-    args: ["show", `${ref}:${INDEX_JSON_PATH}`],
-    cwd: projectRoot(),
-    stdout: "piped",
-    stderr: "piped",
-  });
-  const { code, stdout, stderr } = await command.output();
-  if (code !== 0) {
+  const { exitCode, stdout, stderr } =
+    await Bun.$`git show ${`${ref}:${INDEX_JSON_PATH}`}`
+      .cwd(projectRoot())
+      .quiet()
+      .nothrow();
+  if (exitCode !== 0) {
     throw new Error(
       `git show ${ref}:${INDEX_JSON_PATH} failed: ${
         new TextDecoder().decode(stderr)
@@ -100,9 +99,9 @@ async function readExistingOutput(
 ): Promise<{ [prefabName: string]: string }> {
   let text: string;
   try {
-    text = await Deno.readTextFile(outputPath);
+    text = await readFile(outputPath, "utf8");
   } catch (e) {
-    if (e instanceof Deno.errors.NotFound) return {};
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {};
     throw e;
   }
 

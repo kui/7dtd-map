@@ -1,76 +1,35 @@
 {
-  "lsp": {
-    "deno": {
-      "settings": {
-        "deno": {
-          "enable": true,
-          "enablePaths": ["src", "tools", "lib", "e2e"]
-        }
-      }
-    },
-    "json-language-server": {
-      "settings": {
-        "json": {
-          "schemas": [
-            {
-              "fileMatch": ["deno.json", "deno.jsonc"],
-              "url": "https://raw.githubusercontent.com/denoland/deno/refs/heads/main/cli/schemas/config-file.v1.json"
-            }
-          ]
-        }
-      }
-    }
-  },
   "languages": {
     "JavaScript": {
-      "language_servers": [
-        "deno",
-        "!typescript-language-server",
-        "!vtsls",
-        "!eslint"
-      ],
-      "formatter": "language_server"
-    },
-    "TypeScript": {
-      "language_servers": [
-        "deno",
-        "ast-grep",
-        "!typescript-language-server",
-        "!vtsls",
-        "!eslint"
-      ],
-      "formatter": "language_server"
-    },
-    "TSX": {
-      "language_servers": [
-        "deno",
-        "!typescript-language-server",
-        "!vtsls",
-        "!eslint"
-      ],
-      "formatter": "language_server"
-    },
-    "HTML": {
       "formatter": {
         "external": {
-          "command": "deno",
-          "arguments": ["fmt", "--ext", "html", "-"]
+          "command": "node_modules/.bin/oxfmt",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "TypeScript": {
+      "language_servers": ["...", "ast-grep"],
+      "formatter": {
+        "external": {
+          "command": "node_modules/.bin/oxfmt",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
         }
       }
     },
     "CSS": {
       "formatter": {
         "external": {
-          "command": "deno",
-          "arguments": ["fmt", "--ext", "css", "-"]
+          "command": "node_modules/.bin/oxfmt",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
         }
       }
     },
     "YAML": {
       "formatter": {
         "external": {
-          "command": "deno",
-          "arguments": ["fmt", "--ext", "yaml", "-"]
+          "command": "node_modules/.bin/oxfmt",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
         }
       }
     }

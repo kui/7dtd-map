@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "lib": [
-      "deno.ns",
-      "deno.shared_globals",
-    ],
-  },
-}

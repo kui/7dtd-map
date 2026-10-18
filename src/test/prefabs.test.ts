@@ -3,8 +3,7 @@ import {
   decorationToPrefab,
   type DifficultyIndex,
 } from "../lib/prefabs.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 /**
  * Stand-in for a `<decoration>` element. `decorationToPrefab` only calls

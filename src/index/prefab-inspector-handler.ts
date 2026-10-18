@@ -90,7 +90,7 @@ export class PrefabInspectorHandler {
     for (const name of prefabIndex) {
       const difficulty = difficulties[name] ?? 0;
       // SAFETY: countsPerDifficulty is built with length 6, so an out-of-range difficulty would raise before this dereference.
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const counts = countsPerDifficulty[difficulty]!;
       counts.defined++;
       totalCounts.defined++;
@@ -107,7 +107,7 @@ export class PrefabInspectorHandler {
     for (let i = 0; i < 6; i++) {
       assertDifficultyIndex(i);
       const countDoms = this.#doms.detailCounts[i];
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const counts = countsPerDifficulty[i]!;
       countDoms.inMap.textContent = counts.inMap.toString();
       countDoms.defined.textContent = counts.defined.toString();

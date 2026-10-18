@@ -1,13 +1,12 @@
 import process from "node:process";
 import { program } from "../lib/utils.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 describe("program", () => {
   it("returns the basename of process.argv[1]", () => {
     const saved = process.argv;
     try {
-      process.argv = [saved[0] ?? "deno", "/tmp/foo.ts"];
+      process.argv = [saved[0] ?? "bun", "/tmp/foo.ts"];
       expect(program()).toBe("foo.ts");
     } finally {
       process.argv = saved;
@@ -17,7 +16,7 @@ describe("program", () => {
   it("throws a diagnostic error when process.argv[1] is missing", () => {
     const saved = process.argv;
     try {
-      process.argv = [saved[0] ?? "deno"];
+      process.argv = [saved[0] ?? "bun"];
       expect(() => program()).toThrow("Unexpected process.argv:");
     } finally {
       process.argv = saved;

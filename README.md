@@ -9,7 +9,7 @@ Map renderer for 7 Day to Die.
 Linux, macOS, and Windows are supported.
 
 1. Point the project at your installed copy of the game by creating a
-   `tools/vanilla` link at the project root. The path is wired into `deno task`
+   `tools/vanilla` link at the project root. The path is wired into wireit
    input-based caching, so it must be a static project-local path — not a
    runtime config file. Pick the command for your OS:
 
@@ -38,26 +38,27 @@ Linux, macOS, and Windows are supported.
      New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
      ```
 
-2. Execute in your terminal:
+2. Install dependencies and build:
 
    ```
-   deno task build
+   bun install
+   bun run build
    ```
 
-   On a second run the tasks declared in `deno.jsonc` skip themselves
-   (`cached, inputs unchanged`) when neither the source TS nor the matched game
-   files have changed.
+   On a second run the wireit scripts declared in `package.json` skip
+   themselves when neither the source TS nor the matched game files have
+   changed. Wireit keeps its state and output cache in `.wireit/`.
 
 ## Code lint
 
 ```
-deno task fix
+bun run fix
 ```
 
 ## Serve pages for development
 
 ```
-deno task serve
+bun run serve
 ```
 
 Note: You need to use HTTPS for development or access it using "localhost"

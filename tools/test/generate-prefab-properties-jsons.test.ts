@@ -1,6 +1,5 @@
 import { extractMeshSizes } from "../generate-prefab-properties-jsons.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 function prefab(props: Record<string, string>) {
   return Object.entries(props).map(([name, value]) => ({ name, value }));

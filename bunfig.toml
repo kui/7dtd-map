@@ -1,0 +1,10 @@
+[install.scopes]
+"@jsr" = "https://npm.jsr.io"
+
+[test]
+pathIgnorePatterns = [
+  "e2e/**",
+  "public/**",
+  "tools/vanilla/**",
+  "node_modules/**",
+]

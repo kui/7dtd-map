@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { parse as parseXml } from "@libs/xml";
 import { vanillaDir } from "../utils.ts";
 
@@ -35,7 +36,7 @@ function isRawMaterialsXml(value: unknown): value is RawMaterialsXml {
 export async function loadMaterials(
   materialsXmlFileName: string = MATERIALS_XML,
 ): Promise<Materials> {
-  const parsed = parseXml(await Deno.readTextFile(materialsXmlFileName));
+  const parsed = parseXml(await readFile(materialsXmlFileName, "utf8"));
   if (!isRawMaterialsXml(parsed)) {
     throw new Error(`Unexpected structure in ${materialsXmlFileName}`);
   }

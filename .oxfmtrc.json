@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "public/old/**",
+    "public/maps/**",
+    "public/**/*.svg",
+    "public/**/*.js",
+    "public/**/*.json",
+    "public/prefabs/**",
+    "public/*.html",
+    "bun.lock"
+  ]
+}

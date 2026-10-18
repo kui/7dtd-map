@@ -288,7 +288,7 @@ export function buildSleeperVolumes(
     }
     groups.push({
       // SAFETY: index i is validated because the preceding countMin/countMax parse already checks i+1 and i+2.
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       group: groupsRaw[i]!,
       count: [countMin, countMax] as [number, number],
     });

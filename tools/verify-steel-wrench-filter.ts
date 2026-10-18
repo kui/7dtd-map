@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { handleMain } from "./lib/utils.ts";
 import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
 import { loadMaterials } from "./lib/xmls/materials-xml.ts";
@@ -25,8 +26,9 @@ async function main() {
     filtered.add(harvest.blockName);
   }
 
-  const indexHtml = await Deno.readTextFile(
+  const indexHtml = await readFile(
     new URL("../public/index.html", import.meta.url),
+    "utf8",
   );
   const m = indexHtml.match(
     /data-input-block-filter="([^"]+)"[^>]*>\s*\n?\s*Steel with Wrench/,

@@ -45,7 +45,7 @@ export function buildPrefabBoxes(
   const scale = new three.Vector3();
   const quaternion = new three.Quaternion();
   for (let i = 0; i < placements.length; i++) {
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const p = placements[i]!;
     position.set(p.centerX, (p.bottomY + p.topY) / 2, p.centerZ);
     scale.set(p.width, Math.max(p.topY - p.bottomY, 1e-6), p.depth);

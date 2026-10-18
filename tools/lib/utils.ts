@@ -14,11 +14,21 @@ export function publishDir(...pathList: string[]): string {
 
 /**
  * Resolves a project-relative path under `tools/vanilla`. Must stay a
- * static project-relative path because `deno task` input-based caching
- * needs to express it as a glob in `deno.jsonc:files`.
+ * static project-relative path because wireit input-based caching
+ * needs to express it as a glob in `package.json` `wireit.*.files`.
  */
 export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);
+}
+
+export async function globFiles(
+  root: string,
+  pattern: string,
+): Promise<string[]> {
+  const matches = await Array.fromAsync(
+    fs.promises.glob(pattern, { cwd: root }),
+  );
+  return matches.sort().map((p) => path.join(root, p));
 }
 
 export function requireNonnull<T>(
@@ -158,6 +168,7 @@ export async function throttleAll<T>(
   tasks: (() => Promise<T>)[],
   maxConcurrency: number,
 ): Promise<T[]> {
+  // eslint-disable-next-line unicorn/no-new-array
   const results: T[] = new Array(tasks.length);
   let index = 0;
 
@@ -165,7 +176,7 @@ export async function throttleAll<T>(
     while (true) {
       const currentIndex = index++;
       if (currentIndex >= tasks.length) break;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       results[currentIndex] = await tasks[currentIndex]!();
     }
   }

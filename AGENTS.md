@@ -14,11 +14,12 @@ repository. Agents must read and follow these rules closely.
      example, when an agent is instructed in Japanese to "open an issue", the
      issue itself must still be filed in English.
 
-2. **Deno Version Management**
-   - **Never run `deno upgrade`** in this project.
-   - `deno` is managed by `mise` (see `mise.toml`).
-   - To update Deno, modify `mise.toml` and run `mise install` instead.
-   - Running `deno upgrade` directly can lead to version mismatches and
+2. **Bun Version Management**
+   - **Never run `bun upgrade`** in this project.
+   - `bun` is managed by `mise` (see `mise.toml`).
+   - To update Bun, modify `mise.toml` and run `mise install` instead. Keep
+     the `@types/bun` version in `package.json` in sync with it.
+   - Running `bun upgrade` directly can lead to version mismatches and
      unexpected behavior with mise.
 
 3. **Fail Fast in `tools/`**

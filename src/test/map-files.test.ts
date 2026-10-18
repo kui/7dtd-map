@@ -1,7 +1,6 @@
 import { decode, encode } from "fast-png";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
 import { Processor, type WorldFileName } from "../../lib/map-files.ts";
+import { describe, expect, it } from "bun:test";
 
 async function processBytes(
   name: WorldFileName,

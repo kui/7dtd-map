@@ -1,6 +1,5 @@
 import { matchAndHighlight } from "../worker/lib/prefab-filter.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "bun:test";
 
 describe("matchAndHighlight", () => {
   it("returns null when nothing matches", () => {

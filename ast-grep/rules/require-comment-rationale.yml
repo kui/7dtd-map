@@ -9,6 +9,6 @@ rule:
       - regex: '^(//|/\*)\s*(\*/)?$'
       - regex: '^/\*\*'
       - regex: '^///\s*<(reference|amd-)'
-      - regex: "deno-lint-ignore|deno-lint-disable|deno-fmt-ignore|deno-coverage-ignore"
+      - regex: "eslint-disable|eslint-enable|oxlint-disable|oxlint-enable|prettier-ignore|oxfmt-ignore"
       - regex: "@ts-expect-error|@ts-ignore|@ts-nocheck|@ts-check"
       - regex: "WHY:|SAFETY:|INVARIANT:|HACK:|TODO|FIXME"

@@ -1,7 +1,6 @@
 import { LabelHandler } from "../lib/label-handler.ts";
 import { LANGUAGES } from "../lib/labels.ts";
-import { expect } from "@std/expect";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 
 /**
  * Minimal <option> stand-in for LabelHandler#buildSelectOptions and the
@@ -87,7 +86,6 @@ describe("LabelHandler", () => {
     saved = {};
     storage = new FakeLocalStorage();
     setGlobal("localStorage", storage);
-    // WHY: no DOM in deno test, so a tiny document.createElement returning FakeOption for "option" (the only tag LabelHandler creates) is enough.
     setGlobal("document", {
       createElement: (tag: string) => {
         if (tag === "option") return new FakeOption();

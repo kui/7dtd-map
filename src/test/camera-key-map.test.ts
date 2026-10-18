@@ -1,9 +1,8 @@
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
 import {
   type CameraKeyAction,
   mapCameraKey,
 } from "../index/terrain-viewer/camera-controller.ts";
+import { describe, expect, it } from "bun:test";
 
 function ev(
   code: string,

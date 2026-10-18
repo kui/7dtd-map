@@ -52,13 +52,14 @@ export class PrefabHitIndex {
 
     const n = tmp.length;
     this.source = all;
+    // eslint-disable-next-line unicorn/no-new-array
     this.prefabs = new Array<Prefab>(n);
     this.x0 = new Int32Array(n);
     this.z0 = new Int32Array(n);
     this.w = new Int32Array(n);
     this.d = new Int32Array(n);
     for (let i = 0; i < n; i++) {
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const e = tmp[i]!;
       this.prefabs[i] = e.prefab;
       this.x0[i] = e.x0;
@@ -73,15 +74,15 @@ export class PrefabHitIndex {
     const { x0, z0, w, d, prefabs } = this;
     const n = prefabs.length;
     for (let i = 0; i < n; i++) {
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const xi = x0[i]!;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (x < xi || x >= xi + w[i]!) continue;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const zi = z0[i]!;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (z < zi || z >= zi + d[i]!) continue;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return prefabs[i]!;
     }
     return null;

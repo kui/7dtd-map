@@ -1,7 +1,6 @@
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
 import type { DecodedPng } from "fast-png";
 import { formatPixelKey, statDecodedPixels } from "../print-png-pixel-stat.ts";
+import { describe, expect, it } from "bun:test";
 
 function fakeDecoded(
   data: Uint8Array,

@@ -1,6 +1,5 @@
 import { FileProgressionIndicator } from "../index/dialog-handler.ts";
-import { expect } from "@std/expect";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 
 /**
  * Minimal fakes for FileProgressionIndicator. The class only touches
