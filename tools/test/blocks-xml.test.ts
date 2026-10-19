@@ -1,5 +1,5 @@
 import { parseCount } from "../lib/xmls/blocks-xml.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("parseCount", () => {
   it("parses a single number as [n, n]", () => {

@@ -1,5 +1,5 @@
 import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("latestAddedVersion", () => {
   it("throws for an empty map", () => {

@@ -1,4 +1,4 @@
-import { FileHandler } from "./file-handler.ts";
+import type { FileHandler } from "./file-handler.ts";
 import * as storage from "../lib/storage.ts";
 import { closeOnBackdropClick } from "../lib/ui/dialog-backdrop-close.ts";
 import { escapeHtml } from "../lib/utils.ts";

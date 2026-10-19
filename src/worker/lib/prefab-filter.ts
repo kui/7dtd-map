@@ -11,7 +11,8 @@ import type {
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
-import { LabelHolder, Language } from "../../lib/labels.ts";
+import type { Language } from "../../lib/labels.ts";
+import { LabelHolder } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
 import { escapeHtml, printError, sleep } from "../../lib/utils.ts";

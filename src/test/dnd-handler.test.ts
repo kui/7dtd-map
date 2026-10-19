@@ -1,5 +1,5 @@
 import { createDragCounter } from "../index/dnd-handler.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("createDragCounter", () => {
   it("returns true on the first enter and matching final leave", () => {

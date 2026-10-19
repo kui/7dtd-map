@@ -1,6 +1,7 @@
 import process from "node:process";
 import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
-import { loadLoot, LootTable } from "./lib/xmls/loot-xml.ts";
+import type { LootTable } from "./lib/xmls/loot-xml.ts";
+import { loadLoot } from "./lib/xmls/loot-xml.ts";
 import { handleMain, program } from "./lib/utils.ts";
 
 const CMD = program();

@@ -1,9 +1,6 @@
-import {
-  buildSleeperVolumes,
-  escapeHtml,
-  PrefabProperty,
-} from "../lib/prefab-html.ts";
-import { describe, expect, it } from "bun:test";
+import type { PrefabProperty } from "../lib/prefab-html.ts";
+import { buildSleeperVolumes, escapeHtml } from "../lib/prefab-html.ts";
+import { describe, expect, it } from "vitest";
 
 describe("escapeHtml", () => {
   it("escapes <, >, and & without double-escaping the ampersand", () => {

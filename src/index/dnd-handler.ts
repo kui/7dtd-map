@@ -1,5 +1,5 @@
 import * as events from "../lib/events.ts";
-import { DialogHandler } from "./dialog-handler.ts";
+import type { DialogHandler } from "./dialog-handler.ts";
 
 export interface EventMessage {
   files: FileSystemEntry[];

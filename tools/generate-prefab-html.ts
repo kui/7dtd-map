@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
+import type { Label, LabelId } from "./lib/label-parser.ts";
+import { parseLabel } from "./lib/label-parser.ts";
 import { prefabHtml } from "./lib/prefab-html.ts";
 import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {

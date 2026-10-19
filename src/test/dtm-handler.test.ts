@@ -4,7 +4,7 @@ import type { MapFileName } from "../../lib/map-files.ts";
 import * as events from "../lib/events.ts";
 import { gameMapSize } from "../lib/utils.ts";
 import * as three from "three";
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 
 type FileHandlerEventMessage = MapFileName[];
 
@@ -29,7 +29,7 @@ describe("DtmHandler listeners", () => {
   it("fires update when map_info.xml is in the update list", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = mock();
+    const listener = vi.fn();
     dtm.addListener(listener);
 
     await emit(["map_info.xml"]);
@@ -40,7 +40,7 @@ describe("DtmHandler listeners", () => {
   it("fires update when dtm_block.raw.gz is in the update list", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = mock();
+    const listener = vi.fn();
     dtm.addListener(listener);
 
     await emit(["dtm_block.raw.gz"]);
@@ -51,7 +51,7 @@ describe("DtmHandler listeners", () => {
   it("does not fire update for unrelated file changes", async () => {
     const { fileHandler, emit } = createStubFileHandler();
     const dtm = new DtmHandler(dummyWorkerFactory, fileHandler);
-    const listener = mock();
+    const listener = vi.fn();
     dtm.addListener(listener);
 
     await emit(["biomes.png", "prefabs.xml"]);

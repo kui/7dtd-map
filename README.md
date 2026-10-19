@@ -41,8 +41,8 @@ Linux, macOS, and Windows are supported.
 2. Install dependencies and build:
 
    ```
-   bun install
-   bun run build
+   npm ci
+   npm run build
    ```
 
    On a second run the wireit scripts declared in `package.json` skip
@@ -54,13 +54,13 @@ Linux, macOS, and Windows are supported.
 ## Code lint
 
 ```
-bun run fix
+npm run fix
 ```
 
 ## Serve pages for development
 
 ```
-bun run serve
+npm run serve
 ```
 
 Note: You need to use HTTPS for development or access it using "localhost"

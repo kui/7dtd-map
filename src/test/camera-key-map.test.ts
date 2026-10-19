@@ -2,7 +2,7 @@ import {
   type CameraKeyAction,
   mapCameraKey,
 } from "../index/terrain-viewer/camera-controller.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 function ev(
   code: string,

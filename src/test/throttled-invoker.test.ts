@@ -1,12 +1,12 @@
 import { throttledInvoker } from "../lib/throttled-invoker.ts";
 import { printError, sleep } from "../lib/utils.ts";
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { useFakeTime } from "./fake-time.ts";
 
 describe("throttledInvoker", () => {
   it("delays the first run by at least 10ms so rapid successive calls coalesce", async () => {
     using time = useFakeTime(0);
-    const mockFn = mock();
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(() => {
       mockFn();
     }, 100);
@@ -23,7 +23,7 @@ describe("throttledInvoker", () => {
 
   it("coalesces calls arriving during execution into one trailing run", async () => {
     using time = useFakeTime(0);
-    const mockFn = mock();
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(async () => {
       mockFn();
       await sleep(100);
@@ -47,7 +47,7 @@ describe("throttledInvoker", () => {
 
   it("does not schedule an extra run for calls during the throttle wait", async () => {
     using time = useFakeTime(0);
-    const mockFn = mock();
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(() => {
       mockFn();
     }, 100);

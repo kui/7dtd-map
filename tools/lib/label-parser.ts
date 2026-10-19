@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
-import { parse as csvParse, Parser } from "csv-parse";
+import type { Parser } from "csv-parse";
+import { parse as csvParse } from "csv-parse";
 
 export const LANGUAGES = [
   "english",

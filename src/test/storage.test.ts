@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { MapDir } from "../lib/storage.ts";
-import { describe, expect, it, spyOn } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 
 class FakeWritable {
   parts: (ArrayBuffer | Blob)[] = [];
@@ -133,7 +133,7 @@ describe("MapDir", () => {
   it("createWritable() returns the same stream object that the handle gave us", async () => {
     const { dir, fake } = buildMapDir();
     const handle = await fake.getFileHandle("map_info.xml", { create: true });
-    const createSpy = spyOn(handle, "createWritable");
+    const createSpy = vi.spyOn(handle, "createWritable");
     const w = await dir.createWritable("map_info.xml");
     expect(w).toBeDefined();
     expect(createSpy.mock.calls.length).toBe(1);

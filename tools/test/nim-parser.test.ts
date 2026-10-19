@@ -3,7 +3,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 import { parseNim } from "../lib/nim-parser.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 async function writeTempNim(bytes: Buffer): Promise<string> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "nim-parser-test-"));

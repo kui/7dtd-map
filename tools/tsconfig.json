@@ -2,7 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["esnext"],
-    "types": ["bun"]
+    "types": ["node"]
   },
   "include": ["**/*.ts"],
   "exclude": ["test", "vanilla"]

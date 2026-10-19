@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { Label, Language, LANGUAGES, parseLabel } from "./lib/label-parser.ts";
+import type { Label, Language } from "./lib/label-parser.ts";
+import { LANGUAGES, parseLabel } from "./lib/label-parser.ts";
 import {
   buildArrayMapByEntries,
   handleMain,

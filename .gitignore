@@ -14,3 +14,4 @@
 /playwright/.cache
 .playwright-mcp
 /.wireit
+*.tsbuildinfo

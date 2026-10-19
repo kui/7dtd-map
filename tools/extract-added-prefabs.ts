@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import {
@@ -39,8 +40,8 @@ async function main() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const previousRef = VERSIONS[i - 1]!.ref;
 
-    const previousNames = await readIndexJsonAt(previousRef);
-    const currentNames = await readIndexJsonAt(ref);
+    const previousNames = readIndexJsonAt(previousRef);
+    const currentNames = readIndexJsonAt(ref);
     const addedNames = [...currentNames].filter(
       (name) => !previousNames.has(name),
     );
@@ -71,21 +72,17 @@ async function main() {
   return 0;
 }
 
-async function readIndexJsonAt(ref: string): Promise<Set<string>> {
-  const { exitCode, stdout, stderr } =
-    await Bun.$`git show ${`${ref}:${INDEX_JSON_PATH}`}`
-      .cwd(projectRoot())
-      .quiet()
-      .nothrow();
-  if (exitCode !== 0) {
-    throw new Error(
-      `git show ${ref}:${INDEX_JSON_PATH} failed: ${new TextDecoder().decode(
-        stderr,
-      )}`,
-    );
+function readIndexJsonAt(ref: string): Set<string> {
+  const { status, stdout, stderr } = spawnSync(
+    "git",
+    ["show", `${ref}:${INDEX_JSON_PATH}`],
+    { cwd: projectRoot(), encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
+  );
+  if (status !== 0) {
+    throw new Error(`git show ${ref}:${INDEX_JSON_PATH} failed: ${stderr}`);
   }
 
-  const json: unknown = JSON.parse(new TextDecoder().decode(stdout));
+  const json: unknown = JSON.parse(stdout);
   if (!Array.isArray(json) || !json.every((v) => typeof v === "string")) {
     throw new Error(`${INDEX_JSON_PATH} at ${ref} is not an array of strings`);
   }

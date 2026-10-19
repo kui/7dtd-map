@@ -1,5 +1,5 @@
 import { LabelHandler } from "../lib/label-handler.ts";
-import { Labels } from "../lib/labels.ts";
+import type { Labels } from "../lib/labels.ts";
 import { component } from "../lib/dom-utils.ts";
 import { printError } from "../lib/utils.ts";
 

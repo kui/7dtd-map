@@ -1,5 +1,5 @@
 import { Labels, resolveLanguage } from "../lib/labels.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("resolveLanguage", () => {
   it("returns english for empty list", () => {

@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import { ByteReader } from "./byte-reader.ts";
-import { BlockId } from "./nim-parser.ts";
+import type { BlockId } from "./nim-parser.ts";
 
 const KNOWN_VERSIONS = [13, 15, 16, 17, 18, 19];
 const BLOCK_ID_BIT_MASK = 0b0111111111111111;

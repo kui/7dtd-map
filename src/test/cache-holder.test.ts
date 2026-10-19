@@ -1,13 +1,13 @@
 import { CacheHolder } from "../lib/cache-holder.ts";
 import { sleep } from "../lib/utils.ts";
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 import { useFakeTime } from "./fake-time.ts";
 
 describe("CacheHolder.get()", () => {
   it("should cache and invalidate", async () => {
     using time = useFakeTime(0);
-    const fetcher = mock(() => Promise.resolve("value"));
-    const deconstructor = mock((s: string) => s);
+    const fetcher = vi.fn(() => Promise.resolve("value"));
+    const deconstructor = vi.fn((s: string) => s);
     const age = 10000;
     const holder = new CacheHolder<string>(fetcher, deconstructor, age);
     const first = holder.get();
@@ -34,10 +34,10 @@ describe("CacheHolder.get()", () => {
   });
 
   it("should raise error if fetcher throws", async () => {
-    const fetcher = mock(() => {
+    const fetcher = vi.fn(() => {
       throw new Error("error");
     });
-    const deconstructor = mock((s: string) => s);
+    const deconstructor = vi.fn((s: string) => s);
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     await expect(holder.get()).rejects.toThrow("error");
     expect(fetcher.mock.calls.length).toBe(1);
@@ -46,8 +46,8 @@ describe("CacheHolder.get()", () => {
   });
 
   it("should not call deconstructor when invalidating before any get", () => {
-    const fetcher = mock(() => Promise.resolve("value"));
-    const deconstructor = mock((s: string) => s);
+    const fetcher = vi.fn(() => Promise.resolve("value"));
+    const deconstructor = vi.fn((s: string) => s);
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     holder.invalidate();
     expect(fetcher.mock.calls.length).toBe(0);
@@ -58,11 +58,11 @@ describe("CacheHolder.get()", () => {
   it("should refetch if the fetching is invalidated", async () => {
     using time = useFakeTime(0);
     const sleepTime = 300;
-    const fetcher = mock(async () => {
+    const fetcher = vi.fn(async () => {
       await sleep(sleepTime);
       return Promise.resolve("value");
     });
-    const deconstructor = mock((s: string) => s);
+    const deconstructor = vi.fn((s: string) => s);
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     const first = holder.get();
 
@@ -84,14 +84,14 @@ describe("CacheHolder.get()", () => {
     using time = useFakeTime(0);
     const sleepTime = 300;
     let counter = 0;
-    const fetcher = mock(async () => {
+    const fetcher = vi.fn(async () => {
       const id = ++counter;
       await sleep(sleepTime);
       // WHY: invalidate mid-fetch so the first result is discarded once it resolves.
       if (id === 1) holder.invalidate();
       return `value-${id.toString()}`;
     });
-    const deconstructor = mock((_s: string) => {});
+    const deconstructor = vi.fn((_s: string) => {});
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     const first = holder.get();
 
@@ -110,11 +110,11 @@ describe("CacheHolder.get()", () => {
   it("should not abort refetch if deconstructor throws on discarded values", async () => {
     using time = useFakeTime(0);
     const sleepTime = 300;
-    const fetcher = mock(async () => {
+    const fetcher = vi.fn(async () => {
       await sleep(sleepTime);
       return "value";
     });
-    const deconstructor = mock((_s: string) => {
+    const deconstructor = vi.fn((_s: string) => {
       throw new Error("deconstructor failure");
     });
     const holder = new CacheHolder<string>(fetcher, deconstructor);

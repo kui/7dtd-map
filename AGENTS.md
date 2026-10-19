@@ -14,13 +14,12 @@ repository. Agents must read and follow these rules closely.
      example, when an agent is instructed in Japanese to "open an issue", the
      issue itself must still be filed in English.
 
-2. **Bun Version Management**
-   - **Never run `bun upgrade`** in this project.
-   - `bun` is managed by `mise` (see `mise.toml`).
-   - To update Bun, modify `mise.toml` and run `mise install` instead. Keep
-     the `@types/bun` version in `package.json` in sync with it.
-   - Running `bun upgrade` directly can lead to version mismatches and
-     unexpected behavior with mise.
+2. **Node Version Management**
+   - `node` is managed by `mise` (see `mise.toml`). Do not install or switch
+     Node with other version managers.
+   - To update Node, modify `mise.toml` and run `mise install`. Keep the
+     `@types/node` major version and `engines.node` in `package.json` in sync
+     with it.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data files (prefab xmls,

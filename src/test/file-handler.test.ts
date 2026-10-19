@@ -3,7 +3,7 @@ import { MapDir } from "../lib/storage.ts";
 import type { BundledMapHandler } from "../index/bundled-map-handler.ts";
 import type { DialogHandler } from "../index/dialog-handler.ts";
 import type { DndHandler } from "../index/dnd-handler.ts";
-import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 class FakeDirHandle {
   kind = "directory" as const;
@@ -73,7 +73,7 @@ describe("FileHandler.initialize", () => {
 
   it("does not dispatch update when workspace has no map files", async () => {
     const handler = stubFileHandler(fakeWorkspace([]));
-    const listener = mock();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();
@@ -83,7 +83,7 @@ describe("FileHandler.initialize", () => {
 
   it("ignores unrelated files in the workspace", async () => {
     const handler = stubFileHandler(fakeWorkspace(["junk.bin", "notes.txt"]));
-    const listener = mock();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();
@@ -95,7 +95,7 @@ describe("FileHandler.initialize", () => {
     const handler = stubFileHandler(
       fakeWorkspace(["map_info.xml", "biomes.png", "junk.bin"]),
     );
-    const listener = mock();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();

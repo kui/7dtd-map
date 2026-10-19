@@ -1,6 +1,6 @@
 import { LabelHandler } from "../lib/label-handler.ts";
 import { LANGUAGES } from "../lib/labels.ts";
-import { afterEach, beforeEach, describe, expect, it } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 /**
  * Minimal <option> stand-in for LabelHandler#buildSelectOptions and the

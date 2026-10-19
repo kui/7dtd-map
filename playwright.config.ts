@@ -29,7 +29,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `bun run serve:static`,
+    command: `npm run serve:static`,
     url: baseURL,
     timeout: 120_000,
     reuseExistingServer: !CI,

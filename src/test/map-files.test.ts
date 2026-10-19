@@ -1,6 +1,6 @@
 import { decode, encode } from "fast-png";
 import { Processor, type WorldFileName } from "../../lib/map-files.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 async function processBytes(
   name: WorldFileName,

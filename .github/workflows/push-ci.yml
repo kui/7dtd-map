@@ -3,7 +3,7 @@ on: push
 permissions:
   contents: read
 jobs:
-  bun-run-ci:
+  node-run-ci:
     strategy:
       fail-fast: false
       matrix:
@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4
-      - run: bun install --frozen-lockfile
+      - run: npm ci
       - name: Install Playwright system dependencies
         if: runner.os == 'Linux'
-        run: bunx playwright install-deps chromium
-      - run: bun run ci
+        run: npx playwright install-deps chromium
+      - run: npm run ci

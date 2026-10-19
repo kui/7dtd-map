@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 import { parseTts, Tts } from "../lib/tts-parser.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("Tts.getBlockId bounds", () => {
   const dim = { x: 2, y: 3, z: 4 };

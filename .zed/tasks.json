@@ -1,7 +1,7 @@
 [
   {
-    "label": "bun test",
-    "command": "bun test '$ZED_FILE'",
+    "label": "vitest",
+    "command": "npx vitest run '$ZED_FILE'",
     "tags": ["js-test"]
   }
 ]

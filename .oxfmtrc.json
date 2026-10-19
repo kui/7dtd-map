@@ -8,6 +8,6 @@
     "public/**/*.json",
     "public/prefabs/**",
     "public/*.html",
-    "bun.lock"
+    "package-lock.json"
   ]
 }

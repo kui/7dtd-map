@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { UrlState } from "../lib/url-state.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 /**
  * Minimal stand-in for HTMLInputElement. Only implements the surface

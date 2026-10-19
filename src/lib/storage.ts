@@ -1,4 +1,4 @@
-import { MapFileName } from "../../lib/map-files.ts";
+import type { MapFileName } from "../../lib/map-files.ts";
 
 /**
  * Expected directory structure within the Origin Private File System (OPFS).

@@ -38,14 +38,6 @@
     "typescript/no-inferrable-types": "error",
     "typescript/no-namespace": "error"
   },
-  "overrides": [
-    {
-      "files": ["src/test/**", "tools/test/**"],
-      "rules": {
-        "typescript/await-thenable": "off"
-      }
-    }
-  ],
   "env": {
     "builtin": true
   },

@@ -15,6 +15,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": []
+    "types": [],
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   }
 }

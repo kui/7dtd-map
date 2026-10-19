@@ -7,7 +7,7 @@ import {
   requireType,
   strictParseInt,
 } from "../lib/utils.ts";
-import { describe, expect, it, spyOn } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 
 describe("requireNonnull", () => {
   it("returns non-null values unchanged", () => {
@@ -168,8 +168,10 @@ describe("fetchCompleteBlob", () => {
     response: Response,
     fn: () => Promise<void>,
   ): Promise<void> {
-    const s = spyOn(globalThis, "fetch").mockImplementation((() =>
-      Promise.resolve(response)) as unknown as typeof fetch);
+    const s = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation((() =>
+        Promise.resolve(response)) as unknown as typeof fetch);
     try {
       await fn();
     } finally {

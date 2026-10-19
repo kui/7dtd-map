@@ -11,7 +11,7 @@ import {
   MATCHED_BLOCKS_LIMIT,
   PrefabFilter,
 } from "../worker/lib/prefab-filter.ts";
-import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Stubs globalThis.fetch (which LabelHolder.fetchJson hits with URLs like
@@ -19,7 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
  * can run end-to-end without touching the network.
  */
 function stubFetch(map: Record<string, unknown>) {
-  return spyOn(globalThis, "fetch").mockImplementation(((
+  return vi.spyOn(globalThis, "fetch").mockImplementation(((
     input: string | URL | Request,
   ): Promise<Response> => {
     const url =

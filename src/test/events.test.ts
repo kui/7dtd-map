@@ -1,6 +1,6 @@
 import { ListenerManager } from "../lib/events.ts";
 import { MultipleErrors } from "../lib/errors.ts";
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it, vi } from "vitest";
 
 type TestMessage = { value: string };
 
@@ -8,8 +8,8 @@ describe("ListenerManager", () => {
   describe("dispatch", () => {
     it("calls all registered listeners with the message", async () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener1 = mock();
-      const listener2 = mock();
+      const listener1 = vi.fn();
+      const listener2 = vi.fn();
       manager.addListener(listener1);
       manager.addListener(listener2);
       const msg: TestMessage = { value: "test" };
@@ -29,7 +29,7 @@ describe("ListenerManager", () => {
     it("re-throws a single error when one listener throws synchronously", async () => {
       const manager = new ListenerManager<TestMessage>();
       const err = new Error("single sync error");
-      const second = mock();
+      const second = vi.fn();
       manager.addListener(() => {
         throw err;
       });
@@ -75,7 +75,7 @@ describe("ListenerManager", () => {
   describe("removeListener", () => {
     it("does not call the listener after it is removed", async () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener = mock();
+      const listener = vi.fn();
       manager.addListener(listener);
       manager.removeListener(listener);
       await manager.dispatch({ value: "test" });
@@ -84,7 +84,7 @@ describe("ListenerManager", () => {
 
     it("is a no-op when the listener was never added", () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener = mock();
+      const listener = vi.fn();
       expect(() => manager.removeListener(listener)).not.toThrow();
     });
   });

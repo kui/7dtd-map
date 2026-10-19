@@ -6,12 +6,12 @@ import type { BundledMapHandler } from "./bundled-map-handler.ts";
 import type { DialogHandler } from "./dialog-handler.ts";
 import type { DndHandler } from "./dnd-handler.ts";
 
+import type { MapFileName } from "../../lib/map-files.ts";
 import {
   getPreferWorldFileName,
   hasPreferWorldFileNameIn,
   isMapFileName,
   MAP_FILE_NAMES,
-  MapFileName,
   PREFER_WORLD_FILE_NAMES,
 } from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";

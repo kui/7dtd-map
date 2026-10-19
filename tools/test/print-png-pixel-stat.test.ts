@@ -1,6 +1,6 @@
 import type { DecodedPng } from "fast-png";
 import { formatPixelKey, statDecodedPixels } from "../print-png-pixel-stat.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 function fakeDecoded(data: Uint8Array, channels: number): DecodedPng {
   return {

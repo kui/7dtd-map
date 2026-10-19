@@ -1,22 +1,13 @@
-import { jest } from "bun:test";
-
-async function flushMicrotasks() {
-  for (let i = 0; i < 20; i++) await Promise.resolve();
-}
+import { vi } from "vitest";
 
 export function useFakeTime(now: number) {
-  jest.useFakeTimers({ now });
+  vi.useFakeTimers({ now });
   return {
-    // WHY: bun:test has no async tick, so step 1 ms at a time and let awaited continuations run between steps.
     async tickAsync(ms: number) {
-      await flushMicrotasks();
-      for (let i = 0; i < ms; i++) {
-        jest.advanceTimersByTime(1);
-        await flushMicrotasks();
-      }
+      await vi.advanceTimersByTimeAsync(ms);
     },
     [Symbol.dispose]() {
-      jest.useRealTimers();
+      vi.useRealTimers();
     },
   };
 }

@@ -1,5 +1,5 @@
 import { FileProgressionIndicator } from "../index/dialog-handler.ts";
-import { afterEach, beforeEach, describe, expect, it } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 /**
  * Minimal fakes for FileProgressionIndicator. The class only touches

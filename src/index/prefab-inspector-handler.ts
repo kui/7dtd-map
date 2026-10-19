@@ -2,7 +2,7 @@ import type {
   PrefabAddedVersions,
   PrefabDifficulties,
 } from "../types/7dtdmap.ts";
-import { LabelHandler } from "../lib/label-handler.ts";
+import type { LabelHandler } from "../lib/label-handler.ts";
 import { assertDifficultyIndex, loadPrefabsXml } from "../lib/prefabs.ts";
 import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
 import { closeOnBackdropClick } from "../lib/ui/dialog-backdrop-close.ts";

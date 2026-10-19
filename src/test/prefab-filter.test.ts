@@ -1,5 +1,5 @@
 import { matchAndHighlight } from "../worker/lib/prefab-filter.ts";
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 
 describe("matchAndHighlight", () => {
   it("returns null when nothing matches", () => {
