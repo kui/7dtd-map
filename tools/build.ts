@@ -13,6 +13,8 @@ const targets = (
 const outDir = "public";
 
 const commonOpts: esbuild.BuildOptions = {
+  // WHY: keep the type-check tsconfig (strict, target) from changing the shipped bundles; it is not a wireit input of build:ts.
+  tsconfigRaw: {},
   bundle: true,
   sourcemap: true,
   outdir: outDir,

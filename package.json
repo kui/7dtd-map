@@ -84,6 +84,7 @@
       "files": [
         "tools/generate-font-subsets.ts",
         "tools/lib/symbol-chars.ts",
+        "tools/lib/utils.ts",
         "tools/fonts/NotoColorEmoji-COLRv1.ttf",
         "tools/fonts/NotoSansSymbols2-Regular.ttf",
         "src/**/*.ts",
