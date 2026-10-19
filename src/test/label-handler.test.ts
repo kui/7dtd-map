@@ -1,6 +1,6 @@
 import { LabelHandler } from "../lib/label-handler.ts";
 import { LANGUAGES } from "../lib/labels.ts";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Minimal <option> stand-in for LabelHandler#buildSelectOptions and the
@@ -59,41 +59,20 @@ class FakeLocalStorage {
   }
 }
 
-const G = globalThis as unknown as Record<string, unknown>;
-let saved: Record<string, unknown> = {};
 let storage: FakeLocalStorage;
-
-function setGlobal(key: string, value: unknown) {
-  const desc = Object.getOwnPropertyDescriptor(G, key);
-  saved[key] = desc ?? null;
-  Object.defineProperty(G, key, {
-    value,
-    writable: true,
-    configurable: true,
-    enumerable: true,
-  });
-}
-function restoreGlobal(key: string, value: unknown) {
-  if (value === null) {
-    delete G[key];
-  } else {
-    Object.defineProperty(G, key, value as PropertyDescriptor);
-  }
-}
 
 describe("LabelHandler", () => {
   beforeEach(() => {
-    saved = {};
     storage = new FakeLocalStorage();
-    setGlobal("localStorage", storage);
-    setGlobal("document", {
+    vi.stubGlobal("localStorage", storage);
+    vi.stubGlobal("document", {
       createElement: (tag: string) => {
         if (tag === "option") return new FakeOption();
         throw new Error(`Unexpected createElement: ${tag}`);
       },
     });
     // WHY: LabelHolder eagerly kicks off background fetches in its constructor, so fetch must be stubbed before every LabelHandler build.
-    setGlobal("fetch", () =>
+    vi.stubGlobal("fetch", () =>
       Promise.resolve(
         new Response("{}", {
           headers: { "content-type": "application/json" },
@@ -102,8 +81,7 @@ describe("LabelHandler", () => {
     );
   });
   afterEach(() => {
-    for (const [k, v] of Object.entries(saved)) restoreGlobal(k, v);
-    saved = {};
+    vi.unstubAllGlobals();
   });
 
   it("populates the <select> with all supported languages", () => {

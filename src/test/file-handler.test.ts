@@ -62,13 +62,10 @@ function stubFileHandler(workspace: Promise<MapDir>): FileHandler {
 
 describe("FileHandler.initialize", () => {
   beforeAll(() => {
-    Object.defineProperty(globalThis, "localStorage", {
-      value: { getItem: () => null },
-      configurable: true,
-    });
+    vi.stubGlobal("localStorage", { getItem: () => null });
   });
   afterAll(() => {
-    Reflect.deleteProperty(globalThis, "localStorage");
+    vi.unstubAllGlobals();
   });
 
   it("does not dispatch update when workspace has no map files", async () => {
