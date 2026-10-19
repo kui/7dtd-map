@@ -65,8 +65,19 @@ if (args[0] === "serve") {
     port,
     hostname,
     async fetch(req) {
-      let file = path.join(root, decodeURIComponent(new URL(req.url).pathname));
-      if (!file.startsWith(root))
+      let pathname: string;
+      try {
+        pathname = decodeURIComponent(new URL(req.url).pathname);
+      } catch {
+        return new Response("Bad Request", { status: 400 });
+      }
+      let file = path.join(root, pathname);
+      const rel = path.relative(root, file);
+      if (
+        rel === ".." ||
+        rel.startsWith(`..${path.sep}`) ||
+        path.isAbsolute(rel)
+      )
         return new Response("Forbidden", { status: 403 });
       if (file.endsWith(path.sep)) file = path.join(file, "index.html");
       const body = Bun.file(file);
