@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import {
@@ -73,15 +73,12 @@ async function main() {
 }
 
 function readIndexJsonAt(ref: string): Set<string> {
-  const { status, stdout, stderr } = spawnSync(
-    "git",
-    ["show", `${ref}:${INDEX_JSON_PATH}`],
-    { cwd: projectRoot(), encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
-  );
-  if (status !== 0) {
-    throw new Error(`git show ${ref}:${INDEX_JSON_PATH} failed: ${stderr}`);
-  }
-
+  const stdout = execFileSync("git", ["show", `${ref}:${INDEX_JSON_PATH}`], {
+    cwd: projectRoot(),
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
   const json: unknown = JSON.parse(stdout);
   if (!Array.isArray(json) || !json.every((v) => typeof v === "string")) {
     throw new Error(`${INDEX_JSON_PATH} at ${ref} is not an array of strings`);
