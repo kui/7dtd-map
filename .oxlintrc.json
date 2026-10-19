@@ -36,7 +36,12 @@
     "typescript/ban-ts-comment": "error",
     "typescript/no-empty-interface": "error",
     "typescript/no-inferrable-types": "error",
-    "typescript/no-namespace": "error"
+    "typescript/no-namespace": "error",
+    "eslint/no-fallthrough": "error",
+    "eslint/no-regex-spaces": "error",
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-unsafe-function-type": "error"
   },
   "env": {
     "builtin": true
