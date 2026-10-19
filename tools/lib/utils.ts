@@ -169,8 +169,7 @@ export async function throttleAll<T>(
   tasks: (() => Promise<T>)[],
   maxConcurrency: number,
 ): Promise<T[]> {
-  // eslint-disable-next-line unicorn/no-new-array
-  const results: T[] = new Array(tasks.length);
+  const results: T[] = [];
   let index = 0;
 
   async function worker(): Promise<void> {

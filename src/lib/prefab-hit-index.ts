@@ -49,8 +49,7 @@ export class PrefabHitIndex {
 
     const n = tmp.length;
     this.source = all;
-    // eslint-disable-next-line unicorn/no-new-array
-    this.prefabs = new Array<Prefab>(n);
+    this.prefabs = tmp.map((e) => e.prefab);
     this.x0 = new Int32Array(n);
     this.z0 = new Int32Array(n);
     this.w = new Int32Array(n);
@@ -58,7 +57,6 @@ export class PrefabHitIndex {
     for (let i = 0; i < n; i++) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const e = tmp[i]!;
-      this.prefabs[i] = e.prefab;
       this.x0[i] = e.x0;
       this.z0[i] = e.z0;
       this.w[i] = e.w;
