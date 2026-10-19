@@ -1,3 +1,7 @@
 [tools]
 bun = "1.4.3"
+node = "24"
 ast-grep = "0.51"
+
+[env]
+WIREIT_CACHE = "none"

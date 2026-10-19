@@ -47,7 +47,9 @@ Linux, macOS, and Windows are supported.
 
    On a second run the wireit scripts declared in `package.json` skip
    themselves when neither the source TS nor the matched game files have
-   changed. Wireit keeps its state and output cache in `.wireit/`.
+   changed. Wireit keeps its state in `.wireit/`. Its output cache is
+   disabled by `WIREIT_CACHE=none` in `mise.toml`, because the outputs are
+   already committed and the cache has no size limit.
 
 ## Code lint
 
