@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
  */
 class FakeOption {
   #explicitValue: string | null = null;
-  textContent: string = "";
+  textContent = "";
   /**
    * Mirrors HTMLOptionElement: when `value` has not been assigned
    * explicitly, reading it returns `textContent`.
@@ -23,7 +23,7 @@ class FakeOption {
 }
 class FakeSelect extends EventTarget {
   options: FakeOption[] = [];
-  #value: string = "";
+  #value = "";
   appendChild(option: FakeOption) {
     this.options.push(option);
     if (this.#value === "") this.#value = option.value;

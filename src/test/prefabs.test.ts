@@ -136,7 +136,7 @@ describe("assertDifficultyIndex", () => {
   });
 
   it("narrows the input type when it returns", () => {
-    const i: number = 3;
+    const i = 3;
     assertDifficultyIndex(i);
     const narrowed: DifficultyIndex = i;
     expect(narrowed).toBe(3);

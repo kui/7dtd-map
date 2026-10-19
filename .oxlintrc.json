@@ -5,7 +5,8 @@
     "correctness": "error"
   },
   "options": {
-    "typeAware": true
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "error"
   },
   "rules": {
     "eslint/default-param-last": "error",
@@ -15,11 +16,27 @@
     "eslint/no-throw-literal": "error",
     "eslint/no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+      {
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
     ],
     "typescript/no-explicit-any": "error",
     "typescript/no-non-null-asserted-optional-chain": "error",
-    "typescript/no-non-null-assertion": "error"
+    "typescript/no-non-null-assertion": "error",
+    "eslint/no-array-constructor": "error",
+    "eslint/no-case-declarations": "error",
+    "eslint/no-empty": "error",
+    "eslint/no-inner-declarations": "error",
+    "eslint/no-prototype-builtins": "error",
+    "eslint/no-redeclare": "error",
+    "eslint/no-var": "error",
+    "eslint/prefer-const": "error",
+    "eslint/require-await": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-empty-interface": "error",
+    "typescript/no-inferrable-types": "error",
+    "typescript/no-namespace": "error"
   },
   "overrides": [
     {
