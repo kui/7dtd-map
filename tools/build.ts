@@ -2,6 +2,7 @@ import * as esbuild from "esbuild";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import * as http from "node:http";
+import { pipeline } from "node:stream/promises";
 import { globFiles, projectRoot } from "./lib/utils.ts";
 
 const targets = (
@@ -75,7 +76,7 @@ if (args[0] === "serve") {
             CONTENT_TYPES[path.extname(file)] ?? "application/octet-stream",
           "content-length": size,
         });
-        fs.createReadStream(file).pipe(res);
+        pipeline(fs.createReadStream(file), res).catch(() => {});
       });
     })
     .listen(port, hostname);
