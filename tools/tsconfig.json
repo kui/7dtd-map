@@ -2,7 +2,9 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["esnext"],
-    "types": ["node"]
+    "types": ["node"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
   },
   "include": ["**/*.ts"],
   "exclude": ["test", "vanilla"]

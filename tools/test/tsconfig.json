@@ -3,7 +3,9 @@
   "compilerOptions": {
     "lib": ["esnext"],
     "types": ["node"],
-    "noUncheckedIndexedAccess": false
+    "noUncheckedIndexedAccess": false,
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
   },
   "include": ["**/*.ts"]
 }
