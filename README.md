@@ -38,7 +38,11 @@ Linux, macOS, and Windows are supported.
      New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
      ```
 
-2. Install dependencies and build:
+2. Install Node.js 26. With [mise](https://mise.jdx.dev/), `mise install`
+   picks the version pinned in `mise.toml`; any other Node 26 install works
+   too.
+
+3. Install dependencies and build:
 
    ```
    npm ci
@@ -47,9 +51,12 @@ Linux, macOS, and Windows are supported.
 
    On a second run the wireit scripts declared in `package.json` skip
    themselves when neither the source TS nor the matched game files have
-   changed. Wireit keeps its state in `.wireit/`. Its output cache is
-   disabled by `WIREIT_CACHE=none` in `mise.toml`, because the outputs are
-   already committed and the cache has no size limit.
+   changed. Wireit keeps its state in `.wireit/`.
+
+   Set `WIREIT_CACHE=none` when building. Wireit otherwise copies every
+   output (about 130 MB of maps and prefab pages) into `.wireit/` for each
+   input change, with no size limit. `mise.toml` sets it for you inside a
+   mise-activated shell; without mise, export it in your shell profile.
 
 ## Code lint
 

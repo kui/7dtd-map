@@ -15,11 +15,11 @@ repository. Agents must read and follow these rules closely.
      issue itself must still be filed in English.
 
 2. **Node Version Management**
-   - `node` is managed by `mise` (see `mise.toml`). Do not install or switch
-     Node with other version managers.
-   - To update Node, modify `mise.toml` and run `mise install`. Keep the
-     `@types/node` major version and `engines.node` in `package.json` in sync
-     with it.
+   - `mise.toml` is the source of truth for the Node version. mise is
+     convenient but not required; the build must keep working with any
+     matching Node install, so do not rely on mise-only behavior.
+   - To update Node, modify `mise.toml`. Keep the `@types/node` major version
+     and `engines.node` in `package.json` in sync with it.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data files (prefab xmls,
