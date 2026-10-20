@@ -1,6 +1,5 @@
 [tools]
 node = "26"
-ast-grep = "0.51"
 
 [env]
 WIREIT_CACHE = "none"

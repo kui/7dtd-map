@@ -197,6 +197,7 @@
     "three": "0.185.0"
   },
   "devDependencies": {
+    "@ast-grep/cli": "0.51.0",
     "@libs/xml": "npm:@jsr/libs__xml@^7.0.4",
     "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",
@@ -218,6 +219,7 @@
     "node": ">=26"
   },
   "allowScripts": {
-    "esbuild@0.28.1": true
+    "esbuild@0.28.1": true,
+    "@ast-grep/cli@0.51.0": true
   }
 }
