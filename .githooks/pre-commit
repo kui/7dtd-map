@@ -4,9 +4,9 @@ staged=$(mktemp)
 trap 'rm -f "$staged"' EXIT
 git diff --cached --name-only --diff-filter=ACMR -z >"$staged"
 if [ -s "$staged" ]; then
-  xargs -0 -a "$staged" mise exec -- npx --no-install oxfmt --check --no-error-on-unmatched-pattern
-  xargs -0 -a "$staged" mise exec -- npx --no-install oxlint --no-error-on-unmatched-pattern
-  xargs -0 -a "$staged" mise exec -- ast-grep scan
+  xargs -0 -a "$staged" npx --no-install oxfmt --check --no-error-on-unmatched-pattern
+  xargs -0 -a "$staged" npx --no-install oxlint --no-error-on-unmatched-pattern
+  xargs -0 -a "$staged" npx --no-install ast-grep scan
 fi
-mise exec -- npx --no-install tsc -b
-exec mise exec -- npx --no-install vitest run --changed
+npx --no-install tsc -b
+exec npx --no-install vitest run --changed
