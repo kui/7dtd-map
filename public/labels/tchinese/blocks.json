@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "打開的黃色棺材壁階",
 	"cntCasketModernRandomHelper": "= 棺材 = 隨機助手",
 	"cntCementMixerBustedRandomLootHelper": "= 壞掉的水泥攪拌機 = 隨機助手",
-	"cntCementMixerBustedRandomLootHelperDesc": "根據沙盒設定，會生成一臺完好或毀損的水泥攪拌機。",
+	"cntCementMixerBustedRandomLootHelperDesc": "會出現一臺水泥攪拌機。10% 的機率是一臺可正常使用的水泥攪拌機。",
 	"cntCharcoalGrillClosed": "木炭烤爐",
 	"cntCharcoalGrillOpen": "木炭烤爐（打開）",
 	"cntCharcoalGrillRandomLootHelper": "= 木炭烤爐 = 隨機助手",

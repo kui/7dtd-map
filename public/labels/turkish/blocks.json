@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Sarı Tabut Çıkıntısı, Açık",
 	"cntCasketModernRandomHelper": "= Tabut = Rastgele Yardımcı",
 	"cntCementMixerBustedRandomLootHelper": "= Parçalanmış Çimento Mikseri = Rastgele Yardımcı",
-	"cntCementMixerBustedRandomLootHelperDesc": "Sandbox Seçeneklerine bağlı olarak sağlam ya da parçalanmış bir Çimento Mikseri çıkarabilir.respawn",
+	"cntCementMixerBustedRandomLootHelperDesc": "Çimento Mikseri çıkarabilir.  Çalışanını elde etme ihtimali %10.",
 	"cntCharcoalGrillClosed": "Mangal",
 	"cntCharcoalGrillOpen": "Mangal (Açık)",
 	"cntCharcoalGrillRandomLootHelper": "= Mangal = Rastgele Yardımcı",

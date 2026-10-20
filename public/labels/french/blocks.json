@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Cercueil jaune, décalé, ouvert",
 	"cntCasketModernRandomHelper": "= Cercueil = Aide aléatoire",
 	"cntCementMixerBustedRandomLootHelper": "= Bétonnière détruite = Aide aléatoire",
-	"cntCementMixerBustedRandomLootHelperDesc": "Peut faire apparaître une bétonnière fonctionnelle ou détruite selon les options de bac à sable.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Peut faire apparaître une bétonnière.  10 % de chances que celle-ci fonctionne.",
 	"cntCharcoalGrillClosed": "Grill à charbon de bois",
 	"cntCharcoalGrillOpen": "Grill à charbon de bois (ouvert)",
 	"cntCharcoalGrillRandomLootHelper": "= Grill à charbon de bois = Aide aléatoire",

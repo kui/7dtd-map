@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Gelber Sarg – Versatz, offen",
 	"cntCasketModernRandomHelper": "= Sarg = Zufälliger Helfer",
 	"cntCementMixerBustedRandomLootHelper": "= Zerstörter Zementmischer = Zufälliger Helfer",
-	"cntCementMixerBustedRandomLootHelperDesc": "Kann je nach Sandbox‑Optionen entweder einen Zementmischer oder einen zerstörten Zementmischer erscheinen lassen.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Kann einen Zementmischer erscheinen lassen.  10 % Wahrscheinlichkeit auf Funktionsfähigkeit.",
 	"cntCharcoalGrillClosed": "Holzkohlegrill",
 	"cntCharcoalGrillOpen": "Holzkohlegrill (offen)",
 	"cntCharcoalGrillRandomLootHelper": "= Holzkohlegrill = Zufälliger Helfer",

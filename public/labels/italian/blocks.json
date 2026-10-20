@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Bara piegata gialla, aperta",
 	"cntCasketModernRandomHelper": "= Bara = Aiutante casuale",
 	"cntCementMixerBustedRandomLootHelper": "= Betoniera distrutta = Aiutante casuale",
-	"cntCementMixerBustedRandomLootHelperDesc": "Può generare una betoniera o una versione distrutta in base alle opzioni sandbox.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Può generare una betoniera.  10% di possibilità che sia funzionante.",
 	"cntCharcoalGrillClosed": "Griglia a carbonella",
 	"cntCharcoalGrillOpen": "Griglia a carbonella (aperta)",
 	"cntCharcoalGrillRandomLootHelper": "= Griglia a carbonella = Aiutante casuale",

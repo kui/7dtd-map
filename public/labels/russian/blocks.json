@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Открытый желтый гроб со смещением",
 	"cntCasketModernRandomHelper": "= Гроб = Случайный помощник",
 	"cntCementMixerBustedRandomLootHelper": "= Сломанная бетономешалка = Случайный помощник",
-	"cntCementMixerBustedRandomLootHelperDesc": "Может вызвать появление бетономешалки или сломанной бетономешалки в соответствии с настройками «песочницы».",
+	"cntCementMixerBustedRandomLootHelperDesc": "Может вызвать появление бетономешалки.  С 10% шансом в рабочем состоянии.",
 	"cntCharcoalGrillClosed": "Мангал",
 	"cntCharcoalGrillOpen": "Мангал (открытый)",
 	"cntCharcoalGrillRandomLootHelper": "= Мангал = Случайный помощник",

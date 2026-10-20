@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Trumna – żółta, otwarta, przesunięcie",
 	"cntCasketModernRandomHelper": "= Trumna = losowy pomocnik",
 	"cntCementMixerBustedRandomLootHelper": "= Zniszczona betoniarka = losowy pomocnik",
-	"cntCementMixerBustedRandomLootHelperDesc": "Może wygenerować sprawną lub zniszczoną betoniarkę w zależności od opcji trybu piaskownicy.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Może wygenerować betoniarkę.  10% szansy wygenerowania sprawnego elementu.",
 	"cntCharcoalGrillClosed": "Grill na węgiel drzewny",
 	"cntCharcoalGrillOpen": "Grill na węgiel drzewny (otwarty)",
 	"cntCharcoalGrillRandomLootHelper": "= Grill na węgiel drzewny = losowy pomocnik",

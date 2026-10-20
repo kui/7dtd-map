@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "黄色棺材 偏移，打开",
 	"cntCasketModernRandomHelper": "=棺材 = 随机助手",
 	"cntCementMixerBustedRandomLootHelper": "= 毁坏的水泥搅拌机 = 随机助手",
-	"cntCementMixerBustedRandomLootHelperDesc": "可根据沙盒选项生成正常或损毁的水泥搅拌机。",
+	"cntCementMixerBustedRandomLootHelperDesc": "可生成一个水泥搅拌机。有10%的几率刷出尚可使用的该物件。",
 	"cntCharcoalGrillClosed": "炭烤架",
 	"cntCharcoalGrillOpen": "炭烤架（打开）",
 	"cntCharcoalGrillRandomLootHelper": "= 炭烤架 = 随机助手",

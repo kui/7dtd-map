@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "노란색 장식함 오프셋, 열림",
 	"cntCasketModernRandomHelper": "= 장식함 = 무작위 도우미",
 	"cntCementMixerBustedRandomLootHelper": "= 부서진 시멘트 믹서 = 무작위 도우미",
-	"cntCementMixerBustedRandomLootHelperDesc": "샌드박스 옵션에 기반하여 시멘트 믹서 또는 부서진 버전 1개를 생성합니다.",
+	"cntCementMixerBustedRandomLootHelperDesc": "시멘트 믹서를 생성합니다.  10% 확률로 작동합니다.",
 	"cntCharcoalGrillClosed": "숯불 그릴",
 	"cntCharcoalGrillOpen": "숯불 그릴 (열림)",
 	"cntCharcoalGrillRandomLootHelper": "= 숯불 그릴 = 무작위 도우미",

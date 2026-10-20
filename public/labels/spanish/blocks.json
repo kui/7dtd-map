@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Ataúd amarillo inclinado, abierto",
 	"cntCasketModernRandomHelper": "= Ataúd = Asistente aleatorio",
 	"cntCementMixerBustedRandomLootHelper": "= Hormigonera destruida = Asistente aleatorio",
-	"cntCementMixerBustedRandomLootHelperDesc": "Puede aparecer una hormigonera funcional o una destruida según las opciones del mundo.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Puede aparecer una hormigonera.  10 % de probabilidad de que aparezca una que funcione.",
 	"cntCharcoalGrillClosed": "Parrilla de carbón",
 	"cntCharcoalGrillOpen": "Parrilla de carbón (abierta)",
 	"cntCharcoalGrillRandomLootHelper": "= Parrilla de carbón = Asistente aleatorio",

@@ -1345,7 +1345,7 @@
 	"cntCasketModernOpenYellowOffset": "Caixão deslocado amarelo, aberto",
 	"cntCasketModernRandomHelper": "= Caixão = Ajudante aleatório",
 	"cntCementMixerBustedRandomLootHelper": "= Betoneira destruída = Ajudante aleatório",
-	"cntCementMixerBustedRandomLootHelperDesc": "Pode gerar uma Betoneira inteira ou destruída com base nas opções de Sandbox.",
+	"cntCementMixerBustedRandomLootHelperDesc": "Pode fazer surgir uma betoneira.  10% de chance de ser uma que funcione.",
 	"cntCharcoalGrillClosed": "Churrasqueira a Carvão",
 	"cntCharcoalGrillOpen": "Churrasqueira a Carvão (Aberta)",
 	"cntCharcoalGrillRandomLootHelper": "= Churrasqueira a carvão = Ajudante aleatório",
