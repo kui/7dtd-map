@@ -5,18 +5,6 @@
   "scripts": {
     "serve": "node tools/build.ts serve",
     "serve:static": "node tools/build.ts serve-static",
-    "build": "wireit",
-    "build:glyph-markers": "wireit",
-    "build:favicon": "wireit",
-    "build:font-subsets": "wireit",
-    "build:ts": "wireit",
-    "build:json": "wireit",
-    "build:json:prefab-props": "wireit",
-    "build:json:labels": "wireit",
-    "build:json:added-prefabs": "wireit",
-    "build:json:block-counts": "wireit",
-    "build:prefab-html": "wireit",
-    "build:copy-map-files": "wireit",
     "fix": "oxfmt && oxlint --fix",
     "test": "vitest run",
     "test:changed": "vitest run --changed",
@@ -27,171 +15,6 @@
     "ci:ast-grep": "ast-grep scan",
     "ci:fmt-check": "oxfmt --check",
     "ci:type-check": "tsc -b"
-  },
-  "wireit": {
-    "build": {
-      "dependencies": [
-        "build:ts",
-        "build:json",
-        "build:prefab-html",
-        "build:copy-map-files",
-        "build:font-subsets",
-        "build:glyph-markers",
-        "build:favicon"
-      ]
-    },
-    "build:glyph-markers": {
-      "command": "node tools/generate-glyph-markers.ts",
-      "files": [
-        "tools/generate-glyph-markers.ts",
-        "tools/lib/utils.ts",
-        "lib/glyph-marker.ts",
-        "tools/fonts/NotoSansSymbols2-Regular.ttf",
-        "tools/fonts/NotoEmojiOld-Regular.ttf"
-      ],
-      "output": [
-        "public/heavy-ballot-x.svg",
-        "public/heavy-ballot-x-path.json",
-        "public/triangular-flag.svg",
-        "public/triangular-flag-path.json"
-      ],
-      "clean": false
-    },
-    "build:favicon": {
-      "command": "node tools/generate-favicon.ts",
-      "dependencies": [
-        "build:glyph-markers"
-      ],
-      "files": [
-        "tools/generate-favicon.ts",
-        "tools/lib/ico.ts",
-        "tools/lib/utils.ts",
-        "public/heavy-ballot-x.svg"
-      ],
-      "output": [
-        "public/favicon.ico"
-      ],
-      "clean": false
-    },
-    "build:font-subsets": {
-      "command": "node tools/generate-font-subsets.ts",
-      "files": [
-        "tools/generate-font-subsets.ts",
-        "tools/lib/symbol-chars.ts",
-        "tools/lib/utils.ts",
-        "tools/fonts/NotoColorEmoji-COLRv1.ttf",
-        "tools/fonts/NotoSansSymbols2-Regular.ttf",
-        "src/**/*.ts",
-        "public/*.html",
-        "tools/lib/prefab-html.ts"
-      ],
-      "output": [
-        "public/NotoColorEmoji.subset.woff2",
-        "public/NotoSansSymbols2.subset.woff2"
-      ],
-      "clean": false
-    },
-    "build:ts": {
-      "command": "node tools/build.ts",
-      "files": [
-        "tools/build.ts",
-        "tools/lib/utils.ts",
-        "src/**/*.ts",
-        "lib/**/*.ts"
-      ],
-      "output": [
-        "public/*.js",
-        "public/*.js.map",
-        "public/worker/*.js",
-        "public/worker/*.js.map",
-        "public/prefabs/*.js",
-        "public/prefabs/*.js.map"
-      ],
-      "clean": false
-    },
-    "build:json": {
-      "dependencies": [
-        "build:json:prefab-props",
-        "build:json:labels",
-        "build:json:block-counts",
-        "build:json:added-prefabs"
-      ]
-    },
-    "build:json:prefab-props": {
-      "command": "node tools/generate-prefab-properties-jsons.ts",
-      "files": [
-        "tools/generate-prefab-properties-jsons.ts",
-        "tools/lib/**/*.ts",
-        "tools/vanilla/Data/Prefabs/*/*.xml",
-        "tools/vanilla/Data/Config/rwgmixer.xml"
-      ],
-      "output": [
-        "public/prefab-difficulties.json",
-        "public/prefab-mesh-sizes.json",
-        "public/prefab-density-scores.json",
-        "public/district-colors.json"
-      ],
-      "clean": false
-    },
-    "build:json:labels": {
-      "command": "node tools/generate-labels-jsons.ts",
-      "files": [
-        "tools/generate-labels-jsons.ts",
-        "tools/lib/**/*.ts",
-        "tools/vanilla/Data/Config/Localization.csv"
-      ],
-      "output": [
-        "public/labels/**/*.json"
-      ],
-      "clean": false
-    },
-    "build:json:added-prefabs": {
-      "command": "node tools/extract-added-prefabs.ts"
-    },
-    "build:json:block-counts": {
-      "command": "node tools/generate-prefab-block-counts.ts",
-      "files": [
-        "tools/generate-prefab-block-counts.ts",
-        "tools/lib/**/*.ts",
-        "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
-        "tools/vanilla/Data/Prefabs/*/*.tts"
-      ],
-      "output": [
-        "public/prefab-block-counts.json"
-      ],
-      "clean": false
-    },
-    "build:prefab-html": {
-      "command": "node tools/generate-prefab-html.ts",
-      "files": [
-        "tools/generate-prefab-html.ts",
-        "tools/lib/**/*.ts",
-        "tools/vanilla/Data/Prefabs/*/*.xml",
-        "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
-        "tools/vanilla/Data/Prefabs/*/*.tts",
-        "tools/vanilla/Data/Prefabs/*/*.jpg",
-        "tools/vanilla/Data/Config/Localization.csv"
-      ],
-      "output": [
-        "public/prefabs/*.html",
-        "public/prefabs/*.jpg",
-        "public/prefabs/index.json"
-      ],
-      "clean": false
-    },
-    "build:copy-map-files": {
-      "command": "node tools/copy-map-files.ts",
-      "files": [
-        "tools/copy-map-files.ts",
-        "tools/lib/**/*.ts",
-        "lib/map-files.ts",
-        "tools/vanilla/Data/Worlds/**/*"
-      ],
-      "output": [
-        "public/maps/**/*"
-      ],
-      "clean": false
-    }
   },
   "dependencies": {
     "three": "0.185.0"
@@ -212,8 +35,7 @@
     "oxlint": "1.88.0",
     "oxlint-tsgolint": "7.0.2004",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.5",
-    "wireit": "^0.14.13"
+    "vitest": "^5.0.5"
   },
   "engines": {
     "node": ">=26"

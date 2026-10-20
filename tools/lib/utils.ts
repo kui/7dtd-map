@@ -14,8 +14,8 @@ export function publishDir(...pathList: string[]): string {
 
 /**
  * Resolves a project-relative path under `tools/vanilla`. Must stay a
- * static project-relative path because wireit input-based caching
- * needs to express it as a glob in `package.json` `wireit.*.files`.
+ * static project-relative path because the build tasks express it as a
+ * glob in the `sources` of `mise.toml`.
  */
 export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);

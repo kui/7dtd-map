@@ -9,9 +9,9 @@ Map renderer for 7 Day to Die.
 Linux, macOS, and Windows are supported.
 
 1. Point the project at your installed copy of the game by creating a
-   `tools/vanilla` link at the project root. The path is wired into wireit
-   input-based caching, so it must be a static project-local path — not a
-   runtime config file. Pick the command for your OS:
+   `tools/vanilla` link at the project root. The path appears in the task
+   `sources` globs in `mise.toml`, so it must be a static project-local path,
+   not a runtime config file. Pick the command for your OS:
 
    - **macOS / Linux** (symlink):
 
@@ -38,25 +38,19 @@ Linux, macOS, and Windows are supported.
      New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
      ```
 
-2. Install Node.js 26. With [mise](https://mise.jdx.dev/), `mise install`
-   picks the version pinned in `mise.toml`; any other Node 26 install works
-   too.
+2. Install [mise](https://mise.jdx.dev/). It installs the Node version pinned
+   in `mise.toml` and runs the build tasks defined there.
 
 3. Install dependencies and build:
 
    ```
+   mise install
    npm ci
-   npm run build
+   mise run build
    ```
 
-   On a second run the wireit scripts declared in `package.json` skip
-   themselves when neither the source TS nor the matched game files have
-   changed. Wireit keeps its state in `.wireit/`.
-
-   Set `WIREIT_CACHE=none` when building. Wireit otherwise copies every
-   output (about 130 MB of maps and prefab pages) into `.wireit/` for each
-   input change, with no size limit. `mise.toml` sets it for you inside a
-   mise-activated shell; without mise, export it in your shell profile.
+   On a second run each task skips itself when neither its source files nor
+   the matched game files have changed since the last run.
 
 ## Code lint
 
