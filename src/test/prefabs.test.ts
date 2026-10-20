@@ -3,8 +3,7 @@ import {
   decorationToPrefab,
   type DifficultyIndex,
 } from "../lib/prefabs.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "vitest";
 
 /**
  * Stand-in for a `<decoration>` element. `decorationToPrefab` only calls
@@ -19,11 +18,13 @@ function decoration(attrs: Record<string, string>) {
 describe("decorationToPrefab", () => {
   it("reads x/z/rotation from a decoration", () => {
     expect(
-      decorationToPrefab(decoration({
-        name: "house_01",
-        position: "10,44,-20",
-        rotation: "2",
-      })),
+      decorationToPrefab(
+        decoration({
+          name: "house_01",
+          position: "10,44,-20",
+          rotation: "2",
+        }),
+      ),
     ).toEqual({
       name: "house_01",
       x: 10,
@@ -36,12 +37,14 @@ describe("decorationToPrefab", () => {
 
   it("keeps y as ground level and flags v2.x groundlevel decorations", () => {
     expect(
-      decorationToPrefab(decoration({
-        name: "quarry_02",
-        position: "-650,44,-206",
-        rotation: "0",
-        y_is_groundlevel: "true",
-      })),
+      decorationToPrefab(
+        decoration({
+          name: "quarry_02",
+          position: "-650,44,-206",
+          rotation: "0",
+          y_is_groundlevel: "true",
+        }),
+      ),
     ).toEqual({
       name: "quarry_02",
       x: -650,
@@ -69,8 +72,7 @@ describe("decorationToPrefab", () => {
     expect(
       decorationToPrefab(
         decoration({ name: "p", position: "0,0,0", rotation: "5" }),
-      )
-        ?.rotation,
+      )?.rotation,
     ).toBe(1);
   });
 
@@ -81,8 +83,9 @@ describe("decorationToPrefab", () => {
 
   it("throws on a position that is not three finite numbers", () => {
     for (const position of ["1,2", "1,2,3,4", "10,,20", "10,x,20"]) {
-      expect(() => decorationToPrefab(decoration({ name: "p", position })))
-        .toThrow(/Invalid decoration position/);
+      expect(() =>
+        decorationToPrefab(decoration({ name: "p", position })),
+      ).toThrow(/Invalid decoration position/);
     }
   });
 });
@@ -133,7 +136,8 @@ describe("assertDifficultyIndex", () => {
   });
 
   it("narrows the input type when it returns", () => {
-    const i: number = 3;
+    // WHY: widen to number so the assignment below compiles only if assertDifficultyIndex narrows; a bare literal 3 is already a DifficultyIndex.
+    const i = 3 as number;
     assertDifficultyIndex(i);
     const narrowed: DifficultyIndex = i;
     expect(narrowed).toBe(3);

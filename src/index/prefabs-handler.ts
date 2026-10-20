@@ -40,12 +40,9 @@ interface Doms extends PrefabsFilterControlsDoms {
 }
 
 export class PrefabsHandler {
-  #filterHeaderListeners = new events.ListenerManager<
-    FilterHeaderEventMessage
-  >();
-  #filterChunkListeners = new events.ListenerManager<
-    FilterChunkEventMessage
-  >();
+  #filterHeaderListeners =
+    new events.ListenerManager<FilterHeaderEventMessage>();
+  #filterChunkListeners = new events.ListenerManager<FilterChunkEventMessage>();
   #allPrefabsListeners = new events.ListenerManager<AllPrefabsEventMessage>();
   #hitIndexListeners = new events.ListenerManager<PrefabHitIndexEventMessage>();
 

@@ -40,7 +40,6 @@ export class CursorCoordsDisplayHandler {
       return;
     }
     const y = (await this.#dtmHandler.getElevation(coords)) ?? "-";
-    this.#doms.output.textContent =
-      `E/W: ${coords.x.toString()}, N/S: ${coords.z.toString()}, Elev: ${y.toString()}`;
+    this.#doms.output.textContent = `E/W: ${coords.x.toString()}, N/S: ${coords.z.toString()}, Elev: ${y.toString()}`;
   }
 }

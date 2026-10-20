@@ -6,10 +6,7 @@ import type { GameCoords, Prefab, PrefabMeshSizes } from "../types/7dtdmap.ts";
  * is the placement framework and `part_driveway_` overlaps its parent
  * POI, so neither is ever what a user is asking about.
  */
-export const EXCLUDED_NAME_FRAGMENTS = [
-  "rwg_tile_",
-  "part_driveway_",
-] as const;
+export const EXCLUDED_NAME_FRAGMENTS = ["rwg_tile_", "part_driveway_"] as const;
 
 /**
  * AABB stored in four parallel `Int32Array`s so the hit-test loop is
@@ -52,15 +49,14 @@ export class PrefabHitIndex {
 
     const n = tmp.length;
     this.source = all;
-    this.prefabs = new Array<Prefab>(n);
+    this.prefabs = tmp.map((e) => e.prefab);
     this.x0 = new Int32Array(n);
     this.z0 = new Int32Array(n);
     this.w = new Int32Array(n);
     this.d = new Int32Array(n);
     for (let i = 0; i < n; i++) {
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const e = tmp[i]!;
-      this.prefabs[i] = e.prefab;
       this.x0[i] = e.x0;
       this.z0[i] = e.z0;
       this.w[i] = e.w;
@@ -73,15 +69,15 @@ export class PrefabHitIndex {
     const { x0, z0, w, d, prefabs } = this;
     const n = prefabs.length;
     for (let i = 0; i < n; i++) {
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const xi = x0[i]!;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (x < xi || x >= xi + w[i]!) continue;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const zi = z0[i]!;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (z < zi || z >= zi + d[i]!) continue;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return prefabs[i]!;
     }
     return null;

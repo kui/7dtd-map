@@ -14,7 +14,9 @@ test.describe("index.html", () => {
     await expect(page.locator("#download")).toBeVisible();
   });
 
-  test("language select change is persisted in localStorage", async ({ page }) => {
+  test("language select change is persisted in localStorage", async ({
+    page,
+  }) => {
     await page.goto("/index.html");
     // WHY: LabelHandler populates the select asynchronously, so wait for options before interacting.
     await expect
@@ -23,13 +25,15 @@ test.describe("index.html", () => {
 
     await page.selectOption("#label-lang", "japanese");
     await expect
-      .poll(async () =>
-        await page.evaluate(() => localStorage.getItem("language"))
+      .poll(
+        async () => await page.evaluate(() => localStorage.getItem("language")),
       )
       .toBe("japanese");
   });
 
-  test("min-tier cannot exceed max-tier — they correct each other", async ({ page }) => {
+  test("min-tier cannot exceed max-tier — they correct each other", async ({
+    page,
+  }) => {
     await page.goto("/index.html");
     await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "2";
@@ -51,8 +55,8 @@ test.describe("index.html", () => {
 
     // WHY: The bundled-map select is populated asynchronously.
     await expect
-      .poll(async () =>
-        await page.locator("#bundled-map-select option").count()
+      .poll(
+        async () => await page.locator("#bundled-map-select option").count(),
       )
       .toBeGreaterThan(1);
 
@@ -75,11 +79,13 @@ test.describe("index.html", () => {
     await page.selectOption("#bundled-map-select", "Navezgane");
 
     await expect
-      .poll(async () =>
-        await page.evaluate(() =>
-          (globalThis as unknown as { __dialogWasOpen?: boolean })
-            .__dialogWasOpen ?? false
-        )
+      .poll(
+        async () =>
+          await page.evaluate(
+            () =>
+              (globalThis as unknown as { __dialogWasOpen?: boolean })
+                .__dialogWasOpen ?? false,
+          ),
       )
       .toBe(true);
 
@@ -87,9 +93,10 @@ test.describe("index.html", () => {
     await expect
       .poll(
         async () =>
-          await page.evaluate(() =>
-            (globalThis as unknown as { __dialogClosed?: boolean })
-              .__dialogClosed ?? false
+          await page.evaluate(
+            () =>
+              (globalThis as unknown as { __dialogClosed?: boolean })
+                .__dialogClosed ?? false,
           ),
         { timeout: 40_000 },
       )
@@ -97,53 +104,57 @@ test.describe("index.html", () => {
 
     // WHY: Navezgane HeightMapSize is 6144x6144 and the default render scale is 0.12, so the expected canvas size is 6144 * 0.12 = 737.28 -> 737.
     const slow = { timeout: 20_000 };
-    await expect.poll(
-      async () =>
-        await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.width),
-      slow,
-    ).toBe(737);
-    await expect.poll(
-      async () =>
-        await page.locator("#map").evaluate((c: HTMLCanvasElement) => c.height),
-      slow,
-    ).toBe(737);
+    await expect
+      .poll(
+        async () =>
+          await page
+            .locator("#map")
+            .evaluate((c: HTMLCanvasElement) => c.width),
+        slow,
+      )
+      .toBe(737);
+    await expect
+      .poll(
+        async () =>
+          await page
+            .locator("#map")
+            .evaluate((c: HTMLCanvasElement) => c.height),
+        slow,
+      )
+      .toBe(737);
 
-    await expect.poll(
-      async () => await page.locator("#prefabs-list li").count(),
-      slow,
-    ).toBeGreaterThan(0);
+    await expect
+      .poll(async () => await page.locator("#prefabs-list li").count(), slow)
+      .toBeGreaterThan(0);
 
-    await expect.poll(
-      async () => await page.locator("#map-name").inputValue(),
-      slow,
-    ).toBe("Navezgane");
+    await expect
+      .poll(async () => await page.locator("#map-name").inputValue(), slow)
+      .toBe("Navezgane");
 
     await page.click(
       'button[data-input-prefab-filter="trader"]:text-is("All Traders")',
     );
-    await expect.poll(async () =>
-      await page.locator("#prefab-filter").inputValue()
-    ).toBe("trader");
-    await expect.poll(async () =>
-      await page.locator("#prefabs-list li").count()
-    ).toBeGreaterThan(0);
+    await expect
+      .poll(async () => await page.locator("#prefab-filter").inputValue())
+      .toBe("trader");
+    await expect
+      .poll(async () => await page.locator("#prefabs-list li").count())
+      .toBeGreaterThan(0);
 
-    await page.click(
-      'button[data-input-prefab-filter=""]',
-    );
-    await expect.poll(async () =>
-      await page.locator("#prefab-filter").inputValue()
-    ).toBe("");
+    await page.click('button[data-input-prefab-filter=""]');
+    await expect
+      .poll(async () => await page.locator("#prefab-filter").inputValue())
+      .toBe("");
 
     await page.click(
       'button[data-input-block-filter="(Grace|Super)Corn"]:text-is("Super Corn")',
     );
-    await expect.poll(async () =>
-      await page.locator("#block-filter").inputValue()
-    ).toBe("(Grace|Super)Corn");
-    await expect.poll(async () =>
-      await page.locator("#prefabs-list li").count()
-    ).toBeGreaterThan(0);
+    await expect
+      .poll(async () => await page.locator("#block-filter").inputValue())
+      .toBe("(Grace|Super)Corn");
+    await expect
+      .poll(async () => await page.locator("#prefabs-list li").count())
+      .toBeGreaterThan(0);
 
     await page.locator("#max-tier").evaluate((el: HTMLInputElement) => {
       el.value = "0";
@@ -155,12 +166,14 @@ test.describe("index.html", () => {
       el.dispatchEvent(new Event("input", { bubbles: true }));
       el.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    await expect.poll(async () =>
-      await page.locator("#prefabs-list li").count()
-    ).toBe(0);
+    await expect
+      .poll(async () => await page.locator("#prefabs-list li").count())
+      .toBe(0);
   });
 
-  test("block filter input stays responsive (freeze regression)", async ({ page }) => {
+  test("block filter input stays responsive (freeze regression)", async ({
+    page,
+  }) => {
     test.setTimeout(60_000);
 
     // WHY: Collect long-task timings so we can isolate typing-window latency from initial load overhead.
@@ -178,8 +191,8 @@ test.describe("index.html", () => {
 
     await page.goto("/index.html");
     await expect
-      .poll(async () =>
-        await page.locator("#bundled-map-select option").count()
+      .poll(
+        async () => await page.locator("#bundled-map-select option").count(),
       )
       .toBeGreaterThan(1);
 
@@ -200,9 +213,10 @@ test.describe("index.html", () => {
     await expect
       .poll(
         async () =>
-          await page.evaluate(() =>
-            (globalThis as unknown as { __dialogClosed?: boolean })
-              .__dialogClosed ?? false
+          await page.evaluate(
+            () =>
+              (globalThis as unknown as { __dialogClosed?: boolean })
+                .__dialogClosed ?? false,
           ),
         { timeout: 40_000 },
       )
@@ -243,7 +257,9 @@ test.describe("index.html", () => {
     ).toBeAttached();
   });
 
-  test("terrain viewer dialog is wired up with a11y attributes", async ({ page }) => {
+  test("terrain viewer dialog is wired up with a11y attributes", async ({
+    page,
+  }) => {
     await page.goto("/index.html");
     const dialog = page.locator("#terrain-viewer-dialog");
     await expect(dialog).toBeAttached();
@@ -255,8 +271,10 @@ test.describe("index.html", () => {
 
     await expect(page.locator("#terrain-viewer-show")).toBeDisabled();
 
-    await expect(page.locator("#terrain-viewer-close"))
-      .toHaveAttribute("aria-label", "Close terrain viewer");
+    await expect(page.locator("#terrain-viewer-close")).toHaveAttribute(
+      "aria-label",
+      "Close terrain viewer",
+    );
   });
 
   test("prefab inspector dialog opens and closes", async ({ page }) => {
@@ -299,11 +317,15 @@ test.describe("index.html", () => {
     await button.focus();
     await page.keyboard.press("Enter");
 
-    await expect.poll(async () =>
-      await page.evaluate(() =>
-        (globalThis as unknown as { __copyCalls?: string[] }).__copyCalls
-          ?.length ?? 0
+    await expect
+      .poll(
+        async () =>
+          await page.evaluate(
+            () =>
+              (globalThis as unknown as { __copyCalls?: string[] }).__copyCalls
+                ?.length ?? 0,
+          ),
       )
-    ).toBeGreaterThan(0);
+      .toBeGreaterThan(0);
   });
 });

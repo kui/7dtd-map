@@ -1,0 +1,47 @@
+{
+  "name": "7dtd-map",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/build.ts serve",
+    "serve:static": "node tools/build.ts serve-static",
+    "fix": "oxfmt && oxlint --fix",
+    "test": "vitest run",
+    "test:changed": "vitest run --changed",
+    "e2e:install": "playwright install chromium",
+    "e2e": "npm run e2e:install && playwright test",
+    "ci": "npm run ci:lint && npm run ci:ast-grep && npm run ci:fmt-check && npm run ci:type-check && npm run test && npm run e2e",
+    "ci:lint": "oxlint",
+    "ci:ast-grep": "ast-grep scan",
+    "ci:fmt-check": "oxfmt --check",
+    "ci:type-check": "tsc -b"
+  },
+  "dependencies": {
+    "three": "0.185.0"
+  },
+  "devDependencies": {
+    "@ast-grep/cli": "0.51.0",
+    "@libs/xml": "npm:@jsr/libs__xml@^7.0.4",
+    "@playwright/test": "^1.61.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.5",
+    "@types/three": "^0.185.0",
+    "@web-alchemy/fonttools": "^1.4.0",
+    "csv-parse": "^7.0.1",
+    "esbuild": "0.28.1",
+    "fast-png": "^8.0.0",
+    "opentype.js": "^2.0.0",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
+    "oxlint-tsgolint": "7.0.2004",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "@ast-grep/cli@0.51.0": true
+  }
+}

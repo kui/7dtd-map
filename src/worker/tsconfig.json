@@ -1,10 +1,13 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": [
       "webworker",
       "webworker.iterable",
       "webworker.asynciterable",
-      "esnext",
+      "esnext"
     ],
+    "types": []
   },
+  "include": ["**/*.ts"]
 }

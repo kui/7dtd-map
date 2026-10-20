@@ -63,9 +63,10 @@ export class CursorHandler {
   async #dispatchImmediately() {
     const event = this.#lastEvent;
     const size = await this.#dtmHandler.size();
-    const coords = event && size
-      ? canvasEventToGameCoords(event, size, this.#doms.canvas)
-      : null;
+    const coords =
+      event && size
+        ? canvasEventToGameCoords(event, size, this.#doms.canvas)
+        : null;
     await this.#listeners.dispatch({ event, coords });
   }
 

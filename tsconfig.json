@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./lib" },
+    { "path": "./src" },
+    { "path": "./src/test" },
+    { "path": "./src/worker" },
+    { "path": "./tools" },
+    { "path": "./tools/test" },
+    { "path": "./e2e" }
+  ]
+}

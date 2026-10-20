@@ -11,7 +11,8 @@ import type {
 } from "../../types/7dtdmap.ts";
 import type { NumberRange } from "../../types/utils.ts";
 import { throttledInvoker } from "../../lib/throttled-invoker.ts";
-import { LabelHolder, Language } from "../../lib/labels.ts";
+import type { Language } from "../../lib/labels.ts";
+import { LabelHolder } from "../../lib/labels.ts";
 import { CacheHolder } from "../../lib/cache-holder.ts";
 import * as events from "../../lib/events.ts";
 import { escapeHtml, printError, sleep } from "../../lib/utils.ts";
@@ -69,10 +70,7 @@ export class PrefabFilter {
     );
     this.#meshSizesHolder = new CacheHolder(fetchPrefabMeshSizes, noop);
     this.#difficultiesHolder = new CacheHolder(fetchPrefabDifficulties, noop);
-    this.#addedVersionsHolder = new CacheHolder(
-      fetchPrefabAddedVersions,
-      noop,
-    );
+    this.#addedVersionsHolder = new CacheHolder(fetchPrefabAddedVersions, noop);
   }
 
   set language(lang: Language) {
@@ -158,8 +156,7 @@ export class PrefabFilter {
       this.#status = `${this.#filtered.length.toString()} prefabs matched`;
     }
     if (this.blockFilterRegexp.length > 0 && this.minMatchedBlockCount > 0) {
-      this.#status +=
-        `, at least ${this.minMatchedBlockCount.toString()} blocks`;
+      this.#status += `, at least ${this.minMatchedBlockCount.toString()} blocks`;
     }
   }
 
@@ -221,13 +218,12 @@ export class PrefabFilter {
     latestVersion: string,
   ): Promise<HighlightedPrefab[]> {
     const labels = await this.#labelHolder.get("prefabs");
-    const pattern = this.prefabFilterRegexp.length === 0
-      ? new RegExp("", "i")
-      : tryCompileRegex(this.prefabFilterRegexp, "i");
+    const pattern =
+      this.prefabFilterRegexp.length === 0
+        ? new RegExp("", "i")
+        : tryCompileRegex(this.prefabFilterRegexp, "i");
     if (pattern === null) {
-      console.warn(
-        `Invalid prefab name pattern: ${this.prefabFilterRegexp}`,
-      );
+      console.warn(`Invalid prefab name pattern: ${this.prefabFilterRegexp}`);
       this.#prefabFilterInvalid = true;
       return [];
     }
@@ -248,8 +244,8 @@ export class PrefabFilter {
       }
 
       const highlightedName = matchAndHighlight(prefab.name, pattern);
-      const highlightedLabel = (label && matchAndHighlight(label, pattern)) ??
-        null;
+      const highlightedLabel =
+        (label && matchAndHighlight(label, pattern)) ?? null;
       if (highlightedName !== null || highlightedLabel !== null) {
         return {
           ...prefab,
@@ -305,14 +301,12 @@ export class PrefabFilter {
     const shapeLabels = await this.#labelHolder.get("shapes");
     const prefabNames = new Set(prefabs.map((p) => p.name));
     const matchedPrefabNames: { [prefabName: string]: HighlightedBlock[] } = {};
-    for (
-      const [blockName, prefabs] of Object.entries(
-        await this.#blockPrefabCountsHolder.get(),
-      )
-    ) {
+    for (const [blockName, prefabs] of Object.entries(
+      await this.#blockPrefabCountsHolder.get(),
+    )) {
       const highlightedName = matchAndHighlight(blockName, pattern);
-      const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ??
-        "-";
+      const label =
+        blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
       const highlightedLabel = label && matchAndHighlight(label, pattern);
       if (highlightedName === null && highlightedLabel === null) continue;
       for (const [prefabName, count] of Object.entries(prefabs)) {

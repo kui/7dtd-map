@@ -35,9 +35,10 @@ export function requireType<T>(
   throw Error(errorMessage());
 }
 
-export function humanreadableDistance(
-  [direction, distance]: [Direction | null, number],
-): string {
+export function humanreadableDistance([direction, distance]: [
+  Direction | null,
+  number,
+]): string {
   const dir = direction ?? "";
   if (distance < 1000) {
     return `${dir} ${distance.toString()}m`;
@@ -83,8 +84,10 @@ export async function fetchCompleteBlob(url: string): Promise<Blob> {
   // WHY: content-encoding bodies decompress client-side, so blob.size legitimately differs from Content-Length. Only length-check uncompressed responses.
   const header = r.headers.get("content-length");
   const declared = header === null ? NaN : Number(header);
-  const short = r.headers.get("content-encoding") === null &&
-    Number.isFinite(declared) && blob.size !== declared;
+  const short =
+    r.headers.get("content-encoding") === null &&
+    Number.isFinite(declared) &&
+    blob.size !== declared;
   if (blob.size === 0 || short) {
     throw Error(
       `Incomplete download for ${url}: ${blob.size.toString()} bytes` +

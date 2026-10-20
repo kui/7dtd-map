@@ -3,9 +3,7 @@ import { MapDir } from "../lib/storage.ts";
 import type { BundledMapHandler } from "../index/bundled-map-handler.ts";
 import type { DialogHandler } from "../index/dialog-handler.ts";
 import type { DndHandler } from "../index/dnd-handler.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-import { spy } from "@std/testing/mock";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 class FakeDirHandle {
   kind = "directory" as const;
@@ -63,39 +61,44 @@ function stubFileHandler(workspace: Promise<MapDir>): FileHandler {
 }
 
 describe("FileHandler.initialize", () => {
+  beforeAll(() => {
+    vi.stubGlobal("localStorage", { getItem: () => null });
+  });
+  afterAll(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("does not dispatch update when workspace has no map files", async () => {
     const handler = stubFileHandler(fakeWorkspace([]));
-    const listener = spy();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();
 
-    expect(listener.calls.length).toBe(0);
+    expect(listener.mock.calls.length).toBe(0);
   });
 
   it("ignores unrelated files in the workspace", async () => {
     const handler = stubFileHandler(fakeWorkspace(["junk.bin", "notes.txt"]));
-    const listener = spy();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();
 
-    expect(listener.calls.length).toBe(0);
+    expect(listener.mock.calls.length).toBe(0);
   });
 
   it("dispatches only existing map file names", async () => {
     const handler = stubFileHandler(
       fakeWorkspace(["map_info.xml", "biomes.png", "junk.bin"]),
     );
-    const listener = spy();
+    const listener = vi.fn();
     handler.addListener(listener);
 
     await handler.initialize();
 
-    expect(listener.calls.length).toBe(1);
-    const msg = listener.calls[0]?.args[0] as string[];
-    expect(new Set(msg)).toEqual(
-      new Set(["map_info.xml", "biomes.png"]),
-    );
+    expect(listener.mock.calls.length).toBe(1);
+    const msg = listener.mock.calls[0]?.[0] as string[];
+    expect(new Set(msg)).toEqual(new Set(["map_info.xml", "biomes.png"]));
   });
 });

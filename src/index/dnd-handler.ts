@@ -1,5 +1,5 @@
 import * as events from "../lib/events.ts";
-import { DialogHandler } from "./dialog-handler.ts";
+import type { DialogHandler } from "./dialog-handler.ts";
 
 export interface EventMessage {
   files: FileSystemEntry[];
@@ -75,8 +75,8 @@ export class DndHandler {
       // WHY: drop consumes the dragenter without firing a matching dragleave, so reset the counter to keep it consistent for the next drag.
       counter.reset();
       this.#listeners.dispatchNoAwait({
-        files: Array.from(event.dataTransfer.items).flatMap((item) =>
-          item.webkitGetAsEntry() ?? []
+        files: Array.from(event.dataTransfer.items).flatMap(
+          (item) => item.webkitGetAsEntry() ?? [],
         ),
       });
     });

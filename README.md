@@ -9,9 +9,9 @@ Map renderer for 7 Day to Die.
 Linux, macOS, and Windows are supported.
 
 1. Point the project at your installed copy of the game by creating a
-   `tools/vanilla` link at the project root. The path is wired into `deno task`
-   input-based caching, so it must be a static project-local path — not a
-   runtime config file. Pick the command for your OS:
+   `tools/vanilla` link at the project root. The path appears in the task
+   `sources` globs in `mise.toml`, so it must be a static project-local path,
+   not a runtime config file. Pick the command for your OS:
 
    - **macOS / Linux** (symlink):
 
@@ -38,26 +38,30 @@ Linux, macOS, and Windows are supported.
      New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
      ```
 
-2. Execute in your terminal:
+2. Install [mise](https://mise.jdx.dev/). It installs the Node version pinned
+   in `mise.toml` and runs the build tasks defined there.
+
+3. Install dependencies and build:
 
    ```
-   deno task build
+   mise install
+   npm ci
+   mise run build
    ```
 
-   On a second run the tasks declared in `deno.jsonc` skip themselves
-   (`cached, inputs unchanged`) when neither the source TS nor the matched game
-   files have changed.
+   On a second run each task skips itself when neither its source files nor
+   the matched game files have changed since the last run.
 
 ## Code lint
 
 ```
-deno task fix
+npm run fix
 ```
 
 ## Serve pages for development
 
 ```
-deno task serve
+npm run serve
 ```
 
 Note: You need to use HTTPS for development or access it using "localhost"

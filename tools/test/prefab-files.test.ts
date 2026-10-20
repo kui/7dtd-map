@@ -1,7 +1,6 @@
 import * as path from "node:path";
 import { prefabSiblingFiles } from "../lib/prefab-files.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "vitest";
 
 describe("prefabSiblingFiles", () => {
   const dir = path.join("Data", "Prefabs", "Some_Dir");

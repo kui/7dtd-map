@@ -103,10 +103,10 @@ export type Direction = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
 export type GameCoords =
   | {
-    type: "game";
-    x: number;
-    z: number;
-  }
+      type: "game";
+      x: number;
+      z: number;
+    }
   | Prefab;
 
 export interface PrefabBlockCounts {

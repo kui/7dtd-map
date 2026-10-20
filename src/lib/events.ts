@@ -17,13 +17,13 @@ export class ListenerManager<T> {
 
   async dispatch(payload: T) {
     const results = await Promise.allSettled(
-      this.#listeners.map((fn) =>
-        new Promise<unknown>((resolve) => resolve(fn(payload)))
+      this.#listeners.map(
+        (fn) => new Promise<unknown>((resolve) => resolve(fn(payload))),
       ),
     );
-    const errors = results.flatMap((
-      r,
-    ) => (r.status === "rejected" ? [r.reason as unknown] : []));
+    const errors = results.flatMap((r) =>
+      r.status === "rejected" ? [r.reason as unknown] : [],
+    );
     if (errors.length === 1) throw errors[0];
     if (errors.length > 1) throw new MultipleErrors(errors);
   }

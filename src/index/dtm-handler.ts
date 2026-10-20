@@ -156,7 +156,7 @@ export class Dtm {
       if (dataZ < 0) dataZ = 0;
       else if (dataZ > maxZ) dataZ = maxZ;
       // WHY: elevation byte is in game meters. Divide by scaleFactor to convert to the geometry's local units, which are already shrunk by the same ratio horizontally.
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       arr[j + 1] = this.#data[dataX + dataZ * width]! / scaleFactor;
     }
   }
@@ -170,9 +170,9 @@ async function getHightMapSize(): Promise<GameMapSize | null> {
     await file.text(),
     "application/xml",
   );
-  const size = doc.querySelector("property[name=HeightMapSize]")?.getAttribute(
-    "value",
-  );
+  const size = doc
+    .querySelector("property[name=HeightMapSize]")
+    ?.getAttribute("value");
   if (!size) {
     console.warn("HeightMapSize not found in map_info.xml");
     return null;

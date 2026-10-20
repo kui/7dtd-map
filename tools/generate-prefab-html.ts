@@ -1,10 +1,11 @@
-import { expandGlob } from "@std/fs/expand-glob";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { Label, LabelId, parseLabel } from "./lib/label-parser.ts";
+import type { Label, LabelId } from "./lib/label-parser.ts";
+import { parseLabel } from "./lib/label-parser.ts";
 import { prefabHtml } from "./lib/prefab-html.ts";
 import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {
+  globFiles,
   handleMain,
   publishDir,
   throttleAll,
@@ -23,10 +24,7 @@ async function main() {
 
 async function remove() {
   const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  const files = await Array.fromAsync(
-    expandGlob(globPath),
-    (e) => e.path,
-  );
+  const files = await globFiles(BASE_DEST, "*.{jpg,html}");
   await Promise.all(files.map((f) => fs.unlink(f)));
   console.log("Remove %s", globPath);
 }

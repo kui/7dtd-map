@@ -1,6 +1,7 @@
 import process from "node:process";
 import { loadBlocks } from "./lib/xmls/blocks-xml.ts";
-import { loadLoot, LootTable } from "./lib/xmls/loot-xml.ts";
+import type { LootTable } from "./lib/xmls/loot-xml.ts";
+import { loadLoot } from "./lib/xmls/loot-xml.ts";
 import { handleMain, program } from "./lib/utils.ts";
 
 const CMD = program();
@@ -40,7 +41,7 @@ async function main() {
   for (const b of matchedBlocks) console.log(b.name);
 
   const downgradeGraph = matchedBlocks.flatMap((b) =>
-    blocks.findByDowngradeBlocks([b])
+    blocks.findByDowngradeBlocks([b]),
   );
   console.log();
   console.log("Downgrade");
@@ -54,7 +55,7 @@ async function main() {
 function flattenItems(lootContainers: LootTable[]): Set<string> {
   return new Set(
     lootContainers.flatMap((c) =>
-      c.items.concat(Array.from(flattenItems(c.groups)))
+      c.items.concat(Array.from(flattenItems(c.groups))),
     ),
   );
 }

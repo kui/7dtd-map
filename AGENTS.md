@@ -14,12 +14,13 @@ repository. Agents must read and follow these rules closely.
      example, when an agent is instructed in Japanese to "open an issue", the
      issue itself must still be filed in English.
 
-2. **Deno Version Management**
-   - **Never run `deno upgrade`** in this project.
-   - `deno` is managed by `mise` (see `mise.toml`).
-   - To update Deno, modify `mise.toml` and run `mise install` instead.
-   - Running `deno upgrade` directly can lead to version mismatches and
-     unexpected behavior with mise.
+2. **mise and Node Version Management**
+   - mise is a required tool. It pins the Node version and defines the build
+     tasks (`mise run build`) in `mise.toml`.
+   - Keep the set of required tools minimal. Prefer leaning on a tool that is
+     already required over adding a new one.
+   - To update Node, modify `mise.toml`. Keep the `@types/node` major version
+     and `engines.node` in `package.json` in sync with it.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data files (prefab xmls,

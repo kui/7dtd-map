@@ -1,3 +1,142 @@
 [tools]
-deno = "2.9"
-ast-grep = "0.51"
+node = "26"
+
+[tasks.build]
+depends = [
+  "build:ts",
+  "build:json",
+  "build:prefab-html",
+  "build:copy-map-files",
+  "build:font-subsets",
+  "build:glyph-markers",
+  "build:favicon",
+]
+
+[tasks."build:glyph-markers"]
+run = "node tools/generate-glyph-markers.ts"
+sources = [
+  "tools/generate-glyph-markers.ts",
+  "tools/lib/utils.ts",
+  "lib/glyph-marker.ts",
+  "tools/fonts/NotoSansSymbols2-Regular.ttf",
+  "tools/fonts/NotoEmojiOld-Regular.ttf",
+]
+outputs = [
+  "public/heavy-ballot-x.svg",
+  "public/heavy-ballot-x-path.json",
+  "public/triangular-flag.svg",
+  "public/triangular-flag-path.json",
+]
+
+[tasks."build:favicon"]
+run = "node tools/generate-favicon.ts"
+depends = ["build:glyph-markers"]
+sources = [
+  "tools/generate-favicon.ts",
+  "tools/lib/ico.ts",
+  "tools/lib/utils.ts",
+  "public/heavy-ballot-x.svg",
+]
+outputs = ["public/favicon.ico"]
+
+[tasks."build:font-subsets"]
+run = "node tools/generate-font-subsets.ts"
+sources = [
+  "tools/generate-font-subsets.ts",
+  "tools/lib/symbol-chars.ts",
+  "tools/lib/utils.ts",
+  "tools/fonts/NotoColorEmoji-COLRv1.ttf",
+  "tools/fonts/NotoSansSymbols2-Regular.ttf",
+  "src/**/*.ts",
+  "public/*.html",
+  "tools/lib/prefab-html.ts",
+]
+outputs = [
+  "public/NotoColorEmoji.subset.woff2",
+  "public/NotoSansSymbols2.subset.woff2",
+]
+
+[tasks."build:ts"]
+run = "node tools/build.ts"
+sources = ["tools/build.ts", "tools/lib/utils.ts", "src/**/*.ts", "lib/**/*.ts"]
+outputs = [
+  "public/*.js",
+  "public/*.js.map",
+  "public/worker/*.js",
+  "public/worker/*.js.map",
+  "public/prefabs/*.js",
+  "public/prefabs/*.js.map",
+]
+
+[tasks."build:json"]
+depends = [
+  "build:json:prefab-props",
+  "build:json:labels",
+  "build:json:block-counts",
+  "build:json:added-prefabs",
+]
+
+[tasks."build:json:prefab-props"]
+run = "node tools/generate-prefab-properties-jsons.ts"
+sources = [
+  "tools/generate-prefab-properties-jsons.ts",
+  "tools/lib/**/*.ts",
+  "tools/vanilla/Data/Prefabs/*/*.xml",
+  "tools/vanilla/Data/Config/rwgmixer.xml",
+]
+outputs = [
+  "public/prefab-difficulties.json",
+  "public/prefab-mesh-sizes.json",
+  "public/prefab-density-scores.json",
+  "public/district-colors.json",
+]
+
+[tasks."build:json:labels"]
+run = "node tools/generate-labels-jsons.ts"
+sources = [
+  "tools/generate-labels-jsons.ts",
+  "tools/lib/**/*.ts",
+  "tools/vanilla/Data/Config/Localization.csv",
+]
+outputs = ["public/labels/**/*.json"]
+
+# WHY: no sources, so it runs every time; it appends to its own output and must see the latest git refs.
+[tasks."build:json:added-prefabs"]
+run = "node tools/extract-added-prefabs.ts"
+
+[tasks."build:json:block-counts"]
+run = "node tools/generate-prefab-block-counts.ts"
+sources = [
+  "tools/generate-prefab-block-counts.ts",
+  "tools/lib/**/*.ts",
+  "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
+  "tools/vanilla/Data/Prefabs/*/*.tts",
+]
+outputs = ["public/prefab-block-counts.json"]
+
+[tasks."build:prefab-html"]
+run = "node tools/generate-prefab-html.ts"
+sources = [
+  "tools/generate-prefab-html.ts",
+  "tools/lib/**/*.ts",
+  "tools/vanilla/Data/Prefabs/*/*.xml",
+  "tools/vanilla/Data/Prefabs/*/*.blocks.nim",
+  "tools/vanilla/Data/Prefabs/*/*.tts",
+  "tools/vanilla/Data/Prefabs/*/*.jpg",
+  "tools/vanilla/Data/Config/Localization.csv",
+]
+outputs = [
+  "public/prefabs/*.html",
+  "public/prefabs/*.jpg",
+  "public/prefabs/index.json",
+]
+
+[tasks."build:copy-map-files"]
+run = "node tools/copy-map-files.ts"
+sources = [
+  "tools/copy-map-files.ts",
+  "tools/lib/**/*.ts",
+  "lib/map-files.ts",
+  "tools/vanilla/Data/Worlds/**/*",
+]
+outputs = ["public/maps/**/*"]

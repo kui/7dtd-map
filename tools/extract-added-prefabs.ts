@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import {
   handleMain,
@@ -33,15 +35,15 @@ async function main() {
 
   let totalAdded = 0;
   for (let i = 1; i < VERSIONS.length; i++) {
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { version, ref } = VERSIONS[i]!;
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const previousRef = VERSIONS[i - 1]!.ref;
 
-    const previousNames = await readIndexJsonAt(previousRef);
-    const currentNames = await readIndexJsonAt(ref);
-    const addedNames = [...currentNames].filter((name) =>
-      !previousNames.has(name)
+    const previousNames = readIndexJsonAt(previousRef);
+    const currentNames = readIndexJsonAt(ref);
+    const addedNames = [...currentNames].filter(
+      (name) => !previousNames.has(name),
     );
 
     for (const name of addedNames) {
@@ -70,27 +72,16 @@ async function main() {
   return 0;
 }
 
-async function readIndexJsonAt(ref: string): Promise<Set<string>> {
-  const command = new Deno.Command("git", {
-    args: ["show", `${ref}:${INDEX_JSON_PATH}`],
+function readIndexJsonAt(ref: string): Set<string> {
+  const stdout = execFileSync("git", ["show", `${ref}:${INDEX_JSON_PATH}`], {
     cwd: projectRoot(),
-    stdout: "piped",
-    stderr: "piped",
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
   });
-  const { code, stdout, stderr } = await command.output();
-  if (code !== 0) {
-    throw new Error(
-      `git show ${ref}:${INDEX_JSON_PATH} failed: ${
-        new TextDecoder().decode(stderr)
-      }`,
-    );
-  }
-
-  const json: unknown = JSON.parse(new TextDecoder().decode(stdout));
+  const json: unknown = JSON.parse(stdout);
   if (!Array.isArray(json) || !json.every((v) => typeof v === "string")) {
-    throw new Error(
-      `${INDEX_JSON_PATH} at ${ref} is not an array of strings`,
-    );
+    throw new Error(`${INDEX_JSON_PATH} at ${ref} is not an array of strings`);
   }
   return new Set(json);
 }
@@ -100,15 +91,17 @@ async function readExistingOutput(
 ): Promise<{ [prefabName: string]: string }> {
   let text: string;
   try {
-    text = await Deno.readTextFile(outputPath);
+    text = await readFile(outputPath, "utf8");
   } catch (e) {
-    if (e instanceof Deno.errors.NotFound) return {};
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {};
     throw e;
   }
 
   const json: unknown = JSON.parse(text);
   if (
-    json === null || typeof json !== "object" || Array.isArray(json) ||
+    json === null ||
+    typeof json !== "object" ||
+    Array.isArray(json) ||
     !Object.values(json).every((v) => typeof v === "string")
   ) {
     throw new Error(`${outputPath} is not a flat string-to-string map`);

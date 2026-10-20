@@ -1,7 +1,7 @@
 [
   {
-    "label": "deno test",
-    "command": "deno test -A '$ZED_FILE'",
+    "label": "vitest",
+    "command": "npx vitest run '$ZED_FILE'",
     "tags": ["js-test"]
   }
 ]

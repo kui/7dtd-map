@@ -1,8 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = Number(Deno.env.get("PORT") ?? 18234);
-const HOST = Deno.env.get("HOST") ?? "127.0.0.1";
-const CI = Deno.env.get("CI");
+const PORT = Number(process.env["PORT"] ?? 18234);
+const HOST = process.env["HOST"] ?? "127.0.0.1";
+const CI = process.env["CI"];
 const baseURL = `http://${HOST}:${PORT}`;
 
 export default defineConfig({
@@ -29,7 +29,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `deno task serve:static`,
+    command: `npm run serve:static`,
     url: baseURL,
     timeout: 120_000,
     reuseExistingServer: !CI,

@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { parse as parseXml } from "@libs/xml";
 
 export interface District {
@@ -24,7 +25,7 @@ function asArray<T>(v: T | T[] | undefined): T[] {
 function parsePreviewColor(raw: string): [number, number, number] | null {
   const parts = raw.split(",").map((s) => parseFloat(s.trim()));
   return parts.length === 3 && parts.every((n) => Number.isFinite(n))
-    ? parts as [number, number, number]
+    ? (parts as [number, number, number])
     : null;
 }
 
@@ -35,10 +36,8 @@ function parsePreviewColor(raw: string): [number, number, number] | null {
  * `preview_color` are still returned with `previewColor = null` so
  * callers can decide whether to fall back to a default.
  */
-export async function parseRwgmixerXml(
-  fileName: string,
-): Promise<District[]> {
-  const parsed = parseXml(await Deno.readTextFile(fileName)) as {
+export async function parseRwgmixerXml(fileName: string): Promise<District[]> {
+  const parsed = parseXml(await readFile(fileName, "utf8")) as {
     rwgmixer?: { district?: RawDistrict | RawDistrict[] };
   };
   const rawDistricts = asArray(parsed.rwgmixer?.district);

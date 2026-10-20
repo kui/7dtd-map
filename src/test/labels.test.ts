@@ -1,6 +1,5 @@
 import { Labels, resolveLanguage } from "../lib/labels.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "vitest";
 
 describe("resolveLanguage", () => {
   it("returns english for empty list", () => {

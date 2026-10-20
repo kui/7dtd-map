@@ -11,9 +11,7 @@ import {
   MATCHED_BLOCKS_LIMIT,
   PrefabFilter,
 } from "../worker/lib/prefab-filter.ts";
-import { expect } from "@std/expect";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { stub } from "@std/testing/mock";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Stubs globalThis.fetch (which LabelHolder.fetchJson hits with URLs like
@@ -21,26 +19,25 @@ import { stub } from "@std/testing/mock";
  * can run end-to-end without touching the network.
  */
 function stubFetch(map: Record<string, unknown>) {
-  return stub(
-    globalThis,
-    "fetch",
-    ((input: string | URL | Request): Promise<Response> => {
-      const url = typeof input === "string"
+  return vi.spyOn(globalThis, "fetch").mockImplementation(((
+    input: string | URL | Request,
+  ): Promise<Response> => {
+    const url =
+      typeof input === "string"
         ? input
         : input instanceof URL
-        ? input.toString()
-        : input.url;
-      const key = Object.keys(map).find((k) => url.endsWith(k));
-      if (!key) {
-        return Promise.reject(new Error(`Unexpected fetch: ${url}`));
-      }
-      return Promise.resolve(
-        new Response(JSON.stringify(map[key]), {
-          headers: { "content-type": "application/json" },
-        }),
-      );
-    }) as typeof fetch,
-  );
+          ? input.toString()
+          : input.url;
+    const key = Object.keys(map).find((k) => url.endsWith(k));
+    if (!key) {
+      return Promise.reject(new Error(`Unexpected fetch: ${url}`));
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(map[key]), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }) as typeof fetch);
 }
 
 function build(
@@ -66,7 +63,7 @@ interface Captured {
   headers: number;
 }
 
-const fetchStubs: { restore: () => void }[] = [];
+const fetchStubs: { mockRestore: () => void }[] = [];
 
 describe("PrefabFilter", () => {
   beforeEach(() => {
@@ -79,7 +76,7 @@ describe("PrefabFilter", () => {
     );
   });
   afterEach(() => {
-    while (fetchStubs.length) fetchStubs.pop()?.restore();
+    while (fetchStubs.length) fetchStubs.pop()?.mockRestore();
   });
 
   const prefabs: Prefab[] = [
@@ -89,10 +86,10 @@ describe("PrefabFilter", () => {
     { name: "skyscraper_01", x: 500, y: 0, z: 500, yIsGroundLevel: false },
   ];
   const difficulties: PrefabDifficulties = {
-    "aaa_test_01": 0,
-    "house_01": 1,
-    "trader_01": 3,
-    "skyscraper_01": 5,
+    aaa_test_01: 0,
+    house_01: 1,
+    trader_01: 3,
+    skyscraper_01: 5,
   };
 
   function capture(f: PrefabFilter): Captured {
@@ -128,9 +125,7 @@ describe("PrefabFilter", () => {
     f.preExcludes = ["^aaa_"];
     const slot = capture(f);
     await settle(f, slot);
-    expect(slot.prefabs.map((p) => p.name)).not.toContain(
-      "aaa_test_01",
-    );
+    expect(slot.prefabs.map((p) => p.name)).not.toContain("aaa_test_01");
     expect(slot.prefabs.length).toBe(3);
   });
 
@@ -154,8 +149,8 @@ describe("PrefabFilter", () => {
     const first = slot.prefabs[0];
     expect(first.name).toBe("aaa_test_01");
     expect(
-      slot.prefabs.every((p) =>
-        p.distance !== null && p.distance !== undefined
+      slot.prefabs.every(
+        (p) => p.distance !== null && p.distance !== undefined,
       ),
     ).toBe(true);
   });
@@ -166,9 +161,7 @@ describe("PrefabFilter", () => {
     f.preExcludes = [];
     const slot = capture(f);
     await settle(f, slot);
-    expect(slot.status).toBe(
-      `All ${prefabs.length.toString()} prefabs`,
-    );
+    expect(slot.status).toBe(`All ${prefabs.length.toString()} prefabs`);
   });
 
   it("filters to prefabs added in the latest version when onlyNew is set", async () => {
@@ -221,9 +214,7 @@ describe("PrefabFilter", () => {
     f.blockFilterRegexp = "[unbalanced";
     const slot = capture(f);
     await settle(f, slot);
-    expect(slot.status).toBe(
-      "Invalid prefab name and block name patterns",
-    );
+    expect(slot.status).toBe("Invalid prefab name and block name patterns");
     expect(slot.prefabs).toEqual([]);
   });
 
@@ -248,9 +239,7 @@ describe("PrefabFilter", () => {
     f.preExcludes = ["(unbalanced", "^aaa_"];
     const slot = capture(f);
     await settle(f, slot);
-    expect(slot.prefabs.map((p) => p.name)).not.toContain(
-      "aaa_test_01",
-    );
+    expect(slot.prefabs.map((p) => p.name)).not.toContain("aaa_test_01");
   });
 
   it("re-runs filter when language changes", async () => {
@@ -262,7 +251,7 @@ describe("PrefabFilter", () => {
     await settle(f, slot);
     expect(slot.prefabs.map((p) => p.name)).toContain("house_01");
 
-    while (fetchStubs.length) fetchStubs.pop()?.restore();
+    while (fetchStubs.length) fetchStubs.pop()?.mockRestore();
     fetchStubs.push(
       stubFetch({
         "japanese/prefabs.json": { house_01: "家", trader_01: "商人" },
@@ -363,8 +352,10 @@ describe("PrefabFilter", () => {
     expect(blocks.length).toBe(MATCHED_BLOCKS_LIMIT);
     expect(house?.matchedBlockTypeCount).toBe(typeCount);
     // INVARIANT: matchedBlockCount sums every matched type, not just the transmitted ones capped by MATCHED_BLOCKS_LIMIT.
-    const fullSum = Array.from({ length: typeCount }, (_, i) => i + 1)
-      .reduce((a, b) => a + b, 0);
+    const fullSum = Array.from({ length: typeCount }, (_, i) => i + 1).reduce(
+      (a, b) => a + b,
+      0,
+    );
     expect(house?.matchedBlockCount).toBe(fullSum);
     const counts = blocks.map((b) => b.count ?? 0);
     expect(counts).toEqual([...counts].sort((a, b) => b - a));

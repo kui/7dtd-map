@@ -1,5 +1,5 @@
 import { LabelHandler } from "../lib/label-handler.ts";
-import { Labels } from "../lib/labels.ts";
+import type { Labels } from "../lib/labels.ts";
 import { component } from "../lib/dom-utils.ts";
 import { printError } from "../lib/utils.ts";
 
@@ -36,9 +36,9 @@ function updatePrefabLabels(labels: Labels) {
 }
 
 function updateBlockLabels(blockLabels: Labels, shapeLabels: Labels) {
-  for (
-    const blockEl of component("blocks", HTMLElement).querySelectorAll(".block")
-  ) {
+  for (const blockEl of component("blocks", HTMLElement).querySelectorAll(
+    ".block",
+  )) {
     const name = blockEl.querySelector(".block_name")?.textContent.trim();
     if (!name) continue;
     const labelEl = blockEl.querySelector(".block_label");

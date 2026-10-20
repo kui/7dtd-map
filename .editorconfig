@@ -1,7 +1,6 @@
 root = true
 
 [*]
-# General settings matching Deno's default formatting rules
 charset = utf-8
 end_of_line = lf
 indent_style = space

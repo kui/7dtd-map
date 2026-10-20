@@ -15,8 +15,9 @@ export class DialogHandler {
     this.#doms = doms;
     this.#radioList = requireType(
       requireNonnull(
-        (doms.dialog.querySelector("#dialog-active") as HTMLFormElement)
-          ?.elements.namedItem("active-section"),
+        (
+          doms.dialog.querySelector("#dialog-active") as HTMLFormElement
+        )?.elements.namedItem("active-section"),
         () => "Unexpected dialog content",
       ),
       RadioNodeList,
@@ -87,7 +88,7 @@ export class FileProgressionIndicator {
 
   get isAllCompleted() {
     return this.#liList.every((li) =>
-      TERMINATED_STATES.find((state) => li.classList.contains(state))
+      TERMINATED_STATES.find((state) => li.classList.contains(state)),
     );
   }
 

@@ -10,9 +10,7 @@ import type { PrefabAddedVersions } from "../types/7dtdmap.ts";
  * is importable from the filter worker, where DOM types are
  * unavailable.
  */
-export function latestAddedVersion(
-  addedVersions: PrefabAddedVersions,
-): string {
+export function latestAddedVersion(addedVersions: PrefabAddedVersions): string {
   const knownVersions = new Set<string>();
   let latest: number[] | null = null;
   for (const version of Object.values(addedVersions)) {

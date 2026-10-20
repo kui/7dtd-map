@@ -1,9 +1,9 @@
-import { expandGlob } from "@std/fs/expand-glob";
 import * as path from "node:path";
 import { parseNim } from "./lib/nim-parser.ts";
 import { parseTts } from "./lib/tts-parser.ts";
 import { prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {
+  globFiles,
   handleMain,
   publishDir,
   throttleAll,
@@ -24,9 +24,9 @@ interface PrefabBlockCounts {
 async function main() {
   console.log("Load nim files");
   const globPath = vanillaDir("Data", "Prefabs", "*", "*.blocks.nim");
-  const nimFiles = await Array.fromAsync(
-    expandGlob(globPath),
-    (e) => e.path,
+  const nimFiles = await globFiles(
+    vanillaDir("Data", "Prefabs"),
+    "*/*.blocks.nim",
   );
   console.log("Found %d nim files from %s", nimFiles.length, globPath);
 
@@ -55,7 +55,7 @@ async function readCounts(nimFiles: string[]): Promise<PrefabBlockCounts> {
 
   return Object.fromEntries(
     (await throttleAll(tasks, 100)).toSorted((a, b) =>
-      a[0].localeCompare(b[0])
+      a[0].localeCompare(b[0]),
     ),
   );
 }

@@ -1,8 +1,6 @@
 import { ListenerManager } from "../lib/events.ts";
 import { MultipleErrors } from "../lib/errors.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-import { spy as fn } from "@std/testing/mock";
+import { describe, expect, it, vi } from "vitest";
 
 type TestMessage = { value: string };
 
@@ -10,15 +8,15 @@ describe("ListenerManager", () => {
   describe("dispatch", () => {
     it("calls all registered listeners with the message", async () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener1 = fn();
-      const listener2 = fn();
+      const listener1 = vi.fn();
+      const listener2 = vi.fn();
       manager.addListener(listener1);
       manager.addListener(listener2);
       const msg: TestMessage = { value: "test" };
       await manager.dispatch(msg);
-      expect(listener1.calls.length).toBe(1);
-      expect(listener1.calls[0]?.args[0]).toBe(msg);
-      expect(listener2.calls.length).toBe(1);
+      expect(listener1.mock.calls.length).toBe(1);
+      expect(listener1.mock.calls[0]?.[0]).toBe(msg);
+      expect(listener2.mock.calls.length).toBe(1);
     });
 
     it("resolves when there are no listeners", async () => {
@@ -31,24 +29,20 @@ describe("ListenerManager", () => {
     it("re-throws a single error when one listener throws synchronously", async () => {
       const manager = new ListenerManager<TestMessage>();
       const err = new Error("single sync error");
-      const second = fn();
+      const second = vi.fn();
       manager.addListener(() => {
         throw err;
       });
       manager.addListener(second);
-      await expect(
-        manager.dispatch({ value: "test" }),
-      ).rejects.toBe(err);
-      expect(second.calls.length).toBe(1);
+      await expect(manager.dispatch({ value: "test" })).rejects.toBe(err);
+      expect(second.mock.calls.length).toBe(1);
     });
 
     it("re-throws a single rejected promise error directly", async () => {
       const manager = new ListenerManager<TestMessage>();
       const err = new Error("async error");
       manager.addListener(() => Promise.reject(err));
-      await expect(
-        manager.dispatch({ value: "test" }),
-      ).rejects.toBe(err);
+      await expect(manager.dispatch({ value: "test" })).rejects.toBe(err);
     });
 
     it("wraps multiple synchronous throws in MultipleErrors", async () => {
@@ -81,16 +75,16 @@ describe("ListenerManager", () => {
   describe("removeListener", () => {
     it("does not call the listener after it is removed", async () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener = fn();
+      const listener = vi.fn();
       manager.addListener(listener);
       manager.removeListener(listener);
       await manager.dispatch({ value: "test" });
-      expect(listener.calls.length).toBe(0);
+      expect(listener.mock.calls.length).toBe(0);
     });
 
     it("is a no-op when the listener was never added", () => {
       const manager = new ListenerManager<TestMessage>();
-      const listener = fn();
+      const listener = vi.fn();
       expect(() => manager.removeListener(listener)).not.toThrow();
     });
   });

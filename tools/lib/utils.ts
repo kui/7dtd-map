@@ -14,11 +14,21 @@ export function publishDir(...pathList: string[]): string {
 
 /**
  * Resolves a project-relative path under `tools/vanilla`. Must stay a
- * static project-relative path because `deno task` input-based caching
- * needs to express it as a glob in `deno.jsonc:files`.
+ * static project-relative path because the build tasks express it as a
+ * glob in the `sources` of `mise.toml`.
  */
 export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);
+}
+
+export async function globFiles(
+  root: string,
+  pattern: string,
+): Promise<string[]> {
+  const matches = await Array.fromAsync(
+    fs.promises.glob(pattern, { cwd: root }),
+  );
+  return matches.sort().map((p) => path.join(root, p));
 }
 
 export function requireNonnull<T>(
@@ -61,10 +71,7 @@ export async function writeJsonFile(
  * null, "\t")` so diffs stay per-entry, but without indentation or
  * spaces after `":"` and `","`.
  */
-function compactStringify(
-  value: unknown,
-  collapseLeafArrays: boolean,
-): string {
+function compactStringify(value: unknown, collapseLeafArrays: boolean): string {
   if (isJsonPrimitive(value)) return JSON.stringify(value);
   if (Array.isArray(value)) {
     if (value.length === 0) return "[]";
@@ -77,8 +84,9 @@ function compactStringify(
   if (typeof value === "object" && value !== null) {
     const entries = Object.entries(value);
     if (entries.length === 0) return "{}";
-    const items = entries.map(([k, v]) =>
-      `${JSON.stringify(k)}:${compactStringify(v, collapseLeafArrays)}`
+    const items = entries.map(
+      ([k, v]) =>
+        `${JSON.stringify(k)}:${compactStringify(v, collapseLeafArrays)}`,
     );
     return `{\n${items.join(",\n")}\n}`;
   }
@@ -86,8 +94,12 @@ function compactStringify(
 }
 
 function isJsonPrimitive(value: unknown): boolean {
-  return value === null || typeof value === "string" ||
-    typeof value === "number" || typeof value === "boolean";
+  return (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  );
 }
 
 /**
@@ -97,8 +109,7 @@ function isJsonPrimitive(value: unknown): boolean {
  * booleans, null), so structured elements stay pretty-printed.
  */
 function collapseLeafArrays(body: string): string {
-  const primitive =
-    `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;
+  const primitive = `(?:-?\\d+(?:\\.\\d+)?|"(?:[^"\\\\]|\\\\.)*"|true|false|null)`;
   const re = new RegExp(
     `\\[\\n\\s*(${primitive}(?:,\\n\\s*${primitive})*)\\n\\s*\\]`,
     "g",
@@ -158,14 +169,14 @@ export async function throttleAll<T>(
   tasks: (() => Promise<T>)[],
   maxConcurrency: number,
 ): Promise<T[]> {
-  const results: T[] = new Array(tasks.length);
+  const results: T[] = [];
   let index = 0;
 
   async function worker(): Promise<void> {
     while (true) {
       const currentIndex = index++;
       if (currentIndex >= tasks.length) break;
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       results[currentIndex] = await tasks[currentIndex]!();
     }
   }

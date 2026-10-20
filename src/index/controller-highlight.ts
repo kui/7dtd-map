@@ -6,10 +6,7 @@ export const HIGHLIGHT_CLASS = "reset-target-highlight";
  * section is folded. Targets without any of these ancestors (e.g.
  * inside a dialog) are skipped.
  */
-export function setHighlightFor(
-  targets: Iterable<Element>,
-  on: boolean,
-): void {
+export function setHighlightFor(targets: Iterable<Element>, on: boolean): void {
   for (const el of targets) {
     const row = el.closest("tr, li");
     if (row) row.classList.toggle(HIGHLIGHT_CLASS, on);

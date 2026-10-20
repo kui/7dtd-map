@@ -1,31 +1,29 @@
 import { throttledInvoker } from "../lib/throttled-invoker.ts";
 import { printError, sleep } from "../lib/utils.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-import { FakeTime } from "@std/testing/time";
-import { spy as fn } from "@std/testing/mock";
+import { describe, expect, it, vi } from "vitest";
+import { useFakeTime } from "./fake-time.ts";
 
 describe("throttledInvoker", () => {
   it("delays the first run by at least 10ms so rapid successive calls coalesce", async () => {
-    using time = new FakeTime(0);
-    const mockFn = fn();
+    using time = useFakeTime(0);
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(() => {
       mockFn();
     }, 100);
 
     invoker().catch(printError);
     await time.tickAsync(9);
-    expect(mockFn.calls.length).toBe(0);
+    expect(mockFn.mock.calls.length).toBe(0);
 
     const second = invoker();
     await time.tickAsync(1);
-    expect(mockFn.calls.length).toBe(1);
+    expect(mockFn.mock.calls.length).toBe(1);
     await expect(second).resolves.toBeUndefined();
   });
 
   it("coalesces calls arriving during execution into one trailing run", async () => {
-    using time = new FakeTime(0);
-    const mockFn = fn();
+    using time = useFakeTime(0);
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(async () => {
       mockFn();
       await sleep(100);
@@ -43,20 +41,20 @@ describe("throttledInvoker", () => {
     await time.tickAsync(200);
     await time.tickAsync(200);
 
-    expect(mockFn.calls.length).toBe(2);
+    expect(mockFn.mock.calls.length).toBe(2);
     await expect(third).resolves.toBeUndefined();
   });
 
   it("does not schedule an extra run for calls during the throttle wait", async () => {
-    using time = new FakeTime(0);
-    const mockFn = fn();
+    using time = useFakeTime(0);
+    const mockFn = vi.fn();
     const invoker = throttledInvoker(() => {
       mockFn();
     }, 100);
 
     invoker().catch(printError);
     await time.tickAsync(10);
-    expect(mockFn.calls.length).toBe(1);
+    expect(mockFn.mock.calls.length).toBe(1);
 
     const second = invoker();
     await time.tickAsync(50);
@@ -64,12 +62,12 @@ describe("throttledInvoker", () => {
     expect(third).toBe(second);
 
     await time.tickAsync(200);
-    expect(mockFn.calls.length).toBe(2);
+    expect(mockFn.mock.calls.length).toBe(2);
     await expect(second).resolves.toBeUndefined();
   });
 
   it("waits intervalMs from completion of the previous run, not from its start", async () => {
-    using time = new FakeTime(0);
+    using time = useFakeTime(0);
     const events: string[] = [];
     const invoker = throttledInvoker(async () => {
       events.push(`start:${Date.now()}`);
@@ -77,7 +75,6 @@ describe("throttledInvoker", () => {
       events.push(`end:${Date.now()}`);
     }, 100);
 
-    // WHY: FakeTime returns Date.now() as the tick target inside an await continuation, not the timer's scheduled time, so ticks must land exactly on each due time.
     invoker().catch(printError);
     await time.tickAsync(10);
     await time.tickAsync(50);
@@ -90,7 +87,7 @@ describe("throttledInvoker", () => {
   });
 
   it("avoids parallel execution", async () => {
-    using time = new FakeTime(0);
+    using time = useFakeTime(0);
     let count = 0;
     const invoker = throttledInvoker(async () => {
       count++;
@@ -110,7 +107,7 @@ describe("throttledInvoker", () => {
   });
 
   it("rejects only the failing cycle and keeps serving later calls", async () => {
-    using time = new FakeTime(0);
+    using time = useFakeTime(0);
     let calls = 0;
     const invoker = throttledInvoker(async () => {
       calls++;

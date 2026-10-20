@@ -1,6 +1,5 @@
 import { extractMeshSizes } from "../generate-prefab-properties-jsons.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "vitest";
 
 function prefab(props: Record<string, string>) {
   return Object.entries(props).map(([name, value]) => ({ name, value }));
@@ -25,7 +24,7 @@ describe("extractMeshSizes", () => {
     expect(() =>
       extractMeshSizes({
         broken: prefab({ PrefabSize: "10, 8, 12", YOffset: "-1.5" }),
-      })
+      }),
     ).toThrow(/YOffset/);
   });
 
@@ -37,16 +36,19 @@ describe("extractMeshSizes", () => {
 
   it("throws on a PrefabSize that is not three integers", () => {
     for (const PrefabSize of ["10, 8", "10, 8, 12, 4", "10, x, 20"]) {
-      expect(() => extractMeshSizes({ p: prefab({ PrefabSize }) }))
-        .toThrow(/PrefabSize/);
+      expect(() => extractMeshSizes({ p: prefab({ PrefabSize }) })).toThrow(
+        /PrefabSize/,
+      );
     }
   });
 
   it("skips prefabs with a non-positive footprint", () => {
-    expect(extractMeshSizes({ p: prefab({ PrefabSize: "0, 8, 12" }) }))
-      .toEqual({});
-    expect(extractMeshSizes({ p: prefab({ PrefabSize: "10, 8, 0" }) }))
-      .toEqual({});
+    expect(extractMeshSizes({ p: prefab({ PrefabSize: "0, 8, 12" }) })).toEqual(
+      {},
+    );
+    expect(extractMeshSizes({ p: prefab({ PrefabSize: "10, 8, 0" }) })).toEqual(
+      {},
+    );
   });
 
   it("sorts entries by prefab name", () => {

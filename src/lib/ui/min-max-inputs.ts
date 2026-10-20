@@ -6,12 +6,10 @@ export function init() {
     });
   }
 
-  for (
-    const input of [
-      ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
-      ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
-    ]
-  ) {
+  for (const input of [
+    ...document.querySelectorAll<HTMLInputElement>("input[data-max]"),
+    ...document.querySelectorAll<HTMLInputElement>("input[data-min]"),
+  ]) {
     updateMinMax(input);
   }
 }
@@ -38,9 +36,10 @@ function updateBounded(
     `input[data-${bound}="${minMaxId}"]`,
   );
   for (const input of inputs) {
-    const violatesBound = bound === "max"
-      ? input.valueAsNumber < target.valueAsNumber
-      : input.valueAsNumber > target.valueAsNumber;
+    const violatesBound =
+      bound === "max"
+        ? input.valueAsNumber < target.valueAsNumber
+        : input.valueAsNumber > target.valueAsNumber;
     if (violatesBound) {
       const oldValue = input.value;
       input.value = target.value;

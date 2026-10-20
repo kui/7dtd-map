@@ -6,12 +6,12 @@ import type { BundledMapHandler } from "./bundled-map-handler.ts";
 import type { DialogHandler } from "./dialog-handler.ts";
 import type { DndHandler } from "./dnd-handler.ts";
 
+import type { MapFileName } from "../../lib/map-files.ts";
 import {
   getPreferWorldFileName,
   hasPreferWorldFileNameIn,
   isMapFileName,
   MAP_FILE_NAMES,
-  MapFileName,
   PREFER_WORLD_FILE_NAMES,
 } from "../../lib/map-files.ts";
 import * as storage from "../lib/storage.ts";
@@ -146,9 +146,9 @@ export class FileHandler {
     if (entries.length === 1 && isDirectory(entry)) {
       this.#setMapName(entry.name);
       const files = await Promise.all(
-        (await listEntries(entry)).flatMap((
-          e,
-        ) => (isFile(e) ? [toFile(e)] : [])),
+        (await listEntries(entry)).flatMap((e) =>
+          isFile(e) ? [toFile(e)] : [],
+        ),
       );
       await this.#pushFiles(files);
       return;
@@ -193,7 +193,8 @@ export class FileHandler {
 
   async #process(resourceList: ResourceLike[]) {
     if (
-      this.#dialogHandler.isOpen && this.#dialogHandler.state === "processing"
+      this.#dialogHandler.isOpen &&
+      this.#dialogHandler.state === "processing"
     ) {
       throw new Error("Already processing");
     }
@@ -315,21 +316,21 @@ function isStateRequiredResource(
   return isStateRequiredMapFile(resource.name);
 }
 
-function isNeverProcessRequiredResource(
-  resource: ResourceLike,
-): resource is { name: NeverProcessRequiredMapFileName; blob: Blob } | {
-  name: NeverProcessRequiredMapFileName;
-  url: string;
-} {
+function isNeverProcessRequiredResource(resource: ResourceLike): resource is
+  | { name: NeverProcessRequiredMapFileName; blob: Blob }
+  | {
+      name: NeverProcessRequiredMapFileName;
+      url: string;
+    } {
   return isNeverProcessRequiredMapFile(resource.name);
 }
 
-function isAlwaysProcessRequiredResource(
-  resource: ResourceLike,
-): resource is { name: AlwaysProcessRequiredFileName; blob: Blob } | {
-  name: AlwaysProcessRequiredFileName;
-  url: string;
-} {
+function isAlwaysProcessRequiredResource(resource: ResourceLike): resource is
+  | { name: AlwaysProcessRequiredFileName; blob: Blob }
+  | {
+      name: AlwaysProcessRequiredFileName;
+      url: string;
+    } {
   return isAlwaysProcessRequiredFile(resource.name);
 }
 
@@ -377,7 +378,7 @@ class DepletedFileHandler {
 
   isSupport(worldFileName: string): worldFileName is DeplateOrPreferedFileName {
     return Object.entries(PREFER_WORLD_FILE_NAMES).some((e) =>
-      e.includes(worldFileName)
+      e.includes(worldFileName),
     );
   }
 

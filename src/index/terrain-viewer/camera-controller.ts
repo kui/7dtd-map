@@ -254,9 +254,12 @@ export class TerrainViewerCameraController {
 
   #moveCameraXZ(deltaMsec: number) {
     if (
-      this.#speeds.x === 0 && this.#speeds.y === 0 &&
-      this.#mouseMove.left.x === 0 && this.#mouseMove.left.y === 0
-    ) return;
+      this.#speeds.x === 0 &&
+      this.#speeds.y === 0 &&
+      this.#mouseMove.left.x === 0 &&
+      this.#mouseMove.left.y === 0
+    )
+      return;
 
     const scaleFactor = this.#mapWidth / (this.#terrainSize.width + 1);
 
@@ -294,18 +297,20 @@ export class TerrainViewerCameraController {
 
   #moveCameraForward(deltaMsec: number) {
     if (this.#mouseMove.wheel === 0 && this.#speeds.zoom === 0) return;
-    const wheelDelta = (this.#mouseMove.wheel * this.#terrainSize.width) /
-      -5000;
+    const wheelDelta =
+      (this.#mouseMove.wheel * this.#terrainSize.width) / -5000;
     this.#mouseMove.wheel = 0;
     // WHY: keyboard zoom advances roughly 30% of the terrain width per second at speed 1 to match the perceived feel of the mouse wheel at moderate use.
-    const keyDelta = (this.#speeds.zoom * this.#terrainSize.width * 0.3 *
-      deltaMsec) / 1000;
+    const keyDelta =
+      (this.#speeds.zoom * this.#terrainSize.width * 0.3 * deltaMsec) / 1000;
     const moveDelta = wheelDelta + keyDelta;
-    const moveVector = this.#cameraWork.move.copy(this.#cameraWork.direction)
+    const moveVector = this.#cameraWork.move
+      .copy(this.#cameraWork.direction)
       .multiplyScalar(moveDelta);
     this.camera.position.add(moveVector);
     if (
-      this.camera.position.y < this.#minY || this.#maxY < this.camera.position.y
+      this.camera.position.y < this.#minY ||
+      this.#maxY < this.camera.position.y
     ) {
       this.camera.position.sub(moveVector);
     }
@@ -319,14 +324,15 @@ export class TerrainViewerCameraController {
     const deltaRadMouse = this.#mouseMove.center.y * (-(Math.PI / 2) / 1000);
 
     // WHY: keypress tilt uses PI/4 rad per second (about 45°/s at speed 1).
-    const deltaRadKey = (((this.#speeds.tilt * Math.PI) / 4) * deltaMsec) /
-      1000;
+    const deltaRadKey =
+      (((this.#speeds.tilt * Math.PI) / 4) * deltaMsec) / 1000;
 
     const deltaRad = deltaRadMouse + deltaRadKey;
     this.#mouseMove.center.y = 0;
 
     const pivot = this.#cameraWork.groundPoint;
-    const offset = this.#cameraWork.tiltOffset.copy(this.camera.position)
+    const offset = this.#cameraWork.tiltOffset
+      .copy(this.camera.position)
       .sub(pivot);
     offset.applyAxisAngle(TILT_AXIS, deltaRad);
 

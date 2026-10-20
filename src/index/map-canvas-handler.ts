@@ -23,10 +23,7 @@ interface Doms {
 }
 
 interface MapRendererWorker extends Worker {
-  postMessage(
-    message: MapRendererInputMessage,
-    transfer: Transferable[],
-  ): void;
+  postMessage(message: MapRendererInputMessage, transfer: Transferable[]): void;
   postMessage(
     message: MapRendererInputMessage,
     options?: StructuredSerializeOptions,

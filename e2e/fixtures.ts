@@ -18,9 +18,9 @@ export const test = base.extend({
 
     expect(
       errors,
-      `Unexpected console errors/warnings: ${
-        errors.map((e) => `[${e.type}] ${e.text}`).join("; ")
-      }`,
+      `Unexpected console errors/warnings: ${errors
+        .map((e) => `[${e.type}] ${e.text}`)
+        .join("; ")}`,
     ).toEqual([]);
   },
 });

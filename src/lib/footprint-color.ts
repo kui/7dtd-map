@@ -23,14 +23,14 @@ export function buildTileIndex(allPrefabs: Prefab[]): TileIndex {
   for (const p of allPrefabs) {
     const m = /^rwg_tile_([^_]+)_/.exec(p.name);
     if (!m) continue;
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     tiles.push({ x: p.x, z: p.z, district: m[1]! });
   }
   // WHY: the lattice origin is the world-centre offset, not a multiple of 150 in world coords. Derive it from any tile (mod 150 normalised to [0, 150)).
   const mod = (n: number) => ((n % TILE_SIZE) + TILE_SIZE) % TILE_SIZE;
-  // deno-lint-ignore no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const offsetX = tiles.length > 0 ? mod(tiles[0]!.x) : 0;
-  // deno-lint-ignore no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const offsetZ = tiles.length > 0 ? mod(tiles[0]!.z) : 0;
   const cells = new Map<string, string>();
   for (const t of tiles) {
@@ -90,11 +90,11 @@ function hexToRgbFloat(hex: string): [number, number, number] {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return [1, 1, 1];
   return [
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     parseInt(m[1]!, 16) / 255,
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     parseInt(m[2]!, 16) / 255,
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     parseInt(m[3]!, 16) / 255,
   ];
 }

@@ -1,6 +1,5 @@
 import { FileProgressionIndicator } from "../index/dialog-handler.ts";
-import { expect } from "@std/expect";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Minimal fakes for FileProgressionIndicator. The class only touches
@@ -28,21 +27,14 @@ class FakeLi {
   classList = new FakeClassList();
 }
 
-let savedDocument: PropertyDescriptor | undefined;
-
 describe("FileProgressionIndicator", () => {
   beforeEach(() => {
-    savedDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
-    Object.defineProperty(globalThis, "document", {
-      value: { createElement: (_tag: string) => new FakeLi() },
-      configurable: true,
-      writable: true,
+    vi.stubGlobal("document", {
+      createElement: (_tag: string) => new FakeLi(),
     });
   });
   afterEach(() => {
-    if (savedDocument) {
-      Object.defineProperty(globalThis, "document", savedDocument);
-    } else delete (globalThis as { document?: unknown }).document;
+    vi.unstubAllGlobals();
   });
 
   it("creates one <li> per task name in order", () => {

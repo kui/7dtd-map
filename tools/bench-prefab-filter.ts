@@ -1,8 +1,8 @@
 /**
  * Phase-level CPU benchmark of the block-name matching pipeline in
  * `src/worker/lib/prefab-filter.ts` (`#matchByBlockName` equivalent).
- * Runs directly under Deno so no browser or dev server is needed.
  */
+import { readFile } from "node:fs/promises";
 import {
   matchAndHighlight,
   MATCHED_BLOCKS_LIMIT,
@@ -17,7 +17,7 @@ async function readJson(relative: string): Promise<unknown> {
   const url = new URL(relative, PUBLIC);
   let text: string;
   try {
-    text = await Deno.readTextFile(url);
+    text = await readFile(url, "utf8");
   } catch (e) {
     throw new Error(`Cannot read ${url.pathname}: ${String(e)}`);
   }
@@ -113,8 +113,8 @@ function runOnce(pattern: RegExp) {
   const matched: { [prefab: string]: HB[] } = {};
   for (const [blockName, prefabs] of invertedEntries) {
     const highlightedName = mah(blockName, pattern);
-    const label = blockLabels.get(blockName) ?? shapeLabels.get(blockName) ??
-      "-";
+    const label =
+      blockLabels.get(blockName) ?? shapeLabels.get(blockName) ?? "-";
     const highlightedLabel = label && mah(label, pattern);
     if (highlightedName === null && highlightedLabel === null) continue;
     for (const [prefabName, count] of Object.entries(prefabs)) {
@@ -141,9 +141,9 @@ function runOnce(pattern: RegExp) {
   t.join = performance.now() - t0;
 
   t0 = performance.now();
-  result.sort((a, b) =>
-    b.matchedBlockCount - a.matchedBlockCount ||
-    a.name.localeCompare(b.name)
+  result.sort(
+    (a, b) =>
+      b.matchedBlockCount - a.matchedBlockCount || a.name.localeCompare(b.name),
   );
   t.sort = performance.now() - t0;
 
@@ -156,10 +156,9 @@ function runOnce(pattern: RegExp) {
   t.cloneFirstChunk = performance.now() - t0;
   const capped = result.slice(0, 50).map((p) => ({
     ...p,
-    matchedBlocks: p.matchedBlocks.toSorted(matchedBlockSorter).slice(
-      0,
-      MATCHED_BLOCKS_LIMIT,
-    ),
+    matchedBlocks: p.matchedBlocks
+      .toSorted(matchedBlockSorter)
+      .slice(0, MATCHED_BLOCKS_LIMIT),
   }));
   t0 = performance.now();
   structuredClone(capped);
@@ -184,10 +183,12 @@ for (const f of ["s", "st", "stu", "stum", "stump"]) {
   if (!b) throw new Error("benchmark produced no samples");
   const ms = (v: number) => v.toFixed(0).padStart(5);
   console.log(
-    `${f.padEnd(7)}${String(b.matchedPrefabs).padStart(7)}${
-      String(b.totalBlocks).padStart(9)
-    }  ${ms(b.t.scan)}(${ms(b.t.mah)})  ${ms(b.t.join)} ${ms(b.t.sort)}  ${
-      ms(b.t.cloneAll)
-    }   ${ms(b.t.cloneFirstChunk)}  ${ms(b.t.cloneCapped)}`,
+    `${f.padEnd(7)}${String(b.matchedPrefabs).padStart(7)}${String(
+      b.totalBlocks,
+    ).padStart(
+      9,
+    )}  ${ms(b.t.scan)}(${ms(b.t.mah)})  ${ms(b.t.join)} ${ms(b.t.sort)}  ${ms(
+      b.t.cloneAll,
+    )}   ${ms(b.t.cloneFirstChunk)}  ${ms(b.t.cloneCapped)}`,
   );
 }

@@ -208,7 +208,8 @@ export default class MapRenderer {
       if (
         prefab.name.includes("rwg_tile") ||
         prefab.name.includes("part_driveway")
-      ) continue;
+      )
+        continue;
       const size = meshSizes[prefab.name];
       if (!size) continue;
       const [sx, sz] = size;
@@ -504,11 +505,11 @@ export default class MapRenderer {
 function withAlpha(hex: string, alpha: number): string {
   const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!m) return hex;
-  // deno-lint-ignore no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const r = parseInt(m[1]!, 16);
-  // deno-lint-ignore no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const g = parseInt(m[2]!, 16);
-  // deno-lint-ignore no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const b = parseInt(m[3]!, 16);
   return `rgba(${r.toString()}, ${g.toString()}, ${b.toString()}, ${alpha.toString()})`;
 }

@@ -1,6 +1,5 @@
 import { parseCount } from "../lib/xmls/blocks-xml.ts";
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it } from "vitest";
 
 describe("parseCount", () => {
   it("parses a single number as [n, n]", () => {

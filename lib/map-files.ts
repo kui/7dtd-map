@@ -113,10 +113,11 @@ export const PREFER_WORLD_FILE_NAMES = {
  */
 export function filterWorldFileNames(names: string[]): WorldFileName[] {
   const n = names.filter(isWorldFileName);
-  return n.filter((f) =>
-    !n.includes(
-      PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES],
-    )
+  return n.filter(
+    (f) =>
+      !n.includes(
+        PREFER_WORLD_FILE_NAMES[f as keyof typeof PREFER_WORLD_FILE_NAMES],
+      ),
   );
 }
 
@@ -129,10 +130,12 @@ export function hasPreferWorldFileNameIn(
   name: string,
   files: string[],
 ): boolean {
-  return name in PREFER_WORLD_FILE_NAMES &&
+  return (
+    name in PREFER_WORLD_FILE_NAMES &&
     files.includes(
       PREFER_WORLD_FILE_NAMES[name as keyof typeof PREFER_WORLD_FILE_NAMES],
-    );
+    )
+  );
 }
 
 export function getPreferWorldFileName(name: string): string | undefined {
@@ -202,8 +205,10 @@ class ComposingTransformer<I, M, O> implements TransformStream<I, O> {
  * The default Uint8Array allows SharedArrayBuffer, which causes type mismatches
  *  when piping to streams that accept strict BufferSource inputs.
  */
-class OddByteTransformer
-  extends TransformStream<Uint8Array, Uint8Array<ArrayBuffer>> {
+class OddByteTransformer extends TransformStream<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>
+> {
   constructor() {
     let nextOffset = 1;
     super(
@@ -213,13 +218,13 @@ class OddByteTransformer
             chunk.length % 2 === 0
               ? chunk.length / 2
               : nextOffset === 1
-              ? (chunk.length - 1) / 2
-              : (chunk.length + 1) / 2,
+                ? (chunk.length - 1) / 2
+                : (chunk.length + 1) / 2,
           );
 
           let i = nextOffset;
           for (; i < chunk.length; i += 2) {
-            // deno-lint-ignore no-non-null-assertion
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             buffer[(i - nextOffset) / 2] = chunk[i]!;
           }
 
@@ -232,8 +237,11 @@ class OddByteTransformer
   }
 }
 
-class DtmRawTransformer
-  extends ComposingTransformer<Uint8Array, BufferSource, Uint8Array> {
+class DtmRawTransformer extends ComposingTransformer<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>,
+  Uint8Array
+> {
   constructor() {
     super(new OddByteTransformer(), new CompressionStream("gzip"));
   }
@@ -256,7 +264,7 @@ function normalizeToUint8(
   }
   const result = new Uint8Array(data.length);
   for (let i = 0; i < data.length; i++) {
-    // deno-lint-ignore no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     result[i] = data[i]! >> 8;
   }
   return result;
@@ -278,22 +286,22 @@ function toRgba(data: Uint8Array, channels: number): Uint8Array {
   for (let i = 0, j = 0; i < data.length; i += channels, j += 4) {
     switch (channels) {
       case 1:
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j] = out[j + 1] = out[j + 2] = data[i]!;
         out[j + 3] = 255;
         break;
       case 2:
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j] = out[j + 1] = out[j + 2] = data[i]!;
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j + 3] = data[i + 1]!;
         break;
       case 3:
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j] = data[i]!;
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j + 1] = data[i + 1]!;
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         out[j + 2] = data[i + 2]!;
         out[j + 3] = 255;
         break;
@@ -309,9 +317,7 @@ function toRgba(data: Uint8Array, channels: number): Uint8Array {
  * then re-encode as an 8-bit RGBA PNG with maximum compression.
  */
 class PngEditingTransformer extends TransformStream<Uint8Array, Uint8Array> {
-  constructor(
-    copyAndEdit: (src: Uint8Array, dst: Uint8Array) => void,
-  ) {
+  constructor(copyAndEdit: (src: Uint8Array, dst: Uint8Array) => void) {
     const chunks: Uint8Array[] = [];
     super(
       {
@@ -365,11 +371,11 @@ class Splat3PngTransformer extends PngEditingTransformer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else {
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i] = src[i]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
           dst[i + 3] = 255;
         }
@@ -396,18 +402,18 @@ class Splat4PngTransformer extends PngEditingTransformer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else if (src[i + 1] === 255 || src[i + 2] === 29) {
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i] = src[i]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 1] = src[i + 2]!;
           dst[i + 2] = 255;
           dst[i + 3] = 255;
         } else {
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i] = src[i]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
           dst[i + 3] = 255;
         }
@@ -431,11 +437,11 @@ class RadiationPngTransformer extends PngEditingTransformer {
           dst[i + 2] = 0;
           dst[i + 3] = 0;
         } else {
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i] = src[i]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 1] = src[i + 1]!;
-          // deno-lint-ignore no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           dst[i + 2] = src[i + 2]!;
           dst[i + 3] = 255;
         }
@@ -451,7 +457,7 @@ class RepackPngTransformer extends PngEditingTransformer {
   constructor() {
     super((src, dst) => {
       for (let i = 0; i < src.length; i++) {
-        // deno-lint-ignore no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         dst[i] = src[i]!;
       }
     });

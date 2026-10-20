@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import { ByteReader } from "./byte-reader.ts";
-import { BlockId } from "./nim-parser.ts";
+import type { BlockId } from "./nim-parser.ts";
 
 const KNOWN_VERSIONS = [13, 15, 16, 17, 18, 19];
 const BLOCK_ID_BIT_MASK = 0b0111111111111111;
@@ -73,9 +73,12 @@ export class Tts {
   }
   getBlockId(x: number, y: number, z: number): BlockId | undefined {
     if (
-      x < 0 || x >= this.maxx ||
-      y < 0 || y >= this.maxy ||
-      z < 0 || z >= this.maxz
+      x < 0 ||
+      x >= this.maxx ||
+      y < 0 ||
+      y >= this.maxy ||
+      z < 0 ||
+      z >= this.maxz
     ) {
       throw Error(
         `Out of index range: x=${x}, y=${y}, z=${z}, maxValues=${this.maxx},${this.maxy},${this.maxz}`,

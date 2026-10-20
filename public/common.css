@@ -15,9 +15,7 @@
    shapes consistent regardless of the fonts installed on the OS. */
 body {
   font-family:
-    "Noto Color Emoji Subset",
-    "Noto Sans Symbols 2 Subset",
-    sans-serif;
+    "Noto Color Emoji Subset", "Noto Sans Symbols 2 Subset", sans-serif;
 }
 
 .logo {

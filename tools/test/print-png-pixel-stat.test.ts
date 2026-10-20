@@ -1,12 +1,8 @@
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
 import type { DecodedPng } from "fast-png";
 import { formatPixelKey, statDecodedPixels } from "../print-png-pixel-stat.ts";
+import { describe, expect, it } from "vitest";
 
-function fakeDecoded(
-  data: Uint8Array,
-  channels: number,
-): DecodedPng {
+function fakeDecoded(data: Uint8Array, channels: number): DecodedPng {
   return {
     width: 0,
     height: 0,
@@ -21,24 +17,13 @@ describe("statDecodedPixels", () => {
   it("counts each unique RGBA pixel exactly once", () => {
     // WHY: alphas are distinct so each RGBA becomes a unique key.
     const data = new Uint8Array([
-      255,
-      0,
-      0,
-      255,
-      255,
-      0,
-      0,
-      255,
-      0,
-      0,
-      255,
-      128,
+      255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 255, 128,
     ]);
     const stat = statDecodedPixels(fakeDecoded(data, 4));
     expect(stat.size).toBe(2);
 
     const redKey = 255 * 0x1000000 + ((0 << 16) | (0 << 8) | 255);
-    const blueKey = 0 * 0x1000000 + ((0 << 16) | (255 << 8) | 128);
+    const blueKey = (0 << 16) | (255 << 8) | 128;
     expect(stat.get(redKey)).toBe(2);
     expect(stat.get(blueKey)).toBe(1);
   });
@@ -53,9 +38,7 @@ describe("statDecodedPixels", () => {
 
   it("throws when the PNG has fewer than 4 channels", () => {
     const data = new Uint8Array([255, 0, 0, 0, 255, 0]);
-    expect(() => statDecodedPixels(fakeDecoded(data, 3))).toThrow(
-      /4 channels/,
-    );
+    expect(() => statDecodedPixels(fakeDecoded(data, 3))).toThrow(/4 channels/);
   });
 
   it("throws when the PNG has 16-bit depth", () => {

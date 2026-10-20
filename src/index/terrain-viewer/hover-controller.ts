@@ -85,11 +85,11 @@ export class TerrainViewerHoverController {
       return;
     }
     // WHY: the controller's token guard drops this if the hover changes or hides before the content lookup resolves, so no per-instance recheck is needed.
-    this.#controller.showFor(
-      placement.prefab,
-      ["click", "dblclick", "shift-click"],
-      () => this.#anchor(placement),
-    ).catch(printError);
+    this.#controller
+      .showFor(placement.prefab, ["click", "dblclick", "shift-click"], () =>
+        this.#anchor(placement),
+      )
+      .catch(printError);
   }
 
   /**

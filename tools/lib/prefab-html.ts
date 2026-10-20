@@ -2,7 +2,7 @@ import * as path from "node:path";
 import { parseNim } from "./nim-parser.ts";
 import { parseTts } from "./tts-parser.ts";
 import { isPrefabPropertyValue, parsePrefabXml } from "./xmls/prefab-xml.ts";
-import { Label, LabelId } from "./label-parser.ts";
+import type { Label, LabelId } from "./label-parser.ts";
 import { requireNonnull } from "./utils.ts";
 
 interface HtmlModel {
@@ -72,52 +72,48 @@ function html(model: HtmlModel): string {
 
   <section id="xml">
     <h2>XML</h2>
-    <table>${
-    model.xml.map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`).join(
-      "\n",
-    )
-  }</table>
+    <table>${model.xml
+      .map((p) => `<tr><th>${p.name}</th><td>${p.value}</td></tr>`)
+      .join("\n")}</table>
   </section>
 
   <section id="dimensions">
     <h2>Dimensions</h2>
-    <table>${
-    Object.entries<number>(model.dimensions)
-      .map(([axis, value]) =>
-        `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`
+    <table>${Object.entries<number>(model.dimensions)
+      .map(
+        ([axis, value]) =>
+          `<tr><th>${axis}</th><td>${value.toString()}</td></tr>`,
       )
-      .join("\n")
-  }</table>
+      .join("\n")}</table>
   </section>
 
   <section id="blocks">
     <h2>Blocks</h2>
     <table id="blocks" class="long-table">
       <tr><th>ID</th><th>Name</th><th>Count</th></tr>
-      ${
-    model.blocks
-      .map((b) =>
-        [
-          `<tr class="block">`,
-          `<td class="block_name">${b.name}</td>`,
-          `<td class="block_label">${escapeHtml(b.localizedName)}</td>`,
-          `<td class="block_count">${b.count.toString()}</td>`,
-          "</tr>",
-        ].join("")
-      )
-      .join("\n")
-  }
+      ${model.blocks
+        .map((b) =>
+          [
+            `<tr class="block">`,
+            `<td class="block_name">${b.name}</td>`,
+            `<td class="block_label">${escapeHtml(b.localizedName)}</td>`,
+            `<td class="block_count">${b.count.toString()}</td>`,
+            "</tr>",
+          ].join(""),
+        )
+        .join("\n")}
     </table>
   </section>
 
   <section id="sleeper-volumes">
     <h2>SleeperVolumes</h2>
     ${
-    model.sleeperVolumes.length === 0 ? "<p>No SleeperVolumes</p>" : `
+      model.sleeperVolumes.length === 0
+        ? "<p>No SleeperVolumes</p>"
+        : `
     <table class="long-table">
       <tr><th>#</th><th>Group</th><th>Count</th><th>GroupId</th><th>GameStageAdjust</th><th>Flags</th><th>IsBoss</th><th>IsLoot</th><th>IsQuestExclude</th><th>Size</th><th>Start</th></tr>
-      ${
-      model.sleeperVolumes
+      ${model.sleeperVolumes
         .map((s, i) =>
           [
             "<tr>",
@@ -137,14 +133,13 @@ function html(model: HtmlModel): string {
             `<td>${s.size.join("x")}</td>`,
             `<td>${s.start.join("x")}</td>`,
             "</tr>",
-          ].join("")
+          ].join(""),
         )
-        .join("\n")
-    }
+        .join("\n")}
     </table>
     <p>Total Count: ${renderSleeperVolumeTotalCount(model.sleeperVolumes)}</p>
     `
-  }
+    }
   </section>
 </body>
 </html>
@@ -179,8 +174,8 @@ export async function prefabHtml(
     .toSorted((a, b) => a.name.localeCompare(b.name));
 
   const blockIdSet = new Set(blocks.map((b) => b.id));
-  const undefinedBlockIds = [...blockNums.keys()].filter((i) =>
-    !blockIdSet.has(i)
+  const undefinedBlockIds = [...blockNums.keys()].filter(
+    (i) => !blockIdSet.has(i),
   );
   if (undefinedBlockIds.length > 0) {
     console.warn(
@@ -268,10 +263,8 @@ export function buildSleeperVolumes(
 ): SleeperVolume[] {
   const propMap = new Map(properties.map((p) => [p.name, p.value]));
 
-  const groupsRaw = parseCsvField(
-    propMap,
-    "SleeperVolumeGroup",
-    (s) => s.trim(),
+  const groupsRaw = parseCsvField(propMap, "SleeperVolumeGroup", (s) =>
+    s.trim(),
   );
   if (groupsRaw === undefined) return [];
   const groups = [];
@@ -281,22 +274,20 @@ export function buildSleeperVolumes(
     const countMax = parseInt(groupsRaw[i + 2] ?? "", 10);
     if (isNaN(countMin) || isNaN(countMax)) {
       throw new Error(
-        `Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${
-          String(groupsRaw[i + 2])
-        }`,
+        `Invalid sleeper volume count: ${String(groupsRaw[i + 1])}, ${String(
+          groupsRaw[i + 2],
+        )}`,
       );
     }
     groups.push({
       // SAFETY: index i is validated because the preceding countMin/countMax parse already checks i+1 and i+2.
-      // deno-lint-ignore no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       group: groupsRaw[i]!,
       count: [countMin, countMax] as [number, number],
     });
   }
-  const groupIds = parseCsvField(
-    propMap,
-    "SleeperVolumeGroupId",
-    (s) => parseInt(s, 10),
+  const groupIds = parseCsvField(propMap, "SleeperVolumeGroupId", (s) =>
+    parseInt(s, 10),
   );
   if (groupIds === undefined) {
     throw new Error("SleeperVolumeGroupId is not found");
@@ -306,21 +297,21 @@ export function buildSleeperVolumes(
   // WHY: GameStageAdjust and IsBoss are absent from the binary model.
   const gameStageAdjusts =
     parseCsvField(propMap, "SleeperVolumeGameStageAdjust", (s) => s.trim()) ??
-      Array.from(groups, () => "");
-  const flags = parseCsvField(
-    propMap,
-    "SleeperVolumeFlags",
-    (s) => parseInt(s, 10),
+    Array.from(groups, () => "");
+  const flags = parseCsvField(propMap, "SleeperVolumeFlags", (s) =>
+    parseInt(s, 10),
   );
   if (flags === undefined) throw new Error("SleeperVolumeFlags is not found");
   const parseBool = (s: string) => s === "True";
-  const isBosses = parseCsvField(propMap, "SleeperIsBossVolume", parseBool) ??
+  const isBosses =
+    parseCsvField(propMap, "SleeperIsBossVolume", parseBool) ??
     Array.from(groups, () => false);
-  const isLoots = parseCsvField(propMap, "SleeperIsLootVolume", parseBool) ??
+  const isLoots =
+    parseCsvField(propMap, "SleeperIsLootVolume", parseBool) ??
     Array.from(groups, () => false);
   const isQuestExcludes =
     parseCsvField(propMap, "SleeperIsQuestExclude", parseBool) ??
-      Array.from(groups, () => false);
+    Array.from(groups, () => false);
   const sizes = parseCsvField(
     propMap,
     "SleeperVolumeSize",

@@ -25,9 +25,10 @@ export class MarkerHandler {
   ) {
     const setFromEvent = async (event: MouseEvent | null) => {
       const size = await dtmHandler.size();
-      const coords = event && size
-        ? canvasEventToGameCoords(event, size, doms.canvas)
-        : null;
+      const coords =
+        event && size
+          ? canvasEventToGameCoords(event, size, doms.canvas)
+          : null;
       await store.set(coords);
     };
 
