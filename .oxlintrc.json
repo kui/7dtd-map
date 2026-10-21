@@ -11,6 +11,7 @@
   "rules": {
     "eslint/default-param-last": "error",
     "eslint/eqeqeq": "error",
+    "eslint/id-match": ["error", "^_*[$A-Za-z0-9]*_*$|^[$A-Z0-9_]+$"],
     "eslint/no-eval": "error",
     "eslint/no-self-compare": "error",
     "eslint/no-throw-literal": "error",
