@@ -1,8 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "../../node_modules/.cache/tsbuildinfo/tools-test.tsbuildinfo",
     "lib": ["esnext"],
     "types": ["node"],
+    // WHY: Tests index into arrays/objects they just built, so the extra
+    // undefined-checking noise from the base config is not worth it here.
     "noUncheckedIndexedAccess": false,
     "module": "nodenext",
     "moduleResolution": "nodenext"

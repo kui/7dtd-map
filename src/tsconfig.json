@@ -1,8 +1,8 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["dom", "esnext"],
-    "types": []
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/src.tsbuildinfo",
+    "lib": ["dom", "esnext"]
   },
   "include": ["**/*.ts"],
   "exclude": ["test", "worker"]

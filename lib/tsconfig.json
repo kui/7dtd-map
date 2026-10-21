@@ -1,8 +1,8 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["esnext", "webworker"],
-    "types": []
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/lib.tsbuildinfo",
+    "lib": ["esnext", "webworker"]
   },
   "include": ["**/*.ts"]
 }

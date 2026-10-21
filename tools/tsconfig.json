@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/tools.tsbuildinfo",
     "lib": ["esnext"],
     "types": ["node"],
     "module": "nodenext",
