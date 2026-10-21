@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/e2e.tsbuildinfo",
     "lib": ["dom", "esnext"],
     "types": ["node"]
   },

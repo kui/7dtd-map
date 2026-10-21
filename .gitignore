@@ -13,4 +13,6 @@
 /blob-report
 /playwright/.cache
 .playwright-mcp
+
+# WHY: tsc -b left these in project directories before tsBuildInfoFile was set
 *.tsbuildinfo
