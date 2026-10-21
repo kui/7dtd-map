@@ -156,12 +156,11 @@ describe("fetchCompleteBlob", () => {
     headers: Record<string, string> = {},
     ok = true,
   ): Response {
-    return {
-      ok,
+    return new Response(body, {
+      status: ok ? 200 : 404,
       statusText: ok ? "OK" : "Not Found",
-      headers: new Headers(headers),
-      blob: () => Promise.resolve(new Blob([body])),
-    } as unknown as Response;
+      headers,
+    });
   }
 
   async function withFetch(

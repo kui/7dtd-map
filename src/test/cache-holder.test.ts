@@ -6,10 +6,13 @@ describe("CacheHolder.get()", () => {
   beforeEach(() => {
     vi.useFakeTimers({ now: 0 });
   });
-  // WHY: vitest has no leak sanitizer, so assert every test leaves no expiration timer behind.
+  // WHY: vitest has no leak sanitizer, so assert every test leaves no pending timer behind.
   afterEach(() => {
     try {
-      expect(vi.getTimerCount()).toBe(0);
+      expect(
+        vi.getTimerCount(),
+        "pending fake timers; end the test with holder.invalidate()",
+      ).toBe(0);
     } finally {
       vi.useRealTimers();
     }
@@ -62,7 +65,6 @@ describe("CacheHolder.get()", () => {
     holder.invalidate();
     expect(fetcher.mock.calls.length).toBe(0);
     expect(deconstructor.mock.calls.length).toBe(0);
-    holder.invalidate();
   });
 
   it("should refetch if the fetching is invalidated", async () => {
@@ -121,9 +123,11 @@ describe("CacheHolder.get()", () => {
       await sleep(sleepTime);
       return "value";
     });
-    const deconstructor = vi.fn((_s: string): void => {
-      throw new Error("deconstructor failure");
-    });
+    const deconstructor = vi
+      .fn((_s: string) => {})
+      .mockImplementationOnce(() => {
+        throw new Error("deconstructor failure");
+      });
     const holder = new CacheHolder<string>(fetcher, deconstructor);
     const first = holder.get();
 
@@ -136,8 +140,6 @@ describe("CacheHolder.get()", () => {
     expect(await first).toBe("value");
     expect(fetcher.mock.calls.length).toBe(2);
     expect(deconstructor.mock.calls.length).toBe(1);
-    // WHY: invalidate() calls the deconstructor before clearing the timer, so stop it throwing to release the timer.
-    deconstructor.mockImplementation(() => {});
     holder.invalidate();
   });
 });
