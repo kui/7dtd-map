@@ -73,13 +73,19 @@ export class CacheHolder<T> {
    * Invalidate the cache.
    */
   invalidate() {
-    if (this.#value !== NO_VALUE) {
-      this.#deconstructor(this.#value);
-      this.#value = NO_VALUE;
-    }
+    const value = this.#value;
+    this.#value = NO_VALUE;
     if (this.#expirationTimeout) clearTimeout(this.#expirationTimeout);
     this.#expirationTimeout = null;
     this.#lastInvalidation = Date.now();
+    // WHY: deconstruct last and catch errors so a throwing deconstructor cannot half-invalidate the holder.
+    if (value !== NO_VALUE) {
+      try {
+        this.#deconstructor(value);
+      } catch (e) {
+        printError(e);
+      }
+    }
   }
 
   #resetTimer() {

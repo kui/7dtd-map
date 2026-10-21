@@ -142,4 +142,31 @@ describe("CacheHolder.get()", () => {
     expect(deconstructor.mock.calls.length).toBe(1);
     holder.invalidate();
   });
+
+  it("should fully invalidate even if deconstructor throws", async () => {
+    using consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const fetcher = vi.fn(() => Promise.resolve("value"));
+    const deconstructor = vi
+      .fn((_s: string) => {})
+      .mockImplementationOnce(() => {
+        throw new Error("deconstructor failure");
+      });
+    const holder = new CacheHolder<string>(fetcher, deconstructor);
+    expect(await holder.get()).toBe("value");
+    expect(vi.getTimerCount()).toBe(1);
+
+    expect(() => {
+      holder.invalidate();
+    }).not.toThrow();
+    expect(deconstructor.mock.calls.length).toBe(1);
+    expect(consoleError.mock.calls.length).toBe(1);
+    expect(vi.getTimerCount()).toBe(0);
+
+    expect(await holder.get()).toBe("value");
+    expect(fetcher.mock.calls.length).toBe(2);
+    holder.invalidate();
+    expect(deconstructor.mock.calls.length).toBe(2);
+  });
 });
