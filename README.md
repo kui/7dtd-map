@@ -39,7 +39,9 @@ Linux, macOS, and Windows are supported.
      ```
 
 2. Install [mise](https://mise.jdx.dev/). It installs the Node version pinned
-   in `mise.toml` and runs the build tasks defined there.
+   in `mise.toml` and runs the build tasks defined there. `devEngines` in
+   `package.json` makes npm refuse to install or run scripts on an older Node
+   version, so run npm in a mise-activated shell or via `mise exec --`.
 
 3. Install dependencies and build:
 
