@@ -37,6 +37,13 @@
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "error"
+    }
+  },
   "engines": {
     "node": ">=26"
   },

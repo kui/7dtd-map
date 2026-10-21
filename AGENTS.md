@@ -19,8 +19,11 @@ repository. Agents must read and follow these rules closely.
      tasks (`mise run build`) in `mise.toml`.
    - Keep the set of required tools minimal. Prefer leaning on a tool that is
      already required over adding a new one.
-   - To update Node, modify `mise.toml`. Keep the `@types/node` major version
-     and `engines.node` in `package.json` in sync with it.
+   - To update Node, modify `mise.toml`. Keep the `@types/node` major version,
+     `engines.node`, and `devEngines.runtime.version` in `package.json` in sync
+     with it. `devEngines` is what makes npm refuse a mismatched Node.
+   - Assume contributors run commands in a mise-activated shell. Docs and
+     scripts call `npm`, `npx`, and `node` directly, not via `mise exec --`.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data files (prefab xmls,
