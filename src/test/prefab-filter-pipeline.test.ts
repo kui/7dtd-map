@@ -19,9 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * can run end-to-end without touching the network.
  */
 function stubFetch(map: Record<string, unknown>) {
-  return vi.spyOn(globalThis, "fetch").mockImplementation(((
-    input: string | URL | Request,
-  ): Promise<Response> => {
+  return vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
     const url =
       typeof input === "string"
         ? input
@@ -37,7 +35,7 @@ function stubFetch(map: Record<string, unknown>) {
         headers: { "content-type": "application/json" },
       }),
     );
-  }) as typeof fetch);
+  });
 }
 
 function build(

@@ -168,10 +168,7 @@ describe("fetchCompleteBlob", () => {
     response: Response,
     fn: () => Promise<void>,
   ): Promise<void> {
-    const s = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation((() =>
-        Promise.resolve(response)) as unknown as typeof fetch);
+    const s = vi.spyOn(globalThis, "fetch").mockResolvedValue(response);
     try {
       await fn();
     } finally {
