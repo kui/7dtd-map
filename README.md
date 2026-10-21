@@ -38,10 +38,12 @@ Linux, macOS, and Windows are supported.
      New-Item -ItemType Junction -Path tools\vanilla -Target "C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die"
      ```
 
-2. Install [mise](https://mise.jdx.dev/). It installs the Node version pinned
-   in `mise.toml` and runs the build tasks defined there. `devEngines` in
-   `package.json` makes npm refuse to install or run scripts on an older Node
-   version, so run npm in a mise-activated shell or via `mise exec --`.
+2. Install [mise](https://mise.jdx.dev/) and
+   [activate it in your shell](https://mise.jdx.dev/getting-started.html#activate-mise).
+   It installs the Node version pinned in `mise.toml` and runs the build tasks
+   defined there. Every command in this README, and the git pre-commit hook,
+   assumes a mise-activated shell: `devEngines` in `package.json` makes npm
+   (including `npx`) refuse to run on an older Node.
 
 3. Install dependencies and build:
 
