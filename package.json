@@ -10,7 +10,7 @@
     "test:changed": "vitest run --changed",
     "e2e:install": "playwright install chromium",
     "e2e": "npm run e2e:install && playwright test",
-    "ci": "npm run ci:lint && npm run ci:ast-grep && npm run ci:fmt-check && npm run ci:type-check && npm run test && npm run e2e",
+    "ci": "mise run --continue-on-error ci",
     "ci:lint": "oxlint",
     "ci:ast-grep": "ast-grep scan",
     "ci:fmt-check": "oxfmt --check",
