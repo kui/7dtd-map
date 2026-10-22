@@ -91,6 +91,12 @@ describe("MapDir", () => {
     expect(await dir.get("biomes.png")).toBeNull();
   });
 
+  it("returns null from get() while a put() has not written the file yet", async () => {
+    const { dir } = buildMapDir();
+    await dir.createWritable("biomes.png");
+    expect(await dir.get("biomes.png")).toBeNull();
+  });
+
   it("put() persists data that can be read back via get()", async () => {
     const { dir } = buildMapDir();
     const payload = new TextEncoder().encode("hello").buffer;
