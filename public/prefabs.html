@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -39,7 +39,8 @@
               title="Clear Tier Range"
               data-input-min-tier="0"
               data-input-max-tier="5"
-            >×</button>
+              >×</button
+            >
           </header>
           <table>
             <tr>
@@ -90,8 +91,7 @@
           </div>
           <div>
             <label>
-              <input id="only-new-prefabs" type="checkbox" /> Only new
-              prefabs
+              <input id="only-new-prefabs" type="checkbox" /> Only new prefabs
             </label>
           </div>
         </section>
@@ -120,49 +120,55 @@
             data-input-min-tier="0"
             data-input-prefab-filter="trader"
             data-input-block-filter=""
-          >Traders</button>
+            >Traders</button
+          >
           <button
             data-input-min-tier="0"
             data-input-max-tier="5"
             data-input-prefab-filter=""
             data-input-block-filter="(Grace|Super)Corn"
             data-input-min-matched-block-count=""
-          >Super Corn</button>
+            >Super Corn</button
+          >
           <button
             data-input-min-tier="0"
             data-input-max-tier="5"
             data-input-prefab-filter=""
             data-input-block-filter="^cnt(Loot|Shipping)CrateHero"
             data-input-min-matched-block-count=""
-          >Hidden Stash</button>
+            >Hidden Stash</button
+          >
           <button
             data-input-min-tier="0"
             data-input-max-tier="5"
             data-input-prefab-filter=""
             data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
             data-input-min-matched-block-count="20"
-          >More than 20 Book Containers</button>
+            >More than 20 Book Containers</button
+          >
         </section>
         <details>
           <summary>Advanced Filters</summary>
           <section id="prefab-excludes">
             <h2>Excludes</h2>
             <p>
-              <label><input
+              <label
+                ><input
                   type="checkbox"
                   value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
                   checked
-                />Test</label>
-              <label><input
+                />Test</label
+              >
+              <label
+                ><input
                   type="checkbox"
                   value="^rwg_tile_"
                   checked
-                />Tiles</label>
-              <label><input
-                  type="checkbox"
-                  value="^part_"
-                  checked
-                />Parts</label>
+                />Tiles</label
+              >
+              <label
+                ><input type="checkbox" value="^part_" checked />Parts</label
+              >
               <label>
                 <input
                   type="checkbox"
