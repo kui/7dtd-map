@@ -4,9 +4,9 @@ staged=$(mktemp)
 trap 'rm -f "$staged"' EXIT
 git diff --cached --name-only --diff-filter=ACMR -z >"$staged"
 if [ -s "$staged" ]; then
-  xargs -0 -a "$staged" npm run --silent ci:fmt-check -- --no-error-on-unmatched-pattern
-  xargs -0 -a "$staged" npm run --silent ci:lint -- --no-error-on-unmatched-pattern
-  xargs -0 -a "$staged" npm run --silent ci:ast-grep --
+  xargs -0 -a "$staged" npm run ci:fmt-check -- --no-error-on-unmatched-pattern
+  xargs -0 -a "$staged" npm run ci:lint -- --no-error-on-unmatched-pattern
+  xargs -0 -a "$staged" npm run ci:ast-grep --
 fi
-npm run --silent ci:type-check
-exec npm run --silent test:changed
+npm run ci:type-check
+exec npm run test:changed
