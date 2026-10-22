@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
-import * as path from "node:path";
-import { createStaticServer } from "./lib/static-server.ts";
+import * as http from "node:http";
+import sirv from "sirv";
 import { globFiles, projectRoot } from "./lib/utils.ts";
 
 const targets = (
@@ -59,7 +59,18 @@ if (args[0] === "serve") {
 
   const port = envPort ? Number(envPort) : 8000;
   const hostname = envHost ?? "127.0.0.1";
-  createStaticServer(path.resolve(outDir)).listen(port, hostname, () => {
+  const serve = sirv(outDir, {
+    // WHY: dev mode stats files per request and sends no-store, so a rebuild while a reused server runs never serves stale sizes.
+    dev: true,
+    setHeaders: (res, pathname) => {
+      // WHY: sirv marks *.gz as Content-Encoding: gzip, so the browser would inflate dtm_block.raw.gz before the app's own DecompressionStream does. Serve it as an opaque gzip file, like GitHub Pages.
+      if (pathname.endsWith(".gz")) {
+        res.setHeader("content-encoding", "identity");
+        res.setHeader("content-type", "application/gzip");
+      }
+    },
+  });
+  http.createServer(serve).listen(port, hostname, () => {
     console.log(`Serving at http://${hostname}:${port}`);
   });
 } else {
