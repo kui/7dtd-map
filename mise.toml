@@ -140,3 +140,33 @@ sources = [
   "tools/vanilla/Data/Worlds/**/*",
 ]
 outputs = ["public/maps/**/*"]
+
+# WHY: `npm run ci` passes --continue-on-error so one failing check does not
+# hide the others; mise has no config setting for it.
+[tasks.ci]
+depends = [
+  "ci:lint",
+  "ci:ast-grep",
+  "ci:fmt-check",
+  "ci:type-check",
+  "ci:test",
+  "ci:e2e",
+]
+
+[tasks."ci:lint"]
+run = "npm run ci:lint"
+
+[tasks."ci:ast-grep"]
+run = "npm run ci:ast-grep"
+
+[tasks."ci:fmt-check"]
+run = "npm run ci:fmt-check"
+
+[tasks."ci:type-check"]
+run = "npm run ci:type-check"
+
+[tasks."ci:test"]
+run = "npm test"
+
+[tasks."ci:e2e"]
+run = "npm run e2e"
