@@ -27,6 +27,7 @@ beforeAll(async () => {
   root = path.join(tmp, "public");
   await fs.promises.mkdir(path.join(root, "prefabs"), { recursive: true });
   await fs.promises.mkdir(path.join(root, "empty"));
+  await fs.promises.mkdir(path.join(root, "evil.example"));
   await fs.promises.writeFile(path.join(root, "index.html"), "<p>top</p>");
   await fs.promises.writeFile(
     path.join(root, "prefabs", "index.html"),
@@ -47,14 +48,17 @@ describe("resolvePath", () => {
   });
 
   it.each(["/../secret.txt", "/%2e%2e/secret.txt"])(
-    "rejects path traversal: %s",
+    "returns 404 for dot segments the URL parser collapses: %s",
     async (url) => {
-      const r = await resolvePath(root, url);
-      // WHY: the URL parser already collapses literal dot segments, so those land back inside root.
-      expect(r.status === 403 || r.status === 404).toBe(true);
-      expect(r).not.toHaveProperty("file");
+      expect(await resolvePath(root, url)).toEqual({ status: 404 });
     },
   );
+
+  it("returns 403 for an encoded-backslash traversal", async () => {
+    expect(await resolvePath(root, "/..%5c..%5csecret.txt")).toEqual({
+      status: 403,
+    });
+  });
 
   it("returns 403 for an encoded-slash traversal", async () => {
     expect(await resolvePath(root, "/prefabs/..%2f..%2fsecret.txt")).toEqual({
@@ -96,21 +100,28 @@ describe("resolvePath", () => {
 
   it("redirects a directory URL without a trailing slash", async () => {
     expect(await resolvePath(root, "/prefabs")).toEqual({
-      status: 301,
-      location: "./prefabs/",
-    });
-    expect(await resolvePath(root, "/prefabs?q=1")).toEqual({
-      status: 301,
+      status: 302,
       location: "./prefabs/",
     });
   });
 
-  it("keeps the redirect on the same origin for a protocol-relative-looking path", async () => {
-    await fs.promises.mkdir(path.join(root, "evil.example"), {
-      recursive: true,
+  it("keeps the query string on the trailing-slash redirect", async () => {
+    expect(await resolvePath(root, "/prefabs?q=1")).toEqual({
+      status: 302,
+      location: "./prefabs/?q=1",
     });
+  });
+
+  it("redirects when only an encoded slash ends the path", async () => {
+    expect(await resolvePath(root, "/prefabs%2f")).toEqual({
+      status: 302,
+      location: "./prefabs%2f/",
+    });
+  });
+
+  it("keeps the redirect on the same origin for a protocol-relative-looking path", async () => {
     expect(await resolvePath(root, "//evil.example")).toEqual({
-      status: 301,
+      status: 302,
       location: "./evil.example/",
     });
   });
@@ -183,7 +194,7 @@ describe("createStaticServer", () => {
 
   it("redirects a directory URL without a trailing slash", async () => {
     const res = await request("/prefabs");
-    expect(res.status).toBe(301);
+    expect(res.status).toBe(302);
     expect(res.headers.location).toBe("./prefabs/");
   });
 
@@ -220,10 +231,19 @@ describe("createStaticServer", () => {
   });
 
   it("returns 500 when a file passes stat but cannot be opened", async () => {
-    vi.spyOn(fs.promises, "open").mockRejectedValueOnce(
-      Object.assign(new Error("EACCES"), { code: "EACCES" }),
+    const target = path.join(root, "main.js");
+    const open = fs.promises.open;
+    vi.spyOn(fs.promises, "open").mockImplementation((file, ...rest) =>
+      file === target
+        ? Promise.reject(Object.assign(new Error("EACCES"), { code: "EACCES" }))
+        : open(file, ...rest),
     );
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
     const res = await request("/main.js");
     expect(res.status).toBe(500);
+    expect(error).toHaveBeenCalledWith(
+      `static-server: cannot open ${target}:`,
+      expect.any(Error),
+    );
   });
 });
