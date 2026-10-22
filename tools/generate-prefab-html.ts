@@ -7,6 +7,7 @@ import { listPrefabXmlPaths, prefabSiblingFiles } from "./lib/prefab-files.ts";
 import {
   globFiles,
   handleMain,
+  isErrnoException,
   publishDir,
   throttleAll,
   vanillaDir,
@@ -23,10 +24,10 @@ async function main() {
 }
 
 async function remove() {
-  const globPath = path.join(BASE_DEST, "*.{jpg,html}");
-  const files = await globFiles(BASE_DEST, "*.{jpg,html}");
+  const pattern = "*.{jpg,html}";
+  const files = await globFiles(BASE_DEST, pattern);
   await Promise.all(files.map((f) => fs.unlink(f)));
-  console.log("Remove %s", globPath);
+  console.log("Remove %s", path.join(BASE_DEST, pattern));
 }
 
 async function loadLabels() {
@@ -90,10 +91,6 @@ async function copyJpg(xmlFileName: string) {
     }
     throw e;
   }
-}
-
-function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
-  return typeof (e as NodeJS.ErrnoException).code === "string";
 }
 
 handleMain(main());

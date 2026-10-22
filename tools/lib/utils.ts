@@ -21,14 +21,29 @@ export function vanillaDir(...pathList: string[]): string {
   return projectRoot("tools", "vanilla", ...pathList);
 }
 
+/**
+ * Returns the sorted absolute paths of regular files under `root` that
+ * match `pattern`. Directories and symlinks are excluded.
+ */
 export async function globFiles(
   root: string,
   pattern: string,
 ): Promise<string[]> {
-  const matches = await Array.fromAsync(
-    fs.promises.glob(pattern, { cwd: root }),
+  const entries = await Array.fromAsync(
+    fs.promises.glob(pattern, { cwd: root, withFileTypes: true }),
   );
-  return matches.sort().map((p) => path.join(root, p));
+  return entries
+    .filter((e) => e.isFile())
+    .map((e) => path.resolve(root, e.parentPath, e.name))
+    .sort();
+}
+
+export function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    typeof (e as NodeJS.ErrnoException).code === "string"
+  );
 }
 
 export function requireNonnull<T>(
