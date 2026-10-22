@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 import * as http from "node:http";
-import sirv from "sirv";
+import serveStatic from "serve-static";
 import { globFiles, projectRoot } from "./lib/utils.ts";
 
 const targets = (
@@ -59,27 +59,22 @@ if (args[0] === "serve") {
 
   const port = envPort ? Number(envPort) : 8000;
   const hostname = envHost ?? "127.0.0.1";
-  const serve = sirv(outDir, {
-    // WHY: dev mode stats files per request and sends no-store, so a rebuild while a reused server runs never serves stale sizes.
-    dev: true,
-    setHeaders: (res, pathname) => {
-      // WHY: sirv marks *.gz as Content-Encoding: gzip, so the browser would inflate dtm_block.raw.gz before the app's own DecompressionStream does. Serve it as an opaque gzip file, like GitHub Pages.
-      if (pathname.endsWith(".gz")) {
-        res.setHeader("content-encoding", "identity");
-        res.setHeader("content-type", "application/gzip");
-      }
-    },
-  });
+  // WHY: no fallthrough, so every failure (404, 400, 403, 500) arrives at the callback as an error with a statusCode.
+  const serve = serveStatic(outDir, { fallthrough: false });
   http
     .createServer((req, res) => {
-      // WHY: sirv pipes fs.createReadStream() into res without an error listener, so a file that vanishes or is locked after its stat would crash the whole server. Headers are already sent by then, so drop the connection instead.
-      res.on("pipe", (src) => {
-        src.on("error", (e) => {
-          console.error(`serve-static: failed to read ${req.url}:`, e);
+      serve(req, res, (err) => {
+        if (err.statusCode >= 500)
+          console.error(`serve-static: ${req.url}:`, err);
+        // WHY: a read error mid-body cannot change the status any more; drop the connection so the client sees a truncated response, not a short 200.
+        if (res.headersSent) {
           res.destroy();
-        });
+          return;
+        }
+        // WHY: send sets the file's Content-Length/Type before opening it, so an open failure would otherwise announce the file's size on the error response.
+        for (const name of res.getHeaderNames()) res.removeHeader(name);
+        res.writeHead(err.statusCode).end();
       });
-      serve(req, res);
     })
     .listen(port, hostname, () => {
       console.log(`Serving at http://${hostname}:${port}`);

@@ -50,3 +50,32 @@ declare module "opentype.js" {
   };
   export default opentype;
 }
+
+declare module "serve-static" {
+  import type { IncomingMessage, ServerResponse } from "node:http";
+
+  /** Only the options used by tools/ are declared. */
+  interface ServeStaticOptions {
+    /** `false` forwards every failure to `next` instead of calling it bare for 404s. */
+    fallthrough?: boolean;
+  }
+
+  /** The error passed to `next`; `statusCode` is the HTTP status to answer with. */
+  interface HttpError extends Error {
+    statusCode: number;
+  }
+
+  /**
+   * With `fallthrough: false`, `next` is only called with an error; a
+   * successful request is answered by the middleware itself.
+   */
+  function serveStatic(
+    root: string,
+    options?: ServeStaticOptions,
+  ): (
+    req: IncomingMessage,
+    res: ServerResponse,
+    next: (err: HttpError) => void,
+  ) => void;
+  export default serveStatic;
+}
