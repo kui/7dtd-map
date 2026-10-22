@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import {
   handleMain,
+  isErrnoException,
   projectRoot,
   publishDir,
   writeJsonFile,
@@ -93,7 +94,7 @@ async function readExistingOutput(
   try {
     text = await readFile(outputPath, "utf8");
   } catch (e) {
-    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {};
+    if (isErrnoException(e) && e.code === "ENOENT") return {};
     throw e;
   }
 
