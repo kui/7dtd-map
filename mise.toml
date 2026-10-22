@@ -168,5 +168,15 @@ run = "npm run ci:type-check"
 [tasks."ci:test"]
 run = "npm test"
 
+# WHY: e2e has tight timeouts and no local retries; running it alongside the
+# other checks made it flaky. wait_for (not depends) still runs it when one of
+# them fails.
 [tasks."ci:e2e"]
 run = "npm run e2e"
+wait_for = [
+  "ci:lint",
+  "ci:ast-grep",
+  "ci:fmt-check",
+  "ci:type-check",
+  "ci:test",
+]

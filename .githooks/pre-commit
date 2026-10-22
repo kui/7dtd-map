@@ -4,6 +4,8 @@ staged=$(mktemp)
 trap 'rm -f "$staged"' EXIT
 git diff --cached --name-only --diff-filter=ACMR -z >"$staged"
 if [ -s "$staged" ]; then
+  # These append flags and staged paths, so each of these npm scripts must stay
+  # a single tool call that accepts file arguments.
   xargs -0 -a "$staged" npm run ci:fmt-check -- --no-error-on-unmatched-pattern
   xargs -0 -a "$staged" npm run ci:lint -- --no-error-on-unmatched-pattern
   xargs -0 -a "$staged" npm run ci:ast-grep --
