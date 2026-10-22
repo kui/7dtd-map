@@ -1,24 +1,22 @@
 # AGENTS.md
 
-This file provides critical instructions for AI agents working on this
-repository. Agents must read and follow these rules closely.
+Rules for AI agents working on this repository.
 
 ## Critical Rules
 
 1. **Language**
-   - **All generated artifacts written into the repository or GitHub must be in
-     English.** This includes, but is not limited to: code comments,
-     documentation (Markdown, JSDoc, etc.), commit messages, pull request
-     titles/descriptions, GitHub issue titles/bodies, and review comments.
-   - This rule applies regardless of the language used in the chat/prompt. For
-     example, when an agent is instructed in Japanese to "open an issue", the
-     issue itself must still be filed in English.
+   - Everything written into the repository or GitHub must be in English:
+     code comments, documentation, commit messages, PR titles/descriptions,
+     issues, and review comments.
+   - This holds regardless of the chat language. When asked in Japanese to
+     "open an issue", file the issue in English.
 
 2. **mise and Node Version Management**
-   - mise is a required tool. It pins the Node version and defines the build
-     tasks (`mise run build`) in `mise.toml`.
-   - Keep the set of required tools minimal. Prefer leaning on a tool that is
-     already required over adding a new one.
+   - mise is required. It pins the Node version and defines the build tasks
+     (`mise run build`) in `mise.toml`.
+   - Keep the set of tools contributors must install (outside `npm ci`)
+     minimal. Prefer leaning on mise or Node over adding a new one. npm
+     packages are covered by rule 5.
    - To update Node, modify `mise.toml`. Keep the `@types/node` major version,
      `engines.node`, and `devEngines.runtime.version` in `package.json` in sync
      with it. `devEngines` is what makes npm refuse a mismatched Node.
@@ -26,27 +24,36 @@ repository. Agents must read and follow these rules closely.
      scripts call `npm`, `npx`, and `node` directly, not via `mise exec --`.
 
 3. **Fail Fast in `tools/`**
-   - Code under `tools/` parses upstream game data files (prefab xmls,
-     rwgmixer.xml, .tts/.nim blobs, etc.). When the schema drifts in a future
-     game version, we want the build to break loudly.
-   - **Throw on unknown data shapes; never silently drop or coerce.** Prefer
-     explicit type guards that reject unrecognised entries with a descriptive
-     `Error`, not lenient fall-through that returns an empty/default value.
-   - Default to fail-fast over fail-safe in the tooling pipeline: a missing
-     property, an unexpected XML element, or an unknown variant tag should
-     surface as an exception that names the offending file/value, not as a
-     hidden gap in the generated JSON.
-   - This rule applies to `tools/` specifically. Runtime code under `src/`
-     should prefer graceful degradation: missing JSON entries are tolerated via
-     nullish-coalescing defaults so a partial dataset still produces a usable UI
-     rather than crashing the page.
+   - Code under `tools/` parses upstream game data (prefab XMLs, rwgmixer.xml,
+     .tts/.nim blobs, etc.). When the schema drifts in a future game version,
+     the build must break loudly: throw a descriptive `Error` naming the
+     offending file/value on any unknown shape, missing property, or unknown
+     variant. Never silently drop, coerce, or default.
+   - Runtime code under `src/` is the opposite: degrade gracefully. Tolerate
+     missing JSON entries with nullish-coalescing defaults so a partial dataset
+     still renders a usable page.
 
 4. **Do Not Modify `public/old/` Directories**
-   - Directories under `public/old/` (e.g., `a20/`, `a21/`, `v1.4/`, `v2.6/`)
-     are frozen snapshots of previous major releases. They are self-contained.
-   - **Do not edit files inside these old directories.** Do not apply refactors,
-     renames, or style fixes to them.
-   - The only exception is during a major version upgrade: copy the current
-     system into a new `public/old/<version>/` directory, then edit `index.html`
-     (or similar top-level files) within that new copy to update only the nav
-     elements / version banner. No other edits to old snapshots are allowed.
+   - `public/old/<version>/` (e.g. `a20/`, `v2.6/`) are frozen, self-contained
+     snapshots of previous major releases. Do not edit them, including
+     refactors, renames, and style fixes.
+   - Only exception: in a major version upgrade, copy the current system into a
+     new `public/old/<version>/` and edit only the nav / version banner in that
+     new copy's top-level HTML.
+
+5. **Adding npm Dependencies**
+   - Before hand-writing generic infrastructure (an HTTP server, a parser for a
+     standard format, etc.), check whether a widely used package already does
+     it. Choosing a package is fine; a hand-rolled version needs a reason.
+   - Before adding a package, check and state in the PR: its latest release
+     and commit dates, open issues about the features you rely on, weekly
+     downloads compared with the main alternatives, and its transitive
+     dependency count. Prefer the maintained, mainstream option; do not pick an
+     unmaintained one because it is smaller.
+
+6. **PR Descriptions State Only What Was Verified**
+   - Mark a checklist item done, or claim a behavior ("handled by X",
+     "returns 404"), only after running something that shows it: a command, a
+     request, a test. Put what you ran in the Verification section.
+   - If something was not verified, or is only partly met, say so explicitly
+     instead of checking the box.
