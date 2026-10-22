@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "htmlWhitespaceSensitivity": "strict",
   "ignorePatterns": [
     "public/old/**",
     "public/maps/**",
@@ -7,7 +8,6 @@
     "public/**/*.js",
     "public/**/*.json",
     "public/prefabs/**",
-    "public/*.html",
     "package-lock.json"
   ]
 }

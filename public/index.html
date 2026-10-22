@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -33,8 +33,9 @@
 
     <div id="controller">
       <p>
-        <button id="clear-map"
-          title="Discard the currently loaded world files">🗑️ Unload Map</button>
+        <button id="clear-map" title="Discard the currently loaded world files"
+          >🗑️ Unload Map</button
+        >
         <label class="file-button" title="Select a map folder to load">
           📁 Load Map
           <input
@@ -68,8 +69,16 @@
         <tr id="flag-row">
           <th>
             🚩 Flag
-            <button id="jump-to-mark" disabled title="Scroll the map to the flag" aria-label="Scroll the map to the flag">⌖</button>
-            <button id="reset-mark" title="Reset (or double-click the map)">×</button>
+            <button
+              id="jump-to-mark"
+              disabled
+              title="Scroll the map to the flag"
+              aria-label="Scroll the map to the flag"
+              >⌖</button
+            >
+            <button id="reset-mark" title="Reset (or double-click the map)"
+              >×</button
+            >
           </th>
           <td colspan="2">
             <div id="mark-coods">E/W: -, N/S: -, Elev: -</div>
@@ -84,16 +93,19 @@
               id="terrain-viewer-show"
               disabled
               title="Requires dtm.raw and map_info.xml"
-            >⛰️ Show Terrain</button>
+              >⛰️ Show Terrain</button
+            >
             <button
               id="prefab-inspector-show"
               data-show-dialog-for="prefab-inspector-dialog"
-            >🔍️ Inspect Prefabs</button>
+              >🔍️ Inspect Prefabs</button
+            >
             <button
               id="map-info-show"
               disabled
               data-show-dialog-for="map-info-dialog"
-            >ℹ️ map_info.xml</button>
+              >ℹ️ map_info.xml</button
+            >
           </td>
         </tr>
         <tr>
@@ -123,8 +135,9 @@
                 <tr>
                   <th><label for="biomes-alpha">🌲 biomes.png</label></th>
                   <td>
-                    <output class="alpha-output"
-                      data-sync-for="biomes-alpha">1.0</output>
+                    <output class="alpha-output" data-sync-for="biomes-alpha"
+                      >1.0</output
+                    >
                   </td>
                   <td>
                     <input
@@ -145,11 +158,13 @@
                     <span
                       id="warn-splat3-png"
                       title="Currently using splat3.png which is degraded compared to splat3_processed.png"
-                    >⚠️</span>
+                      >⚠️</span
+                    >
                   </th>
                   <td>
-                    <output class="alpha-output"
-                      data-sync-for="splat3-alpha">1.0</output>
+                    <output class="alpha-output" data-sync-for="splat3-alpha"
+                      >1.0</output
+                    >
                   </td>
                   <td>
                     <input
@@ -170,11 +185,13 @@
                     <span
                       id="warn-splat4-png"
                       title="Currently using splat4.png which is degraded compared to splat4_processed.png"
-                    >⚠️</span>
+                      >⚠️</span
+                    >
                   </th>
                   <td>
-                    <output class="alpha-output"
-                      data-sync-for="splat4-alpha">0.7</output>
+                    <output class="alpha-output" data-sync-for="splat4-alpha"
+                      >0.7</output
+                    >
                   </td>
                   <td>
                     <input
@@ -194,8 +211,9 @@
                     <label for="rad-alpha">☢️ radiation.png</label>
                   </th>
                   <td>
-                    <output class="alpha-output"
-                      data-sync-for="rad-alpha">0.5</output>
+                    <output class="alpha-output" data-sync-for="rad-alpha"
+                      >0.5</output
+                    >
                   </td>
                   <td>
                     <input
@@ -216,7 +234,8 @@
                     <output
                       class="alpha-output"
                       data-sync-for="prefab-footprint-alpha"
-                    >1.0</output>
+                      >1.0</output
+                    >
                   </td>
                   <td>
                     <input
@@ -233,10 +252,9 @@
                 <tr>
                   <th><label for="brightness">🔆 Brightness</label></th>
                   <td>
-                    <output
-                      class="percentage-output"
-                      data-sync-for="brightness"
-                    >60</output>%
+                    <output class="percentage-output" data-sync-for="brightness"
+                      >60</output
+                    >%
                   </td>
                   <td>
                     <input
@@ -256,15 +274,18 @@
         </tr>
         <tbody class="multi-rows">
           <tr>
-            <th
-              rowspan="2"><img class="logo" src="heavy-ballot-x.svg" alt="" /> Prefab Sign</th>
+            <th rowspan="2"
+              ><img class="logo" src="heavy-ballot-x.svg" alt="" /> Prefab
+              Sign</th
+            >
             <td>
               <label for="prefab-sign-size">
                 <span class="label-text">Size:</span>
                 <output
                   class="font-size-output"
                   data-sync-for="prefab-sign-size"
-                  >20</output>px
+                  >20</output
+                >px
               </label>
             </td>
             <td>
@@ -283,8 +304,9 @@
             <td>
               <label for="prefab-sign-alpha">
                 <span class="label-text">Alpha:</span>
-                <output class="alpha-output"
-                  data-sync-for="prefab-sign-alpha">1.0</output>
+                <output class="alpha-output" data-sync-for="prefab-sign-alpha"
+                  >1.0</output
+                >
               </label>
             </td>
             <td>
@@ -305,11 +327,14 @@
             <button
               id="toggle-prefab-sign"
               title="Toggle prefab sign visibility (alpha 0 / 1)"
-            ><img class="logo" src="heavy-ballot-x.svg" alt="" /> Toggle Sign</button>
+              ><img class="logo" src="heavy-ballot-x.svg" alt="" /> Toggle
+              Sign</button
+            >
             <button
               id="reset-remembered"
               title="Restore display preferences (alpha, brightness, scale, prefab sign, terrain-viewer help, pre-filters) to their defaults"
-            >🔄 Reset Display Settings</button>
+              >🔄 Reset Display Settings</button
+            >
           </td>
         </tr>
         <tbody class="multi-rows">
@@ -360,38 +385,42 @@
             <button title="Clear" data-input-prefab-filter="">×</button>
             <div class="sub-field">
               <label>
-                <input
-                  id="only-new-prefabs"
-                  type="checkbox"
-                /> 🆕 Only new prefabs
+                <input id="only-new-prefabs" type="checkbox" /> 🆕 Only new
+                prefabs
               </label>
             </div>
             <details id="prefab-pre-filters" class="sub-field">
               <summary>Excludes</summary>
               <ul>
                 <li>
-                  <label><input
+                  <label
+                    ><input
                       type="checkbox"
                       value="^(?:aaa_|AAA_|spacercise_|terrain_smoothing_bug)"
                       checked
                       data-remember="prefabFilterExcludeTest"
-                    />Test</label>
+                    />Test</label
+                  >
                 </li>
                 <li>
-                  <label><input
+                  <label
+                    ><input
                       type="checkbox"
                       value="^rwg_tile_"
                       checked
                       data-remember="prefabFilterExcludeTiles"
-                    />Tiles</label>
+                    />Tiles</label
+                  >
                 </li>
                 <li>
-                  <label><input
+                  <label
+                    ><input
                       type="checkbox"
                       value="^part_driveway_"
                       checked
                       data-remember="prefabFilterExcludeDrivewayParts"
-                    />Driveway Parts</label>
+                    />Driveway Parts</label
+                  >
                 </li>
               </ul>
             </details>
@@ -402,8 +431,12 @@
           <td colspan="2">
             <div>
               <input id="block-filter" placeholder="Enter block name" />
-              <button title="Clear" data-input-block-filter=""
-                data-input-min-matched-block-count="">×</button>
+              <button
+                title="Clear"
+                data-input-block-filter=""
+                data-input-min-matched-block-count=""
+                >×</button
+              >
             </div>
             <div class="sub-field">
               <label>
@@ -426,13 +459,15 @@
               data-input-min-tier="0"
               data-input-prefab-filter="trader"
               data-input-block-filter=""
-            >All Traders</button>
+              >All Traders</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter="skyscraper"
               data-input-block-filter=""
-            >Skyscrapers</button>
+              >Skyscrapers</button
+            >
             <button
               title="More than or equal to 20 book containers in early game"
               data-input-min-tier="0"
@@ -440,35 +475,40 @@
               data-input-prefab-filter=""
               data-input-block-filter="^cnt(LootCrateBook|Book|shelfSupply|StoreElectronicsBook|Desk|FileCabinet)(?!.*Empty)"
               data-input-min-matched-block-count="20"
-            >Many Books in Early Game</button>
+              >Many Books in Early Game</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="(Grace|Super)Corn"
               data-input-min-matched-block-count=""
-            >Super Corn</button>
+              >Super Corn</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="2"
               data-input-prefab-filter=""
               data-input-block-filter="^decoCookingPot"
               data-input-min-matched-block-count=""
-            >Cooking Pot in Early Game</button>
+              >Cooking Pot in Early Game</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^sleeper(?!Zombie|Vulture).*Animal$"
               data-input-min-matched-block-count="6"
-            >Many Meats</button>
+              >Many Meats</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^planted.*Harvest"
               data-input-min-matched-block-count="20"
-            >Many Plants</button>
+              >Many Plants</button
+            >
             <!-- INVARIANT: Check this regexp using ./tools/verify-steel-wrench-filter.ts -->
             <button
               data-input-min-tier="0"
@@ -476,45 +516,47 @@
               data-input-prefab-filter=""
               data-input-block-filter="^(cntVendingMachine.*Broken|cntAllVendingMachine|utilityTransformer|chandelierLight|streetLight(\d+|Broken(Destroyed)?)|cntGasPump|cntMunitionsBox)"
               data-input-min-matched-block-count=""
-            >Steel with Wrench</button>
+              >Steel with Wrench</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^cntVendingMachine.*(?&lt;!RandomLootHelper|Broken|Trader|Empty)$"
               data-input-min-matched-block-count=""
-            >Working Vending-Machine</button>
+              >Working Vending-Machine</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^cnt(WoodenChestRotten|OldWestChest)(?!Open)"
               data-input-min-matched-block-count=""
-            >Taza's Stone Axe</button>
+              >Taza's Stone Axe</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^treeStump"
               data-input-min-matched-block-count=""
-            >Tree Stump</button>
+              >Tree Stump</button
+            >
             <button
               data-input-min-tier="0"
               data-input-max-tier="5"
               data-input-prefab-filter=""
               data-input-block-filter="^cnt(Loot|Shipping)CrateHero"
               data-input-min-matched-block-count=""
-            >Hidden Stash</button>
+              >Hidden Stash</button
+            >
           </td>
         </tr>
       </table>
       <p id="prefabs-status"></p>
       <ul id="prefabs-list"></ul>
     </div>
-    <dialog
-      id="terrain-viewer-dialog"
-      aria-labelledby="terrain-viewer-title"
-    >
+    <dialog id="terrain-viewer-dialog" aria-labelledby="terrain-viewer-title">
       <h2 id="terrain-viewer-title" class="visually-hidden">Terrain Viewer</h2>
       <canvas id="terrain-viewer" width="0" height="0" tabindex="0"></canvas>
       <div id="terrarian-viewer-hud" class="terrain-viewer-hud">
@@ -534,8 +576,9 @@
           </dt>
           <dd>Move horizontally (hold <code>Shift</code> to move faster)</dd>
           <dt>
-            <code>R</code>/<code>F</code>
-            or <code>PageUp</code>/<code>PageDown</code>
+            <code>R</code>/<code>F</code> or <code>PageUp</code>/<code
+              >PageDown</code
+            >
             / Grab with Mouse Wheel Button
           </dt>
           <dd>Tilt</dd>
@@ -553,7 +596,8 @@
           class="terrain-viewer-close"
           type="submit"
           aria-label="Close terrain viewer"
-        >×</button>
+          >×</button
+        >
       </form>
     </dialog>
     <div id="map-wrapper">
@@ -581,12 +625,17 @@
         Open "GeneratedWorlds" folder:
         <ul>
           <li>
-            <code><span id="generated-world-path-windows">%APPDATA%\7DaysToDie\GeneratedWorlds</span></code>
+            <code
+              ><span id="generated-world-path-windows"
+                >%APPDATA%\7DaysToDie\GeneratedWorlds</span
+              ></code
+            >
             <button
               title="Copy this path"
               data-copy-for="generated-world-path-windows"
               data-success-message="✅ Press Win+R then paste this"
-            >📋️</button>
+              >📋️</button
+            >
           </li>
         </ul>
       </li>
@@ -716,8 +765,8 @@
       <h3>New Prefabs</h3>
       <p>
         Prefabs added in version
-        <span id="prefab-inspector-new-version">-</span>, and how many of
-        them were found in this map.
+        <span id="prefab-inspector-new-version">-</span>, and how many of them
+        were found in this map.
       </p>
       <table>
         <tbody>

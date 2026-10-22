@@ -62,6 +62,16 @@ Linux, macOS, and Windows are supported.
 npm run fix
 ```
 
+## Run all checks
+
+```
+npm run ci
+```
+
+This runs `mise run --continue-on-error ci`. Lint, ast-grep, format check, type
+check, and unit tests run in parallel, up to mise's `jobs` setting (default 4).
+The e2e tests run after them. Every failing check is reported.
+
 ## Serve pages for development
 
 ```
