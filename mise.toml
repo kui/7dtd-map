@@ -58,7 +58,13 @@ outputs = [
 
 [tasks."build:ts"]
 run = "node tools/build.ts"
-sources = ["tools/build.ts", "tools/lib/utils.ts", "src/**/*.ts", "lib/**/*.ts"]
+sources = [
+  "tools/build.ts",
+  "tools/lib/static-server.ts",
+  "tools/lib/utils.ts",
+  "src/**/*.ts",
+  "lib/**/*.ts",
+]
 outputs = [
   "public/*.js",
   "public/*.js.map",
