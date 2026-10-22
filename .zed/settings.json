@@ -1,6 +1,6 @@
-// Formatting runs oxfmt from node_modules and needs no extension.
-// Diagnostics need the Zed extensions "oxc" (oxlint), "tsgo" (TypeScript 7)
-// and "ast-grep". They run the binaries installed by `npm ci`.
+// Required Zed extensions: "oxc" (oxlint + oxfmt), "tsgo" (TypeScript 7
+// language server) and "ast-grep". Without them Zed does not format or lint
+// on save. All of them run the binaries installed by `npm ci`.
 {
   "lsp": {
     // The tsgo extension downloads its own `typescript` package by default.
@@ -34,16 +34,7 @@
         "..."
       ],
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "TypeScript": {
       "language_servers": [
@@ -57,93 +48,30 @@
         "..."
       ],
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "CSS": {
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "JSON": {
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "JSONC": {
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "Markdown": {
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "TOML": {
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     "YAML": {
       "prettier": { "allowed": false },
-      "formatter": {
-        "external": {
-          "command": "node",
-          "arguments": [
-            "node_modules/oxfmt/bin/oxfmt",
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+      "formatter": { "language_server": { "name": "oxfmt" } }
     },
     // oxfmt ignores public/*.html on purpose. Keep Zed's default HTML
     // formatter from rewriting it on save.
