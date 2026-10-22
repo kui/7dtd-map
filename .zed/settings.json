@@ -73,10 +73,10 @@
       "prettier": { "allowed": false },
       "formatter": { "language_server": { "name": "oxfmt" } }
     },
-    // oxfmt ignores public/*.html on purpose. Keep Zed's default HTML
-    // formatter from rewriting it on save.
+    // oxfmt ignores public/*.html on purpose. Stop Zed's default HTML
+    // formatter (Prettier, or the oxfmt language server) from rewriting it.
     "HTML": {
-      "format_on_save": "off"
+      "formatter": "none"
     }
   }
 }
