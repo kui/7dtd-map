@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import * as fontTools from "@web-alchemy/fonttools";
 import { extractSymbolChars } from "./lib/symbol-chars.ts";
 import { globFiles, handleMain, projectRoot, publishDir } from "./lib/utils.ts";
-const fontTools = await import("@web-alchemy/fonttools");
 
 interface FontJob {
   target: readonly string[];
