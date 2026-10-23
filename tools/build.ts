@@ -53,7 +53,7 @@ if (args[0] === "serve") {
 
   console.log(`Serving at http://${hosts[0]}:${port}`);
 } else if (args[0] === "serve-static") {
-  // WHY: esbuild's own serve drops response bodies under CI load, giving E2E 0-byte map files (see issue #202). Build once, then serve public/ from a real static server.
+  // WHY: e2e only needs one build of public/, not a watcher; serve it from a plain static server so a test run does not depend on esbuild's serve.
   await esbuild.build({ ...commonOpts, ...serveOpts });
   await esbuild.stop();
 
