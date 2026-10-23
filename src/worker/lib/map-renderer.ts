@@ -553,17 +553,10 @@ async function readPngSize(
   file: Blob,
 ): Promise<{ width: number; height: number }> {
   const header = await file.slice(0, PNG_HEADER_BYTES).arrayBuffer();
-  // WHY: diagnostic for https://github.com/kui/7dtd-map/issues/202 (flaky short read of bundled PNGs in CI). Throw a descriptive error with the file metadata visible at the moment of the short read so the next CI flake captures what would otherwise be lost behind a bare RangeError.
+  // WHY: a truncated PNG would otherwise surface as a bare RangeError from DataView with no file name.
   if (header.byteLength < PNG_HEADER_BYTES) {
-    const headerHex = Array.from(new Uint8Array(header))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
     throw new Error(
-      `readPngSize: short read for ${fileName} ` +
-        `(file.size=${file.size.toString()}, file.type=${file.type}, ` +
-        `header.byteLength=${header.byteLength.toString()}, ` +
-        `header[hex]=${headerHex}). ` +
-        `See https://github.com/kui/7dtd-map/issues/202`,
+      `${fileName} is too short to be a PNG: ${file.size.toString()} bytes`,
     );
   }
   const view = new DataView(header);

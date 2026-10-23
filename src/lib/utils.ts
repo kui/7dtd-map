@@ -73,9 +73,10 @@ export async function fetchJson<T>(url: string): Promise<T> {
 }
 
 /**
- * Rejects empty or short bodies before they are persisted. Dev and CI
- * static servers occasionally return them under load. See
- * https://github.com/kui/7dtd-map/issues/202.
+ * Rejects empty or truncated bodies before they are persisted. Besides
+ * catching a broken download early, this keeps the workspace free of
+ * empty files, which `MapDir.get()` relies on to treat a 0-byte file as
+ * a write still in progress.
  */
 export async function fetchCompleteBlob(url: string): Promise<Blob> {
   const r = await fetch(url);
@@ -93,8 +94,7 @@ export async function fetchCompleteBlob(url: string): Promise<Blob> {
       `Incomplete download for ${url}: ${blob.size.toString()} bytes` +
         (Number.isFinite(declared)
           ? ` (content-length=${declared.toString()})`
-          : "") +
-        ". See https://github.com/kui/7dtd-map/issues/202",
+          : ""),
     );
   }
   return blob;
