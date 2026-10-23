@@ -157,6 +157,10 @@ depends = [
 [tasks."ci:lint"]
 run = "npm run ci:lint"
 
+# WHY: the npm script passes --globs to skip public/old and the generated
+# public/prefabs HTML without parsing them (~20-30s otherwise). Those globs
+# must mirror the rules' `ignores:` in ast-grep/rules; the hook and this task
+# both go through that one script.
 [tasks."ci:ast-grep"]
 run = "npm run ci:ast-grep"
 

@@ -2,6 +2,10 @@ id: require-comment-rationale-html
 language: Html
 severity: error
 message: Delete this comment, or prefix it with a rationale marker (WHY:, SAFETY:, INVARIANT:, HACK:) followed by the reason.
+# WHY: editors (ast-grep LSP) honour these ignores, but `npm run ci:ast-grep`
+# skips files via --globs before parsing them, for speed. Keep the two in sync:
+# anything the script excludes must be ignored here by every rule that would
+# otherwise match it, and a path linted here must not be excluded by the script.
 ignores:
   - public/old/**
   - public/prefabs/**
