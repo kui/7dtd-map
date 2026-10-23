@@ -10,9 +10,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!CI,
   retries: CI ? 2 : 0,
-  /** The bundled-map load test fetches ~5MB of assets through the dev server.
-   *  Cap workers to keep server contention bounded even though serve:static is
-   *  sturdier than esbuild's serve under load. */
+  /** The bundled-map tests fetch and decode several MB of map assets per
+   *  test. Cap workers so they do not compete with each other for CPU. */
   workers: CI ? 1 : 2,
   reporter: CI ? [["html", { open: "never" }], ["list"]] : "list",
   timeout: 30_000,
