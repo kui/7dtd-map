@@ -86,8 +86,10 @@ export class MapDir {
   async get(name: MapFileName): Promise<File | null> {
     console.debug("get", name);
     try {
-      const file = await this.#dir.getFileHandle(name);
-      return await file.getFile();
+      const handle = await this.#dir.getFileHandle(name);
+      const file = await handle.getFile();
+      // WHY: put() creates the entry before its writable closes, and OPFS shows it as 0 bytes until then. Readers that race a put (e.g. the map renderer during a bundled map load) must see it as absent; no writer stores an empty map file. See https://github.com/kui/7dtd-map/issues/202
+      return file.size === 0 ? null : file;
     } catch (e: unknown) {
       if (e instanceof DOMException && e.name === "NotFoundError") {
         return null;
