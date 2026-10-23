@@ -74,8 +74,7 @@
       "formatter": { "language_server": { "name": "oxfmt" } }
     },
     // Like the other languages, HTML goes through oxfmt so Zed matches
-    // `oxfmt --check`. The language server honors .oxfmtrc.json's
-    // ignorePatterns, so public/*.html stays untouched.
+    // `oxfmt --check`.
     "HTML": {
       "prettier": { "allowed": false },
       "formatter": { "language_server": { "name": "oxfmt" } }
