@@ -157,10 +157,8 @@ depends = [
 [tasks."ci:lint"]
 run = "npm run ci:lint"
 
-# WHY: the npm script passes --globs to skip public/old and the generated
-# public/prefabs HTML without parsing them (~20-30s otherwise). Those globs
-# must mirror the rules' `ignores:` in ast-grep/rules; the hook and this task
-# both go through that one script.
+# WHY: the npm script's --globs skip files before parsing (speed) and must mirror
+# the `ignores:` in ast-grep/rules/*.yml; package.json cannot hold this comment.
 [tasks."ci:ast-grep"]
 run = "npm run ci:ast-grep"
 
@@ -173,8 +171,6 @@ run = "npm run ci:type-check"
 [tasks."ci:test"]
 run = "npm test"
 
-# WHY: split from ci:e2e so the browser download overlaps the other checks
-# instead of adding to the e2e critical path.
 [tasks."ci:e2e-install"]
 run = "npm run e2e:install"
 
