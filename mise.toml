@@ -150,6 +150,7 @@ depends = [
   "ci:fmt-check",
   "ci:type-check",
   "ci:test",
+  "ci:e2e-install",
   "ci:e2e",
 ]
 
@@ -168,12 +169,18 @@ run = "npm run ci:type-check"
 [tasks."ci:test"]
 run = "npm test"
 
+# WHY: split from ci:e2e so the browser download overlaps the other checks
+# instead of adding to the e2e critical path.
+[tasks."ci:e2e-install"]
+run = "npm run e2e:install"
+
 # WHY: e2e has tight timeouts and no local retries; running it alongside the
 # other checks made it flaky. wait_for (not depends) still runs it when one of
 # them fails.
 [tasks."ci:e2e"]
-run = "npm run e2e"
+run = "npm run e2e:run"
 wait_for = [
+  "ci:e2e-install",
   "ci:lint",
   "ci:ast-grep",
   "ci:fmt-check",
