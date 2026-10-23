@@ -1,0 +1,23 @@
+// js-debug starts Node with the inspector itself, so no `--inspect-wait` is
+// needed. Node runs the `.ts` sources directly.
+[
+  {
+    "adapter": "JavaScript",
+    "label": "Node: current file",
+    "type": "pwa-node",
+    "request": "launch",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "program": "$ZED_FILE",
+    "skipFiles": ["<node_internals>/**"]
+  },
+  {
+    "adapter": "JavaScript",
+    "label": "Vitest: current file",
+    "type": "pwa-node",
+    "request": "launch",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "program": "$ZED_WORKTREE_ROOT/node_modules/vitest/vitest.mjs",
+    "args": ["run", "$ZED_FILE"],
+    "skipFiles": ["<node_internals>/**"]
+  }
+]
