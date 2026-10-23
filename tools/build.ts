@@ -59,7 +59,7 @@ if (args[0] === "serve") {
 
   const port = envPort ? Number(envPort) : 8000;
   const hostname = envHost ?? "127.0.0.1";
-  // WHY: no fallthrough, so every failure (404, 400, 403, 500) arrives at the callback as an error with a statusCode.
+  // WHY: without fallthrough, every error send raises (400, 403, 404, 412, 416, 500, ...) reaches the callback with a statusCode; non-GET/HEAD requests are answered 405 by serve-static itself.
   const serve = serveStatic(outDir, { fallthrough: false });
   http
     .createServer((req, res) => {
@@ -73,7 +73,8 @@ if (args[0] === "serve") {
         }
         // WHY: send sets the file's Content-Length/Type before opening it, so an open failure would otherwise announce the file's size on the error response.
         for (const name of res.getHeaderNames()) res.removeHeader(name);
-        res.writeHead(err.statusCode).end();
+        // WHY: send's own error response re-applies err.headers after clearing, e.g. Content-Range on a 416.
+        res.writeHead(err.statusCode, err.headers).end();
       });
     })
     .listen(port, hostname, () => {
