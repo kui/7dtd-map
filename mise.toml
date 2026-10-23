@@ -150,12 +150,15 @@ depends = [
   "ci:fmt-check",
   "ci:type-check",
   "ci:test",
+  "ci:e2e-install",
   "ci:e2e",
 ]
 
 [tasks."ci:lint"]
 run = "npm run ci:lint"
 
+# WHY: the npm script's --globs skip files before parsing (speed) and must mirror
+# the `ignores:` in ast-grep/rules/*.yml; package.json cannot hold this comment.
 [tasks."ci:ast-grep"]
 run = "npm run ci:ast-grep"
 
@@ -168,12 +171,16 @@ run = "npm run ci:type-check"
 [tasks."ci:test"]
 run = "npm test"
 
+[tasks."ci:e2e-install"]
+run = "npm run e2e:install"
+
 # WHY: e2e has tight timeouts and no local retries; running it alongside the
 # other checks made it flaky. wait_for (not depends) still runs it when one of
 # them fails.
 [tasks."ci:e2e"]
-run = "npm run e2e"
+run = "npm run e2e:run"
 wait_for = [
+  "ci:e2e-install",
   "ci:lint",
   "ci:ast-grep",
   "ci:fmt-check",

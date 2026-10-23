@@ -9,11 +9,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4
       - run: npm ci
-      - name: Install Playwright system dependencies
-        if: runner.os == 'Linux'
-        run: npx playwright install-deps chromium
       - run: npm run ci
