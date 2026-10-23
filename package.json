@@ -13,7 +13,7 @@
     "e2e": "npm run e2e:install && npm run e2e:run",
     "ci": "mise run --continue-on-error ci",
     "ci:lint": "oxlint",
-    "ci:ast-grep": "ast-grep scan --globs \"!public/old/**\" --globs \"!public/prefabs/**\"",
+    "ci:ast-grep": "ast-grep scan --globs \"!public/old/**\" --globs \"!public/prefabs/**/*.html\"",
     "ci:fmt-check": "oxfmt --check",
     "ci:type-check": "tsc -b"
   },
