@@ -8,11 +8,13 @@ const selfPath = path
   .relative(repoRoot, import.meta.filename)
   .replaceAll("\\", "/");
 
-// WHY: `x` is mise's alias for `exec`, and `\s+` also catches the name wrapped across lines in hard-wrapped prose.
-const forbidden = /\bmise\s+(?:exec|x)\b/g;
+const miseExecAliases = ["exec", "x"];
+const miseExecInvocation = new RegExp(
+  String.raw`\bmise\s+(?:${miseExecAliases.join("|")})\b`,
+  "g",
+);
 
-// WHY: public/old is a frozen snapshot, the other public dirs and the lockfile are generated data, and this file names the forbidden command itself.
-const excluded = [
+const frozenOrGeneratedPaths = [
   ":!public/old",
   ":!public/prefabs",
   ":!public/maps",
@@ -24,21 +26,20 @@ const excluded = [
 it("no tracked file calls mise exec", () => {
   const files = execFileSync(
     "git",
-    ["ls-files", "-z", "--", ".", ...excluded],
+    ["ls-files", "-z", "--", ".", ...frozenOrGeneratedPaths],
     {
       cwd: repoRoot,
       encoding: "utf8",
     },
   )
     .split("\0")
-    // WHY: git ls-files lists index entries, so a file deleted but not yet staged would make the read below throw ENOENT.
     .filter((f) => f !== "" && fs.existsSync(path.join(repoRoot, f)));
   expect(files.length).toBeGreaterThan(0);
 
   const offenders = files.flatMap((f) => {
     const text = fs.readFileSync(path.join(repoRoot, f), "latin1");
     if (text.includes("\0")) return [];
-    return [...text.matchAll(forbidden)].map(
+    return [...text.matchAll(miseExecInvocation)].map(
       (m) => `${f}:${text.slice(0, m.index).split("\n").length}`,
     );
   });
