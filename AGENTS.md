@@ -20,8 +20,7 @@ Rules for AI agents working on this repository.
    - To update Node, modify `mise.toml`. Keep the `@types/node` major version,
      `engines.node`, and `devEngines.runtime.version` in `package.json` in sync
      with it. `devEngines` is what makes npm refuse a mismatched Node.
-   - Assume contributors run commands in a mise-activated shell. Docs and
-     scripts call `npm`, `npx`, and `node` directly, not via `mise exec --`.
+   - Assume contributors run commands in a mise-activated shell.
 
 3. **Fail Fast in `tools/`**
    - Code under `tools/` parses upstream game data (prefab XMLs, rwgmixer.xml,

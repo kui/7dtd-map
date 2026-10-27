@@ -53,6 +53,9 @@ Linux, macOS, and Windows are supported.
    mise run build
    ```
 
+   `npm ci` also points `core.hooksPath` at `.githooks`, which enables the
+   pre-commit hook.
+
    On a second run each task skips itself when neither its source files nor
    the matched game files have changed since the last run.
 
