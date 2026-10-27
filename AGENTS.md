@@ -17,9 +17,7 @@ Rules for AI agents working on this repository.
    - Keep the set of tools contributors must install (outside `npm ci`)
      minimal. Prefer leaning on mise or Node over adding a new one. npm
      packages are covered by rule 5.
-   - To update Node, modify `mise.toml`. Keep the `@types/node` major version,
-     `engines.node`, and `devEngines.runtime.version` in `package.json` in sync
-     with it. `devEngines` is what makes npm refuse a mismatched Node.
+   - To update Node, modify `mise.toml`.
    - Assume contributors run commands in a mise-activated shell.
 
 3. **Fail Fast in `tools/`**
