@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
     "serve": "node tools/build.ts serve",
     "serve:static": "node tools/build.ts serve-static",
     "fix": "oxfmt && oxlint --fix",
