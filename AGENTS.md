@@ -16,7 +16,7 @@ Rules for AI agents working on this repository.
      (`mise run build`) in `mise.toml`.
    - Keep the set of tools contributors must install (outside `npm ci`)
      minimal. Prefer leaning on mise or Node over adding a new one. npm
-     packages are covered by rule 5.
+     packages are covered by rule 4.
    - To update Node, modify `mise.toml`.
    - Assume contributors run commands in a mise-activated shell.
 
@@ -30,15 +30,7 @@ Rules for AI agents working on this repository.
      missing JSON entries with nullish-coalescing defaults so a partial dataset
      still renders a usable page.
 
-4. **Do Not Modify `public/old/` Directories**
-   - `public/old/<version>/` (e.g. `a20/`, `v2.6/`) are frozen, self-contained
-     snapshots of previous major releases. Do not edit them, including
-     refactors, renames, and style fixes.
-   - Only exception: in a major version upgrade, copy the current system into a
-     new `public/old/<version>/` and edit only the nav / version banner in that
-     new copy's top-level HTML.
-
-5. **Adding npm Dependencies**
+4. **Adding npm Dependencies**
    - Before hand-writing generic infrastructure (an HTTP server, a parser for a
      standard format, etc.), check whether a widely used package already does
      it. Choosing a package is fine; a hand-rolled version needs a reason.
@@ -48,7 +40,7 @@ Rules for AI agents working on this repository.
      dependency count. Prefer the maintained, mainstream option; do not pick an
      unmaintained one because it is smaller.
 
-6. **PR Descriptions State Only What Was Verified**
+5. **PR Descriptions State Only What Was Verified**
    - Mark a checklist item done, or claim a behavior ("handled by X",
      "returns 404"), only after running something that shows it: a command, a
      request, a test. Put what you ran in the Verification section.

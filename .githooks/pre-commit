@@ -11,4 +11,6 @@ if [ -s "$staged" ]; then
   xargs -0 -a "$staged" npm run ci:ast-grep --
 fi
 npm run ci:type-check
+# --changed misses edits under public/old/, which no test imports.
+npm test -- tools/test/frozen-old-snapshots.test.ts
 exec npm run test:changed

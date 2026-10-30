@@ -12,6 +12,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+      # WHY: frozen-old-snapshots.test.ts diffs public/old/ against this base.
+      # A master push compares with the commit before the push, since
+      # origin/master is HEAD itself there.
+      - run: git fetch --no-tags --depth=1 origin "+${BASE}:refs/frozen-old-base"
+        shell: bash
+        env:
+          BASE: ${{ github.ref == 'refs/heads/master' && github.event.before || 'master' }}
       - uses: jdx/mise-action@v4
       - run: npm ci
       - run: npm run ci
+        env:
+          FROZEN_OLD_BASE: refs/frozen-old-base
