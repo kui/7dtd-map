@@ -290,6 +290,45 @@ test.describe("index.html", () => {
     await expect(dialog).not.toHaveAttribute("open", /.*/);
   });
 
+  test("dialogs declare native backdrop light-dismiss", async ({ page }) => {
+    await page.goto("/index.html");
+    await expect(page.locator("#map-info-dialog")).toHaveAttribute(
+      "closedby",
+      "any",
+    );
+    await expect(page.locator("#prefab-inspector-dialog")).toHaveAttribute(
+      "closedby",
+      "any",
+    );
+  });
+
+  test("prefab inspector dialog closes on backdrop click", async ({ page }) => {
+    await page.goto("/index.html");
+    // SAFETY: this guards the test's premise; the project supports latest Chrome, where closedby is native.
+    expect(
+      await page.evaluate(() => "closedBy" in HTMLDialogElement.prototype),
+    ).toBe(true);
+
+    const dialog = page.locator("#prefab-inspector-dialog");
+    await page.click("#prefab-inspector-show");
+    await expect(dialog).toHaveAttribute("open", /.*/);
+
+    const box = await dialog.boundingBox();
+    if (!box) throw new Error("dialog has no bounding box");
+    // WHY: the removed helper also ignored clicks on the dialog's own padding; keep that behavior locked in.
+    await page.mouse.click(box.x + 4, box.y + 4);
+    await expect(dialog).toHaveAttribute("open", /.*/);
+
+    const viewport = page.viewportSize();
+    if (!viewport) throw new Error("page has no viewport size");
+    // WHY: pick a point outside the dialog rect so the click lands on the backdrop instead of dialog content.
+    const x = box.x > 0 ? 1 : viewport.width - 1;
+    const y = box.y > 0 ? 1 : viewport.height - 1;
+    await page.mouse.click(x, y);
+
+    await expect(dialog).not.toHaveAttribute("open", /.*/);
+  });
+
   test("copy-button activates with Enter key", async ({ page }) => {
     await page.goto("/index.html");
     const button = page.locator(
