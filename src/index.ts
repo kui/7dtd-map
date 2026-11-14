@@ -192,7 +192,6 @@ function main() {
   new MapInfoHandler(
     {
       mapInfoShow: component("map-info-show", HTMLButtonElement),
-      mapInfoDialog: component("map-info-dialog", HTMLDialogElement),
       mapInfoTable: component("map-info-table", HTMLTableElement),
     },
     fileHandler,
@@ -289,7 +288,6 @@ function main() {
   );
   new PrefabInspectorHandler(
     {
-      dialog: component("prefab-inspector-dialog", HTMLDialogElement),
       show: component("prefab-inspector-show", HTMLButtonElement),
       count: component("prefab-inspector-count"),
       detailCounts: {

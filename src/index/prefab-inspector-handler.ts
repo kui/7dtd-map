@@ -5,7 +5,6 @@ import type {
 import type { LabelHandler } from "../lib/label-handler.ts";
 import { assertDifficultyIndex, loadPrefabsXml } from "../lib/prefabs.ts";
 import { latestAddedVersion } from "../lib/prefab-added-versions.ts";
-import { closeOnBackdropClick } from "../lib/ui/dialog-backdrop-close.ts";
 import { escapeHtml, printError } from "../lib/utils.ts";
 
 interface PrefabCountDoms {
@@ -14,7 +13,6 @@ interface PrefabCountDoms {
 }
 
 interface Doms {
-  dialog: HTMLDialogElement;
   show: HTMLButtonElement;
   count: HTMLElement;
   detailCounts: {
@@ -58,7 +56,6 @@ export class PrefabInspectorHandler {
     this.#addedVersions = addedVersions;
     this.#fetchPrefabIndex = fetchPrefabIndex;
 
-    closeOnBackdropClick(this.#doms.dialog);
     doms.show.addEventListener("click", () => {
       this.inspect().catch(printError);
     });

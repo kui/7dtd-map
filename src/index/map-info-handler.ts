@@ -1,11 +1,9 @@
 import type { FileHandler } from "./file-handler.ts";
 import * as storage from "../lib/storage.ts";
-import { closeOnBackdropClick } from "../lib/ui/dialog-backdrop-close.ts";
 import { escapeHtml } from "../lib/utils.ts";
 
 interface Doms {
   mapInfoShow: HTMLButtonElement;
-  mapInfoDialog: HTMLDialogElement;
   mapInfoTable: HTMLTableElement;
 }
 
@@ -14,7 +12,6 @@ export class MapInfoHandler {
   constructor(doms: Doms, fileHandler: FileHandler) {
     this.#doms = doms;
 
-    closeOnBackdropClick(this.#doms.mapInfoDialog);
     fileHandler.addListener(async (fileNames) => {
       if (fileNames.includes("map_info.xml")) await this.#update();
     });
